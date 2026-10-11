@@ -1,0 +1,8 @@
+{
+  "name": "agroville-mvp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
