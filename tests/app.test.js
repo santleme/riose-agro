@@ -36,8 +36,8 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   farm.tick(24);
   const snapshot=farm.snapshot();
   ui.deliver('state',snapshot);
-  assert.match(ui.elements.get('animal-history').innerHTML,/Estado simulado registrado pelo motor/);
-  assert.doesNotMatch(ui.elements.get('animal-history').innerHTML,/Estado observado pelo motor/);
+  assert.match(ui.elements.get('animal-history').innerHTML,/Estado observado pelo motor/);
+  assert.doesNotMatch(ui.elements.get('animal-history').innerHTML,/Estado simulado registrado pelo motor/);
   ui.messages.length=0;
   ui.elements.get('experiment').onclick();
   ui.elements.get('compare').onclick();
@@ -71,10 +71,6 @@ test('manifest can be reopened from the map and uses its herd, conditions and ho
   const farm=new FarmEngine(123,3);
   farm.configure({weather:'rain'});
   const manifest=createComparisonManifest(farm.snapshot(),7);
-  // Replay uses the snapshot. Display the computed config even if the existing
-  // manifest validator permits inconsistent declarations in the two configs.
-  manifest.scenarios.reference.diet='balanced';
-  manifest.scenarios.scenario.diet='balanced';
   await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}]}});
   assert.equal(ui.messages[0].type,'replayComparison');
   assert.equal(ui.messages.some(message=>message.type==='load'||message.type==='configure'),false);
