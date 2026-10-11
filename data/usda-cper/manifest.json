@@ -1,0 +1,26 @@
+{
+  "source": {
+    "title": "Data from: Can measurements of foraging behaviour predict variation in weight gains of free-ranging cattle?",
+    "publisher": "USDA Agricultural Research Service / Ag Data Commons",
+    "doi": "10.15482/USDA.ADC/1524788",
+    "catalogUrl": "https://catalog.data.gov/dataset/data-from-can-measurements-of-foraging-behaviour-predict-variation-in-weight-gains-of-free",
+    "articleDoi": "10.1071/AN21560",
+    "license": "U.S. Public Domain",
+    "licenseUrl": "https://www.usa.gov/publicdomain/label/1.0/",
+    "retrieved": "2026-10-11"
+  },
+  "files": [
+    {
+      "path": "period.csv",
+      "upstreamFilename": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44531612",
+      "sha256": "1128d3e644a57a138ca8e1d8c3af1d8afc19f5b3b05bd513363e82fbeda0fb3a"
+    },
+    {
+      "path": "period_dict.csv",
+      "upstreamFilename": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod_dictionary.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44531615",
+      "sha256": "69d760a9b8b5f47e00f9de593aae484c0187682c44aecd0a4ab5ec682a26081a"
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+{
+  "schemaVersion": "0.1.0",
+  "snapshotId": "usda-cper-2019-period-1-paddock-19n-eartag-242",
+  "snapshotKind": "observed-study-slice",
+  "createdDate": "2026-10-11",
+  "caseDefinition": {
+    "id": "adult-pasture-vs-confinement-draft",
+    "version": "0.1.0",
+    "reviewStatus": "pending-domain-review",
+    "requiredFields": [
+      "animal.eartag-242.start_weight_kg",
+      "animal.eartag-242.dmi_kg_day",
+      "paddock.19N.area_ha"
+    ]
+  },
+  "sourceCatalog": [
+    {
+      "id": "usda-cper-moonitor-2019-2020",
+      "title": "Data from: Can measurements of foraging behaviour predict variation in weight gains of free-ranging cattle?",
+      "url": "https://doi.org/10.15482/USDA.ADC/1524788",
+      "version": "Data.gov catalog updated 2025-11-21; accessed 2026-10-11",
+      "license": "Public domain (USDA Ag Data Commons metadata label)",
+      "accessedDate": "2026-10-11"
+    },
+    {
+      "id": "usda-cper-article-2022",
+      "title": "Can measurements of foraging behaviour predict variation in weight gains of free-ranging cattle?",
+      "url": "https://doi.org/10.1071/AN21560",
+      "version": "2022",
+      "license": "CC BY-NC-ND 4.0 (article; not applied to USDA dataset)",
+      "accessedDate": "2026-10-11"
+    }
+  ],
+  "farm": {
+    "id": "cper-research-site",
+    "name": "Central Plains Experimental Range",
+    "location": {
+      "country": {
+        "path": "farm.location.country",
+        "value": "United States",
+        "unit": "country",
+        "status": "observed",
+        "sourceId": "usda-cper-moonitor-2019-2020",
+        "sourceLocator": "Data.gov metadata / spatial and description",
+        "populationValidity": "Research site in Colorado, USA; not representative of Brazilian farms."
+      },
+      "region": {
+        "path": "farm.location.region",
+        "value": "Colorado; shortgrass steppe",
+        "unit": "region/ecosystem",
+        "status": "observed",
+        "sourceId": "usda-cper-article-2022",
+        "sourceLocator": "Study area and methods",
+        "populationValidity": "Study-specific region and ecological system."
+      }
+    }
+  },
+  "population": {
+    "species": {
+      "path": "population.species",
+      "value": "Bos taurus",
+      "unit": "taxon",
+      "status": "derived",
+      "sourceId": "usda-cper-article-2022",
+      "sourceLocator": "Methods: mixed-European yearling steers",
+      "populationValidity": "Only the yearling steers in the cited study."
+    },
+    "productionClass": {
+      "path": "population.production_class",
+      "value": "yearling steer",
+      "unit": "category",
+      "status": "observed",
+      "sourceId": "usda-cper-article-2022",
+      "sourceLocator": "Methods: cattle stocking and measurements",
+      "populationValidity": "Not a general cattle class or Brazilian production system."
+    },
+    "validityDescription": "One animal-period record from a small observational study of steers grazing shortgrass steppe in Colorado; not a randomized pasture-versus-confinement comparison."
+  },
+  "lots": [
+    {
+      "id": "period-1-paddock-19n",
+      "animalIds": [
+        "eartag-242"
+      ],
+      "description": "One steer-period row from late summer 2019; this is a research-data slice, not a complete farm lot."
+    }
+  ],
+  "animals": [
+    {
+      "id": "eartag-242",
+      "lotId": "period-1-paddock-19n",
+      "category": {
+        "path": "animal.eartag-242.category",
+        "value": "yearling steer",
+        "unit": "category",
+        "status": "observed",
+        "sourceId": "usda-cper-article-2022",
+        "sourceLocator": "Study methods; animal ID from period-summary CSV row 2",
+        "populationValidity": "This record only."
+      }
+    }
+  ],
+  "paddocks": [
+    {
+      "id": "19N",
+      "name": {
+        "path": "paddock.19N.name",
+        "value": "19N",
+        "unit": "paddock identifier",
+        "status": "observed",
+        "sourceId": "usda-cper-moonitor-2019-2020",
+        "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / Pasture",
+        "populationValidity": "Paddock identifier at this research site."
+      }
+    }
+  ],
+  "operations": {
+    "coverage": "not-recorded",
+    "events": [],
+    "coverageNote": "The public period-summary row does not contain feed delivery, costs, or a pasture-to-confinement intervention."
+  },
+  "history": {
+    "coverage": "partial",
+    "events": [],
+    "coverageNote": "The linked daily file has sensor-derived daily measures, but this snapshot contains only the period-summary row and no chronological event log."
+  },
+  "observations": [
+    {
+      "path": "animal.eartag-242.adg_60d",
+      "value": 1.25745098,
+      "unit": "kg/steer/day",
+      "status": "observed",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / ADG_60d",
+      "populationValidity": "Observed interval gain for this steer-period only; not an individual weight trajectory.",
+      "period": "60dADG_INT=1; late summer 2019; exact dates not present in the row.",
+      "measurementId": "usda-cper-eartag-242-001",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement."
+    },
+    {
+      "path": "animal.eartag-242.days_with_complete_sensor_data",
+      "value": 13,
+      "unit": "days",
+      "status": "observed",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / DaysData",
+      "populationValidity": "Sensor data coverage for this steer-period, not the number of weight measurement days.",
+      "measurementId": "usda-cper-eartag-242-002",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "animal.eartag-242.mean_grazing_bout_duration_5min",
+      "value": 127.4880128,
+      "unit": "min/day",
+      "status": "observed",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / GBD_5min",
+      "populationValidity": "Collar-derived study measure at 5-minute resolution.",
+      "measurementId": "usda-cper-eartag-242-003",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "animal.eartag-242.grazing_hours_5min",
+      "value": 9.668446376,
+      "unit": "h/day",
+      "status": "observed",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / GrazeHrs_5min",
+      "populationValidity": "Collar-derived study measure at 5-minute resolution.",
+      "measurementId": "usda-cper-eartag-242-004",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "animal.eartag-242.mean_grazing_velocity",
+      "value": 5.05088741,
+      "unit": "m/min",
+      "status": "observed",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod.csv row 2 / MeanVelo",
+      "populationValidity": "Mean velocity while grazing, collar-derived, for this steer-period.",
+      "measurementId": "usda-cper-eartag-242-005",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "animal.eartag-242.start_weight_kg",
+      "value": null,
+      "unit": "kg live weight",
+      "status": "missing",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Not present in period-summary CSV row 2; source file inspected.",
+      "populationValidity": "No individual start weight available in this summary row.",
+      "missingReason": "The public summary contains interval ADG but not the animal's start weight.",
+      "measurementId": "usda-cper-eartag-242-006",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "animal.eartag-242.dmi_kg_day",
+      "value": null,
+      "unit": "kg DM/animal/day",
+      "status": "missing",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "No feed-intake variable in the public CSVs or data dictionary.",
+      "populationValidity": "Cannot infer individual dry-matter intake from grazing collars or biomass estimates.",
+      "missingReason": "Individual feed intake was not collected or included in this public dataset.",
+      "measurementId": "usda-cper-eartag-242-007",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "paddock.19N.area_ha",
+      "value": null,
+      "unit": "ha",
+      "status": "missing",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "Area not included in the USDA period-summary CSV.",
+      "populationValidity": "Do not infer pasture area from biomass or sensor data.",
+      "missingReason": "Paddock area is absent from the selected source record.",
+      "measurementId": "usda-cper-eartag-242-008",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    },
+    {
+      "path": "operations.feed_or_housing_change",
+      "value": null,
+      "unit": "intervention description",
+      "status": "missing",
+      "sourceId": "usda-cper-moonitor-2019-2020",
+      "sourceLocator": "No randomized intervention in the observational study record.",
+      "populationValidity": "This source cannot identify a causal pasture-versus-confinement effect.",
+      "missingReason": "No feed or housing intervention is represented in this study-period row.",
+      "measurementId": "usda-cper-eartag-242-009",
+      "observedAt": null,
+      "timeMissingReason": "The period-summary row identifies a study period but does not provide the exact calendar date for this measurement.",
+      "period": "Study period; exact calendar date not supplied by the summary row."
+    }
+  ],
+  "simulationEligibility": {
+    "status": "not-applicable",
+    "missingRequiredFields": [
+      "animal.eartag-242.start_weight_kg",
+      "animal.eartag-242.dmi_kg_day",
+      "paddock.19N.area_ha"
+    ],
+    "reason": "This is an observed research-study slice, not a farm baseline. The record can document a candidate population but cannot run the Agroville what-if engine."
+  },
+  "manifestReference": {
+    "status": "not-linked",
+    "reason": "The scenario-manifest contract is tracked in issue #4; this observational record is not a runnable scenario."
+  }
+}

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — ensaio observado</title>
+  <link rel="stylesheet" href="observed-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ dados observados</span></a>
+    <a class="back-link" href="./">← Voltar à fazenda</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE UM ENSAIO PUBLICADO</div>
+        <h1>O que foi observado nas bezerras?</h1>
+        <p>Explore pesos e ingestão medidos no estudo. Esta página não executa o motor de simulação.</p>
+      </div>
+      <div class="data-badge"><span></span> OBSERVAÇÕES · CC0</div>
+    </section>
+
+    <section class="study-card" aria-labelledby="study-title">
+      <div class="study-heading">
+        <div>
+          <div class="eyebrow">COORTE EXPERIMENTAL</div>
+          <h2 id="study-title">Feno longo em balde ou tubo</h2>
+        </div>
+        <a href="https://zenodo.org/records/7251167" target="_blank" rel="noopener">Fonte e arquivos ↗</a>
+      </div>
+      <p>27 bezerras Holandesas, alojadas individualmente · Control, Bucket e Pipe (9 animais por grupo) · nascimento até 60 dias. Feno nos grupos Bucket/Pipe até o dia 50; TMR durante o desaleitamento.</p>
+      <div class="study-facts"><span><strong>27</strong> animais</span><span><strong>3</strong> grupos experimentais</span><span><strong>0–60</strong> dias de idade</span><span><strong>256</strong> pesagens</span></div>
+    </section>
+
+    <section class="explorer" aria-labelledby="measure-label">
+      <div class="explorer-head">
+        <div>
+          <div id="measure-label" class="eyebrow">MEDIDA OBSERVADA</div>
+          <label class="select-wrap" for="measure">
+            <span class="sr-only">Escolher medida</span>
+            <select id="measure">
+              <option value="weight">Peso corporal</option>
+              <option value="grain">Ingestão de grão</option>
+              <option value="hay">Ingestão de feno</option>
+              <option value="tmr">Ingestão de TMR</option>
+              <option value="water">Consumo de água</option>
+            </select>
+          </label>
+        </div>
+        <p id="measure-note" class="measure-note"></p>
+      </div>
+      <div id="chart-wrap" class="chart-wrap"><svg id="chart" viewBox="0 0 900 380" role="img" aria-label="Médias observadas por semana e grupo"></svg></div>
+      <div id="group-summary" class="group-summary" aria-live="polite"></div>
+      <div id="coverage" class="coverage"></div>
+    </section>
+
+    <section class="contrast-card" aria-labelledby="contrast-title">
+      <div class="contrast-head">
+        <div>
+          <div class="eyebrow">CONTRASTE DESCRITIVO</div>
+          <h2 id="contrast-title">Comparar dois grupos observados</h2>
+          <p>Diferença entre médias semanais por animal neste ensaio. Não é uma previsão nem uma estimativa causal.</p>
+        </div>
+        <div class="contrast-controls">
+          <label for="reference-group">Referência<select id="reference-group"></select></label>
+          <span aria-hidden="true">→</span>
+          <label for="comparison-group">Comparação<select id="comparison-group"></select></label>
+        </div>
+      </div>
+      <div class="contrast-table-wrap">
+        <table class="contrast-table">
+          <thead><tr><th scope="col">Idade</th><th id="reference-heading" scope="col">Referência</th><th id="comparison-heading" scope="col">Comparação</th><th scope="col">Diferença absoluta</th><th scope="col">Diferença relativa</th></tr></thead>
+          <tbody id="contrast-rows"></tbody>
+        </table>
+      </div>
+      <p id="contrast-note" class="contrast-note" aria-live="polite"></p>
+    </section>
+
+    <section class="limits">
+      <h2>Como interpretar</h2>
+      <ul>
+        <li>As curvas mostram a média por semana, primeiro calculando uma média por animal naquela semana. Animais sem medida válida naquela semana não entram nessa média.</li>
+        <li>Os valores ausentes são omitidos, nunca convertidos em zero. As hastes verticais mostram a faixa entre os menores e maiores valores médios por animal; não são intervalos de confiança.</li>
+        <li>Os grupos descrevem este protocolo experimental. A amostra não representa bovinos adultos, fazendas de corte, pastagem ou resultados futuros.</li>
+        <li>ADG é derivado de pesagens do mesmo conjunto e não aparece como confirmação independente do peso.</li>
+      </ul>
+      <p class="citation">Downey &amp; Tucker (2023), <a href="https://doi.org/10.3168/jds.2022-22413" target="_blank" rel="noopener">Journal of Dairy Science ↗</a>. Dados CC0: <a href="https://doi.org/10.5281/zenodo.7251167" target="_blank" rel="noopener">Zenodo 10.5281/zenodo.7251167 ↗</a>.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Resultados observados · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="observed-data.js"></script>
+</body>
+</html>

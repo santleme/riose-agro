@@ -4,6 +4,16 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "archive:comparison": "node scripts/archive-comparison.js",
+    "validate:outcome": "node scripts/validate-outcome-record.js",
+    "link:snapshot": "node scripts/link-farm-snapshot.js",
+    "validate:snapshot": "node scripts/validate-farm-snapshot.js",
+    "build:observed-data": "python3 scripts/build_observed_calf_dataset.py",
+    "audit:usda-cper": "python3 scripts/audit_usda_cper_validation.py"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

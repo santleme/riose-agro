@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agroville Farm Snapshot",
+  "description": "Versioned domain-state and field-level provenance. Scenario seeds and comparison configuration belong to the separate reproducibility manifest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "snapshotId", "snapshotKind", "createdDate", "caseDefinition",
+    "sourceCatalog", "farm", "population", "lots", "animals", "paddocks",
+    "operations", "history", "observations", "simulationEligibility", "manifestReference"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "snapshotId": {"type": "string", "minLength": 1},
+    "snapshotKind": {"enum": ["farm-baseline", "observed-study-slice", "demonstrative"]},
+    "createdDate": {"type": "string", "format": "date"},
+    "caseDefinition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "version", "reviewStatus", "requiredFields"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "reviewStatus": {"enum": ["pending-domain-review", "approved"]},
+        "requiredFields": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "sourceCatalog": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title", "url", "version", "license", "accessedDate"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "format": "uri"},
+          "version": {"type": "string", "minLength": 1},
+          "license": {"type": "string", "minLength": 1},
+          "accessedDate": {"type": "string", "format": "date"},
+          "checksum": {"type": "string"}
+        }
+      }
+    },
+    "farm": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "location"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "location": {
+          "type": "object", "additionalProperties": false,
+          "required": ["country", "region"],
+          "properties": {
+            "country": {"$ref": "#/$defs/field"},
+            "region": {"$ref": "#/$defs/field"}
+          }
+        }
+      }
+    },
+    "population": {
+      "type": "object", "additionalProperties": false,
+      "required": ["species", "productionClass", "validityDescription"],
+      "properties": {
+        "species": {"$ref": "#/$defs/field"},
+        "productionClass": {"$ref": "#/$defs/field"},
+        "validityDescription": {"type": "string", "minLength": 1}
+      }
+    },
+    "lots": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "animalIds", "description"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "animalIds": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+          "description": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "animals": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "lotId", "category"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "lotId": {"type": "string", "minLength": 1},
+          "category": {"$ref": "#/$defs/field"}
+        }
+      }
+    },
+    "paddocks": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"$ref": "#/$defs/field"}
+        }
+      }
+    },
+    "operations": {"$ref": "#/$defs/eventLog"},
+    "history": {"$ref": "#/$defs/eventLog"},
+    "observations": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "#/$defs/field"},
+          {"type": "object", "required": ["measurementId", "observedAt"]}
+        ]
+      }
+    },
+    "simulationEligibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "missingRequiredFields"],
+      "properties": {
+        "status": {"enum": ["ready", "blocked", "review-pending", "not-applicable"]},
+        "missingRequiredFields": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "not-applicable"}}, "required": ["status"]}, "then": {"required": ["reason"]}}
+      ]
+    },
+    "manifestReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["not-linked", "linked"]},
+        "type": {"type": "string"},
+        "version": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "reason": {"type": "string"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "linked"}}, "required": ["status"]}, "then": {"required": ["type", "version", "sha256"]}},
+        {"if": {"properties": {"status": {"const": "not-linked"}}, "required": ["status"]}, "then": {"required": ["reason"]}}
+      ]
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "value", "unit", "status", "sourceId", "sourceLocator", "populationValidity"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "value": {},
+        "unit": {"type": "string", "minLength": 1},
+        "status": {"enum": ["observed", "derived", "hypothesis", "missing", "not-applicable"]},
+        "sourceId": {"type": "string", "minLength": 1},
+        "sourceLocator": {"type": "string", "minLength": 1},
+        "populationValidity": {"type": "string", "minLength": 1},
+        "period": {"type": "string"},
+        "missingReason": {"type": "string"},
+        "measurementId": {"type": "string", "minLength": 1},
+        "observedAt": {"type": ["string", "null"], "format": "date-time"},
+        "timeMissingReason": {"type": "string"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"enum": ["missing", "not-applicable"]}}, "required": ["status"]}, "then": {"properties": {"value": {"type": "null"}}, "required": ["missingReason"]}},
+        {"if": {"properties": {"status": {"enum": ["observed", "derived", "hypothesis"]}}, "required": ["status"]}, "then": {"properties": {"value": {"not": {"type": "null"}}}}},
+        {"if": {"properties": {"observedAt": {"const": null}}, "required": ["observedAt"]}, "then": {"required": ["timeMissingReason", "period"]}}
+      ]
+    },
+    "eventLog": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coverage", "events", "coverageNote"],
+      "properties": {
+        "coverage": {"enum": ["complete", "partial", "not-recorded"]},
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "type", "occurredAt", "status", "sourceId", "sourceLocator", "populationValidity", "fields"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "type": {"type": "string", "minLength": 1},
+              "occurredAt": {"type": "string", "format": "date-time"},
+              "status": {"enum": ["observed", "derived", "hypothesis"]},
+              "sourceId": {"type": "string", "minLength": 1},
+              "sourceLocator": {"type": "string", "minLength": 1},
+              "populationValidity": {"type": "string", "minLength": 1},
+              "fields": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/field"}}
+            }
+          }
+        },
+        "coverageNote": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

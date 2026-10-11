@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#faf9f7">
+    <meta name="description" content="Agroville é um protótipo interativo para explorar cenários demonstrativos de manejo de bovinos.">
+    <title>Agroville — um mundo de fazenda para explorar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+      <a class="wordmark" href="./" aria-label="Agroville, página inicial">agroville</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
+        <span></span><span></span>
+      </button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#transparencia">Transparência</a>
+        <a href="observed-data.html">Dados observados</a>
+        <a href="#contato">Contato</a>
+        <a class="nav-cta" href="index.html">Explorar a fazenda</a>
+      </nav>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-worlds" src="assets/agroville-farm-worlds.png" alt="" aria-hidden="true">
+        <div class="hero-copy">
+          <p class="eyebrow hero-badge"><span class="eyebrow-dot"></span> Protótipo interativo para cenários de fazenda</p>
+          <h1 id="hero-title">Explore cenários na fazenda.</h1>
+          <p class="hero-description">Mude uma condição, acompanhe o rebanho e veja o que acontece neste pequeno mundo demonstrativo.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="index.html">Explorar a fazenda</a>
+            <a class="hero-more" href="#como-funciona">Conhecer o projeto</a>
+          </div>
+          <p class="hero-note">Protótipo experimental · resultados não validados para manejo real</p>
+        </div>
+        <a class="scroll-cue" href="#pergunta">Role para conhecer o Agroville</a>
+      </section>
+
+      <section class="intro-section section-wrap" id="pergunta">
+        <p class="eyebrow">PERGUNTAS ANTES DE RESPOSTAS</p>
+        <h2>Uma mudança de cada vez.</h2>
+        <p class="section-lede">O Agroville transforma uma pergunta de manejo em um cenário que você pode explorar. A comparação mantém as demais condições iguais para tornar visível o que o protótipo está testando.</p>
+        <p class="quiet-note">É uma ferramenta de exploração e aprendizagem. Não faz previsões nem recomenda decisões para uma fazenda real.</p>
+      </section>
+
+      <section class="feature-section section-wrap" id="como-funciona" aria-labelledby="feature-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">COMO FUNCIONA</p>
+            <h2 id="feature-title">Do mapa à comparação.</h2>
+          </div>
+          <a class="text-link" href="index.html">Conhecer o simulador</a>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-item">
+            <span class="step-number">01</span>
+            <h3>Observe o rebanho</h3>
+            <p>Explore o mapa da fazenda e acompanhe a rotina simulada dos animais ao longo do dia.</p>
+          </article>
+          <article class="feature-item">
+            <span class="step-number">02</span>
+            <h3>Escolha uma condição</h3>
+            <p>Altere alojamento, dieta, suplemento ou clima sem misturar as mudanças no mesmo experimento.</p>
+          </article>
+          <article class="feature-item">
+            <span class="step-number">03</span>
+            <h3>Compare o cenário</h3>
+            <p>Veja lado a lado o cenário de referência e a alternativa durante 30 dias demonstrativos.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="transparency-section" id="transparencia" aria-labelledby="transparency-title">
+        <div class="section-wrap transparency-inner">
+          <div class="transparency-copy">
+            <p class="eyebrow">TRANSPARÊNCIA VEM PRIMEIRO</p>
+            <h2 id="transparency-title">Cada resultado precisa mostrar de onde veio.</h2>
+            <p>O motor atual usa regras e parâmetros simplificados para demonstrar como uma comparação funciona. Ele ainda não foi calibrado nem validado com dados zootécnicos independentes.</p>
+            <a class="text-link" href="index.html">Leia os limites do modelo</a>
+          </div>
+          <div class="evidence-list">
+            <article>
+              <span class="evidence-index">01</span>
+              <div><h3>Um modelo demonstrativo</h3><p>O que você vê no simulador é calculado por regras locais e reprodutíveis, não por medições de uma fazenda real.</p></div>
+            </article>
+            <article>
+              <span class="evidence-index">02</span>
+              <div><h3>Observações em separado</h3><p>O explorador de dados mostra um ensaio publicado de bezerras; esses registros não calibram o rebanho adulto simulado.</p></div>
+            </article>
+            <article>
+              <span class="evidence-index">03</span>
+              <div><h3>Validação ainda necessária</h3><p>Antes de orientar qualquer decisão, o modelo precisa de um caso zootécnico definido e avaliação independente.</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="observed-section section-wrap" aria-labelledby="observed-title">
+        <div class="observed-copy">
+          <p class="eyebrow">DADOS OBSERVADOS</p>
+          <h2 id="observed-title">Medidas reais. Em uma tela própria.</h2>
+          <p>Explore peso e ingestão registrados em um ensaio publicado com bezerras. Os dados aparecem como observações, separados dos resultados produzidos pelo simulador.</p>
+          <a class="button button-outline" href="observed-data.html">Abrir explorador de dados</a>
+        </div>
+        <div class="observed-stamp" aria-label="Dados observacionais, 27 bezerras">
+          <span>UM ENSAIO</span>
+          <strong>27</strong>
+          <span>BEZERRAS</span>
+          <span class="stamp-rule"></span>
+          <small>Fonte aberta · Zenodo</small>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contato" aria-labelledby="contact-title">
+        <div class="section-wrap contact-inner">
+          <div>
+            <p class="eyebrow">CONSTRUINDO COM EVIDÊNCIA</p>
+            <h2 id="contact-title">Quer conversar sobre o projeto?</h2>
+            <p>O Agroville está em desenvolvimento. Sugestões de pesquisa, dados e cenários podem ajudar a definir os próximos passos.</p>
+          </div>
+          <a class="button button-light" href="https://github.com/santleme/riose-agro/issues" target="_blank" rel="noopener noreferrer">Abrir canal do projeto no GitHub</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="wordmark footer-wordmark" href="./">agroville</a>
+      <p>Protótipo de pesquisa · Simulação demonstrativa, sem validação zootécnica.</p>
+      <nav aria-label="Links do rodapé">
+        <a href="index.html">Explorar a fazenda</a>
+        <a href="observed-data.html">Dados observados</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <small>© 2026 Agroville</small>
+    </footer>
+    <script src="home.js" defer></script>
+  </body>
+</html>

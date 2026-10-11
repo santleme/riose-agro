@@ -1,0 +1,13 @@
+COLUMN_NAME,UNITS,DESCRIPTION,DATA TYPE,NOTES
+Year,Year,Year of measurements,Date/Time,
+60dADG_INT,NA,Interval in which weight gain was measured (1=late summer 2019; 2=early summer 2020; 3 = late summer 2020),Integer,
+Pasture,NA,Pasture name at the Central Plains Experimental Range (paddock 1 = 19N; paddock 2 = 15E; paddock 3 = 23E; paddock 4 = 22W),Character,
+Eartag,NA,Eartag assigned to indivudal steer for unique identification,Integer,
+DaysData,Count,Number of days for which complete data were collected by the Moonitor collar for this animal,Integer,
+GBD_5min,Minutes,"Mean grazing bout duration per day, calculated at 5 min resolution",Decimal,
+GrazeHrs_5min,Hours,Total number of grazing hours calculated from 5 min grazing intervals,Decimal,
+GBD_4sec,Seconds,"Mean grazing bout duration per day, calculated at 4 sec resolution",Decimal,
+GrazeHrs_4sec,Hours,Total number of grazing hours calculated from 4 sec grazing intervals,Decimal,
+MeanTA,Degree,Mean turn angle for steer while grazing (deviation from straight line in days),Decimal,
+MeanVelo,Meters per minute,Mean velocity of steer while grazing,Decimal,
+ADG_60d,Kg per steer per day,Mean daily rate of weight gain over the 60dADG interval,Decimal,

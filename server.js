@@ -1,13 +1,19 @@
 import {createServer as createHttpServer} from 'node:http';
+import {readFileSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {extname, resolve, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
+import {validateFarmSnapshot} from './snapshot-validator.js';
+import {validateFarmSnapshotManifestReference} from './snapshot-manifest-link.js';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
+const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
-const PUBLIC_FILES = new Set(['index.html', 'style.css', 'app.js', 'engine.js', 'worker.js']);
+const PUBLIC_FILES = new Set(['index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js', 'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json']);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -46,6 +52,9 @@ export function deterministicExplanation(input) {
 
 function responseText(payload) {
   if (typeof payload?.output_text === 'string') return payload.output_text.trim();
+  const chatContent = payload?.choices?.[0]?.message?.content;
+  if (typeof chatContent === 'string') return chatContent.trim();
+  if (Array.isArray(chatContent)) return chatContent.map(item => typeof item?.text === 'string' ? item.text : '').join('').trim();
   return (payload?.output ?? [])
     .flatMap(item => item.type === 'message' ? item.content ?? [] : [])
     .filter(item => item.type === 'output_text' && typeof item.text === 'string')
@@ -60,22 +69,31 @@ export async function explain(input, {
   fetchImpl = fetch,
 } = {}) {
   const fallback = deterministicExplanation(input);
-  if (provider !== 'openai' || !apiKey) {
+  const providerConfig = {
+    openai: {url: 'https://api.openai.com/v1/responses', protocol: 'responses'},
+    groq: {url: 'https://api.groq.com/openai/v1/chat/completions', protocol: 'chat', tokenLimitField: 'max_completion_tokens'},
+    huggingface: {url: 'https://router.huggingface.co/v1/chat/completions', protocol: 'chat', tokenLimitField: 'max_tokens'},
+  }[provider];
+  if (!providerConfig || !apiKey) {
     return {text: fallback, source: 'deterministic', label: 'Explicação determinística · não medido'};
   }
 
   try {
-    const result = await fetchImpl('https://api.openai.com/v1/responses', {
+    const instructions = 'Explique em português brasileiro, em até duas frases, apenas o estado e os valores fornecidos por esta simulação. Não invente causas, previsões ou medições. Não recomende manejo real. Sua resposta é uma explicação textual não medida; não proponha nem execute ações.';
+    const body = providerConfig.protocol === 'responses'
+      ? {model, store: false, max_output_tokens: MAX_OUTPUT_TOKENS, instructions, input: JSON.stringify(input)}
+      : {
+        model,
+        messages: [{role: 'system', content: instructions}, {role: 'user', content: JSON.stringify(input)}],
+        [providerConfig.tokenLimitField]: MAX_OUTPUT_TOKENS,
+        temperature: 0.2,
+        stream: false,
+      };
+    const result = await fetchImpl(providerConfig.url, {
       method: 'POST',
       headers: {'content-type': 'application/json', authorization: `Bearer ${apiKey}`},
       signal: AbortSignal.timeout(5000),
-      body: JSON.stringify({
-        model,
-        store: false,
-        max_output_tokens: MAX_OUTPUT_TOKENS,
-        instructions: 'Explique em português brasileiro, em até duas frases, apenas o estado e os valores fornecidos por esta simulação. Não invente causas, previsões ou medições. Não recomende manejo real. Sua resposta é uma explicação textual não medida; não proponha nem execute ações.',
-        input: JSON.stringify(input),
-      }),
+      body: JSON.stringify(body),
     });
     if (!result.ok) throw new Error('provider_error');
     const text = responseText(await result.json());
@@ -87,11 +105,15 @@ export async function explain(input, {
 }
 
 async function readJson(request) {
+  return readJsonWithLimit(request, MAX_BODY_BYTES);
+}
+
+async function readJsonWithLimit(request, maxBytes) {
   const chunks = [];
   let size = 0;
   for await (const chunk of request) {
     size += chunk.length;
-    if (size > MAX_BODY_BYTES) throw Object.assign(new Error('body_too_large'), {status: 413});
+    if (size > maxBytes) throw Object.assign(new Error('body_too_large'), {status: 413});
     chunks.push(chunk);
   }
   try {
@@ -99,6 +121,92 @@ async function readJson(request) {
   } catch {
     throw Object.assign(new Error('invalid_json'), {status: 400});
   }
+}
+
+const schemaPath = fileURLToPath(new URL('./schemas/farm-snapshot.schema.json', import.meta.url));
+const snapshotSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
+addFormats(ajv);
+const validateSnapshotSchema = ajv.compile(snapshotSchema);
+
+export function validateSnapshotReviewRequest(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input) || !input.snapshot || typeof input.snapshot !== 'object' || Array.isArray(input.snapshot)) {
+    return {status: 400, body: {error: 'invalid_snapshot_request'}};
+  }
+  const snapshot = input.snapshot;
+  const schemaValid = validateSnapshotSchema(snapshot);
+  const semantic = validateFarmSnapshot(snapshot);
+  const countsByStatus = {};
+  const visit = value => {
+    if (!value || typeof value !== 'object') return;
+    if (!Array.isArray(value) && typeof value.path === 'string' && typeof value.status === 'string' && typeof value.sourceId === 'string') {
+      countsByStatus[value.status] = (countsByStatus[value.status] ?? 0) + 1;
+      return;
+    }
+    for (const child of Array.isArray(value) ? value : Object.values(value)) visit(child);
+  };
+  visit(snapshot);
+  const errors = [
+    ...(schemaValid ? [] : validateSnapshotSchema.errors.map(error => `${error.instancePath || '/'} ${error.message}`)),
+    ...semantic.errors,
+  ];
+  let manifestReferenceChecked = false;
+  let manifestReferenceValid = snapshot.manifestReference?.status !== 'linked';
+  if (snapshot.manifestReference?.status === 'linked') {
+    manifestReferenceValid = false;
+    if (typeof input.manifestBase64 !== 'string' || !input.manifestBase64) {
+      errors.push('Snapshot ligado a manifesto; selecione o arquivo exato para conferir SHA-256 e versão.');
+    } else if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(input.manifestBase64)) {
+      manifestReferenceChecked = true;
+      errors.push('Conteúdo do manifesto em base64 inválido.');
+    } else {
+      manifestReferenceChecked = true;
+      try {
+        const manifestBytes = Buffer.from(input.manifestBase64, 'base64');
+        if (manifestBytes.toString('base64') !== input.manifestBase64) throw new Error('invalid_base64');
+        const manifestCheck = validateFarmSnapshotManifestReference(snapshot, manifestBytes);
+        errors.push(...manifestCheck.errors);
+        manifestReferenceValid = manifestCheck.valid;
+      } catch {
+        errors.push('Não foi possível ler ou validar o arquivo de manifesto selecionado.');
+      }
+    }
+  } else if (input.manifestBase64 !== undefined) {
+    manifestReferenceValid = false;
+    errors.push('Foi selecionado um manifesto, mas o snapshot declara manifestReference.status=not-linked.');
+  }
+  const valid = schemaValid && semantic.semanticValid && manifestReferenceValid && errors.length === 0;
+  return {status: 200, body: {
+    snapshotId: snapshot.snapshotId ?? null,
+    snapshotKind: snapshot.snapshotKind ?? null,
+    eligibilityStatus: snapshot.simulationEligibility?.status ?? null,
+    coverage: {
+      sourceCount: Array.isArray(snapshot.sourceCatalog) ? snapshot.sourceCatalog.length : 0,
+      lotCount: Array.isArray(snapshot.lots) ? snapshot.lots.length : 0,
+      animalCount: Array.isArray(snapshot.animals) ? snapshot.animals.length : 0,
+      paddockCount: Array.isArray(snapshot.paddocks) ? snapshot.paddocks.length : 0,
+      observationCount: Array.isArray(snapshot.observations) ? snapshot.observations.length : 0,
+      operationEventCount: Array.isArray(snapshot.operations?.events) ? snapshot.operations.events.length : 0,
+      historyEventCount: Array.isArray(snapshot.history?.events) ? snapshot.history.events.length : 0,
+      evidenceFieldsByStatus: countsByStatus,
+      sources: (Array.isArray(snapshot.sourceCatalog) ? snapshot.sourceCatalog : []).map(source => ({
+        id: source?.id ?? null,
+        title: source?.title ?? null,
+        version: source?.version ?? null,
+        license: source?.license ?? null,
+        url: source?.url ?? null,
+      })),
+    },
+    schemaValid,
+    semanticValid: semantic.semanticValid,
+    manifestReferenceChecked,
+    manifestReferenceValid,
+    valid,
+    simulationEligible: valid && semantic.simulationEligible,
+    errors,
+    blockers: semantic.blockers,
+    missingRequiredFields: semantic.missingRequiredFields,
+  }};
 }
 
 function sendJson(response, status, value) {
@@ -138,8 +246,25 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
           metrics: {weight: input.metrics.weight, gain: input.metrics.gain, cost: input.metrics.cost, pasture: input.metrics.pasture, stress: input.metrics.stress},
         };
         const provider = env.LLM_PROVIDER ?? 'none';
-        const result = await explain(safeInput, {provider, apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL ?? 'gpt-6-luna', fetchImpl});
+        const providerSettings = {
+          openai: {apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL ?? 'gpt-6-luna'},
+          groq: {apiKey: env.GROQ_API_KEY, model: env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.HF_MODEL ?? 'openai/gpt-oss-120b:cheapest'},
+        }[provider] ?? {};
+        const result = await explain(safeInput, {provider, apiKey: providerSettings.apiKey, model: env.LLM_MODEL ?? providerSettings.model, fetchImpl});
         return sendJson(response, 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 400, {error: error.status === 413 ? 'request_too_large' : 'invalid_request'});
+      }
+    }
+    if (url.pathname === '/api/validate-snapshot' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      try {
+        const input = await readJsonWithLimit(request, MAX_SNAPSHOT_BODY_BYTES);
+        const result = validateSnapshotReviewRequest(input);
+        return sendJson(response, result.status, result.body);
       } catch (error) {
         return sendJson(response, error.status ?? 400, {error: error.status === 413 ? 'request_too_large' : 'invalid_request'});
       }
@@ -152,5 +277,12 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT ?? 8000);
   const host = process.env.HOST ?? '127.0.0.1';
-  createServer().listen(port, host, () => process.stdout.write(`Agroville disponível em http://${host}:${port}\n`));
+  const loopbackHosts = new Set(['127.0.0.1', '::1', 'localhost']);
+  if (!loopbackHosts.has(host) && process.env.ALLOW_REMOTE_ACCESS !== 'true') {
+    process.stderr.write('HOST fora do loopback pode expor snapshots locais. Defina ALLOW_REMOTE_ACCESS=true para confirmar explicitamente.\n');
+    process.exitCode = 1;
+  } else {
+    if (!loopbackHosts.has(host)) process.stderr.write('Aviso: o servidor e a API de revisão de snapshots estão acessíveis pela rede.\n');
+    createServer().listen(port, host, () => process.stdout.write(`Agroville disponível em http://${host}:${port}\n`));
+  }
 }

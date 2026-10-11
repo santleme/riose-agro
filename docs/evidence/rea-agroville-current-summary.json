@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-11",
+  "evidence_id": "ev_aebda8cb81d211f826c16cdea0ca0673ca969fab6e5a482044832e6dabad98be",
+  "subject": {
+    "name": "riose-agro",
+    "digest": {
+      "sha256": "141e2cdb8230ea748ba9f81da4b930f35ab14338cddf70030e75677368fbdb38"
+    },
+    "format": "directory",
+    "architecture": null,
+    "local_path": "/home/lucas_coimbra/projects/hackhatons/riose-agro"
+  },
+  "provider": {
+    "id": "rea-javascript-application",
+    "name": "REA JavaScript application analyzer",
+    "version": "1"
+  },
+  "operation": "analyze_javascript_application",
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "root_artifact_sha256": "141e2cdb8230ea748ba9f81da4b930f35ab14338cddf70030e75677368fbdb38",
+  "graph_id": "jag_1ab04df31b1f21c2ce5ad9448e0170dd9dd3698dd5198698e6f4d5d6a23f84c7",
+  "graph_coverage": {
+    "status": "complete",
+    "truncated": false,
+    "omitted_count": 0,
+    "limits": []
+  },
+  "nodes": 58,
+  "edges": 78,
+  "statistics": {
+    "relevant_files": 18,
+    "nested_asar_containers": 0,
+    "text_bytes_read": 932170,
+    "invalid_utf8_files": 0,
+    "parsed_javascript_files": 9,
+    "visited_ast_nodes": 11202,
+    "findings": 46,
+    "modules": 0,
+    "parse_failures": 0
+  },
+  "limitations": [
+    "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+    "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+    "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+    "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+    "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+  ]
+}

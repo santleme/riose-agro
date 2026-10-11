@@ -43,6 +43,36 @@ test('OpenAI provider is optional, bounded, and returns only explanatory text', 
   assert.match(result.text, /peso médio estimado/);
 });
 
+test('Groq and Hugging Face providers use bounded chat-completion adapters', async () => {
+  const cases = [
+    {provider: 'groq', model: 'openai/gpt-oss-20b', url: 'https://api.groq.com/openai/v1/chat/completions', limitField: 'max_completion_tokens'},
+    {provider: 'huggingface', model: 'openai/gpt-oss-120b:cheapest', url: 'https://router.huggingface.co/v1/chat/completions', limitField: 'max_tokens'},
+  ];
+  for (const item of cases) {
+    let request;
+    const result = await explain(input, {
+      provider: item.provider,
+      apiKey: 'provider-secret',
+      model: item.model,
+      fetchImpl: async (url, options) => {
+        request = {url, options};
+        return {ok: true, json: async () => ({choices: [{message: {content: 'Explicação curta.'}}]})};
+      },
+    });
+    const body = JSON.parse(request.options.body);
+    assert.equal(request.url, item.url);
+    assert.equal(request.options.headers.authorization, 'Bearer provider-secret');
+    assert.equal(body.model, item.model);
+    assert.equal(body[item.limitField], 160);
+    assert.equal(body.stream, false);
+    assert.deepEqual(JSON.parse(body.messages[1].content), input);
+    assert.doesNotMatch(body.messages.map(message => message.content).join(' '), /provider-secret/);
+    assert.equal(result.source, 'llm');
+    assert.equal(result.text, 'Explicação curta.');
+    assert.match(result.label, /não medido/);
+  }
+});
+
 test('provider errors fall back without exposing provider details', async () => {
   const result = await explain(input, {
     provider: 'openai',
@@ -94,6 +124,31 @@ test('HTTP endpoint forwards only the validated simulation summary to the provid
   assert.equal(response.status, 200);
   assert.deepEqual(JSON.parse(sentInput), input);
   assert.doesNotMatch(sentInput, /must not reach the provider|backend-only/);
+});
+
+test('HTTP endpoint selects Hugging Face through server-only environment configuration', async t => {
+  let request;
+  const server = createServer({
+    env: {LLM_PROVIDER: 'huggingface', HF_TOKEN: 'hf-server-secret'},
+    fetchImpl: async (url, options) => {
+      request = {url, options};
+      return {ok: true, json: async () => ({choices: [{message: {content: 'Resumo observado.'}}]})};
+    },
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/explain`, {
+    method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify(input),
+  });
+  const result = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(request.url, 'https://router.huggingface.co/v1/chat/completions');
+  assert.equal(request.options.headers.authorization, 'Bearer hf-server-secret');
+  assert.equal(JSON.parse(request.options.body).model, 'openai/gpt-oss-120b:cheapest');
+  assert.equal(result.source, 'llm');
+  assert.doesNotMatch(JSON.stringify(result), /hf-server-secret/);
 });
 
 test('an API key alone does not enable remote explanations', async t => {

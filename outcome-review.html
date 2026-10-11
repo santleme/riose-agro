@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Registrar resultado — Agroville</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="outcome-review.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./" aria-label="Voltar para a fazenda"><span class="brand-mark">▦</span> agroville<span class="version">/ resultado observado</span></a>
+    <div class="header-right"><span class="status"><i></i> ARQUIVOS LOCAIS</span><a class="back-to-map" href="./">Voltar ao mapa</a></div>
+  </header>
+  <main class="outcome-page">
+    <section class="intro outcome-intro"><div><div class="eyebrow">CICLO DA DECISÃO · ISSUE #16</div><h1>O que aconteceu depois?</h1><p>Vincule uma medição posterior à projeção que existia antes da decisão.</p></div></section>
+    <aside class="privacy-note" role="note"><strong>Privacidade:</strong> os arquivos são lidos nesta página e o registro é baixado para seu dispositivo. A página não envia nem salva dados no servidor. Use um ID pseudônimo; revise consentimento, acesso e retenção antes de registrar dados de fazenda.</aside>
+    <section class="outcome-card">
+      <div class="step-heading"><span>1</span><div><h2>Carregar a projeção congelada</h2><p>Selecione o manifesto original. Gere o arquivo de resultado aqui ou carregue o arquivo arquivado anteriormente.</p></div></div>
+      <div class="file-grid">
+        <label class="file-control">Manifesto JSON<input id="manifest-file" type="file" accept="application/json,.json"></label>
+        <label class="file-control">Snapshot da fazenda ligado ao manifesto<input id="snapshot-file" type="file" accept="application/json,.json"></label>
+        <label class="file-control">Resultado arquivado (opcional)<input id="archive-file" type="file" accept="application/json,.json"></label>
+      </div>
+      <div id="snapshot-status" class="form-status" role="status" aria-live="polite">Escolha um snapshot elegível ligado ao mesmo manifesto e com o mesmo tamanho de lote.</div>
+      <div class="button-row"><button id="archive-create" class="primary" type="button" disabled>Reproduzir e arquivar projeção</button><button id="archive-load" type="button" disabled>Validar arquivo carregado</button><button id="archive-download" type="button" hidden>Baixar arquivo de projeção</button></div>
+      <div id="archive-status" class="form-status" role="status" aria-live="polite">Escolha o manifesto exportado no Scenario Studio.</div>
+      <div id="archive-summary" class="archive-summary" hidden></div>
+    </section>
+
+    <form id="outcome-form" class="outcome-card" hidden>
+      <div class="step-heading"><span>2</span><div><h2>Registrar a observação</h2><p>Preencha a medição e a trilha de governança. Estados pendentes continuam bloqueados para comparação.</p></div></div>
+      <fieldset><legend>Decisão e autorização</legend>
+        <div class="form-grid">
+          <label>ID do registro<input name="outcomeId" required maxlength="100" value="desfecho-001"></label>
+          <label>Decisão<select name="decisionStatus" required><option value="implemented">Executada integralmente</option><option value="partially-implemented">Executada em parte</option><option value="not-implemented">Não executada</option><option value="unknown">Desconhecido</option></select></label>
+          <label>Cenário efetivamente executado<select name="executedScenario" required><option value="unknown">Desconhecido</option><option value="baseline">Referência</option><option value="scenario">Alternativa</option></select></label>
+          <label>Data da execução<input name="decisionAt" type="datetime-local"></label>
+          <label>Consentimento<select name="consentStatus" required><option value="pending">Pendente</option><option value="granted">Concedido</option><option value="not-required">Não aplicável</option><option value="withdrawn">Retirado</option></select></label>
+          <label>Base do consentimento<input name="consentBasis" required maxlength="500" placeholder="Referência do consentimento ou justificativa"></label>
+          <label>Acesso aos dados<select name="accessStatus" required><option value="pending">Pendente</option><option value="authorized">Autorizado</option><option value="public">Público</option><option value="withdrawn">Retirado</option></select></label>
+          <label>Base do acesso<input name="accessBasis" required maxlength="500" placeholder="Permissão, termo, licença ou referência pública"></label>
+          <label>Retenção<input name="retentionPolicy" required maxlength="500" value="Arquivo local; definir prazo antes de coletar dados reais."></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>Revisão humana</legend>
+        <div class="form-grid">
+          <label>Estado<select name="reviewStatus" required><option value="pending">Pendente</option><option value="approved">Aprovado</option><option value="rejected">Rejeitado</option></select></label>
+          <label>Revisor<input name="reviewerId" maxlength="100" placeholder="ID do revisor"></label>
+          <label>Data da revisão<input name="reviewedAt" type="datetime-local"></label>
+          <label>Notas<input name="reviewNote" maxlength="500" placeholder="Critérios e decisão de revisão"></label>
+        </div>
+      </fieldset>
+      <fieldset><legend>Entidade e medições</legend>
+        <div class="form-grid">
+          <label>Lote do snapshot<select name="entityId" required><option value="">Carregue um snapshot ligado</option></select></label>
+          <label>Nível<select name="entityLevel"><option value="lot">Lote</option><option value="animal">Animal</option><option value="farm">Fazenda</option></select></label>
+          <label>População descrita<input name="populationDescription" required maxlength="500" placeholder="Categoria, sistema e validade do grupo"></label>
+        </div>
+        <div id="observation-list" class="observation-list"></div>
+        <button id="add-observation" type="button" class="add-observation">＋ Adicionar outra métrica</button>
+        <template id="observation-template"><section class="observation-card">
+          <div class="observation-card-header"><strong>Medição <span data-row-number></span></strong><button type="button" data-remove-observation>Remover</button></div>
+          <div class="form-grid">
+            <label>Métrica da projeção<select data-field="metricPath" required></select></label>
+            <label>Resultado do cenário<select data-field="scenario"><option value="scenario">Alternativa</option><option value="baseline">Referência</option></select></label>
+            <label>Estado da medição<select data-field="status"><option value="observed">Valor observado</option><option value="missing">Medição ausente</option></select></label>
+            <label>Valor observado<input data-field="value" type="number" step="any" required></label>
+            <label>Unidade<input data-field="unit" readonly></label>
+            <label>Data/hora da medição<input data-field="observedAt" type="datetime-local" required></label>
+            <label>Duração observada (dias)<input data-field="periodDays" type="number" min="1" required placeholder="Informe o período medido"></label>
+            <label>Início do período<input data-field="periodStart" type="date"></label>
+            <label>Fim do período<input data-field="periodEnd" type="date"></label>
+            <label>Método<input data-field="method" required maxlength="500" placeholder="Balança, planilha, protocolo..."></label>
+            <label>Qualidade<select data-field="quality"><option value="unknown">Desconhecida</option><option value="measured">Medida</option><option value="derived">Derivada</option><option value="estimated">Estimada</option></select></label>
+            <label>ID da fonte<input data-field="sourceId" required maxlength="100"></label>
+            <label>Título da fonte<input data-field="sourceTitle" required maxlength="300"></label>
+            <label>Versão da fonte<input data-field="sourceVersion" required maxlength="100"></label>
+            <label>Localizador na fonte<input data-field="sourceLocator" required maxlength="500" placeholder="Arquivo, linha, página ou registro"></label>
+            <label>Motivo da ausência<input data-field="missingReason" maxlength="500" disabled></label>
+            <label>Alinhamento<select data-field="alignmentStatus"><option value="pending">Pendente</option><option value="approved">Aprovado</option><option value="not-comparable">Não comparável</option></select></label>
+            <label>Base do alinhamento<input data-field="alignmentBasis" required maxlength="500" placeholder="Por que o alvo corresponde à métrica?"></label>
+            <label>Revisor do alinhamento<input data-field="alignmentReviewerId" maxlength="100"></label>
+            <label>Data da revisão do alinhamento<input data-field="alignmentReviewedAt" type="datetime-local"></label>
+          </div>
+        </section></template>
+      </fieldset>
+      <div id="outcome-status" class="form-status" role="status" aria-live="polite">A diferença só será calculada quando todos os gates estiverem aprovados.</div>
+      <div id="difference-preview" class="difference-preview" hidden></div>
+      <div class="button-row"><button class="primary" type="submit">Validar e baixar registro JSON</button><a class="text-link" href="./">Voltar ao mapa</a></div>
+      <p class="outcome-footnote">O validador local de CLI continua sendo a checagem final do arquivo exportado. Uma diferença descritiva não demonstra efeito causal nem valida o motor.</p>
+    </form>
+  </main>
+  <script type="module" src="outcome-review.js"></script>
+</body>
+</html>
