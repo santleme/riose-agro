@@ -29,6 +29,7 @@ npm test
 - `docs/proximo-mvp.md` — increment scope, assumptions, and next steps
 - `docs/caso-zootecnico-demonstrativo.md` — current software case and expert decisions still needed
 - `docs/parametros-e-fontes.md` — parameter assumptions, contextual references, and data/license status
+- `docs/fontes-dados-candidatos.md` — data discovery and the recommended next prototype sequence
 
 Project follow-up: [private GitHub issue tracker](https://github.com/santleme/riose-agro/issues).
 

@@ -1,0 +1,37 @@
+# Triagem de dados para os próximos protótipos
+
+Pesquisa: 11/10/2026. Esta triagem orienta o backlog; nenhum arquivo externo foi baixado ou incorporado ao motor.
+
+## Resultado da busca
+
+| Fonte | O que encontrei | Licença / acesso | Serve para |
+|---|---|---|---|
+| Hugging Face Hub: buscas por `cattle`, `beef cattle feed intake`, `cattle weight gain`, `bovine feed intake` e `forage intake beef cattle` | Os resultados encontrados são sobretudo imagens, postura, rastreamento, doença ou texto; não identifiquei um dataset aberto com medições longitudinais de ingestão, peso e manejo de bovinos de corte adequado à validação deste motor. A busca do conector HF falhou nesta sessão; repeti a triagem pela API pública do Hub. | Cada repositório tem seus próprios termos; não encontrei candidato tabular adequado para importar. | Descoberta inicial, não prova de inexistência de dados no Hub. Repetir após fixar a população e a variável-alvo. |
+| Kaggle, `Livestock Growth and Weight Prediction Dataset` | A própria página descreve pesos e rações em 12 meses, mas declara que o conjunto foi gerado sinteticamente. | A página informa CC0; verificar o pacote e manter a marcação de dado sintético se for usado. | Fixture para testar formulários, gráficos e fluxo de cenários; **não** é evidência independente nem validação zootécnica. |
+| Kaggle, `Cattle Health and Feeding Data` | A descrição promete alimentação, saúde e produção leiteira, mas não apresenta procedência experimental verificável na listagem consultada. | A API pública da página retorna licença `Unknown`. | Não usar até obter procedência, schema e permissão/licença explícitos. |
+| Mendeley Data, [Feed Bunk Score Images (FBSI), v1](https://data.mendeley.com/datasets/p9cr67s6jp/1), DOI [10.17632/p9cr67s6jp.1](https://doi.org/10.17632/p9cr67s6jp.1) | 1.511 imagens de sobras de ração em cochos de confinamento, seis escores visuais, com diferenças entre dietas, fazendas e tipos de cocho. | CC BY 4.0, publicado em 16/12/2022. Exige atribuição. | **Protótipo visual separado:** carregar foto e apresentar uma classificação/inspeção de escore de cocho. Não mede CMS individual, ganho de peso nem condição de pastagem; não deve alterar a simulação numérica sem uma validação própria. |
+| GitHub, [FeedIntake-AI](https://github.com/hugomilan/FeedIntake-AI), e artigo [DOI 10.1016/j.atech.2026.102090](https://doi.org/10.1016/j.atech.2026.102090) | O notebook de reprodução espera `Feed_intake_data.parquet` e `Environmental_data.parquet`; esses arquivos não aparecem na listagem pública do repositório. O artigo descreve dados de 19 experimentos e mais de 16,5 milhões de amostras, mas declara que os dados usados são confidenciais. | README anuncia CC BY-SA 4.0, mas o arquivo `LICENSE` no repositório público é CC BY 4.0. Os dados do artigo são confidenciais. Não copiar código/dados até esclarecer a licença exata e não presumir que a licença do código libera os dados experimentais. | Leitura de método e comparação de variáveis/avaliação; **não** pode validar nosso motor sem autorização e acesso ao conjunto original. |
+| Embrapa, [estudo de automação de consumo e peso em bovinos de corte](https://www.alice.cnptia.embrapa.br/handle/doc/1101355) | O resumo descreve 44 animais (28 Nelore e 16 Guzerá), não castrados, 18–21 meses, prova de 70 dias, CMS e pesagens. | O registro público consultado é tese/resumo; não encontrei ali um arquivo tabular de observações para importar nem licença de reutilização dos dados brutos. | Possível contato para solicitar dados/protocolo e avaliar compatibilidade com o caso. Não tratar o resumo como base de validação. |
+| Embrapa, [tabelas de ingestão de MS para bovinos de corte em crescimento em pastejo](https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/569918) | Tabelas condicionais a categoria e condições especificadas (incluindo peso, ganho, qualidade e disponibilidade de forragem). | O repositório declara CC BY-NC-ND 4.0 para seu conteúdo. Não importar/derivar tabelas no código sem confirmar que a utilização planejada respeita os termos. | Referência de escopo e variáveis que um caso deve especificar; não substitui medições independentes para validação. |
+
+## Recomendação de produto
+
+O Agroville atual é um protótipo de **what-if operacional da fazenda**: parte de um estado, muda uma condição e compara resultados. Esse é o caminho mais curto para um MVP de cenário aplicado. A interface do Simile pode inspirar a clareza de população, hipótese, alternativa e comparação, mas uma simulação de animais não equivale a uma população sintética de produtores.
+
+Há duas propostas que não devem ser misturadas no primeiro produto:
+
+1. **Decisão de manejo na fazenda (recomendado para o próximo MVP):** usuário define a fazenda/lote, escolhe uma intervenção suportada, vê os pressupostos, a diferença em métricas e a origem/qualidade de cada evidência. Primeiro escolher uma pergunta estreita com especialista na issue #1; depois buscar dados e protocolo apropriados na issue #6.
+2. **Resposta de uma população de produtores a uma política, produto ou mensagem (analogia mais direta ao Simile):** exige amostra representativa de produtores, desenho de pesquisa, dados de respostas e validação em uma amostra separada. Nenhuma evidência desse tipo está no repositório ou nas fontes analisadas; não é o próximo incremento do simulador animal.
+
+### Sequência recomendada de protótipos
+
+1. **Fechar a decisão de domínio (#1):** escolher, com especialista, espécie/categoria, sistema, intervenção única, período, desfecho e medições necessárias. O caso atual pasto versus confinamento continua marcado como demonstração.
+2. **Resolver dados e validação (#6):** solicitar/selecionar dados compatíveis e licenciados; registrar procedência, unidades, protocolo, lacunas, separação entre calibração e validação e métrica de erro. Se não houver acesso, limitar o produto a protótipo de fluxo/visualização.
+3. **Deixar GUZZBR1 terminar sua trilha de infraestrutura:** manifesto reprodutível (#4), cenários guardados na interface (#5), aleatoriedade separada (#8) e observação passiva REA (#10). Essas tarefas reduzem risco de integração; não são validação biológica.
+4. **Prototipar o “Scenario Studio”** sobre o caso escolhido: estado inicial explícito → uma intervenção → comparador → resultados antes/depois → pressupostos e evidências ao lado. Usar os cenários persistentes/manifestos da #4/#5, sem duplicar esses componentes.
+5. **Manter uma pista visual opcional de baixo risco:** usar FBSI para um pequeno ensaio de captura/fila de imagem e exibição de escore de sobra no cocho, isolado do motor. Só integrar depois de avaliação por fazenda, classe, erro e revisão de especialista.
+6. **Só então decidir sobre LLMs (#7):** o LLM pode explicar a diferença, localizar pressupostos e sugerir perguntas ao usuário; não deve gerar resultado numérico, evidência nem manejo aplicado automaticamente.
+
+## Critério de avanço
+
+O próximo MVP estará pronto para teste externo quando uma pessoa conseguir: (a) entender qual situação está sendo comparada; (b) mudar exatamente uma intervenção suportada; (c) repetir o mesmo cenário; (d) identificar unidades, fontes e o que ainda é hipótese; e (e) não confundir resultado sintético com previsão validada. Para promover uma saída a previsão, exigir dados representativos e avaliação independente descrita na issue #6.
