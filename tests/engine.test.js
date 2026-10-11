@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DEFAULT_CONFIG, FarmEngine, compare} from '../engine.js';
+import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
 
 test('same seed and actions reproduce the same farm state', () => {
   const first = new FarmEngine(417, 8);
@@ -9,6 +9,35 @@ test('same seed and actions reproduce the same farm state', () => {
   first.tick(72);
   second.tick(72);
 
+  assert.deepEqual(first.snapshot(), second.snapshot());
+});
+
+test('housing changes consume locomotion randomness without advancing the model seed', () => {
+  const changed = new FarmEngine(417, 8);
+  const unchanged = new FarmEngine(417, 8);
+  const modelSeed = changed.state.seed;
+  const locomotionSeed = changed.state.locomotionSeed;
+
+  changed.configure({housing: 'barn'});
+  changed.tick(3);
+
+  assert.equal(changed.state.seed, modelSeed);
+  assert.notEqual(changed.state.locomotionSeed, locomotionSeed);
+  assert.equal(changed.random(), unchanged.random());
+});
+
+test('legacy snapshots get a deterministic locomotion stream without being mutated', () => {
+  const legacySnapshot = new FarmEngine(81, 3).snapshot();
+  delete legacySnapshot.locomotionSeed;
+  const original = structuredClone(legacySnapshot);
+  const first = FarmEngine.from(legacySnapshot);
+  const second = FarmEngine.from(legacySnapshot);
+
+  assert.deepEqual(legacySnapshot, original);
+  assert.ok(Number.isInteger(first.state.locomotionSeed));
+  assert.equal(first.state.locomotionSeed, second.state.locomotionSeed);
+  first.tick(24);
+  second.tick(24);
   assert.deepEqual(first.snapshot(), second.snapshot());
 });
 
@@ -38,6 +67,33 @@ test('scenario comparison repeats with the same input and period', () => {
 
   assert.deepEqual(compare(start, 14), compare(start, 14));
   assert.equal(compare(start, 14).rows.length, 15);
+});
+
+test('comparison manifests preserve the seed, starting snapshot, period, and both configs', () => {
+  const engine = new FarmEngine(2741, 5);
+  engine.configure({diet: 'balanced', supplement: 1.5, weather: 'rain'});
+  engine.tick(48);
+  const start = engine.snapshot();
+  const manifest = createComparisonManifest(start, 17);
+  const restored = JSON.parse(JSON.stringify(manifest));
+
+  assert.equal(restored.seed, start.initialSeed);
+  assert.deepEqual(restored.initialSnapshot, start);
+  assert.equal(restored.periodDays, 17);
+  assert.equal(restored.factor, 'housing');
+  assert.deepEqual(restored.scenarios.reference, {...start.config, housing: 'pasture'});
+  assert.deepEqual(restored.scenarios.scenario, {...start.config, housing: 'barn'});
+  assert.equal(validateComparisonManifest(restored), true);
+  assert.deepEqual(replayComparisonManifest(restored), replayComparisonManifest(restored));
+  assert.deepEqual(replayComparisonManifest(restored), compare(start, 17));
+  assert.deepEqual(engine.snapshot(), start);
+});
+
+test('comparison manifests reject scenarios that change undeclared factors', () => {
+  const manifest = createComparisonManifest(new FarmEngine(44, 2).snapshot(), 3);
+  manifest.scenarios.scenario.weather = 'hot';
+
+  assert.throws(() => validateComparisonManifest(manifest), /diferir somente no fator declarado/);
 });
 
 test('activity history records the rule inputs for every animal', () => {
