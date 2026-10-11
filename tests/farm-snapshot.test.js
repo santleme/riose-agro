@@ -28,6 +28,11 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
   invalidSourceUrl.sourceCatalog[0].url = 'not a URL';
   assert.equal(validateSchema(invalidSourceUrl), false);
 
+  const noRequiredFields = structuredClone(example);
+  noRequiredFields.caseDefinition.requiredFields = [];
+  assert.equal(validateSchema(noRequiredFields), false);
+  assert.equal(validateFarmSnapshot(noRequiredFields).semanticValid, false);
+
   assert.equal(validateFarmSnapshot(missingOperations).semanticValid, true);
 });
 
@@ -80,7 +85,7 @@ test('public USDA snapshot documents provenance and blocks unsupported simulatio
 test('review-pending is distinct from blocked when no required fields are missing', () => {
   const pending = structuredClone(example);
   pending.snapshotKind = 'farm-baseline';
-  pending.caseDefinition.requiredFields = [];
+  pending.caseDefinition.requiredFields = ['population.species'];
   pending.simulationEligibility.missingRequiredFields = [];
   pending.simulationEligibility.status = 'review-pending';
   delete pending.simulationEligibility.reason;
@@ -99,7 +104,7 @@ test('an observed study slice cannot be marked simulation-ready even after case 
   const invalid = structuredClone(example);
   invalid.snapshotKind = 'observed-study-slice';
   invalid.caseDefinition.reviewStatus = 'approved';
-  invalid.caseDefinition.requiredFields = [];
+  invalid.caseDefinition.requiredFields = ['population.species'];
   invalid.simulationEligibility.status = 'ready';
   invalid.simulationEligibility.missingRequiredFields = [];
   delete invalid.simulationEligibility.reason;

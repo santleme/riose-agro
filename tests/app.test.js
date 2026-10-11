@@ -56,6 +56,7 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.equal(ui.elements.get('comparison').open,true);
   assert.match(ui.elements.get('results').innerHTML,/Diferença alternativa − base:/);
   assert.match(ui.elements.get('results').innerHTML,/relativa:/);
+  assert.match(ui.elements.get('comparison-assumptions').innerHTML,/Sem calibração suficiente/);
   assert.equal(result.validated,false);
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);

@@ -259,6 +259,7 @@ export function validateFarmSnapshot(snapshot) {
 
   const requiredPaths = Array.isArray(snapshot.caseDefinition?.requiredFields) ? snapshot.caseDefinition.requiredFields : [];
   if (!Array.isArray(snapshot.caseDefinition?.requiredFields)) errors.push('caseDefinition.requiredFields precisa ser uma lista.');
+  else if (requiredPaths.length === 0) errors.push('caseDefinition.requiredFields precisa definir ao menos um campo para o caso.');
   if (new Set(requiredPaths).size !== requiredPaths.length) errors.push('caseDefinition.requiredFields contém caminhos duplicados.');
   if (requiredPaths.some(path => typeof path !== 'string' || !path.trim())) errors.push('caseDefinition.requiredFields contém caminho vazio ou inválido.');
   const missingRequiredFields = requiredPaths.filter(path => {
