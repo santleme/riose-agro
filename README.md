@@ -27,6 +27,8 @@ npm test
 - `tests/engine.test.js` — deterministic replay and single-factor comparison checks
 - `docs/engenharia-reversa.md` — source evidence and REA availability notes
 - `docs/proximo-mvp.md` — increment scope, assumptions, and next steps
+- `docs/caso-zootecnico-demonstrativo.md` — current software case and expert decisions still needed
+- `docs/parametros-e-fontes.md` — parameter assumptions, contextual references, and data/license status
 
 Project follow-up: [private GitHub issue tracker](https://github.com/santleme/riose-agro/issues).
 

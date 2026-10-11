@@ -17,6 +17,8 @@ O inspetor também mantém até 40 transições recentes por animal. Cada regist
 
 ## Métricas e parâmetros
 
+O caso de comparação atualmente executado e as variáveis ainda necessárias para definir uma pergunta de campo estão em [`caso-zootecnico-demonstrativo.md`](caso-zootecnico-demonstrativo.md). O registro expandido de parâmetros, fontes contextuais e status de dados/licenças está em [`parametros-e-fontes.md`](parametros-e-fontes.md). Os números do motor continuam sem calibração: as referências não foram usadas como valores de entrada.
+
 O peso é exibido em kg por animal; o consumo estimado em kg MS por lote e por animal acumulado durante o período projetado; o estoque de forragem em kg MS por piquete no início e no fim; e o custo em R$ acumulados da alimentação do lote. Esses valores são exibidos lado a lado para pasto e confinamento.
 
 O livro de consumo soma: (1) forragem retirada do piquete no modo pasto; (2) a demanda-base atribuída como alimento no modo confinamento; (3) suplemento configurado, dividido por 24 em cada passo horário; e (4) o adicional fixo da dieta balanceada (1,8 kg MS/animal/dia) ou concentrada (3,2 kg MS/animal/dia). A demanda-base é 8 kg MS/animal/dia na referência de 360 kg, escalada pelo peso e pelo multiplicador de clima. A forragem do pasto é limitada pelo estoque disponível; no confinamento, o estoque de pasto não é consumido. Os fatores 1,2 e 1,35 ainda aplicados no cálculo interno de energia não alteram os kg MS contabilizados no livro de consumo.
