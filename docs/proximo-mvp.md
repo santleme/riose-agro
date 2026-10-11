@@ -10,7 +10,7 @@ O inspetor também mantém até 40 transições recentes por animal. Cada regist
 
 ## Verificação
 
-- `npm test`: 17 testes cobrem comparação controlada, ingestão/estoque, manifestos, cenários determinísticos, explicação opcional e fallback.
+- `npm test`: 18 testes cobrem comparação controlada, ingestão/estoque, manifestos, cenários determinísticos, explicação opcional e fallback.
 - `node --check app.js`, `worker.js`, `engine.js` e `server.js` verificam sintaxe JavaScript.
 - `git diff --check` deve ser executado sobre os arquivos de código e documentação incluídos na entrega.
 
