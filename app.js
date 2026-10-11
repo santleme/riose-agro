@@ -114,44 +114,98 @@ $('explain').onclick=async()=>{if(!state)return;const button=$('explain'),input=
 function beginCompare(){if(!state||requestCompare||loadingScenario)return;setRunning(false);const snapshot=structuredClone(state),manifest=createComparisonManifest(snapshot,30);pendingComparison={snapshot,manifest};compareBusy(true);worker.postMessage({type:'compare',days:30,snapshot});}
 $('compare').onclick=beginCompare;
 $('experiment').onclick=beginCompare;
+function comparisonNumber(value,digits=1){return Number.isFinite(value)?number(value,digits):'Indisponível';}
+function comparisonCurrency(value){return Number.isFinite(value)?currency(value):'Indisponível';}
+function comparisonCalculation(values,calculate){return values.every(Number.isFinite)?calculate(...values):undefined;}
+function comparisonPerAnimal(value){const count=comparisonSnapshot?.animals?.length;return Number.isInteger(count)&&count>0?comparisonCalculation([value],total=>total/count):undefined;}
+function comparisonRows(data){return Array.isArray(data?.rows)?data.rows.filter(row=>row&&typeof row==='object'):[];}
+function comparisonFinalRow(data){return comparisonRows(data).find(row=>Number.isFinite(data.days)&&row.day===data.days)??{};}
+function comparisonArray(value){return Array.isArray(value)?value:[];}
+function comparisonPasturesAvailable(){const values=comparisonSnapshot?.pastures;return Array.isArray(values)&&values.length===4&&Array.from(values).every(Number.isFinite);}
+function comparisonData(data){return comparisonPasturesAvailable()?data:{...data,startWeight:undefined,initialPastureByPaddock:[],rows:comparisonRows(data).map(row=>({day:row.day}))};}
+const intakeKeys=['pastureKgDM','barnBaseKgDM','supplementKgDM','dietExtraKgDM'];
+function comparisonIntake(row,side,key){return Number.isFinite(comparisonSnapshot?.intake?.[key])?row?.[side+'IntakeBySourceKgDM']?.[key]:undefined;}
+function comparisonConsumption(row,side){return intakeKeys.every(key=>Number.isFinite(comparisonSnapshot?.intake?.[key]))?row?.[side+'ConsumptionKgDM']:undefined;}
+function comparisonEvidence(rule,period){return '<p class="metric-evidence"><b>Derivado · demonstrativo · não validado</b> Período: '+period+'. Regra: '+rule+' Fonte: <a href="/engine.js" target="_blank" rel="noopener">engine.js · compare / metrics / tick</a>.</p>';}
 function resultDifference(base,alternative,unit,digits=1){
-  if(!Number.isFinite(base)||!Number.isFinite(alternative))return 'Diferença alternativa − base: indisponível · relativa: indisponível.';
-  const delta=alternative-base,relative=base===0?'indefinida (base zero)':(delta/base*100);
-  const absolute=(delta>=0?'+':'')+number(delta,digits)+' '+unit;
-  const relativeText=typeof relative==='number'?(relative>=0?'+':'')+number(relative,2)+'%':relative;
-  return 'Diferença alternativa − base: '+absolute+' · relativa: '+relativeText+'.';
+  const delta=comparisonCalculation([base,alternative],(b,a)=>a-b);
+  if(!Number.isFinite(delta))return 'Diferença alternativa − base: Indisponível · relativa: Indisponível.';
+  const percent=comparisonCalculation([delta,base],(d,b)=>d/b*100),relative=base===0?'indefinida (base zero)':Number.isFinite(percent)?(percent>=0?'+':'')+comparisonNumber(percent,2)+'%':'Indisponível';
+  return 'Diferença alternativa − base: '+(delta>=0?'+':'')+comparisonNumber(delta,digits)+' '+unit+' · relativa: '+relative+'.';
 }
 function renderDetailedResults(data){
-  const end=data.rows.at(-1),herd=data.herdSize??1;
-  $('results').innerHTML=`
-    <div class="result-card"><h3>PESO MÉDIO · DIA ${data.days}</h3><strong>${number(end.scenarioWeight)} kg/animal</strong><p>Base · pasto: ${number(end.baselineWeight)} kg/animal.</p><p>${resultDifference(end.baselineWeight,end.scenarioWeight,'kg/animal',2)}</p></div>
-    <div class="result-card"><h3>CONSUMO ESTIMADO DE MS · ${data.days} DIAS</h3><strong>${number(end.scenarioConsumptionKgDM,0)} kg MS/lote</strong><p>Base: ${number(end.baselineConsumptionKgDM,0)} kg MS/lote · alternativa: ${number(end.scenarioConsumptionKgDM,0)} kg MS/lote.</p><p>${resultDifference(end.baselineConsumptionKgDM,end.scenarioConsumptionKgDM,'kg MS/lote',2)}</p><p>Por animal: base ${number(end.baselineConsumptionKgDM/herd,1)} · alternativa ${number(end.scenarioConsumptionKgDM/herd,1)} kg MS/animal.</p></div>
-    <div class="result-card"><h3>ESTOQUE DE FORRAGEM · DIA ${data.days}</h3><strong>${number(end.scenarioPastureKgDM,0)} kg MS</strong><p>Base · pasto: ${number(end.baselinePastureKgDM,0)} kg MS · alternativa · confinamento: ${number(end.scenarioPastureKgDM,0)} kg MS.</p><p>${resultDifference(end.baselinePastureKgDM,end.scenarioPastureKgDM,'kg MS',2)}</p></div>
-    <div class="result-card"><h3>CUSTO DA ALIMENTAÇÃO · ${data.days} DIAS</h3><strong>${currency(end.scenarioCost)}</strong><p>Base · pasto: ${currency(end.baselineCost)} · alternativa · confinamento: ${currency(end.scenarioCost)} · R$/lote.</p><p>${resultDifference(end.baselineCost,end.scenarioCost,'R$/lote',2)}</p></div>`;
-  const sources=[
-    ['Forragem retirada dos piquetes','pastureKgDM'],
-    ['Alimento-base assumido no confinamento','barnBaseKgDM'],
-    ['Suplemento configurado','supplementKgDM'],
-    ['Adicional fixo da dieta','dietExtraKgDM']
+  data=comparisonData(data);
+  const end=comparisonFinalRow(data),days=comparisonNumber(data.days,0),period='intervalo de 0 a '+days+' dias desde o snapshot';
+  const baseConsumption=comparisonConsumption(end,'baseline'),scenarioConsumption=comparisonConsumption(end,'scenario');
+  const cards=[
+    ['PESO MÉDIO · DIA '+days,comparisonNumber(end.scenarioWeight)+' kg/animal','Base · pasto: '+comparisonNumber(end.baselineWeight)+' kg/animal.',end.baselineWeight,end.scenarioWeight,'kg/animal','Soma dos pesos simulados dividida pelo número de animais.','dia '+days+' desde o snapshot'],
+    ['CONSUMO ESTIMADO DE MS · '+days+' DIAS',comparisonNumber(scenarioConsumption,0)+' kg MS/lote','Alternativa: '+comparisonNumber(comparisonPerAnimal(scenarioConsumption))+' kg MS/animal · Base: '+comparisonNumber(baseConsumption,0)+' kg MS/lote ('+comparisonNumber(comparisonPerAnimal(baseConsumption))+' kg MS/animal).',baseConsumption,scenarioConsumption,'kg MS/lote','Soma dos quatro componentes do consumo, menos o registro inicial; por animal, dividir pelo rebanho do snapshot.',period],
+    ['ESTOQUE DE FORRAGEM · DIA '+days,comparisonNumber(end.scenarioPastureKgDM,0)+' kg MS','Base · pasto: '+comparisonNumber(end.baselinePastureKgDM,0)+' kg MS · estoque simulado nos 4 piquetes.',end.baselinePastureKgDM,end.scenarioPastureKgDM,'kg MS','Soma dos estoques dos piquetes após crescimento assumido e retirada simulada.','dia '+days+' desde o snapshot'],
+    ['CUSTO DA ALIMENTAÇÃO · '+days+' DIAS',comparisonCurrency(end.scenarioCost),'Base · pasto: '+comparisonCurrency(end.baselineCost)+' · R$/lote.',end.baselineCost,end.scenarioCost,'R$/lote','Custo acumulado do alimento-base no confinamento, suplemento e adicional da dieta, menos o custo inicial.',period]
   ];
-  const intakeRows=sources.map(([label,key])=>`<tr><th scope="row">${label}</th><td>${number(end.baselineIntakeBySourceKgDM[key],1)}</td><td>${number(end.scenarioIntakeBySourceKgDM[key],1)}</td></tr>`).join('');
-  $('intake-summary').innerHTML=`<section><h3>COMPOSIÇÃO DO CONSUMO ESTIMADO · KG MS NO LOTE · ${data.days} DIAS</h3><table class="pasture-table"><thead><tr><th scope="col">Componente do motor</th><th scope="col">Base · pasto</th><th scope="col">Alternativa · confinamento</th></tr></thead><tbody>${intakeRows}</tbody></table></section>`;
-  const paddockRows=data.initialPastureByPaddock.map((initial,index)=>`<tr><th scope="row">Piquete ${String.fromCharCode(65+index)}</th><td>${number(initial,0)}</td><td>${number(end.baselinePastureByPaddock[index],0)}</td><td>${number(end.scenarioPastureByPaddock[index],0)}</td></tr>`).join('');
-  $('pasture-summary').innerHTML=`<section><h3>ESTOQUE DE FORRAGEM POR PIQUETE · KG MS</h3><table class="pasture-table"><thead><tr><th scope="col">Piquete</th><th scope="col">Início</th><th scope="col">Base · pasto · dia ${data.days}</th><th scope="col">Alternativa · confinamento · dia ${data.days}</th></tr></thead><tbody>${paddockRows}</tbody></table><p>Estoque calculado por crescimento assumido e retirada de forragem pelo motor; sem área, medição ou categoria real de condição do pasto.</p></section>`;
+  $('results').innerHTML=cards.map(([title,value,base,b,s,unit,rule,when])=>'<div class="result-card"><h3>'+title+'</h3><strong>'+value+'</strong><p>Alternativa · confinamento. '+base+'</p><p>'+resultDifference(b,s,unit,2)+'</p>'+comparisonEvidence(rule,when)+'</div>').join('');
+  const sources=[
+    ['Forragem retirada dos piquetes','pastureKgDM','Mínimo entre demanda e estoque disponível por hora.'],
+    ['Alimento-base assumido no confinamento','barnBaseKgDM','Demanda assumida integralmente fornecida por hora.'],
+    ['Suplemento configurado','supplementKgDM','Suplemento configurado dividido por 24 por animal/hora.'],
+    ['Adicional fixo da dieta','dietExtraKgDM','0, 1,8 ou 3,2 kg MS/animal/dia conforme a dieta.']
+  ];
+  const intakeRows=sources.map(([label,key,rule])=>'<tr><th scope="row">'+label+'<small class="row-derivation">'+rule+' Acumulado menos início.</small></th><td>'+comparisonNumber(comparisonIntake(end,'baseline',key))+'</td><td>'+comparisonNumber(comparisonIntake(end,'scenario',key))+'</td></tr>').join('');
+  $('intake-summary').innerHTML='<section><h3>COMPOSIÇÃO DO CONSUMO ESTIMADO · KG MS/LOTE · '+days+' DIAS</h3><table class="pasture-table"><thead><tr><th scope="col">Componente do motor</th><th scope="col">Pasto</th><th scope="col">Confinamento</th></tr></thead><tbody>'+intakeRows+'</tbody></table>'+comparisonEvidence('Cada linha é a diferença do componente entre o fim e o início; unidade kg MS/lote.',period)+'</section>';
+  const initial=comparisonArray(data.initialPastureByPaddock),base=comparisonArray(end.baselinePastureByPaddock),alternative=comparisonArray(end.scenarioPastureByPaddock);
+  const paddockRows=Array.from({length:4},(_,index)=>'<tr><th scope="row">Piquete '+String.fromCharCode(65+index)+'</th><td>'+comparisonNumber(initial[index],0)+'</td><td>'+comparisonNumber(base[index],0)+'</td><td>'+comparisonNumber(alternative[index],0)+'</td></tr>').join('');
+  $('pasture-summary').innerHTML='<section><h3>ESTOQUE DE FORRAGEM POR PIQUETE · KG MS/PIQUETE</h3><table class="pasture-table"><thead><tr><th scope="col">Piquete</th><th scope="col">Início · dia 0</th><th scope="col">Pasto · dia '+days+'</th><th scope="col">Confinamento · dia '+days+'</th></tr></thead><tbody>'+paddockRows+'</tbody></table>'+comparisonEvidence('Início: estoque declarado no snapshot simulado. Final: crescimento assumido menos retirada; unidade kg MS/piquete.','snapshot inicial e dia '+days+' do intervalo')+'<p>Sem área, medição de biomassa ou categoria real de condição do pasto.</p></section>';
+  renderComparisonContext(data);
+}
+function renderComparisonContext(data){
+  const rows=comparisonRows(data),end=comparisonFinalRow(data),missing=[];
+  if(!comparisonPasturesAvailable())missing.push('Estoque inicial do snapshot incompleto ou inválido: trajetórias de peso, consumo, estoque e custo indisponíveis; a coerção numérica do motor não fornece evidência para esses resultados.');
+  if(!rows.length)missing.push('Série diária ausente.');
+  else if(!Number.isInteger(data.days)||rows.length!==data.days+1||rows.some((row,index)=>row.day!==index))missing.push('Série diária incompleta ou fora de ordem; resultados finais exigem a linha do último dia.');
+  if(intakeKeys.some(key=>!Number.isFinite(comparisonSnapshot?.intake?.[key])))missing.push('Registro inicial de consumo incompleto: consumo acumulado indisponível; o zero de compatibilidade do motor não é tratado como medição.');
+  if(['baselineWeight','scenarioWeight','baselinePastureKgDM','scenarioPastureKgDM','baselineCost','scenarioCost'].some(key=>!Number.isFinite(end[key]))||['baseline','scenario'].some(side=>!Number.isFinite(comparisonConsumption(end,side))||intakeKeys.some(key=>!Number.isFinite(comparisonIntake(end,side,key)))))missing.push('Há métricas finais ausentes ou inválidas.');
+  if([data.initialPastureByPaddock,end.baselinePastureByPaddock,end.scenarioPastureByPaddock].some(values=>!Array.isArray(values)||values.length!==4||Array.from(values).some(value=>!Number.isFinite(value))))missing.push('Estoque por piquete incompleto ou inválido.');
+  if(rows.some(row=>!Number.isFinite(row.day)||!Number.isFinite(row.baselineWeight)||!Number.isFinite(row.scenarioWeight)))missing.push('A série de peso tem lacunas; o gráfico interrompe a linha nesses pontos.');
+  $('comparison-coverage').innerHTML='<h3>Observações reais · nenhuma conectada</h3><p>Este resultado cobre somente o rebanho simulado do snapshot. Não há dados de fazenda, área/biomassa medida, fonte empírica ou população real aprovada. A proveniência de um snapshot de fazenda depende da issue #12; a população/caso, da #1; a calibração e validação independente, da #6. O explorador de bezerras/novilhas citado nas issues é separado e não está disponível neste checkout.</p><h3>Cobertura da simulação</h3><p>'+(missing.length?missing.join(' '):'Campos finais e série diária disponíveis no resultado do motor; isso não indica cobertura empírica.')+' Ausência, valor inválido ou não finito aparece como “Indisponível”; zero finito é exibido como zero.</p>';
+  const a=data.assumptions??{},c=data.baselineConfig??{},hypotheses=[
+    ['Demanda-base',a.baseDemandKgDM,'kg MS/animal/dia, ajustada por peso/360 e calor × 0,8'],
+    ['Manutenção',a.maintenanceKgDM,'kg MS/animal/dia, ajustada por peso/360'],
+    ['Fator de ganho',a.gainFactor,'kg de peso por kg equivalente de MS acima da manutenção'],
+    ['Crescimento por piquete',a.dailyPastureGrowthKgDM,'kg MS/piquete/dia; chuva × 1,3, calor × 0,65; teto 2.400 kg MS/piquete'],
+    ['Preço do suplemento',a.supplementPrice,'R$/kg MS'],
+    ['Preço do adicional balanceado',a.balancedPrice,'R$/kg MS'],
+    ['Preço do adicional concentrado',a.concentratePrice,'R$/kg MS'],
+    ['Suplemento efetivamente usado',c.supplement,'kg MS/animal/dia nos dois cenários']
+  ];
+  $('comparison-assumptions').innerHTML='<h3>Hipóteses usadas · demonstrativas · não validadas</h3><p>Única intervenção: alojamento. Mesmo snapshot, sementes, dieta, suplemento e clima. Não há calibração nem intervalo de confiança sustentado por dados.</p><ul>'+hypotheses.map(([label,value,unit])=>'<li>'+label+': '+comparisonNumber(value,2)+' '+unit+'.</li>').join('')+'</ul><p>Outras regras fixas do motor: alimento-base no confinamento a 0,65 R$/kg MS; adicionais da dieta de 0 / 1,8 / 3,2 kg MS/animal/dia; suplemento × 1,2 e adicional × 1,35 no equivalente energético; piso de peso 200 kg/animal. Essas constantes são hipóteses, não preços pesquisados ou equações ajustadas. O estoque inicial vem do snapshot usado na comparação.</p><p>Fonte das hipóteses e cálculos: <a href="/engine.js" target="_blank" rel="noopener">engine.js · ASSUMPTIONS / tick / compare</a>. Reprodução: <a href="/worker.js" target="_blank" rel="noopener">worker.js · replayComparison</a>. Diferenças: alternativa − base; percentual: diferença / base × 100, indefinido quando a base é zero.</p>';
 }
 function showComparison(data){
-  comparison=data;comparisonSnapshot=pendingComparison.snapshot;comparisonManifest=pendingComparison.manifest;pendingComparison=null;compareBusy(false);
-  const c=data.initialConfig;if(!c)return;
-  $('compareconfig').textContent='Única variável: local do rebanho (base · pasto → alternativa · confinamento). Horizonte: '+data.days+' dias desde o snapshot. Permanecem iguais: '+data.herdSize+' animais, mesmo snapshot e semente, '+dietNames[c.diet]+', '+number(c.supplement)+' kg MS de suplemento/animal/dia e '+({normal:'clima ameno',hot:'calor',rain:'chuva'}[c.weather])+'.';
-  const rows=data.rows,values=rows.flatMap(r=>[r.baselineWeight,r.scenarioWeight]),low=Math.floor(Math.min(...values)-1),high=Math.ceil(Math.max(...values)+1);
+  comparisonSnapshot=pendingComparison?.snapshot??comparisonSnapshot;comparisonManifest=pendingComparison?.manifest??comparisonManifest;pendingComparison=null;
+  data=comparisonData(data);
+  comparison=data;compareBusy(false);
+  const c=data.baselineConfig??{},snapshot=comparisonSnapshot??{},days=comparisonNumber(data.days,0),initial=comparisonArray(data.initialPastureByPaddock),initialTotal=initial.length===4?comparisonCalculation(initial,(...values)=>values.reduce((sum,value)=>sum+value,0)):undefined;
+  const start=Number.isFinite(snapshot.hour)?'dia '+(Math.floor(snapshot.hour/24)+1)+' às '+String(snapshot.hour%24).padStart(2,'0')+':00':'horário indisponível';
+  $('compareconfig').textContent='Derivado · demonstrativo · não validado. Única intervenção: local do rebanho. Base: pasto; alternativa: confinamento. Horizonte: '+days+' dias a partir de '+start+'. Snapshot simulado da comparação: '+comparisonNumber(snapshot.animals?.length,0)+' animais, peso inicial '+comparisonNumber(data.startWeight)+' kg/animal (média dos pesos no snapshot), forragem inicial '+comparisonNumber(initialTotal,0)+' kg MS (soma dos piquetes no snapshot) e mesmas sementes. Configuração efetivamente usada: '+(dietNames[c.diet]??'dieta indisponível')+', '+comparisonNumber(c.supplement)+' kg MS de suplemento/animal/dia e '+({normal:'clima ameno',hot:'calor',rain:'chuva'}[c.weather]??'clima indisponível')+'.';
+  $('chart').setAttribute('aria-label','Evolução demonstrativa de peso médio em kg/animal durante '+days+' dias; derivada, não validada');
+  $('chart-note').innerHTML=comparisonEvidence('Cada ponto é a média dos pesos simulados em kg/animal; pesos e estoques iniciais acima vêm do snapshot simulado.','dia 0 até dia '+days+' desde o snapshot');
+  const rows=comparisonRows(data),values=rows.flatMap(r=>[r.baselineWeight,r.scenarioWeight]).filter(Number.isFinite),low=Math.floor(Math.min(...values)-1),high=Math.ceil(Math.max(...values)+1);
+  if(!values.length||!Number.isFinite(data.days)||data.days<=0||!Number.isFinite(high-low)||high<=low){$('chart').innerHTML='<text x="44" y="80">Peso: Indisponível</text>';renderDetailedResults(data);$('comparison').showModal();return;}
   const x=day=>44+day/data.days*548,y=weight=>165-(weight-low)/(high-low)*133;
   let svg='';
   for(let i=0;i<4;i++){const v=low+(high-low)*i/3;svg+='<line x1="44" x2="592" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#dde5d4"/><text x="2" y="'+(y(v)+3)+'" font-family="monospace" font-size="9" fill="#98a08a">'+number(v,0)+'</text>';}
   for(const day of [0,Math.round(data.days/3),Math.round(data.days*2/3),data.days])svg+='<text x="'+x(day)+'" y="191" text-anchor="middle" font-family="monospace" font-size="9" fill="#98a08a">Dia '+day+'</text>';
-  for(const [key,color] of [['baselineWeight','#b2b49b'],['scenarioWeight','#4c7942']])svg+='<polyline points="'+rows.map(r=>x(r.day)+','+y(r[key])).join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2.5"/>';
-  $('chart').setAttribute('aria-label','Evolução de peso médio em '+data.days+' dias');$('chart').innerHTML=svg;renderDetailedResults(data);$('comparison').showModal();
+  for(const [key,color] of [['baselineWeight','#b2b49b'],['scenarioWeight','#4c7942']]){let points=[],previousDay;const flush=()=>{if(points.length)svg+='<polyline points="'+points.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2.5"/>';points=[];};for(const row of rows){if(Number.isFinite(row.day)&&Number.isFinite(row[key])&&Number.isFinite(x(row.day))&&Number.isFinite(y(row[key]))){if(previousDay!==undefined&&row.day!==previousDay+1)flush();points.push(x(row.day)+','+y(row[key]));previousDay=row.day;}else{flush();previousDay=undefined;}}flush();}
+  $('chart').innerHTML=svg;renderDetailedResults(data);$('comparison').showModal();
 }
-$('export').onclick=()=>{if(!comparison||requestCompare||loadingScenario)return;const paddocks=comparison.initialPastureByPaddock.length;const headers=['dia','peso_ref_kg','peso_confinamento_kg','consumo_ref_lote_kgMS','consumo_confinamento_lote_kgMS','consumo_ref_kgMS_animal','consumo_confinamento_kgMS_animal','estoque_ref_total_kgMS','estoque_confinamento_total_kgMS','custo_ref_brl','custo_confinamento_brl'];for(let i=0;i<paddocks;i++)headers.push('piquete_'+String.fromCharCode(65+i)+'_inicio_kgMS','piquete_'+String.fromCharCode(65+i)+'_pasto_final_kgMS','piquete_'+String.fromCharCode(65+i)+'_confinamento_final_kgMS');const herd=comparison.herdSize??1;const rows=[headers.join(','),...comparison.rows.map(r=>[r.day,r.baselineWeight.toFixed(4),r.scenarioWeight.toFixed(4),r.baselineConsumptionKgDM.toFixed(4),r.scenarioConsumptionKgDM.toFixed(4),(r.baselineConsumptionKgDM/herd).toFixed(4),(r.scenarioConsumptionKgDM/herd).toFixed(4),r.baselinePastureKgDM.toFixed(4),r.scenarioPastureKgDM.toFixed(4),r.baselineCost.toFixed(4),r.scenarioCost.toFixed(4),...r.baselinePastureByPaddock.flatMap((value,i)=>[comparison.initialPastureByPaddock[i].toFixed(2),value.toFixed(2),r.scenarioPastureByPaddock[i].toFixed(2)])].join(','))];const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='agroville-comparacao-demonstrativa.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+function comparisonCSV(data){
+  data=comparisonData(data);
+  const initial=comparisonArray(data.initialPastureByPaddock),cell=(value,digits=4)=>Number.isFinite(value)?value.toFixed(digits):'Indisponível';
+  const headers=['dia','peso_ref_kg','peso_confinamento_kg','consumo_ref_lote_kgMS','consumo_confinamento_lote_kgMS','consumo_ref_kgMS_animal','consumo_confinamento_kgMS_animal','estoque_ref_total_kgMS','estoque_confinamento_total_kgMS','custo_ref_brl','custo_confinamento_brl'];
+  for(let i=0;i<4;i++)headers.push('piquete_'+String.fromCharCode(65+i)+'_inicio_kgMS','piquete_'+String.fromCharCode(65+i)+'_pasto_final_kgMS','piquete_'+String.fromCharCode(65+i)+'_confinamento_final_kgMS');
+  return [headers.join(','),...comparisonRows(data).map(row=>{const base=comparisonConsumption(row,'baseline'),alternative=comparisonConsumption(row,'scenario');return [cell(row.day,0),...[row.baselineWeight,row.scenarioWeight,base,alternative,comparisonPerAnimal(base),comparisonPerAnimal(alternative),row.baselinePastureKgDM,row.scenarioPastureKgDM,row.baselineCost,row.scenarioCost].map(value=>cell(value)),...Array.from({length:4},(_,i)=>[initial[i],row.baselinePastureByPaddock?.[i],row.scenarioPastureByPaddock?.[i]].map(value=>cell(value,2))).flat()].join(',');})].join('\n');
+}
+$('export').onclick=()=>{if(comparison&&!requestCompare&&!loadingScenario)downloadFile('agroville-comparacao-demonstrativa.csv',comparisonCSV(comparison),'text/csv;charset=utf-8');};
+
 let noticeTimer                              ;function notify(message       ){$('notice').textContent=message;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,5000);}
 $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!comparisonManifest){notify('Faça ou importe uma comparação antes de exportar o manifesto.');return;}downloadFile('agroville-manifesto-demonstrativo.json',JSON.stringify(comparisonManifest,null,2),'application/json;charset=utf-8');};
 $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&&!loadingScenario)$('manifest-file').click();};
