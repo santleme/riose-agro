@@ -1,0 +1,1801 @@
+{
+  "profile": "tabular-data-package",
+  "resources": [
+    {
+      "name": "2018-2025_pasture_dm_herbage_mass",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/2/2018-2025_Pasture_DM_herbage_mass.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Date",
+            "type": "date",
+            "title": "Date",
+            "description": "Date on which the assessment of pasture DM_HM was made",
+            "rdfType": "http://schema.org/Date",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "DM_HM",
+            "type": "integer",
+            "title": "DM_HM",
+            "description": "Dry matter herbage mass, estimated using a rising plate meter. Compressed sward height (cm) was converted to herbage dry matter using the equation DM_HM = (compressed sward height (cm) x 125) + 640",
+            "rdfType": null,
+            "units": "kg DM/ha"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2018",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/3/Cattle_LWt_2018.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 6 levels: Aberdeen Angus crossbred (AAX), British Blue crossbred (BRBX), Fleckvieh crossbred (FKVX), Hereford crosssbred (HEX), Montbelliarde crossbred (MOX), and Simmental crossbred (SMX), all crossbred with dairy breeds.",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2018-04-26",
+            "type": "integer",
+            "title": "LWt_2018-04-26",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018_05_21",
+            "type": "integer",
+            "title": "LWt_2018-05-21",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-06-22",
+            "type": "integer",
+            "title": "LWt_2018-06-22",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-07-19",
+            "type": "integer",
+            "title": "LWt_2018-07-19",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-08-06",
+            "type": "integer",
+            "title": "LWt_2018-08-06",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWT_2018-08-15",
+            "type": "integer",
+            "title": "LWt_2018-08-15",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-08-21",
+            "type": "integer",
+            "title": "LWt_2018-08-21",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot. For animals with a weight on this date, it indicates that they had been removed after the previous weighing (LWt_2018-08-06), and replaced on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-09-05",
+            "type": "integer",
+            "title": "LWt_2018-09-05",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-09-13",
+            "type": "integer",
+            "title": "LWt_2018-09-13",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-10-04",
+            "type": "integer",
+            "title": "LWt_2018-10-04",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2018-10-15",
+            "type": "integer",
+            "title": "LWt_2018-10-15",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Some animals were removed from the plots on 2018-08-06 and replaced on 2018-08-21, identified as animals with a weight in the LWt_2018-08021 column. Liveweight gain during this removal period is not included in the liveweight gain calculation.",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots. Some animals were removed from the plots on 2018-08-06 and replaced on 2018-08-21, identified as animals with a weight in the LWt_2018-08021 column. The day count does not include days during this period that they were removed.",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.5 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2019",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/4/Cattle_LWt_2019.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 6 levels: Aberdeen Angus crossbred (AAX), British Blue crossbred (BRBX), Fleckvieh crossbred (FKVX), Hereford crosssbred (HEX), Montbelliarde crossbred (MOX), and Simmental crossbred (SMX), all crossbred with dairy breeds.",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2019-03-26",
+            "type": "integer",
+            "title": "LWt_2019-03-26",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-04-01",
+            "type": "integer",
+            "title": "LWt_2019-04-01",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-04-03",
+            "type": "integer",
+            "title": "LWt_2019-04-03",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-04-18",
+            "type": "integer",
+            "title": "LWt_2019-04-18",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-04-26",
+            "type": "integer",
+            "title": "LWt_2019-04-26",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-05-10",
+            "type": "integer",
+            "title": "LWt_2019-05-10",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-05-15",
+            "type": "integer",
+            "title": "LWt_2019-05-15",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-06-03",
+            "type": "integer",
+            "title": "LWt_2019-06-03",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-06-21",
+            "type": "integer",
+            "title": "LWt_2019-06-21",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-07-19",
+            "type": "integer",
+            "title": "LWt_2019-07-19",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-08-14",
+            "type": "integer",
+            "title": "LWt_2019-08-14",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-08-27",
+            "type": "integer",
+            "title": "LWt_2019-08-27",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-09-27",
+            "type": "integer",
+            "title": "LWt_2019-09-27",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-10-22",
+            "type": "integer",
+            "title": "LWt_2019-10-22",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2019-11-06",
+            "type": "integer",
+            "title": "LWt_2019-11-06",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date. Animals were weighed every time they entered and left the plots, so missing values after their first weighing and before their last indicates that the animal was removed from the plot and replaced. The period over which the animal was not on the plot can be determined by identifying the preceding and following LWt_(date) columns that contain animal weights. During this time, animals were grazed on the same field, but outside of the experimental boundary, when not on the plot. Cells marked NA indicates that the animal was not weighed on this date, but was on the plot.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Liveweight gain during any period that they were removed from the plot is not included. ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots, which excludes any period over which they had been removed from the plots. ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2020",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/5/Cattle_LWt_2020.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 3 levels: Fleckvieh crossbred (FKVX) and Hereford crosssbred (HEX), both crossbred with dairy breeds, and Stabiliser (ST).",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2020-04-17",
+            "type": "integer",
+            "title": "LWt_2020-04-17",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-05-12",
+            "type": "integer",
+            "title": "LWt_2020-05-12",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-06-04",
+            "type": "integer",
+            "title": "LWt_2020-06-04",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-07-07",
+            "type": "integer",
+            "title": "LWt_2020-07-07",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-08-05",
+            "type": "integer",
+            "title": "LWt_2020-08-05",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-09-08",
+            "type": "integer",
+            "title": "LWt_2020-09-08",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-10-09",
+            "type": "integer",
+            "title": "LWt_2020-10-09",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2020-10-16",
+            "type": "integer",
+            "title": "LWt_2020-10-16",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2021",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/6/Cattle_LWt_2021.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 2 levels: Fleckvieh crossbred (FKVX) and Hereford crosssbred (HEX), both crossbred with dairy breeds.",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2021-04-09",
+            "type": "integer",
+            "title": "LWt_2021-04-09",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-05-19",
+            "type": "integer",
+            "title": "LWt_2021-05-19",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-06-28",
+            "type": "integer",
+            "title": "LWt_2021-06-28",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-07-10",
+            "type": "integer",
+            "title": "LWt_2021-07-10",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-08-05",
+            "type": "integer",
+            "title": "LWt_2021-08-05",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-09-13",
+            "type": "integer",
+            "title": "LWt_2021-09-13",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-09-25",
+            "type": "integer",
+            "title": "LWt_2021-09-25",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2021-10-06",
+            "type": "integer",
+            "title": "LWt_2021-10-06",
+            "description": "The liveweight mass of the animal measured on the date given in the column heading (YYYY-MM-DD). Missing values indicate that the animal was not on the plot on this date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2022",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/7/Cattle_LWt_2022.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 4 levels: Aberdeen Angus crossbred (AAX),  Hereford crosssbred (HEX), Stabiliser (ST) and Stabiliser crossbred (STX).",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2022-04-21",
+            "type": "integer",
+            "title": "LWt_2022-04-21",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-05-11",
+            "type": "integer",
+            "title": "LWt_2022-05-11",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-06-07",
+            "type": "integer",
+            "title": "LWt_2022-06-07",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-06-24",
+            "type": "integer",
+            "title": "LWt_2022-06-24",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-07-05",
+            "type": "integer",
+            "title": "LWt_2022-07-05",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-07-12",
+            "type": "integer",
+            "title": "LWt_2022-07-12",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-07-21",
+            "type": "integer",
+            "title": "LWt_2022-07-21",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-08-02",
+            "type": "integer",
+            "title": "LWt_2022-08-02",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-08-23",
+            "type": "integer",
+            "title": "LWt_2022-08-23",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-08-25",
+            "type": "integer",
+            "title": "LWt_2022-08-25",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-09-06",
+            "type": "integer",
+            "title": "LWt_2022-09-06",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-09-21",
+            "type": "integer",
+            "title": "LWt_2022-09-21",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-09-26",
+            "type": "integer",
+            "title": "LWt_2022-09-26",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-10-04",
+            "type": "integer",
+            "title": "LWt_2022-10-04",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2022-10-11",
+            "type": "integer",
+            "title": "LWt_2022-10-11",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Liveweight gain during any period that they were removed from the plot is not included. ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots, which excludes any period over which they had been removed from the plots. ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2023",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/8/Cattle_LWt_2023.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 2 levels: Aberdeen Angus crossbred (AAX), Hereford crosssbred (HEX)",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2023-05-09",
+            "type": "integer",
+            "title": "LWt_2023-05-09",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-06-08",
+            "type": "integer",
+            "title": "LWt_2023-06-08",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-06-20",
+            "type": "integer",
+            "title": "LWt_2023-06-20",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-06-26",
+            "type": "integer",
+            "title": "LWt_2023-06-26",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-07-12",
+            "type": "integer",
+            "title": "LWt_2023-07-12",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-07-27",
+            "type": "integer",
+            "title": "LWt_2023-07-27",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-08-15",
+            "type": "integer",
+            "title": "LWt_2023-08-15",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-09-05",
+            "type": "integer",
+            "title": "LWt_2023-09-05",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-09-21",
+            "type": "integer",
+            "title": "LWt_2023-09-21",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-10-06",
+            "type": "integer",
+            "title": "LWt_2023-10-06",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2023-10-26",
+            "type": "integer",
+            "title": "LWt_2023-10-26",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain",
+            "type": "integer",
+            "title": "LW_gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Liveweight gain during any period that they were removed from the plot is not included. ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots, which excludes any period over which they had been removed from the plots. ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2024",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/9/Cattle_LWt_2024.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 2 levels: Aberdeen Angus crossbred (AAX), British Blue crossbred (BRBX)",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2024-04-02",
+            "type": "integer",
+            "title": "LWt_2024-04-02",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-04-30",
+            "type": "integer",
+            "title": "LWt_2024-04-30",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-06-11",
+            "type": "integer",
+            "title": "LWt_2024-06-11",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-07-18",
+            "type": "integer",
+            "title": "LWt_2024-07-18",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-08-29",
+            "type": "integer",
+            "title": "LWt_2024-08-29",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-09-16",
+            "type": "integer",
+            "title": "LWt_2024-09-16",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2024-10-23",
+            "type": "integer",
+            "title": "LWt_2024-10-23",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Liveweight gain during any period that they were removed from the plot is not included. ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots, which excludes any period over which they had been removed from the plots. ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha...19",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha...20",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_2025",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/10/Cattle_LWt_2025.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": null
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier. A tag may appear more than once in the dataset because the same animal can have multiple records from the 2025 grazing season after being moved between plots to maintain target stocking numbers.",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 1 level: Aberdeen Angus crossbred (AAX)",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_2025-04-07",
+            "type": "integer",
+            "title": "LWt_2025-04-07",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-05-20",
+            "type": "integer",
+            "title": "LWt_2025-05-20",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-06-24",
+            "type": "integer",
+            "title": "LWt_2025-06-24",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-07-14",
+            "type": "integer",
+            "title": "LWt_2025-07-14",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-08-19",
+            "type": "integer",
+            "title": "LWt_2025-08-19",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-09-17",
+            "type": "integer",
+            "title": "LWt_2025-09-17",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_2025-10-13",
+            "type": "integer",
+            "title": "LWt_2025-10-13",
+            "description": "Liveweight (kg) recorded on the date shown in the column name (YYYY-MM-DD). Blank/missing values mean the animal was not assigned to the plot on that date. Because animals were weighed when entering and leaving plots, gaps between an animals first and last recorded weights indicate it was temporarily removed from the plot and replaced; the off-plot period can be inferred from the nearest previous and subsequent LWt_(date) columns with recorded weights. During off-plot periods, animals grazed the same field but outside the experimental boundary. Values coded as NA indicate the animal was on the plot but was not weighed on that date.",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LW_Gain",
+            "type": "integer",
+            "title": "LW_Gain",
+            "description": "Cumulative liveweight gained on the experimental plots. Liveweight gain during any period that they were removed from the plot is not included. ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0002045",
+            "units": "kg"
+          },
+          {
+            "name": "Days",
+            "type": "integer",
+            "title": "Days",
+            "description": "Cumulative number of days that the animals grazed in the experimental plots, which excludes any period over which they had been removed from the plots. ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain. Calculated as LW_Gain/Days ",
+            "rdfType": "http://purl.obolibrary.org/obo/CMO_0000419",
+            "units": "kg"
+          },
+          {
+            "name": "LW_gain/ha",
+            "type": "integer",
+            "title": "LW_gain/ha",
+            "description": "Cumulative liveweight gain per hectare. Calculated as LW_Gain/plot area, where plot area was 1ha for the cell grazing plots (Plot_ID starting with a T) and 1.75 ha for the set-stocking plots (Plot_ID starting with a C)",
+            "rdfType": null,
+            "units": "kg/ha"
+          },
+          {
+            "name": "LW_gain/ha/day",
+            "type": "integer",
+            "title": "LW_gain/ha/day",
+            "description": "Cumulative liveweight gain per hectare per day. Calculated as LW_gain/ha/days, Where days are the cumulative number of days the animals grazed the experimental plots.",
+            "rdfType": null,
+            "units": "kg/ha/day"
+          }
+        ]
+      }
+    },
+    {
+      "name": "cattle_lwt_collated_2018-2025",
+      "path": "https://repository.rothamsted.ac.uk/id/eprint/33688/11/Cattle_LWt_collated_2018-2025.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": {
+        "fields": [
+          {
+            "name": "Plot_ID",
+            "type": "string",
+            "title": "Plot_ID",
+            "description": "Identifier for the plot. Factor with 6 levels: C1, C2, C3, T1, T2 and T3. The C represents plots in the set-stocking treatment, and the T represents plots in the cell grazing treatment. The number is the block within the treatment",
+            "rdfType": "https://schema.org/identifier",
+            "units": null
+          },
+          {
+            "name": "Year",
+            "type": "year",
+            "title": "Year",
+            "description": "Grazing year, running approximately spring to autumn",
+            "rdfType": "http://rs.tdwg.org/dwc/terms/year",
+            "units": "YYYY"
+          },
+          {
+            "name": "Cohort_number",
+            "type": "integer",
+            "title": "Cohort_number",
+            "description": "Each cohort of cattle grazed on the experiment over two years, and then were replaced by younger stock. The Cohort_number indicates the group in which they grazed",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Grazing_number",
+            "type": "integer",
+            "title": "Grazing_number",
+            "description": "Cattle were grazed on the experiment over two years, and the Grazing_number indicates whether the measurement was taken in their first or second year ",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_Official",
+            "type": "string",
+            "title": "Tag_Official",
+            "description": "The ear tag number that each animal must have in the UK to provide them with a unique identifier",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Tag_4",
+            "type": "integer",
+            "title": "Tag_4",
+            "description": "The last four digits of the Tag_official",
+            "rdfType": null,
+            "units": null
+          },
+          {
+            "name": "Breed",
+            "type": "string",
+            "title": "Breed",
+            "description": "Cattle breed. Factor with 7 levels: Aberdeen Angus crossbred (AAX), British Blue crossbred (BRBX), Fleckvieh crossbred (FKVX), Hereford crosssbred (HEX), Montbelliarde crossbred (MOX), Simmental crossbread (SMX) and Stabiliser (ST).",
+            "rdfType": "http://purl.obolibrary.org/obo/VBO_0400020",
+            "units": null
+          },
+          {
+            "name": "DOB",
+            "type": "date",
+            "title": "DOB",
+            "description": "Date of birth of the animal",
+            "rdfType": "http://schema.org/birthDate",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "Date_From",
+            "type": "date",
+            "title": "Date_From",
+            "description": "The start of the date range over which the animal liveweight gain is being calculated. On this date, the animal weight was recorded (LWt_Start)",
+            "rdfType": "http://schema.org/Datetrea",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "Date_To",
+            "type": "date",
+            "title": "Date_To",
+            "description": "The end of the date range over which the animal liveweight gain is being calculated. On this date, the animal weight was recorded (LWt_End). Except for the first period in which liveweight gain is calculated in a Year, the Date_To becomes the Date_From for the subsequent period of liveweight gain calculation",
+            "rdfType": "http://schema.org/Date",
+            "units": "YYYY-MM-DD"
+          },
+          {
+            "name": "LWt_Start",
+            "type": "integer",
+            "title": "LWt_Start",
+            "description": "The liveweight mass of the animal at the start of the date range (Date_From) over which animal liveweight gain is being calculated",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "LWt_End",
+            "type": "integer",
+            "title": "LWt_End",
+            "description": "The liveweight mass of the animal at the end of the date range (Date_To) over which animal liveweight gain is being calculated. Except for the first period in which liveweight gain is calculated in a Year, the LWt_End becomes the LWt_Start for the subsequent period of liveweight gain calculation",
+            "rdfType": "https://schema.org/weight",
+            "units": "kg"
+          },
+          {
+            "name": "DLWG",
+            "type": "number",
+            "title": "DLWG",
+            "description": "Daily liveweight gain, representing the change in mass over the period. Calculated as (LWt_End - LWt_Start) / (Date_To - Date_From)",
+            "rdfType": null,
+            "units": "kg"
+          }
+        ]
+      }
+    }
+  ],
+  "title": "Individual animal liveweight and daily liveweight gain, and pasture herbage mass recorded in a dairy x beef grazing study comparing contrasting grazing methods: set-stocked versus cell-grazed on a temperate permanent pasture.",
+  "description": "This dataset provides measures of pasture herbage mass (commonly referred as cover), livestock performance (cattle liveweight and daily liveweight gain) and land productivity (liveweight gained per hectare) from a 8.25 ha replicated cattle grazing experiment comparing the effect of set-stocking versus cell grazing, where grazing intensity is higher but animals are moved more regularly. The data are from a 7-year study in the SW of the United Kingdom.",
+  "creators": [
+    {
+      "creatorName": "Morgan, S.",
+      "nameIdentifier": "https://orcid.org/0000-0002-0355-0345",
+      "schemeURI": "https://orcid.org/",
+      "affiliation": "Harper Adams University, UK",
+      "affiliationIdentifier": "https://ror.org/00z20c921",
+      "affiliationIdentifierScheme": "ROR"
+    },
+    {
+      "creatorName": "Perez Marquez, S.",
+      "nameIdentifier": "https://orcid.org/0000-0003-3108-8159",
+      "schemeURI": "https://orcid.org/",
+      "affiliation": "Rothamsted Research, UK",
+      "affiliationIdentifier": "https://ror.org/0347fy350",
+      "affiliationIdentifierScheme": "ROR"
+    },
+    {
+      "creatorName": "Morten, C.",
+      "nameIdentifier": null,
+      "schemeURI": null,
+      "affiliation": "Rothamsted Research, UK",
+      "affiliationIdentifier": "https://ror.org/0347fy350",
+      "affiliationIdentifierScheme": "ROR"
+    },
+    {
+      "creatorName": "Rivero, M. J.",
+      "nameIdentifier": "https://orcid.org/0000-0002-9045-289X",
+      "schemeURI": "https://orcid.org/",
+      "affiliation": "Rothamsted Research, UK",
+      "affiliationIdentifier": "https://ror.org/0347fy350",
+      "affiliationIdentifierScheme": "ROR"
+    }
+  ],
+  "contributors": [
+    {
+      "contributorName": "Tegan Darch",
+      "nameIdentifier": "https://orcid.org/0000-0003-2367-043X",
+      "schemeURI": "https://orcid.org/",
+      "affiliation": "Rothamsted Research, UK",
+      "affiliationIdentifier": "https://ror.org/0347fy350",
+      "affiliationIdentifierScheme": "ROR"
+    }
+  ],
+  "relatedIdentifiers": [
+    {
+      "relatedIdentifier": "https://www.rothamsted.ac.uk/sites/default/files/Documents/Cell%20Grazing%20Technical%20Report%202023_2.pdf",
+      "relatedIdentifierType": "URL",
+      "relationType": "IsDescribedBy",
+      "resourceTypeGeneral": "Report"
+    }
+  ],
+  "keywords": ["Mob grazing", "Technograzing", "Livestock", "Beef cattle", "Pasture productivity", "Grazing", "Grassland", "Liveweight gain", "Grazing methods"],
+  "licenses": {
+    "name": "CC BY 4.0 ",
+    "path": "https://creativecommons.org/licenses/by/4.0/",
+    "title": "Creative Commons Attribution 4.0 International"
+  }
+}

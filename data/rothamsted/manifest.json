@@ -1,0 +1,37 @@
+{
+  "source": {
+    "title": "Individual animal liveweight and daily liveweight gain, and pasture herbage mass recorded in a dairy x beef grazing study comparing contrasting grazing methods: set-stocked versus cell-grazed on a temperate permanent pasture, 2018–2025",
+    "publisher": "Rothamsted Research Repository",
+    "doi": "10.23637/rothamsted.00033688",
+    "repositoryUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "retrieved": "2026-10-11",
+    "attribution": "Rothamsted Research. Individual animal liveweight and daily liveweight gain, and pasture herbage mass recorded in a dairy x beef grazing study comparing contrasting grazing methods: set-stocked versus cell-grazed on a temperate permanent pasture, 2018–2025. DOI: 10.23637/rothamsted.00033688. CC BY 4.0."
+  },
+  "files": [
+    {
+      "path": "Cattle_LWt_collated_2018-2025.csv",
+      "upstreamUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/11/Cattle_LWt_collated_2018-2025.csv",
+      "sha256": "52842cf922dcc4cd6838346649440f96dc5d4e9259ed734d014e9eb8efeb0c28"
+    },
+    {
+      "path": "2018-2025_Pasture_DM_herbage_mass.csv",
+      "upstreamUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/2/2018-2025_Pasture_DM_herbage_mass.csv",
+      "sha256": "4de55256c208e6ed7f8cd0b3bb5dae74ca968e0f7d8d308ea9daa830cb3509a3"
+    },
+    {
+      "path": "datapackage.json",
+      "upstreamUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/12/datapackage.json",
+      "sha256": "f48d5c52f759ffdae87d4fce16506cb390611b404724fc5f5d720fd552e1edc5"
+    }
+  ],
+  "limits": [
+    "The repository page currently supersedes an older dataset version and reports minor corrections plus additional data through 2025.",
+    "The collated CSV contains cohort numbers 1–4 grouped into two-year cohorts; preserve each cohort intact for evaluation.",
+    "The dataset describes the same six North Wyke plots across cohorts. Holding out cohort 4 tests later cohorts on those plots, not new-farm generalization.",
+    "DLWG is computed from start/end liveweight and elapsed days; it is not an independent measurement from those endpoints.",
+    "Treatment has three plot replicates per arm. Animal-period rows are repeated observations, not independent treatment replicates.",
+    "This dataset does not contain USDA CPER grazing-bout/velocity measures, individual dry-matter intake, feed costs, or a confinement arm; it cannot validate the current engine.js."
+  ]
+}

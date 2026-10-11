@@ -1,0 +1,99 @@
+{
+  "source": {
+    "title": "Individual animal liveweight and daily liveweight gain, and pasture herbage mass recorded in a dairy x beef grazing study comparing contrasting grazing methods: set-stocked versus cell-grazed on a temperate permanent pasture, 2018–2025",
+    "publisher": "Rothamsted Research Repository",
+    "doi": "10.23637/rothamsted.00033688",
+    "repositoryUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "retrieved": "2026-10-11",
+    "attribution": "Rothamsted Research. Individual animal liveweight and daily liveweight gain, and pasture herbage mass recorded in a dairy x beef grazing study comparing contrasting grazing methods: set-stocked versus cell-grazed on a temperate permanent pasture, 2018–2025. DOI: 10.23637/rothamsted.00033688. CC BY 4.0.",
+    "verifiedSnapshotFiles": [
+      "Cattle_LWt_collated_2018-2025.csv",
+      "2018-2025_Pasture_DM_herbage_mass.csv",
+      "datapackage.json"
+    ]
+  },
+  "integrity": {
+    "animalPeriodRowCount": 2362,
+    "uniqueOfficialTagCount": 248,
+    "plotIds": [
+      "C1",
+      "C2",
+      "C3",
+      "T1",
+      "T2",
+      "T3"
+    ],
+    "dlwgReconcilesWithWeightEndpointsAndDays": true,
+    "herbageMassRowCount": 1210
+  },
+  "cohorts": {
+    "1": {
+      "rowCount": 523,
+      "animalCount": 42,
+      "years": [
+        2018,
+        2019
+      ]
+    },
+    "2": {
+      "rowCount": 507,
+      "animalCount": 53,
+      "years": [
+        2020,
+        2021
+      ]
+    },
+    "3": {
+      "rowCount": 834,
+      "animalCount": 95,
+      "years": [
+        2022,
+        2023
+      ]
+    },
+    "4": {
+      "rowCount": 498,
+      "animalCount": 58,
+      "years": [
+        2024,
+        2025
+      ]
+    }
+  },
+  "heldOutBaseline": {
+    "method": "train cohorts 1–3; predict each animal-period in cohort 4 with the training-row mean DLWG",
+    "trainCohorts": [
+      1,
+      2,
+      3
+    ],
+    "testCohort": 4,
+    "trainAnimalCount": 190,
+    "testAnimalCount": 58,
+    "animalLeakage": false,
+    "trainMeanKgPerSteerDay": 0.598836373390558,
+    "rowCount": 498,
+    "maeKgPerSteerDay": 0.4607746975024562,
+    "rmseKgPerSteerDay": 0.5697955442198973,
+    "biasKgPerSteerDay": 0.00485042961545755,
+    "scope": "later cohorts on the same six North Wyke plots; not new-farm generalization and not a feature model"
+  },
+  "descriptiveTreatmentMeans": {
+    "cell-grazed": {
+      "animalPeriodRowCount": 1187,
+      "meanDlwgKgPerSteerDay": 0.5546015164279697,
+      "warning": "descriptive only; treatment is replicated at three plots per arm, so animal-period rows are not independent treatment replicates"
+    },
+    "set-stocked": {
+      "animalPeriodRowCount": 1175,
+      "meanDlwgKgPerSteerDay": 0.6414672340425532,
+      "warning": "descriptive only; treatment is replicated at three plots per arm, so animal-period rows are not independent treatment replicates"
+    }
+  },
+  "engineValidation": {
+    "evaluated": false,
+    "reason": "The study contains ADG and plot-level herbage mass, but lacks the approved USDA CPER bout-duration/velocity predictors, individual dry-matter intake, feed costs, and a confinement arm. Its pasture treatment comparison cannot validate engine.js outputs or a pasture-versus-confinement counterfactual."
+  }
+}

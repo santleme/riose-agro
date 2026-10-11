@@ -10,7 +10,8 @@
     "link:snapshot": "node scripts/link-farm-snapshot.js",
     "validate:snapshot": "node scripts/validate-farm-snapshot.js",
     "build:observed-data": "python3 scripts/build_observed_calf_dataset.py",
-    "audit:usda-cper": "python3 scripts/audit_usda_cper_validation.py"
+    "audit:usda-cper": "python3 scripts/audit_usda_cper_validation.py",
+    "audit:rothamsted-adg": "python3 scripts/audit_rothamsted_adg.py"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
