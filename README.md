@@ -16,7 +16,9 @@ Open http://localhost:8000 for the farm map and Scenario Studio. The optional pr
 
 The farm engine stays local and deterministic. `/api/explain` receives validated scenario settings and aggregate metrics; its fallback requires no provider or API key. To enable an optional language-provider adapter, set `LLM_PROVIDER=openai|groq|huggingface` and its matching server-side key (`OPENAI_API_KEY`, `GROQ_API_KEY`, or `HF_TOKEN`) before `npm start`; select a model with `LLM_MODEL` or the provider-specific `OPENAI_MODEL`, `GROQ_MODEL`, or `HF_MODEL`. Keys stay on the server. With no provider/key, or if a provider fails, the deterministic explanation is used. Explanations cannot modify simulation results or apply actions and are labeled as not measured.
 
-Open **Dados observados** in the header to explore the published calf trial as measurements, separate from the simulated adult beef herd. The normalized CC0 data snapshot is included so the page works offline. To regenerate it from Zenodo and verify the source-file MD5 checksums, run:
+Open **ADG e pastejo (adultos)** to explore USDA/CPER animal-period ADG and grazing measures, or **Dados observados** to explore the separate published calf trial. Both pages show measurements separately from simulated results. The adult explorer uses the local USDA period table; repeated animal IDs remain visible as repeated study periods, not independent animals.
+
+The normalized CC0 calf data snapshot is included so the calf page works offline. To regenerate it from Zenodo and verify the source-file MD5 checksums, run:
 
 ```bash
 npm run build:observed-data
@@ -66,6 +68,7 @@ The command validates the manifest with the engine's existing rules, records the
 - `tests/engine.test.js`, `tests/app.test.js`, `tests/comparison-presentation.test.js` — deterministic replay, Scenario Studio flow, and evidence presentation checks
 - `tests/explanation.test.js` — explanation input validation and deterministic fallback
 - `observed-data.html`, `observed-data.js`, `observed-data.css` — read-only explorer for the published calf trial
+- `adult-data.html`, `adult-data.js`, `adult-data.css`, `adult-data-model.js` — read-only ADG and grazing-measure explorer for adult USDA/CPER records
 - `observed-data-model.js` — animal-weighted weekly summaries for the observed-data explorer
 - `scripts/build_observed_calf_dataset.py` — standard-library importer that fetches and checksum-verifies the source XLSX files
 - `data/observed-calves-zenodo-7251167.json` — normalized observations from the CC0 Zenodo record; not model output

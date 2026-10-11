@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — ADG e pastejo observados</title>
+  <link rel="stylesheet" href="adult-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ adultos observados</span></a>
+    <a class="back-link" href="index.html">← Voltar à fazenda</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · BOVINOS ADULTOS</div>
+        <h1>ADG e indicadores de pastejo</h1>
+        <p>Explore os registros publicados por animal e período. A página descreve observações e não executa nem calibra o motor do Agroville.</p>
+      </div>
+      <div class="data-badge"><span></span> USDA / CPER · DOMÍNIO PÚBLICO</div>
+    </section>
+
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">ESTUDO OBSERVACIONAL</div><h2>Novilhos em shortgrass steppe</h2></div><a href="https://doi.org/10.15482/USDA.ADC/1524788" target="_blank" rel="noopener">Fonte e arquivos ↗</a></div>
+      <p>Central Plains Experimental Range, Colorado · períodos de pastejo em 2019–2020 · os mesmos animais podem aparecer em mais de um período. Não houve comparação randomizada com confinamento.</p>
+      <div class="study-facts" id="study-facts" aria-live="polite"><span>Carregando resumo…</span></div>
+    </section>
+
+    <section class="explorer adult-explorer" aria-labelledby="explorer-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">ASSOCIAÇÃO DESCRITIVA</div><h2 id="explorer-title">ADG observado e pastejo</h2></div>
+        <label class="measure-control" for="predictor">Eixo horizontal<select id="predictor"><option value="GBD_5min">Duração do bout (min/dia)</option><option value="MeanVelo">Velocidade ao pastejar (m/min)</option><option value="GrazeHrs_5min">Horas de pastejo (h/dia)</option></select></label>
+      </div>
+      <p class="measure-note" id="chart-note">Cada ponto representa uma linha animal-período. Repetições do mesmo brinco não são independentes.</p>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 390" role="img" aria-label="ADG observado em relação ao indicador de pastejo selecionado"></svg></div>
+      <div class="adult-summary" id="summary" aria-live="polite"></div>
+      <p class="table-note">As médias acima dão o mesmo peso a cada registro animal-período. Como alguns animais aparecem mais de uma vez, elas não são médias por animal independente.</p>
+    </section>
+
+    <section class="data-table-card">
+      <div class="study-heading"><div><div class="eyebrow">REGISTROS PUBLICADOS</div><h2>Animal por período</h2></div><span id="row-count"></span></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Período</th><th>Piquete</th><th>Brinco</th><th>ADG (kg/d)</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Velocidade (m/min)</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note">Dados ausentes não são preenchidos. 60dADG_INT identifica o intervalo do estudo; as datas exatas não constam nesta tabela-resumo.</p>
+    </section>
+
+    <section class="limits">
+      <h2>Limites de interpretação</h2>
+      <ul>
+        <li>O gráfico mostra uma associação dentro deste conjunto; não identifica que mudar o pastejo cause mudança no ADG.</li>
+        <li>36 registros incluem 33 brincos únicos. Uma validação deve agrupar todos os períodos do mesmo animal e ainda precisa de dados externos.</li>
+        <li>Os dados não incluem DMI individual, custo alimentar ou comparador pasto–confinamento. Eles não validam as previsões de peso, consumo, custo ou forragem de <code>engine.js</code>.</li>
+        <li>É um sistema de pastagem específico do Colorado; não representa fazendas brasileiras. O estudo é mostrado como dado observado, não como resultado do motor.</li>
+      </ul>
+      <p class="citation">Augustine et al. (2022), <a href="https://doi.org/10.1071/AN21560" target="_blank" rel="noopener">artigo ↗</a>. Dados: <a href="https://doi.org/10.15482/USDA.ADC/1524788" target="_blank" rel="noopener">USDA Ag Data Commons ↗</a>.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Medidas observadas · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="adult-data.js"></script>
+</body>
+</html>
