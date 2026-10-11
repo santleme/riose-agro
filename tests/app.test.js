@@ -77,7 +77,7 @@ test('manifest can be reopened from the map and uses its herd, conditions and ho
   const result=replayComparisonManifest(ui.messages[0].manifest);
   ui.deliver('comparison',result);
   assert.match(ui.elements.get('compareconfig').textContent,/Horizonte: 7 dias.*3 animais.*Volumoso \/ pasto.*chuva/);
-  assert.match(ui.elements.get('chart')['aria-label'],/Evolução de peso médio em 7 dias/);
+  assert.match(ui.elements.get('chart')['aria-label'],/kg\/animal durante 7 dias/);
   const consumption=(result.rows.at(-1).scenarioConsumptionKgDM/3).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
   assert.ok(ui.elements.get('results').innerHTML.includes(consumption+' kg MS/animal'));
   assert.match(ui.elements.get('results').innerHTML,/relativa: indefinida \(base zero\)/);

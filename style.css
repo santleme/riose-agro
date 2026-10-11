@@ -5,5 +5,14 @@
 .explanation{margin-top:14px;padding:11px;border:1px solid var(--line);background:#f8faf5}.explanation button{font-size:10px}.explanation p{margin:8px 0 4px;font-size:11px;line-height:1.5;color:#43543d}.explanation small{font-size:9px;color:var(--muted)}.explanation button:disabled{opacity:.6;cursor:wait}
 .pasture-summary{margin:14px 0 18px;border:1px solid #dde5d6;padding:14px;border-radius:3px;overflow-x:auto}.pasture-summary h3{font:10px monospace;letter-spacing:.5px;color:#8a967e;margin:0 0 9px}.pasture-summary p{font-size:10px;line-height:1.5;color:#788579;margin:9px 0 0}.pasture-table{width:100%;border-collapse:collapse;font-size:10px}.pasture-table th,.pasture-table td{padding:7px 6px;border-bottom:1px solid #edf0e9;text-align:right;white-space:nowrap}.pasture-table thead th{font:9px monospace;color:#788579}.pasture-table th:first-child,.pasture-table td:first-child{text-align:left}.pasture-table tbody th{font-weight:600;color:#315c42}@media(max-width:600px){.comparison-results{grid-template-columns:1fr;gap:8px}.pasture-summary{padding:10px}.pasture-table th,.pasture-table td{padding:6px 4px;font-size:8px}.pasture-table thead th{font-size:7px}}
 .intake-summary{margin:14px 0 18px;border:1px solid #dde5d6;padding:14px;border-radius:3px;overflow-x:auto}.intake-summary h3{font:10px monospace;letter-spacing:.5px;color:#8a967e;margin:0 0 9px}
+.comparison-context{margin:14px 0;padding:14px;border:1px solid #cdd9c3;border-radius:3px;background:#f0f4e8}
+.comparison-context h3{margin:0 0 7px;font-size:12px}
+.comparison-context h3:not(:first-child){margin-top:14px}
+.comparison-context p,.comparison-context li{font-size:11px;line-height:1.6;color:#53634f}
+.comparison-context p{margin:6px 0}
+.comparison-context ul{padding-left:20px;margin:8px 0}
+.metric-evidence{font-size:10px;line-height:1.6;color:#53634f!important}
+.metric-evidence b{display:block;font-size:10px;margin-bottom:4px}
+.row-derivation{display:block;white-space:normal;min-width:140px;font-weight:400;line-height:1.5;color:#647467;margin-top:5px}
 
 .result-card p+p{margin-top:7px;color:#496c3e}

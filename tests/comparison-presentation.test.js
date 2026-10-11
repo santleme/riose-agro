@@ -1,0 +1,192 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+import {FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
+import {createServer} from '../server.js';
+
+const source=await readFile(new URL('../app.js',import.meta.url),'utf8');
+const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+function presentation(snapshot=new FarmEngine(42,2).snapshot()){
+  const elements=new Map();
+  const element=id=>{
+    if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',attributes:{},setAttribute(key,value){this.attributes[key]=value;},showModal(){this.open=true;}});
+    return elements.get(id);
+  };
+  const context=vm.createContext({
+    $:element,comparisonSnapshot:snapshot,comparisonManifest:undefined,comparison:undefined,requestCompare:false,loadingScenario:false,pendingComparison:undefined,
+    state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,
+    dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
+    compareBusy(){},setRunning(){},notify(){},worker:{postMessage(message){context.lastMessage=message;}}
+  });
+  // Execute the existing presentation and import handlers without booting the canvas/worker UI.
+  vm.runInContext(source.slice(source.indexOf('const currency='),source.indexOf('const actionNames=')),context);
+  vm.runInContext(source.slice(source.indexOf('function comparisonNumber('),source.indexOf('let noticeTimer')),context);
+  vm.runInContext(source.slice(source.indexOf("$('manifest-file').onchange="),source.indexOf('function downloadFile(')),context);
+  return {context,element,markup:()=>[...elements.values()].map(item=>item.innerHTML+' '+item.textContent).join('\n')};
+}
+
+test('comparison renders derived metadata, periods, units, assumptions and real-data gaps',()=>{
+  const snapshot=new FarmEngine(42,2).snapshot(),ui=presentation(snapshot);
+  ui.context.showComparison(compare(snapshot,2));
+  assert.equal(ui.element('comparison').open,true);
+  assert.equal((ui.element('results').innerHTML.match(/Derivado · demonstrativo · não validado/g)??[]).length,4);
+  for(const id of ['results','intake-summary','pasture-summary','chart-note']){
+    assert.match(ui.element(id).innerHTML,/Período:/);
+    assert.match(ui.element(id).innerHTML,/href="\/engine.js"/);
+    assert.match(ui.element(id).innerHTML,/Regra:/);
+  }
+  assert.match(ui.element('results').innerHTML,/kg\/animal|kg MS\/lote|R\$\/lote/);
+  assert.match(ui.element('intake-summary').innerHTML,/KG MS\/LOTE/);
+  assert.match(ui.element('pasture-summary').innerHTML,/KG MS\/PIQUETE/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/Observações reais · nenhuma conectada/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/issue #12/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/Hipóteses usadas/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/8,00 kg MS\/animal\/dia/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/Não há calibração nem intervalo de confiança/);
+  for(const id of ['comparison-coverage','comparison-assumptions','chart-note'])assert.match(html,new RegExp('id="'+id+'"'));
+});
+
+test('finite zero stays zero while missing, invalid and nonfinite metrics stay unavailable',()=>{
+  const ui=presentation();
+  for(const value of [undefined,null,NaN,Infinity,-Infinity,'0',false,{}]){
+    assert.equal(ui.context.comparisonNumber(value),'Indisponível');
+    assert.equal(ui.context.comparisonCurrency(value),'Indisponível');
+    assert.match(ui.context.resultDifference(value,4,'kg'),/Indisponível/);
+  }
+  assert.equal(ui.context.comparisonNumber(0),'0,0');
+  assert.match(ui.context.resultDifference(0,1,'kg'),/base zero/);
+  assert.match(ui.context.resultDifference(0,0,'kg'),/\+0,0 kg/);
+  ui.context.showComparison({days:1,rows:[{day:1,baselineWeight:0,scenarioWeight:null,baselineCost:0,scenarioCost:Infinity}]});
+  assert.match(ui.element('results').innerHTML,/Indisponível kg\/animal/);
+  assert.match(ui.element('results').innerHTML,/R\$\s*0/);
+  assert.match(ui.element('pasture-summary').innerHTML,/Indisponível/);
+  assert.doesNotMatch(ui.markup(),/NaN|Infinity|undefined/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/métricas finais ausentes ou inválidas/);
+});
+
+test('missing arrays, rows and initial ledgers never crash or become zero consumption',()=>{
+  const snapshot=new FarmEngine(42,2).snapshot();delete snapshot.intake;
+  const ui=presentation(snapshot);
+  ui.context.showComparison(compare(snapshot,1));
+  assert.match(ui.element('results').innerHTML,/Indisponível kg MS\/lote/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/Registro inicial de consumo incompleto/);
+  assert.match(ui.element('intake-summary').innerHTML,/Indisponível/);
+  assert.doesNotThrow(()=>ui.context.showComparison({days:1}));
+  assert.match(ui.element('chart').innerHTML,/Indisponível/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/Série diária ausente/);
+  assert.doesNotThrow(()=>ui.context.comparisonCSV({}));
+});
+
+test('missing final day cannot be presented as a result for that day; chart gaps split lines',()=>{
+  const snapshot=new FarmEngine(42,2).snapshot(),ui=presentation(snapshot),data=compare(snapshot,3);
+  data.rows[1].scenarioWeight=null;
+  ui.context.showComparison(data);
+  assert.equal((ui.element('chart').innerHTML.match(/<polyline/g)??[]).length,3);
+  assert.match(ui.element('comparison-coverage').innerHTML,/gráfico interrompe/);
+  data.rows.pop();
+  ui.context.showComparison(data);
+  assert.match(ui.element('results').innerHTML,/Indisponível kg\/animal/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/Série diária incompleta/);
+});
+
+test('import keeps its own population, config and snapshot; validated true cannot upgrade evidence',async()=>{
+  const snapshot=new FarmEngine(41,2).snapshot();snapshot.config={diet:'balanced',supplement:1.5,weather:'hot',housing:'barn'};snapshot.hour=54;
+  const manifest=createComparisonManifest(snapshot,2);manifest.validated=true;
+  const ui=presentation();
+  await ui.element('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}],value:'import'}});
+  const replaySnapshot=ui.context.pendingComparison?.snapshot??ui.context.comparisonSnapshot;
+  const replayManifest=ui.context.pendingComparison?.manifest??ui.context.comparisonManifest;
+  assert.deepEqual(replaySnapshot,snapshot);
+  assert.equal(ui.context.lastMessage.type,'replayComparison');
+  const data=replayComparisonManifest(ui.context.lastMessage.manifest);
+  // The presentation stays tied to the imported manifest's snapshot and population.
+  ui.context.comparisonSnapshot=replaySnapshot;
+  ui.context.comparisonManifest=replayManifest;
+  // Even a payload claiming validation never changes the presentation's authoritative label.
+  ui.context.showComparison({...data,validated:true});
+  assert.match(ui.element('compareconfig').textContent,/2 animais/);
+  assert.match(ui.element('compareconfig').textContent,/dia 3 às 06:00/);
+  assert.match(ui.element('compareconfig').textContent,/Balanceada, 1,5 kg MS.*calor/);
+  assert.match(ui.element('compareconfig').textContent,/demonstrativo · não validado/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/Suplemento efetivamente usado: 1,50/);
+  assert.equal(ui.context.comparisonPerAnimal(10),5);
+  const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
+  assert.equal(csv[5],(data.rows.at(-1).baselineConsumptionKgDM/2).toFixed(4));
+  assert.equal(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/2).toFixed(4));
+  assert.notEqual(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/24).toFixed(4));
+  assert.match(ui.element('results').innerHTML,/Derivado · demonstrativo · não validado/);
+});
+
+test('all presentation provenance links resolve through the existing static server',async t=>{
+  const snapshot=new FarmEngine(42,2).snapshot(),ui=presentation(snapshot);
+  ui.context.showComparison(compare(snapshot,1));
+  const links=[...new Set([...ui.markup().matchAll(/href="([^"]+)"/g)].map(match=>match[1]))];
+  assert.deepEqual(links.sort(),['/engine.js','/worker.js']);
+  const server=createServer({env:{}});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  for(const link of links){
+    const response=await fetch('http://127.0.0.1:'+server.address().port+link);
+    assert.equal(response.status,200);
+    assert.match(await response.text(),link==='/engine.js'?/ASSUMPTIONS|function compare/:/replayComparison/);
+  }
+});
+
+test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{
+  const variants=[
+    [null,1800,1800,1800],
+    [undefined,1800,1800,1800],
+    [NaN,1800,1800,1800],
+    [Infinity,1800,1800,1800],
+    [-Infinity,1800,1800,1800],
+    [1800,,1800,1800]
+  ];
+  for(const pastures of variants){
+    const snapshot=new FarmEngine(42,2).snapshot();snapshot.pastures=pastures;
+    const ui=presentation(snapshot),data=compare(snapshot,3);
+    ui.context.showComparison(data);
+    for(const id of ['results','intake-summary','pasture-summary','chart']){
+      assert.match(ui.element(id).innerHTML,/Indisponível/);
+    }
+    assert.equal((ui.element('results').innerHTML.match(/<strong>Indisponível/g)??[]).length,4);
+    assert.match(ui.element('comparison-coverage').innerHTML,/Estoque inicial do snapshot incompleto ou inválido/);
+    assert.doesNotMatch(ui.markup(),/NaN|Infinity|undefined|5\.820/);
+    const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
+    assert.equal(csv[0],'3');
+    assert.ok(csv.slice(1).every(value=>value==='Indisponível'));
+  }
+  const validSnapshot=new FarmEngine(42,2).snapshot();validSnapshot.pastures=[0,1800,1800,1800];
+  const valid=presentation(validSnapshot);
+  valid.context.showComparison(compare(validSnapshot,3));
+  assert.doesNotMatch(valid.element('comparison-coverage').innerHTML,/Estoque inicial do snapshot incompleto ou inválido/);
+  assert.match(valid.element('pasture-summary').innerHTML,/<td>0<\/td>/);
+});
+
+test('replayed null pasture stock remains unavailable after JSON import and engine coercion',async()=>{
+  const snapshot=new FarmEngine(42,2).snapshot(),manifest=createComparisonManifest(snapshot,3);
+  manifest.initialSnapshot.pastures[0]=null;
+  const ui=presentation();
+  await ui.element('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}],value:'import'}});
+  assert.equal(ui.context.lastMessage.type,'replayComparison');
+  const replaySnapshot=ui.context.pendingComparison?.snapshot??ui.context.comparisonSnapshot;
+  const replayManifest=ui.context.pendingComparison?.manifest??ui.context.comparisonManifest;
+  assert.deepEqual(replaySnapshot,manifest.initialSnapshot);
+  ui.context.comparisonSnapshot=replaySnapshot;
+  ui.context.comparisonManifest=replayManifest;
+  ui.context.pendingComparison=undefined;
+  ui.context.showComparison(replayComparisonManifest(ui.context.lastMessage.manifest));
+  assert.match(ui.element('comparison-coverage').innerHTML,/Estoque inicial do snapshot incompleto ou inválido/);
+  assert.equal((ui.element('results').innerHTML.match(/<strong>Indisponível/g)??[]).length,4);
+  assert.match(ui.element('chart').innerHTML,/Indisponível/);
+});
+
+test('a missing intermediate day splits both otherwise finite chart trajectories',()=>{
+  const snapshot=new FarmEngine(42,2).snapshot(),ui=presentation(snapshot),data=compare(snapshot,4);
+  data.rows.splice(2,1);
+  ui.context.showComparison(data);
+  assert.equal((ui.element('chart').innerHTML.match(/<polyline/g)??[]).length,4);
+  assert.match(ui.element('comparison-coverage').innerHTML,/Série diária incompleta/);
+  assert.doesNotMatch(ui.element('results').innerHTML,/<strong>Indisponível/);
+});
+
