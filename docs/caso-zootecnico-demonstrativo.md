@@ -39,3 +39,15 @@ Um(a) especialista e o responsável pelos dados precisam definir antes de uma va
 - origem, versão, permissão/licença e separação entre dados de calibração e validação.
 
 Até essas decisões serem tomadas, não há uma população real ou um período de campo defensável para o motor. O projeto não tem dados medidos de animais nem pastos. Não se pode inferir área, lotação ou condição do pasto a partir dos estoques abstratos em kg MS/piquete. A issue [#1](https://github.com/santleme/riose-agro/issues/1) permanece aberta para revisão especializada; a issue [#6](https://github.com/santleme/riose-agro/issues/6) permanece aberta para validação independente.
+
+## Candidato a caso com dados públicos (aguarda revisão especializada)
+
+Uma opção viável para um protótipo separado do motor adulto atual é reproduzir um ensaio publicado de bezerras leiteiras:
+
+> Em bezerras Holandesas alojadas individualmente, como diferem o consumo diário de matéria seca e o ganho médio diário até o início do desaleitamento entre controle sem feno e acesso a feno longo no balde?
+
+O estudo de referência incluiu 27 bezerras (9 por grupo: controle, feno no balde e feno em tubo), acompanhadas do nascimento até o desaleitamento; há consumo diário de grãos/feno/TMR/água e pesos semanais. O contraste inicial proposto é somente **controle versus feno no balde**; o grupo do tubo fica fora do contraste primário para manter uma intervenção interpretável. Desfecho primário proposto: ganho médio diário (kg/cabeça/dia) até o início do desaleitamento. Secundário: consumo de MS por fonte (g/cabeça/dia, convertido para kg apenas para apresentação) e ruminação/comportamento quando disponível.
+
+Entradas e unidades identificadas: idade (dias), tratamento, ingestão de grão/feno/TMR em g de MS/dia, água em L/dia, peso vivo semanal em kg, e protocolo de leite e alojamento descrito no estudo. Os demais fatores do ensaio devem ser transcritos do método antes de implementar o caso. Limites: amostra pequena, população de bezerras leiteiras dos EUA em alojamento individual; não representa bovinos de corte adultos, pastejo, rebanhos brasileiros nem manejo comercial de uma fazenda. O candidato precisa de revisão de especialista antes de ser escolhido e não valida os parâmetros atuais de `engine.js`.
+
+A fonte e o segundo conjunto independente com ingestão diária, mas sem peso, estão descritos em [`fontes-dados-candidatos.md`](fontes-dados-candidatos.md). Se aprovado, deve virar um módulo/caso isolado para evitar misturar as equações de animais adultos com dados de bezerras.
