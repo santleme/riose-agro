@@ -10,10 +10,9 @@ O inspetor também mantém até 40 transições recentes por animal. Cada regist
 
 ## Verificação
 
-- `npm test` cobre reprodução por semente, mudança exclusiva de alojamento, preservação do snapshot de entrada, repetibilidade da projeção e reprodução do histórico por animal.
-- `node --check app.js`, `node --check worker.js` e `node --check engine.js` verificam sintaxe.
-- `python3 -m http.server 8765` serve o app localmente; módulos e Web Worker precisam de HTTP, não `file://`.
-- O teste manual de HTTP retornou `200 OK` para `/`.
+- `npm test`: 17 testes cobrem comparação controlada, ingestão/estoque, manifestos, cenários determinísticos, explicação opcional e fallback.
+- `node --check app.js`, `worker.js`, `engine.js` e `server.js` verificam sintaxe JavaScript.
+- `git diff --check` deve ser executado sobre os arquivos de código e documentação incluídos na entrega.
 
 ## Métricas e parâmetros
 
@@ -46,21 +45,21 @@ Peso, consumo, custos, estresse, forragem e ganhos são **demonstrativos**. Não
 
 ## Decisões e limites
 
-- Manter o mapa canvas e a renderização própria: já atendem a seleção/inspeção atual; não há necessidade observada de editor de tiles ou pathfinding neste incremento.
-- Manter o motor determinístico local, sem dependência de API. A interface do sistema não precisa de LLM para comparação numérica.
-- Adiar interface opcional para Hugging Face/Groq até que exista uma tarefa concreta de explicação/diálogo e backend protegido. Antes disso, confirmar em documentação oficial modelos disponíveis, protocolo de saída, limites e custos. A resposta de um modelo nunca será medida do motor.
-- Não foi criado backend de cenários persistentes, exportação de semente/parâmetros, consumo medido ou validação biológica nesta entrega. O livro de consumo e a condição de pasto foram implementados como estimativas demonstrativas.
-- As análises estáticas REA do app local e do recorte Smallville estão em `docs/evidence/`. Após esta etapa, REA analisou seis arquivos do app e emitiu Evidence `ev_4ad96b98a1908efa97adb3317d8fe978c8390027767c6aa5ca83a050266d4c68`, com o grafo compacto em `rea-agroville-issue3-static.json`. Em 11/10/2026, a análise Smallville repetida retornou o Evidence ID arquivado; `doctor --client codex` marcou registro e skill alinhados. O relatório geral aponta engines nativos opcionais ausentes, desnecessários para análise JavaScript. O `doctor` sob Node Linux 20.20.2 do WSL marca Node incompatível ao tentar diagnosticar a configuração Windows; para REA use o Node Windows 24.19.0 do Codex. O comando global `rea` não está no PATH WSL e o MCP ainda não aparece nesta sessão; é necessário reiniciar o Codex. A observação passiva da demo continua pendente porque o Chrome CDP em `127.0.0.1:9222` estava inacessível e a URL pública não abriu na ferramenta de navegação; a tarefa está atribuída a `GUZZBR1`.
-- O repositório privado [santleme/riose-agro](https://github.com/santleme/riose-agro) recebeu o código no commit `5b8034a`. A issue #3 (consumo e estoque por piquete) foi concluída no commit `17bce17`. A issue #2 documenta os parâmetros como demonstrativos e está concluída; as issues #1 e #6 seguem com `santleme`. As issues #4, #5, #7, #8 e #10 estão atribuídas ao contributor `GUZZBR1`. As issues #3, #9 e #11 foram fechadas após entrega.
+- Manter o mapa canvas e a renderização própria: já atendem à seleção e inspeção atuais.
+- Manter o motor determinístico local. Os cenários nomeados ficam no armazenamento do navegador; manifestos JSON registram snapshot, semente, período, fator e configurações para reprodução.
+- A aleatoriedade de modelo e locomoção usa fluxos separados. Snapshots antigos recebem uma semente de locomoção derivada de forma determinística; a trajetória de locomoção antiga não é preservada.
+- A explicação por LLM é opcional, isolada no backend e incapaz de aplicar ações. Sem chave ou rede, o fallback determinístico continua disponível. Textos explicativos são “não medidos”.
+- As equações, consumo e estoque de forragem continuam sendo hipóteses demonstrativas; não há calibração nem validação biológica.
+- A análise estática REA está arquivada em `docs/evidence/`. A preparação do REA foi confirmada pelo `doctor`, mas `list-browser-targets` ainda retorna `endpoint_unreachable`; portanto, não há alvo CDP nem Evidence de captura passiva da demo. Essa evidência de runtime continua pendente.
+- As issues #4, #5, #7 e #8 estão implementadas localmente e serão enviadas em PR para revisão. As issues #1 e #6 ainda exigem definição de domínio e dados; a #10 segue pendente da captura passiva REA.
 
 ## Próximos passos recomendados
 
-1. Tornar a comparação uma entidade exportável com semente, estado inicial, parâmetros, intervalo e fator alterado em JSON/CSV.
-2. Separar cenários do estado vivo do mapa, para que o usuário consiga nomear, salvar e repetir intervenções.
-3. Definir uma pergunta zootécnica com especialista, selecionar dados de entrada e referência científica, e validar as saídas antes de rotular qualquer número como previsão.
-4. Medir desempenho e cobertura de testes antes de considerar migração de engine ou renderer.
-5. Reiniciar o Codex, abrir a demo num Chrome com CDP elegível e fazer captura passiva pelo REA; comparar essa evidência com o código local.
-6. Avaliar filtros e recuperação por relevância na linha do tempo quando houver mais eventos e requisitos observados de usuários.
+1. Definir com especialista a pergunta zootécnica, categoria, duração e desfecho (#1).
+2. Obter dados licenciados e protocolo independente para validação (#6).
+3. Concluir a captura passiva da demo com REA quando um alvo CDP estiver acessível (#10).
+4. Medir desempenho e cobertura antes de considerar migração de engine ou renderer.
+5. Avaliar filtros e recuperação por relevância quando houver requisitos observados de usuários.
 
 ## Backlog
 
