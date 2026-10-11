@@ -1,6 +1,6 @@
 # Roteiro de solicitação de dados: DMI de bovinos adultos em pastejo (WVU)
 
-Status: **rascunho local; nenhum contato foi enviado**.
+Status: **mensagem pronta; ainda não enviada porque nenhum conector de email está conectado nesta sessão**.
 
 O artigo de Blake et al. (2026; [DOI 10.1093/jas/skag133](https://doi.org/10.1093/jas/skag133)) descreve DMI individual diária de bovinos de corte em pastejo e informa: “Data may be available by contacting the corresponding author.” A avaliação reportada inclui separações retidas por animal e por sistema/local, mas o artigo não fornece os arquivos nem uma licença aberta. O DMI de referência é estimado por marcador fecal e digestibilidade da forragem, e não deve ser descrito como pesagem direta de alimento consumido.
 
@@ -16,7 +16,9 @@ Este é um pedido de acesso para avaliar um único alvo compatível do motor (CM
 6. Quais termos/licença permitem validação interna, publicação de métricas agregadas, divulgação de checksums e armazenamento de um manifesto sem redistribuir os registros brutos? Há NDA, taxa, revisão dos resultados ou aprovação ética aplicáveis?
 7. Qual citação e reconhecimento devem acompanhar a análise? Há uma pessoa responsável pela aprovação de uso dos dados além do autor correspondente?
 
-## Rascunho de mensagem (em inglês)
+## Mensagem autorizada para envio (em inglês)
+
+To: matt.wilson@mail.wvu.edu
 
 > **Subject:** Request for access and reuse terms for grazing beef-cattle DMI records
 >
@@ -24,18 +26,19 @@ Este é um pedido de acesso para avaliar um único alvo compatível do motor (CM
 >
 > I am assessing whether the Agroville prototype can be evaluated against independent measurements of beef-cattle intake. Your paper, “Generalizable long short-term memory models for beef cattle DMI under grazing” (DOI: 10.1093/jas/skag133), describes individual daily DMI records across grazing and drylot systems and notes that data may be available by contacting the corresponding author.
 >
-> Would an anonymized, research-use extract and data dictionary be available? For a leakage-safe assessment, stable pseudonymous animal IDs and study/test/site/year/group identifiers would be important, along with DMI units and calculation protocol, measurement coverage and exclusions, and the associated weight, water, weather, and grazing-context fields where they may be shared.
+> Would an anonymized, research-use extract of the individual DMI records and a data dictionary be available? For a leakage-safe assessment, stable pseudonymous animal IDs and study/test/site/year/group identifiers would be important, along with DMI units and calculation protocol, measurement coverage and exclusions, and the associated weight, water, weather, and grazing-context fields where they may be shared.
 >
 > Our first proposed use would be limited to an exploratory check of the prototype’s daily dry-matter-intake output. We would not treat it as validation of weight, cost, pasture-stock, or pasture-versus-confinement outputs, and would keep animals/tests/sites grouped when reserving evaluation data. Before any analysis, could you clarify the applicable license or agreement, whether aggregate metrics may be published, and whether there are fees, review, or ethics requirements? We would not redistribute the raw records.
 >
 > If there is a preferred data request form or repository, please point me to it. Thank you for considering the request.
 >
 > Best regards,\
-> [name / affiliation / contact]
+> Lucas Coimbra\
+> Agroville prototype project
 
 ## Gate antes de enviar ou analisar
 
-- Preencher identidade/afiliação e obter autorização explícita do usuário para contato externo.
+- O usuário autorizou explicitamente o envio em 2026-10-11; o autor correspondente e o endereço foram confirmados no artigo. Enviar pela conta de email conectada do usuário, sem alegar afiliação institucional.
 - Não assumir licença ou consentimento a partir da disponibilidade por contato; registrar os termos concedidos.
 - Confirmar unidades, algoritmo de referência, cobertura, missingness, filtros e mudanças anuais do protocolo.
 - Congelar estimando, entradas, população e split antes de qualquer ajuste; manter animal/teste/site inteiros no holdout apropriado e não usar rótulos retidos para calibração.

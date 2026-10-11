@@ -21,6 +21,18 @@
       "upstreamFilename": "Moo2019-20_dailymetrics_w_ADG_by_studyperiod_dictionary.csv",
       "downloadUrl": "https://ndownloader.figshare.com/files/44531615",
       "sha256": "69d760a9b8b5f47e00f9de593aae484c0187682c44aecd0a4ab5ec682a26081a"
+    },
+    {
+      "path": "daily.csv",
+      "upstreamFilename": "Moo2019-20_dailymetrics_database.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44531618",
+      "sha256": "343258c6992eef3de542a0b95485978cd898919e2136b26213729887d547b9eb"
+    },
+    {
+      "path": "daily_dict.csv",
+      "upstreamFilename": "Moo2019-20_dailymetrics_database_dictionary.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44531621",
+      "sha256": "bcb5e0ec990904652150d758b00f10cc612465586f08d7c2ce5b708463d430b2"
     }
   ]
 }

@@ -90,9 +90,10 @@ The command validates the manifest with the engine's existing rules, records the
 - `scripts/archive-comparison.js` and `scripts/validate-outcome-record.js` — reproducible archive and outcome-link validation commands
 - `outcome-review.html`, `outcome-review.js`, `outcome-review.css` — browser-local post-decision capture and sidecar export
 - `docs/registro-desfecho.md` and `tests/outcome-record.test.js` — outcome contract, limits, and review/consent/comparability checks
-- `data/usda-cper/period.csv` — public-domain period outcomes from the USDA CPER study; retained for a validation-feasibility audit, not engine calibration
-- `data/usda-cper/manifest.json` — DOI, license, direct source URLs, and pinned SHA-256 checksums for the archived period table and dictionary
+- `data/usda-cper/period.csv` and `daily.csv` — public-domain adult ADG-by-period and daily grazing observations from USDA/CPER; used for read-only exploration, not engine calibration
+- `data/usda-cper/manifest.json` — DOI, license, direct source URLs, and pinned SHA-256 checksums for both data tables and dictionaries
 - `scripts/audit_usda_cper_validation.py` — source hash checks, grouped mean baseline and exploratory cross-validated ADG model, with explicit engine-target compatibility report (`npm run audit:usda-cper`)
+- `scripts/audit_usda_cper_daily.py` — source hash, daily schema, coverage, duplicate animal-day, and codebook consistency audit (`npm run audit:usda-cper-daily`)
 - `tests/usda-audit.test.js` — checks grouped holdout coverage and that the audit does not claim model validation
 - `docs/engenharia-reversa.md` — evidence ledger for Smallville, Simile, REA static analysis, and runtime-observation limits
 

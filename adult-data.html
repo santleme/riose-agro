@@ -45,11 +45,26 @@
       <p class="table-note">Dados ausentes não são preenchidos. 60dADG_INT identifica o intervalo do estudo; as datas exatas não constam nesta tabela-resumo.</p>
     </section>
 
+    <section class="explorer daily-explorer" aria-labelledby="daily-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">SÉRIE DIÁRIA PUBLICADA</div><h2 id="daily-title">Sinais observados no piquete</h2></div>
+        <div class="daily-controls">
+          <label class="measure-control" for="animal-select">Animal<select id="animal-select"></select></label>
+          <label class="measure-control" for="daily-measure">Medida<select id="daily-measure"><option value="grazingHours">Horas de pastejo (h/dia)</option><option value="bout">Duração do bout (min/dia)</option><option value="velocity">Velocidade ao pastejar (m/min)</option><option value="biomass">Biomassa estimada (kg MS/ha)</option></select></label>
+        </div>
+      </div>
+      <p class="measure-note">Um ponto é um dia-animal observado. Dias sem observação ficam em branco; não interpolamos valores nem tratamos ADG como diário.</p>
+      <div class="chart-wrap daily-chart-wrap"><svg id="daily-chart" viewBox="0 0 900 320" role="img" aria-label="Série diária observada para o animal selecionado"></svg></div>
+      <div class="study-facts daily-facts" id="daily-facts" aria-live="polite"><span>Carregando dados diários…</span></div>
+      <div class="table-scroll daily-table-scroll"><table><thead><tr><th>Data</th><th>Piquete</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Velocidade (m/min)</th><th>Biomassa (kg MS/ha)</th><th>Dia completo</th></tr></thead><tbody id="daily-records"></tbody></table></div>
+      <p class="table-note">A marca de dia completo segue o dicionário da fonte: 1.368–1.512 minutos registrados (±5% de 24 horas). Biomassa é estimativa por satélite. O dicionário tem códigos inconsistentes nas colunas de intervalo; por isso a série é organizada apenas por data, animal e piquete. ADG fica no nível de intervalo do arquivo-resumo acima, nunca replicado por dia.</p>
+    </section>
+
     <section class="limits">
       <h2>Limites de interpretação</h2>
       <ul>
         <li>O gráfico mostra uma associação dentro deste conjunto; não identifica que mudar o pastejo cause mudança no ADG.</li>
-        <li>36 registros incluem 33 brincos únicos. Uma validação deve agrupar todos os períodos do mesmo animal e ainda precisa de dados externos.</li>
+        <li>O resumo tem 36 registros animal-período e a série diária tem 644 linhas de animal-dia, ambas com 33 brincos. O ADG é medido por intervalo de cerca de 60 dias; não é um desfecho diário e as linhas repetidas não são independentes.</li>
         <li>Os dados não incluem DMI individual, custo alimentar ou comparador pasto–confinamento. Eles não validam as previsões de peso, consumo, custo ou forragem de <code>engine.js</code>.</li>
         <li>É um sistema de pastagem específico do Colorado; não representa fazendas brasileiras. O estudo é mostrado como dado observado, não como resultado do motor.</li>
       </ul>
