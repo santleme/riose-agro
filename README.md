@@ -1,6 +1,6 @@
 # Agroville — MVP 0.1
 
-Small browser-based pixel-art cattle-farm simulator. The MVP lets you select animals, explore the map, change diet, supplement, location, and weather, and compare pasture with confinement over 30 illustrative days. The comparison holds diet, supplement, weather, and starting state constant so housing is the only changed factor.
+Small browser-based pixel-art cattle-farm simulator. The MVP lets you select animals, explore the map, change diet, supplement, location, and weather, and compare pasture with confinement over 30 illustrative days. The comparison holds diet, supplement, weather, and starting state constant so housing is the only changed factor. It reports modeled dry-matter intake and per-paddock forage stock alongside weight and feed cost.
 
 ## Run locally
 

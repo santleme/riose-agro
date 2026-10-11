@@ -67,3 +67,41 @@ test('activity histories replay deterministically with the same seed', () => {
   }
   assert.deepEqual(first.snapshot().animals.map(animal => animal.history), second.snapshot().animals.map(animal => animal.history));
 });
+
+test('comparison reports simulated intake and pasture stock by paddock', () => {
+  const engine = new FarmEngine(93, 4);
+  engine.configure({diet: 'balanced', supplement: 1});
+  engine.tick(24);
+  const start = engine.snapshot();
+  const result = compare(start, 3);
+  const end = result.rows.at(-1);
+
+  assert.equal(result.initialPastureByPaddock.length, 4);
+  assert.equal(end.baselinePastureByPaddock.length, 4);
+  assert.equal(end.scenarioPastureByPaddock.length, 4);
+  assert.equal(result.rows[0].baselineConsumptionKgDM, 0);
+  assert.equal(result.rows[0].scenarioConsumptionKgDM, 0);
+  assert.ok(end.baselineConsumptionKgDM > 0);
+  assert.ok(end.scenarioConsumptionKgDM > 0);
+  assert.ok(end.baselinePastureKgDM < end.scenarioPastureKgDM);
+  assert.deepEqual(engine.snapshot(), start);
+});
+
+test('intake ledger separates pasture, confinement base feed, supplement, and diet extra', () => {
+  const pasture = new FarmEngine(21, 3);
+  pasture.configure({diet: 'balanced', supplement: 1.5});
+  pasture.tick(24);
+  const pastureIntake = pasture.metrics().intake;
+  assert.ok(pastureIntake.pastureKgDM > 0);
+  assert.equal(pastureIntake.barnBaseKgDM, 0);
+  assert.ok(pastureIntake.supplementKgDM > 0);
+  assert.ok(pastureIntake.dietExtraKgDM > 0);
+  assert.equal(pastureIntake.totalKgDM, pastureIntake.pastureKgDM + pastureIntake.supplementKgDM + pastureIntake.dietExtraKgDM);
+
+  const barn = FarmEngine.from(pasture.snapshot());
+  barn.configure({housing: 'barn'});
+  barn.tick(24);
+  const barnIntake = barn.metrics().intake;
+  assert.ok(barnIntake.barnBaseKgDM > 0);
+  assert.equal(barnIntake.pastureKgDM, pastureIntake.pastureKgDM);
+});

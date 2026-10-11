@@ -17,7 +17,7 @@ export class FarmEngine {
   state         ;
   constructor(seed=2026,count=24){
     if(!Number.isInteger(count)||count<1||count>10000)throw new Error('Animal count must be 1–10000');
-    this.state={hour:6,animals:[],pastures:Array(4).fill(ASSUMPTIONS.initialPastureKgDM),config:{...DEFAULT_CONFIG},cost:0,events:[{hour:6,text:'Fazenda iniciada. Os animais estão no pasto.'}],seed:seed>>>0};
+    this.state={hour:6,animals:[],pastures:Array(4).fill(ASSUMPTIONS.initialPastureKgDM),intake:{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0},config:{...DEFAULT_CONFIG},cost:0,events:[{hour:6,text:'Fazenda iniciada. Os animais estão no pasto.'}],seed:seed>>>0};
     for(let i=0;i<count;i++){const weight=330+this.random()*70;const patch=i%4;const b=patchBounds[patch];const x=b.x+10+this.random()*(b.w-20),y=b.y+10+this.random()*(b.h-20);const animal={id:i+1,name:names[i%names.length]+(i>=names.length?' '+(i+1):''),weight,initialWeight:weight,energy:75,thirst:20,action:'grazing',patch,x,y,targetX:x,targetY:y,history:[]};this.state.animals.push(animal);this.recordActivity(animal,'pasture_housing',20,false);}
   }
   random(){this.state.seed=(Math.imul(1664525,this.state.seed)+1013904223)>>>0;return this.state.seed/4294967296;}
@@ -53,13 +53,15 @@ export class FarmEngine {
         a.action=reason==='rest_window'?'resting':reason==='thirst_threshold'?'drinking':reason==='pasture_housing'?'grazing':'feeding';
         if(a.action==='drinking')a.thirst=12;
         const demand=ASSUMPTIONS.baseDemandKgDM*(a.weight/360)*heat/24;
-        let forage=demand;
+        let forage=0,barnBaseFeed=0;
         if(c.housing==='pasture'){forage=Math.min(demand,s.pastures[a.patch]);s.pastures[a.patch]-=forage;}
-        else s.cost+=demand*0.65;
+        else {barnBaseFeed=demand;s.cost+=demand*0.65;}
         const supplement=c.supplement/24;
         const dietExtra=c.diet==='pasture'?0:c.diet==='balanced'?1.8/24:3.2/24;
         s.cost+=supplement*ASSUMPTIONS.supplementPrice+dietExtra*(c.diet==='balanced'?ASSUMPTIONS.balancedPrice:ASSUMPTIONS.concentratePrice);
-        const energyIntake=forage+supplement*1.2+dietExtra*1.35;
+        s.intake??={pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};
+        s.intake.pastureKgDM+=forage;s.intake.barnBaseKgDM+=barnBaseFeed;s.intake.supplementKgDM+=supplement;s.intake.dietExtraKgDM+=dietExtra;
+        const energyIntake=forage+barnBaseFeed+supplement*1.2+dietExtra*1.35;
         const gain=(energyIntake-ASSUMPTIONS.maintenanceKgDM*(a.weight/360)/24)*ASSUMPTIONS.gainFactor;
         a.weight=Math.max(200,a.weight+gain);
         a.energy=clamp(a.energy+(a.action==='resting'?5:energyIntake*4-1.5),0,100);
@@ -76,7 +78,7 @@ export class FarmEngine {
   metrics()         {return metrics(this.state);}
   static from(snapshot         ){const engine=new FarmEngine(1,1);engine.state=structuredClone(snapshot);return engine;}
 }
-export function metrics(s         )        {const n=s.animals.length;return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),stress:s.config.weather==='hot'?28:s.config.housing==='barn'?12:5};}
+export function metrics(s         )        {const n=s.animals.length,intake=s.intake??{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),pastureByPaddock:[...s.pastures],intake:{...intake,totalKgDM:intake.pastureKgDM+intake.barnBaseKgDM+intake.supplementKgDM+intake.dietExtraKgDM},stress:s.config.weather==='hot'?28:s.config.housing==='barn'?12:5};}
 export function compare(snapshot         ,days=30){
   if(!Number.isInteger(days)||days<1||days>365)throw new Error('Forecast days must be 1–365');
   // Both futures share the exact same state, seed, diet, supplement and weather.
@@ -84,8 +86,20 @@ export function compare(snapshot         ,days=30){
   const baseline=FarmEngine.from(snapshot),scenario=FarmEngine.from(snapshot);
   baseline.configure({housing:'pasture'});
   scenario.configure({housing:'barn'});
-  const baseCost=snapshot.cost,baseWeight=metrics(snapshot).weight;
+  const baseCost=snapshot.cost,startMetrics=metrics(snapshot),baseWeight=startMetrics.weight;
   const rows=[];
-  for(let day=0;day<=days;day++){if(day){baseline.tick(24);scenario.tick(24);}const b=baseline.metrics(),s=scenario.metrics();rows.push({day,baselineWeight:b.weight,scenarioWeight:s.weight,baselineCost:b.cost-baseCost,scenarioCost:s.cost-baseCost});}
-  return {days,startWeight:baseWeight,comparisonFactor:'housing',baselineConfig:baseline.state.config,scenarioConfig:scenario.state.config,rows,baseline:baseline.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
+  const intakeDelta=current=>({
+    pastureKgDM:current.pastureKgDM-startMetrics.intake.pastureKgDM,
+    barnBaseKgDM:current.barnBaseKgDM-startMetrics.intake.barnBaseKgDM,
+    supplementKgDM:current.supplementKgDM-startMetrics.intake.supplementKgDM,
+    dietExtraKgDM:current.dietExtraKgDM-startMetrics.intake.dietExtraKgDM,
+    totalKgDM:current.totalKgDM-startMetrics.intake.totalKgDM
+  });
+  for(let day=0;day<=days;day++){
+    if(day){baseline.tick(24);scenario.tick(24);}
+    const b=baseline.metrics(),s=scenario.metrics();
+    const baselineIntake=intakeDelta(b.intake),scenarioIntake=intakeDelta(s.intake);
+    rows.push({day,baselineWeight:b.weight,scenarioWeight:s.weight,baselineCost:b.cost-baseCost,scenarioCost:s.cost-baseCost,baselineConsumptionKgDM:baselineIntake.totalKgDM,scenarioConsumptionKgDM:scenarioIntake.totalKgDM,baselineIntakeBySourceKgDM:baselineIntake,scenarioIntakeBySourceKgDM:scenarioIntake,baselinePastureKgDM:b.pasture,scenarioPastureKgDM:s.pasture,baselinePastureByPaddock:b.pastureByPaddock,scenarioPastureByPaddock:s.pastureByPaddock});
+  }
+  return {days,startWeight:baseWeight,initialPastureByPaddock:[...snapshot.pastures],comparisonFactor:'housing',baselineConfig:baseline.state.config,scenarioConfig:scenario.state.config,rows,baseline:baseline.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
 }
