@@ -18,15 +18,15 @@ export class FarmEngine {
   constructor(seed=2026,count=24){
     if(!Number.isInteger(count)||count<1||count>10000)throw new Error('Animal count must be 1–10000');
     this.state={hour:6,animals:[],pastures:Array(4).fill(ASSUMPTIONS.initialPastureKgDM),config:{...DEFAULT_CONFIG},cost:0,events:[{hour:6,text:'Fazenda iniciada. Os animais estão no pasto.'}],seed:seed>>>0};
-    for(let i=0;i<count;i++){const weight=330+this.random()*70;const patch=i%4;const b=patchBounds[patch];const x=b.x+10+this.random()*(b.w-20),y=b.y+10+this.random()*(b.h-20);const animal={id:i+1,name:names[i%names.length]+(i>=names.length?' '+(i+1):''),weight,initialWeight:weight,energy:75,thirst:20,action:'grazing',patch,x,y,targetX:x,targetY:y,history:[]};this.state.animals.push(animal);this.recordActivity(animal,'pasture_housing',20);}
+    for(let i=0;i<count;i++){const weight=330+this.random()*70;const patch=i%4;const b=patchBounds[patch];const x=b.x+10+this.random()*(b.w-20),y=b.y+10+this.random()*(b.h-20);const animal={id:i+1,name:names[i%names.length]+(i>=names.length?' '+(i+1):''),weight,initialWeight:weight,energy:75,thirst:20,action:'grazing',patch,x,y,targetX:x,targetY:y,history:[]};this.state.animals.push(animal);this.recordActivity(animal,'pasture_housing',20,false);}
   }
   random(){this.state.seed=(Math.imul(1664525,this.state.seed)+1013904223)>>>0;return this.state.seed/4294967296;}
   log(text       ,animalId        ){this.state.events.unshift({hour:this.state.hour,text,...(animalId===undefined?{}:{animalId})});this.state.events.length=Math.min(this.state.events.length,100);}
-  recordActivity(animal,reason,observedThirst=animal.thirst){
+  recordActivity(animal,reason,observedThirst=animal.thirst,announce=true){
     const record={hour:this.state.hour,action:animal.action,reason,observed:{hour:this.state.hour%24,thirst:observedThirst,housing:this.state.config.housing}};
     animal.history??=[];animal.history.push(record);if(animal.history.length>40)animal.history.shift();
     const activity={grazing:'pastando',feeding:'no cocho',drinking:'bebendo água',resting:'descansando'}[animal.action];
-    this.log(animal.name+': '+activity+'.',animal.id);
+    if(announce)this.log(animal.name+': '+activity+'.',animal.id);
   }
   configure(patch                ){
     const previous=this.state.config;

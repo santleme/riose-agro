@@ -42,6 +42,7 @@ test('scenario comparison repeats with the same input and period', () => {
 
 test('activity history records the rule inputs for every animal', () => {
   const engine = new FarmEngine(11, 2);
+  assert.equal(engine.snapshot().events.length, 1, 'initial activity belongs in each animal history, not the global event feed');
   engine.configure({weather: 'hot'});
   engine.tick(6);
   const snapshot = engine.snapshot();
