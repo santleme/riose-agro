@@ -57,6 +57,8 @@ test('comparison keeps the initial snapshot and changes housing only', () => {
   assert.deepEqual({...baseline, housing: DEFAULT_CONFIG.housing}, {...scenario, housing: DEFAULT_CONFIG.housing});
   assert.deepEqual(engine.snapshot(), start);
   assert.equal(result.rows[0].baselineWeight, result.rows[0].scenarioWeight);
+  assert.deepEqual(result.initialConfig, start.config);
+  assert.equal(result.herdSize, start.animals.length);
 });
 
 test('scenario comparison repeats with the same input and period', () => {
@@ -95,6 +97,8 @@ test('comparison manifest replay reproduces all detailed outputs', () => {
   const first = replayComparisonManifest(manifest);
   const second = replayComparisonManifest(JSON.parse(JSON.stringify(manifest)));
   assert.deepEqual(first, second);
+  assert.deepEqual(first.initialConfig, manifest.initialSnapshot.config);
+  assert.equal(first.herdSize, manifest.initialSnapshot.animals.length);
   assert.ok(first.rows.at(-1).baselineConsumptionKgDM > 0);
   assert.equal(first.rows.at(-1).baselinePastureByPaddock.length, 4);
 });
@@ -104,6 +108,14 @@ test('comparison manifests reject scenarios that change undeclared factors', () 
   manifest.scenarios.scenario.weather = 'hot';
 
   assert.throws(() => validateComparisonManifest(manifest), /diferir somente no fator declarado/);
+});
+
+test('comparison manifests reject shared non-factor settings that differ from the initial snapshot', () => {
+  const manifest = createComparisonManifest(new FarmEngine(44, 2).snapshot(), 3);
+  manifest.scenarios.reference.diet = 'balanced';
+  manifest.scenarios.scenario.diet = 'balanced';
+
+  assert.throws(() => validateComparisonManifest(manifest), /corresponder ao snapshot inicial/);
 });
 
 test('activity history records the rule inputs for every animal', () => {

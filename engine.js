@@ -107,7 +107,7 @@ export function compare(snapshot         ,days=30){
     const baselineIntake=intakeDelta(b.intake),scenarioIntake=intakeDelta(s.intake);
     rows.push({day,baselineWeight:b.weight,scenarioWeight:s.weight,baselineCost:b.cost-baseCost,scenarioCost:s.cost-baseCost,baselineConsumptionKgDM:baselineIntake.totalKgDM,scenarioConsumptionKgDM:scenarioIntake.totalKgDM,baselineIntakeBySourceKgDM:baselineIntake,scenarioIntakeBySourceKgDM:scenarioIntake,baselinePastureKgDM:b.pasture,scenarioPastureKgDM:s.pasture,baselinePastureByPaddock:b.pastureByPaddock,scenarioPastureByPaddock:s.pastureByPaddock});
   }
-  return {days,startWeight:baseWeight,initialPastureByPaddock:[...snapshot.pastures],comparisonFactor:'housing',baselineConfig:baseline.state.config,scenarioConfig:scenario.state.config,rows,baseline:baseline.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
+  return {days,startWeight:baseWeight,initialConfig:{...snapshot.config},herdSize:snapshot.animals.length,initialPastureByPaddock:[...snapshot.pastures],comparisonFactor:'housing',baselineConfig:baseline.state.config,scenarioConfig:scenario.state.config,rows,baseline:baseline.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
 }
 
 const MANIFEST_TYPE='agroville-comparison';
@@ -142,6 +142,9 @@ export function validateComparisonManifest(manifest){
   const keys=Object.keys(reference);
   const differences=keys.filter(key=>reference[key]!==scenario[key]);
   if(differences.length!==1||differences[0]!==manifest.factor)throw new Error('Os cenários devem diferir somente no fator declarado ('+manifest.factor+')');
+  const snapshotConfig=manifest.initialSnapshot.config;
+  const changedBaseline=keys.filter(key=>key!==manifest.factor&&(reference[key]!==snapshotConfig[key]||scenario[key]!==snapshotConfig[key]));
+  if(changedBaseline.length)throw new Error('Configurações não relacionadas ao fator devem corresponder ao snapshot inicial');
   if(reference.housing!=='pasture'||scenario.housing!=='barn')throw new Error('Para o fator alojamento, a referência deve ser pasto e o cenário deve ser confinamento');
   return true;
 }

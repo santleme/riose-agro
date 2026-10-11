@@ -41,7 +41,9 @@ npm test
 
 Project follow-up: [private GitHub issue tracker](https://github.com/santleme/riose-agro/issues).
 
-Saved scenarios stay in browser storage. Comparison manifests export and validate the starting snapshot, seed, period, factor, and both configurations; the engine keeps model and locomotion randomness separate.\n\n## Current limitations
+Saved scenarios stay in browser storage. Comparison manifests export and validate the starting snapshot, seed, period, factor, and both configurations; the engine keeps model and locomotion randomness separate.
+
+## Current limitations
 
 This is an illustrative software prototype, not a validated livestock or nutrition model. Assumptions are in `engine.js`; results must not guide real animal-management decisions. No scientific dataset was used to calibrate or validate the assumptions. Behavior text comes from fixed state rules, not an LLM. Optional explanations can use a server-side provider but never change simulation values or apply actions. The map and sprites were drawn in code for this demo; the project uses the Smallville paper as interaction inspiration but does not copy its source or assets.
 

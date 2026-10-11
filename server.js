@@ -137,7 +137,7 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
           config: {diet: input.config.diet, housing: input.config.housing, weather: input.config.weather, supplement: input.config.supplement},
           metrics: {weight: input.metrics.weight, gain: input.metrics.gain, cost: input.metrics.cost, pasture: input.metrics.pasture, stress: input.metrics.stress},
         };
-        const provider = env.LLM_PROVIDER ?? (env.OPENAI_API_KEY ? 'openai' : 'none');
+        const provider = env.LLM_PROVIDER ?? 'none';
         const result = await explain(safeInput, {provider, apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL ?? 'gpt-6-luna', fetchImpl});
         return sendJson(response, 200, result);
       } catch (error) {

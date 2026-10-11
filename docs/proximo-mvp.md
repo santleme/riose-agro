@@ -51,7 +51,7 @@ Peso, consumo, custos, estresse, forragem e ganhos são **demonstrativos**. Não
 - A explicação por LLM é opcional, isolada no backend e incapaz de aplicar ações. Sem chave ou rede, o fallback determinístico continua disponível. Textos explicativos são “não medidos”.
 - As equações, consumo e estoque de forragem continuam sendo hipóteses demonstrativas; não há calibração nem validação biológica.
 - A análise estática REA está arquivada em `docs/evidence/`. A preparação do REA foi confirmada pelo `doctor`, mas `list-browser-targets` ainda retorna `endpoint_unreachable`; portanto, não há alvo CDP nem Evidence de captura passiva da demo. Essa evidência de runtime continua pendente.
-- As issues #4, #5, #7 e #8 estão implementadas localmente e serão enviadas em PR para revisão. As issues #1 e #6 ainda exigem definição de domínio e dados; a #10 segue pendente da captura passiva REA.
+- As issues #4, #5, #7 e #8 estão incluídas no PR #17 e aguardam revisão e merge. As issues #1 e #6 ainda exigem definição de domínio e dados; a #10 segue pendente da captura passiva REA.
 
 ## Próximos passos recomendados
 

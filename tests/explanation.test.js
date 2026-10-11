@@ -95,3 +95,26 @@ test('HTTP endpoint forwards only the validated simulation summary to the provid
   assert.deepEqual(JSON.parse(sentInput), input);
   assert.doesNotMatch(sentInput, /must not reach the provider|backend-only/);
 });
+
+test('an API key alone does not enable remote explanations', async t => {
+  let providerCalled = false;
+  const server = createServer({
+    env: {OPENAI_API_KEY: 'present-but-not-opted-in'},
+    fetchImpl: async () => {
+      providerCalled = true;
+      throw new Error('provider must not be called');
+    },
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => server.close(resolve)));
+
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/explain`, {
+    method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify(input),
+  });
+  const result = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(result.source, 'deterministic');
+  assert.equal(providerCalled, false);
+});
