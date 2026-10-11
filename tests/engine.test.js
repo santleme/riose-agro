@@ -89,6 +89,16 @@ test('comparison manifests preserve the seed, starting snapshot, period, and bot
   assert.deepEqual(engine.snapshot(), start);
 });
 
+test('comparison manifest replay reproduces all detailed outputs', () => {
+  const snapshot = new FarmEngine(445, 4).snapshot();
+  const manifest = createComparisonManifest(snapshot, 3);
+  const first = replayComparisonManifest(manifest);
+  const second = replayComparisonManifest(JSON.parse(JSON.stringify(manifest)));
+  assert.deepEqual(first, second);
+  assert.ok(first.rows.at(-1).baselineConsumptionKgDM > 0);
+  assert.equal(first.rows.at(-1).baselinePastureByPaddock.length, 4);
+});
+
 test('comparison manifests reject scenarios that change undeclared factors', () => {
   const manifest = createComparisonManifest(new FarmEngine(44, 2).snapshot(), 3);
   manifest.scenarios.scenario.weather = 'hot';
