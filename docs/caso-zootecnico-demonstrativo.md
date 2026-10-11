@@ -90,3 +90,9 @@ O artigo de Congio et al. (2023; DOI [10.1016/j.scitotenv.2022.159128](https://d
 - **Escopo desta fase:** bezerras não fazem parte do caso adulto aprovado e qualquer extensão para essa população precisa de decisão e validação próprias. O conjunto não autoriza recalibrar o motor atual.
 
 O roteiro técnico de acesso está em [`solicitacao-dados-lamp.md`](solicitacao-dados-lamp.md); ele permanece um rascunho local não enviado.
+
+## Candidato separado para validação de CMS: WVU DMI em pastejo
+
+O artigo de Blake et al. (2026; DOI [10.1093/jas/skag133](https://doi.org/10.1093/jas/skag133)) descreve registros individuais diários de DMI, peso, água e clima em bovinos adultos de corte, com avaliações retidas por sistema/local. O artigo informa que os dados podem ser obtidos pelo autor correspondente, mas não publica um arquivo ou licença aberta. O DMI de referência é calculado por marcador fecal e digestibilidade; portanto, qualquer avaliação precisa carregar esse protocolo, cobertura e mudanças entre anos. O roteiro para pedir acesso está em [`solicitacao-dados-wvu-dmi.md`](solicitacao-dados-wvu-dmi.md) e não foi enviado.
+
+Esse candidato pode apoiar uma avaliação futura do alvo DMI do motor, se houver permissão, variáveis compatíveis e IDs de agrupamento. Ele **não muda** a decisão aprovada na #1 (ADG e pastejo USDA/CPER, exploratório e observacional) e não permite validar peso, custo, estoque de pasto ou efeito pasto × confinamento. Não se reutilizam os resultados de desempenho do artigo como validação do Agroville.
