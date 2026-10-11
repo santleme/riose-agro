@@ -4,13 +4,13 @@
   "snapshotKind": "observed-study-slice",
   "createdDate": "2026-10-11",
   "caseDefinition": {
-    "id": "adult-pasture-vs-confinement-draft",
-    "version": "0.1.0",
+    "id": "adult-pasture-adg-foraging-observational",
+    "version": "1.0.0",
     "reviewStatus": "pending-domain-review",
     "requiredFields": [
-      "animal.eartag-242.start_weight_kg",
-      "animal.eartag-242.dmi_kg_day",
-      "paddock.19N.area_ha"
+      "animal.eartag-242.adg_60d",
+      "animal.eartag-242.mean_grazing_bout_duration_5min",
+      "animal.eartag-242.mean_grazing_velocity"
     ]
   },
   "sourceCatalog": [
@@ -249,11 +249,7 @@
   ],
   "simulationEligibility": {
     "status": "not-applicable",
-    "missingRequiredFields": [
-      "animal.eartag-242.start_weight_kg",
-      "animal.eartag-242.dmi_kg_day",
-      "paddock.19N.area_ha"
-    ],
+    "missingRequiredFields": [],
     "reason": "This is an observed research-study slice, not a farm baseline. The record can document a candidate population but cannot run the Agroville what-if engine."
   },
   "manifestReference": {

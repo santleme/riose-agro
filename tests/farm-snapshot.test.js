@@ -74,9 +74,13 @@ test('public USDA snapshot documents provenance and blocks unsupported simulatio
   const result = validateFarmSnapshot(example);
   assert.equal(result.semanticValid, true);
   assert.equal(result.simulationEligible, false);
-  assert.deepEqual(result.missingRequiredFields, example.caseDefinition.requiredFields);
+  assert.deepEqual(example.caseDefinition.requiredFields, [
+    'animal.eartag-242.adg_60d',
+    'animal.eartag-242.mean_grazing_bout_duration_5min',
+    'animal.eartag-242.mean_grazing_velocity',
+  ]);
+  assert.deepEqual(result.missingRequiredFields, []);
   assert.ok(result.blockers.some(message => message.includes('revisão de domínio')));
-  assert.ok(result.blockers.some(message => message.includes('dmi_kg_day')));
   assert.ok(result.blockers.some(message => message.includes('não é um estado-base executável')));
   assert.equal(example.simulationEligibility.status, 'not-applicable');
   assert.equal(example.manifestReference.status, 'not-linked');
@@ -135,7 +139,7 @@ test('snapshot source references and readiness gaps are checked across the contr
   assert.equal(validateFarmSnapshot(invalid).semanticValid, false);
 
   const stale = structuredClone(example);
-  stale.simulationEligibility.missingRequiredFields.pop();
+  stale.simulationEligibility.missingRequiredFields.push('animal.eartag-242.start_weight_kg');
   assert.ok(validateFarmSnapshot(stale).errors.some(message => message.includes('não corresponde')));
 });
 
@@ -248,7 +252,7 @@ test('snapshot link command validates and links the exact manifest bytes without
   try {
     const source = structuredClone(example);
     source.snapshotKind = 'farm-baseline';
-    source.simulationEligibility.status = 'blocked';
+    source.simulationEligibility.status = 'review-pending';
     const manifestBytes = Buffer.from(JSON.stringify(createComparisonManifest(new FarmEngine(17, 5).snapshot(), 30)));
     const snapshotPath = join(directory, 'snapshot.json');
     const manifestPath = join(directory, 'comparison.json');

@@ -24,17 +24,13 @@ test('snapshot review distinguishes a valid observed slice from simulation eligi
   assert.ok(report.body.coverage.evidenceFieldsByStatus.observed > 0);
   assert.equal(report.body.coverage.sources.length, 2);
   assert.match(report.body.blockers.join(' '), /recorte observacional/i);
-  assert.deepEqual(report.body.missingRequiredFields, [
-    'animal.eartag-242.start_weight_kg',
-    'animal.eartag-242.dmi_kg_day',
-    'paddock.19N.area_ha',
-  ]);
+  assert.deepEqual(report.body.missingRequiredFields, []);
 });
 
 test('snapshot review checks the exact linked manifest bytes and never upgrades eligibility', () => {
   const source = structuredClone(snapshotExample);
   source.snapshotKind = 'farm-baseline';
-  source.simulationEligibility.status = 'blocked';
+  source.simulationEligibility.status = 'review-pending';
   const manifestBytes = Buffer.from(JSON.stringify(createComparisonManifest(new FarmEngine(17, 5).snapshot(), 30)));
   const linked = linkFarmSnapshotToManifest(source, manifestBytes);
   const report = validateSnapshotReviewRequest({snapshot: linked, manifestBase64: manifestBytes.toString('base64')});
@@ -54,7 +50,7 @@ test('snapshot review checks the exact linked manifest bytes and never upgrades 
 test('CLI and API both reject a digest-matching but invalid comparison manifest', () => {
   const snapshot = structuredClone(snapshotExample);
   snapshot.snapshotKind = 'farm-baseline';
-  snapshot.simulationEligibility.status = 'blocked';
+  snapshot.simulationEligibility.status = 'review-pending';
   const invalidManifest = createComparisonManifest(new FarmEngine(17, 5).snapshot(), 30);
   invalidManifest.periodDays = 0;
   const manifestBytes = Buffer.from(JSON.stringify(invalidManifest));
