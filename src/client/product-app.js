@@ -113,7 +113,7 @@ function drawProductScene(time){
   if(assetReady){
     for(let row=-1;row<8;row++)for(let col=-1;col<10;col++)drawAssetOn(ctx,(row+col)%5===0?'grass-mid':'grass-light',col*92-row*46,row*34,104,70);
   }
-  for(const [x,y,w,h] of pathRegions){
+  for(const {x,y,w,h} of pathRegions){
     ctx.fillStyle='rgba(197,181,139,.72)';ctx.fillRect(x,y,w,h);
     if(assetReady&&w>h)for(let px=x;px<x+w;px+=58)drawAssetOn(ctx,'road-rural-dirt-imagegen-v1',px+28,y+h/2,72,38);
   }
