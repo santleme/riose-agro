@@ -27,11 +27,13 @@ test('seeded beef and dairy farm layouts are deterministic, traceable, and valid
     assert.deepEqual(first, second);
     assert.equal(first.generation.model.used, false);
     assert.equal(first.generation.seed, 417);
-    assert.equal(first.generation.generatorVersion, 2);
-    assert.equal(first.generation.algorithm, 'seeded-spatial-grammar-v2');
+    assert.equal(first.generation.generatorVersion, 3);
+    assert.equal(first.generation.algorithm, 'seeded-spatial-grammar-v3');
     assert.equal(first.schemaVersion, 1, 'the generated scene format remains v1; only generator behavior is versioned');
     assert.equal(first.generation.assets.length > 0, true);
     assert.deepEqual(validateFarmLayout(first, {prefabs, manifest}), []);
+    const instanceIds = [...first.placements, ...first.prefabInstances].map(item => item.id);
+    assert.equal(new Set(instanceIds).size, instanceIds.length, 'every editable scene object has a unique ID');
 
     const otherSeed = generateFarmLayout({...input, seed: 418});
     assert.notEqual(otherSeed.generation.inputFingerprint, first.generation.inputFingerprint);
@@ -65,6 +67,20 @@ test('declared adjacency constraints direct deterministic module placement', () 
   assert.equal(edgeAdjacent, true);
   const originalB = unconstrained.prefabInstances.find(item => item.id === constraints[0].second);
   assert.notDeepEqual([b.col, b.row], [originalB.col, originalB.row], 'the rule moved the module to satisfy the declared relation');
+});
+
+test('seed sweep preserves deterministic, collision-free in-bounds layouts for both systems', () => {
+  for (const scenarioType of ['beef', 'dairy']) {
+    for (let seed = 0; seed < 16; seed++) {
+      const input = {scenarioType, seed, prefabs, manifest};
+      const first = generateFarmLayout(input);
+      const second = generateFarmLayout(input);
+      assert.deepEqual(first, second, `${scenarioType} seed ${seed} must be reproducible`);
+      assert.deepEqual(validateFarmLayout(first, {prefabs, manifest}), [], `${scenarioType} seed ${seed} must validate`);
+      const ids = [...first.placements, ...first.prefabInstances].map(item => item.id);
+      assert.equal(new Set(ids).size, ids.length, `${scenarioType} seed ${seed} must have unique editable IDs`);
+    }
+  }
 });
 
 test('impossible declared adjacency constraints fail clearly and missing assets stay visible', () => {
@@ -123,6 +139,20 @@ test('layout validation checks assigned placement zones and prefab child bounds'
 
   invalidPolygon.zones[0].polygon[1] = null;
   assert.doesNotThrow(() => validateFarmLayout(invalidPolygon, {prefabs, manifest}));
+});
+
+test('layout validation rejects duplicate instance IDs and placement footprints crossing zone edges', () => {
+  const scene = generateFarmLayout({scenarioType: 'dairy', seed: 417, prefabs, manifest});
+  const duplicateIdScene = structuredClone(scene);
+  duplicateIdScene.placements[1].id = duplicateIdScene.placements[0].id;
+  assert.ok(validateFarmLayout(duplicateIdScene, {prefabs, manifest}).some(item => item.code === 'duplicate-instance-id'));
+
+  const crossingScene = structuredClone(scene);
+  const animal = crossingScene.placements.find(item => item.layer === 'animals');
+  animal.properties.zoneId = 'zone-pasture-north';
+  animal.position = {col: 17.5, row: 3};
+  assert.ok(validateFarmLayout(crossingScene, {prefabs, manifest}).some(item =>
+    item.code === 'placement-outside-zone' && item.path === `$.placements[${crossingScene.placements.indexOf(animal)}]`));
 });
 
 test('concave zone edges cannot cut through a prefab footprint when sampled points remain inside', () => {

@@ -11,7 +11,9 @@ const hash = (seed, x, y) => {
 };
 
 const placement = (assetId, col, row, layer, properties = {}, rotation = 0) => ({
-  id: `${layer}-${assetId}-${col}-${row}-${Math.round(hash(91, col, row) * 1e6)}`,
+  // Orientation is part of instance identity: at fence corners two connector
+  // segments can share an origin while remaining separate editable objects.
+  id: `${layer}-${assetId}-${col}-${row}-r${rotation}-${Math.round(hash(91, col, row) * 1e6)}`,
   assetId,
   layer,
   position: {col, row},
@@ -201,7 +203,9 @@ export function createBeefFarmScene(prefabs, seed = 20261012) {
   let visualIndex = 0;
   for (const [paddockIndex, paddock] of paddocks.entries()) {
     const visualIds = [];
-    for (const [localIndex, offset] of [[2, 2], [5, 5], [6, 2]].entries()) {
+    // Keep the eastern representative inside the pasture polygon with its full
+    // one-cell footprint (the zone edge is at col 18).
+    for (const [localIndex, offset] of [[2, 2], [5, 5], [5, 2]].entries()) {
       visualIndex++;
       const visualId = `beef-visual-${String(visualIndex).padStart(2, '0')}`;
       visualIds.push(visualId);
@@ -264,8 +268,8 @@ export function unprojectIso(x, y, grid) {
 /**
  * Build an editable starter layout from the checked-in spatial templates.
  * This deliberately does not call a model or synthesize assets: the seed is
- * consumed only by the existing seeded visual choices, and every reference is
- * traceable to the supplied prefab/asset catalog.
+ * consumed by structural water-point placement and seeded visual choices;
+ * every reference is traceable to the supplied prefab/asset catalog.
  */
 export function generateFarmLayout({
   scenarioType = 'dairy',
@@ -299,8 +303,8 @@ export function generateFarmLayout({
   const assetsById = new Map((manifest?.assets ?? []).map((item) => [item.id, item]));
   scene.generation = {
     generator: 'riose-farm-layout-rules',
-    generatorVersion: 2,
-    algorithm: 'seeded-spatial-grammar-v2',
+    generatorVersion: 3,
+    algorithm: 'seeded-spatial-grammar-v3',
     seed,
     scenarioType,
     inputFingerprint: fingerprint({scenarioType, seed, prefabs, manifest: manifest ?? null, constraints}),
@@ -454,6 +458,15 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
   const zones = Array.isArray(scene.zones) ? scene.zones : [];
   if (!Array.isArray(scene.zones)) report('invalid-zones', 'Scene zones must be an array.', '$.zones');
   const zoneIds = new Set();
+  const instanceIds = new Map();
+  const registerInstanceId = (id, path) => {
+    if (typeof id !== 'string' || id.length === 0) return;
+    if (instanceIds.has(id)) {
+      report('duplicate-instance-id', `Instance ID ${id} is used more than once.`, `${instanceIds.get(id)}|${path}`);
+    } else {
+      instanceIds.set(id, path);
+    }
+  };
   for (const [index, zone] of zones.entries()) {
     if (!zone?.id || zoneIds.has(zone.id)) report('invalid-zone-id', `Zone ID is missing or duplicated: ${zone?.id ?? '(missing)'}.`, `$.zones[${index}]`);
     if (zone?.id) zoneIds.add(zone.id);
@@ -481,6 +494,7 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
   };
 
   for (const [index, instance] of scene.prefabInstances.entries()) {
+    registerInstanceId(instance?.id, `$.prefabInstances[${index}]`);
     const prefab = prefabById.get(instance.prefabId);
     if (!prefab) {
       report('unknown-prefab', `Unknown prefab ${instance.prefabId}.`, `$.prefabInstances[${index}]`);
@@ -510,6 +524,7 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
   }
 
   for (const [index, item] of scene.placements.entries()) {
+    registerInstanceId(item?.id, `$.placements[${index}]`);
     const asset = assetById.get(item.assetId);
     const footprint = item.footprint ?? asset?.footprint ?? [1, 1];
     const position = item.position ?? item;
@@ -521,7 +536,7 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
       const zone = zones.find((candidate) => candidate?.id === assignedZoneId);
       if (!zone) report('unknown-zone', `Placement ${item.id ?? item.assetId} references missing zone ${assignedZoneId}.`, `$.placements[${index}]`);
       else {
-        if (!pointInPolygon(position, zone.polygon)) report('placement-outside-zone', `${item.id ?? item.assetId} is outside assigned zone ${zone.id}.`, `$.placements[${index}]`);
+        if (!rectFitsZone(position, footprint, zone.polygon)) report('placement-outside-zone', `${item.id ?? item.assetId} footprint is outside assigned zone ${zone.id}.`, `$.placements[${index}]`);
         if (asset?.allowedZones?.length && !asset.allowedZones.includes(zone.type)) {
           report('asset-zone-mismatch', `${item.assetId} is in incompatible zone ${zone.id}.`, `$.placements[${index}]`);
         }
