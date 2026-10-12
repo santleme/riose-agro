@@ -150,6 +150,9 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
     else if(link==='/worker.js')assert.match(body,/replayComparison/);
     else assert.doesNotThrow(()=>JSON.parse(body));
   }
+  const environmentResponse=await fetch('http://127.0.0.1:'+server.address().port+'/environment-model.js');
+  assert.equal(environmentResponse.status,200);
+  assert.match(await environmentResponse.text(),/getWeatherRules/);
 });
 
 test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{
