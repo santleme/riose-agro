@@ -45,11 +45,28 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
   }
   assert.equal(scene.prefabs.length, 219);
   assert.equal(scene.entities.filter(entity => entity.kind === 'animal').length, 0, 'the Worker provides operational beef animals without visual duplicates');
-  assert.equal(dairyScene.prefabs.length, 227);
+  assert.equal(dairyScene.prefabs.length, 247);
   assert.equal(dairyScene.simulation.productionSystem, 'dairy');
   assert.equal(dairyScene.domainModule.status, 'in-progress');
   assert.equal(dairyScene.entities.filter(entity => entity.kind === 'animal').length, 14);
   assert.equal(dairyScene.visualGroups.reduce((sum, group) => sum + group.population, 0), 200);
+  const dairyPastures = dairyScene.zones.filter(zone => zone.kind === 'pasture');
+  assert.deepEqual(dairyPastures.map(zone => zone.zoneId).sort(), [
+    'zone-pasture-north-east', 'zone-pasture-north-west', 'zone-pasture-south-east', 'zone-pasture-south-west',
+  ]);
+  assert.deepEqual(dairyPastures.map(zone => zone.footprint.columns * zone.footprint.rows).reduce((sum, area) => sum + area, 0), 306);
+  assert.deepEqual(dairyScene.visualGroups.filter(group => group.zoneId.startsWith('zone-pasture-')).map(group => group.population), [45, 45, 45, 45]);
+  const rotationFences = dairyScene.prefabs.filter(prefab => prefab.prefabId.startsWith('dairy-rotation-'));
+  assert.equal(rotationFences.length, 20);
+  assert.equal(rotationFences.filter(prefab => prefab.assetId === 'fence-gate-wood-imagegen-v1').length, 2);
+  for (const group of dairyScene.visualGroups.filter(group => group.zoneId.startsWith('zone-pasture-'))) {
+    assert.ok(group.visualEntityIds.length > 0, `${group.groupId} has a visual representative`);
+    for (const id of group.visualEntityIds) {
+      const entity = dairyScene.entities.find(candidate => candidate.entityId === id);
+      assert.equal(entity.groupId, group.groupId);
+      assert.ok(entity.position.x >= dairyScene.zones.find(zone => zone.zoneId === group.zoneId).origin.x);
+    }
+  }
   assert.ok(dairyScene.entities.some(entity => entity.representationMode === 'sampled-miniature'));
   assert.ok(dairyScene.entities.some(entity => entity.representationMode === 'operational'));
   let placed = [];

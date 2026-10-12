@@ -243,7 +243,7 @@
       "state": {
         "stateId": "resting"
       },
-      "groupId": "dairy-north-lot",
+      "groupId": "dairy-north-west-lot",
       "visualId": "dairy-visual-01",
       "representationMode": "sampled-miniature",
       "visualScale": 0.8810872742906213
@@ -265,7 +265,7 @@
       "state": {
         "stateId": "grazing"
       },
-      "groupId": "dairy-north-lot",
+      "groupId": "dairy-north-west-lot",
       "visualId": "dairy-visual-02",
       "representationMode": "sampled-miniature",
       "visualScale": 0.8665644912701099
@@ -287,7 +287,7 @@
       "state": {
         "stateId": "grazing"
       },
-      "groupId": "dairy-north-lot",
+      "groupId": "dairy-north-east-lot",
       "visualId": "dairy-visual-03",
       "representationMode": "sampled-miniature",
       "visualScale": 0.859777625016868
@@ -309,7 +309,7 @@
       "state": {
         "stateId": "grazing"
       },
-      "groupId": "dairy-south-lot",
+      "groupId": "dairy-north-east-lot",
       "visualId": "dairy-visual-04",
       "representationMode": "sampled-miniature",
       "visualScale": 0.9040272307489067
@@ -331,7 +331,7 @@
       "state": {
         "stateId": "resting"
       },
-      "groupId": "dairy-south-lot",
+      "groupId": "dairy-south-west-lot",
       "visualId": "dairy-visual-05",
       "representationMode": "sampled-miniature",
       "visualScale": 0.9005911820288747
@@ -340,7 +340,7 @@
       "entityId": "visual-dairy-visual-06",
       "kind": "animal",
       "position": {
-        "x": 5.932022020914592,
+        "x": 13.25,
         "y": 18.966171548739077,
         "unit": "grid-cell"
       },
@@ -353,7 +353,7 @@
       "state": {
         "stateId": "grazing"
       },
-      "groupId": "dairy-south-lot",
+      "groupId": "dairy-south-east-lot",
       "visualId": "dairy-visual-06",
       "representationMode": "sampled-miniature",
       "visualScale": 0.93973767824471
@@ -537,9 +537,9 @@
   ],
   "zones": [
     {
-      "zoneId": "zone-pasture-north",
+      "zoneId": "zone-pasture-north-west",
       "kind": "pasture",
-      "name": "Piquetes Norte",
+      "name": "Piquete Norte Oeste",
       "color": "#78a75b",
       "origin": {
         "x": 1,
@@ -547,16 +547,33 @@
         "unit": "grid-cell"
       },
       "footprint": {
-        "columns": 17,
+        "columns": 9,
         "rows": 9
       },
       "groundAssetId": "grass-light",
       "domainZoneId": "zone-pasture-north"
     },
     {
-      "zoneId": "zone-pasture-south",
+      "zoneId": "zone-pasture-north-east",
       "kind": "pasture",
-      "name": "Piquetes Sul",
+      "name": "Piquete Norte Leste",
+      "color": "#78a75b",
+      "origin": {
+        "x": 10,
+        "y": 1,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 8,
+        "rows": 9
+      },
+      "groundAssetId": "grass-light",
+      "domainZoneId": "zone-pasture-north"
+    },
+    {
+      "zoneId": "zone-pasture-south-west",
+      "kind": "pasture",
+      "name": "Piquete Sul Oeste",
       "color": "#83aa63",
       "origin": {
         "x": 1,
@@ -564,7 +581,24 @@
         "unit": "grid-cell"
       },
       "footprint": {
-        "columns": 17,
+        "columns": 9,
+        "rows": 9
+      },
+      "groundAssetId": "grass-light",
+      "domainZoneId": "zone-pasture-south"
+    },
+    {
+      "zoneId": "zone-pasture-south-east",
+      "kind": "pasture",
+      "name": "Piquete Sul Leste",
+      "color": "#83aa63",
+      "origin": {
+        "x": 10,
+        "y": 13,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 8,
         "rows": 9
       },
       "groundAssetId": "grass-light",
@@ -5011,6 +5045,406 @@
       "compositionId": "module-water-paddock-se",
       "sourcePrefabId": "water-point",
       "rotationDegrees": 0
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-1",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 1,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-2",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 2,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-3",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 3,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-4",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 4,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-gate-row-5",
+      "assetId": "fence-gate-wood-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 5,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-gate",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-6",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 6,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-7",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 7,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-8",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 8,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-9",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 9,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-north-fence-row-10",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 10,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-13",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 13,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-14",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 14,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-15",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 15,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-16",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 16,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-gate-row-17",
+      "assetId": "fence-gate-wood-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 17,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-gate",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-18",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 18,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-19",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 19,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-20",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 20,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-21",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 21,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
+    },
+    {
+      "prefabId": "dairy-rotation-south-fence-row-22",
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "position": {
+        "x": 10,
+        "y": 22,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 1,
+        "rows": 1
+      },
+      "layer": "infrastructure",
+      "state": {
+        "stateId": "default"
+      },
+      "blocking": false,
+      "sourcePrefabId": "dairy-pasture-rotation-fence",
+      "rotationDegrees": 90
     }
   ],
   "terrainTiles": [
@@ -5355,7 +5789,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-2-1-315450",
@@ -5365,7 +5799,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-3-1-237680",
@@ -5375,7 +5809,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-4-1-794919",
@@ -5385,7 +5819,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-5-1-520270",
@@ -5395,7 +5829,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-6-1-566719",
@@ -5405,7 +5839,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-7-1-330348",
@@ -5415,7 +5849,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-8-1-735513",
@@ -5425,7 +5859,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-1-752559",
@@ -5435,7 +5869,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-1-208966",
@@ -5445,7 +5879,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-1-338493",
@@ -5455,7 +5889,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-1-953824",
@@ -5465,7 +5899,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-1-621093",
@@ -5475,7 +5909,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-1-347149",
@@ -5485,7 +5919,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-15-1-10022",
@@ -5495,7 +5929,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-16-1-103737",
@@ -5505,7 +5939,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-17-1-792630",
@@ -5515,7 +5949,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-18-1-871779",
@@ -5711,7 +6145,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-2-2-348999",
@@ -5721,7 +6155,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-3-2-370383",
@@ -5731,7 +6165,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-4-2-851801",
@@ -5741,7 +6175,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-5-2-482125",
@@ -5751,7 +6185,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-6-2-302112",
@@ -5761,7 +6195,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-7-2-477855",
@@ -5771,7 +6205,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-8-2-756493",
@@ -5781,7 +6215,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-2-797657",
@@ -5791,7 +6225,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-2-146558",
@@ -5801,7 +6235,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-2-814234",
@@ -5811,7 +6245,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-2-509740",
@@ -5821,7 +6255,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-2-892676",
@@ -5831,7 +6265,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-2-491182",
@@ -5841,7 +6275,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-15-2-118388",
@@ -5851,7 +6285,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-2-447812",
@@ -5861,7 +6295,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-2-755534",
@@ -5871,7 +6305,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-2-418151",
@@ -6067,7 +6501,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-2-3-235841",
@@ -6077,7 +6511,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-3-3-676485",
@@ -6087,7 +6521,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-4-3-885018",
@@ -6097,7 +6531,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-5-3-78147",
@@ -6107,7 +6541,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-6-3-439769",
@@ -6117,7 +6551,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-7-3-43559",
@@ -6127,7 +6561,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-8-3-230263",
@@ -6137,7 +6571,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-3-223094",
@@ -6147,7 +6581,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-3-412285",
@@ -6157,7 +6591,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-3-414355",
@@ -6167,7 +6601,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-3-675995",
@@ -6177,7 +6611,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-3-599305",
@@ -6187,7 +6621,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-3-726565",
@@ -6197,7 +6631,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-15-3-380444",
@@ -6207,7 +6641,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-3-279306",
@@ -6217,7 +6651,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-3-563184",
@@ -6227,7 +6661,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-3-927538",
@@ -6423,7 +6857,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-2-4-944452",
@@ -6433,7 +6867,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-3-4-866590",
@@ -6443,7 +6877,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-4-4-645024",
@@ -6453,7 +6887,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-5-4-304155",
@@ -6463,7 +6897,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-light-6-4-370481",
@@ -6473,7 +6907,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-4-593673",
@@ -6483,7 +6917,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-4-954886",
@@ -6493,7 +6927,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-4-640040",
@@ -6503,7 +6937,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-4-329097",
@@ -6513,7 +6947,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-4-590099",
@@ -6523,7 +6957,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-4-259071",
@@ -6533,7 +6967,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-4-27671",
@@ -6543,7 +6977,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-14-4-100344",
@@ -6553,7 +6987,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-15-4-836201",
@@ -6563,7 +6997,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-4-759357",
@@ -6573,7 +7007,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-4-452082",
@@ -6583,7 +7017,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-4-48875",
@@ -6779,7 +7213,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-2-5-925015",
@@ -6789,7 +7223,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-3-5-976921",
@@ -6799,7 +7233,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-4-5-736017",
@@ -6809,7 +7243,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-5-5-883498",
@@ -6819,7 +7253,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-6-5-750856",
@@ -6829,7 +7263,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-5-674570",
@@ -6839,7 +7273,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-5-835614",
@@ -6849,7 +7283,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-5-997516",
@@ -6859,7 +7293,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-5-186080",
@@ -6869,7 +7303,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-5-807278",
@@ -6879,7 +7313,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-5-300522",
@@ -6889,7 +7323,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-5-713825",
@@ -6899,7 +7333,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-5-403172",
@@ -6909,7 +7343,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-15-5-5485",
@@ -6919,7 +7353,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-5-919753",
@@ -6929,7 +7363,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-5-29434",
@@ -6939,7 +7373,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-5-454076",
@@ -7135,7 +7569,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-2-6-552321",
@@ -7145,7 +7579,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-3-6-115968",
@@ -7155,7 +7589,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-4-6-292905",
@@ -7165,7 +7599,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-5-6-609506",
@@ -7175,7 +7609,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-6-6-735320",
@@ -7185,7 +7619,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-6-673640",
@@ -7195,7 +7629,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-6-404928",
@@ -7205,7 +7639,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-6-888446",
@@ -7215,7 +7649,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-6-879486",
@@ -7225,7 +7659,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-6-769375",
@@ -7235,7 +7669,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-6-761750",
@@ -7245,7 +7679,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-6-479599",
@@ -7255,7 +7689,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-6-949929",
@@ -7265,7 +7699,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-15-6-214894",
@@ -7275,7 +7709,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-6-858515",
@@ -7285,7 +7719,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-6-101202",
@@ -7295,7 +7729,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-6-656704",
@@ -7491,7 +7925,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-2-7-466268",
@@ -7501,7 +7935,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-3-7-226314",
@@ -7511,7 +7945,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-4-7-513611",
@@ -7521,7 +7955,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-5-7-318561",
@@ -7531,7 +7965,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-6-7-384396",
@@ -7541,7 +7975,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-7-321129",
@@ -7551,7 +7985,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-7-336425",
@@ -7561,7 +7995,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-7-330651",
@@ -7571,7 +8005,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-7-720648",
@@ -7581,7 +8015,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-7-306021",
@@ -7591,7 +8025,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-7-420601",
@@ -7601,7 +8035,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-7-181573",
@@ -7611,7 +8045,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-7-101444",
@@ -7621,7 +8055,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-15-7-384174",
@@ -7631,7 +8065,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-16-7-968100",
@@ -7641,7 +8075,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-7-874901",
@@ -7651,7 +8085,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-7-763984",
@@ -7847,7 +8281,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-2-8-327935",
@@ -7857,7 +8291,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-3-8-807008",
@@ -7867,7 +8301,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-4-8-618344",
@@ -7877,7 +8311,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-5-8-845131",
@@ -7887,7 +8321,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-6-8-912986",
@@ -7897,7 +8331,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-8-578033",
@@ -7907,7 +8341,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-8-361600",
@@ -7917,7 +8351,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-8-699609",
@@ -7927,7 +8361,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-8-727529",
@@ -7937,7 +8371,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-8-826455",
@@ -7947,7 +8381,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-8-3669",
@@ -7957,7 +8391,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-8-864548",
@@ -7967,7 +8401,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-8-122539",
@@ -7977,7 +8411,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-15-8-43066",
@@ -7987,7 +8421,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-16-8-984510",
@@ -7997,7 +8431,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-17-8-876849",
@@ -8007,7 +8441,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-light-18-8-732240",
@@ -8205,7 +8639,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-2-9-73724",
@@ -8215,7 +8649,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-3-9-682600",
@@ -8225,7 +8659,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-4-9-507229",
@@ -8235,7 +8669,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-5-9-222365",
@@ -8245,7 +8679,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-6-9-629206",
@@ -8255,7 +8689,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-7-9-893715",
@@ -8265,7 +8699,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-8-9-242312",
@@ -8275,7 +8709,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-9-9-24417",
@@ -8285,7 +8719,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-west"
     },
     {
       "tileId": "terrain-grass-mid-10-9-685551",
@@ -8295,7 +8729,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-11-9-144675",
@@ -8305,7 +8739,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-12-9-944084",
@@ -8315,7 +8749,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-13-9-684440",
@@ -8325,7 +8759,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-14-9-223272",
@@ -8335,7 +8769,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-15-9-548170",
@@ -8345,7 +8779,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-16-9-480684",
@@ -8355,7 +8789,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-17-9-353157",
@@ -8365,7 +8799,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-north"
+      "zoneId": "zone-pasture-north-east"
     },
     {
       "tileId": "terrain-grass-mid-18-9-104766",
@@ -9573,7 +10007,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-2-13-277035",
@@ -9583,7 +10017,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-3-13-671837",
@@ -9593,7 +10027,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-13-948329",
@@ -9603,7 +10037,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-13-491815",
@@ -9613,7 +10047,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-13-407083",
@@ -9623,7 +10057,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-13-987921",
@@ -9633,7 +10067,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-13-515208",
@@ -9643,7 +10077,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-13-348659",
@@ -9653,7 +10087,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-10-13-429208",
@@ -9663,7 +10097,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-11-13-957212",
@@ -9673,7 +10107,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-12-13-307342",
@@ -9683,7 +10117,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-13-27191",
@@ -9693,7 +10127,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-13-27227",
@@ -9703,7 +10137,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-13-310172",
@@ -9713,7 +10147,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-13-546701",
@@ -9723,7 +10157,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-17-13-262766",
@@ -9733,7 +10167,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-18-13-343316",
@@ -9929,7 +10363,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-2-14-310585",
@@ -9939,7 +10373,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-3-14-48183",
@@ -9949,7 +10383,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-14-17911",
@@ -9959,7 +10393,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-14-811573",
@@ -9969,7 +10403,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-14-285083",
@@ -9979,7 +10413,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-14-736997",
@@ -9989,7 +10423,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-14-190970",
@@ -9999,7 +10433,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-14-393768",
@@ -10009,7 +10443,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-10-14-122634",
@@ -10019,7 +10453,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-14-88245",
@@ -10029,7 +10463,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-14-505885",
@@ -10039,7 +10473,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-14-542944",
@@ -10049,7 +10483,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-14-826063",
@@ -10059,7 +10493,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-14-519587",
@@ -10069,7 +10503,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-14-235462",
@@ -10079,7 +10513,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-14-415592",
@@ -10089,7 +10523,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-18-14-877011",
@@ -10285,7 +10719,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-2-15-21416",
@@ -10295,7 +10729,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-15-230790",
@@ -10305,7 +10739,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-15-643854",
@@ -10315,7 +10749,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-15-900471",
@@ -10325,7 +10759,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-15-757469",
@@ -10335,7 +10769,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-15-837630",
@@ -10345,7 +10779,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-15-122465",
@@ -10355,7 +10789,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-15-883893",
@@ -10365,7 +10799,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-10-15-938387",
@@ -10375,7 +10809,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-15-969696",
@@ -10385,7 +10819,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-15-914730",
@@ -10395,7 +10829,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-15-723460",
@@ -10405,7 +10839,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-15-726542",
@@ -10415,7 +10849,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-15-485740",
@@ -10425,7 +10859,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-15-823567",
@@ -10435,7 +10869,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-15-619890",
@@ -10445,7 +10879,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-18-15-735330",
@@ -10641,7 +11075,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-16-262229",
@@ -10651,7 +11085,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-16-348615",
@@ -10661,7 +11095,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-16-965422",
@@ -10671,7 +11105,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-16-427218",
@@ -10681,7 +11115,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-16-256533",
@@ -10691,7 +11125,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-16-536155",
@@ -10701,7 +11135,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-16-151772",
@@ -10711,7 +11145,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-9-16-911303",
@@ -10721,7 +11155,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-10-16-308387",
@@ -10731,7 +11165,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-16-927625",
@@ -10741,7 +11175,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-16-247786",
@@ -10751,7 +11185,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-16-39528",
@@ -10761,7 +11195,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-16-185128",
@@ -10771,7 +11205,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-16-144621",
@@ -10781,7 +11215,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-16-89787",
@@ -10791,7 +11225,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-16-758751",
@@ -10801,7 +11235,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-18-16-545095",
@@ -10998,7 +11432,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-17-234868",
@@ -11008,7 +11442,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-17-675657",
@@ -11018,7 +11452,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-17-186131",
@@ -11028,7 +11462,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-17-169587",
@@ -11038,7 +11472,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-17-829956",
@@ -11048,7 +11482,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-17-433664",
@@ -11058,7 +11492,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-17-24576",
@@ -11068,7 +11502,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-17-603505",
@@ -11078,7 +11512,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-10-17-225191",
@@ -11088,7 +11522,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-17-113222",
@@ -11098,7 +11532,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-17-555578",
@@ -11108,7 +11542,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-17-857175",
@@ -11118,7 +11552,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-17-145339",
@@ -11128,7 +11562,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-17-414941",
@@ -11138,7 +11572,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-17-575806",
@@ -11148,7 +11582,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-17-658881",
@@ -11158,7 +11592,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-18-17-402394",
@@ -11355,7 +11789,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-18-256186",
@@ -11365,7 +11799,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-18-263928",
@@ -11375,7 +11809,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-18-723681",
@@ -11385,7 +11819,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-18-698869",
@@ -11395,7 +11829,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-18-836483",
@@ -11405,7 +11839,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-18-588151",
@@ -11415,7 +11849,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-18-455586",
@@ -11425,7 +11859,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-18-747917",
@@ -11435,7 +11869,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-light-10-18-395634",
@@ -11445,7 +11879,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-18-347367",
@@ -11455,7 +11889,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-18-963677",
@@ -11465,7 +11899,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-18-532320",
@@ -11475,7 +11909,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-18-990332",
@@ -11485,7 +11919,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-18-288538",
@@ -11495,7 +11929,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-18-184188",
@@ -11505,7 +11939,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-18-412589",
@@ -11515,7 +11949,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-18-18-468918",
@@ -11712,7 +12146,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-19-167912",
@@ -11722,7 +12156,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-19-590971",
@@ -11732,7 +12166,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-19-5317",
@@ -11742,7 +12176,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-19-481900",
@@ -11752,7 +12186,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-19-348992",
@@ -11762,7 +12196,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-19-587234",
@@ -11772,7 +12206,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-19-287742",
@@ -11782,7 +12216,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-19-440120",
@@ -11792,7 +12226,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-10-19-210878",
@@ -11802,7 +12236,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-11-19-593899",
@@ -11812,7 +12246,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-19-271472",
@@ -11822,7 +12256,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-19-451529",
@@ -11832,7 +12266,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-19-848970",
@@ -11842,7 +12276,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-19-497949",
@@ -11852,7 +12286,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-16-19-670222",
@@ -11862,7 +12296,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-17-19-475195",
@@ -11872,7 +12306,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-18-19-387125",
@@ -12069,7 +12503,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-20-878751",
@@ -12079,7 +12513,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-20-564358",
@@ -12089,7 +12523,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-20-204419",
@@ -12099,7 +12533,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-20-235522",
@@ -12109,7 +12543,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-20-315229",
@@ -12119,7 +12553,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-20-387333",
@@ -12129,7 +12563,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-20-10141",
@@ -12139,7 +12573,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-20-202880",
@@ -12149,7 +12583,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-10-20-153077",
@@ -12159,7 +12593,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-11-20-958723",
@@ -12169,7 +12603,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-12-20-604529",
@@ -12179,7 +12613,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-13-20-663189",
@@ -12189,7 +12623,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-14-20-818247",
@@ -12199,7 +12633,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-light-15-20-14631",
@@ -12209,7 +12643,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-light",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-16-20-874892",
@@ -12219,7 +12653,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-17-20-777792",
@@ -12229,7 +12663,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-18-20-197542",
@@ -12426,7 +12860,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-2-21-506056",
@@ -12436,7 +12870,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-3-21-769569",
@@ -12446,7 +12880,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-4-21-688150",
@@ -12456,7 +12890,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-5-21-505063",
@@ -12466,7 +12900,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-6-21-198622",
@@ -12476,7 +12910,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-7-21-386392",
@@ -12486,7 +12920,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-8-21-370373",
@@ -12496,7 +12930,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-9-21-571153",
@@ -12506,7 +12940,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-west"
     },
     {
       "tileId": "terrain-grass-mid-10-21-745462",
@@ -12516,7 +12950,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-11-21-819776",
@@ -12526,7 +12960,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-12-21-891570",
@@ -12536,7 +12970,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-13-21-805264",
@@ -12546,7 +12980,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-14-21-229078",
@@ -12556,7 +12990,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-15-21-122996",
@@ -12566,7 +13000,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-16-21-503523",
@@ -12576,7 +13010,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-17-21-225875",
@@ -12586,7 +13020,7 @@
         "unit": "grid-cell"
       },
       "assetId": "grass-mid",
-      "zoneId": "zone-pasture-south"
+      "zoneId": "zone-pasture-south-east"
     },
     {
       "tileId": "terrain-grass-mid-18-21-198077",
@@ -13417,28 +13851,48 @@
   ],
   "visualGroups": [
     {
-      "groupId": "dairy-north-lot",
-      "population": 90,
-      "zoneId": "zone-pasture-north",
+      "groupId": "dairy-north-west-lot",
+      "population": 45,
+      "zoneId": "zone-pasture-north-west",
       "operationalState": "grazing",
       "mode": "sampled-miniature",
       "seed": 20261012,
       "visualEntityIds": [
         "visual-dairy-visual-01",
-        "visual-dairy-visual-02",
-        "visual-dairy-visual-03"
+        "visual-dairy-visual-02"
       ]
     },
     {
-      "groupId": "dairy-south-lot",
-      "population": 90,
-      "zoneId": "zone-pasture-south",
+      "groupId": "dairy-north-east-lot",
+      "population": 45,
+      "zoneId": "zone-pasture-north-east",
       "operationalState": "grazing",
       "mode": "sampled-miniature",
       "seed": 20261012,
       "visualEntityIds": [
-        "visual-dairy-visual-04",
-        "visual-dairy-visual-05",
+        "visual-dairy-visual-03",
+        "visual-dairy-visual-04"
+      ]
+    },
+    {
+      "groupId": "dairy-south-west-lot",
+      "population": 45,
+      "zoneId": "zone-pasture-south-west",
+      "operationalState": "grazing",
+      "mode": "sampled-miniature",
+      "seed": 20261012,
+      "visualEntityIds": [
+        "visual-dairy-visual-05"
+      ]
+    },
+    {
+      "groupId": "dairy-south-east-lot",
+      "population": 45,
+      "zoneId": "zone-pasture-south-east",
+      "operationalState": "grazing",
+      "mode": "sampled-miniature",
+      "seed": 20261012,
+      "visualEntityIds": [
         "visual-dairy-visual-06"
       ]
     },
