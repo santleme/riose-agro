@@ -1,4 +1,5 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
+import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from './scenario-presets.js';
 import {renderSimulationReport} from './simulation-report.js';
 import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from './run-history.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from './scientific/br_corte_pasture_dmi.js';
@@ -18,7 +19,7 @@ const worker=new Worker(workerUrl,{type:'module'});
 let state,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison,requestCompare=false,comparisonSnapshot,comparisonManifest,comparisonLotContext=null,comparisonEnvironmentState=null,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false,pendingSnapshotAction=null;
 const stateRequests=[];
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
-function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export','report-export'])$(id).disabled=value||loadingScenario;const lotCompare=$('lot-compare');if(lotCompare)lotCompare.disabled=value||loadingScenario||!activeLotContext;$('run-history-replay').disabled=value||loadingScenario||!$('run-history-select').value;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
+function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export','report-export'])$(id).disabled=value||loadingScenario;const lotCompare=$('lot-compare');if(lotCompare)lotCompare.disabled=value||loadingScenario||!activeLotContext;$('run-history-replay').disabled=value||loadingScenario||!$('run-history-select').value;$('scenario-select').disabled=value||loadingScenario;$('preset-select').disabled=value||loadingScenario;$('preset-run').disabled=value||loadingScenario||getScenarioPreset($('preset-select').value).status==='unsupported';$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const number=(n       ,digits=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const actionNames={grazing:'Pastando',feeding:'No cocho',drinking:'Bebendo água',resting:'Descansando'};
@@ -209,6 +210,33 @@ function renderScenarioVariables(){
   const baseT=comparisonEnvironmentState?.baseline?.temperatureC?.value,baseRh=comparisonEnvironmentState?.baseline?.relativeHumidityPct?.value,scenarioT=comparisonEnvironmentState?.current?.temperatureC,scenarioRh=comparisonEnvironmentState?.current?.relativeHumidityPct,baseThi=calculateThi(baseT,baseRh),scenarioThi=calculateThi(scenarioT,scenarioRh),value=result=>result.available?number(result.value,1)+' (sem unidade)':'Não informado · '+result.reason;
   thermal.innerHTML='<h3>Indicador ambiental · THI</h3><p>Original: '+escapeHtml(value(baseThi))+' · Cenário: '+escapeHtml(value(scenarioThi))+'.</p><p>Fórmula: '+escapeHtml(scenarioThi.formula??'0,8 × T + (UR/100) × (T − 14,4) + 46,4')+'. T em °C; UR em %. Somente índice ambiental, sem conversão em estresse fisiológico ou resposta produtiva.</p><small>Fonte: <a href="'+THI_SOURCE.doi+'" target="_blank" rel="noopener">'+escapeHtml(THI_SOURCE.authors+', '+THI_SOURCE.title)+'</a>. O índice não inclui vento nem radiação solar.</small>';
 }
+function renderPresetCatalog(){
+  const select=$('preset-select');
+  select.replaceChildren(...SCENARIO_PRESETS.map(preset=>{const option=document.createElement('option');option.value=preset.id;option.textContent=preset.status==='unsupported'?preset.name+' · indisponível':preset.name;return option;}));
+  select.value='baseline';
+  updatePresetDescription();
+}
+function updatePresetDescription(){
+  const preset=getScenarioPreset($('preset-select').value);
+  $('preset-description').textContent=preset.status==='unsupported'?preset.unavailableReason:preset.description+' Semente '+preset.seed+' · '+preset.durationDays+' dias.';
+  $('preset-run').textContent=preset.execution==='reset'?'Carregar baseline':'Executar preset · '+preset.durationDays+' dias';
+  $('preset-run').disabled=preset.status==='unsupported'||requestCompare||loadingScenario;
+}
+$('preset-select').onchange=updatePresetDescription;
+$('preset-run').onclick=()=>{
+  const preset=getScenarioPreset($('preset-select').value);
+  if(preset.status==='unsupported'){$('preset-description').textContent=preset.unavailableReason;return;}
+  const snapshot=createScenarioPresetSnapshot(preset.id);
+  if(preset.execution==='reset'){
+    setRunning(false);pending=false;pendingSnapshotAction=null;scientificPreviewActive=false;scientificResult=null;renderScientificPanel();$('play').disabled=false;$('day').disabled=false;
+    selected=1;positions.clear();activeScenarioId=null;saveScenarioData();renderScenarios();loadingScenario=true;compareBusy(false);requestState({type:'load',snapshot});
+    $('preset-description').textContent='Baseline carregado · semente '+preset.seed+' · '+snapshot.animals.length+' animais.';
+    return;
+  }
+  if(!state||requestCompare||loadingScenario||pendingSnapshotAction)return;
+  setRunning(false);const manifest=createComparisonManifest(snapshot,preset.durationDays);pendingComparison={snapshot,manifest,lotContext:null,environmentState:structuredClone(environmentState)};compareBusy(true);worker.postMessage({type:'compare',days:preset.durationDays,snapshot});
+};
+renderPresetCatalog();
 function comparisonNumber(value,digits=1){return Number.isFinite(value)?number(value,digits):'Indisponível';}
 function comparisonCurrency(value){return Number.isFinite(value)?currency(value):'Indisponível';}
 function comparisonCalculation(values,calculate){return values.every(Number.isFinite)?calculate(...values):undefined;}
