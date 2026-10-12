@@ -1,5 +1,5 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
@@ -127,6 +127,16 @@ function visualJitter(seed, range) {
 }
 
 function screenPoint(x, y) { return {x: state.camera.x + x * state.camera.zoom, y: state.camera.y + y * state.camera.zoom}; }
+function focusAnimal(animalId) {
+  const index = state.view?.animalIds.indexOf(animalId) ?? -1;
+  if (index < 0) return false;
+  const offset = index * 4, grid = simulationPositionToScene(state.view.animalValues[offset], state.view.animalValues[offset + 1], state.scene, state.view.config.housing);
+  const target = isoPosition(grid.column + visualJitter(index, .28), grid.row + visualJitter(index + 901, .22));
+  state.camera.x = state.canvasSizing.width / 2 - target.x * state.camera.zoom;
+  state.camera.y = state.canvasSizing.height / 2 - target.y * state.camera.zoom;
+  refreshScene();
+  return true;
+}
 function prefabRotation(entry) {
   return Number.isFinite(entry.prefab?.rotationDegrees)
     ? entry.prefab.rotationDegrees * Math.PI / 180
@@ -171,7 +181,7 @@ function refreshScene() {
     if (entry.kind === 'livestock') {
       const point = screenPoint(entry.x, entry.y);
       if (entry.animalId) {
-        const distance = Math.hypot(point.x - state.camera.x, point.y - state.camera.y);
+        const distance = distanceToViewportCenter(point.x, point.y, state.canvasSizing.width, state.canvasSizing.height);
         const zoomScale = Math.min(1, state.camera.zoom);
         entry.screenX = point.x; entry.screenY = point.y; entry.lod = visualLod(distance, 100 * zoomScale, 220 * zoomScale);
         entry.assetId = entry.lod === 'near' ? 'nelore-adult' : 'nelore-adult-low';
@@ -224,7 +234,7 @@ function updateVisualMotion(time) {
   const started = performance.now(); let updates = 0;
   for (const entry of state.visible) {
     if (entry.kind !== 'livestock' || !entry.animalId) continue;
-    const zoomScale = Math.min(1, state.camera.zoom), interval = visualUpdateInterval(Math.hypot(entry.screenX - state.camera.x, entry.screenY - state.camera.y), 100 * zoomScale, 220 * zoomScale), motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
+    const zoomScale = Math.min(1, state.camera.zoom), interval = visualUpdateInterval(distanceToViewportCenter(entry.screenX, entry.screenY, state.canvasSizing.width, state.canvasSizing.height), 100 * zoomScale, 220 * zoomScale), motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
     if (time - motion.updatedAt >= interval) { motion.updatedAt = time; motion.offset = Math.sin(time * .002 + entry.animalId * .71) * .55; state.motionById.set(entry.id, motion); updates++; }
     entry.animationOffset = motion.offset;
     if (state.renderer === 'pixi') { const sprite = state.pixiPrefabs.get(entry.id); if (sprite) sprite.y = entry.y + motion.offset; }
@@ -604,14 +614,15 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
     $('renderer').value = renderer; switchRenderer(renderer);
     if (renderer === 'pixi') await initPixi();
     for (const count of counts) {
-      $('herd-size').value = String(count); await resetSimulation(count); state.camera.zoom = 2; syncCanvasSize(); refreshScene();
+      $('herd-size').value = String(count); await resetSimulation(count); state.camera.zoom = 2; syncCanvasSize();
+      if (!focusAnimal(1)) throw new Error(`Não foi possível enquadrar o animal #1 no benchmark de ${count} bovinos.`);
       await captureFrames(warmupMs); state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0;
       const frames = await captureFrames(durationMs); state.frameTimes = frames;
       const record = frameStats(); record.count = count; record.workerRoundTripMs = state.lastWorkerRoundTripMs; record.memorySource = 'Use Chromium Performance.getMetrics for post-GC JS heap; GPU memory is not exposed by this harness.';
       results.push(record);
     }
   }
-  $('renderer').value = 'canvas'; switchRenderer('canvas'); state.camera.zoom = 1.35; refreshScene();
+  $('renderer').value = 'canvas'; switchRenderer('canvas'); state.camera.zoom = 1.35; syncCanvasSize(); refreshScene();
   const report = {browser: navigator.userAgent, measuredAt: new Date().toISOString(), durationMs, warmupMs, assetLoadMs: state.imageLoadMs, pixiInitMs: state.pixiLoadMs, sourceSimulation: 'Existing FarmEngine Worker; one 1-hour tick is separate from renderer frame samples.', results};
   $('benchmark-output').textContent = JSON.stringify(report, null, 2);
   return report;
@@ -684,6 +695,7 @@ async function initialize() {
     selectScene: domain => selectScene(domain),
     reset: count => resetSimulation(count),
     setCameraZoom: zoom => { state.camera.zoom = zoom; syncCanvasSize(); refreshScene(); },
+    focusAnimal,
     clearStats: () => { state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0; },
     stats: frameStats,
     tick: async () => { const result = await askWorker({type: 'tick', hours: 1}); return {roundTripMs: state.lastWorkerRoundTripMs, implementation: result.engineImplementation}; },

@@ -6,7 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -20,6 +20,11 @@ test('shared Composer tools remain available in both production-system scenes', 
   assert.equal(toolAvailableInSystem('both', 'dairy'), true);
   assert.equal(toolAvailableInSystem('beef', 'dairy'), false);
   assert.equal(toolAvailableInSystem('dairy', 'beef'), false);
+});
+
+test('screen-space LOD distance is measured from the viewport center, not camera translation', () => {
+  assert.equal(distanceToViewportCenter(367.5, 189, 735, 378), 0);
+  assert.equal(distanceToViewportCenter(0, 0, 735, 378), Math.hypot(367.5, 189));
 });
 
 test('renderer-independent scene schema supports beef and in-progress dairy scenarios', () => {
@@ -177,16 +182,22 @@ test('placement rules enforce allowed zones, adjacency and alignment; compositio
 test('prefab distribution is deterministic, stays inside the pasture, and avoids overlaps', () => {
   const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
   const paddock = scene.zones.find(zone => zone.kind === 'pasture');
-  const first = distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed);
-  const second = distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed);
+  const {columns, rows} = scene.projection;
+  const first = distributePrefab(template, paddock, columns, rows, scene.prefabs, 3, scene.simulation.seed);
+  const second = distributePrefab(template, paddock, columns, rows, scene.prefabs, 3, scene.simulation.seed);
   assert.ok(first.length > 0);
   assert.deepEqual(first, second);
-  assert.notDeepEqual(first, distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed + 1));
+  assert.notDeepEqual(first, distributePrefab(template, paddock, columns, rows, scene.prefabs, 3, scene.simulation.seed + 1));
   assert.ok(first.some(prefab => prefab.position.x % 1 !== 0 || prefab.position.y % 1 !== 0), 'seeded placement should not form a fixed integer grid');
+  const nearestDistances = first.map(prefab => Math.min(...first.filter(other => other !== prefab).map(other => Math.hypot(prefab.position.x - other.position.x, prefab.position.y - other.position.y))));
+  const meanNearestDistance = nearestDistances.reduce((sum, distance) => sum + distance, 0) / nearestDistances.length;
+  const nearestDistanceCv = Math.sqrt(nearestDistances.reduce((sum, distance) => sum + (distance - meanNearestDistance) ** 2, 0) / nearestDistances.length) / meanNearestDistance;
+  assert.ok(nearestDistanceCv > .2, `seeded clustering should avoid near-uniform spacing; observed CV ${nearestDistanceCv.toFixed(2)}`);
+  assert.ok(Math.min(...nearestDistances) >= 1.25, 'clustered trees still keep a minimum separation');
   for (const prefab of first) {
     assert.ok(prefab.position.x > paddock.origin.x);
     assert.ok(prefab.position.y > paddock.origin.y);
-    assert.equal(placementFits(prefab, prefab.position, 14, 10, [...scene.prefabs, ...first.filter(item => item !== prefab)]), true);
+    assert.equal(placementFits(prefab, prefab.position, columns, rows, [...scene.prefabs, ...first.filter(item => item !== prefab)]), true);
   }
 });
 

@@ -35,6 +35,10 @@ export function visualLod(distance, nearDistance = 100, mediumDistance = 220) {
   return distance <= nearDistance ? 'near' : distance <= mediumDistance ? 'medium' : 'far';
 }
 
+export function distanceToViewportCenter(screenX, screenY, width, height) {
+  return Math.hypot(screenX - width / 2, screenY - height / 2);
+}
+
 export function visualUpdateInterval(distance, nearDistance = 100, mediumDistance = 220) {
   if (!Number.isFinite(distance) || distance < 0) return 120;
   if (distance <= nearDistance) return 1000 / 60;
@@ -139,11 +143,18 @@ export function distributePrefab(prefabTemplate, zone, columns, rows, others = [
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
   const area = Math.max(1, (maxX - minX + footprint.columns) * (maxY - minY + footprint.rows));
   const target = Math.max(1, Math.floor(area / (spacing * spacing)));
-  const minimumDistance = Math.max(1.25, spacing * 0.72);
+  const minimumDistance = Math.max(1.25, spacing * 0.48);
+  const clusterCount = Math.max(2, Math.ceil(target / 4));
+  const clusters = Array.from({length: clusterCount}, () => ({x: minX + random() * (maxX - minX), y: minY + random() * (maxY - minY)}));
   const candidates = [];
-  for (let attempt = 0; attempt < target * 80; attempt++) {
-    const x = Math.round((minX + random() * (maxX - minX)) * 4) / 4;
-    const y = Math.round((minY + random() * (maxY - minY)) * 4) / 4;
+  for (let attempt = 0; attempt < target * 120; attempt++) {
+    let candidateX = minX + random() * (maxX - minX), candidateY = minY + random() * (maxY - minY);
+    if (random() < 0.72) {
+      const center = clusters[Math.floor(random() * clusters.length)], angle = random() * Math.PI * 2, radius = spacing * (0.2 + random() * 0.85);
+      candidateX = center.x + Math.cos(angle) * radius; candidateY = center.y + Math.sin(angle) * radius;
+    }
+    const x = Math.round((Math.max(minX, Math.min(maxX, candidateX))) * 4) / 4;
+    const y = Math.round((Math.max(minY, Math.min(maxY, candidateY))) * 4) / 4;
     if (candidates.some(point => Math.hypot(point.x - x, point.y - y) < minimumDistance)) continue;
     const prefabId = `${prefabTemplate.assetId}-auto-${zone.zoneId}-${seed}-${attempt}`;
     if (occupants.some(item => item.prefabId === prefabId)) continue;

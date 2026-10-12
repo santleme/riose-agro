@@ -43,3 +43,18 @@ Pixi measured 4.4 FPS / 243 ms Worker round-trip at 1,000 and collected no compl
 A follow-up run on the same headless Chrome/SwiftShader setup used 10,000 animals, zoom 3.2×, a 735×378 CSS-pixel viewport, two fresh-page repetitions, 500 ms warm-up and 1,500 ms capture. It reported 4,643 animals whose sprite bounds intersected the viewport and 5,357 culled animals; all 4,643 visible IDs were represented by individual sprites or clusters. The visible population split into 151 near, 1,833 medium and 2,659 far animals; those tiers produced 2,065 animal draw units and 81 far clusters. This confirms why the earlier 5,131 figure was too high: that older center-point test padded the viewport by 70 px and counted off-screen animals. The current check intersects full sprite bounds (including the motion envelope) with the viewport. A subsequent one-repetition run with the automated accounting invariant passed for both renderers, confirming visible + culled = 10,000 and accounted = visible.
 
 Canvas measured 53.2 mean FPS, 7.0 ms median scene update, 3.6 ms median draw submission, 0.35 ms median motion update and 55.6 ms Worker round-trip; post-GC heap was 2.9 MB. At this cadence the progressive policy averaged about 521 per-animal animation updates per frame. Pixi measured 0.33 mean FPS, 7.7 ms scene update, 0.85 ms draw submission, 1.05 ms motion update, 1,510.9 ms Worker round-trip and 15.3 MB post-GC heap; its sparse frame samples caused all 1,984 individual near/medium entries to pass the update gate on each frame. The renderer decision remains Canvas by default. This run verifies accounting and the changed update cadence, but remains a short exploratory headless measurement.
+
+## Composer close-up after camera/LOD correction
+
+The earlier automated camera zoom left the camera centered on the empty service zone in the 36×24 Composer scene, so its later 3.2× run reported zero visible animals. The corrected harness centers on stable simulation animal #1 and fails if a nonempty herd produces zero visible animals. LOD and animation distance now use the viewport center in screen pixels, not the camera's translation offset. This fixes the pan-dependent tiering bug.
+
+One short validation used the same headless Chrome 156/SwiftShader environment, 735×378 viewport, zoom 3.2×, one fresh page per renderer/load, 400 ms warm-up and 1,000 ms capture. All 10,000 animals remained in the Worker; 771 sprite bounds intersected the viewport and 9,229 were culled. All visible IDs were represented by 435 visual draw units (111 herd clusters). The visible tiers were 87 near, 237 medium and 447 far. At 1,000 animals, 73 intersected the viewport and 927 were culled; 67 draw units represented the visible set.
+
+| Renderer | Load | Mean FPS | Frame p95 | Scene update | Draw submission | Visual motion updates/frame | Worker round-trip | Post-GC JS heap |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Canvas | 1,000 | 121.0 | 16.7 ms | 1.5 ms | 0.3 ms | 5.3 | 7.9 ms | 2.4 MB |
+| Canvas | 10,000 | 121.0 | 16.7 ms | 9.5 ms | 2.1 ms | 60.6 | 17.5 ms | 2.5 MB |
+| PixiJS | 1,000 | 40.3 | 33.4 ms | 3.0 ms | 0.1 ms | 13.4 | 38.9 ms | 5.9 MB |
+| PixiJS | 10,000 | 11.8 | 100.0 ms | 7.4 ms | 0.3 ms | 293.5 | 109.4 ms | 8.5 MB |
+
+This one-repetition run is exploratory, not a release benchmark. Its visibility count is intentionally lower than the 4,643 map-centered count above because the close-up is focused on one animal rather than showing the whole map. It demonstrates correct camera focus, culling accounting, LOD tiering and stable representation; it does not provide a directly comparable performance delta against older runs with different camera targets.
