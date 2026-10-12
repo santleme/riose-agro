@@ -8,7 +8,7 @@
 | World System | Paddocks, world coordinates, topology, obstacles and scenario generation | Weight/energy equations and UI layout | Four pasture stocks and movement coordinates currently share the engine state |
 | Visual Adapter / Renderer | Visual IDs, draw state, interpolation, viewport culling, camera and asset resolution | Scientific calculations and authoritative model state | `src/client/worker.js` transfers compact view buffers; `src/client/app.js` canvas resolves state to the preserved art and presentation |
 | Data Platform | Scenario inputs, reproducible results, imports/exports, provenance and retention | Animal model math | JSON, schemas, browser localStorage, local server; no database |
-| Asset System | Asset manifests, IDs, variants, atlas layout, licensing and pipeline | Simulation state | Baseline artwork plus uncommitted V7 asset work in the `d99d` worktree |
+| Asset System | Asset manifests, IDs, variants, atlas layout, licensing and pipeline | Simulation state | Committed visual assets and the standalone Composer under `public/assets/`; approval remains tracked per asset |
 | Hardware Adapters | Device-specific decode, clock sync, quality and observation ingestion | Direct mutation of model state without provenance | No runtime integration observed; design only when a device is selected |
 
 ## Dependency direction
