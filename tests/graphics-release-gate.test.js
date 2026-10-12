@@ -109,6 +109,25 @@ test('runtime release gate treats missing status as unresolved and rejects every
   assert.throws(() => assertGraphicsReleaseInputsReady(missing), /nelore-adult runtime status UNRESOLVED is not release eligible/);
 });
 
+test('runtime release gate requires declared atlas membership and finite positive frame coordinates', () => {
+  const missing = cloneFixture();
+  delete missing.runtimeManifest.assets[0].frame;
+  assert.throws(() => assertGraphicsReleaseInputsReady(missing), /nelore-adult runtime frame has no declared atlas membership/);
+  assert.throws(() => assertGraphicsReleaseInputsReady(missing), /nelore-adult runtime frame has invalid coordinates/);
+
+  const undeclared = cloneFixture();
+  undeclared.runtimeManifest.assets[0].frame.atlas = 'missing';
+  assert.throws(() => assertGraphicsReleaseInputsReady(undeclared), /nelore-adult runtime frame has no declared atlas membership/);
+
+  const fractional = cloneFixture();
+  fractional.runtimeManifest.assets[0].frame.x = 2.5;
+  assert.doesNotThrow(() => assertGraphicsReleaseInputsReady(fractional), 'fractional atlas cells are valid when bounded');
+
+  const nonFinite = cloneFixture();
+  nonFinite.runtimeManifest.assets[0].frame.x = Number.NaN;
+  assert.throws(() => assertGraphicsReleaseInputsReady(nonFinite), /nelore-adult runtime frame has invalid coordinates/);
+});
+
 test('runtime provenance join preserves explicit source status, rights and unknowns without approving assets', () => {
   const runtimeManifest = {assets: [{id: 'source-approved'}, {id: 'source-review'}, {id: 'orphan'}, {id: 'renderer-review-conflict'}]};
   const semanticManifest = {assets: [
@@ -220,6 +239,14 @@ test('filesystem gate rejects generated frames that exceed the atlas dimensions'
     const errors = await inspectGraphicsReleaseFiles(inputs, repositoryRoot);
     assert(errors.some(error => /outside generated atlas livestock \(10x12\)/.test(error)));
     assert(errors.some(error => /outside atlas livestock \(10x12\)/.test(error)));
+  });
+});
+
+test('filesystem gate rejects runtime frames whose atlas key is missing or undeclared', async () => {
+  await withFilesystemFixture(async ({repositoryRoot, inputs}) => {
+    inputs.runtimeManifest.assets[0].frame.atlas = 'missing';
+    const errors = await inspectGraphicsReleaseFiles(inputs, repositoryRoot);
+    assert(errors.some(error => /runtime asset nelore-adult frame references undeclared atlas missing/.test(error)));
   });
 });
 

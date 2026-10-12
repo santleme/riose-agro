@@ -82,7 +82,10 @@ export async function inspectGraphicsReleaseFiles({semanticManifest, dairyManife
   for (const asset of runtimeManifest?.assets ?? []) {
     const atlasKey = asset.frame?.atlas;
     const atlas = runtimeManifest.atlases?.[atlasKey];
-    if (!atlas) continue;
+    if (!atlas) {
+      errors.push(`runtime asset ${asset.id} frame references undeclared atlas ${String(atlasKey)}`);
+      continue;
+    }
     const metadata = await fileMetadata(atlas.image, repositoryRoot).catch(() => null);
     if (!metadata) continue;
     const frame = asset.frame;
@@ -263,6 +266,8 @@ export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifes
 function validateRuntimeManifest(runtime, errors) {
   check(runtime && Array.isArray(runtime.assets), 'runtime Composer manifest has no assets array', errors);
   if (!Array.isArray(runtime?.assets)) return;
+  check(runtime.atlases && typeof runtime.atlases === 'object' && !Array.isArray(runtime.atlases)
+    && Object.keys(runtime.atlases).length > 0, 'runtime Composer manifest has no atlas map', errors);
   uniqueBy(runtime.assets, 'id', 'runtime asset', errors);
   for (const asset of runtime.assets) {
     const id = asset?.id ?? '<unnamed runtime asset>';
@@ -274,5 +279,11 @@ function validateRuntimeManifest(runtime, errors) {
     check(asset?.provenance?.rights?.licenseState === 'documented'
       && typeof asset.provenance.rights.notes === 'string' && asset.provenance.rights.notes.trim().length > 0,
     `${id} runtime asset has no documented rights basis`, errors);
+    const frame = asset?.frame;
+    check(frame && typeof frame.atlas === 'string' && Object.hasOwn(runtime.atlases ?? {}, frame.atlas),
+      `${id} runtime frame has no declared atlas membership`, errors);
+    check(frame && [frame.x, frame.y, frame.w, frame.h].every(Number.isFinite)
+      && frame.x >= 0 && frame.y >= 0 && frame.w > 0 && frame.h > 0,
+    `${id} runtime frame has invalid coordinates`, errors);
   }
 }
