@@ -11,7 +11,7 @@ export const PRODUCT_SCENE_PREFABS=Object.freeze({
   pond:{water:'water-pond-imagegen-v1',bank:'meadow-edge',selectable:'water'},
   barnCorral:{barn:'building-shed-imagegen-v1',corral:'corral-wood-standard-imagegen-v1',selectable:'structure'},
   crop:{stages:['field-soybean-growing','field-soybean-mature'],rows:3,selectable:'crop'},
-  treeCluster:{variants:['shade-tree','fruit-tree','shrub'],scatter:'deterministic',selectable:'tree'},
+  treeCluster:{variants:['vegetation-tree-shade-imagegen-v1','fruit-tree','shrub'],scatter:'deterministic',selectable:'tree'},
   roadConnector:{surface:'dirt-path',connections:['pasture','farmstead','barn'],selectable:'path'},
   fenceBoundary:{segment:'fence-wire-wood-post-imagegen-v1',snapping:'grid-edge',selectable:'fence'},
   service:{assets:['silo','technology-gateway-antenna-imagegen-v1','water-reservoir-imagegen-v1'],selectable:'structure'}
@@ -50,13 +50,13 @@ const OBJECTS=[
 ];
 
 const TREE_PLACEMENTS=[
-  [0.4,1.6,'shade-tree',38,43],[.2,4.1,'fruit-tree',31,37],[.4,8.8,'shade-tree',42,46],[1.5,10.2,'fruit-tree',30,36],
-  [5.2,.4,'shade-tree',37,43],[10.4,.2,'fruit-tree',31,36],[12.8,.7,'shade-tree',41,46],[18.9,1.7,'shade-tree',42,46],
-  [19.2,5.5,'fruit-tree',30,36],[19.1,9.5,'shade-tree',39,43],[16,11.1,'fruit-tree',31,35],[11.3,11.2,'shade-tree',40,45],
+  [0.4,1.6,'vegetation-tree-shade-imagegen-v1',38,43],[.2,4.1,'fruit-tree',31,37],[.4,8.8,'vegetation-tree-shade-imagegen-v1',42,46],[1.5,10.2,'fruit-tree',30,36],
+  [5.2,.4,'vegetation-tree-shade-imagegen-v1',37,43],[10.4,.2,'fruit-tree',31,36],[12.8,.7,'vegetation-tree-shade-imagegen-v1',41,46],[18.9,1.7,'vegetation-tree-shade-imagegen-v1',42,46],
+  [19.2,5.5,'fruit-tree',30,36],[19.1,9.5,'vegetation-tree-shade-imagegen-v1',39,43],[16,11.1,'fruit-tree',31,35],[11.3,11.2,'vegetation-tree-shade-imagegen-v1',40,45],
   [8.8,5.2,'shrub',25,21],[13.2,5.7,'shrub',23,19],[14.1,3.8,'fruit-tree',28,33],[3.1,5.3,'shrub',25,20],
-  [8.1,9.7,'shade-tree',34,39],[2.8,10.7,'fruit-tree',27,33],[18.3,3.2,'shrub',24,18]
+  [8.1,9.7,'vegetation-tree-shade-imagegen-v1',34,39],[2.8,10.7,'fruit-tree',27,33],[18.3,3.2,'shrub',24,18]
 ];
-const TREES=TREE_PLACEMENTS.map(([col,row,asset,w,h],index)=>object(`tree-${index}`,'tree',asset==='fruit-tree'?'Fruit tree':'Shade tree',asset,col,row,w,h,{hitW:w*.38,hitH:h*.27,prefab:'treeCluster'}));
+const TREES=TREE_PLACEMENTS.map(([col,row,asset,w,h],index)=>object(`tree-${index}`,'tree',asset==='fruit-tree'?'Fruit tree':asset==='shrub'?'Shrub':'Shade tree',asset,col,row,w,h,{hitW:w*.38,hitH:h*.27,prefab:'treeCluster'}));
 
 // Route cells are ground tiles; each route remains selectable as a path zone.
 const ROAD_CELLS=new Set();
@@ -114,11 +114,16 @@ function drawBase(ctx){
   ctx.strokeStyle='rgba(226,202,143,.72)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(left.x,left.y);ctx.lineTo(bottomRight.x,bottomRight.y);ctx.lineTo(right.x,right.y);ctx.stroke();
 }
 function inPasture(col,row){return PASTURES.find(zone=>col>=zone.col-.5&&col<zone.col+zone.cols-.5&&row>=zone.row-.5&&row<zone.row+zone.rows-.5);}
+function tileNoise(col,row,salt=0){
+  let value=Math.imul(col+19+salt,0x45d9f3b)^Math.imul(row+37+salt,0x119de1f3);
+  value=Math.imul(value^(value>>>16),0x45d9f3b);value=Math.imul(value^(value>>>16),0x45d9f3b);
+  return ((value^(value>>>16))>>>0)/4294967296;
+}
 function terrainCellColor(col,row){
   const pasture=inPasture(col,row),crop=row>=9&&col>=3&&col<=8;
-  const offset=((col*37+row*17)%5)-2;
+  const tone=tileNoise(col,row)-.5;
   const base=crop?[119,141,81]:pasture?[129,151,93]:[131,153,96];
-  return `rgb(${base[0]+offset},${base[1]+offset},${base[2]+offset})`;
+  return `rgb(${Math.round(base[0]+tone*7)},${Math.round(base[1]+tone*9)},${Math.round(base[2]+tone*6)})`;
 }
 function drawRoads(ctx){
   for(const routePoints of ROAD_PATHS){
@@ -129,23 +134,19 @@ function drawRoads(ctx){
     trace();ctx.setLineDash([2,5]);ctx.strokeStyle='rgba(238,216,173,.55)';ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
   }
 }
-function drawTerrain(ctx,drawAsset,assetsReady){
+function drawTerrain(ctx){
   drawBase(ctx);
   for(let depth=0;depth<columns+rows;depth++)for(let col=0;col<columns;col++){
     const row=depth-col;if(row<0||row>=rows)continue;
     const corners=tileCorners(col,row);
     polygon(ctx,corners,terrainCellColor(col,row));
     // A restrained, deterministic scatter gives the tilemap texture without repeating a tile image.
-    const p=gridToScreen(col,row);const seed=(col*37+row*71)%13;
-    if(!ROAD_CELLS.has(`${col},${row}`)&&seed<7){
-      ctx.fillStyle=seed===0?'rgba(239,219,133,.8)':'rgba(54,91,48,.36)';
-      ctx.beginPath();ctx.ellipse(p.x+(seed%3-1)*5,p.y-1+(seed%2)*2,seed===0?1.1:1.5,2.2,-.3,0,Math.PI*2);ctx.fill();
-      if(seed===2||seed===5){ctx.strokeStyle='rgba(57,91,51,.48)';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(p.x-2,p.y+2);ctx.lineTo(p.x-3,p.y-1);ctx.moveTo(p.x,p.y+2);ctx.lineTo(p.x+1,p.y-2);ctx.stroke();}
-    }
-    if(assetsReady&&!ROAD_CELLS.has(`${col},${row}`)&&(col*5+row*3)%7===0){
-      const tile=(col*3+row*5)%4===0?'grass-mid':'grass-light';
-      ctx.save();ctx.globalAlpha=.22;ctx.beginPath();ctx.moveTo(corners[0].x,corners[0].y);for(let point=1;point<corners.length;point++)ctx.lineTo(corners[point].x,corners[point].y);ctx.closePath();ctx.clip();
-      drawAsset(tile,p.x,p.y,32,23.5,'center');ctx.restore();
+    const p=gridToScreen(col,row),seed=tileNoise(col,row,11),variation=tileNoise(col,row,23);
+    if(!ROAD_CELLS.has(`${col},${row}`)&&seed<.53){
+      const x=p.x+(tileNoise(col,row,31)-.5)*15,y=p.y+(tileNoise(col,row,47)-.5)*6;
+      ctx.fillStyle=variation<.12?'rgba(226,202,126,.66)':'rgba(54,91,48,.30)';
+      ctx.beginPath();ctx.ellipse(x,y,variation<.12?1.15:1.1+variation,1.7+variation*1.8,-.3+variation*.5,0,Math.PI*2);ctx.fill();
+      if(variation>.82){ctx.strokeStyle='rgba(57,91,51,.46)';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x-2,y+2);ctx.lineTo(x-3,y-1);ctx.moveTo(x,y+2);ctx.lineTo(x+1,y-2);ctx.stroke();}
     }
     // Soil walls are drawn only on the exposed southeast/southwest edges of the tile map.
     if(!inGrid(col+1,row)){const edge=[corners[1],corners[2],{x:corners[2].x,y:corners[2].y+soilDepth},{x:corners[1].x,y:corners[1].y+soilDepth}];polygon(ctx,edge,'#8b5b3a','#704a32',.6);}
@@ -189,7 +190,7 @@ export function productFarmEntityAt(x,y){
 export function productFarmHoverEntityAt(x,y){return productFarmEntityAt(x,y);}
 
 export function drawProductFarm(ctx,{drawAsset,assetsReady,time=0,animals=[],drawAnimal=()=>{},selectedEntityId=null,hoverEntityId=null}){
-  ctx.fillStyle='#e7eadb';ctx.fillRect(0,0,576,336);drawTerrain(ctx,drawAsset,assetsReady);drawPastureZones(ctx,selectedEntityId,hoverEntityId);
+  ctx.fillStyle='#e7eadb';ctx.fillRect(0,0,576,336);drawTerrain(ctx);drawPastureZones(ctx,selectedEntityId,hoverEntityId);
   // Crop rows are a prefab: alternating growth stages, aligned to the same grid anchor.
   for(const crop of OBJECTS.filter(item=>item.type==='crop')){
     const p=gridToScreen(crop.col,crop.row);drawAsset(crop.asset,p.x,p.y+4,crop.w,crop.h,'bottom');

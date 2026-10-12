@@ -28,15 +28,32 @@ function saveScenarioData(){try{localStorage.setItem(scenarioStorageKey,JSON.str
 function renderScenarios(){const select=$('scenario-select'),active=activeScenario();select.replaceChildren(new Option(productExperience?'Current world · not saved':'Fazenda atual · não salva',''));for(const scenario of scenarios){const config=scenario.snapshot.config;select.add(new Option(scenario.name+' · D'+(Math.floor(scenario.snapshot.hour/24)+1)+' · '+scenarioNames[config.housing]+' · '+scenarioNames[config.diet],scenario.id));}select.value=activeScenarioId??'';$('scenario-rename').disabled=!active;$('scenario-delete').disabled=!active;$('event-scope').textContent=active?active.name.toLocaleUpperCase('en-US'):(productExperience?'LIVE':'AO VIVO');if(active){const snapshot=active.snapshot,c=snapshot.config;$('scenario-status').textContent=productExperience?'Day '+String(Math.floor(snapshot.hour/24)+1).padStart(2,'0')+' · '+scenarioNames[c.housing]+' · '+scenarioNames[c.diet]+' · '+number(c.supplement)+' kg DM/day · '+scenarioNames[c.weather]+' · '+snapshot.events.length+' events':'D'+String(Math.floor(snapshot.hour/24)+1).padStart(2,'0')+' · '+scenarioNames[c.housing]+' · dieta '+scenarioNames[c.diet]+' · '+number(c.supplement)+' kg MS/animal/dia · '+scenarioNames[c.weather]+' · '+snapshot.events.length+' eventos';}else $('scenario-status').textContent=productExperience?'Current world · unsaved':'Cenário atual ainda não salvo.';}
 const cowSvg='<svg viewBox="0 0 18 14" aria-hidden="true"><path fill="#45613e" d="M3 3h10v7H3zM12 2h4v6h-4zM3 9h2v4H3zM10 9h2v4h-2zM1 4h2v4H1z"/><path fill="#edf1e1" d="M4 3h5v3H4zM8 7h5v3H8zM13 2h2v3h-2z"/><path fill="#293b23" d="M15 4h1v1h-1z"/></svg>';
 const canvas=$                   ('map'),ctx=canvas.getContext('2d') ;
-ctx.imageSmoothingEnabled=false;
+// Keep the 576 × 336 scene coordinates, but rasterize at the display DPR so
+// the browser never has to enlarge a low-resolution bitmap of the whole farm.
+ctx.imageSmoothingEnabled=true;
+ctx.imageSmoothingQuality='high';
+let canvasScaleX=1,canvasScaleY=1;
+function resizeProductCanvas(){
+  const bounds=canvas.getBoundingClientRect();
+  const scale=window.devicePixelRatio||1;
+  if(!bounds.width||!bounds.height)return;
+  const width=Math.round(bounds.width*scale),height=Math.round(bounds.height*scale);
+  if(canvas.width===width&&canvas.height===height&&canvasScaleX===width/576&&canvasScaleY===height/336)return;
+  canvas.width=width;canvas.height=height;canvasScaleX=width/576;canvasScaleY=height/336;
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+}
+new ResizeObserver(resizeProductCanvas).observe(canvas);
+window.addEventListener('resize',resizeProductCanvas,{passive:true});
+resizeProductCanvas();
 const terrain=document.createElement('canvas');terrain.width=576;terrain.height=336;const t=terrain.getContext('2d') ;
+t.imageSmoothingEnabled=true;t.imageSmoothingQuality='high';
 function rect(g                         ,x       ,y       ,w       ,h       ,color       ){g.fillStyle=color;g.fillRect(Math.round(x),Math.round(y),w,h);}
 let terrainSeed=9;function rand(){terrainSeed=(Math.imul(1664525,terrainSeed)+1013904223)>>>0;return terrainSeed/4294967296;}
 const assetFrames={},assetAtlases={};let assetReady=false;
 function drawAssetOn(g,id,x,y,w,h,anchor='center',rotation=0){const frame=assetFrames[id],atlas=frame&&assetAtlases[frame.atlas];if(!atlas?.complete||!atlas.naturalWidth)return;g.save();g.translate(x,y);g.rotate(rotation);g.drawImage(atlas,frame.x,frame.y,frame.w,frame.h,-w/2,anchor==='bottom'?-h:-h/2,w,h);g.restore();}
 function loadProductAssets(){fetch('/assets/manifest.json').then(response=>{if(!response.ok)throw new Error('manifest');return response.json();}).then(manifest=>{
   for(const asset of manifest.assets)assetFrames[asset.id]=asset.frame;
-  const required=new Set(['farm','livestock','livestock-approved','animals-review','handling-review','environment-review','infrastructure-review','agriculture','technology-review']);
+  const required=new Set(['farm','livestock-approved','animals-review','handling-review','environment-review','infrastructure-review','agriculture','technology-review']);
   const atlases=Object.entries(manifest.atlases).filter(([id])=>required.has(id));let loaded=0;
   for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length){assetReady=true;buildTerrain();}};atlas.onerror=()=>{assetFrames[id]=null;};atlas.src=definition.image;}
 }).catch(()=>{});}
@@ -127,7 +144,7 @@ function drawManifestoCow(a,x,y,time){
   rect(ctx,x+7,y-5,1,4,'#34382f');rect(ctx,x+8,y-6,1,2,'#34382f');
 }
 function draw(time       ){
-  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,576,336);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  ctx.setTransform(canvasScaleX,0,0,canvasScaleY,0,0);ctx.clearRect(0,0,576,336);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
   if(productExperience){
     drawProductScene(time);
   }else ctx.drawImage(terrain,0,0);
