@@ -8,6 +8,7 @@ import {
   createScenarioContract,
   replayScenarioContract,
   SCENARIO_ENGINE_VERSION,
+  validateReproducibilityManifest,
   upgradeComparisonManifestToScenarioContract,
   validateScenarioContract,
 } from '../src/client/scenario-contract.js';
@@ -52,6 +53,29 @@ test('legacy v1 manifests stay readable and adapt with an explicit unknown engin
   assert.equal(upgraded.engine_version, 'legacy-unspecified');
   assert.deepEqual(upgraded.baseline, roundTrip.initialSnapshot);
   assert.deepEqual(replayScenarioContract(upgraded), replayComparisonManifest(roundTrip));
+});
+
+test('comparison manifest compatibility table dispatches v1 and v2 and rejects unknown envelopes', () => {
+  const snapshot = fixture(551);
+  const v1 = createComparisonManifest(snapshot, 6);
+  const v2 = createScenarioContract(snapshot, 6);
+  const cases = [
+    {label: 'agroville-comparison v1', manifest: v1, expected: true},
+    {label: 'agroville-comparison v2', manifest: v2, expected: true},
+    {label: 'unknown comparison version', manifest: {...structuredClone(v1), version: 3}, expected: false},
+    {label: 'unknown comparison type', manifest: {...structuredClone(v1), type: 'future-comparison'}, expected: false},
+    {label: 'missing comparison version', manifest: Object.fromEntries(Object.entries(v1).filter(([key]) => key !== 'version')), expected: false},
+  ];
+
+  for (const {label, manifest, expected} of cases) {
+    if (expected) assert.equal(validateReproducibilityManifest(manifest), true, label);
+    else assert.throws(() => validateReproducibilityManifest(manifest), undefined, label);
+  }
+
+  const adapted = upgradeComparisonManifestToScenarioContract(v1);
+  assert.equal(adapted.version, 2);
+  assert.equal(adapted.engine_version, 'legacy-unspecified');
+  assert.equal(validateScenarioContract(adapted), true, 'adapted v1 is a valid in-memory v2 contract');
 });
 
 test('optional scenario identity uses a deterministic default or the requested ID', () => {

@@ -1,5 +1,6 @@
 use std::hint::black_box;
-use std::process::Command;
+use std::io::Write;
+use std::process::{Command, Stdio};
 use std::time::Instant;
 
 use riose_core::update_metabolism;
@@ -71,7 +72,7 @@ fn main() {
         "benchmark": {"name":"native-metabolism-kernel","source":{"revision":revision,"dirty":dirty}},
         "runtime": {"platform":std::env::consts::OS,"rust":rustc,"crateVersion":env!("CARGO_PKG_VERSION")},
         "hardware": {"os":std::env::consts::OS,"architecture":std::env::consts::ARCH,"cpu":null,"gpuMemoryBytes":null},
-        "workload": {"seed":null,"populations":[
+        "workload": {"seed":"deterministic-index-no-rng","populations":[
             {"animals":100,"scope":"numeric-kernel-only"},
             {"animals":1000,"scope":"numeric-kernel-only"},
             {"animals":10000,"scope":"numeric-kernel-only"},
@@ -83,9 +84,34 @@ fn main() {
             "engine":phase(measurements),"snapshot":not_measured(),"serialization":not_measured(),"worker":not_measured(),
             "ui":not_measured(),"layout":not_measured(),"render":not_measured(),"startup":not_measured()
         },
+        "timingBoundaries": [{
+            "phase":"engine",
+            "timed":["Native Rust metabolism kernel over preallocated input and output vectors."],
+            "notTimed":["Input construction, FarmEngine, Worker transfer, UI, rendering, and process startup."]
+        }],
         "results": {"workload":"pure Rust metabolism loop over preallocated vectors; no full FarmEngine runner"},
         "limitations": ["This is an isolated numeric kernel measurement. It does not measure FarmEngine, Worker, UI, rendering, or GPU memory."],
     });
+    let validator = format!(
+        "{}/../../scripts/validate-benchmark-report.mjs",
+        env!("CARGO_MANIFEST_DIR")
+    );
+    let mut child = Command::new("node")
+        .arg(validator)
+        .stdin(Stdio::piped())
+        .spawn()
+        .expect("node is required to validate the shared benchmark report schema");
+    child
+        .stdin
+        .as_mut()
+        .expect("validator stdin is piped")
+        .write_all(&serde_json::to_vec(&report).expect("benchmark report serializes"))
+        .expect("write benchmark report to schema validator");
+    let validation = child.wait().expect("wait for benchmark schema validator");
+    assert!(
+        validation.success(),
+        "benchmark report failed shared JSON Schema validation"
+    );
     println!(
         "{}",
         serde_json::to_string_pretty(&report).expect("benchmark report serializes")

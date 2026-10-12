@@ -9,10 +9,7 @@ test('DMI/ADG readiness matrix keeps ordered source references and component out
   assert.equal(report.schemaVersion, 'riose.dmi-adg-readiness/v1');
   assert.equal(report.domainExpertReview.status, 'pending_not_obtained');
   assert.equal(report.sources.length, report.processing.sourceCount);
-  assert.deepEqual(report.sources.map(source => source.id), [...report.sources.map(source => source.id)].sort((a, b) => {
-    const declared = ['usda-cper-behavior', 'usda-cper-ltgi', 'dryad-finishing-steers', 'sdsu-individual-dmi', 'grastech-dairy-grazing', 'usda-ars-feedlot-dmi', 'dryad-grazing-yearlings', 'rothamsted-dairy-beef-grazing', 'mdpi-angus-cows', 'public-pasture-dmi-unavailable'];
-    return declared.indexOf(a) - declared.indexOf(b);
-  }));
+  assert.deepEqual(report.sources.map(source => source.id), [...report.sources.map(source => source.id)].sort());
 
   for (const source of report.sources) {
     assert.ok(['available_local', 'unavailable_or_not_reusable'].includes(source.access));
@@ -32,4 +29,10 @@ test('DMI/ADG readiness matrix keeps ordered source references and component out
   assert.equal(inaccessible.outcomes.adg.trainable, false);
   assert.ok(report.sources.some(source => source.outcomes.dmi.status === 'conditional'));
   assert.ok(report.sources.some(source => source.outcomes.adg.status === 'conditional'));
+  for (const source of report.sources) {
+    assert.ok(Object.hasOwn(source, 'studyDesign'));
+    assert.ok(Object.hasOwn(source.counts, 'animals'));
+    assert.ok(Object.hasOwn(source.counts, 'trials'));
+    assert.ok(Object.hasOwn(source.missingness, 'documentedMetrics'));
+  }
 });

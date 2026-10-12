@@ -340,6 +340,35 @@ mod tests {
     }
 
     #[test]
+    fn checkpoint_contract_compatibility_table_fails_closed() {
+        let valid = encode_snapshot(&CoreSnapshot::empty(42)).unwrap();
+        let mut unknown_version: serde_json::Value = serde_json::from_str(&valid).unwrap();
+        unknown_version["version"] = json!(CORE_SNAPSHOT_VERSION + 1);
+        let mut unknown_type: serde_json::Value = serde_json::from_str(&valid).unwrap();
+        unknown_type["type"] = json!("future-core-snapshot");
+        let mut missing_version: serde_json::Value = serde_json::from_str(&valid).unwrap();
+        missing_version.as_object_mut().unwrap().remove("version");
+
+        let cases = [
+            ("current checkpoint v1", valid, true),
+            (
+                "unknown checkpoint version",
+                unknown_version.to_string(),
+                false,
+            ),
+            ("unknown checkpoint type", unknown_type.to_string(), false),
+            (
+                "missing checkpoint version",
+                missing_version.to_string(),
+                false,
+            ),
+        ];
+        for (label, bytes, expected_valid) in cases {
+            assert_eq!(decode_snapshot(&bytes).is_ok(), expected_valid, "{label}");
+        }
+    }
+
+    #[test]
     fn snapshot_decoder_rejects_duplicate_ids_and_unversioned_components() {
         let mut snapshot = CoreSnapshot::empty(1);
         snapshot.entities.push(EntitySnapshot {

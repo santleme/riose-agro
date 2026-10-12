@@ -11,66 +11,6 @@
   },
   "sources": [
     {
-      "id": "usda-cper-behavior",
-      "name": "USDA/CPER foraging behavior and weight gains",
-      "references": {
-        "manifest": "data/usda-cper/manifest.json",
-        "audit": "docs/evidence/usda-cper-association.json",
-        "decision": "docs/caso-zootecnico-demonstrativo.md"
-      },
-      "sourceIdentity": {
-        "doi": "10.15482/USDA.ADC/1524788",
-        "license": "U.S. Public Domain (manifest)"
-      },
-      "access": "available_local",
-      "population": "Yearling cattle on semi-arid Colorado rangeland; adult classification is unresolved.",
-      "units": "Animal-period ADG in kg/day; DMI is not present.",
-      "missingness": "See linked audit report; source has repeated animal-period observations.",
-      "outcomes": {
-        "dmi": {
-          "status": "ineligible",
-          "trainable": false,
-          "reason": "No individual DMI outcome is present."
-        },
-        "adg": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Suitable only for the approved exploratory association/component scope; yearling classification, observational design and repeated animal keys constrain generalization."
-        }
-      },
-      "permissibleUse": "Exploratory observational ADG/pastejo analysis; no causal claim, adult-cow claim, or full-engine validation."
-    },
-    {
-      "id": "usda-cper-ltgi",
-      "name": "USDA/CPER long-term grazing intensity weight gains",
-      "references": {
-        "manifest": "data/usda-cper-ltgi-2000-2019/manifest.json",
-        "audit": "docs/evidence/usda-cper-ltgi-audit.json",
-        "decision": "docs/evidence/engine-adg-usda-cper-ltgi-check.json"
-      },
-      "sourceIdentity": {
-        "doi": "10.15482/USDA.ADC/1528520",
-        "license": "U.S. Public Domain (manifest)"
-      },
-      "access": "available_local",
-      "population": "Yearling cattle (heifers and steers) managed under grazing intensities, 2000–2019.",
-      "units": "One animal-season row; entry/exit weights converted to kg; derived ADG kg/day.",
-      "missingness": "Exclusions, repeated keys and measurement protocol changes are described in the audit report.",
-      "outcomes": {
-        "dmi": {
-          "status": "ineligible",
-          "trainable": false,
-          "reason": "No individual DMI outcome is present."
-        },
-        "adg": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Public individual seasonal gain supports a bounded ADG component diagnostic; it is not a daily trajectory or replicated causal treatment experiment."
-        }
-      },
-      "permissibleUse": "Bounded ADG component assessment with year/pasture/animal key discipline; not full-engine or causal treatment validation."
-    },
-    {
       "id": "dryad-finishing-steers",
       "name": "Dryad finishing steers methane-model dataset",
       "references": {
@@ -83,9 +23,40 @@
         "license": "CC0-1.0 (manifest)"
       },
       "access": "available_local",
+      "studyDesign": {
+        "value": "Five experiment-level groups; finishing-phase summaries, not paired daily trajectories",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/dryad-finishing-steers-audit.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": 446,
+          "definition": "unique Project+Animal keys; raw Animal IDs repeat across experiments",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/nUniqueProjectAnimalKeys"
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": 5,
+          "definition": "experiments",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/nExperiments"
+        }
+      },
       "population": "Finishing/feedlot beef steers across five experiments.",
       "units": "One animal-by-experiment summary row; DMI and ADG in kg/day.",
-      "missingness": "The linked audit reports 446 complete outcome rows; no daily paired trajectory.",
+      "missingness": {
+        "summary": "The linked audit reports 446 complete outcome rows; no daily paired trajectory.",
+        "documentedMetrics": {
+          "value": {
+            "missingByColumn": "all audited columns have zero missing values"
+          },
+          "definition": "audit's per-column missingByColumn counts",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/missingByColumn"
+        }
+      },
       "outcomes": {
         "dmi": {
           "status": "conditional",
@@ -101,96 +72,6 @@
       "permissibleUse": "Limited finishing/feedlot component assessment; keep experiment IDs grouped and do not transfer conclusions to grazing."
     },
     {
-      "id": "sdsu-individual-dmi",
-      "name": "SDSU individual DMI on rangeland",
-      "references": {
-        "manifest": "data/sdsu-individual-dmi/manifest.json",
-        "audit": "docs/evidence/sdsu-individual-dmi-audit.json",
-        "decision": "docs/evidence/sdsu-engine-dmi-check.json"
-      },
-      "sourceIdentity": {
-        "doi": "10.3389/fvets.2025.1625448",
-        "license": "CC BY (manifest article/supplement; see source-specific evidence)"
-      },
-      "access": "available_local",
-      "population": "Rangeland grazing cohort described in the linked audit; verify eligibility for any target population before use.",
-      "units": "Derived DMI kg/day from intake pounds and period mean dry-matter percentage; see manifest derivation.",
-      "missingness": "Rows without forage matching are retained with derived DMI blank; see audit and manifest.",
-      "outcomes": {
-        "dmi": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Local source and derivation are available, but derived intake and population/period limitations require a component-only interpretation."
-        },
-        "adg": {
-          "status": "ineligible",
-          "trainable": false,
-          "reason": "The paired source/audit does not establish an approved ADG outcome for the target use."
-        }
-      },
-      "permissibleUse": "DMI component diagnostic under the documented derivation; no claim of complete pasture-engine validation."
-    },
-    {
-      "id": "grastech-dairy-grazing",
-      "name": "GrASTech dairy grazing DMI",
-      "references": {
-        "manifest": "data/grastech-dairy-grazing-dmi/manifest.json",
-        "audit": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json",
-        "decision": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json"
-      },
-      "sourceIdentity": {
-        "doi": "10.57745/GTTJAR",
-        "license": "Etalab Open License 2.0 (manifest)"
-      },
-      "access": "available_local",
-      "population": "Lactating dairy cows in a grazing supplementation experiment.",
-      "units": "See audit report; linked workbooks hold animal, period, feed and herbage measures.",
-      "missingness": "Use workbook-level missingness and coverage in the linked audit; not copied into this matrix.",
-      "outcomes": {
-        "dmi": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Individual grazing-intake evidence is available, but dairy population and study-specific measurement limit transfer to beef cattle."
-        },
-        "adg": {
-          "status": "ineligible",
-          "trainable": false,
-          "reason": "The cited audit does not establish an approved paired ADG target for this assessment."
-        }
-      },
-      "permissibleUse": "Dairy grazing DMI component analysis only; do not treat it as beef-cattle validation."
-    },
-    {
-      "id": "usda-ars-feedlot-dmi",
-      "name": "USDA-ARS individual feedlot DMI",
-      "references": {
-        "manifest": "data/usda-ars-individual-dmi-feedlot/manifest.json",
-        "audit": "docs/evidence/usda-ars-feedlot-dmi-audit.json",
-        "decision": "docs/evidence/usda-ars-feedlot-engine-dmi-check.json"
-      },
-      "sourceIdentity": {
-        "doi": "10.17632/wcc46fhff8.1",
-        "license": "CC BY 4.0 (manifest)"
-      },
-      "access": "available_local",
-      "population": "Beef cattle in feedlot experiments.",
-      "units": "Individual feedlot DMI and supporting fields as listed in the audit.",
-      "missingness": "See linked audit report; do not infer missing values from publication summaries.",
-      "outcomes": {
-        "dmi": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Open feedlot DMI can support a feedlot component assessment, not a pasture-DMI claim."
-        },
-        "adg": {
-          "status": "conditional",
-          "trainable": false,
-          "reason": "Performance association is not sufficient by itself to establish a paired approved ADG validation target."
-        }
-      },
-      "permissibleUse": "Feedlot DMI component analysis within dataset license and attribution terms."
-    },
-    {
       "id": "dryad-grazing-yearlings",
       "name": "Dryad grazing yearling steers",
       "references": {
@@ -203,9 +84,38 @@
         "license": "CC0-1.0 (manifest)"
       },
       "access": "available_local",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": 154,
+          "definition": "unique model steer IDs",
+          "reference": "docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/uniqueModelSteerIds"
+        },
+        "animalObservationUnits": {
+          "value": 154,
+          "definition": "model rows with ADG and body weight",
+          "reference": "docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/modelRowsWithAdgAndBw"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
       "population": "Yearling grazing steers.",
       "units": "One ADG and body-weight record per steer; visits are interval records.",
-      "missingness": "The audit reports 154 model rows; DMI and experiment ID are absent, and visit coverage is incomplete for some animals.",
+      "missingness": {
+        "summary": "The audit reports 154 model rows; DMI and experiment ID are absent, and visit coverage is incomplete for some animals.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
       "outcomes": {
         "dmi": {
           "status": "ineligible",
@@ -221,34 +131,63 @@
       "permissibleUse": "Separate yearling ADG descriptive reference only; no full-engine validation or adult-cow inference."
     },
     {
-      "id": "rothamsted-dairy-beef-grazing",
-      "name": "Rothamsted dairy-cross beef grazing",
+      "id": "grastech-dairy-grazing",
+      "name": "GrASTech dairy grazing DMI",
       "references": {
-        "manifest": "data/rothamsted/manifest.json",
-        "audit": "docs/evidence/rothamsted-adg-audit.json",
-        "decision": "docs/evidence/engine-adg-rothamsted-check.json"
+        "manifest": "data/grastech-dairy-grazing-dmi/manifest.json",
+        "audit": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json",
+        "decision": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json"
       },
       "sourceIdentity": {
-        "doi": "10.23637/rothamsted.00033688",
-        "license": "CC BY 4.0 (manifest)"
+        "doi": "10.57745/GTTJAR",
+        "license": "Etalab Open License 2.0 (manifest)"
       },
       "access": "available_local",
-      "population": "Young growing dairy-cross beef cattle in temperate pasture; not a mature-cow cohort.",
-      "units": "Animal-period daily liveweight gain kg/steer/day; repeated periods per official tag.",
-      "missingness": "Integrity, coverage and cohort details are in the linked audit report.",
-      "outcomes": {
-        "dmi": {
-          "status": "ineligible",
-          "trainable": false,
-          "reason": "No individual DMI outcome is present."
+      "studyDesign": {
+        "value": "One farm and one experiment; evaluation groups are within-study Latin-square groups",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
         },
-        "adg": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Open repeated animal-period ADG supports a bounded component diagnostic, but its population and predictors differ from the approved CPER case."
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
         }
       },
-      "permissibleUse": "Held-out cohort ADG component diagnostic only; not full-engine or adult-cow validation."
+      "population": "Lactating dairy cows in a grazing supplementation experiment.",
+      "units": "See audit report; linked workbooks hold animal, period, feed and herbage measures.",
+      "missingness": {
+        "summary": "Use workbook-level missingness and coverage in the linked audit; not copied into this matrix.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Individual grazing-intake evidence is available, but dairy population and study-specific measurement limit transfer to beef cattle."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The cited audit does not establish an approved paired ADG target for this assessment."
+        }
+      },
+      "permissibleUse": "Dairy grazing DMI component analysis only; do not treat it as beef-cattle validation."
     },
     {
       "id": "mdpi-angus-cows",
@@ -263,9 +202,41 @@
         "license": "CC-BY-4.0 (manifest/article supplement; inspect data terms before redistribution)"
       },
       "access": "available_local",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": 241,
+          "definition": "unique cow IDs across the two study years",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1UniqueCowIdsAcrossYears"
+        },
+        "animalObservationUnits": {
+          "value": 408,
+          "definition": "cow-season rows",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1CowSeasonRows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
       "population": "Pregnant commercial Angus cows, ages 1–10, on dormant mixed-grass rangeland.",
       "units": "Cow-season weight change; ADG is derived over a study-reported 84-day period.",
-      "missingness": "Audit reports missing weight/BCS changes; 167 cow IDs recur across years, and GPS covers a subset/45 days.",
+      "missingness": {
+        "summary": "Audit reports missing weight/BCS changes; 167 cow IDs recur across years, and GPS covers a subset/45 days.",
+        "documentedMetrics": {
+          "value": {
+            "weightChange": 5,
+            "bodyConditionScoreChange": 3
+          },
+          "definition": "rows missing weight-change and BCS-change values",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1MissingWeightChange"
+        }
+      },
       "outcomes": {
         "dmi": {
           "status": "ineligible",
@@ -293,28 +264,354 @@
         "license": "Underlying-data reuse license/access not established for the cited candidates."
       },
       "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
       "population": "Candidate sources include adult beef cattle on pasture; assess each source separately if access/terms change.",
       "units": "No individual-level reusable outcome file was retrieved for these candidates.",
-      "missingness": "Individual observations are unavailable; article summaries are not a substitute.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; article summaries are not a substitute.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
       "outcomes": {
         "dmi": {
           "status": "ineligible",
           "trainable": false,
-          "reason": "Underlying records are private, inaccessible, absent, or not data-specifically licensed; inaccessible sources are never counted as trainable."
+          "reason": "Underlying records are private, inaccessible, absent, or not data-specifically licensed; inaccessible sources are never counted as trainable. Source is inaccessible or not reusable."
         },
         "adg": {
           "status": "ineligible",
           "trainable": false,
-          "reason": "No usable individual ADG records with the required paired inputs were retrieved."
+          "reason": "No usable individual ADG records with the required paired inputs were retrieved. Source is inaccessible or not reusable."
         }
       },
       "permissibleUse": "Literature/methods context and access follow-up only; do not reconstruct microdata from tables or figures."
+    },
+    {
+      "id": "rothamsted-dairy-beef-grazing",
+      "name": "Rothamsted dairy-cross beef grazing",
+      "references": {
+        "manifest": "data/rothamsted/manifest.json",
+        "audit": "docs/evidence/rothamsted-adg-audit.json",
+        "decision": "docs/evidence/engine-adg-rothamsted-check.json"
+      },
+      "sourceIdentity": {
+        "doi": "10.23637/rothamsted.00033688",
+        "license": "CC BY 4.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": 248,
+          "definition": "unique official tags",
+          "reference": "docs/evidence/rothamsted-adg-audit.json#/integrity/uniqueOfficialTagCount"
+        },
+        "animalObservationUnits": {
+          "value": 2362,
+          "definition": "animal-period rows",
+          "reference": "docs/evidence/rothamsted-adg-audit.json#/integrity/animalPeriodRowCount"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Young growing dairy-cross beef cattle in temperate pasture; not a mature-cow cohort.",
+      "units": "Animal-period daily liveweight gain kg/steer/day; repeated periods per official tag.",
+      "missingness": {
+        "summary": "Integrity, coverage and cohort details are in the linked audit report.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Open repeated animal-period ADG supports a bounded component diagnostic, but its population and predictors differ from the approved CPER case."
+        }
+      },
+      "permissibleUse": "Held-out cohort ADG component diagnostic only; not full-engine or adult-cow validation."
+    },
+    {
+      "id": "sdsu-individual-dmi",
+      "name": "SDSU individual DMI on rangeland",
+      "references": {
+        "manifest": "data/sdsu-individual-dmi/manifest.json",
+        "audit": "docs/evidence/sdsu-individual-dmi-audit.json",
+        "decision": "docs/evidence/sdsu-engine-dmi-check.json"
+      },
+      "sourceIdentity": {
+        "doi": "10.3389/fvets.2025.1625448",
+        "license": "CC BY (manifest article/supplement; see source-specific evidence)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Hay-feeding experiment; derivative restricted to seven selected non-lactating cows",
+        "definition": "audit scope",
+        "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/scope/population_and_setting"
+      },
+      "counts": {
+        "animals": {
+          "value": 14,
+          "definition": "animals with intake tags; not the seven-tag selected complete-case cohort",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/coverage/animals_in_intake_with_tag"
+        },
+        "animalObservationUnits": {
+          "value": 1480,
+          "definition": "intake rows",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/coverage/intake_rows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Rangeland grazing cohort described in the linked audit; verify eligibility for any target population before use.",
+      "units": "Derived DMI kg/day from intake pounds and period mean dry-matter percentage; see manifest derivation.",
+      "missingness": {
+        "summary": "Rows without forage matching are retained with derived DMI blank; see audit and manifest.",
+        "documentedMetrics": {
+          "value": {
+            "selectedCompleteCaseRowsWithoutMatchingForagePeriod": 147
+          },
+          "definition": "audit quality-check count",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/qualityChecks/selected_complete_case_intake_rows_without_matching_forage_period"
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Local source and derivation are available, but derived intake and population/period limitations require a component-only interpretation."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The paired source/audit does not establish an approved ADG outcome for the target use."
+        }
+      },
+      "permissibleUse": "DMI component diagnostic under the documented derivation; no claim of complete pasture-engine validation."
+    },
+    {
+      "id": "usda-ars-feedlot-dmi",
+      "name": "USDA-ARS individual feedlot DMI",
+      "references": {
+        "manifest": "data/usda-ars-individual-dmi-feedlot/manifest.json",
+        "audit": "docs/evidence/usda-ars-feedlot-dmi-audit.json",
+        "decision": "docs/evidence/usda-ars-feedlot-engine-dmi-check.json"
+      },
+      "sourceIdentity": {
+        "doi": "10.17632/wcc46fhff8.1",
+        "license": "CC BY 4.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Three published finishing/feedlot experiments; treatment allocation is not summarized in the combined audit",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": 149,
+          "definition": "animals across the three experiments",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimals"
+        },
+        "animalObservationUnits": {
+          "value": 150,
+          "definition": "animal-experiment rows",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimalExperimentRows"
+        },
+        "trials": {
+          "value": 3,
+          "definition": "experiments",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nExperiments"
+        }
+      },
+      "population": "Beef cattle in feedlot experiments.",
+      "units": "Individual feedlot DMI and supporting fields as listed in the audit.",
+      "missingness": {
+        "summary": "See linked audit report; do not infer missing values from publication summaries.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Open feedlot DMI can support a feedlot component assessment, not a pasture-DMI claim."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": false,
+          "reason": "Performance association is not sufficient by itself to establish a paired approved ADG validation target."
+        }
+      },
+      "permissibleUse": "Feedlot DMI component analysis within dataset license and attribution terms."
+    },
+    {
+      "id": "usda-cper-behavior",
+      "name": "USDA/CPER foraging behavior and weight gains",
+      "references": {
+        "manifest": "data/usda-cper/manifest.json",
+        "audit": "docs/evidence/usda-cper-association.json",
+        "decision": "docs/caso-zootecnico-demonstrativo.md"
+      },
+      "sourceIdentity": {
+        "doi": "10.15482/USDA.ADC/1524788",
+        "license": "U.S. Public Domain (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "within-study observational association exploration",
+        "definition": "audit classification",
+        "reference": "docs/evidence/usda-cper-association.json#/classification"
+      },
+      "counts": {
+        "animals": {
+          "value": 33,
+          "definition": "unique animal IDs",
+          "reference": "docs/evidence/usda-cper-association.json#/coverage/uniqueAnimals"
+        },
+        "animalObservationUnits": {
+          "value": 36,
+          "definition": "animal-period rows",
+          "reference": "docs/evidence/usda-cper-association.json#/coverage/animalPeriodRows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Yearling cattle on semi-arid Colorado rangeland; adult classification is unresolved.",
+      "units": "Animal-period ADG in kg/day; DMI is not present.",
+      "missingness": {
+        "summary": "See linked audit report; source has repeated animal-period observations.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Suitable only for the approved exploratory association/component scope; yearling classification, observational design and repeated animal keys constrain generalization."
+        }
+      },
+      "permissibleUse": "Exploratory observational ADG/pastejo analysis; no causal claim, adult-cow claim, or full-engine validation."
+    },
+    {
+      "id": "usda-cper-ltgi",
+      "name": "USDA/CPER long-term grazing intensity weight gains",
+      "references": {
+        "manifest": "data/usda-cper-ltgi-2000-2019/manifest.json",
+        "audit": "docs/evidence/usda-cper-ltgi-audit.json",
+        "decision": "docs/evidence/engine-adg-usda-cper-ltgi-check.json"
+      },
+      "sourceIdentity": {
+        "doi": "10.15482/USDA.ADC/1528520",
+        "license": "U.S. Public Domain (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Grazing-intensity study with one pasture replication per treatment",
+        "definition": "audit limitation; not a causal replicated treatment design",
+        "reference": "docs/evidence/usda-cper-ltgi-audit.json#/limitations/0"
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": 1283,
+          "definition": "unique animal-season keys; not a unique-animal count",
+          "reference": "docs/evidence/usda-cper-ltgi-audit.json#/coverage/uniqueAnimalSeasonKeys"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Yearling cattle (heifers and steers) managed under grazing intensities, 2000–2019.",
+      "units": "One animal-season row; entry/exit weights converted to kg; derived ADG kg/day.",
+      "missingness": {
+        "summary": "Exclusions, repeated keys and measurement protocol changes are described in the audit report.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Public individual seasonal gain supports a bounded ADG component diagnostic; it is not a daily trajectory or replicated causal treatment experiment."
+        }
+      },
+      "permissibleUse": "Bounded ADG component assessment with year/pasture/animal key discipline; not full-engine or causal treatment validation."
     }
   ],
   "processing": {
     "sourceCount": 10,
     "inputFileCount": 25,
-    "elapsedSeconds": 0.004645,
+    "elapsedSeconds": 0.013108,
     "elapsedTimeKind": "observed_wall_clock_seconds"
   }
 }

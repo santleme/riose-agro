@@ -1,6 +1,7 @@
 import {readFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
 import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const manifestPath = new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url);
 const fixtures = [
@@ -38,7 +39,28 @@ for (const [system, url] of fixtures) {
     unsupportedFieldKinds: document.unsupportedFields.length,
     loadMsMedian: round(median(loadTimes)),
     adaptMsMedian: round(median(adaptTimes)),
+    observations: {loadMs: loadTimes, adaptMs: adaptTimes},
   });
 }
 
-process.stdout.write(`${JSON.stringify({adapterVersion: '1.0.0', fixtureScope: 'committed Composer beef and dairy exports only', results}, null, 2)}\n`);
+const report = benchmarkReport({
+  name: 'composer-scene-adapter-v1',
+  workload: {seed: 'fixed-committed-fixtures-no-rng', populations: [{count: fixtures.length, unit: 'scenes', scope: 'committed Composer beef and dairy fixtures'}]},
+  configuration: {warmupRuns: 1, repetitions: 20},
+  phases: {
+    startup: {status: 'measured', measurements: results.map(row => measurement('startup', 'fixture-json-parse', 'ms', summarizeSamples(row.observations.loadMs), {population: 1, scope: row.system, source: 'scripts/measure-scene-adapter-v1.mjs', observations: row.observations.loadMs}))},
+    layout: {status: 'measured', measurements: results.map(row => measurement('layout', 'composer-to-canonical-adaptation', 'ms', summarizeSamples(row.observations.adaptMs), {population: 1, scope: row.system, source: 'scripts/measure-scene-adapter-v1.mjs', observations: row.observations.adaptMs}))},
+    serialization: {status: 'measured', measurements: results.flatMap(row => [
+      measurement('serialization', 'canonical-scene-bytes', 'bytes', summarizeSamples([row.canonicalSceneBytes]), {population: 1, scope: row.system, source: 'JSON.stringify(document.scene)', observations: [row.canonicalSceneBytes]}),
+      measurement('serialization', 'adapter-document-bytes', 'bytes', summarizeSamples([row.adapterDocumentBytes]), {population: 1, scope: row.system, source: 'JSON.stringify(document)', observations: [row.adapterDocumentBytes]}),
+    ])},
+  },
+  timingBoundaries: [
+    {phase: 'startup', timed: ['Parsing one committed Composer JSON fixture from already-read bytes.'], notTimed: ['Filesystem read, renderer startup, browser image loading.']},
+    {phase: 'layout', timed: ['adaptComposerDocument(source, manifest).'], notTimed: ['Fixture file read and canonical scene rendering.']},
+    {phase: 'serialization', timed: ['UTF-8 byte counts of JSON.stringify outputs; no serialization duration is measured.'], notTimed: ['Browser storage or renderer transfer.']},
+  ],
+  results: {adapterVersion: '1.0.0', fixtureScope: 'committed Composer beef and dairy exports only', results},
+  limitations: ['Host-local Node measurements; excludes filesystem read, browser rendering, and image loading.'],
+});
+process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

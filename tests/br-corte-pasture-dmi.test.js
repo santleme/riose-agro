@@ -14,6 +14,24 @@ test('BR-CORTE 2023 Eq. 2.6 reproduces Table 2.14 worked example', () => {
   });
   assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.publishedRoundedTotalDmiKgDMPerDay) < table214.expected.publishedPrecisionToleranceKgDMPerDay);
   assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
+  const {bodyWeightKg, adgKgPerDay, supplementKgDMPerDay} = table214.inputs;
+  const intermediates = table214.intermediates;
+  const metabolicWeight = bodyWeightKg.value ** 0.75;
+  const expectedIntermediates = {
+    bodyWeightMetabolicKg075: metabolicWeight,
+    supplementTermKgDMPerDay: 0.7732 * supplementKgDMPerDay.value,
+    bodyWeightTermKgDMPerDay: 0.0742 * metabolicWeight,
+    adgTermKgDMPerDay: 0.7953 * adgKgPerDay.value,
+    squaredAdgTermKgDMPerDay: -0.9047 * adgKgPerDay.value ** 2
+  };
+  for (const [name, value] of Object.entries(expectedIntermediates)) {
+    assert.ok(Math.abs(intermediates[name].value - value) < 1e-12, `${name} transcription/formula mismatch`);
+  }
+  assert.ok(Math.abs(result.totalDmiKgDMPerDay - (-0.4684
+    + expectedIntermediates.supplementTermKgDMPerDay
+    + expectedIntermediates.bodyWeightTermKgDMPerDay
+    + expectedIntermediates.adgTermKgDMPerDay
+    + expectedIntermediates.squaredAdgTermKgDMPerDay)) < 1e-12);
   assert.equal(result.inValidatedDomain, true);
   assert.equal(result.adgRole, 'input-assumption; not predicted by this equation');
 });

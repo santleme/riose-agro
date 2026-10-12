@@ -28,5 +28,8 @@ for (const count of herds) {
       measurement('snapshot','materialize','ms',typedColumns.snapshotStatistics,{population:count,implementation:'typedColumns',memory:{materializedHeapDeltaBytesMedian:typedColumns.materializedHeapDeltaBytesMedian,materializedArrayBuffersDeltaBytesMedian:typedColumns.materializedArrayBuffersDeltaBytesMedian,materializedRssBytesMedian:typedColumns.materializedRssBytesMedian}}),
     ]},
   };
-  console.log(JSON.stringify(benchmarkReport({name:'history-storage-comparison',workload:{seed:20261012,populations:[{animals:count,scope:'FarmEngine',limit:'FarmEngine maximum 10000'}],hours},configuration:{warmupRuns:1,repetitions},phases,results:benchmarkResults})));
+  console.log(JSON.stringify(benchmarkReport({name:'history-storage-comparison',workload:{seed:20261012,populations:[{animals:count,scope:'FarmEngine',limit:'FarmEngine maximum 10000'}],hours},configuration:{warmupRuns:1,repetitions},phases,timingBoundaries:[
+    {phase:'engine',timed:['720-hour scenario engine run, including history recording for selected storage representation.'],notTimed:['Child-process startup and input setup.','Full snapshot materialization.']},
+    {phase:'snapshot',timed:['Full snapshot materialization from retained history representation.'],notTimed:['720-hour simulation run.']},
+  ],results:benchmarkResults})));
 }

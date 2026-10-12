@@ -280,7 +280,14 @@ export function generateFarmLayout({
   const scene = scenarioType === 'beef'
     ? createBeefFarmScene(prefabs, seed)
     : createDairyFarmScene(prefabs, seed);
+  varyWaterPointStructure(scene, {seed, prefabs, manifest});
+  placeConstrainedModules(scene, {seed, prefabs, manifest, constraints});
   const validation = validateFarmLayout(scene, {prefabs, manifest, constraints});
+  const errors = validation.filter((item) => item.severity === 'error'
+    && !['unresolved-asset', 'unresolved-prefab-asset'].includes(item.code));
+  if (errors.length) {
+    throw new TypeError(`Generated farm layout is invalid: ${errors.map((item) => `${item.code} at ${item.path}`).join(', ')}`);
+  }
   const referencedAssetIds = new Set(scene.placements.map((item) => item.assetId));
   const prefabById = new Map(prefabs.map((item) => [item.id, item]));
   for (const instance of scene.prefabInstances) {
@@ -289,8 +296,8 @@ export function generateFarmLayout({
   const assetsById = new Map((manifest?.assets ?? []).map((item) => [item.id, item]));
   scene.generation = {
     generator: 'riose-farm-layout-rules',
-    generatorVersion: 1,
-    algorithm: 'seeded-spatial-template-v1',
+    generatorVersion: 2,
+    algorithm: 'seeded-spatial-grammar-v2',
     seed,
     scenarioType,
     inputFingerprint: fingerprint({scenarioType, seed, prefabs, manifest: manifest ?? null, constraints}),
@@ -307,6 +314,135 @@ export function generateFarmLayout({
     }),
   };
   return scene;
+}
+
+/** Seeded placement of water points makes the farm structure vary while keeping each point in its authored pasture zone. */
+function varyWaterPointStructure(scene, {seed, prefabs, manifest}) {
+  const prefabById = new Map(prefabs.map((item) => [item.id, item]));
+  const waterPoints = scene.prefabInstances.filter((item) => item.prefabId === 'water-point');
+  for (const instance of waterPoints) {
+    const prefab = prefabById.get(instance.prefabId);
+    if (!prefab) continue;
+    const originCenter = {col: instance.col + prefab.footprint[0] / 2, row: instance.row + prefab.footprint[1] / 2};
+    const zone = (scene.zones ?? []).find((item) => item.type === 'pasture' && pointInPolygon(originCenter, item.polygon));
+    if (!zone) continue;
+    const candidates = candidateOrigins(scene, prefab, zone, scene.prefabInstances, manifest, prefabById, {exclude: instance.id});
+    if (!candidates.length) continue;
+    const start = Math.floor(stableSeedUnit(seed, instance.id) * candidates.length);
+    const picked = candidates[start];
+    instance.col = picked.col;
+    instance.row = picked.row;
+  }
+}
+
+function stableSeedUnit(seed, key) {
+  let value = (Number(seed) >>> 0) ^ 0x9e3779b9;
+  for (let index = 0; index < key.length; index++) {
+    value = Math.imul(value ^ key.charCodeAt(index), 0x45d9f3b);
+    value ^= value >>> 16;
+  }
+  return (value >>> 0) / 4294967296;
+}
+
+function candidateOrigins(scene, prefab, zone, allInstances, manifest, prefabById, {exclude = null} = {}) {
+  const [width, height] = prefab.footprint;
+  const xs = (zone.polygon ?? []).map((point) => point.col), ys = (zone.polygon ?? []).map((point) => point.row);
+  if (!xs.length || !ys.length) return [];
+  const minX = Math.ceil(Math.min(...xs)), maxX = Math.floor(Math.max(...xs) - width);
+  const minY = Math.ceil(Math.min(...ys)), maxY = Math.floor(Math.max(...ys) - height);
+  const points = [];
+  for (let row = minY; row <= maxY; row++) for (let col = minX; col <= maxX; col++) {
+    const candidate = {col, row};
+    if (!originFitsZone(candidate, prefab, zone) || !originFitsGrid(candidate, prefab, scene.grid)) continue;
+    if (allInstances.some((other) => other.id !== exclude && prefabBoxesOverlap(candidate, prefab, other, prefabById))) continue;
+    if (overlapsBlockingPlacement(candidate, prefab, scene, manifest)) continue;
+    points.push(candidate);
+  }
+  return points;
+}
+
+function originFitsGrid(origin, prefab, grid) {
+  return origin.col >= 0 && origin.row >= 0
+    && origin.col + prefab.footprint[0] <= grid.width
+    && origin.row + prefab.footprint[1] <= grid.height;
+}
+
+function originFitsZone(origin, prefab, zone) {
+  if (prefab.zones?.length && !prefab.zones.includes(zone.type)) return false;
+  const [width, height] = prefab.footprint;
+  const corners = [
+    {col: origin.col, row: origin.row},
+    {col: origin.col + width, row: origin.row},
+    {col: origin.col, row: origin.row + height},
+    {col: origin.col + width, row: origin.row + height},
+  ];
+  return corners.every((point) => pointInPolygon(point, zone.polygon));
+}
+
+function prefabBoxesOverlap(originA, prefabA, instanceB, prefabById) {
+  const prefabB = prefabById?.get(instanceB.prefabId);
+  if (!prefabB) return false;
+  const [widthA, heightA] = prefabA.footprint, [widthB, heightB] = prefabB.footprint;
+  return originA.col < instanceB.col + widthB && originA.col + widthA > instanceB.col
+    && originA.row < instanceB.row + heightB && originA.row + heightA > instanceB.row;
+}
+
+function overlapsBlockingPlacement(origin, prefab, scene, manifest) {
+  const assets = new Map((manifest?.assets ?? []).map((asset) => [asset.id, asset]));
+  const [width, height] = prefab.footprint;
+  return scene.placements.some((placement) => {
+    const asset = assets.get(placement.assetId);
+    if (asset?.placementRules?.collision !== true && asset?.collision == null) return false;
+    const position = placement.position ?? placement;
+    const [otherWidth, otherHeight] = placement.footprint ?? asset?.footprint ?? [1, 1];
+    return origin.col < position.col + otherWidth && origin.col + width > position.col
+      && origin.row < position.row + otherHeight && origin.row + height > position.row;
+  });
+}
+
+function placeConstrainedModules(scene, {seed, prefabs, manifest, constraints}) {
+  if (!constraints.length) return;
+  const prefabById = new Map(prefabs.map((item) => [item.id, item]));
+  const instances = scene.prefabInstances;
+  const byId = new Map(instances.map((item) => [item.id, item]));
+  for (const [index, constraint] of constraints.entries()) {
+    if (constraint?.type !== 'must-be-adjacent' || !constraint.first || !constraint.second) continue;
+    const first = byId.get(constraint.first), second = byId.get(constraint.second);
+    const prefabA = prefabById.get(first?.prefabId), prefabB = prefabById.get(second?.prefabId);
+    if (!first || !second || !prefabA || !prefabB || first.id === second.id) continue;
+    const candidates = adjacentOrigins(first, prefabA, second, prefabB, scene, prefabById, manifest);
+    const valid = candidates.filter((origin) => {
+      const previous = {col: second.col, row: second.row};
+      second.col = origin.col; second.row = origin.row;
+      const okay = instances.filter((item) => item.id !== second.id)
+        .every((item) => !prefabBoxesOverlap(origin, prefabB, item, prefabById));
+      second.col = previous.col; second.row = previous.row;
+      return okay;
+    });
+    if (!valid.length) continue;
+    valid.sort((a, b) => a.row - b.row || a.col - b.col);
+    const chosen = valid[Math.floor(stableSeedUnit(seed, `${index}:${constraint.first}:${constraint.second}`) * valid.length)];
+    second.col = chosen.col;
+    second.row = chosen.row;
+  }
+}
+
+function adjacentOrigins(first, prefabA, second, prefabB, scene, prefabById, manifest) {
+  const [firstW, firstH] = prefabA.footprint, [secondW, secondH] = prefabB.footprint;
+  const candidates = [];
+  for (let row = first.row - secondH + 1; row < first.row + firstH; row++) {
+    candidates.push({col: first.col + firstW, row});
+    candidates.push({col: first.col - secondW, row});
+  }
+  for (let col = first.col - secondW + 1; col < first.col + firstW; col++) {
+    candidates.push({col, row: first.row + firstH});
+    candidates.push({col, row: first.row - secondH});
+  }
+  return candidates.filter((origin) => originFitsGrid(origin, prefabB, scene.grid)
+    && (scene.zones ?? []).some((zone) => originFitsZone(origin, prefabB, zone))
+    && !overlapsBlockingPlacement(origin, prefabB, scene, manifest)
+    && !scene.prefabInstances.some((item) => item.id !== first.id && item.id !== second.id
+      && prefabBoxesOverlap(origin, prefabB, item, prefabById)));
 }
 
 /** Return deterministic, machine-readable layout diagnostics. */

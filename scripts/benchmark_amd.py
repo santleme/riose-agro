@@ -419,7 +419,10 @@ def run_benchmark(
         })
     not_measured = {"status": "not-measured", "measurements": []}
     cpu_name = platform.processor() or None
-    return {
+    report = {
+        # Keep legacy AMD report fields, including their original workload and
+        # configuration members, while adding required camelCase envelope keys.
+        **legacy_report,
         "schemaVersion": 1,
         "benchmark": {
             "name": "compute-service-scale-vector",
@@ -433,11 +436,16 @@ def run_benchmark(
             "gpuMemoryBytes": None,
         },
         "workload": {
-            "seed": None,
-            "populations": [],
+            **legacy_report["workload"],
+            "seed": "deterministic-vector-no-rng",
+            "populations": [{
+                "count": len(values),
+                "unit": "numeric-vector-elements",
+                "scope": "numeric-kernel-only",
+            }],
             "numericWorkload": {"elements": len(values), "operation": "scale_vector"},
         },
-        "configuration": {"warmupRuns": warmup_runs, "repetitions": repetitions},
+        "configuration": {**legacy_report["configuration"], "warmupRuns": warmup_runs, "repetitions": repetitions},
         "limits": {
             "farmEngineMaxAnimals": None,
             "rendererMaxAnimals": None,
@@ -453,11 +461,27 @@ def run_benchmark(
             "render": not_measured,
             "startup": not_measured,
         },
+        "timingBoundaries": [{
+            "phase": "engine",
+            "timed": ["scale_vector operation over the prepared numeric input, separately for CPU and AMD backends."],
+            "notTimed": ["Input construction, correctness verification, Worker/UI/rendering, and GPU memory measurement."],
+        }],
         "results": legacy_report,
         "limitations": legacy_report["limitations"],
-        # Keep the original v1 fields at the top level for existing report consumers.
-        **legacy_report,
     }
+    validator = ROOT / "scripts" / "validate-benchmark-report.mjs"
+    try:
+        subprocess.run(
+            ["node", str(validator)],
+            input=json.dumps(report, allow_nan=False),
+            text=True,
+            check=True,
+            capture_output=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as error:
+        detail = error.stderr.strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
+        raise ValueError(f"shared_benchmark_report_schema_validation_failed: {detail}") from error
+    return report
 
 
 def _positive_env_int(name: str, default: int, *, allow_zero: bool = False) -> int:

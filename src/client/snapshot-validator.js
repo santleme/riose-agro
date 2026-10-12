@@ -257,6 +257,7 @@ export function validateFarmSnapshot(snapshot) {
   if (!isRecord(snapshot)) {
     return {semanticValid: false, simulationEligible: false, errors: ['snapshot precisa ser um objeto.'], blockers: [], missingRequiredFields: []};
   }
+  if (snapshot.schemaVersion !== '0.1.0') errors.push("schemaVersion precisa ser '0.1.0'.");
   validateVariableClassification(snapshot, errors);
 
   const sourceCatalog = Array.isArray(snapshot.sourceCatalog) ? snapshot.sourceCatalog : [];

@@ -39,8 +39,12 @@ function validateManifest(manifest, label, errors) {
     check(SHIP_STATUSES.has(asset?.status), `${id} status ${String(asset?.status)} is not release eligible`, errors);
     check(asset?.review?.art === 'pass' && asset?.review?.technical === 'pass', `${id} lacks explicit art and technical approval`, errors);
     const atlas = asset?.atlas;
-    if (atlas !== null && atlas !== undefined) {
-      check(typeof atlas === 'object' && typeof atlas.pack === 'string' && Object.hasOwn(manifest.atlasPacks ?? {}, atlas.pack),
+    const hasAtlasMembership = typeof atlas === 'object' && atlas !== null && typeof atlas.pack === 'string';
+    if (SHIP_STATUSES.has(asset?.status)) {
+      check(hasAtlasMembership && Object.hasOwn(manifest.atlasPacks ?? {}, atlas.pack),
+        `${id} atlas membership does not resolve to a declared atlas pack`, errors);
+    } else if (hasAtlasMembership) {
+      check(Object.hasOwn(manifest.atlasPacks ?? {}, atlas.pack),
         `${id} atlas membership does not resolve to a declared atlas pack`, errors);
     }
     for (const reference of asset?.references ?? []) {
@@ -94,7 +98,6 @@ function validateRendererManifest(renderer, sourceManifests, releaseScenes, erro
 }
 
 export async function assertGraphicsReleaseReady() {
-  const errors = [];
   const [semanticManifest, dairyManifest, rendererManifest, beefScene, dairyScene] = await Promise.all([
     readJson('assets/manifests/manifest.json'),
     readJson('public/assets/modules/livestock-dairy/manifest.json'),
@@ -102,10 +105,16 @@ export async function assertGraphicsReleaseReady() {
     readJson('graphics-poc/source/main-composer-v1/beef.json'),
     readJson('graphics-poc/source/main-composer-v1/dairy.json'),
   ]);
-  validateManifest(semanticManifest, 'semantic manifest', errors);
-  validateRendererManifest(rendererManifest, [semanticManifest, dairyManifest], [
+  assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes: [
     ['beef scene', beefScene], ['dairy scene', dairyScene],
-  ], errors);
+  ]});
+}
+
+/** Validate the exact manifest inputs used by a release build; exported for isolated fixture tests. */
+export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes}) {
+  const errors = [];
+  validateManifest(semanticManifest, 'semantic manifest', errors);
+  validateRendererManifest(rendererManifest, [semanticManifest, dairyManifest], releaseScenes, errors);
   if (errors.length) {
     throw new Error(`Graphics release blocked (${errors.length} manifest issue(s)):\n${errors.map(error => `- ${error}`).join('\n')}`);
   }

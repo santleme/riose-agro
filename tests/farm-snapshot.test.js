@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
-import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
+import {linkFarmSnapshotToManifest, validateFarmSnapshotManifestReference} from '../src/client/snapshot-manifest-link.js';
 import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
 import {createScenarioContract} from '../src/client/scenario-contract.js';
 
@@ -36,6 +36,21 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
   assert.equal(validateFarmSnapshot(noRequiredFields).semanticValid, false);
 
   assert.equal(validateFarmSnapshot(missingOperations).semanticValid, true);
+});
+
+test('farm snapshot persisted-version compatibility table fails closed', () => {
+  const cases = [
+    {label: 'current schema 0.1.0', mutate: snapshot => {}, expected: true},
+    {label: 'unknown schema 0.2.0', mutate: snapshot => {snapshot.schemaVersion = '0.2.0';}, expected: false},
+    {label: 'missing schema version', mutate: snapshot => {delete snapshot.schemaVersion;}, expected: false},
+  ];
+
+  for (const {label, mutate, expected} of cases) {
+    const candidate = structuredClone(example);
+    mutate(candidate);
+    assert.equal(validateSchema(candidate), expected, `${label}: schema reader result`);
+    assert.equal(validateFarmSnapshot(candidate).semanticValid, expected, `${label}: semantic reader result`);
+  }
 });
 
 test('snapshot accepts optional versioned variable domain classification', () => {
@@ -341,6 +356,41 @@ test('existing farm snapshots can reference a validated v2 comparison contract',
   assert.equal(linked.manifestReference.sha256, createHash('sha256').update(manifestBytes).digest('hex'));
   assert.equal(validateSchema(linked), true, JSON.stringify(validateSchema.errors));
   assert.equal(validateFarmSnapshot(linked).semanticValid, true);
+});
+
+test('snapshot manifest-link compatibility table accepts comparison v1/v2 and rejects unknown versions', () => {
+  const engineSnapshot = new FarmEngine(817, 3).snapshot();
+  const supportedManifests = [
+    ['comparison v1', createComparisonManifest(engineSnapshot, 4)],
+    ['scenario contract v2', createScenarioContract(engineSnapshot, 4)],
+  ];
+
+  for (const [label, manifest] of supportedManifests) {
+    const manifestBytes = Buffer.from(JSON.stringify(manifest));
+    const sourceSnapshot = structuredClone(example);
+    sourceSnapshot.snapshotKind = 'demonstrative';
+    const linked = linkFarmSnapshotToManifest(sourceSnapshot, manifestBytes);
+    assert.equal(linked.manifestReference.version, manifest.version, `${label}: writer preserves source version`);
+    assert.deepEqual(validateFarmSnapshotManifestReference(linked, manifestBytes), {checked: true, valid: true, errors: []}, `${label}: reader accepts exact linked bytes`);
+  }
+
+  const unknownManifest = {...createComparisonManifest(engineSnapshot, 4), version: 3};
+  const unknownBytes = Buffer.from(JSON.stringify(unknownManifest));
+  const unlinked = structuredClone(example);
+  unlinked.snapshotKind = 'demonstrative';
+  assert.throws(() => linkFarmSnapshotToManifest(unlinked, unknownBytes), /versão não suportada/);
+  const reference = {
+    ...unlinked,
+    manifestReference: {
+      status: 'linked',
+      type: unknownManifest.type,
+      version: unknownManifest.version,
+      sha256: createHash('sha256').update(unknownBytes).digest('hex'),
+    },
+  };
+  const report = validateFarmSnapshotManifestReference(reference, unknownBytes);
+  assert.equal(report.valid, false);
+  assert.ok(report.errors.some(message => message.includes('versão não suportada')));
 });
 
 test('snapshot link command validates and links the exact manifest bytes without mutating the source', () => {

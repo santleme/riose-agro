@@ -4,6 +4,7 @@ import {FarmEngine} from '../src/client/engine.js';
 import {encodeScenarioSnapshot} from '../src/client/scenario-storage.js';
 import {loadWasmMetabolism, updateMetabolismJS} from '../src/client/metabolism-wasm.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {cleanupMemoryBenchmarkResources} from './benchmark-memory-resources.mjs';
 
 const herds = (process.env.BENCH_MEMORY_HERDS ?? '100,1000,10000,100000').split(',').map(Number);
 const repetitions = Number(process.env.BENCH_MEMORY_REPETITIONS ?? 3);
@@ -105,64 +106,79 @@ async function measureHerd(count) {
   const wasmBytes = () => wasm.memoryBytes();
   const phases = {};
   let engine, snapshot, encoded, view;
-  const startup = await observe(() => {
-    engine = new FarmEngine(seed, count);
-    return engine;
-  }, wasmBytes);
-  phases.startup = {...startup, payloadBytes: null, method: 'FarmEngine construction; post-GC retained delta from pre-construction baseline.'};
+  try {
+    const startup = await observe(() => {
+      engine = new FarmEngine(seed, count);
+      return engine;
+    }, wasmBytes);
+    phases.startup = {...startup, payloadBytes: null, method: 'FarmEngine construction; post-GC retained delta from pre-construction baseline.'};
 
-  const tick = await observe(() => engine.tick(tickHours, wasm, false), wasmBytes);
-  phases.engine = {...tick, payloadBytes: null, method: '24-hour FarmEngine tick with WASM metabolism; no snapshot or renderer.'};
+    const tick = await observe(() => engine.tick(tickHours, wasm, false), wasmBytes);
+    phases.engine = {...tick, payloadBytes: null, method: '24-hour FarmEngine tick with WASM metabolism; no snapshot or renderer.'};
 
-  const snap = await observe(() => { snapshot = engine.snapshot(); return snapshot; }, wasmBytes);
-  const jsonUtf8Bytes = Buffer.byteLength(JSON.stringify(snapshot));
-  phases.snapshot = {...snap, payloadBytes: {jsonUtf8Bytes}, method: 'Full engine snapshot clone; JSON byte count is payload size, not retained heap.'};
+    const snap = await observe(() => { snapshot = engine.snapshot(); return snapshot; }, wasmBytes);
+    const jsonUtf8Bytes = Buffer.byteLength(JSON.stringify(snapshot));
+    phases.snapshot = {...snap, payloadBytes: {jsonUtf8Bytes}, method: 'Full engine snapshot clone; JSON byte count is payload size, not retained heap.'};
 
-  const compressed = await observe(async () => { encoded = await encodeScenarioSnapshot(snapshot); return encoded; }, wasmBytes);
-  const encodedBytes = Buffer.byteLength(encoded);
-  phases.serialization = {
-    ...compressed,
-    payloadBytes: {
-      jsonUtf8Bytes,
-      gzipBytes: Math.floor(encodedBytes * 3 / 4) - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0),
-      base64Utf8Bytes: encodedBytes,
-    },
-    method: 'Existing gzip-plus-base64 snapshot encoder; output retained to measure post-GC storage representation.',
-  };
+    const compressed = await observe(async () => { encoded = await encodeScenarioSnapshot(snapshot); return encoded; }, wasmBytes);
+    const encodedBytes = Buffer.byteLength(encoded);
+    phases.serialization = {
+      ...compressed,
+      payloadBytes: {
+        jsonUtf8Bytes,
+        gzipBytes: Math.floor(encodedBytes * 3 / 4) - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0),
+        base64Utf8Bytes: encodedBytes,
+      },
+      method: 'Existing gzip-plus-base64 snapshot encoder; output retained to measure post-GC storage representation.',
+    };
 
-  const workerView = await observe(() => { view = makeWorkerView(engine); return view; }, wasmBytes);
-  phases.worker = {
-    ...workerView,
-    payloadBytes: {
-      transferableArrayBuffers: view.animalIds.byteLength + view.animalValues.byteLength + view.animalActions.byteLength,
-      animalIdsBytes: view.animalIds.byteLength,
-      animalValuesBytes: view.animalValues.byteLength,
-      animalActionsBytes: view.animalActions.byteLength,
-      metadataJsonUtf8Bytes: Buffer.byteLength(JSON.stringify({type: view.type, hour: view.hour, pastures: view.pastures, cost: view.cost, intake: view.intake, config: view.config, events: view.events, selectedAnimalId: view.selectedAnimalId, selectedHistory: view.selectedHistory})),
-    },
-    method: 'Node-side projection matching worker.js view fields; transferable buffer lengths are exact, browser structured-clone/transport cost is not measured.',
-  };
-  wasm.dispose();
-  return phases;
+    const workerView = await observe(() => { view = makeWorkerView(engine); return view; }, wasmBytes);
+    phases.worker = {
+      ...workerView,
+      payloadBytes: {
+        transferableArrayBuffers: view.animalIds.byteLength + view.animalValues.byteLength + view.animalActions.byteLength,
+        animalIdsBytes: view.animalIds.byteLength,
+        animalValuesBytes: view.animalValues.byteLength,
+        animalActionsBytes: view.animalActions.byteLength,
+        metadataJsonUtf8Bytes: Buffer.byteLength(JSON.stringify({type: view.type, hour: view.hour, pastures: view.pastures, cost: view.cost, intake: view.intake, config: view.config, events: view.events, selectedAnimalId: view.selectedAnimalId, selectedHistory: view.selectedHistory})),
+      },
+      method: 'Node-side projection matching worker.js view fields; transferable buffer lengths are exact, browser structured-clone/transport cost is not measured.',
+    };
+    return phases;
+  } finally {
+    cleanupMemoryBenchmarkResources({
+      wasm,
+      views: [view?.animalIds, view?.animalValues, view?.animalActions],
+    });
+    engine = null;
+    snapshot = null;
+    encoded = null;
+    view = null;
+  }
 }
 
 async function measureNumericKernel(count) {
   const wasm = await loadBenchmarkWasm();
-  const input = new Float64Array(count * 4);
-  for (let index = 0; index < count; index++) {
-    const offset = index * 4;
-    input[offset] = 330 + index % 70; input[offset + 1] = 75;
-    input[offset + 2] = (index % 100) / 100; input[offset + 3] = index % 6 === 0 ? 1 : 0;
+  let input, output;
+  try {
+    input = new Float64Array(count * 4);
+    for (let index = 0; index < count; index++) {
+      const offset = index * 4;
+      input[offset] = 330 + index % 70; input[offset + 1] = 75;
+      input[offset + 2] = (index % 100) / 100; input[offset + 3] = index % 6 === 0 ? 1 : 0;
+    }
+    output = new Float64Array(count * 2);
+    const runKernel = await observe(() => wasm(input, count, output), () => wasm.memoryBytes());
+    const jsRun = await observe(() => updateMetabolismJS(input, count, output), () => null);
+    return {
+      wasm: {...runKernel, payloadBytes: {inputArrayBufferBytes: input.byteLength, outputArrayBufferBytes: output.byteLength}, method: 'Isolated 100000-capable numeric kernel only; input/output typed arrays preallocated.'},
+      javascript: {...jsRun, payloadBytes: {inputArrayBufferBytes: input.byteLength, outputArrayBufferBytes: output.byteLength}, method: 'Isolated numeric kernel only; input/output typed arrays preallocated.'},
+    };
+  } finally {
+    cleanupMemoryBenchmarkResources({wasm, views: [input, output]});
+    input = null;
+    output = null;
   }
-  const output = new Float64Array(count * 2);
-  const runKernel = await observe(() => wasm(input, count, output), () => wasm.memoryBytes());
-  const jsRun = await observe(() => updateMetabolismJS(input, count, output), () => null);
-  const result = {
-    wasm: {...runKernel, payloadBytes: {inputArrayBufferBytes: input.byteLength, outputArrayBufferBytes: output.byteLength}, method: 'Isolated 100000-capable numeric kernel only; input/output typed arrays preallocated.'},
-    javascript: {...jsRun, payloadBytes: {inputArrayBufferBytes: input.byteLength, outputArrayBufferBytes: output.byteLength}, method: 'Isolated numeric kernel only; input/output typed arrays preallocated.'},
-  };
-  wasm.dispose();
-  return result;
 }
 
 const allResults = [];
@@ -183,24 +199,29 @@ const phaseNames = ['startup', 'engine', 'snapshot', 'serialization', 'worker'];
 const measurements = Object.fromEntries(phaseNames.map(phase => [phase, []]));
 function addAggregatedMeasurements(phase, population, scope, rows, implementation = undefined) {
   const specs = [
-    ['postGcRetainedJsHeapDelta', row => row.memory.postGcRetainedDelta.jsHeapUsedBytes, 'bytes', true],
-    ['postGcRetainedExternalDelta', row => row.memory.postGcRetainedDelta.externalBytes, 'bytes', true],
-    ['postGcRetainedArrayBuffersDelta', row => row.memory.postGcRetainedDelta.arrayBuffersBytes, 'bytes', true],
-    ['postGcRetainedWasmLinearMemoryDelta', row => row.memory.postGcRetainedDelta.wasmLinearMemoryBytes, 'bytes', true],
-    ['processRssHighWaterCumulative', row => row.memory.bestAvailablePeakProxy.processRssHighWaterBytes, 'bytes', false],
-    ['processRssImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.processRssBytesImmediatelyAfterOperation, 'bytes', false],
-    ['jsHeapUsedImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.jsHeapUsedBytesImmediatelyAfterOperation, 'bytes', false],
-    ['operationDuration', row => row.elapsedMs, 'ms', false],
+    ['postGcRetainedJsHeapDelta', row => row.memory.postGcRetainedDelta.jsHeapUsedBytes, 'bytes', true, 'process.memoryUsage().heapUsed before and after the phase, with global.gc() when available'],
+    ['postGcRetainedExternalDelta', row => row.memory.postGcRetainedDelta.externalBytes, 'bytes', true, 'process.memoryUsage().external before and after the phase, with global.gc() when available'],
+    ['postGcRetainedArrayBuffersDelta', row => row.memory.postGcRetainedDelta.arrayBuffersBytes, 'bytes', true, 'process.memoryUsage().arrayBuffers before and after the phase, with global.gc() when available'],
+    ['postGcRetainedWasmLinearMemoryDelta', row => row.memory.postGcRetainedDelta.wasmLinearMemoryBytes, 'bytes', true, 'WASM wrapper memoryBytes() before and after the phase, with global.gc() when available'],
+    ['processRssHighWaterCumulative', row => row.memory.bestAvailablePeakProxy.processRssHighWaterBytes, 'bytes', false, 'process.resourceUsage().maxRSS cumulative process high-water mark; Linux KiB converted to bytes', 'process'],
+    ['processRssImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.processRssBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().rss sampled immediately after the phase', 'process'],
+    ['jsHeapUsedImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.jsHeapUsedBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().heapUsed sampled immediately after the phase', 'process'],
+    ['operationDuration', row => row.elapsedMs, 'ms', false, 'performance.now() around the phase operation'],
   ];
-  for (const [metric, getValue, unit, normalizePerAnimal] of specs) {
+  const metricSource = (source, row) => `scripts/benchmark-memory.mjs::${source}; ${row.method}`;
+  const measurementPopulation = {count: population, unit: 'animals', scope};
+  for (const [metric, getValue, unit, normalizePerAnimal, source, populationKind] of specs) {
     const values = rows.map(getValue).filter(Number.isFinite);
+    const metricPopulation = populationKind === 'process'
+      ? {count: 1, unit: 'process', scope: 'whole Node.js benchmark process; value is not attributed to a herd'}
+      : measurementPopulation;
     measurements[phase].push(measurement(phase, metric, unit, summarizeSamples(values), {
-      population, scope, ...(implementation ? {implementation} : {}),
+      population: metricPopulation, scope, source: metricSource(source, rows.at(-1)), ...(implementation ? {implementation} : {}),
       observations: values, memorySamples: rows.map(row => row.memory),
       payloadBytes: rows.at(-1).payloadBytes, method: rows.at(-1).method,
     }));
     if (normalizePerAnimal) measurements[phase].push(measurement(phase, `${metric}PerAnimal`, 'bytes/animal', summarizeSamples(values.map(value => value / population)), {
-      population, scope, ...(implementation ? {implementation} : {}),
+      population: measurementPopulation, scope, source: metricSource(source, rows.at(-1)), ...(implementation ? {implementation} : {}),
       observations: values.map(value => value / population), normalizedFrom: metric,
       method: rows.at(-1).method,
     }));
@@ -208,12 +229,17 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
   const payloadFields = Object.keys(rows.at(-1).payloadBytes ?? {});
   for (const field of payloadFields) {
     const values = rows.map(row => row.payloadBytes?.[field]).filter(Number.isFinite);
+    const source = field.endsWith('JsonUtf8Bytes')
+      ? 'Buffer.byteLength(serialized JSON, UTF-8)'
+      : field.endsWith('Bytes') || field === 'transferableArrayBuffers'
+        ? 'ArrayBuffer.byteLength of the encoded or transferable payload'
+        : 'benchmark payload byte counter';
     measurements[phase].push(measurement(phase, `payload${field[0].toUpperCase()}${field.slice(1)}`, 'bytes', summarizeSamples(values), {
-      population, scope, ...(implementation ? {implementation} : {}), observations: values,
+      population: measurementPopulation, scope, source: `${source}; ${rows.at(-1).method}`, ...(implementation ? {implementation} : {}), observations: values,
       method: rows.at(-1).method,
     }));
     measurements[phase].push(measurement(phase, `payload${field[0].toUpperCase()}${field.slice(1)}PerAnimal`, 'bytes/animal', summarizeSamples(values.map(value => value / population)), {
-      population, scope, ...(implementation ? {implementation} : {}), observations: values.map(value => value / population),
+      population: measurementPopulation, scope, source: `${source}; ${rows.at(-1).method}`, ...(implementation ? {implementation} : {}), observations: values.map(value => value / population),
       normalizedFrom: `payload${field[0].toUpperCase()}${field.slice(1)}`, method: rows.at(-1).method,
     }));
   }
@@ -226,7 +252,8 @@ for (const row of allResults) {
     addAggregatedMeasurements('engine', row.animals, row.scope, kernelRows, variant);
     const wasmSamples = kernelRows.map(sample => sample.memory.after.wasmLinearMemoryBytes).filter(Number.isFinite);
     measurements.engine.push(measurement('engine', 'wasmLinearMemoryBytesAfterKernel', 'bytes', summarizeSamples(wasmSamples), {
-      population: row.animals, scope: row.scope, implementation: variant, observations: wasmSamples,
+      population: {animals: row.animals, scope: row.scope}, scope: row.scope, implementation: variant,
+      source: 'scripts/benchmark-memory.mjs::WASM wrapper memoryBytes() after isolated numeric kernel call; input/output typed arrays preallocated', observations: wasmSamples,
     }));
   }
 }
@@ -240,6 +267,13 @@ console.log(JSON.stringify(benchmarkReport({
   },
   configuration: {warmupRuns: 0, repetitions, gc: typeof global.gc === 'function' ? 'forced before/after phase' : 'unavailable; run with --expose-gc'},
   phases: Object.fromEntries(phaseNames.map(phase => [phase, {status: measurements[phase].length ? 'measured' : 'not-measured', measurements: measurements[phase]}])),
+  timingBoundaries:[
+    {phase:'startup',timed:['FarmEngine construction.'],notTimed:['Worker/browser startup.']},
+    {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['Full snapshot and renderer.']},
+    {phase:'snapshot',timed:['Full FarmEngine snapshot clone.'],notTimed:['JSON serialization and compression.']},
+    {phase:'serialization',timed:['Existing gzip-plus-base64 snapshot encoder.'],notTimed:['Browser storage writes and quota measurement.']},
+    {phase:'worker',timed:['Node-side construction of the packed Worker view projection.'],notTimed:['Actual browser Worker transport, renderer and GPU work.']},
+  ],
   results: {samples: allResults, memoryFields: ['jsHeapUsedBytes', 'externalBytes', 'arrayBuffersBytes', 'rssProcessBytes', 'rssProcessHighWaterBytes', 'wasmLinearMemoryBytes', 'gpuMemoryBytes']},
   limitations: [
     'RSS is a process-level measurement and is not attributed to FarmEngine, WASM, or an individual herd phase.',
@@ -247,6 +281,7 @@ console.log(JSON.stringify(benchmarkReport({
     'Post-GC retained deltas are measured after forced GC when available; without --expose-gc they are observational deltas, not retained-memory estimates.',
     'WASM linear memory is reported separately from JS ArrayBuffer and heap fields; GPU memory is null because this Node harness has no GPU memory instrumentation.',
     'Worker view reports the current packed projection and transferable payload sizes in Node; it does not measure browser Worker transport, renderer, or GPU allocations.',
+    'This Node.js harness creates no Browser Page; browser page creation and cleanup are unavailable and are not measured.',
     '100000 animals measures only preallocated numeric-kernel input/output and JS/WASM kernel behavior; FarmEngine, snapshots, compressed storage and Worker view are unsupported at that size.',
     'Compression payload bytes are JSON UTF-8, gzip bytes and base64 UTF-8; localStorage quota and browser-specific behavior are not measured.',
   ],

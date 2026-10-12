@@ -97,6 +97,11 @@ console.log(JSON.stringify(benchmarkReport({
     snapshot:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='snapshot')},
     serialization:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='serialization')},
   },
+  timingBoundaries:[
+    {phase:'engine',timed:['FarmEngine.tick(24) including its final snapshot clone.','JS/WASM metabolism batch including ABI copies.'],notTimed:['FarmEngine construction.','Rendering and Worker messaging.']},
+    {phase:'snapshot',timed:['engine.snapshot() clone or structuredClone of the captured snapshot.'],notTimed:['Engine construction and simulation tick.']},
+    {phase:'serialization',timed:['JSON.stringify of the captured full snapshot.'],notTimed:['JSON.parse and storage/compression.']},
+  ],
   results,
   limitations:results.notes,
 }),null,2));

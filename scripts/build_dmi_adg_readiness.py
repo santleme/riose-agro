@@ -21,6 +21,10 @@ JSON_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.json"
 MARKDOWN_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.md"
 
 
+def _fact(value: Any = None, *, definition: str | None = None, reference: str | None = None) -> dict[str, Any]:
+    return {"value": value, "definition": definition, "reference": reference}
+
+
 # Decisions are intentionally scoped to independent, observational component
 # assessment. They do not replace the #22 expert review or claim full-engine
 # validation. `trainable` means records can be used as a model-training source
@@ -34,6 +38,11 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/caso-zootecnico-demonstrativo.md",
         "access": "available_local",
         "license": "U.S. Public Domain (manifest)",
+        "reportedFacts": {
+            "studyDesign": _fact("within-study observational association exploration", definition="audit classification", reference="docs/evidence/usda-cper-association.json#/classification"),
+            "animals": _fact(33, definition="unique animal IDs", reference="docs/evidence/usda-cper-association.json#/coverage/uniqueAnimals"),
+            "animalObservationUnits": _fact(36, definition="animal-period rows", reference="docs/evidence/usda-cper-association.json#/coverage/animalPeriodRows"),
+        },
         "population": "Yearling cattle on semi-arid Colorado rangeland; adult classification is unresolved.",
         "units": "Animal-period ADG in kg/day; DMI is not present.",
         "missingness": "See linked audit report; source has repeated animal-period observations.",
@@ -49,6 +58,10 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/engine-adg-usda-cper-ltgi-check.json",
         "access": "available_local",
         "license": "U.S. Public Domain (manifest)",
+        "reportedFacts": {
+            "studyDesign": _fact("Grazing-intensity study with one pasture replication per treatment", definition="audit limitation; not a causal replicated treatment design", reference="docs/evidence/usda-cper-ltgi-audit.json#/limitations/0"),
+            "animalObservationUnits": _fact(1283, definition="unique animal-season keys; not a unique-animal count", reference="docs/evidence/usda-cper-ltgi-audit.json#/coverage/uniqueAnimalSeasonKeys"),
+        },
         "population": "Yearling cattle (heifers and steers) managed under grazing intensities, 2000–2019.",
         "units": "One animal-season row; entry/exit weights converted to kg; derived ADG kg/day.",
         "missingness": "Exclusions, repeated keys and measurement protocol changes are described in the audit report.",
@@ -64,6 +77,12 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/engine-dmi-dryad-finishing-check.json",
         "access": "available_local",
         "license": "CC0-1.0 (manifest)",
+        "reportedFacts": {
+            "studyDesign": _fact("Five experiment-level groups; finishing-phase summaries, not paired daily trajectories", definition="audit limitations", reference="docs/evidence/dryad-finishing-steers-audit.json#/limitations"),
+            "animals": _fact(446, definition="unique Project+Animal keys; raw Animal IDs repeat across experiments", reference="docs/evidence/dryad-finishing-steers-audit.json#/coverage/nUniqueProjectAnimalKeys"),
+            "trials": _fact(5, definition="experiments", reference="docs/evidence/dryad-finishing-steers-audit.json#/coverage/nExperiments"),
+            "missingness": _fact({"missingByColumn": "all audited columns have zero missing values"}, definition="audit's per-column missingByColumn counts", reference="docs/evidence/dryad-finishing-steers-audit.json#/coverage/missingByColumn"),
+        },
         "population": "Finishing/feedlot beef steers across five experiments.",
         "units": "One animal-by-experiment summary row; DMI and ADG in kg/day.",
         "missingness": "The linked audit reports 446 complete outcome rows; no daily paired trajectory.",
@@ -79,6 +98,12 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/sdsu-engine-dmi-check.json",
         "access": "available_local",
         "license": "CC BY (manifest article/supplement; see source-specific evidence)",
+        "reportedFacts": {
+            "studyDesign": _fact("Hay-feeding experiment; derivative restricted to seven selected non-lactating cows", definition="audit scope", reference="docs/evidence/sdsu-individual-dmi-audit.json#/scope/population_and_setting"),
+            "animals": _fact(14, definition="animals with intake tags; not the seven-tag selected complete-case cohort", reference="docs/evidence/sdsu-individual-dmi-audit.json#/coverage/animals_in_intake_with_tag"),
+            "animalObservationUnits": _fact(1480, definition="intake rows", reference="docs/evidence/sdsu-individual-dmi-audit.json#/coverage/intake_rows"),
+            "missingness": _fact({"selectedCompleteCaseRowsWithoutMatchingForagePeriod": 147}, definition="audit quality-check count", reference="docs/evidence/sdsu-individual-dmi-audit.json#/qualityChecks/selected_complete_case_intake_rows_without_matching_forage_period"),
+        },
         "population": "Rangeland grazing cohort described in the linked audit; verify eligibility for any target population before use.",
         "units": "Derived DMI kg/day from intake pounds and period mean dry-matter percentage; see manifest derivation.",
         "missingness": "Rows without forage matching are retained with derived DMI blank; see audit and manifest.",
@@ -94,6 +119,9 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json",
         "access": "available_local",
         "license": "Etalab Open License 2.0 (manifest)",
+        "reportedFacts": {
+            "studyDesign": _fact("One farm and one experiment; evaluation groups are within-study Latin-square groups", definition="audit limitations", reference="docs/evidence/grastech-dairy-grazing-dmi-engine-check.json#/limitations"),
+        },
         "population": "Lactating dairy cows in a grazing supplementation experiment.",
         "units": "See audit report; linked workbooks hold animal, period, feed and herbage measures.",
         "missingness": "Use workbook-level missingness and coverage in the linked audit; not copied into this matrix.",
@@ -109,6 +137,12 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/usda-ars-feedlot-engine-dmi-check.json",
         "access": "available_local",
         "license": "CC BY 4.0 (manifest)",
+        "reportedFacts": {
+            "studyDesign": _fact("Three published finishing/feedlot experiments; treatment allocation is not summarized in the combined audit", definition="audit limitations", reference="docs/evidence/usda-ars-feedlot-dmi-audit.json#/limitations"),
+            "animals": _fact(149, definition="animals across the three experiments", reference="docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimals"),
+            "animalObservationUnits": _fact(150, definition="animal-experiment rows", reference="docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimalExperimentRows"),
+            "trials": _fact(3, definition="experiments", reference="docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nExperiments"),
+        },
         "population": "Beef cattle in feedlot experiments.",
         "units": "Individual feedlot DMI and supporting fields as listed in the audit.",
         "missingness": "See linked audit report; do not infer missing values from publication summaries.",
@@ -124,6 +158,10 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/dryad-grazing-yearlings-audit.json",
         "access": "available_local",
         "license": "CC0-1.0 (manifest)",
+        "reportedFacts": {
+            "animals": _fact(154, definition="unique model steer IDs", reference="docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/uniqueModelSteerIds"),
+            "animalObservationUnits": _fact(154, definition="model rows with ADG and body weight", reference="docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/modelRowsWithAdgAndBw"),
+        },
         "population": "Yearling grazing steers.",
         "units": "One ADG and body-weight record per steer; visits are interval records.",
         "missingness": "The audit reports 154 model rows; DMI and experiment ID are absent, and visit coverage is incomplete for some animals.",
@@ -139,6 +177,10 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/engine-adg-rothamsted-check.json",
         "access": "available_local",
         "license": "CC BY 4.0 (manifest)",
+        "reportedFacts": {
+            "animals": _fact(248, definition="unique official tags", reference="docs/evidence/rothamsted-adg-audit.json#/integrity/uniqueOfficialTagCount"),
+            "animalObservationUnits": _fact(2362, definition="animal-period rows", reference="docs/evidence/rothamsted-adg-audit.json#/integrity/animalPeriodRowCount"),
+        },
         "population": "Young growing dairy-cross beef cattle in temperate pasture; not a mature-cow cohort.",
         "units": "Animal-period daily liveweight gain kg/steer/day; repeated periods per official tag.",
         "missingness": "Integrity, coverage and cohort details are in the linked audit report.",
@@ -154,6 +196,11 @@ SOURCES: list[dict[str, Any]] = [
         "decisionRef": "docs/evidence/mdpi-angus-cow-grazing-audit.json",
         "access": "available_local",
         "license": "CC-BY-4.0 (manifest/article supplement; inspect data terms before redistribution)",
+        "reportedFacts": {
+            "animals": _fact(241, definition="unique cow IDs across the two study years", reference="docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1UniqueCowIdsAcrossYears"),
+            "animalObservationUnits": _fact(408, definition="cow-season rows", reference="docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1CowSeasonRows"),
+            "missingness": _fact({"weightChange": 5, "bodyConditionScoreChange": 3}, definition="rows missing weight-change and BCS-change values", reference="docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1MissingWeightChange"),
+        },
         "population": "Pregnant commercial Angus cows, ages 1–10, on dormant mixed-grass rangeland.",
         "units": "Cow-season weight change; ADG is derived over a study-reported 84-day period.",
         "missingness": "Audit reports missing weight/BCS changes; 167 cow IDs recur across years, and GPS covers a subset/45 days.",
@@ -187,19 +234,45 @@ def read_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def build_record(source: dict[str, Any]) -> dict[str, Any]:
+def _read_source_reference(reference: str) -> dict[str, Any]:
+    return read_json(ROOT / reference)
+
+
+def _readiness_outcome(source: dict[str, Any], dimension: str) -> dict[str, Any]:
+    declared = source[dimension]
+    if declared["status"] not in {"eligible", "conditional", "ineligible"}:
+        raise ValueError(f"Unknown status for {source['id']}.{dimension}")
+    if not isinstance(declared.get("trainable"), bool):
+        raise ValueError(f"Missing trainable decision for {source['id']}.{dimension}")
+
+    status = declared["status"]
+    trainable = declared["trainable"]
+    reason = declared["reason"]
+    access = source["access"]
+    license_text = source.get("license")
+    if access not in {"available_local", "unavailable_or_not_reusable"}:
+        raise ValueError(f"Unknown access status for {source['id']}: {access}")
+    if access != "available_local":
+        status = "ineligible"
+        trainable = False
+        reason = f"{reason} Source is inaccessible or not reusable."
+    if not isinstance(license_text, str) or not license_text.strip():
+        status = "ineligible"
+        trainable = False
+        reason = f"{reason} Reuse license is absent or undocumented."
+    if status == "ineligible" and trainable:
+        raise ValueError(f"Ineligible source cannot be trainable: {source['id']}.{dimension}")
+    if access != "available_local" and trainable:
+        raise ValueError(f"Inaccessible source cannot be trainable: {source['id']}.{dimension}")
+    return {"status": status, "trainable": trainable, "reason": reason}
+
+
+def build_record(source: dict[str, Any], read_reference=_read_source_reference) -> dict[str, Any]:
     manifest_ref = source["manifest"]
     audit_ref = source["audit"]
-    manifest = read_json(ROOT / manifest_ref) if manifest_ref else None
-    audit = read_json(ROOT / audit_ref)
-    for dimension in ("dmi", "adg"):
-        outcome = source[dimension]
-        if outcome["status"] not in {"eligible", "conditional", "ineligible"}:
-            raise ValueError(f"Unknown status for {source['id']}.{dimension}")
-        if source["access"] != "available_local" and outcome["trainable"]:
-            raise ValueError(f"Inaccessible source cannot be trainable: {source['id']}.{dimension}")
-        if outcome["status"] == "ineligible" and outcome["trainable"]:
-            raise ValueError(f"Ineligible source cannot be trainable: {source['id']}.{dimension}")
+    manifest = read_reference(manifest_ref) if manifest_ref else None
+    audit = read_reference(audit_ref)
+    reported = source.get("reportedFacts", {})
 
     result = {
         "id": source["id"],
@@ -211,24 +284,81 @@ def build_record(source: dict[str, Any]) -> dict[str, Any]:
         },
         "sourceIdentity": {
             "doi": find_doi(manifest or audit),
-            "license": source["license"],
+            "license": source.get("license"),
         },
         "access": source["access"],
+        "studyDesign": reported.get("studyDesign", _fact()),
+        "counts": {
+            "animals": reported.get("animals", _fact()),
+            "animalObservationUnits": reported.get("animalObservationUnits", _fact()),
+            "trials": reported.get("trials", _fact()),
+        },
         "population": source["population"],
         "units": source["units"],
-        "missingness": source["missingness"],
-        "outcomes": {"dmi": source["dmi"], "adg": source["adg"]},
+        "missingness": {
+            "summary": source["missingness"],
+            "documentedMetrics": reported.get("missingness", _fact()),
+        },
+        "outcomes": {dimension: _readiness_outcome(source, dimension) for dimension in ("dmi", "adg")},
         "permissibleUse": source["permissibleUse"],
     }
     # Keep references demonstrably live; the detailed reports remain canonical.
     for ref in result["references"].values():
         if ref and not (ROOT / ref).is_file():
-            raise FileNotFoundError(f"Missing evidence reference: {ref}")
+            # Fixture readers may supply virtual references without writing any
+            # source data into the repository.
+            if read_reference is _read_source_reference:
+                raise FileNotFoundError(f"Missing evidence reference: {ref}")
+    for fact in [result["studyDesign"], *result["counts"].values(), result["missingness"]["documentedMetrics"]]:
+        fact_ref = fact.get("reference")
+        if fact_ref:
+            read_reference(fact_ref.split("#", 1)[0])
     if manifest is not None and not manifest:
         raise ValueError(f"Empty manifest: {manifest_ref}")
     if not audit:
         raise ValueError(f"Empty audit report: {audit_ref}")
     return result
+
+
+def build_readiness_report(
+    sources: list[dict[str, Any]],
+    read_reference=_read_source_reference,
+    *,
+    domain_expert_review: dict[str, Any],
+    elapsed_seconds: float = 0.0,
+    version: str = VERSION,
+) -> dict[str, Any]:
+    """Build an in-memory readiness document from supplied sources and evidence.
+
+    Sorting by stable source ID makes output ordering independent of fixture or
+    registry input order. Counts and missingness stay null unless explicitly
+    supplied as source-documented facts.
+    """
+    ordered_sources = sorted(sources, key=lambda source: source["id"])
+    records = [build_record(source, read_reference) for source in ordered_sources]
+    input_paths = {
+        reference
+        for record in records
+        for reference in record["references"].values()
+        if reference
+    }
+    for record in records:
+        fact_refs = [record["studyDesign"], *record["counts"].values(), record["missingness"]["documentedMetrics"]]
+        input_paths.update(fact["reference"].split("#", 1)[0] for fact in fact_refs if fact.get("reference"))
+    return {
+        "schemaVersion": "riose.dmi-adg-readiness/v1",
+        "version": version,
+        "generator": "scripts/build_dmi_adg_readiness.py",
+        "purpose": "Reference-only readiness assessment for DMI and ADG component datasets.",
+        "domainExpertReview": domain_expert_review,
+        "sources": records,
+        "processing": {
+            "sourceCount": len(records),
+            "inputFileCount": len(input_paths),
+            "elapsedSeconds": round(elapsed_seconds, 6),
+            "elapsedTimeKind": "observed_wall_clock_seconds",
+        },
+    }
 
 
 def find_doi(value: Any) -> str | None:
@@ -250,6 +380,19 @@ def find_doi(value: Any) -> str | None:
 
 
 def render_markdown(document: dict[str, Any]) -> str:
+    def fact_text(fact: dict[str, Any]) -> str:
+        value = fact.get("value")
+        if value is None:
+            return "unknown"
+        rendered = json.dumps(value, ensure_ascii=False, sort_keys=True) if isinstance(value, (dict, list)) else str(value)
+        definition = fact.get("definition")
+        reference = fact.get("reference")
+        if definition:
+            rendered += f" ({definition})"
+        if reference:
+            rendered += f" [{reference}]"
+        return rendered
+
     lines = [
         f"# Matriz de prontidão DMI/ADG v{document['version']}",
         "",
@@ -259,8 +402,8 @@ def render_markdown(document: dict[str, Any]) -> str:
         "",
         "## Matriz",
         "",
-        "| Fonte | Acesso | DMI | ADG | População / unidade | Uso admissível | Evidências |",
-        "|---|---|---|---|---|---|---|",
+        "| Fonte | Acesso | Desenho documentado | Animais documentados | Trials documentados | DMI | ADG | População / unidade | Uso admissível | Evidências |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for item in document["sources"]:
         dmi = item["outcomes"]["dmi"]
@@ -269,12 +412,15 @@ def render_markdown(document: dict[str, Any]) -> str:
         source_refs = ", ".join(f"`{key}: {value}`" for key, value in refs.items() if value)
         compact = f"{item['population']} {item['units']}"
         lines.append(
-            f"| {item['name']} | {item['access']} | {dmi['status']} (trainable: {str(dmi['trainable']).lower()}) | "
+            f"| {item['name']} | {item['access']} | {fact_text(item['studyDesign'])} | "
+            f"{fact_text(item['counts']['animals'])} | {fact_text(item['counts']['trials'])} | "
+            f"{dmi['status']} (trainable: {str(dmi['trainable']).lower()}) | "
             f"{adg['status']} (trainable: {str(adg['trainable']).lower()}) | {compact} | {item['permissibleUse']} | {source_refs} |"
         )
         lines.append("")
         lines.append(f"**{item['id']} — razões.** DMI: {dmi['reason']} ADG: {adg['reason']}")
-        lines.append(f"**Licença:** {item['sourceIdentity']['license']} **Missingness:** {item['missingness']}")
+        lines.append(f"**Licença:** {item['sourceIdentity']['license'] or 'unknown'} **Unidades animal-período/registro:** {fact_text(item['counts']['animalObservationUnits'])}")
+        lines.append(f"**Missingness:** {item['missingness']['summary']} **Métricas documentadas:** {fact_text(item['missingness']['documentedMetrics'])}")
         lines.append("")
     review = document["domainExpertReview"]
     lines.extend([
@@ -300,33 +446,18 @@ def render_markdown(document: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def main() -> None:
-    started = perf_counter()
-    document = {
-        "schemaVersion": "riose.dmi-adg-readiness/v1",
-        "version": VERSION,
-        "generator": "scripts/build_dmi_adg_readiness.py",
-        "purpose": "Reference-only readiness assessment for DMI and ADG component datasets.",
-        "domainExpertReview": {
+DOMAIN_EXPERT_REVIEW = {
             "status": "pending_not_obtained",
             "statement": "Nenhum parecer zootécnico independente foi realizado; a classificação de yearlings como adultos permanece pendente.",
             "reference": "docs/caso-zootecnico-demonstrativo.md",
             "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. A issue #22 acompanha a revisão independente.",
-        },
-        "sources": [build_record(source) for source in SOURCES],
-    }
-    input_paths = {
-        ref
-        for source in document["sources"]
-        for ref in source["references"].values()
-        if ref
-    }
-    document["processing"] = {
-        "sourceCount": len(document["sources"]),
-        "inputFileCount": len(input_paths),
-        "elapsedSeconds": round(perf_counter() - started, 6),
-        "elapsedTimeKind": "observed_wall_clock_seconds",
-    }
+}
+
+
+def main() -> None:
+    started = perf_counter()
+    document = build_readiness_report(SOURCES, domain_expert_review=DOMAIN_EXPERT_REVIEW)
+    document["processing"]["elapsedSeconds"] = round(perf_counter() - started, 6)
     JSON_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     JSON_OUTPUT.write_text(json.dumps(document, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     MARKDOWN_OUTPUT.write_text(render_markdown(document), encoding="utf-8")

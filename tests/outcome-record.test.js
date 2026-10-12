@@ -73,6 +73,45 @@ test('v2 manifests pass the existing archive and outcome validation path', () =>
   assert.equal(report.comparisons[0].status, 'comparable-descriptive');
 });
 
+test('comparison archive compatibility table keeps archive v1 and source manifest v1/v2 versions distinct', () => {
+  for (const manifestVersion of [1, 2]) {
+    const {manifestBytes, engineBytes} = fixture(manifestVersion);
+    const archive = createComparisonArchive(manifestBytes, engineBytes, '2026-10-11T12:00:00.000Z');
+    assert.equal(archive.type, 'agroville-comparison-result');
+    assert.equal(archive.version, 1, 'archive envelope remains v1');
+    assert.equal(archive.manifestReference.version, manifestVersion, 'source manifest version is preserved');
+  }
+
+  const {manifestBytes, engineBytes, snapshotBytes, record, archive} = fixture(2);
+  for (const [label, mutate] of [
+    ['unknown archive version', candidate => {candidate.version = 2;}],
+    ['unknown archive type', candidate => {candidate.type = 'future-comparison-result';}],
+  ]) {
+    const candidateArchive = structuredClone(archive);
+    mutate(candidateArchive);
+    const archiveBytes = Buffer.from(`${JSON.stringify(candidateArchive, null, 2)}\n`);
+    const candidateRecord = structuredClone(record);
+    candidateRecord.projection.archiveSha256 = sha256Bytes(archiveBytes);
+    const report = validateOutcomeRecord(candidateRecord, archiveBytes, manifestBytes, snapshotBytes);
+    assert.equal(report.valid, false, label);
+    assert.ok(report.errors.some(message => message.includes('Tipo/versão do arquivo de projeção não suportado.')), label);
+  }
+});
+
+test('outcome record compatibility table accepts v1 and rejects unknown or missing versions', () => {
+  const {record} = fixture();
+  const cases = [
+    ['outcome record v1', candidate => {}, true],
+    ['unknown outcome record v2', candidate => {candidate.version = 2;}, false],
+    ['missing outcome record version', candidate => {delete candidate.version;}, false],
+  ];
+  for (const [label, mutate, expected] of cases) {
+    const candidate = structuredClone(record);
+    mutate(candidate);
+    assert.equal(validateSchema(candidate), expected, label);
+  }
+});
+
 test('outcome record links exact manifest and archived projection, then reports descriptive difference after review', () => {
   const {manifestBytes, snapshotBytes, archiveBytes, record, archive} = fixture();
   assert.equal(validateSchema(record), true, JSON.stringify(validateSchema.errors));

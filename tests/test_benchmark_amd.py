@@ -86,6 +86,13 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertIsNone(report["speedup"])
         self.assertEqual(report["correctness_check"]["status"], "not_compared")
         self.assertEqual(calls, ["cpu"] * 4)
+        self.assertEqual(report["workload"]["seed"], "deterministic-vector-no-rng")
+        self.assertEqual(report["workload"]["populations"], [{
+            "count": 8,
+            "unit": "numeric-vector-elements",
+            "scope": "numeric-kernel-only",
+        }])
+        self.assertTrue(report["timingBoundaries"][0]["timed"])
 
     def test_available_simulated_backend_uses_same_deterministic_payload(self):
         payloads = []

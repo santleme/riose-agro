@@ -40,12 +40,13 @@ for (const runDurationMs of simulatedRunMs) {
 
 const report = benchmarkReport({
   name: 'resumable-scenario-journal',
-  workload: {runCounts: [runCount], resultBytesPerRun: 64, scenariosAreSynthetic: true},
+  workload: {seed: 'deterministic-index-no-rng', populations: [{count: runCount, unit: 'scenario-runs', scope: 'synthetic resumable journal batch'}], runCounts: [runCount], resultBytesPerRun: 64, scenariosAreSynthetic: true},
   configuration: {warmupRuns: 0, repetitions, atomicMode: 'same-filesystem temp write and rename'},
   phases: {layout: {status: 'measured', measurements: [
     measurement('layout', 'journal_batch_time', 'ms', summarizeSamples(measured.map(row => row.journalBatchMs.median)), {details: measured}),
     measurement('layout', 'heap_used_after_batch', 'byte', {sampleCount: measured.length, maximum: Math.max(...measured.map(row => row.heapUsedBytes))}),
   ]}},
+  timingBoundaries: [{phase: 'layout', timed: ['Batch journal execution, result appends, and configured synthetic per-run delay.'], notTimed: ['Temporary directory creation and cleanup.', 'Manifest construction.', 'Heap sampling.']}],
   results: measured,
   limitations: ['Synthetic runs isolate journal overhead; scenario engine execution time and result size vary.', 'Heap is process heap after a batch with forced GC where available, not peak RSS or per-run allocation.', 'Approximate overhead subtracts only the configured synthetic execution delay.'],
 });

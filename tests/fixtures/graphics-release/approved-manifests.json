@@ -1,0 +1,37 @@
+{
+  "semanticManifest": {
+    "atlasPacks": {
+      "livestock": {"image": "/assets/atlas/livestock.png"}
+    },
+    "assets": [
+      {
+        "id": "livestock.cattle.nelore.adult.v1",
+        "status": "RELEASED",
+        "source": {"sourceFile": "assets/approved/livestock/nelore-adult.png", "kind": "authored"},
+        "rights": {"licenseState": "documented", "notes": "Original project artwork."},
+        "review": {"art": "pass", "technical": "pass"},
+        "atlas": {"pack": "livestock"},
+        "references": []
+      }
+    ]
+  },
+  "dairyManifest": {"assets": []},
+  "rendererManifest": {
+    "atlases": {"livestock": "/graphics-poc/assets/livestock.png"},
+    "unresolvedAssetIds": [],
+    "assets": [
+      {
+        "assetId": "nelore-adult",
+        "sourceSemanticId": "livestock.cattle.nelore.adult.v1",
+        "sourceFile": "assets/approved/livestock/nelore-adult.png",
+        "manifestSource": "assets/manifests/manifest.json",
+        "atlasKey": "livestock",
+        "reviewStatus": "RELEASED"
+      }
+    ]
+  },
+  "releaseScenes": [
+    ["beef scene", {"assets": [{"assetId": "nelore-adult"}]}],
+    ["dairy scene", {"assets": []}]
+  ]
+}

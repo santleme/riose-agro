@@ -136,7 +136,15 @@ try{
   const output=benchmarkReport({
     name:'browser-worker',runtime:{browser:browser.product,browserRevision:browser.revision,userAgent:browser.userAgent},
     workload:{seed:20261012,populations:[...worker.map(row=>({animals:row.animals,scope:'FarmEngine and Worker',limit:'FarmEngine maximum 10000'})),{animals:100000,scope:'numeric-kernel-only',limit:'isolated numeric kernel; not FarmEngine or renderer'}]},
-    configuration:{warmupRuns:{worker:1,kernel:50,simulation:3},repetitions},phases,results:{browser:{product:'Chromium',url:origin},worker,profile:{implementation:profileTick,sampledAppFunctions:sampledFunctions,metricsDelta:profileMetricsDelta,heapUsedBytes:profileMetrics.JSHeapUsedSize,domNodes:profileMetrics.Nodes},simulationProfile,browserEngine:kernel,persistence},limitations,
+    configuration:{warmupRuns:{worker:1,kernel:50,simulation:3},repetitions},phases,
+    timingBoundaries:[
+      {phase:'engine',timed:['FarmEngine 24-hour tick, with/without snapshot, and isolated JS/WASM numeric kernel calls.'],notTimed:['FarmEngine construction and UI rendering.']},
+      {phase:'worker',timed:['Worker tick request/reply round-trip including queueing, execution, transfer and response.'],notTimed:['Separate standalone engine profile and browser startup.']},
+      {phase:'ui',timed:['Whole-page script-duration delta across the measured Worker workload.'],notTimed:['Isolated allocation attribution to one UI function.']},
+      {phase:'layout',timed:['Whole-page layout-duration delta across the measured Worker workload.'],notTimed:['GPU rendering time.']},
+      {phase:'serialization',timed:['JSON byte counting and browser gzip snapshot encoding.'],notTimed:['Browser storage quota measurement.']},
+    ],
+    results:{browser:{product:'Chromium',url:origin},worker,profile:{implementation:profileTick,sampledAppFunctions:sampledFunctions,metricsDelta:profileMetricsDelta,heapUsedBytes:profileMetrics.JSHeapUsedSize,domNodes:profileMetrics.Nodes},simulationProfile,browserEngine:kernel,persistence},limitations,
   });
   console.log(JSON.stringify(output,null,2));
 }finally{

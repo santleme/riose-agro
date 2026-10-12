@@ -8,6 +8,13 @@ const maderExample = numericReferences.fixtures.mader2006ThiPublishedExample;
 
 test('Mader formula matches a published crossbred-calf THI example to reported precision',()=>{
   const result=calculateThi(maderExample.inputs.temperatureC.value,maderExample.inputs.relativeHumidityPct.value);
+  const intermediates=maderExample.intermediates;
+  assert.equal(0.8*maderExample.inputs.temperatureC.value,intermediates.temperatureTerm.value);
+  assert.equal(maderExample.inputs.relativeHumidityPct.value/100,intermediates.humidityFraction.value);
+  assert.equal(maderExample.inputs.temperatureC.value-14.4,intermediates.temperatureOffsetC.value);
+  assert.equal(intermediates.humidityFraction.value*intermediates.temperatureOffsetC.value,intermediates.humidityTerm.value);
+  assert.equal(intermediates.constantTerm.value,46.4);
+  assert.equal(intermediates.temperatureTerm.value+intermediates.humidityTerm.value+intermediates.constantTerm.value,maderExample.expected.calculatedThi);
   assert.equal(result.value,maderExample.expected.calculatedThi);
   assert.ok(Math.abs(result.value-maderExample.expected.publishedRoundedThi)<maderExample.expected.publishedPrecisionTolerance);
   assert.equal(result.unit,'THI');

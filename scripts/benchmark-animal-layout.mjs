@@ -5,6 +5,7 @@ import {writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const seed=20261012;
 const repetitions=process.env.ANIMAL_LAYOUT_REPETITIONS?Number(process.env.ANIMAL_LAYOUT_REPETITIONS):31;
@@ -15,7 +16,7 @@ const gainFactor=0.22;
 
 function summarize(values){
   const sorted=[...values].sort((a,b)=>a-b);
-  return {sampleCount:sorted.length,medianMs:sorted[Math.floor(sorted.length/2)],minMs:sorted[0],maxMs:sorted.at(-1)};
+  return {sampleCount:sorted.length,medianMs:sorted[Math.floor(sorted.length/2)],minMs:sorted[0],maxMs:sorted.at(-1),observations:[...values]};
 }
 function update(weight,energy,intake,resting){
   const gain=(intake-maintenance*(weight/360)/24)*gainFactor;
@@ -113,6 +114,30 @@ for(const count of [100,1_000,10_000]){
   const snapshotColumns=collect(()=>materializeColumns(animals,columnsOut));
   rows.push({animals:count,fixture:{seed,source:'FarmEngine initialization plus current feeding model',inputValues:4,branchMix:{restingAnimals:animals.filter(a=>a.resting).length}},outputsIdentical:true,memory:{heapUsedWithObjectsBytes:memoryWithObjects.heapUsedBytes,heapUsedWithColumnsBytes:memoryWithColumns.heapUsedBytes,heapDeltaAfterPreallocatedColumnsBytes:memoryWithColumns.heapUsedBytes-memoryWithObjects.heapUsedBytes,typedBuffersExactBytes:weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength+columnsOut.byteLength},measurements:{aosEndToEnd:aos,typedColumnsKernel:columnsKernel,typedColumnsGather:gather,typedColumnsScatter:scatter,typedColumnsEndToEnd:endToEndColumns,snapshotMaterializationAos:snapshotAos,snapshotMaterializationColumns:snapshotColumns,nativeRustKernel:summarize(native.samplesMs)},allocationNotes:{perSnapshotVariantObjects:count,typedBufferAllocations:5,peakAllocationCounts:'not instrumented'}});
 }
-const report={study:'animal-layout-aos-vs-aligned-columns',date:new Date().toISOString().slice(0,10),runtime:{node:process.version,rustc:execFileSync('rustc',['--version'],{encoding:'utf8'}).trim(),optimization:'Rust --release'},workload:{seed,repetitions,warmups,populations:[100,1000,10000],hoursPerBenchmarkIteration:1,source:'deterministic FarmEngine fixture; actual calculateFeeding output; fixed scenario branch order'},results:rows,decision:'Keep object-per-animal state. The isolated typed-column kernel excludes gather/scatter and is not a production end-to-end win unless typedColumnsEndToEnd repeatedly beats AoS with identical outputs.',limitations:['This isolates one-hour weight/energy transition after feeding; it does not benchmark a full 24-hour engine tick or renderer.','Native Rust measures the same packed numeric kernel and fixture but excludes JSON serialization, FFI and process startup.','Heap snapshots are process-level readings after GC and include engine/test harness memory; they are directional. Typed-buffer bytes are exact. Peak allocation counts are not instrumented; per-snapshot output object counts are known.','Feed intake is calculated once from the deterministic initial scenario state and reused to isolate transition layout.']};
+const limitations=['This isolates one-hour weight/energy transition after feeding; it does not benchmark a full 24-hour engine tick or renderer.','Native Rust measures the same packed numeric kernel and fixture but excludes JSON serialization, FFI and process startup.','Heap snapshots are process-level readings after GC and include engine/test harness memory; they are directional. Typed-buffer bytes are exact. Peak allocation counts are not instrumented; per-snapshot output object counts are known.','Feed intake is calculated once from the deterministic initial scenario state and reused to isolate transition layout.'];
+const metricRows=(phase,key)=>rows.map(row=>measurement(phase,key,'ms',summarizeSamples(row.measurements[key].observations),{
+  population:row.animals,scope:'FarmEngine one-hour transition fixture',implementation:key,source:'scripts/benchmark-animal-layout.mjs',
+  observations:row.measurements[key].observations,memory:row.memory,
+}));
+const report=benchmarkReport({
+  name:'animal-layout-aos-vs-aligned-columns',
+  runtime:{rustc:execFileSync('rustc',['--version'],{encoding:'utf8'}).trim(),optimization:'Rust --release'},
+  workload:{seed,populations:rows.map(row=>({animals:row.animals,scope:'FarmEngine one-hour transition fixture',limit:'FarmEngine maximum 10000'})),repetitions,warmups,hoursPerBenchmarkIteration:1,source:'deterministic FarmEngine fixture; actual calculateFeeding output; fixed scenario branch order'},
+  configuration:{warmupRuns:warmups,repetitions},
+  phases:{
+    engine:{status:'measured',measurements:['aosEndToEnd','typedColumnsKernel','typedColumnsGather','typedColumnsScatter','typedColumnsEndToEnd','nativeRustKernel'].flatMap(key=>metricRows('engine',key))},
+    snapshot:{status:'measured',measurements:['snapshotMaterializationAos','snapshotMaterializationColumns'].flatMap(key=>metricRows('snapshot',key))},
+  },
+  timingBoundaries:[
+    {phase:'engine',timed:['One-hour weight/energy transition using precomputed intake; typed-column end-to-end includes gather and scatter.','Native Rust loop over preallocated packed vectors.'],notTimed:['FarmEngine construction, feeding calculation, full 24-hour tick, renderer, JSON serialization, FFI, and process startup.']},
+    {phase:'snapshot',timed:['Materialization of one output object per animal from AoS or typed-column results.'],notTimed:['Transition kernel execution.']},
+  ],
+  results:rows,
+  limitations,
+});
+report.study='animal-layout-aos-vs-aligned-columns';
+report.date=new Date().toISOString().slice(0,10);
+report.decision='Keep object-per-animal state. The isolated typed-column kernel excludes gather/scatter and is not a production end-to-end win unless typedColumnsEndToEnd repeatedly beats AoS with identical outputs.';
+report.runtime={...report.runtime,node:process.version};
 await writeFile(resultPath,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({resultPath,results:rows.map(({animals,measurements})=>({animals,measurements}))},null,2));
+console.log(JSON.stringify({resultPath,report},null,2));

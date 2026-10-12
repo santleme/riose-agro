@@ -1,11 +1,13 @@
 import {createHash} from 'node:crypto';
+import {validateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
 
 export const SCENE_ADAPTER_VERSION = '1.0.0';
 export const COMPOSER_SOURCE_FORMAT = 'riose-composer-layout';
+export const GENERATED_LAYOUT_SOURCE_FORMAT = 'riose-generated-farm-layout-v1';
 
 const SCENE_FIELDS = new Set([
   'schemaVersion', 'metadata', 'grid', 'layers', 'placements', 'visualGroups',
-  'zones', 'prefabInstances', 'autoTile',
+  'zones', 'prefabInstances', 'autoTile', 'generation',
 ]);
 const METADATA_FIELDS = new Set([
   'id', 'scenarioType', 'name', 'seed', 'animalCount', 'herdLabel',
@@ -37,8 +39,18 @@ function collectUnsupported(source) {
   const keys = (record, allowed, basePath, id) => {
     for (const key of Object.keys(record ?? {}).sort()) if (!allowed.has(key)) add(`${basePath}.${key}`, id);
   };
+  const unsupportedTree = (value, basePath, id) => {
+    if (!value || typeof value !== 'object') {
+      add(basePath, id);
+      return;
+    }
+    const entries = Object.entries(value);
+    if (!entries.length) add(basePath, id);
+    for (const [key, child] of entries) unsupportedTree(child, `${basePath}.${key}`, id);
+  };
 
   keys(source.scene, SCENE_FIELDS, 'scene');
+  if (source.scene.generation !== undefined) unsupportedTree(source.scene.generation, 'scene.generation', source.scene.metadata?.id);
   keys(source.scene.metadata, METADATA_FIELDS, 'scene.metadata', source.scene.metadata?.id);
   keys(source.scene.grid, GRID_FIELDS, 'scene.grid', source.scene.metadata?.id);
   keys(source.scene.autoTile, new Set(), 'scene.autoTile', source.scene.metadata?.id);
@@ -82,7 +94,7 @@ function rectangle(zone) {
   return {x, y, columns: right - x, rows: bottom - y};
 }
 
-function canonicalize(source, rendererManifest) {
+function canonicalize(source, rendererManifest, {provenance = {sourceId: 'scenario-composer-v1', sourceCommit: '2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7', sourceSceneId: source.scene.metadata.id}} = {}) {
   const {scene} = source;
   const system = scene.metadata?.scenarioType;
   if (!['beef', 'dairy'].includes(system)) throw new TypeError(`Unsupported Composer production system: ${system}`);
@@ -171,7 +183,7 @@ function canonicalize(source, rendererManifest) {
         ? {layoutOnly: true, modelStatus: 'in-progress', herdLabel: scene.metadata.herdLabel}
         : {housing: 'pasture', weather: 'normal', diet: 'pasture', supplement: 0, herdLabel: scene.metadata.herdLabel},
     },
-    provenance: {sourceId: 'scenario-composer-v1', sourceCommit: '2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7', sourceSceneId: scene.metadata.id},
+    ...(provenance ? {provenance} : {}),
     projection: {type: 'isometric-2to1', cellWidth: scene.grid.tileWidth, cellHeight: scene.grid.tileHeight, columns: scene.grid.width, rows: scene.grid.height},
     assets,
     entities,
@@ -225,4 +237,91 @@ export function restoreComposerDocument(adapterDocument) {
     throw new TypeError('Canonical scene changed; v1 cannot save canonical edits back to Composer without a field mapping');
   }
   return restored;
+}
+
+/**
+ * Adapt an editable generated Composer layout without altering renderer outputs.
+ * Prefab children are expanded deterministically for canonical rendering while
+ * the exact generated Composer scene remains the restorable authored source.
+ */
+export function adaptGeneratedFarmLayoutDocument(generatedScene, rendererManifest, prefabLibrary, composerManifest) {
+  if (!generatedScene?.metadata?.id || !Array.isArray(generatedScene.prefabInstances)
+    || !Array.isArray(generatedScene.placements) || !Array.isArray(generatedScene.zones)) {
+    throw new TypeError('Invalid generated farm layout: expected Composer scene, zones, placements and prefabInstances');
+  }
+  const diagnostics = validateFarmLayout(generatedScene, {prefabs: prefabLibrary, manifest: composerManifest});
+  const errors = diagnostics.filter(item => item.severity === 'error');
+  if (errors.length) throw new TypeError(`Generated Composer layout is invalid: ${errors.map(item => `${item.code} at ${item.path}`).join(', ')}`);
+
+  const expandedPlacements = expandGeneratedPrefabPlacements(generatedScene, prefabLibrary);
+  const source = {scene: generatedScene, expandedPlacements};
+  const canonicalScene = canonicalize(source, rendererManifest, {provenance: null});
+  const authoredSource = structuredClone(generatedScene);
+  const sourceDigest = sha256(authoredSource);
+  const assetIds = [...new Set(expandedPlacements.map(item => item.assetId))].sort();
+  return {
+    adapterVersion: SCENE_ADAPTER_VERSION,
+    sourceFormat: {
+      formatId: GENERATED_LAYOUT_SOURCE_FORMAT,
+      schemaVersion: String(generatedScene.schemaVersion),
+      sceneId: generatedScene.metadata.id,
+      sourceDigest,
+      canonicalSceneDigest: sha256(canonicalScene),
+      ids: {
+        sceneId: generatedScene.metadata.id,
+        zoneIds: generatedScene.zones.map(zone => zone.id),
+        placementIds: generatedScene.placements.map(item => item.id),
+        prefabInstanceIds: generatedScene.prefabInstances.map(item => item.id),
+        visualIds: (generatedScene.visualGroups ?? []).flatMap(group => group.visualIds ?? []),
+        assetIds,
+      },
+      expandedPlacementCount: expandedPlacements.length,
+    },
+    scene: canonicalScene,
+    unsupportedFields: collectUnsupported(source),
+    authoredSource,
+  };
+}
+
+/** Restore the exact generated Composer scene if neither side of the adapter document was edited. */
+export function restoreGeneratedFarmLayoutDocument(adapterDocument) {
+  if (adapterDocument?.adapterVersion !== SCENE_ADAPTER_VERSION
+    || adapterDocument?.sourceFormat?.formatId !== GENERATED_LAYOUT_SOURCE_FORMAT
+    || !adapterDocument.authoredSource) {
+    throw new TypeError('Unsupported or incomplete generated farm layout adapter document');
+  }
+  const restored = structuredClone(adapterDocument.authoredSource);
+  if (sha256(restored) !== adapterDocument.sourceFormat.sourceDigest) {
+    throw new TypeError('Generated Composer source failed its integrity check');
+  }
+  if (sha256(adapterDocument.scene) !== adapterDocument.sourceFormat.canonicalSceneDigest) {
+    throw new TypeError('Canonical scene changed; generated Composer source cannot be rewritten without an explicit field mapping');
+  }
+  return restored;
+}
+
+function expandGeneratedPrefabPlacements(scene, prefabLibrary) {
+  const prefabById = new Map(prefabLibrary.map(item => [item.id, item]));
+  const expanded = scene.placements.map(item => structuredClone(item));
+  for (const instance of scene.prefabInstances) {
+    const prefab = prefabById.get(instance.prefabId);
+    if (!prefab) throw new TypeError(`Unknown generated Composer prefab ${instance.prefabId}`);
+    const rotation = ((instance.rotation ?? 0) % 360 + 360) % 360;
+    if (![0, 90, 180, 270].includes(rotation)) throw new TypeError(`Unsupported prefab rotation ${rotation} for ${instance.id}`);
+    for (const [index, child] of (prefab.placements ?? []).entries()) {
+      let col = child.col, row = child.row;
+      if (rotation === 90) [col, row] = [-row, col];
+      else if (rotation === 180) [col, row] = [-col, -row];
+      else if (rotation === 270) [col, row] = [row, -col];
+      expanded.push({
+        id: `${instance.id}::${index}`,
+        assetId: child.assetId,
+        layer: child.layer,
+        position: {col: instance.col + col, row: instance.row + row},
+        rotation: ((child.rotation ?? 0) + rotation) % 360,
+        properties: {...(child.properties ?? {}), prefabInstanceId: instance.id, prefabId: instance.prefabId},
+      });
+    }
+  }
+  return expanded;
 }

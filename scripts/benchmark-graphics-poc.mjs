@@ -143,6 +143,13 @@ try {
       ];}))},
       startup:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>{const rows=rendererLoads.filter(row=>row.renderer===renderer);const metric=renderer==='pixi'?'pixiInitMs':'assetsMs';return [measurement('startup',renderer==='pixi'?'rendererInitialization':'assetLoad','ms',summarizeSamples(rows.map(row=>row[metric])),{renderer})];})},
     },
+    timingBoundaries:[
+      {phase:'worker',timed:['One-hour Worker request and reply round-trip.'],notTimed:['Renderer frame sampling and browser startup.']},
+      {phase:'ui',timed:['Scene and motion update JavaScript phase measurements.'],notTimed:['GPU completion and Worker round-trip.']},
+      {phase:'layout',timed:['Whole-page layout duration delta across the workload.'],notTimed:['GPU rendering time.']},
+      {phase:'render',timed:['RAF frame intervals and JavaScript render-submission call duration.'],notTimed:['GPU completion, texture memory and Worker request/reply.']},
+      {phase:'startup',timed:['Canvas asset loading or Pixi renderer initialization as reported.'],notTimed:['Simulation ticks and steady-state frame loop.']},
+    ],
     results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},url:origin,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
     limitations:measurementNotes,
   });
