@@ -186,6 +186,29 @@ class ComputeServiceTests(unittest.TestCase):
                 amd_detector=lambda: UNAVAILABLE,
             )
 
+    def test_inexact_integer_is_rejected_before_backend_selection(self):
+        with self.assertRaisesRegex(ValueError, "integer_outside_exact_float64_range"):
+            execute_compute(
+                {
+                    "contract_version": "1",
+                    "operation": "scale_vector",
+                    "payload": {"values": [9_007_199_254_740_993], "factor": 1},
+                },
+                amd_detector=lambda: UNAVAILABLE,
+            )
+
+    def test_accepted_integer_uses_float64_on_cpu(self):
+        result = execute_compute(
+            {
+                "contract_version": "1",
+                "operation": "scale_vector",
+                "payload": {"values": [9_007_199_254_740_992], "factor": 1},
+                "preferred_backend": "cpu",
+            },
+            amd_detector=lambda: UNAVAILABLE,
+        )
+        self.assertEqual(result["result"]["values"], [9_007_199_254_740_992.0])
+
     def test_non_finite_computed_result_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "result_must_be_finite"):
             execute_compute(

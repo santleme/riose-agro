@@ -13,6 +13,7 @@ from typing import Any, Callable
 CONTRACT_VERSION = "1"
 MAX_REQUEST_BYTES = 1_048_576
 MAX_VECTOR_LENGTH = 100_000
+MAX_EXACT_INTEGER = 2**53
 BACKENDS = ("auto", "cpu", "amd")
 
 
@@ -77,11 +78,16 @@ def validate_request(body: Any) -> tuple[list[float], float, str]:
         raise ValueError("values_must_be_finite_numbers")
     if not _is_finite_number(factor):
         raise ValueError("factor_must_be_finite_number")
+    if any(isinstance(value, int) and abs(value) > MAX_EXACT_INTEGER for value in values) or (
+        isinstance(factor, int) and abs(factor) > MAX_EXACT_INTEGER
+    ):
+        raise ValueError("integer_outside_exact_float64_range")
 
     preferred_backend = body.get("preferred_backend", "auto")
     if preferred_backend not in BACKENDS:
         raise ValueError("unsupported_preferred_backend")
-    return values, factor, preferred_backend
+    # Both the CPU and PyTorch paths use the same IEEE-754 float64 operands.
+    return [float(value) for value in values], float(factor), preferred_backend
 
 
 def execute_compute(

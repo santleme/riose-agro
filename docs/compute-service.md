@@ -23,7 +23,7 @@ The service listens on `127.0.0.1:8766` by default. Set `COMPUTE_HOST` or `COMPU
 }
 ```
 
-`preferred_backend` is `auto`, `cpu`, or `amd`; it defaults to `auto`. The operation multiplies each finite number in `values` by the finite `factor`. The array must be non-empty and contain at most 100,000 values. Invalid JSON or contract/input fields return HTTP 400.
+`preferred_backend` is `auto`, `cpu`, or `amd`; it defaults to `auto`. The operation multiplies each finite number in `values` by the finite `factor`. The array must be non-empty and contain at most 100,000 values. CPU and PyTorch both use IEEE-754 `float64`; integer inputs outside ±2^53 are rejected because they cannot all be represented exactly. Invalid JSON or contract/input fields return HTTP 400.
 
 An example response is:
 
