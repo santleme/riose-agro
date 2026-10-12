@@ -6,7 +6,8 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const INPUT = resolve(ROOT, 'data/grastech-dairy-grazing-dmi/individual-dmi-observations.tsv');
@@ -112,7 +113,6 @@ const byHeldOutGroup = Object.fromEntries(groups.map(group => {
     constantTrainingMeanBaseline: summarize(rows, 'baselinePredictionKgDmPerDay'),
   }];
 }));
-const engineBytes = readFileSync(resolve(ROOT, 'engine.js'));
 const report = {
   classification: 'fixed_default_engine_dmi_component_diagnostic_out_of_approved_cper_domain_not_full_validation',
   source: {
@@ -133,7 +133,8 @@ const report = {
     exclusions: 'E1 supplement arms (4/8 kg DM/day) and all E2 arms (5 kg DM/day) are outside the engine configuration/input match and are not included in the score.',
   },
   model: {
-    engineSha256: digest(engineBytes),
+    engineSha256: engineSourceSha256(),
+    engineSourceFiles: ENGINE_SOURCE_FILES,
     seed: 20261012,
     configuration: {housing: 'pasture', diet: 'pasture', weather: 'normal', supplementKgDmPerCowDay: 0, simulatedHours: 24, animals: 1},
     inputs: ['observed morning body weight'],

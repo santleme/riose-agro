@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#1b332d">
+  <title>Riose · Scenario Composer</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./composer.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="/" aria-label="Voltar ao simulador">‹ <span>Simulador</span></a>
+    <div class="brand"><span class="brand-mark">R</span><div><strong>RIOSE</strong><small>SCENARIO COMPOSER</small></div></div>
+    <div class="top-actions">
+      <span id="save-state" class="save-state">Cena local</span>
+      <button id="open-scene" class="button subtle" type="button">Abrir JSON</button>
+      <button id="save-scene" class="button primary" type="button">Salvar cena ↓</button>
+      <input id="scene-file" type="file" accept="application/json,.json" hidden>
+    </div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">AUTORIA ESPACIAL · ISOMÉTRICO 2:1</p><h1>Componha a fazenda.</h1><p>Posicione ativos reais, encaixe módulos e ajuste a cena direto no mapa.</p></div>
+      <div class="scene-title"><span class="live-dot"></span><div><strong id="scene-name">Fazenda Leiteira Horizonte</strong><small id="scene-summary">Diorama compacto · seed 20261012</small><select id="scene-preset" aria-label="Selecionar cenário"><option value="dairy">Fazenda leiteira</option><option value="beef">Fazenda de corte</option><option value="custom">Cena importada</option></select></div><button id="fit-scene" class="icon-button" type="button" aria-label="Enquadrar mapa">⛶</button></div>
+    </section>
+
+    <section class="editor-shell" aria-label="Editor de cena">
+      <aside class="palette panel">
+        <div class="panel-heading"><div><span class="eyebrow">BIBLIOTECA</span><h2>Assets</h2></div><span id="asset-count" class="count-pill">—</span></div>
+        <label class="search"><span>⌕</span><input id="asset-search" type="search" placeholder="Buscar por nome ou tag" autocomplete="off"></label>
+        <div id="categories" class="categories" role="tablist" aria-label="Categorias de assets"></div>
+        <div class="palette-label"><span id="palette-title">Terreno</span><span>CLIQUE PARA USAR</span></div>
+        <div id="asset-list" class="asset-list"></div>
+        <div class="prefab-block"><div class="palette-label"><span>Módulos reutilizáveis</span><span id="prefab-count"></span></div><div id="prefab-list" class="prefab-list"></div></div>
+      </aside>
+
+      <section class="viewport panel">
+        <div class="viewport-toolbar">
+          <div class="tool-group" role="group" aria-label="Ferramentas de edição">
+            <button class="tool-button active" data-tool="select" type="button" title="Selecionar (V)">↖ <span>Selecionar</span></button>
+            <button class="tool-button" data-tool="place" type="button" title="Posicionar (P)">＋ <span>Posicionar</span></button>
+            <button class="tool-button" data-tool="paint" type="button" title="Pintar terreno (B)">▦ <span>Pintar</span></button>
+            <button class="tool-button" data-tool="erase" type="button" title="Apagar (E)">⌫ <span>Apagar</span></button>
+          </div>
+          <div class="view-actions"><span id="renderer-status" class="renderer-status"><i></i> Inicializando renderer</span><button id="zoom-out" class="icon-button" type="button" aria-label="Reduzir zoom">−</button><span id="zoom-label">100%</span><button id="zoom-in" class="icon-button" type="button" aria-label="Aumentar zoom">＋</button></div>
+        </div>
+        <div id="stage" class="stage" tabindex="0" aria-label="Mapa isométrico editável">
+          <div class="stage-background"></div>
+          <div id="pixi-stage" class="pixi-stage"></div>
+          <canvas id="fallback-stage" hidden></canvas>
+          <div id="zone-legend" class="zone-legend"></div>
+          <div class="stage-bottom"><span id="cursor-coordinates">c 0 · r 0</span><span id="selection-count">1.259 placements · snap ligado</span></div>
+          <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+        </div>
+        <div class="canvas-footer"><span>ARRASTE PARA MOVER · DELETE REMOVE · R GIRA · Z CRIA ZONA</span><div class="canvas-footer-actions"><button id="finish-zone" class="toggle-button" type="button">＋ Zona</button><button id="toggle-zones" class="toggle-button" type="button">Zonas visíveis <span>●</span></button></div></div>
+      </section>
+
+      <aside class="inspector panel">
+        <div class="panel-heading"><div><span class="eyebrow">CENA</span><h2>Propriedades</h2></div><button id="duplicate" class="icon-button" type="button" aria-label="Duplicar seleção" title="Duplicar (Ctrl+D)">⧉</button></div>
+        <section class="selection-card">
+          <div id="selected-thumb" class="selected-thumb">⌖</div>
+          <div><strong id="selected-name">Nenhum item</strong><small id="selected-type">Selecione um asset no mapa</small></div>
+        </section>
+        <div class="field-grid">
+          <label class="field"><span>Coluna</span><input id="position-col" type="number" step="0.25" disabled></label>
+          <label class="field"><span>Linha</span><input id="position-row" type="number" step="0.25" disabled></label>
+          <label class="field"><span>Rotação</span><select id="rotation" disabled><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
+          <label class="field"><span>Camada</span><select id="placement-layer" disabled></select></label>
+        </div>
+        <label class="field full"><span>Zona funcional</span><select id="zone-select" disabled><option value="">Sem zona</option></select></label>
+        <button id="delete-selection" class="delete-button" type="button" disabled>Remover seleção <span>⌫</span></button>
+        <div class="inspector-divider"></div>
+        <div class="panel-heading layers-heading"><div><span class="eyebrow">ORGANIZAÇÃO</span><h2>Camadas</h2></div><span class="count-pill">10</span></div>
+        <div id="layer-list" class="layer-list"></div>
+        <div class="scene-metrics"><div><span>ITEMS</span><strong id="metric-placements">—</strong></div><div><span>ZONAS</span><strong id="metric-zones">—</strong></div><div><span>ATLAS</span><strong id="metric-atlases">—</strong></div></div>
+        <button id="regenerate" class="regenerate-button" type="button">↻ Gerar composição com a seed</button>
+      </aside>
+    </section>
+
+    <section class="comparison panel">
+      <div class="comparison-head"><div><span class="eyebrow">REFERÊNCIA ARTÍSTICA</span><h2>Diorama Riose lado a lado</h2><p>Referência urbana Simile e fazenda em miniatura, compostas com sprites reais.</p></div><span class="comparison-tag">SCENE JSON <b>→</b> PIXIJS 8 · CANVAS 2D</span></div>
+      <div class="comparison-grid">
+        <figure class="compare-card legacy"><div class="compare-label"><span>REFERÊNCIA</span><strong>Simile · cidade isométrica</strong></div><img class="urban-reference" src="./reference/simile-urban-reference.png" alt="Referência urbana isométrica Simile" loading="lazy"></figure>
+        <figure class="compare-card current"><div class="compare-label"><span>RIOSE</span><strong id="comparison-scene-name">Fazenda leiteira em diorama</strong></div><div id="comparison-stage" class="comparison-stage"></div></figure>
+      </div>
+    </section>
+    <footer><span>RIOSE SCENE V1</span><span>O JSON é independente do renderer; PixiJS é o adaptador de visualização.</span><span>Seed <b id="footer-seed">—</b></span></footer>
+  </main>
+  <script type="module" src="./composer.js"></script>
+</body>
+</html>

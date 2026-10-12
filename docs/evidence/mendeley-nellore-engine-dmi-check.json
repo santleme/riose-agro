@@ -9,7 +9,13 @@
     "exactSameAnimalDateObservedDmiPairs": 219
   },
   "model": {
-    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "engineSha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
+    "engineSourceFiles": [
+      "engine.js",
+      "feeding-model.js",
+      "environment-model.js",
+      "metabolism-wasm.js"
+    ],
     "configuration": "One animal, observed same-date liveweight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
     "calibrationOrParameterFitting": false,
     "treatmentAndWeatherInputsRepresented": false

@@ -1,0 +1,26 @@
+# Module boundaries
+
+| Module | Owns | Must not own | Current implementation / boundary |
+| --- | --- | --- | --- |
+| Simulation Core | Time, deterministic execution, entity IDs, command/event ordering, snapshot lifecycle and metrics | UI, animal-specific equations, rendering, persistence backend | `src/client/engine.js` and `src/client/worker.js`; future Rust core starts with a pure batch kernel |
+| Livestock domain | Animal state and domain transitions | DOM, pixels, network/storage | Animal records currently live inside `FarmEngine`; behavior/feed rules remain JS in this prototype |
+| Scientific Models | Versioned equations and metadata for units, inputs, provenance, limitations and validation | Rendering and UI claims | Existing ADG/pasture case remains demonstrative and unvalidated |
+| World System | Paddocks, world coordinates, topology, obstacles and scenario generation | Weight/energy equations and UI layout | Four pasture stocks and movement coordinates currently share the engine state |
+| Visual Adapter / Renderer | Visual IDs, draw state, interpolation, viewport culling, camera and asset resolution | Scientific calculations and authoritative model state | `src/client/worker.js` transfers compact view buffers; `src/client/app.js` canvas resolves state to the preserved art and presentation |
+| Data Platform | Scenario inputs, reproducible results, imports/exports, provenance and retention | Animal model math | JSON, schemas, browser localStorage, local server; no database |
+| Asset System | Asset manifests, IDs, variants, atlas layout, licensing and pipeline | Simulation state | Baseline artwork plus uncommitted V7 asset work in the `d99d` worktree |
+| Hardware Adapters | Device-specific decode, clock sync, quality and observation ingestion | Direct mutation of model state without provenance | No runtime integration observed; design only when a device is selected |
+
+## Dependency direction
+
+Domain and scientific kernels depend on stable core value types, not the browser, PixiJS or storage. Adapters depend on those contracts. The app may depend on visual/data adapters; simulation core must not import app modules. Python tools exchange versioned files or batches and are not invoked per animal or per frame. No microservices are needed for these in-process modules.
+
+## First cut boundary
+
+The Rust crate provides clock, ID, seed, metrics, command/event and JSON snapshot primitives. These are reusable foundations, not a replacement for JS scenario orchestration or the existing farm snapshot schema.
+
+The metabolism batch receives a packed array of four `f64` values per animal—weight kg, energy score, energy intake kg DM/hour, and resting flag—and writes two values—updated weight kg and energy score. ABI v1 is checked at initialization and errors are explicit status codes. Behavior choice, forage allocation, pasture depletion, feed-cost accounting, movement and activity logs stay in the JS engine. This boundary is narrow enough to compare results and replace the implementation without changing scenario or visual contracts.
+
+Routine Worker ticks return compact, transferable view buffers; full, chronologically ordered snapshots are requested for save, compare, reset and load. The simulation processes the entire modeled herd, while the visual adapter owns camera-space interpolation, viewport visibility and asset selection. Camera, culling, frame rate and animation must not feed back into model rules or deterministic random streams. The interaction layer maps rendered hits to stable entity IDs and sends commands; the renderer does not write authoritative model state.
+
+The initial asset library has a ceiling of 80 semantic visual sets. Variants, animation frames and state overlays belong to a reusable set and do not consume separate IDs. See [visual-asset-budget.md](visual-asset-budget.md).

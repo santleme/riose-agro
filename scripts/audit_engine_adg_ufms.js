@@ -5,7 +5,8 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, renameSync, writeFileSync} from 'node:fs';
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const root = new URL('../', import.meta.url);
 const sourcePath = new URL('data/ufms-nelore-grazing/Complete_Dataset.csv', root);
@@ -110,7 +111,7 @@ const intervals = [...new Set(rows.map(row => row.startDate + '–' + row.finalD
 
 const report = {
   source: {doi: manifest.doi, articleDoi: manifest.article_doi, version: manifest.version, license: manifest.license, sha256: sourceHash},
-  engine: {file: 'engine.js', sha256: createHash('sha256').update(readFileSync(new URL('../engine.js', import.meta.url))).digest('hex'), fitted: false, seed: 20261012, configuration: {housing: 'pasture', diet: 'pasture', weather: 'normal', supplementKgPerAnimalDay: 0}},
+  engine: {file: 'engine.js', sourceFiles: ENGINE_SOURCE_FILES, sha256: engineSourceSha256(), fitted: false, seed: 20261012, configuration: {housing: 'pasture', diet: 'pasture', weather: 'normal', supplementKgPerAnimalDay: 0}},
   protocol: {
     target: '(FINAL_WEIGHT - START_WEIGHT) / AMOUNT_DAYS',
     prediction: 'Frozen default engine ADG from the same starting weight and interval; no parameter fitting or endpoint update.',

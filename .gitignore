@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
+.codex/
 node_modules/
+target/
 coverage/
 .codex/
 __pycache__/
@@ -8,3 +10,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.codex/
+__pycache__/
+*.py[cod]
+.test-results/scenarios/
+graphics-poc/dist/
+target/

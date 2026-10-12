@@ -5,9 +5,9 @@ import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createServer, validateSnapshotReviewRequest} from '../server.js';
-import {FarmEngine, createComparisonManifest} from '../engine.js';
-import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
+import {createServer, validateSnapshotReviewRequest} from '../src/server/server.js';
+import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
+import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 
 const snapshotExample = JSON.parse(readFileSync(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
 
@@ -93,7 +93,7 @@ test('snapshot review endpoint validates locally and review assets are served', 
   const page = await fetch(`${root}/`);
   assert.equal(page.status, 200);
   assert.match(await page.text(), /Revisar snapshot da fazenda/);
-  const reviewScript = await fetch(`${root}/snapshot-review.js`);
+  const reviewScript = await fetch(`${root}/src/client/snapshot-review.js`);
   assert.equal(reviewScript.status, 200);
   const schema = await fetch(`${root}/schemas/farm-snapshot.schema.json`);
   assert.equal(schema.status, 200);
@@ -133,14 +133,14 @@ test('outcome record page is served as a local-only flow from the map', async t 
   const map = await fetch(`${root}/`);
   assert.match(await map.text(), /Registrar resultado/);
 
-  const script = await fetch(`${root}/outcome-review.js`);
+  const script = await fetch(`${root}/src/client/outcome-review.js`);
   assert.equal(script.status, 200);
   const scriptText = await script.text();
   assert.doesNotMatch(scriptText, /\/api\//);
   assert.doesNotMatch(scriptText, /localStorage|sessionStorage/);
   assert.match(scriptText, /archive\.comparison\?\.validated !== false/);
-  assert.equal((await fetch(`${root}/outcome-review.css`)).status, 200);
-  assert.equal((await fetch(`${root}/snapshot-validator.js`)).status, 200);
+  assert.equal((await fetch(`${root}/src/client/outcome-review.css`)).status, 200);
+  assert.equal((await fetch(`${root}/src/client/snapshot-validator.js`)).status, 200);
   assert.equal((await fetch(`${root}/schemas/outcome-record.schema.json`)).status, 200);
 });
 

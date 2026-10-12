@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.local/schemas/scene-v1.schema.json",
+  "title": "Riose world scene",
+  "description": "Renderer-independent isometric scene document. Asset and prefab IDs resolve through the existing Riose manifests.",
+  "type": "object",
+  "required": ["schemaVersion", "metadata", "grid", "layers", "placements", "zones", "prefabInstances", "autoTile"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "metadata": {
+      "type": "object",
+      "required": ["id", "name", "description", "seed"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "seed": {"type": "integer", "minimum": 0},
+        "author": {"type": "string"},
+        "createdAt": {"type": "string", "format": "date"},
+        "animalCount": {"type": "integer", "minimum": 0},
+        "herdLabel": {"type": "string"},
+        "scenarioType": {"enum": ["beef", "dairy", "mixed"]},
+        "visualBudget": {"type": "integer", "minimum": 0},
+        "visibleAnimalCount": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "grid": {
+      "type": "object",
+      "required": ["width", "height", "tileWidth", "tileHeight", "projection", "origin"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1, "maximum": 256},
+        "height": {"type": "integer", "minimum": 1, "maximum": 256},
+        "tileWidth": {"type": "number", "exclusiveMinimum": 0},
+        "tileHeight": {"type": "number", "exclusiveMinimum": 0},
+        "projection": {"const": "isometric-2-to-1"},
+        "origin": {"$ref": "#/$defs/worldOrigin"}
+      },
+      "additionalProperties": false
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "visible", "locked"],
+        "properties": {
+          "id": {"$ref": "#/$defs/layerId"},
+          "order": {"type": "integer", "minimum": 0},
+          "visible": {"type": "boolean"},
+          "locked": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "placements": {"type": "array", "items": {"$ref": "#/$defs/placement"}},
+    "visualGroups": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/visualGroup"}
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "name", "polygon", "color"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"enum": ["pasture", "handling", "dairy", "service", "tech", "support"]},
+          "name": {"type": "string"},
+          "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}},
+          "color": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "prefabInstances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "prefabId", "col", "row"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "prefabId": {"type": "string", "minLength": 1},
+          "col": {"type": "number", "minimum": 0},
+          "row": {"type": "number", "minimum": 0},
+          "rotation": {"type": "integer", "enum": [0, 90, 180, 270]},
+          "zoneId": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "autoTile": {
+      "type": "object",
+      "required": ["enabled", "rules"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "rules": {"type": "array", "uniqueItems": true, "items": {"enum": ["pasture-neighbor-variation", "road-connectivity", "fence-connectivity", "soft-overlap-2px"]}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "layerId": {"enum": ["terrain", "roads", "pasture", "water", "fences", "buildings", "handling", "technology", "animals", "overlays"]},
+    "point": {
+      "type": "object",
+      "required": ["col", "row"],
+      "properties": {"col": {"type": "number"}, "row": {"type": "number"}},
+      "additionalProperties": false
+    },
+    "worldOrigin": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {"x": {"type": "number"}, "y": {"type": "number"}},
+      "additionalProperties": false
+    },
+    "placement": {
+      "type": "object",
+      "required": ["id", "assetId", "layer", "position"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "assetId": {"type": "string", "minLength": 1},
+        "layer": {"$ref": "#/$defs/layerId"},
+        "position": {"$ref": "#/$defs/point"},
+        "rotation": {"type": "number", "multipleOf": 90},
+        "zoneId": {"type": "string"},
+        "anchor": {"$ref": "#/$defs/anchor"},
+        "footprint": {"$ref": "#/$defs/size"},
+        "properties": {"type": "object", "additionalProperties": true}
+      },
+      "additionalProperties": false
+    },
+    "visualGroup": {
+      "type": "object",
+      "required": ["id", "population", "zoneId", "operationalState", "maxSprites", "mode", "seed", "visualIds"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "population": {"type": "integer", "minimum": 0},
+        "zoneId": {"type": "string", "minLength": 1},
+        "operationalState": {"type": "string", "minLength": 1},
+        "maxSprites": {"type": "integer", "minimum": 0},
+        "mode": {"enum": ["sampled-miniature", "grouped", "highlighted", "operational"]},
+        "seed": {"type": "integer", "minimum": 0},
+        "visualIds": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "anchor": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}},
+      "additionalProperties": false
+    },
+    "size": {"type": "array", "prefixItems": [{"type": "number", "exclusiveMinimum": 0}, {"type": "number", "exclusiveMinimum": 0}], "minItems": 2, "maxItems": 2}
+  },
+  "additionalProperties": false
+}

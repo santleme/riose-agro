@@ -1,6 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
+import {createHash} from 'node:crypto';
+import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
+
+test('fixed-seed feeding cases preserve pre-extraction engine outputs', () => {
+  const cases = [
+    {name: 'pasture-normal', seed: 417, count: 4, config: {}, hours: 48, hash: '31fcf1cc89eb8ae3f24d74f349fcc7cb6219e8682b06d3b4135b5405ae041ffe'},
+    {name: 'balanced-pasture-rain', seed: 12, count: 5, config: {housing: 'pasture', diet: 'balanced', supplement: 1.5, weather: 'rain'}, hours: 72, hash: '217f33889555ecfe090d001249c60dafbfcd0021d5700abdd597af9e52c795ad'},
+    {name: 'concentrate-barn-hot-boundary-supplement', seed: 81, count: 3, config: {housing: 'barn', diet: 'concentrate', supplement: 4, weather: 'hot'}, hours: 72, hash: '49ea107eaa6a03e58a59aaf8a8edf35b3b03c5c9eeb0115ae4b23a344f040a2f'},
+    {name: 'zero-pasture-stock', seed: 93, count: 4, config: {diet: 'balanced', supplement: 0}, hours: 24, emptyPasture: true, hash: '4e0bc549741d2bffd9601aa1cc4f8e0f3613317a0aef918ef9a0902c7e193ccc'}
+  ];
+
+  for (const scenario of cases) {
+    const engine = new FarmEngine(scenario.seed, scenario.count);
+    engine.configure(scenario.config);
+    if (scenario.emptyPasture) engine.state.pastures = [0, 0, 0, 0];
+    engine.tick(scenario.hours);
+    const hash = createHash('sha256').update(JSON.stringify(engine.snapshot())).digest('hex');
+
+    assert.equal(hash, scenario.hash, scenario.name);
+  }
+
+  const comparison = compare(new FarmEngine(445, 4).snapshot(), 3);
+  const comparisonHash = createHash('sha256').update(JSON.stringify(comparison)).digest('hex');
+  assert.equal(comparisonHash, 'faa05c79be6db45a9b835a309558845c7c207c332e74eb8fa296183384135888');
+});
 
 test('same seed and actions reproduce the same farm state', () => {
   const first = new FarmEngine(417, 8);
@@ -10,6 +34,15 @@ test('same seed and actions reproduce the same farm state', () => {
   second.tick(72);
 
   assert.deepEqual(first.snapshot(), second.snapshot());
+});
+
+test('tick can skip its deep snapshot copy when the caller only needs current state', () => {
+  const direct = new FarmEngine(81, 20);
+  const noSnapshot = new FarmEngine(81, 20);
+  const returnedSnapshot = direct.tick(24);
+
+  assert.equal(noSnapshot.tick(24, undefined, false), undefined);
+  assert.deepEqual(noSnapshot.snapshot(), returnedSnapshot);
 });
 
 test('housing changes consume locomotion randomness without advancing the model seed', () => {
@@ -59,6 +92,116 @@ test('comparison keeps the initial snapshot and changes housing only', () => {
   assert.equal(result.rows[0].baselineWeight, result.rows[0].scenarioWeight);
   assert.deepEqual(result.initialConfig, start.config);
   assert.equal(result.herdSize, start.animals.length);
+});
+
+test('frozen 30-day housing comparison preserves the main scenario outputs', () => {
+  // Baseline captured from main@764ead1f4cdc8c011adcc22d16b92f4681c15c92.
+  const engine = new FarmEngine(2026, 12);
+  engine.configure({diet: 'balanced', supplement: 1.5, weather: 'rain'});
+  engine.tick(24);
+  const start = engine.snapshot();
+  const result = compare(start, 30);
+
+  assert.deepEqual({
+    hour: start.hour,
+    seed: start.initialSeed,
+    snapshotSeed: start.seed,
+    herdSize: start.animals.length,
+    config: start.config,
+    days: result.days,
+    comparisonFactor: result.comparisonFactor,
+    baselineConfig: result.baselineConfig,
+    scenarioConfig: result.scenarioConfig,
+    startWeight: result.startWeight,
+    day0: {
+      baselineWeight: result.rows[0].baselineWeight,
+      scenarioWeight: result.rows[0].scenarioWeight,
+      baselinePastureByPaddock: result.rows[0].baselinePastureByPaddock,
+    },
+    day30: {
+      baselineWeight: result.rows[30].baselineWeight,
+      scenarioWeight: result.rows[30].scenarioWeight,
+      baselineCost: result.rows[30].baselineCost,
+      scenarioCost: result.rows[30].scenarioCost,
+      baselineConsumptionKgDM: result.rows[30].baselineConsumptionKgDM,
+      scenarioConsumptionKgDM: result.rows[30].scenarioConsumptionKgDM,
+      baselineIntakeBySourceKgDM: result.rows[30].baselineIntakeBySourceKgDM,
+      scenarioIntakeBySourceKgDM: result.rows[30].scenarioIntakeBySourceKgDM,
+      baselinePastureByPaddock: result.rows[30].baselinePastureByPaddock,
+      scenarioPastureByPaddock: result.rows[30].scenarioPastureByPaddock,
+    },
+  }, {
+    hour: 30,
+    seed: 2026,
+    snapshotSeed: 717351974,
+    herdSize: 12,
+    config: {diet: 'balanced', housing: 'pasture', weather: 'rain', supplement: 1.5},
+    days: 30,
+    comparisonFactor: 'housing',
+    baselineConfig: {diet: 'balanced', housing: 'pasture', weather: 'rain', supplement: 1.5},
+    scenarioConfig: {diet: 'balanced', housing: 'barn', weather: 'rain', supplement: 1.5},
+    startWeight: 358.56183703193625,
+    day0: {
+      baselineWeight: 358.56183703193625,
+      scenarioWeight: 358.56183703193625,
+      baselinePastureByPaddock: [1822.1597835193509, 1821.1163296029742, 1822.3504389228774, 1820.9682525876965],
+    },
+    day30: {
+      baselineWeight: 405.3761344270324,
+      scenarioWeight: 405.3761344270324,
+      baselineCost: 2008.80000000025,
+      scenarioCost: 3993.8655849398147,
+      baselineConsumptionKgDM: 4241.947053752924,
+      scenarioConsumptionKgDM: 4241.9470537529305,
+      baselineIntakeBySourceKgDM: {
+        pastureKgDM: 3053.947053752883,
+        barnBaseKgDM: 0,
+        supplementKgDM: 540,
+        dietExtraKgDM: 648.0000000000409,
+        totalKgDM: 4241.947053752924,
+      },
+      scenarioIntakeBySourceKgDM: {
+        pastureKgDM: 0,
+        barnBaseKgDM: 3053.9470537528896,
+        supplementKgDM: 540,
+        dietExtraKgDM: 648.0000000000409,
+        totalKgDM: 4241.9470537529305,
+      },
+      baselinePastureByPaddock: [2398.896533680655, 2398.850814106909, 2398.904887364172, 2398.844326021605],
+      scenarioPastureByPaddock: [2400, 2400, 2400, 2400],
+    },
+  });
+
+  const assertFinite = (value, path = 'result') => {
+    if (typeof value === 'number') {
+      assert.ok(Number.isFinite(value), `${path} must be finite; got ${value}`);
+    } else if (Array.isArray(value)) {
+      value.forEach((item, index) => assertFinite(item, `${path}[${index}]`));
+    } else if (value && typeof value === 'object') {
+      for (const [key, item] of Object.entries(value)) assertFinite(item, `${path}.${key}`);
+    }
+  };
+  assert.ok(Array.isArray(result.rows), 'comparison rows must be an array');
+  assert.equal(result.rows.length, 31, '30-day comparison includes day 0 and day 30');
+  assertFinite(result);
+
+  const assertLedger = (ledger, day, label) => {
+    const sources = ledger.pastureKgDM + ledger.barnBaseKgDM + ledger.supplementKgDM + ledger.dietExtraKgDM;
+    assert.ok(Math.abs(sources - ledger.totalKgDM) < 1e-8, `day ${day} ${label} intake ledger must balance`);
+  };
+  for (const [index, row] of result.rows.entries()) {
+    assert.equal(row.day, index, `comparison row ${index} must identify its day`);
+    assert.equal(row.baselinePastureByPaddock.length, 4, `day ${row.day} baseline must have four paddocks`);
+    assert.equal(row.scenarioPastureByPaddock.length, 4, `day ${row.day} scenario must have four paddocks`);
+    assert.ok(row.baselineWeight >= 200, `day ${row.day} baseline weight must respect the engine floor`);
+    assert.ok(row.scenarioWeight >= 200, `day ${row.day} scenario weight must respect the engine floor`);
+    for (const stock of [...row.baselinePastureByPaddock, ...row.scenarioPastureByPaddock]) {
+      assert.ok(stock >= 0 && stock <= 2400, `day ${row.day} paddock stock must remain within 0–2400 kg DM`);
+    }
+    assertLedger(row.baselineIntakeBySourceKgDM, row.day, 'baseline');
+    assertLedger(row.scenarioIntakeBySourceKgDM, row.day, 'scenario');
+  }
+  assert.deepEqual(engine.snapshot(), start, 'comparison must not mutate its frozen starting input');
 });
 
 test('scenario comparison repeats with the same input and period', () => {
@@ -144,6 +287,23 @@ test('activity histories replay deterministically with the same seed', () => {
     engine.tick(30);
   }
   assert.deepEqual(first.snapshot().animals.map(animal => animal.history), second.snapshot().animals.map(animal => animal.history));
+});
+
+test('activity history ring retains the latest 40 entries in snapshot order',()=>{
+  const engine=new FarmEngine(45,1),animal=engine.state.animals[0],expected=engine.snapshot().animals[0].history;
+  const actions=['grazing','feeding','drinking','resting'];
+  for(let hour=1;hour<=100;hour++){
+    engine.state.hour=hour;animal.action=actions[hour%actions.length];
+    const reason='history_test_'+hour,observedThirst=hour%101;
+    expected.push({hour,action:animal.action,reason,observed:{hour:hour%24,thirst:observedThirst,housing:engine.state.config.housing}});
+    if(expected.length>40)expected.shift();
+    engine.recordActivity(animal,reason,observedThirst,false);
+  }
+  const snapshot=engine.snapshot();
+  assert.deepEqual(snapshot.animals[0].history,expected);
+  assert.equal(Object.hasOwn(snapshot.animals[0],'historyNext'),false);
+  assert.deepEqual(engine.historyFor(animal),expected);
+  assert.deepEqual(FarmEngine.from(snapshot).snapshot(),snapshot);
 });
 
 test('comparison reports simulated intake and pasture stock by paddock', () => {

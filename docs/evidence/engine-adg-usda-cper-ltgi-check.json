@@ -5,11 +5,17 @@
     "sourceUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Data_from_USDA_ARS_Central_Plains_Experimental_Range_CPER_near_Nunn_CO_Cattle_weight_gains_managed_with_light_moderate_and_heavy_grazing_intensities/25217282",
     "license": "U.S. Public Domain",
     "sourceSha256": "533929668b59bc9b6f67bf202c87a746634871419972db126e6c94b2f83eac14",
-    "auditSha256": "deb961d5ed03acbd2046e38db8d105a5f34a8a6f3ae9178a6f562ab7e074e074",
+    "auditSha256": "0a72abb6e2f696f6df491cbef924f1f2600388e026d705f485b2804c3e6cd389",
     "sourceRows": 1283
   },
   "engine": {
-    "sha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "sha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
+    "sourceFiles": [
+      "engine.js",
+      "feeding-model.js",
+      "environment-model.js",
+      "metabolism-wasm.js"
+    ],
     "seed": 20261011,
     "inputConfiguration": {
       "housing": "pasture",

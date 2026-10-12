@@ -4,30 +4,37 @@ import {readFileSync} from 'node:fs';
 import {mkdtempSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {FarmEngine, createComparisonManifest} from '../engine.js';
-import {createComparisonArchive, sha256Bytes} from '../comparison-archive.js';
-import {validateOutcomeRecord} from '../outcome-record.js';
-import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
+import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
+import {createScenarioContract} from '../src/client/scenario-contract.js';
+import {createComparisonArchive, sha256Bytes} from '../src/client/comparison-archive.js';
+import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
+import {validateOutcomeRecord} from '../src/client/outcome-record.js';
+import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 
 const schema = JSON.parse(readFileSync(new URL('../schemas/outcome-record.schema.json', import.meta.url), 'utf8'));
 const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
 addFormats(ajv);
 const validateSchema = ajv.compile(schema);
 
-function fixture() {
+function fixture(manifestVersion = 1) {
   const sourceSnapshot = JSON.parse(readFileSync(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
   sourceSnapshot.snapshotKind = 'demonstrative';
   sourceSnapshot.caseDefinition.reviewStatus = 'approved';
   sourceSnapshot.caseDefinition.requiredFields = ['population.species'];
   sourceSnapshot.simulationEligibility = {status: 'ready', missingRequiredFields: []};
   delete sourceSnapshot.simulationEligibility.reason;
-  const manifestBytes = Buffer.from(JSON.stringify(createComparisonManifest(new FarmEngine(81, 1).snapshot(), 3)));
+  const engineSnapshot = new FarmEngine(81, 1).snapshot();
+  const manifest = manifestVersion === 2
+    ? createScenarioContract(engineSnapshot, 3)
+    : createComparisonManifest(engineSnapshot, 3);
+  const manifestBytes = Buffer.from(JSON.stringify(manifest));
   const farmSnapshot = linkFarmSnapshotToManifest(sourceSnapshot, manifestBytes);
   const snapshotBytes = Buffer.from(`${JSON.stringify(farmSnapshot, null, 2)}\n`);
-  const engineBytes = readFileSync(new URL('../engine.js', import.meta.url));
+  const engineBytes = readEngineSourceBundle();
   const archive = createComparisonArchive(manifestBytes, engineBytes, '2026-10-11T12:00:00.000Z');
   const archiveBytes = Buffer.from(`${JSON.stringify(archive, null, 2)}\n`);
   const projected = archive.comparison.scenario.weight;
@@ -52,16 +59,45 @@ function fixture() {
   return {manifestBytes, engineBytes, farmSnapshot, snapshotBytes, archive, archiveBytes, record};
 }
 
+test('v2 manifests pass the existing archive and outcome validation path', () => {
+  const {manifestBytes, engineBytes, snapshotBytes, record} = fixture(2);
+  const archive = createComparisonArchive(manifestBytes, engineBytes, '2026-10-11T12:00:00.000Z');
+  const archiveBytes = Buffer.from(`${JSON.stringify(archive, null, 2)}\n`);
+
+  assert.equal(archive.manifestReference.version, 2);
+  assert.equal(archive.comparison.days, 3);
+  const v2Record = structuredClone(record);
+  v2Record.projection.archiveSha256 = sha256Bytes(archiveBytes);
+  const report = validateOutcomeRecord(v2Record, archiveBytes, manifestBytes, snapshotBytes);
+  assert.equal(report.valid, true, report.errors.join('\n'));
+  assert.equal(report.comparisons[0].status, 'comparable-descriptive');
+});
+
 test('outcome record links exact manifest and archived projection, then reports descriptive difference after review', () => {
   const {manifestBytes, snapshotBytes, archiveBytes, record, archive} = fixture();
   assert.equal(validateSchema(record), true, JSON.stringify(validateSchema.errors));
   const report = validateOutcomeRecord(record, archiveBytes, manifestBytes, snapshotBytes);
   assert.equal(report.valid, true, report.errors.join('\n'));
   assert.equal(report.engineSourceSha256, archive.engineSourceSha256);
+  assert.deepEqual(archive.engineSourceFiles, ['engine.js', 'feeding-model.js', 'environment-model.js', 'metabolism-wasm.js']);
   assert.deepEqual(report.coverage, {totalObservations: 1, observedValues: 1, comparableValues: 1, unavailableOrBlocked: 0, comparableFractionOfAll: 1});
   assert.equal(report.comparisons[0].status, 'comparable-descriptive');
   assert.equal(report.comparisons[0].difference, 2);
   assert.match(report.comparisons[0].disclaimer, /não estima efeito causal/);
+});
+
+test('legacy comparison archives without the source-file list remain valid', () => {
+  const {manifestBytes, snapshotBytes, record, archive} = fixture();
+  const legacyArchive = structuredClone(archive);
+  delete legacyArchive.engineSourceFiles;
+  const legacyArchiveBytes = Buffer.from(`${JSON.stringify(legacyArchive, null, 2)}\n`);
+  const legacyRecord = structuredClone(record);
+  legacyRecord.projection.archiveSha256 = sha256Bytes(legacyArchiveBytes);
+
+  const report = validateOutcomeRecord(legacyRecord, legacyArchiveBytes, manifestBytes, snapshotBytes);
+
+  assert.equal(report.valid, true, report.errors.join('\n'));
+  assert.equal(report.engineSourceSha256, archive.engineSourceSha256);
 });
 
 test('tampered archived result is blocked when the stored sidecar hash no longer matches', () => {
@@ -204,14 +240,14 @@ test('CLI archives a reproducible comparison without overwriting an existing art
     const outcomePath = join(directory, 'outcome.json');
     writeFileSync(manifestPath, manifestBytes);
     writeFileSync(snapshotPath, snapshotBytes);
-    const archiveCommand = spawnSync(process.execPath, [new URL('../scripts/archive-comparison.js', import.meta.url).pathname, manifestPath, outputPath], {encoding: 'utf8'});
+    const archiveCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
     assert.equal(archiveCommand.status, 0, archiveCommand.stderr);
-    const noOverwrite = spawnSync(process.execPath, [new URL('../scripts/archive-comparison.js', import.meta.url).pathname, manifestPath, outputPath], {encoding: 'utf8'});
+    const noOverwrite = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
     assert.equal(noOverwrite.status, 1);
     assert.match(noOverwrite.stderr, /EEXIST/);
     writeFileSync(outputPath, archiveBytes);
     writeFileSync(outcomePath, JSON.stringify(record));
-    const validationCommand = spawnSync(process.execPath, [new URL('../scripts/validate-outcome-record.js', import.meta.url).pathname, outcomePath, '--archive', outputPath, '--manifest', manifestPath, '--snapshot', snapshotPath], {encoding: 'utf8'});
+    const validationCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/validate-outcome-record.js', import.meta.url)), outcomePath, '--archive', outputPath, '--manifest', manifestPath, '--snapshot', snapshotPath], {encoding: 'utf8'});
     assert.equal(validationCommand.status, 0, validationCommand.stderr);
     assert.equal(JSON.parse(validationCommand.stdout).schemaValid, true);
     assert.equal(JSON.parse(validationCommand.stdout).snapshotSchemaValid, true);

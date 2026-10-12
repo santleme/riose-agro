@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateOutcomeRecord} from '../outcome-record.js';
+import {validateOutcomeRecord} from '../src/client/outcome-record.js';
 
 const args = process.argv.slice(2);
 const archiveIndex = args.indexOf('--archive');

@@ -1,26 +1,35 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
-import {createServer} from '../server.js';
+import {FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
+import {SCENARIO_PRESETS,getScenarioPreset} from '../src/client/scenario-presets.js';
+import {createServer} from '../src/server/server.js';
+import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
+import {environmentDiffRows,initialEnvironmentState} from '../src/client/environment-inputs.js';
+import {bundleEngineSources,ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
+import {engineSourceSha256} from '../scripts/engine-source-hash.js';
 
-const source=await readFile(new URL('../app.js',import.meta.url),'utf8');
+const source=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
 function presentation(snapshot=new FarmEngine(42,2).snapshot()){
   const elements=new Map();
   const element=id=>{
-    if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',attributes:{},setAttribute(key,value){this.attributes[key]=value;},showModal(){this.open=true;}});
+    if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',attributes:{},setAttribute(key,value){this.attributes[key]=value;},replaceChildren(...children){this.children=children;},showModal(){this.open=true;}});
     return elements.get(id);
   };
   const context=vm.createContext({
-    $:element,comparisonSnapshot:snapshot,comparisonManifest:undefined,comparison:undefined,requestCompare:false,loadingScenario:false,pendingComparison:undefined,
-    state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,
+    $:element,comparisonSnapshot:snapshot,comparisonManifest:undefined,comparison:undefined,comparisonLotContext:null,comparisonEnvironmentState:initialEnvironmentState(null),environmentState:initialEnvironmentState(null),requestCompare:false,loadingScenario:false,pendingComparison:undefined,
+    state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,SCENARIO_PRESETS,getScenarioPreset,document:{createElement(){return {value:'',textContent:''};}},
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
-    compareBusy(){},setRunning(){},notify(){},worker:{postMessage(message){context.lastMessage=message;}}
+    scenarioNames:{pasture:'Pasto',barn:'Confinamento',normal:'Ameno',hot:'Calor',rain:'Chuvoso'},calculateThi,THI_SOURCE,environmentDiffRows,
+    escapeHtml:value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])),
+    compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}}
   });
   // Execute the existing presentation and import handlers without booting the canvas/worker UI.
   vm.runInContext(source.slice(source.indexOf('const currency='),source.indexOf('const actionNames=')),context);
+  vm.runInContext(source.slice(source.indexOf('function renderScenarioVariables()'),source.indexOf('function comparisonNumber(')),context);
   vm.runInContext(source.slice(source.indexOf('function comparisonNumber('),source.indexOf('let noticeTimer')),context);
   vm.runInContext(source.slice(source.indexOf("$('manifest-file').onchange="),source.indexOf('function downloadFile(')),context);
   return {context,element,markup:()=>[...elements.values()].map(item=>item.innerHTML+' '+item.textContent).join('\n')};
@@ -33,7 +42,7 @@ test('comparison renders derived metadata, periods, units, assumptions and real-
   assert.equal((ui.element('results').innerHTML.match(/Derivado · demonstrativo · não validado/g)??[]).length,4);
   for(const id of ['results','intake-summary','pasture-summary','chart-note']){
     assert.match(ui.element(id).innerHTML,/Período:/);
-    assert.match(ui.element(id).innerHTML,/href="\/engine.js"/);
+    assert.match(ui.element(id).innerHTML,/href="\/src\/client\/engine\.js"/);
     assert.match(ui.element(id).innerHTML,/Regra:/);
   }
   assert.match(ui.element('results').innerHTML,/kg\/animal|kg MS\/lote|R\$\/lote/);
@@ -137,19 +146,35 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
     '/docs/evidence/engine-adg-usda-cgrec-transport-check.json',
     '/docs/evidence/engine-adg-usda-cper-ltgi-check.json',
     '/docs/evidence/engine-adg-zenodo-cows-check.json',
-    '/engine.js','/worker.js',
+    '/src/client/engine.js','/src/client/worker.js','https://doi.org/10.2527/2006.843712x',
   ]);
   const server=createServer({env:{}});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   for(const link of links){
+    if(link.startsWith('https://'))continue;
     const response=await fetch('http://127.0.0.1:'+server.address().port+link);
     assert.equal(response.status,200);
     const body=await response.text();
-    if(link==='/engine.js')assert.match(body,/ASSUMPTIONS|function compare/);
-    else if(link==='/worker.js')assert.match(body,/replayComparison/);
+    if(link==='/src/client/engine.js')assert.match(body,/ASSUMPTIONS|function compare/);
+    else if(link==='/src/client/worker.js')assert.match(body,/replayComparison/);
     else assert.doesNotThrow(()=>JSON.parse(body));
   }
+  const environmentResponse=await fetch('http://127.0.0.1:'+server.address().port+'/environment-model.js');
+  assert.equal(environmentResponse.status,200);
+  assert.match(await environmentResponse.text(),/getWeatherRules/);
+  const feedingResponse=await fetch('http://127.0.0.1:'+server.address().port+'/feeding-model.js');
+  assert.equal(feedingResponse.status,200);
+  assert.match(await feedingResponse.text(),/calculateFeeding/);
+  const provenanceResponse=await fetch('http://127.0.0.1:'+server.address().port+'/engine-provenance.js');
+  assert.equal(provenanceResponse.status,200);
+  assert.match(await provenanceResponse.text(),/bundleEngineSources/);
+  const sourceEntries=await Promise.all(ENGINE_SOURCE_FILES.map(async filename=>{
+    const response=await fetch('http://127.0.0.1:'+server.address().port+'/'+filename);
+    assert.equal(response.status,200);
+    return [filename,new Uint8Array(await response.arrayBuffer())];
+  }));
+  assert.equal(createHash('sha256').update(bundleEngineSources(new Map(sourceEntries))).digest('hex'),engineSourceSha256());
 });
 
 test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{

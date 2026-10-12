@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {createServer} from '../server.js';
+import {createServer} from '../src/server/server.js';
 
 test('Perea public mature-cow behavior explorer preserves source rows and reports repeated timestamps', async t => {
   execFileSync('python3', ['scripts/audit_perea_rangeland_behavior.py'], {encoding: 'utf8'});
@@ -11,7 +11,7 @@ test('Perea public mature-cow behavior explorer preserves source rows and report
   const adultPage = readFileSync(new URL('../adult-data.html', import.meta.url), 'utf8');
   const reviewBrief = readFileSync(new URL('../docs/revisao-independente-caso.md', import.meta.url), 'utf8');
   const uncertaintyPolicy = readFileSync(new URL('../docs/politica-incerteza.md', import.meta.url), 'utf8');
-  const script = readFileSync(new URL('../rangeland-behavior.js', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../src/client/rangeland-behavior.js', import.meta.url), 'utf8');
   const csv = readFileSync(new URL('../data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv', import.meta.url), 'utf8').trim().split(/\r?\n/);
 
   assert.equal(report.source.doi, '10.6084/m9.figshare.28801181.v2');

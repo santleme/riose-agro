@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import {execFileSync} from 'node:child_process';
-import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {predictDefaultBarnDmiKgPerDay} from './audit_engine_dmi_usda_ars.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const DATA = resolve(ROOT, 'data/dryad-finishing-steers/Database_09-11-2025.csv');
@@ -71,7 +71,8 @@ export function auditDryadFinishingDmi() {
       dmiUnit: 'kg/head/day',
     },
     model: {
-      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'engine.js'))).digest('hex'),
+      engineSha256: engineSourceSha256(),
+      engineSourceFiles: ENGINE_SOURCE_FILES,
       configuration: 'One animal, observed shrunk mid-body weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       dietCompositionUsed: false,

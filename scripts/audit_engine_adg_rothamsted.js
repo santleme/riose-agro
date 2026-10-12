@@ -5,7 +5,8 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const root = new URL('../', import.meta.url);
 const dataPath = new URL('data/rothamsted/Cattle_LWt_collated_2018-2025.csv', root);
@@ -21,7 +22,6 @@ const manifest = JSON.parse(manifestBytes);
 const dataBytes = bytes(dataPath);
 const auditBytes = bytes(auditPath);
 const audit = JSON.parse(auditBytes);
-const engineBytes = bytes(new URL('../engine.js', import.meta.url));
 const expectedFile = manifest.files.find(file => file.path === 'Cattle_LWt_collated_2018-2025.csv');
 if (!expectedFile || digest(dataBytes) !== expectedFile.sha256) throw new Error('Rothamsted CSV SHA-256 does not match manifest');
 if (audit.source?.doi !== manifest.source?.doi || audit.integrity?.dlwgReconcilesWithWeightEndpointsAndDays !== true) {
@@ -163,7 +163,8 @@ const report = {
   },
   population: audit.population,
   engine: {
-    sha256: digest(engineBytes),
+    sha256: engineSourceSha256(),
+    sourceFiles: ENGINE_SOURCE_FILES,
     seed: 20261012,
     fittedParameters: false,
     simulatedOneAnimalAtATime: true,
