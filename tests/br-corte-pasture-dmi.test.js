@@ -76,10 +76,26 @@ test('reference vector pins each transcribed BR-CORTE term and its rounded table
   assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
 });
 
+test('Table 2.14 coefficient guard rows detect changes across BW, ADG, and supplement inputs', () => {
+  for (const row of table214.coefficientGuardRows) {
+    const result = predictPastureDmi(row.inputs);
+    assert.ok(
+      Math.abs(result.totalDmiKgDMPerDay - row.publishedRoundedTotalDmiKgDMPerDay) < table214.coefficientGuardToleranceKgDMPerDay,
+      `Table 2.14 inputs ${JSON.stringify(row.inputs)} should reproduce its rounded Eq. 2.6 value`
+    );
+  }
+});
+
 test('invalid mathematical inputs and nonpositive BW are rejected', () => {
   assert.throws(() => predictPastureDmi({bodyWeightKg: 0, adgKgPerDay: 0.5, supplementKgDMPerDay: 1}), /greater than zero/);
   assert.throws(() => predictPastureDmi({bodyWeightKg: 300, adgKgPerDay: NaN, supplementKgDMPerDay: 1}), /finite number/);
   assert.throws(() => predictPastureDmi({bodyWeightKg: 300, adgKgPerDay: 0.5, supplementKgDMPerDay: -1}), /cannot be negative/);
+});
+
+test('BR-CORTE independent-validation range endpoints remain in-domain', () => {
+  const {bodyWeightKg: [minimumBw, maximumBw], adgKgPerDay: [minimumAdg, maximumAdg], supplementKgDMPerDay: [minimumSupplement, maximumSupplement]} = table214.domainAssumptions;
+  assert.equal(predictPastureDmi({bodyWeightKg: minimumBw, adgKgPerDay: minimumAdg, supplementKgDMPerDay: minimumSupplement}).inValidatedDomain, true);
+  assert.equal(predictPastureDmi({bodyWeightKg: maximumBw, adgKgPerDay: maximumAdg, supplementKgDMPerDay: maximumSupplement}).inValidatedDomain, true);
 });
 
 test('100-animal simulation has deterministic identified animals and supports 30, 60, and 90 days', () => {

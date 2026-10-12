@@ -45,6 +45,16 @@
         "publishedPrecisionToleranceKgDMPerDay": 0.005,
         "unit": "kg DM/day"
       },
+      "coefficientGuardRows": [
+        {"inputs": {"bodyWeightKg": 200, "adgKgPerDay": 0.5, "supplementKgDMPerDay": 0}, "publishedRoundedTotalDmiKgDMPerDay": 3.65},
+        {"inputs": {"bodyWeightKg": 300, "adgKgPerDay": 0.5, "supplementKgDMPerDay": 0}, "publishedRoundedTotalDmiKgDMPerDay": 5.05},
+        {"inputs": {"bodyWeightKg": 500, "adgKgPerDay": 0.5, "supplementKgDMPerDay": 0}, "publishedRoundedTotalDmiKgDMPerDay": 7.55},
+        {"inputs": {"bodyWeightKg": 400, "adgKgPerDay": 0, "supplementKgDMPerDay": 0}, "publishedRoundedTotalDmiKgDMPerDay": 6.17},
+        {"inputs": {"bodyWeightKg": 400, "adgKgPerDay": 1, "supplementKgDMPerDay": 0}, "publishedRoundedTotalDmiKgDMPerDay": 6.06},
+        {"inputs": {"bodyWeightKg": 400, "adgKgPerDay": 0.5, "supplementKgDMPerDay": 3.2}, "publishedRoundedTotalDmiKgDMPerDay": 8.81}
+      ],
+      "coefficientGuardRowsLocator": "BR-CORTE 2023 chapter 2, printed page 37 / PDF page 22, Table 2.14, Eq. 2.6 column. Values are independent transcriptions of published rounded predictions, not observations.",
+      "coefficientGuardToleranceKgDMPerDay": 0.005,
       "limitations": [
         "The table reports rounded model estimates, not raw observations.",
         "ADG is an input to this conditional DMI equation and is not predicted by it.",
@@ -57,10 +67,10 @@
       "locator": {
         "formulaSource": "https://doi.org/10.2527/2006.843712x",
         "formulaSourceDetails": "Journal of Animal Science 84(3), pages 712–719; page 715, Table 3 footnote defines THI as 0.8 × ambient temperature + [(relative humidity ÷ 100) × (ambient temperature − 14.4)] + 46.4.",
-        "numericExampleSource": "https://ve.scielo.org/scielo.php?pid=S0798-22592007000500007&script=sci_arttext",
-        "numericExampleLocator": "Table I, Trial 1, December row; input conditions and THI reported for calves"
+        "inputConditionsSource": "https://ve.scielo.org/scielo.php?pid=S0798-22592007000500007&script=sci_arttext",
+        "inputConditionsLocator": "Table I, Trial 1, December row; temperature and humidity for calves. Its reported THI uses the West (1994)/Hammond et al. (1998) expression in the table footnote, not Mader."
       },
-      "population": "The numeric cross-check is reported for crossbred calves by Quintero-Moreno et al.; it is not a Mader feedlot observation. Mader et al. studied cattle in three summer feedlot studies and evaluated adjustments in four additional cattle studies.",
+      "population": "The selected temperature/humidity inputs are reported for crossbred calves by Quintero-Moreno et al.; they are not a Mader feedlot observation. Mader et al. studied cattle in three summer feedlot studies and evaluated adjustments in four additional cattle studies.",
       "formula": "THI = 0.8*T + (RH/100)*(T - 14.4) + 46.4",
       "domainAssumptions": {
         "temperatureC": [-40, 60],
@@ -80,16 +90,23 @@
       },
       "expected": {
         "calculatedThi": 74.97,
-        "publishedRoundedThi": 75.0,
-        "publishedPrecisionTolerance": 0.05,
+        "calculationTolerance": 1e-12,
         "unit": "THI",
         "physicalDimension": "dimensionless index"
+      },
+      "relatedSourceReportedThi": {
+        "value": 75.0,
+        "source": "https://ve.scielo.org/scielo.php?pid=S0798-22592007000500007&script=sci_arttext",
+        "locator": "Table I footnote",
+        "formulaAttribution": "West (1994); Hammond et al. (1998), not Mader (2006)",
+        "use": "Context only; not an expected output for the Mader formula test."
       },
       "limitations": [
         "The numeric inputs/output are a cited example from a separate crossbred-calf study; they are not evidence that this population matches Riose animals.",
         "THI is a descriptive environmental index, not an individual physiological response or a production prediction.",
         "This formula omits wind speed, solar radiation, shade, coat, genotype, acclimation, and exposure duration; the original Mader study reports wind and radiation adjustments separately.",
-        "Matching a rounded example verifies formula arithmetic only and does not establish a universal stress threshold."
+        "The Mader calculation applies its formula to temperature/humidity values reported by a separate calf study; it does not reproduce that study's reported THI because that study cites a different formula.",
+        "This calculated reference is an arithmetic check, not an independently observed Mader output, and does not establish a universal stress threshold."
       ]
     }
   }

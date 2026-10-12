@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {FarmEngine} from '../src/client/engine.js';
 import {BR_CORTE_PASTURE_DMI_MODEL} from '../scientific/br_corte_dmi_adapter.js';
 import {defineScientificModel, runScientificModel, SCIENTIFIC_MODEL_INTERFACE_VERSION} from '../scientific/model-contract.js';
+
+const numericReferences = JSON.parse(readFileSync(new URL('./fixtures/scientific-numeric-reference-v1.json', import.meta.url), 'utf8'));
+const table214 = numericReferences.fixtures.brCorte2023Eq26Table214;
 
 test('scientific adapter satisfies the common contract and exposes its version and evidence', () => {
   assert.equal(BR_CORTE_PASTURE_DMI_MODEL.interfaceVersion, SCIENTIFIC_MODEL_INTERFACE_VERSION);
@@ -24,6 +28,19 @@ test('scientific model accepts valid inputs and returns contract-shaped outputs'
   assert.equal(typeof result.outputs.totalDmiKgDMPerDay, 'number');
   assert.equal(typeof result.outputs.inValidatedDomain, 'boolean');
   assert.equal(result.evidence.evidenceType, 'published-equation-with-independent-validation-ranges');
+});
+
+test('BR-CORTE scientific adapter preserves reference units and the published reference result', () => {
+  assert.equal(BR_CORTE_PASTURE_DMI_MODEL.units.bodyWeightKg, table214.inputs.bodyWeightKg.unit);
+  assert.equal(BR_CORTE_PASTURE_DMI_MODEL.units.adgKgPerDay, table214.inputs.adgKgPerDay.unit);
+  assert.equal(BR_CORTE_PASTURE_DMI_MODEL.units.supplementKgDMPerDay, table214.inputs.supplementKgDMPerDay.unit);
+  const result = runScientificModel(BR_CORTE_PASTURE_DMI_MODEL, {
+    bodyWeightKg: table214.inputs.bodyWeightKg.value,
+    adgKgPerDay: table214.inputs.adgKgPerDay.value,
+    supplementKgDMPerDay: table214.inputs.supplementKgDMPerDay.value
+  });
+  assert.ok(Math.abs(result.outputs.totalDmiKgDMPerDay - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
+  assert.equal(result.outputs.inValidatedDomain, true);
 });
 
 test('nested evidence metadata cannot mutate model configuration between runs', () => {
