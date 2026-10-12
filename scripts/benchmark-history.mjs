@@ -1,4 +1,5 @@
 import {FarmEngine} from '../engine.js';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 class ShiftHistoryEngine extends FarmEngine{
   recordActivity(animal,reason,observedThirst=animal.thirst,announce=true){
@@ -23,5 +24,16 @@ for(const count of [1000,10000]){
   }
   const shifted=results.get(ShiftHistoryEngine),ringed=results.get(FarmEngine),shiftedState=finalStates.get(ShiftHistoryEngine),ringedState=finalStates.get(FarmEngine);
   const historyEntries=ringedState.animals.reduce((sum,animal)=>sum+animal.history.length,0);
-  console.log(JSON.stringify({animals:count,hours,repetitions,historyEntries,shift:{tickMedianMs:median(shifted.tick),snapshotMedianMs:median(shifted.snapshot)},ring:{tickMedianMs:median(ringed.tick),snapshotMedianMs:median(ringed.snapshot)},snapshotsIdentical:JSON.stringify(shiftedState)===JSON.stringify(ringedState)}));
+  const results={animals:count,hours,repetitions,historyEntries,shift:{tickMedianMs:median(shifted.tick),snapshotMedianMs:median(shifted.snapshot)},ring:{tickMedianMs:median(ringed.tick),snapshotMedianMs:median(ringed.snapshot)},snapshotsIdentical:JSON.stringify(shiftedState)===JSON.stringify(ringedState)};
+  const phases={
+    engine:{status:'measured',measurements:[
+      measurement('engine','tick720h','ms',summarizeSamples(shifted.tick),{population:count,implementation:'shift-history'}),
+      measurement('engine','tick720h','ms',summarizeSamples(ringed.tick),{population:count,implementation:'ring-history'}),
+    ]},
+    snapshot:{status:'measured',measurements:[
+      measurement('snapshot','final-state','ms',summarizeSamples(shifted.snapshot),{population:count,implementation:'shift-history'}),
+      measurement('snapshot','final-state','ms',summarizeSamples(ringed.snapshot),{population:count,implementation:'ring-history'}),
+    ]},
+  };
+  console.log(JSON.stringify(benchmarkReport({name:'history-ring-comparison',workload:{seed:20261012,populations:[{animals:count,scope:'FarmEngine',limit:'FarmEngine maximum 10000'}],hours},configuration:{warmupRuns:1,repetitions},phases,results})));
 }

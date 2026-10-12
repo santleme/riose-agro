@@ -36,6 +36,14 @@ export function predictPastureDmi({bodyWeightKg, adgKgPerDay, supplementKgDMPerD
   };
 }
 
+// Source bundle for the registered equation: include its closed-over domain
+// constants and helper so provenance changes when any calculation dependency changes.
+export const BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE = [
+  `const BR_CORTE_PASTURE_DMI = ${JSON.stringify(BR_CORTE_PASTURE_DMI)};`,
+  `const finite = ${finite.toString()};`,
+  `export ${predictPastureDmi.toString()}`,
+].join('\n');
+
 export function analyzePastureDmiSensitivity({bodyWeightKg, adgKgPerDay, supplementKgDMPerDay}) {
   const baseline = predictPastureDmi({bodyWeightKg, adgKgPerDay, supplementKgDMPerDay});
   const {bodyWeightKg: bwRange, adgKgPerDay: adgRange, supplementKgDMPerDay: supplementRange} = BR_CORTE_PASTURE_DMI.validatedDomain;

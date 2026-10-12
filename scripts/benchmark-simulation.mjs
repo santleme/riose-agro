@@ -3,6 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {FarmEngine} from '../engine.js';
 import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
+import {benchmarkReport,measurement} from './benchmark-report.mjs';
 
 const repetitions=25;
 const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';
@@ -14,7 +15,8 @@ const wasmKernel=await loadWasmMetabolism(new URL('http://benchmark.local/riose_
 
 function percentiles(values){
   const sorted=[...values].sort((a,b)=>a-b);
-  return {medianMs:sorted[Math.floor(sorted.length/2)],p95Ms:sorted[Math.ceil(sorted.length*.95)-1]};
+  const median=sorted.length%2?sorted[(sorted.length-1)/2]:(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2;
+  return {sampleCount:sorted.length,medianMs:median,p95Ms:sorted[Math.ceil(sorted.length*.95)-1],spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]}};
 }
 
 function timeSimulation(count,kernel,Engine=FarmEngine){
@@ -74,12 +76,28 @@ for(const count of [100,1_000,10_000,100_000]){
 }
 const stateTransfer=[100,1_000,10_000].map(timeSnapshotTransfer);
 
-console.log(JSON.stringify({
+const results={
   environment:{node:process.version,platform:process.platform,arch:process.arch,wasmBytes:wasmBytes.length},
   baselineCommit,repetitions,warmupRuns:{simulation:10,kernel:50,stateTransfer:10},seed:20261012,tickHours:24,
   notes:['Simulation timings include the JS engine tick and final snapshot clone, but exclude construction and rendering.','State-transfer rows separately time engine snapshot cloning, structuredClone as a Worker-transfer proxy, and JSON.stringify.','Kernel timings include JS/WASM bridge copies and result-buffer handling.','100000 animals is a numeric-kernel-only case because FarmEngine currently caps herds at 10000.','Memory allocation counts are not exposed by this harness.'],
   simulation,kernel,stateTransfer,
   wasmLinearMemoryBytes:wasmKernel.memoryBytes(),
   processMemoryAfterBytes:process.memoryUsage(),
-},null,2));
+};
+const engineMeasurements=simulation.flatMap(row=>['baselineJavaScript','javascript','wasm'].map(implementation=>measurement('engine','tick24h','ms',row[implementation],{population:row.animals,scope:'FarmEngine',implementation})));
+const kernelMeasurements=kernel.flatMap(row=>['javascript','wasm'].map(implementation=>measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals>10_000?'numeric-kernel-only':null})));
+const snapshotMeasurements=stateTransfer.flatMap(row=>['engineSnapshotClone','structuredCloneProxy','jsonStringify'].map(operation=>measurement(operation==='jsonStringify'?'serialization':'snapshot',operation,'ms',row[operation],{population:row.animals,bytes:row[operation].bytes??null})));
+console.log(JSON.stringify(benchmarkReport({
+  name:'simulation-engine',
+  runtime:{rust:process.env.RUSTC_VERSION??null},
+  workload:{seed:20261012,populations:[...simulation.map(row=>({animals:row.animals,scope:'FarmEngine',limit:'FarmEngine maximum 10000'})),...kernel.filter(row=>row.animals===100_000).map(row=>({animals:row.animals,scope:'numeric-kernel-only',limit:'isolated numeric kernel; not FarmEngine or renderer'}))]},
+  configuration:{warmupRuns:{simulation:10,kernel:50,stateTransfer:10},repetitions},
+  phases:{
+    engine:{status:'measured',measurements:[...engineMeasurements,...kernelMeasurements]},
+    snapshot:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='snapshot')},
+    serialization:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='serialization')},
+  },
+  results,
+  limitations:results.notes,
+}),null,2));
 wasmKernel.dispose();

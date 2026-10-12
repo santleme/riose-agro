@@ -176,6 +176,20 @@ def _project_commit() -> str | None:
     return completed.stdout.strip() or None
 
 
+def _project_dirty() -> bool:
+    try:
+        completed = subprocess.run(
+            ["git", "-c", "safe.directory=*", "status", "--porcelain"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return bool(completed.stdout.strip())
+
+
 def _amd_reason_message(reason: str | None) -> str:
     return {
         "pytorch_unavailable": "PyTorch is not installed or could not be imported.",
@@ -332,7 +346,7 @@ def run_benchmark(
 
     now = timestamp_utc or datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     cpu_name = platform.processor() or None
-    return {
+    legacy_report = {
         "schema_version": 1,
         "timestamp_utc": now,
         "project_commit": project_commit if project_commit is not None else _project_commit(),
@@ -371,6 +385,78 @@ def run_benchmark(
             "The compute service does not expose an AMD device model, so device_name is null when unavailable from its contract.",
             "Benchmark de software/hardware não implica validação científica do modelo.",
         ],
+    }
+    def phase_statistics(statistics: dict[str, Any] | None) -> dict[str, Any]:
+        if statistics is None:
+            return {"sampleCount": 0, "median": None, "spread": None}
+        minimum, maximum = statistics["min_ms"], statistics["max_ms"]
+        return {
+            "sampleCount": statistics["runs"],
+            "median": statistics["median_ms"],
+            "spread": {"min": minimum, "max": maximum, "range": maximum - minimum},
+        }
+
+    compute_measurements = [{
+        "phase": "engine",
+        "metric": "scale_vector",
+        "unit": "ms",
+        "statistics": phase_statistics(cpu_statistics),
+        "scope": "numeric-vector-elements",
+        "elements": len(values),
+        "backend": "cpu",
+        "memory": None,
+    }]
+    if amd_statistics is not None:
+        compute_measurements.append({
+            "phase": "engine",
+            "metric": "scale_vector",
+            "unit": "ms",
+            "statistics": phase_statistics(amd_statistics),
+            "scope": "numeric-vector-elements",
+            "elements": len(values),
+            "backend": "amd_rocm",
+            "memory": None,
+        })
+    not_measured = {"status": "not-measured", "measurements": []}
+    cpu_name = platform.processor() or None
+    return {
+        "schemaVersion": 1,
+        "benchmark": {
+            "name": "compute-service-scale-vector",
+            "source": {"revision": legacy_report["project_commit"], "dirty": _project_dirty()},
+        },
+        "runtime": {"platform": sys.platform, "python": platform.python_version()},
+        "hardware": {
+            "os": platform.system(),
+            "architecture": platform.machine(),
+            "cpu": cpu_name,
+            "gpuMemoryBytes": None,
+        },
+        "workload": {
+            "seed": None,
+            "populations": [],
+            "numericWorkload": {"elements": len(values), "operation": "scale_vector"},
+        },
+        "configuration": {"warmupRuns": warmup_runs, "repetitions": repetitions},
+        "limits": {
+            "farmEngineMaxAnimals": None,
+            "rendererMaxAnimals": None,
+            "numericKernelMaxAnimalsMeasured": None,
+        },
+        "phases": {
+            "engine": {"status": "measured", "measurements": compute_measurements},
+            "snapshot": not_measured,
+            "serialization": not_measured,
+            "worker": not_measured,
+            "ui": not_measured,
+            "layout": not_measured,
+            "render": not_measured,
+            "startup": not_measured,
+        },
+        "results": legacy_report,
+        "limitations": legacy_report["limitations"],
+        # Keep the original v1 fields at the top level for existing report consumers.
+        **legacy_report,
     }
 
 

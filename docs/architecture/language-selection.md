@@ -12,3 +12,5 @@
 | Operational/analytical data | JSON/CSV now; SQLite then PostgreSQL; Arrow/Parquet for large analytics | Start local and portable. Upgrade only when concurrency, retention, query or dataset volume needs it. |
 
 Evaluate performance, memory, safety, library maturity, parallelism, portability, integration, maintenance and development cost together. A language change is a measured implementation choice, not a platform objective by itself.
+
+The conditional gates for predictive models, accelerators, C++, and full-core browser WASM are in [intelligence research gates](intelligence-research-gates.md).

@@ -8,6 +8,7 @@ const count = Number(countText), hours = Number(hoursText), repetitions = Number
 const collect = () => global.gc?.();
 const sampleMemory = () => { const memory = process.memoryUsage(); return {heapUsedBytes: memory.heapUsed, arrayBuffersBytes: memory.arrayBuffers, rssBytes: memory.rss}; };
 const median = values => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
+const summarizeSamples = values => { const sorted = [...values].sort((a, b) => a - b); return {sampleCount: sorted.length, median: median(sorted), spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]}}; };
 
 {
   const warmup = new Engine(20261012, count);
@@ -29,7 +30,9 @@ function oneRun() {
 const rows = Array.from({length: repetitions}, oneRun);
 const summarize = field => ({
   tickMedianMs: median(rows.map(row => row.tickMs)),
+  tickStatistics: summarizeSamples(rows.map(row => row.tickMs)),
   snapshotMedianMs: median(rows.map(row => row.snapshotMs)),
+  snapshotStatistics: summarizeSamples(rows.map(row => row.snapshotMs)),
   baselineRssBytesMedian: median(rows.map(row => row.baselineRssBytes)),
   retainedHeapDeltaBytesMedian: median(rows.map(row => row.retained.heapUsedBytes)),
   retainedArrayBuffersDeltaBytesMedian: median(rows.map(row => row.retained.arrayBuffersBytes)),

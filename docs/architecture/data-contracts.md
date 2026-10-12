@@ -4,6 +4,21 @@
 
 Existing `agroville-comparison` manifest v1, farm snapshot schema and outcome-record schema remain unchanged in this prototype. New fields are additive only where existing consumers ignore them; breaking changes require a new schema/manifest version and an explicit migration. A saved comparison must keep its original implementation/model provenance when replayed. The internal `riose-core-snapshot` v1 is a separate checkpoint contract; it does not replace or reinterpret those existing schemas.
 
+### Reader/writer compatibility matrix
+
+The version below belongs to the serialized artifact, not to the biological model. Readers dispatch on both `type` and `version` where those fields exist. A missing or unknown version is rejected; readers must not infer a producer version from the current engine.
+
+| Artifact | Supported persisted version(s) | Reader behavior | Writer behavior | Unsupported or malformed input |
+| --- | --- | --- | --- | --- |
+| Farm snapshot (`schemas/farm-snapshot.schema.json`) | `schemaVersion: "0.1.0"` | Validate the declared snapshot schema and semantic invariants. `manifestReference` may point to comparison v1 or v2. | Write the current schema version; do not change existing saved bytes in place. | Reject unknown/missing `schemaVersion`, malformed entities, and unsupported manifest references. |
+| Comparison manifest (`agroville-comparison`) | v1 and v2 | Dispatch by `type` and `version`. Validate v1 with its original shape; validate v2 with the scenario contract validator. | New scenarios write v2. Existing v1 files remain v1. | Reject unknown type/version and malformed fields; do not guess an engine version. |
+| Adapted v1 scenario contract | v2 in memory, sourced from v1 | `upgradeComparisonManifestToScenarioContract` validates v1 before adapting it. Missing producer identity is recorded as `engine_version: "legacy-unspecified"`. | Do not persist this adaptation over the original v1 file automatically. | `legacy-unspecified` is accepted only for an adapted v1 contract; other unsupported engine identifiers fail closed. |
+| Comparison result archive (`agroville-comparison-result`) | v1 | Validate its own type/version and its manifest reference; verify the exact manifest digest before comparing. | Archive creation writes v1 and records the referenced manifest version/hash. | Reject unknown archive type/version or mismatched reference; do not replay as a different manifest. |
+| Outcome record (`agroville-outcome-record`) | v1 | Validate the schema version, archive/manifest/snapshot hashes and projection link. | Write v1 sidecars; observations do not modify the archived projection. | Reject unknown type/version and any hash or link mismatch. |
+| Rust checkpoint (`riose-core-snapshot`) | v1 | Decode only the internal checkpoint contract version. It is not an app farm snapshot. | Core runtime writes v1 checkpoints. | Reject unknown type/version; never reinterpret it as an app snapshot. |
+
+This matrix describes the current persisted readers and writers. Any new version needs a valid fixture and an unsupported/malformed fixture at its reader boundary before it is advertised. There is no automatic migration of stored browser data or contract bytes.
+
 ## Message categories
 
 | Contract | Initial encoding | Version / validation |

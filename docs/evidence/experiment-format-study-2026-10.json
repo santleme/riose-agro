@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "riose.experiment-format-study/v1",
+  "generatedAt": "2026-10-12T20:25:54.411Z",
+  "decision": {
+    "default": "JSON/JSONL",
+    "parquet": "no-go for adoption in this study: neither pyarrow nor fastparquet is installed in the existing Python toolchain; no dependency was added.",
+    "threshold": "Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable."
+  },
+  "workload": {
+    "runner": "scripts/run-scenarios.js executeScenario",
+    "fixture": "tests/scenarios/baseline-pasture.json",
+    "records": 25,
+    "animalsPerRecord": 100,
+    "hoursPerRun": 24,
+    "seedRange": [
+      417,
+      441
+    ],
+    "exactNormalizedRoundTrip": true,
+    "sha256": "acfe77be653e7404d494cb2f26fca19e84c1c665f36cba43cf416680aa1a4d39"
+  },
+  "toolchain": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "python": "3.12.3",
+    "pyarrowAvailable": false,
+    "fastparquetAvailable": false,
+    "parquetBinaryFootprintBytes": null,
+    "note": "Parquet was not installed or measured; its dependency and portability costs are therefore unquantified."
+  },
+  "storage": {
+    "jsonBytes": 2264732,
+    "jsonlBytes": 2264730,
+    "jsonGzipLevel6Bytes": 254263,
+    "jsonlGzipLevel6Bytes": 254390
+  },
+  "measurements": {
+    "json": {
+      "bytes": 2264732,
+      "gzipLevel6Bytes": 254263,
+      "write": {
+        "medianMs": 5.192244999999957,
+        "minMs": 4.596755999999971,
+        "maxMs": 10.334474,
+        "durationsMs": [
+          5.192244999999957,
+          5.562449000000015,
+          6.012657000000047,
+          4.6830830000000105,
+          4.960472000000038,
+          4.596755999999971,
+          10.334474,
+          5.9853689999999915,
+          4.90319199999999
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14175944,
+            "rssProcessBytes": 90136576,
+            "externalBytes": 4299462,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 14217152,
+            "rssProcessBytes": 90136576,
+            "externalBytes": 4299462,
+            "arrayBuffersBytes": 2282551
+          },
+          "retainedHeapDeltaBytes": 41208
+        }
+      },
+      "fullRead": {
+        "medianMs": 20.23319299999997,
+        "minMs": 18.045317000000068,
+        "maxMs": 28.204320999999993,
+        "durationsMs": [
+          28.204320999999993,
+          20.449415000000045,
+          19.400956000000008,
+          22.871031000000016,
+          24.489832999999976,
+          20.23319299999997,
+          18.79516799999999,
+          18.045317000000068,
+          18.405891999999994
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14196288,
+            "rssProcessBytes": 96907264,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 26475336,
+            "rssProcessBytes": 96899072,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 542314
+          },
+          "retainedHeapDeltaBytes": 12279048
+        }
+      },
+      "selectiveMetricRead": {
+        "medianMs": 11.084789,
+        "minMs": 10.78157699999997,
+        "maxMs": 12.208947999999964,
+        "durationsMs": [
+          11.202210000000036,
+          10.958589000000075,
+          11.084789,
+          10.78157699999997,
+          10.902305999999953,
+          11.538757000000032,
+          11.025094999999965,
+          12.208947999999964,
+          11.288270000000011
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14205856,
+            "rssProcessBytes": 94732288,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 21592960,
+            "rssProcessBytes": 94765056,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 542314
+          },
+          "retainedHeapDeltaBytes": 7387104
+        },
+        "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
+      }
+    },
+    "jsonl": {
+      "bytes": 2264730,
+      "gzipLevel6Bytes": 254390,
+      "write": {
+        "medianMs": 3.802832999999964,
+        "minMs": 3.4177550000000565,
+        "maxMs": 4.20506899999998,
+        "durationsMs": [
+          4.143520999999964,
+          3.8396659999999656,
+          3.802832999999964,
+          3.4177550000000565,
+          3.5696060000000216,
+          4.20506899999998,
+          3.5335430000000088,
+          3.6794269999999187,
+          3.9340960000000678
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14208760,
+            "rssProcessBytes": 90238976,
+            "externalBytes": 4299460,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 14230744,
+            "rssProcessBytes": 90238976,
+            "externalBytes": 4299460,
+            "arrayBuffersBytes": 2282549
+          },
+          "retainedHeapDeltaBytes": 21984
+        }
+      },
+      "fullRead": {
+        "medianMs": 19.090787999999975,
+        "minMs": 18.326963999999975,
+        "maxMs": 19.88638400000002,
+        "durationsMs": [
+          18.434847999999988,
+          19.090787999999975,
+          19.515566000000035,
+          19.88638400000002,
+          18.326963999999975,
+          19.466129000000024,
+          18.58508500000005,
+          19.047378999999978,
+          19.273247000000083
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14209760,
+            "rssProcessBytes": 96993280,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 26490672,
+            "rssProcessBytes": 96985088,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 542314
+          },
+          "retainedHeapDeltaBytes": 12280912
+        }
+      },
+      "selectiveMetricRead": {
+        "medianMs": 10.985101999999983,
+        "minMs": 10.694762000000082,
+        "maxMs": 14.061494999999923,
+        "durationsMs": [
+          14.061494999999923,
+          11.19172500000002,
+          10.985101999999983,
+          11.471566999999936,
+          10.843116000000009,
+          10.859951000000024,
+          10.694762000000082,
+          10.854370999999901,
+          12.638279000000011
+        ],
+        "processMemoryLastSample": {
+          "before": {
+            "heapUsedBytes": 14219872,
+            "rssProcessBytes": 94715904,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 16619
+          },
+          "after": {
+            "heapUsedBytes": 21609872,
+            "rssProcessBytes": 94617600,
+            "externalBytes": 2559225,
+            "arrayBuffersBytes": 542314
+          },
+          "retainedHeapDeltaBytes": 7390000
+        },
+        "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
+      }
+    }
+  },
+  "memoryMethod": "process.memoryUsage heapUsed/RSS/external/ArrayBuffers sampled before and after each operation; RSS is process-level. Output includes last sample and is not a peak-memory claim.",
+  "selectiveReadMethod": "Both formats read the file and parse every whole record before selecting scenarioId and total intake. JSONL does not provide column projection; Parquet was unavailable.",
+  "limitations": [
+    "One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.",
+    "JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.",
+    "No Parquet results are reported because no Arrow/Parquet library is present in the current toolchain; no network install or new dependency was introduced.",
+    "Timing is specific to this host and includes local file IO; medians/spread are not cross-host product thresholds."
+  ]
+}

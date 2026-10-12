@@ -1,6 +1,7 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
 import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
+import {assertSceneCommandAllowed, sceneExecutionAvailability, unavailableExecutionState} from './execution-eligibility.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -61,6 +62,7 @@ function makeView(snapshot) {
 }
 
 function askWorker(message) {
+  assertSceneCommandAllowed(state.scene, message.type);
   return new Promise((resolve, reject) => { state.pending.push({resolve, reject, messageType: message.type, started: performance.now()}); state.worker.postMessage(message); });
 }
 
@@ -547,13 +549,14 @@ function rotateSelection() {
 
 function updateHud() {
   if (!state.scene) return;
+  const execution = sceneExecutionAvailability(state.scene);
   updateSelectionActions();
   state.lastHud = performance.now();
   $('scene-name').textContent = state.scene.name;
   $('seed-label').textContent = `${state.scene.simulation.seed} · ${state.scene.simulation.scenarioId}`;
   $('prefab-count').textContent = String(state.scene.prefabs.length + state.scene.entities.length);
-  $('sim-count').textContent = state.selectedDomain === 'dairy' ? 'suspensa · módulo em progresso' : state.view ? state.view.animalActions.length.toLocaleString('pt-BR') : '—';
-  $('run-simulation').disabled = state.selectedDomain === 'dairy'; $('reset-simulation').disabled = state.selectedDomain === 'dairy'; $('herd-size').disabled = state.selectedDomain === 'dairy'; $('run-benchmark').disabled = state.selectedDomain === 'dairy';
+  $('sim-count').textContent = execution.available ? state.view ? state.view.animalActions.length.toLocaleString('pt-BR') : '—' : 'indisponível · módulo em progresso';
+  $('run-simulation').disabled = !execution.available; $('reset-simulation').disabled = !execution.available; $('herd-size').disabled = !execution.available; $('run-benchmark').disabled = !execution.available;
   $('visible-count').textContent = state.selectedDomain === 'dairy'
     ? `${state.visibleAnimalCount.toLocaleString('pt-BR')} animais no layout · sem simulação`
     : `${state.visibleAnimalCount.toLocaleString('pt-BR')} / ${state.view?.animalActions.length?.toLocaleString('pt-BR') ?? '0'} bovinos · ${state.animalRenderUnits.toLocaleString('pt-BR')} visuais`;
@@ -561,7 +564,7 @@ function updateHud() {
   $('fps-label').textContent = framesMs.length ? `${fps.toFixed(1)} / ${quantile(framesMs, .95).toFixed(1)} ms` : 'a medir';
   $('cost-label').textContent = `${state.updateMs.toFixed(2)} / ${state.paintMs.toFixed(2)} ms`;
   $('load-label').textContent = `${state.imageLoadMs?.toFixed(0) ?? '—'} ms assets · ${state.pixiLoadMs?.toFixed(0) ?? '—'} ms Pixi`;
-  $('engine-badge').textContent = state.selectedDomain === 'dairy' ? 'livestock-dairy · in-progress' : (state.view?.engineImplementation ?? 'Simulation Worker');
+  $('engine-badge').textContent = execution.available ? (state.view?.engineImplementation ?? execution.status) : `${execution.moduleId ?? 'modelo'} · ${execution.moduleStatus}`;
 }
 
 function persistScene() { try { normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest); localStorage.setItem(`riose-graphics-scene-v1:${state.scene.sceneId}`, JSON.stringify(state.scene)); } catch (error) { $('scene-status').textContent = `Não foi possível salvar as referências da cena: ${error.message}`; } }
@@ -585,7 +588,8 @@ async function selectScene(domain) {
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
     $('scene-status').textContent = 'Fazenda de corte · motor demonstrativo no Worker · cena editável.';
   } else {
-    $('scene-status').textContent = 'Fazenda leiteira · layout visual editável · assets candidatos em revisão · sem resultados de simulação leiteira.';
+    const unavailable = unavailableExecutionState(state.scene);
+    $('scene-status').textContent = `Cena visual carregada · execução numérica indisponível: ${unavailable.reason}`;
     refreshScene(); updateHud();
   }
   refreshScene(); updateHud();
@@ -711,7 +715,7 @@ async function initialize() {
   state.canvasSizing = {width: $('stage').clientWidth, height: $('stage').clientHeight, ratio: Math.min(devicePixelRatio || 1, 1.5)};
   syncCanvasSize(); state.camera.zoom = fitSceneZoom(); refreshScene(); requestAnimationFrame(drawCanvas); updateHud();
   $('scene-status').textContent = state.selectedDomain === 'dairy'
-    ? 'Fazenda leiteira · layout visual editável · assets candidatos em revisão · sem resultados de simulação leiteira.'
+    ? `Cena visual carregada · execução numérica indisponível: ${unavailableExecutionState(state.scene).reason}`
     : `Cena v${state.scene.schemaVersion} · seed fixo · ${state.view.animalActions.length} animais no Worker.`;
   $('renderer').addEventListener('change', event => switchRenderer(event.target.value));
   $('herd-size').addEventListener('change', event => resetSimulation(Number(event.target.value)));

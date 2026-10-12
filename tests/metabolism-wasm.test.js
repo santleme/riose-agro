@@ -23,6 +23,119 @@ test('WASM metabolism batch matches the legacy JavaScript formula across clamps 
   wasmKernel.dispose();
 });
 
+function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocateFailureAt=Infinity,missingExport}={}){
+  const memory=new WebAssembly.Memory({initial:1,maximum:32});
+  const allocations=[],releases=[];
+  let nextPointer=8,allocationCount=0;
+  const allocate=length=>{
+    allocationCount++;
+    if(allocationCount===allocateFailureAt)return 0;
+    const pointer=nextPointer;
+    nextPointer+=length*Float64Array.BYTES_PER_ELEMENT+8;
+    const required=nextPointer;
+    if(required>memory.buffer.byteLength)memory.grow(Math.ceil((required-memory.buffer.byteLength)/65536));
+    allocations.push({pointer,length});
+    return pointer;
+  };
+  const release=(pointer,length)=>releases.push({pointer,length});
+  const update=(count,inputPointer,outputPointer)=>{
+    if(status!==0)return status;
+    const input=new Float64Array(memory.buffer,inputPointer,count*4);
+    const output=new Float64Array(memory.buffer,outputPointer,count*2);
+    for(let index=0;index<count;index++){
+      output[index*2]=input[index*4]+1;
+      output[index*2+1]=input[index*4+1]+2;
+    }
+    if(growDuringUpdate)memory.grow(1);
+    return 0;
+  };
+  const exports={memory,riose_abi_version:()=>abiVersion,riose_alloc_f64:allocate,riose_free_f64:release,riose_update_metabolism_batch:update};
+  if(missingExport)delete exports[missingExport];
+  return {memory,allocations,releases,exports,instance:{exports}};
+}
+
+async function withInstantiatedFixture(fixture,callback){
+  const original=WebAssembly.instantiateStreaming;
+  WebAssembly.instantiateStreaming=async()=>({instance:fixture.instance});
+  try{return await callback();}
+  finally{WebAssembly.instantiateStreaming=original;}
+}
+
+test('WASM validates counts and output capacity before calling the ABI or changing output',async()=>{
+  const fixture=createWasmFixture();
+  await withInstantiatedFixture(fixture,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const output=new Float64Array([71,72,73]);
+    assert.throws(()=>kernel(new Float64Array(4),-1,output),/invalid metabolism animal count/);
+    assert.throws(()=>kernel(new Float64Array(4),1.5,output),/invalid metabolism animal count/);
+    assert.throws(()=>kernel(new Float64Array(4),100_001,output),/invalid metabolism animal count/);
+    assert.throws(()=>kernel(new Float64Array(3),1,output),/input buffer is too small/);
+    assert.throws(()=>kernel(new Float64Array(4),1,new Float64Array(1)),/output buffer is too small/);
+    assert.deepEqual(Array.from(output),[71,72,73]);
+    assert.equal(fixture.allocations.length,0);
+    kernel.dispose();
+  });
+});
+
+test('WASM capacity grows geometrically, reuses buffers, and recovers after dispose',async()=>{
+  const fixture=createWasmFixture();
+  await withInstantiatedFixture(fixture,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const input=count=>Float64Array.from({length:count*4},(_,index)=>index);
+    assert.deepEqual(Array.from(kernel(input(2))).slice(0,2),[1,3]);
+    assert.equal(fixture.allocations.length,2);
+    kernel(input(1));
+    assert.equal(fixture.allocations.length,2,'capacity is reused while the batch fits');
+    kernel(input(3));
+    assert.equal(fixture.allocations.length,4,'capacity grows only when required');
+    assert.equal(fixture.releases.length,2,'old buffers are released after successful growth');
+    kernel.dispose();
+    assert.equal(fixture.releases.length,4);
+    kernel(input(1));
+    assert.equal(fixture.allocations.length,6,'disposed kernels allocate again on next use');
+    kernel.dispose();
+  });
+});
+
+test('WASM reads fresh views after memory growth and preserves caller output on ABI status errors',async()=>{
+  const growing=createWasmFixture({growDuringUpdate:true});
+  await withInstantiatedFixture(growing,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const output=new Float64Array([88,89,90]);
+    const result=kernel(Float64Array.of(10,20,30,0),1,output);
+    assert.deepEqual(Array.from(result),[11,22]);
+    assert.deepEqual(Array.from(output),[11,22,90]);
+    kernel.dispose();
+  });
+  const failing=createWasmFixture({status:-3});
+  await withInstantiatedFixture(failing,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const output=new Float64Array([88,89]);
+    assert.throws(()=>kernel(Float64Array.of(10,20,30,0),1,output),/WASM metabolism returned status -3/);
+    assert.deepEqual(Array.from(output),[88,89]);
+    kernel.dispose();
+  });
+});
+
+test('WASM reports allocation, fetch, compilation, export, and ABI failures clearly',async()=>{
+  const allocation=createWasmFixture({allocateFailureAt:2});
+  await withInstantiatedFixture(allocation,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    assert.throws(()=>kernel(new Float64Array(4)),/could not allocate metabolism buffers for 1 animals/);
+    assert.equal(allocation.releases.length,1,'partial allocations are released');
+    kernel.dispose();
+  });
+  await assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:false,status:503})),/WASM fetch failed: 503/);
+  const original=WebAssembly.instantiateStreaming;
+  WebAssembly.instantiateStreaming=async()=>{throw new TypeError('bad WASM bytes');};
+  try{await assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),/bad WASM bytes/);}
+  finally{WebAssembly.instantiateStreaming=original;}
+  for(const [fixture,pattern] of [
+    [createWasmFixture({missingExport:'riose_update_metabolism_batch'}),/exports do not match riose-core ABI/],
+    [createWasmFixture({abiVersion:2}),/exports do not match riose-core ABI/],
+  ])await withInstantiatedFixture(fixture,async()=>assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),pattern));
+});
+
 test('WASM-backed ticks and comparison replay match the original JavaScript engine',()=>{
   const original=new BaselineFarmEngine(917,40),js=new FarmEngine(917,40),wasm=new FarmEngine(917,40);
   for(const engine of [original,js,wasm])engine.configure({housing:'barn',weather:'hot',diet:'balanced',supplement:1.5});
@@ -59,12 +172,13 @@ test('local server serves the compiled WASM module with its binary MIME type',as
   }
 });
 
-test('Worker runs the JavaScript default and the opt-in WASM route with identical state',async t=>{
-  const originalFetch=globalThis.fetch,originalSelf=globalThis.self;
-  const run=async(engine,fetchImpl)=>{
+test('Worker runs the JavaScript default and falls back for unavailable or invalid WASM modules',async t=>{
+  const originalFetch=globalThis.fetch,originalSelf=globalThis.self,originalInstantiate=WebAssembly.instantiateStreaming;
+  const run=async(engine,fetchImpl,instantiateImpl=originalInstantiate)=>{
     const harness={messages:[],transfers:[],postMessage(message,transfer=[]){this.messages.push(message);this.transfers.push(transfer);}};
     globalThis.self=harness;
     if(fetchImpl)globalThis.fetch=fetchImpl;
+    WebAssembly.instantiateStreaming=instantiateImpl;
     const url=new URL(`../worker.js?engine=${engine}&run=${Math.random()}`,import.meta.url);
     await import(url.href);
     for(const data of [
@@ -75,16 +189,21 @@ test('Worker runs the JavaScript default and the opt-in WASM route with identica
     ])await harness.onmessage({data});
     return {snapshot:harness.messages.at(-1),views:harness.messages.filter(message=>message.type==='view'),transfers:harness.transfers};
   };
-  t.after(()=>{globalThis.fetch=originalFetch;globalThis.self=originalSelf;});
+  t.after(()=>{globalThis.fetch=originalFetch;globalThis.self=originalSelf;WebAssembly.instantiateStreaming=originalInstantiate;});
   const fetchWasm=async()=>new Response(wasmBytes,{headers:{'content-type':'application/wasm'}});
   const javascript=await run('js',originalFetch);
   const wasm=await run('wasm',fetchWasm);
   const unavailableWasm=await run('wasm',async()=>{throw new Error('simulated missing WASM artifact');});
+  const compilationFailure=await run('wasm',fetchWasm,async()=>{throw new TypeError('simulated invalid module');});
+  const invalidExports=await run('wasm',fetchWasm,async()=>({instance:{exports:{}}}));
+  const invalidAbi=await run('wasm',fetchWasm,async()=>({instance:{exports:{memory:new WebAssembly.Memory({initial:1}),riose_abi_version:()=>2,riose_alloc_f64:()=>1,riose_free_f64:()=>{},riose_update_metabolism_batch:()=>0}}}));
   assert.equal(javascript.snapshot.engineImplementation,'javascript-fallback');
   assert.equal(wasm.snapshot.engineImplementation,'riose-core-wasm/0.1.0');
   assert.equal(unavailableWasm.snapshot.engineImplementation,'javascript-fallback');
+  for(const failed of [compilationFailure,invalidExports,invalidAbi])assert.equal(failed.snapshot.engineImplementation,'javascript-fallback');
   assert.deepEqual(wasm.snapshot.state,javascript.snapshot.state);
   assert.deepEqual(unavailableWasm.snapshot.state,javascript.snapshot.state);
+  for(const failed of [compilationFailure,invalidExports,invalidAbi])assert.deepEqual(failed.snapshot.state,javascript.snapshot.state);
   const withoutImplementation=views=>views.map(({engineImplementation,...view})=>view);
   assert.deepEqual(withoutImplementation(wasm.views),withoutImplementation(javascript.views));
   assert.deepEqual(withoutImplementation(unavailableWasm.views),withoutImplementation(javascript.views));

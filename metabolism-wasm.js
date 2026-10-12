@@ -40,14 +40,28 @@ export async function loadWasmMetabolism(url = new URL('./wasm/riose_core.wasm',
     if (output.length < count * OUTPUT_WIDTH) throw new RangeError('metabolism output buffer is too small');
     if (count === 0) return output.subarray(0,0);
     if (count > capacity) {
+      const nextCapacity = Math.min(100_000, 2 ** Math.ceil(Math.log2(count)));
+      let nextInputPointer = 0;
+      let nextOutputPointer = 0;
+      try {
+        nextInputPointer = allocate(nextCapacity * INPUT_WIDTH);
+        if (nextInputPointer) nextOutputPointer = allocate(nextCapacity * OUTPUT_WIDTH);
+      } catch (cause) {
+        if (nextInputPointer) release(nextInputPointer, nextCapacity * INPUT_WIDTH);
+        throw new Error(`WASM could not allocate metabolism buffers for ${nextCapacity} animals`, {cause});
+      }
+      if (!nextInputPointer || !nextOutputPointer) {
+        if (nextInputPointer) release(nextInputPointer, nextCapacity * INPUT_WIDTH);
+        if (nextOutputPointer) release(nextOutputPointer, nextCapacity * OUTPUT_WIDTH);
+        throw new Error(`WASM could not allocate metabolism buffers for ${nextCapacity} animals`);
+      }
       if (capacity) {
         release(inputPointer, capacity * INPUT_WIDTH);
         release(outputPointer, capacity * OUTPUT_WIDTH);
       }
-      capacity = Math.min(100_000, 2 ** Math.ceil(Math.log2(count)));
-      inputPointer = allocate(capacity * INPUT_WIDTH);
-      outputPointer = allocate(capacity * OUTPUT_WIDTH);
-      if (!inputPointer || !outputPointer) throw new Error('WASM could not allocate batch buffers');
+      capacity = nextCapacity;
+      inputPointer = nextInputPointer;
+      outputPointer = nextOutputPointer;
     }
 
     const input = new Float64Array(memory.buffer, inputPointer, count * INPUT_WIDTH);

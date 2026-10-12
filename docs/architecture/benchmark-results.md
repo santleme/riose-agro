@@ -1,5 +1,19 @@
 # Benchmark results
 
+## Versioned report format
+
+New outputs from the simulation, browser, graphics PoC, history, native-kernel, and AMD compute-service benchmark harnesses use the envelope in [`benchmark-report.schema.json`](benchmark-report.schema.json) (`schemaVersion: 1`). It records source revision and dirty state, runtime, host hardware, workload seed and population scope, warmup and repetition counts, and a fixed `phases` map for `engine`, `snapshot`, `serialization`, `worker`, `ui`, `layout`, `render`, and `startup`. Unmeasured phases are explicitly marked `not-measured`; they are not inferred from neighboring phases. Every normalized phase measurement names its metric and unit and can carry median/spread and memory observations. The existing harness-specific payload remains under `results` for its detailed fields. The AMD service additionally keeps its prior top-level v1 fields for existing report consumers.
+
+The report's GPU memory field is `null` unless a harness can actually measure it; JavaScript heap does not stand in for GPU allocation. The default limit metadata distinguishes the 10,000-animal FarmEngine and renderer limits from isolated numeric-kernel measurements at 100,000. A 100,000 kernel row must declare `scope: "numeric-kernel-only"`; it is not evidence for a full-engine or renderer load. These limits describe current measurement scope and do not add performance thresholds.
+
+## Memory profiling protocol
+
+`npm run bench:memory` invokes `scripts/benchmark-memory.mjs` with `--expose-gc`. It emits the versioned report envelope and, for 100/1,000/10,000 animals, measures FarmEngine construction, a 24-hour tick, a full snapshot clone, the existing gzip/base64 snapshot encoder, and a Node-side projection matching the current Worker view fields. The 100,000 row is numeric-kernel-only with preallocated numeric buffers; it does not construct FarmEngine state or claim full-engine support. `BENCH_MEMORY_REPETITIONS` (default 3) and `BENCH_MEMORY_HERDS` (default `100,1000,10000,100000`) configure the run. Normalized measurements aggregate median and spread across repetitions for each population and phase; raw samples remain in `results.samples`.
+
+Memory dimensions stay separate: post-GC retained deltas include JS heap, external and ArrayBuffer bytes, and WASM linear memory; payload sizes report JSON UTF-8, gzip bytes, base64 UTF-8, or Worker-view transfer buffers and metadata. Retained deltas and payload sizes also include `bytes/animal` measurements for each herd; RSS high-water is never divided by population because it belongs to the whole process. GPU memory remains `null`. RSS is labeled process-level. The best available peak proxy is Node's cumulative `process.resourceUsage().maxRSS` high-water value, alongside RSS and JS heap observed immediately after each operation; it is not a per-phase peak and does not identify which subsystem allocated memory. Synchronous transient JS-heap peaks and allocation counts are unavailable. The Worker phase counts the current packed projection in Node but does not measure browser Worker transfer, renderer, or GPU memory. Browser storage quotas are also outside this harness. No values have been collected with this protocol yet; these details describe how future comparable measurements will be made and do not replace or retrofit any historical observations above.
+
+This schema is applied to new harness output only. Historical prose and measurements below are preserved as recorded; they were not rerun or retrofitted into a format that would imply missing metadata.
+
 ## Setup
 
 - Commit baseline source: `913b36b9fe5c0877c7b857af3e0488cedcfd0e03:engine.js` (loaded directly from Git by the benchmark script, no checkout or source copy).

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose-agro.local/schemas/benchmark-report-v1.json",
+  "title": "Riose benchmark report",
+  "type": "object",
+  "required": ["schemaVersion", "benchmark", "runtime", "hardware", "workload", "configuration", "limits", "phases", "results", "limitations"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "benchmark": {
+      "type": "object",
+      "required": ["name", "source"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "source": {
+          "type": "object",
+          "required": ["revision", "dirty"],
+          "properties": {"revision": {"type": ["string", "null"]}, "dirty": {"type": "boolean"}},
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime": {"type": "object", "required": ["platform"], "properties": {"platform": {"type": "string"}, "node": {"type": "string"}}, "additionalProperties": true},
+    "hardware": {
+      "type": "object",
+      "required": ["os", "architecture", "cpu", "gpuMemoryBytes"],
+      "properties": {"os": {"type": ["string", "null"]}, "architecture": {"type": ["string", "null"]}, "cpu": {"type": ["string", "null"]}, "gpuMemoryBytes": {"type": ["integer", "null"], "minimum": 0}},
+      "additionalProperties": true
+    },
+    "workload": {
+      "type": "object",
+      "required": ["seed", "populations"],
+      "properties": {
+        "seed": {"type": ["integer", "string", "null"]},
+        "populations": {"type": "array", "items": {"type": "object", "required": ["animals", "scope"], "properties": {"animals": {"type": "integer", "minimum": 0}, "scope": {"type": "string"}, "limit": {"type": ["string", "null"]}}, "additionalProperties": true}}
+      },
+      "additionalProperties": true
+    },
+    "configuration": {"type": "object", "required": ["warmupRuns", "repetitions"], "properties": {"warmupRuns": {"type": ["integer", "object", "null"]}, "repetitions": {"type": ["integer", "null"]}}, "additionalProperties": true},
+    "limits": {"type": "object", "required": ["farmEngineMaxAnimals", "rendererMaxAnimals", "numericKernelMaxAnimalsMeasured"], "properties": {"farmEngineMaxAnimals": {"type": ["integer", "null"]}, "rendererMaxAnimals": {"type": ["integer", "null"]}, "numericKernelMaxAnimalsMeasured": {"type": ["integer", "null"]}}, "additionalProperties": true},
+    "phases": {
+      "type": "object",
+      "required": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup"],
+      "properties": {
+        "engine": {"$ref": "#/$defs/phase"}, "snapshot": {"$ref": "#/$defs/phase"}, "serialization": {"$ref": "#/$defs/phase"}, "worker": {"$ref": "#/$defs/phase"},
+        "ui": {"$ref": "#/$defs/phase"}, "layout": {"$ref": "#/$defs/phase"}, "render": {"$ref": "#/$defs/phase"}, "startup": {"$ref": "#/$defs/phase"}
+      },
+      "additionalProperties": false
+    },
+    "results": {"type": ["object", "array"]},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "phase": {
+      "type": "object",
+      "required": ["status", "measurements"],
+      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string"}, "statistics": {"type": "object"}}, "additionalProperties": true}}},
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

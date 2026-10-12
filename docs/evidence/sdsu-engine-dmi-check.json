@@ -21,7 +21,7 @@
     "measurementCaveat": "Observed DMI is locally derived from the supplement spreadsheet and a period-average DM sample, not an independently curated individual DMI table."
   },
   "model": {
-    "engineSha256": "fafc860eb927ba1e2590a01d6aecbd6055e00bdc4c04c72b7402fcc76c49dea1",
+    "engineSha256": "fa7aa89e8bbb72ebfff2b59c5f3592f2d707025ad917fe9c68ab9f63e2ea42e1",
     "engineSourceFiles": [
       "engine.js",
       "feeding-model.js",

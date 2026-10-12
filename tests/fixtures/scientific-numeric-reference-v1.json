@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "kind": "frozen-numeric-reference-fixtures",
+  "transcription": "Independently transcribed from the cited publications; no observational rows or source datasets are included.",
+  "fixtures": {
+    "brCorte2023Eq26Table214": {
+      "model": "BR-CORTE 2023, chapter 2, equation 2.6",
+      "locator": {
+        "source": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+        "printedPage": 37,
+        "pdfPage": 22,
+        "table": "2.14",
+        "row": "body weight 400 kg; ADG 0.50 kg/day; supplement 1.60 kg/day; total DMI (Eq. 2.6)"
+      },
+      "population": "Zebu cattle finished on pasture; equation 2.6 is the Zebu equation. This table row is a worked numerical estimate, not an individual animal observation.",
+      "inputs": {
+        "bodyWeightKg": {"value": 400, "unit": "kg"},
+        "adgKgPerDay": {"value": 0.5, "unit": "kg/day"},
+        "supplementKgDMPerDay": {"value": 1.6, "unit": "kg DM/day"}
+      },
+      "intermediates": {
+        "bodyWeightMetabolicKg075": {"value": 89.44271909999159, "unit": "kg^0.75", "calculation": "400^0.75"},
+        "supplementTermKgDMPerDay": {"value": 1.23712, "unit": "kg DM/day", "calculation": "0.7732 * 1.6"},
+        "bodyWeightTermKgDMPerDay": {"value": 6.636649757219376, "unit": "kg DM/day", "calculation": "0.0742 * 400^0.75"},
+        "adgTermKgDMPerDay": {"value": 0.39765, "unit": "kg DM/day", "calculation": "0.7953 * 0.5"},
+        "squaredAdgTermKgDMPerDay": {"value": -0.226175, "unit": "kg DM/day", "calculation": "-0.9047 * 0.5^2"}
+      },
+      "expected": {
+        "calculatedTotalDmiKgDMPerDay": 7.576844757219376,
+        "publishedRoundedTotalDmiKgDMPerDay": 7.58,
+        "publishedPrecisionToleranceKgDMPerDay": 0.005
+      },
+      "limitations": [
+        "The table reports rounded model estimates, not raw observations.",
+        "ADG is an input to this conditional DMI equation and is not predicted by it.",
+        "Agreement with one table row verifies arithmetic/transcription only; it is not independent validation or farm calibration.",
+        "The source book is publicly accessible, but no open redistribution license for its tables or datasets was identified; this fixture stores only one independently transcribed numeric row and derived arithmetic."
+      ]
+    },
+    "mader2006ThiPublishedExample": {
+      "model": "Mader, Davis & Brown-Brandl (2006) temperature-humidity index formula",
+      "locator": {
+        "formulaSource": "https://doi.org/10.2527/2006.843712x",
+        "formulaSourceDetails": "Journal of Animal Science 84(3), pages 712–719; page 715, Table 3 footnote defines THI as 0.8 × ambient temperature + [(relative humidity ÷ 100) × (ambient temperature − 14.4)] + 46.4.",
+        "numericExampleSource": "https://ve.scielo.org/scielo.php?pid=S0798-22592007000500007&script=sci_arttext",
+        "numericExampleLocator": "Table I, Trial 1, December row; input conditions and THI reported for calves"
+      },
+      "population": "The numeric cross-check is reported for crossbred calves by Quintero-Moreno et al.; it is not a Mader feedlot observation. Mader et al. studied cattle in three summer feedlot studies and evaluated adjustments in four additional cattle studies.",
+      "formula": "THI = 0.8*T + (RH/100)*(T - 14.4) + 46.4",
+      "inputs": {
+        "temperatureC": {"value": 26.8, "unit": "°C", "meaning": "dry-bulb air temperature"},
+        "relativeHumidityPct": {"value": 57.5, "unit": "%"}
+      },
+      "intermediates": {
+        "temperatureTerm": {"value": 21.44, "unit": "THI points", "calculation": "0.8 * 26.8"},
+        "humidityFraction": {"value": 0.575, "unit": "fraction", "calculation": "57.5 / 100"},
+        "temperatureOffsetC": {"value": 12.4, "unit": "°C", "calculation": "26.8 - 14.4"},
+        "humidityTerm": {"value": 7.13, "unit": "THI points", "calculation": "0.575 * 12.4"},
+        "constantTerm": {"value": 46.4, "unit": "THI points"}
+      },
+      "expected": {
+        "calculatedThi": 74.97,
+        "publishedRoundedThi": 75.0,
+        "publishedPrecisionTolerance": 0.05,
+        "unit": "dimensionless THI"
+      },
+      "limitations": [
+        "The numeric inputs/output are a cited example from a separate crossbred-calf study; they are not evidence that this population matches Riose animals.",
+        "THI is a descriptive environmental index, not an individual physiological response or a production prediction.",
+        "This formula omits wind speed, solar radiation, shade, coat, genotype, acclimation, and exposure duration; the original Mader study reports wind and radiation adjustments separately.",
+        "Matching a rounded example verifies formula arithmetic only and does not establish a universal stress threshold."
+      ]
+    }
+  }
+}

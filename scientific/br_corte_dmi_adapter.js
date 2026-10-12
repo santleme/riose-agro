@@ -1,5 +1,5 @@
-import {BR_CORTE_PASTURE_DMI, predictPastureDmi} from './br_corte_pasture_dmi.js';
-import {defineScientificModel} from './model-contract.js';
+import {BR_CORTE_PASTURE_DMI, BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE, predictPastureDmi} from './br_corte_pasture_dmi.js';
+import {defineScientificModel, registerScientificModel} from './model-contract.js';
 
 export const BR_CORTE_PASTURE_DMI_MODEL = defineScientificModel({
   id: BR_CORTE_PASTURE_DMI.id,
@@ -8,6 +8,11 @@ export const BR_CORTE_PASTURE_DMI_MODEL = defineScientificModel({
     bodyWeightKg: 'number',
     adgKgPerDay: 'number',
     supplementKgDMPerDay: 'number'
+  },
+  units: {
+    bodyWeightKg: 'kg',
+    adgKgPerDay: 'kg/day',
+    supplementKgDMPerDay: 'kg DM/day'
   },
   outputs: {
     totalDmiKgDMPerDay: 'number',
@@ -19,10 +24,14 @@ export const BR_CORTE_PASTURE_DMI_MODEL = defineScientificModel({
   },
   evidence: {
     source: BR_CORTE_PASTURE_DMI.source,
+    status: 'demonstrative',
     sourceVersion: BR_CORTE_PASTURE_DMI.version,
     evidenceType: 'published-equation-with-independent-validation-ranges',
     validationRanges: BR_CORTE_PASTURE_DMI.validatedDomain,
     limitation: 'Published ranges do not constitute calibration or validation against Riose observations.'
   },
+  implementationSource: BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE,
   run: predictPastureDmi
 });
+
+registerScientificModel(BR_CORTE_PASTURE_DMI_MODEL);

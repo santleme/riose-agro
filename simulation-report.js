@@ -20,6 +20,28 @@ function metricRow(label, key, row) {
   return `- ${label}: base ${valueText(row?.[`baseline${key}`])}; intervenção ${valueText(row?.[`scenario${key}`])}`;
 }
 
+function renderModelProvenance(models) {
+  if (!Array.isArray(models) || models.length === 0) return null;
+  return [
+    '## Proveniência de modelos científicos',
+    ...models.map(model => {
+      const inputs = model.inputs && typeof model.inputs === 'object'
+        ? Object.entries(model.inputs).map(([name, item]) => `${name}=${valueText(item?.value)} ${item?.unit ?? '(unidade não informada)'}`).join('; ')
+        : 'não informado';
+      const references = Array.isArray(model.evidenceReferences) && model.evidenceReferences.length
+        ? model.evidenceReferences.map(reference => `${reference.id ?? reference.locator ?? 'referência'} [${reference.status ?? 'status não informado'}]`).join('; ')
+        : 'não informada';
+      return [
+        `- Modelo: ${valueText(model.modelId)}@${valueText(model.version)}`,
+        `- Entradas: ${inputs}`,
+        `- Evidência: ${references}; estado: ${valueText(model.evidenceStatus)}`,
+        `- Hash da implementação: ${valueText(model.implementationHash)}`
+      ].join('\n');
+    }),
+    '- O status da evidência é preservado; a resolução não promove evidência nem valida o modelo.'
+  ].join('\n');
+}
+
 export function renderSimulationReport(result, manifest) {
   if (!result || typeof result !== 'object' || !Array.isArray(result.rows)) {
     throw new Error('Resultado inválido: informe um resultado de comparação do motor com uma série de linhas.');
@@ -47,6 +69,7 @@ export function renderSimulationReport(result, manifest) {
     metricRow('Estoque de forragem no último dia (kg MS)', 'PastureKgDM', lastRow),
     metricRow('Custo acumulado no período (R$/lote)', 'Cost', lastRow)
   ].join('\n');
+  const modelProvenance = renderModelProvenance(result.scientificProvenance);
 
   return [
     '# Relatório da simulação',
@@ -80,6 +103,7 @@ export function renderSimulationReport(result, manifest) {
     `- Resultado: saída do motor de simulação (engine.js); estado: ${validation}.`,
     `- Manifesto de reprodução:\n${manifestDetails}`,
     '- Fontes empíricas vinculadas a esta execução: não informado.',
+    ...(modelProvenance ? ['', modelProvenance] : []),
     ''
   ].join('\n');
 }

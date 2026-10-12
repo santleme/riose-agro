@@ -1,10 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {calculateThi,THI_SOURCE} from '../thermal-index.js';
 
-test('Mader feedlot THI reproduces the published bovine example to reported precision',()=>{
-  const result=calculateThi(26.8,57.5);
-  assert.equal(result.value,74.97);
+const numericReferences = JSON.parse(readFileSync(new URL('./fixtures/scientific-numeric-reference-v1.json', import.meta.url), 'utf8'));
+const maderExample = numericReferences.fixtures.mader2006ThiPublishedExample;
+
+test('Mader formula matches a published crossbred-calf THI example to reported precision',()=>{
+  const result=calculateThi(maderExample.inputs.temperatureC.value,maderExample.inputs.relativeHumidityPct.value);
+  assert.equal(result.value,maderExample.expected.calculatedThi);
+  assert.ok(Math.abs(result.value-maderExample.expected.publishedRoundedThi)<maderExample.expected.publishedPrecisionTolerance);
   assert.equal(result.unit,'THI');
   assert.match(THI_SOURCE.doi,/10\.2527\/2006\.843712x/);
   assert.equal(Number(result.value.toFixed(1)),75.0);

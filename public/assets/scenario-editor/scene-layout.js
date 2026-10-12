@@ -116,8 +116,8 @@ export function createDairyFarmScene(prefabs, seed = 20261012) {
     [14, 16], [11, 19], [22, 15], [24, 17], [27, 18], [29, 16],
   ];
   dairySamples.forEach(([col, row], index) => {
-    const zoneId = index < 6 ? (index < 3 ? 'zone-pasture-north' : 'zone-pasture-south') : 'zone-dairy';
-    const groupId = index < 6 ? (index < 3 ? 'dairy-north-lot' : 'dairy-south-lot') : 'dairy-operations-lot';
+      const zoneId = index < 4 ? 'zone-pasture-north' : index < 8 ? 'zone-pasture-south' : 'zone-dairy';
+      const groupId = index < 4 ? 'dairy-north-lot' : index < 8 ? 'dairy-south-lot' : 'dairy-operations-lot';
     const breed = hash(seed, index, 3) < 0.62 ? 'dairy-holstein-cow' : 'dairy-girolando-cow';
     placements.push(placement(breed, col + (hash(seed, index, 1) - 0.5) * 0.22, row + (hash(seed, index, 2) - 0.5) * 0.18, 'animals', {
       groupId, zoneId, visualId: `dairy-visual-${String(index + 1).padStart(2, '0')}`,
@@ -154,9 +154,9 @@ export function createDairyFarmScene(prefabs, seed = 20261012) {
     layers: DEFAULT_LAYERS.map((id, order) => ({id, order, visible: true, locked: id === 'terrain'})),
     placements,
     visualGroups: [
-      {id: 'dairy-north-lot', population: 90, zoneId: 'zone-pasture-north', operationalState: 'grazing', maxSprites: 3, mode: 'sampled-miniature', seed, visualIds: ['dairy-visual-01', 'dairy-visual-02', 'dairy-visual-03']},
-      {id: 'dairy-south-lot', population: 90, zoneId: 'zone-pasture-south', operationalState: 'grazing', maxSprites: 3, mode: 'sampled-miniature', seed, visualIds: ['dairy-visual-04', 'dairy-visual-05', 'dairy-visual-06']},
-      {id: 'dairy-operations-lot', population: 10, zoneId: 'zone-dairy', operationalState: 'milking-rotation', maxSprites: 6, mode: 'operational', seed, visualIds: ['dairy-visual-07', 'dairy-visual-08', 'dairy-visual-09', 'dairy-visual-10', 'dairy-visual-11', 'dairy-visual-12']},
+      {id: 'dairy-north-lot', population: 90, zoneId: 'zone-pasture-north', operationalState: 'grazing', maxSprites: 4, mode: 'sampled-miniature', seed, visualIds: ['dairy-visual-01', 'dairy-visual-02', 'dairy-visual-03', 'dairy-visual-04']},
+      {id: 'dairy-south-lot', population: 90, zoneId: 'zone-pasture-south', operationalState: 'grazing', maxSprites: 4, mode: 'sampled-miniature', seed, visualIds: ['dairy-visual-05', 'dairy-visual-06', 'dairy-visual-07', 'dairy-visual-08']},
+      {id: 'dairy-operations-lot', population: 10, zoneId: 'zone-dairy', operationalState: 'milking-rotation', maxSprites: 6, mode: 'operational', seed, visualIds: ['dairy-visual-09', 'dairy-visual-10', 'dairy-visual-11', 'dairy-visual-12']},
       {id: 'dairy-calf-lot', population: 10, zoneId: 'zone-service', operationalState: 'resting', maxSprites: 2, mode: 'sampled-miniature', seed, visualIds: ['dairy-calf-visual-01', 'dairy-calf-visual-02']},
     ],
     zones: [
@@ -201,7 +201,7 @@ export function createBeefFarmScene(prefabs, seed = 20261012) {
   let visualIndex = 0;
   for (const [paddockIndex, paddock] of paddocks.entries()) {
     const visualIds = [];
-    for (const [localIndex, offset] of [[2, 2], [5, 5], [7, 2]].entries()) {
+    for (const [localIndex, offset] of [[2, 2], [5, 5], [6, 2]].entries()) {
       visualIndex++;
       const visualId = `beef-visual-${String(visualIndex).padStart(2, '0')}`;
       visualIds.push(visualId);
@@ -259,4 +259,172 @@ export function unprojectIso(x, y, grid) {
   const px = x / (grid.tileWidth / 2);
   const py = y / (grid.tileHeight / 2);
   return {col: (px + py) / 2, row: (py - px) / 2};
+}
+
+/**
+ * Build an editable starter layout from the checked-in spatial templates.
+ * This deliberately does not call a model or synthesize assets: the seed is
+ * consumed only by the existing seeded visual choices, and every reference is
+ * traceable to the supplied prefab/asset catalog.
+ */
+export function generateFarmLayout({
+  scenarioType = 'dairy',
+  seed = 20261012,
+  prefabs = [],
+  manifest,
+  constraints = [],
+} = {}) {
+  if (!['beef', 'dairy'].includes(scenarioType)) {
+    throw new TypeError(`Unsupported farm scenario: ${scenarioType}`);
+  }
+  const scene = scenarioType === 'beef'
+    ? createBeefFarmScene(prefabs, seed)
+    : createDairyFarmScene(prefabs, seed);
+  const validation = validateFarmLayout(scene, {prefabs, manifest, constraints});
+  const referencedAssetIds = new Set(scene.placements.map((item) => item.assetId));
+  const prefabById = new Map(prefabs.map((item) => [item.id, item]));
+  for (const instance of scene.prefabInstances) {
+    for (const child of prefabById.get(instance.prefabId)?.placements ?? []) referencedAssetIds.add(child.assetId);
+  }
+  const assetsById = new Map((manifest?.assets ?? []).map((item) => [item.id, item]));
+  scene.generation = {
+    generator: 'riose-farm-layout-rules',
+    generatorVersion: 1,
+    algorithm: 'seeded-spatial-template-v1',
+    seed,
+    scenarioType,
+    inputFingerprint: fingerprint({scenarioType, seed, prefabs, manifest: manifest ?? null, constraints}),
+    model: {used: false, status: 'not-used'},
+    constraints: constraints.map((constraint) => ({...constraint})),
+    validation,
+    assets: [...referencedAssetIds].sort().map((id) => {
+      const asset = assetsById.get(id);
+      return {
+        id,
+        status: asset ? (asset.status ?? asset.reviewStatus ?? 'not-declared') : 'unresolved',
+        provenance: asset?.provenance?.kind ?? asset?.sourceKind ?? 'not-declared',
+      };
+    }),
+  };
+  return scene;
+}
+
+/** Return deterministic, machine-readable layout diagnostics. */
+export function validateFarmLayout(scene, {prefabs = [], manifest, constraints = []} = {}) {
+  const diagnostics = [];
+  const report = (code, message, path, severity = 'error') => diagnostics.push({severity, code, message, path});
+  if (!scene?.grid || !Array.isArray(scene.placements) || !Array.isArray(scene.prefabInstances)) {
+    return [{severity: 'error', code: 'invalid-scene', message: 'Scene is missing grid, placements or prefabInstances.', path: '$'}];
+  }
+  const {width, height} = scene.grid;
+  const prefabById = new Map(prefabs.map((item) => [item.id, item]));
+  const assetById = new Map((manifest?.assets ?? []).map((item) => [item.id, item]));
+  const boxes = [];
+  const insideGrid = (col, row, footprint) => Number.isFinite(col) && Number.isFinite(row)
+    && col >= 0 && row >= 0 && col + footprint[0] <= width && row + footprint[1] <= height;
+  const boxFor = (id, col, row, footprint, path, blocking = true) => {
+    if (!Array.isArray(footprint) || footprint.length !== 2 || footprint.some((item) => !Number.isFinite(item) || item <= 0)) {
+      report('invalid-footprint', `Invalid footprint for ${id}.`, path);
+      return;
+    }
+    if (!insideGrid(col, row, footprint)) report('out-of-bounds', `${id} footprint exceeds the ${width}×${height} grid.`, path);
+    if (blocking) boxes.push({id, x: col, y: row, w: footprint[0], h: footprint[1], path});
+  };
+
+  for (const [index, instance] of scene.prefabInstances.entries()) {
+    const prefab = prefabById.get(instance.prefabId);
+    if (!prefab) {
+      report('unknown-prefab', `Unknown prefab ${instance.prefabId}.`, `$.prefabInstances[${index}]`);
+      continue;
+    }
+    boxFor(instance.id, instance.col, instance.row, prefab.footprint, `$.prefabInstances[${index}]`);
+    for (const [childIndex, child] of (prefab.placements ?? []).entries()) {
+      const childAsset = assetById.get(child.assetId);
+      if (!childAsset && manifest) report('unresolved-prefab-asset', `Asset ${child.assetId} is not in the supplied manifest.`, `$.prefabInstances[${index}].placements[${childIndex}]`);
+      const childFootprint = childAsset?.footprint ?? [1, 1];
+      if (!Number.isFinite(child.col) || !Number.isFinite(child.row)
+        || child.col < 1 || child.row < 1
+        || child.col + childFootprint[0] - 1 > prefab.footprint[0]
+        || child.row + childFootprint[1] - 1 > prefab.footprint[1]) {
+        report('prefab-child-out-of-bounds', `${child.assetId} exceeds prefab ${prefab.id} footprint.`, `$.prefabInstances[${index}].placements[${childIndex}]`);
+      }
+    }
+    const center = {col: instance.col + prefab.footprint[0] / 2, row: instance.row + prefab.footprint[1] / 2};
+    const occupiedZones = (scene.zones ?? []).filter((item) => pointInPolygon(center, item.polygon));
+    if (prefab.zones?.length && !occupiedZones.some((zone) => prefab.zones.includes(zone.type))) {
+      report('prefab-zone-mismatch', `${instance.prefabId} has no compatible zone at its footprint center.`, `$.prefabInstances[${index}]`);
+    }
+  }
+
+  for (const [index, item] of scene.placements.entries()) {
+    const asset = assetById.get(item.assetId);
+    const footprint = item.footprint ?? asset?.footprint ?? [1, 1];
+    const position = item.position ?? item;
+    const collides = asset?.placementRules?.collision === true || asset?.collision != null;
+    boxFor(item.id ?? item.assetId, position.col, position.row, footprint, `$.placements[${index}]`, collides);
+    if (!asset && manifest) report('unresolved-asset', `Asset ${item.assetId} is not in the supplied manifest.`, `$.placements[${index}]`);
+    const assignedZoneId = item.properties?.zoneId;
+    if (assignedZoneId) {
+      const zone = scene.zones?.find((candidate) => candidate.id === assignedZoneId);
+      if (!zone) report('unknown-zone', `Placement ${item.id ?? item.assetId} references missing zone ${assignedZoneId}.`, `$.placements[${index}]`);
+      else {
+        if (!pointInPolygon(position, zone.polygon)) report('placement-outside-zone', `${item.id ?? item.assetId} is outside assigned zone ${zone.id}.`, `$.placements[${index}]`);
+        if (asset?.allowedZones?.length && !asset.allowedZones.includes(zone.type)) {
+          report('asset-zone-mismatch', `${item.assetId} is in incompatible zone ${zone.id}.`, `$.placements[${index}]`);
+        }
+      }
+    }
+  }
+
+  for (let left = 0; left < boxes.length; left++) {
+    for (let right = left + 1; right < boxes.length; right++) {
+      const a = boxes[left]; const b = boxes[right];
+      const overlaps = a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+      if (overlaps) report('blocking-collision', `${a.id} overlaps ${b.id}.`, `${a.path}|${b.path}`);
+    }
+  }
+
+  for (const [index, constraint] of constraints.entries()) {
+    if (constraint?.type !== 'must-be-adjacent' || !constraint.first || !constraint.second) {
+      report('invalid-constraint', 'Expected must-be-adjacent with first and second instance IDs.', `$.constraints[${index}]`);
+      continue;
+    }
+    const first = boxes.find((box) => box.id === constraint.first);
+    const second = boxes.find((box) => box.id === constraint.second);
+    if (!first || !second) {
+      report('unsatisfied-constraint', `Adjacency references a missing instance (${constraint.first}, ${constraint.second}).`, `$.constraints[${index}]`);
+      continue;
+    }
+    const verticalTouch = (first.x + first.w === second.x || second.x + second.w === first.x)
+      && first.y < second.y + second.h && first.y + first.h > second.y;
+    const horizontalTouch = (first.y + first.h === second.y || second.y + second.h === first.y)
+      && first.x < second.x + second.w && first.x + first.w > second.x;
+    if (!verticalTouch && !horizontalTouch) report('unsatisfied-constraint', `${constraint.first} and ${constraint.second} are not edge-adjacent.`, `$.constraints[${index}]`);
+  }
+  return diagnostics;
+}
+
+function pointInPolygon(point, polygon = []) {
+  let inside = false;
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
+    const a = polygon[index]; const b = polygon[previous];
+    const cross = (point.row - a.row) * (b.col - a.col) - (point.col - a.col) * (b.row - a.row);
+    const onSegment = Math.abs(cross) < 1e-9
+      && point.col >= Math.min(a.col, b.col) && point.col <= Math.max(a.col, b.col)
+      && point.row >= Math.min(a.row, b.row) && point.row <= Math.max(a.row, b.row);
+    if (onSegment) return true;
+    const crosses = (a.row > point.row) !== (b.row > point.row)
+      && point.col < ((b.col - a.col) * (point.row - a.row)) / ((b.row - a.row) || Number.EPSILON) + a.col;
+    if (crosses) inside = !inside;
+  }
+  return inside;
+}
+
+function fingerprint(value) {
+  const stable = (item) => Array.isArray(item) ? item.map(stable)
+    : item && typeof item === 'object' ? Object.fromEntries(Object.keys(item).sort().map((key) => [key, stable(item[key])])) : item;
+  const text = JSON.stringify(stable(value));
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index++) hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+  return `fnv1a32-${(hash >>> 0).toString(16).padStart(8, '0')}`;
 }

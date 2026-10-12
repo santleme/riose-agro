@@ -1,0 +1,249 @@
+{
+  "study": "animal-layout-aos-vs-aligned-columns",
+  "date": "2026-10-12",
+  "runtime": {
+    "node": "v20.20.2",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "optimization": "Rust --release"
+  },
+  "workload": {
+    "seed": 20261012,
+    "repetitions": 31,
+    "warmups": 8,
+    "populations": [
+      100,
+      1000,
+      10000
+    ],
+    "hoursPerBenchmarkIteration": 1,
+    "source": "deterministic FarmEngine fixture; actual calculateFeeding output; fixed scenario branch order"
+  },
+  "results": [
+    {
+      "animals": 100,
+      "fixture": {
+        "seed": 20261012,
+        "source": "FarmEngine initialization plus current feeding model",
+        "inputValues": 4,
+        "branchMix": {
+          "restingAnimals": 40
+        }
+      },
+      "outputsIdentical": true,
+      "memory": {
+        "heapUsedWithObjectsBytes": 3497928,
+        "heapUsedWithColumnsBytes": 3493672,
+        "heapDeltaAfterPreallocatedColumnsBytes": -4256,
+        "typedBuffersExactBytes": 4100
+      },
+      "measurements": {
+        "aosEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.013374000000005992,
+          "minMs": 0.012312000000001433,
+          "maxMs": 0.2627510000000015
+        },
+        "typedColumnsKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.007659000000003857,
+          "minMs": 0.0070470000000000255,
+          "maxMs": 0.10700299999999885
+        },
+        "typedColumnsGather": {
+          "sampleCount": 31,
+          "medianMs": 0.003033000000002062,
+          "minMs": 0.0029339999999962174,
+          "maxMs": 0.03734199999999532
+        },
+        "typedColumnsScatter": {
+          "sampleCount": 31,
+          "medianMs": 0.003393000000002644,
+          "minMs": 0.003195000000005166,
+          "maxMs": 0.038026000000002114
+        },
+        "typedColumnsEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.015229000000005044,
+          "minMs": 0.00701999999999714,
+          "maxMs": 0.11523800000000506
+        },
+        "snapshotMaterializationAos": {
+          "sampleCount": 31,
+          "medianMs": 0.00316800000000228,
+          "minMs": 0.0029070000000075424,
+          "maxMs": 0.0294850000000082
+        },
+        "snapshotMaterializationColumns": {
+          "sampleCount": 31,
+          "medianMs": 0.003393000000002644,
+          "minMs": 0.0032759999999996126,
+          "maxMs": 0.026865000000000805
+        },
+        "nativeRustKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.000108,
+          "minMs": 0.000099,
+          "maxMs": 0.003186
+        }
+      },
+      "allocationNotes": {
+        "perSnapshotVariantObjects": 100,
+        "typedBufferAllocations": 5,
+        "peakAllocationCounts": "not instrumented"
+      }
+    },
+    {
+      "animals": 1000,
+      "fixture": {
+        "seed": 20261012,
+        "source": "FarmEngine initialization plus current feeding model",
+        "inputValues": 4,
+        "branchMix": {
+          "restingAnimals": 375
+        }
+      },
+      "outputsIdentical": true,
+      "memory": {
+        "heapUsedWithObjectsBytes": 3936376,
+        "heapUsedWithColumnsBytes": 4090024,
+        "heapDeltaAfterPreallocatedColumnsBytes": 153648,
+        "typedBuffersExactBytes": 41000
+      },
+      "measurements": {
+        "aosEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.03598200000000418,
+          "minMs": 0.012698999999997795,
+          "maxMs": 0.45993500000000154
+        },
+        "typedColumnsKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.006354000000001747,
+          "minMs": 0.006056999999998425,
+          "maxMs": 0.006587999999993599
+        },
+        "typedColumnsGather": {
+          "sampleCount": 31,
+          "medianMs": 0.03656700000000512,
+          "minMs": 0.004004999999992265,
+          "maxMs": 0.15975299999999493
+        },
+        "typedColumnsScatter": {
+          "sampleCount": 31,
+          "medianMs": 0.0023490000000094824,
+          "minMs": 0.0021239999999949077,
+          "maxMs": 0.29876099999999894
+        },
+        "typedColumnsEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.07090399999999875,
+          "minMs": 0.06961599999999635,
+          "maxMs": 0.09782299999999111
+        },
+        "snapshotMaterializationAos": {
+          "sampleCount": 31,
+          "medianMs": 0.015777999999997405,
+          "minMs": 0.01322999999999297,
+          "maxMs": 0.3017229999999955
+        },
+        "snapshotMaterializationColumns": {
+          "sampleCount": 31,
+          "medianMs": 0.013653999999988287,
+          "minMs": 0.010918000000003758,
+          "maxMs": 0.20359700000000203
+        },
+        "nativeRustKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.00126,
+          "minMs": 0.0012419999999999998,
+          "maxMs": 0.00243
+        }
+      },
+      "allocationNotes": {
+        "perSnapshotVariantObjects": 1000,
+        "typedBufferAllocations": 5,
+        "peakAllocationCounts": "not instrumented"
+      }
+    },
+    {
+      "animals": 10000,
+      "fixture": {
+        "seed": 20261012,
+        "source": "FarmEngine initialization plus current feeding model",
+        "inputValues": 4,
+        "branchMix": {
+          "restingAnimals": 3750
+        }
+      },
+      "outputsIdentical": true,
+      "memory": {
+        "heapUsedWithObjectsBytes": 7292512,
+        "heapUsedWithColumnsBytes": 7293680,
+        "heapDeltaAfterPreallocatedColumnsBytes": 1168,
+        "typedBuffersExactBytes": 410000
+      },
+      "measurements": {
+        "aosEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.13444499999999948,
+          "minMs": 0.099677000000014,
+          "maxMs": 2.010852
+        },
+        "typedColumnsKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.03613600000002748,
+          "minMs": 0.03556900000000951,
+          "maxMs": 0.0433179999999993
+        },
+        "typedColumnsGather": {
+          "sampleCount": 31,
+          "medianMs": 0.03984400000001642,
+          "minMs": 0.0393669999999986,
+          "maxMs": 0.0847090000000037
+        },
+        "typedColumnsScatter": {
+          "sampleCount": 31,
+          "medianMs": 0.020764000000013993,
+          "minMs": 0.020503000000019256,
+          "maxMs": 0.04763300000001891
+        },
+        "typedColumnsEndToEnd": {
+          "sampleCount": 31,
+          "medianMs": 0.1860240000000033,
+          "minMs": 0.1707969999999932,
+          "maxMs": 0.7607439999999883
+        },
+        "snapshotMaterializationAos": {
+          "sampleCount": 31,
+          "medianMs": 0.10899200000000064,
+          "minMs": 0.09773300000000518,
+          "maxMs": 0.6068460000000186
+        },
+        "snapshotMaterializationColumns": {
+          "sampleCount": 31,
+          "medianMs": 0.07725800000000049,
+          "minMs": 0.0695350000000019,
+          "maxMs": 0.48256299999999896
+        },
+        "nativeRustKernel": {
+          "sampleCount": 31,
+          "medianMs": 0.009027,
+          "minMs": 0.008928,
+          "maxMs": 0.069463
+        }
+      },
+      "allocationNotes": {
+        "perSnapshotVariantObjects": 10000,
+        "typedBufferAllocations": 5,
+        "peakAllocationCounts": "not instrumented"
+      }
+    }
+  ],
+  "decision": "Keep object-per-animal state. The isolated typed-column kernel excludes gather/scatter and is not a production end-to-end win unless typedColumnsEndToEnd repeatedly beats AoS with identical outputs.",
+  "limitations": [
+    "This isolates one-hour weight/energy transition after feeding; it does not benchmark a full 24-hour engine tick or renderer.",
+    "Native Rust measures the same packed numeric kernel and fixture but excludes JSON serialization, FFI and process startup.",
+    "Heap snapshots are process-level readings after GC and include engine/test harness memory; they are directional. Typed-buffer bytes are exact. Peak allocation counts are not instrumented; per-snapshot output object counts are known.",
+    "Feed intake is calculated once from the deterministic initial scenario state and reused to isolate transition layout."
+  ]
+}

@@ -1,10 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {BR_CORTE_PASTURE_DMI, analyzePastureDmiSensitivity, predictPastureDmi, simulateNelorePastureScenario} from '../scientific/br_corte_pasture_dmi.js';
 
+const numericReferences = JSON.parse(readFileSync(new URL('./fixtures/scientific-numeric-reference-v1.json', import.meta.url), 'utf8'));
+const table214 = numericReferences.fixtures.brCorte2023Eq26Table214;
+
 test('BR-CORTE 2023 Eq. 2.6 reproduces Table 2.14 worked example', () => {
-  const result = predictPastureDmi({bodyWeightKg: 400, adgKgPerDay: 0.5, supplementKgDMPerDay: 1.6});
-  assert.ok(Math.abs(result.totalDmiKgDMPerDay - 7.58) < 0.005);
+  const result = predictPastureDmi({
+    bodyWeightKg: table214.inputs.bodyWeightKg.value,
+    adgKgPerDay: table214.inputs.adgKgPerDay.value,
+    supplementKgDMPerDay: table214.inputs.supplementKgDMPerDay.value
+  });
+  assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.publishedRoundedTotalDmiKgDMPerDay) < table214.expected.publishedPrecisionToleranceKgDMPerDay);
+  assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
   assert.equal(result.inValidatedDomain, true);
   assert.equal(result.adgRole, 'input-assumption; not predicted by this equation');
 });
