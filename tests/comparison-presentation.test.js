@@ -159,6 +159,9 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
   const environmentResponse=await fetch('http://127.0.0.1:'+server.address().port+'/environment-model.js');
   assert.equal(environmentResponse.status,200);
   assert.match(await environmentResponse.text(),/getWeatherRules/);
+  const feedingResponse=await fetch('http://127.0.0.1:'+server.address().port+'/feeding-model.js');
+  assert.equal(feedingResponse.status,200);
+  assert.match(await feedingResponse.text(),/calculateFeeding/);
 });
 
 test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{
