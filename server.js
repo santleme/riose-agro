@@ -14,7 +14,7 @@ const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
-  'index.html', 'home.html', 'home.css', 'home.js', 'simulator.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'favicon.svg', 'riose-mark.svg', 'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png',
+  'index.html', 'home.html', 'home.css', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js', 'product.html', 'product.css', 'product-interaction.js', 'simulator.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'scientific/br_corte_pasture_dmi.js', 'favicon.svg', 'riose-mark.svg', 'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png', 'assets/agroville-manifesto-farm.png',
   'assets/research-pages/generative-agents-1.webp', 'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',

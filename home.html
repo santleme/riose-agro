@@ -15,10 +15,18 @@
   <body>
     <a class="skip-link" href="#research">Skip to content</a>
     <header class="site-header" aria-label="Riose">
-      <a class="header-manifesto" href="#research">manifesto</a>
+      <a class="header-manifesto" href="manifesto.html">manifesto</a>
       <div class="header-mark-group">
-        <a class="header-wordmark" href="/" aria-label="Riose home">Riose</a>
-        <a class="header-product" href="simulator.html">· product</a>
+        <div class="header-name-control">
+          <button class="header-wordmark meaning-trigger" type="button" aria-label="About the name Riose" aria-expanded="false" aria-controls="riose-definition" aria-describedby="riose-definition">Riose</button>
+          <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
+            <span class="definition-title">Riose</span>
+            <span class="definition-meta">proper noun / origin</span>
+            <p>Named after Bel Riose, a general from <em>Foundation</em>, a character inspired by the Byzantine commander Belisarius.</p>
+            <p class="definition-note">A name for seeing farther and turning the unseen into knowledge.</p>
+          </aside>
+        </div>
+          <a class="header-product" href="product.html">· product</a>
       </div>
       <span class="header-place">são paulo, brazil</span>
     </header>
@@ -37,7 +45,7 @@
             <p>Tracking what matters beyond expectations.</p>
             <a href="#research">Here’s how we do it <span aria-hidden="true">↓</span></a>
           </div>
-          <a class="system-preview" href="simulator.html" aria-label="View the Agroville demonstration system">
+          <a class="system-preview" href="product.html" aria-label="Open the Riose product simulation">
             <div class="map-window" aria-hidden="true">
               <svg class="farm-map" viewBox="0 0 260 132" role="img" aria-label="Illustrated preview of the demonstration farm map">
                 <rect width="260" height="132" fill="#d7d5c5"/>
@@ -114,6 +122,7 @@
         </footer>
       </section>
     </main>
+    <script src="header-interaction.js" defer></script>
     <script src="home.js" defer></script>
   </body>
 </html>

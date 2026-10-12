@@ -91,7 +91,7 @@ test('HTTP endpoint validates input and works without an API key', async t => {
 
   const page = await fetch(url.replace('/api/explain', '/'));
   assert.equal(page.status, 200);
-  assert.match(await page.text(), /Agroville/);
+  assert.match(await page.text(), /Riose/);
   const backendFile = await fetch(url.replace('/api/explain', '/server.js'));
   assert.equal(backendFile.status, 404);
 

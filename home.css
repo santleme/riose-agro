@@ -29,13 +29,24 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
   pointer-events: none;
 }
 .header-manifesto { position: absolute; left: clamp(24px, 5.35vw, 80px); color: #64655e; font: 11px var(--mono); letter-spacing: .025em; pointer-events: auto; }
-.header-mark-group { position: absolute; left: calc(50% + clamp(26px, 2.64vw, 38px)); display: flex; align-items: baseline; gap: 15px; transform: translateX(-50%); white-space: nowrap; }
-.header-wordmark { font-size: 19px; font-weight: 700; letter-spacing: -.065em; opacity: 1; transition: opacity .18s ease; pointer-events: auto; }
-.header-product { color: #66675f; font: 11px var(--mono); pointer-events: auto; }
+.header-mark-group { position: absolute; top: 50%; left: 50%; display: flex; align-items: baseline; gap: 10px; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: auto; }
+.header-name-control { position: relative; display: inline-flex; align-items: baseline; }
+.header-wordmark { position: relative; z-index: 1; display: block; padding: 0; border: 0; background: transparent; color: var(--ink); font: 700 19px/1.05 var(--sans); letter-spacing: -.065em; cursor: help; pointer-events: auto; }
+.header-wordmark::before { position: absolute; z-index: -1; inset: 0 -.08em; content: ""; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 86% / 0% 58%; transition: background-size .24s ease; }
+.header-wordmark:hover::before, .header-wordmark:focus-visible::before, .header-name-control.is-open .header-wordmark::before { background-size: 100% 58%; }
+.header-product { align-self: baseline; color: #66675f; font: 11px/1 var(--mono); pointer-events: auto; }
 .header-place { margin-left: auto; color: #77766f; font: 11px var(--mono); letter-spacing: .025em; text-transform: lowercase; }
 .header-place { pointer-events: auto; }
 .site-header.is-locking .header-wordmark { opacity: 0; }
 .site-header.is-scrolled { background-color: rgb(247 247 244 / .86); backdrop-filter: blur(5px); }
+.header-manifesto, .header-product { transition: color .18s ease, background-color .18s ease; }
+.header-manifesto:hover, .header-manifesto:focus-visible, .header-product:hover, .header-product:focus-visible { color: var(--paper); background: var(--ink); }
+.name-definition { position: absolute; z-index: 4; top: calc(100% + 13px); left: 50%; width: min(328px, calc(100vw - 32px)); padding: 18px 20px 19px; color: #292a25; white-space: normal; background: rgb(250 249 245 / .78); border: 1px solid rgb(255 255 255 / .72); border-radius: 20px; box-shadow: 0 22px 60px rgb(46 43 34 / .10), 0 3px 12px rgb(46 43 34 / .04), inset 0 1px 0 rgb(255 255 255 / .72); backdrop-filter: blur(17px) saturate(112%); -webkit-backdrop-filter: blur(17px) saturate(112%); opacity: 0; pointer-events: none; transform: translate(calc(-50% + var(--definition-shift-x, 0px)), 6px); filter: blur(2px); transition: opacity .2s ease, transform .2s ease, filter .2s ease; }
+.header-name-control.is-open .name-definition { opacity: 1; pointer-events: auto; transform: translate(calc(-50% + var(--definition-shift-x, 0px)), 0); filter: blur(0); }
+.definition-title { display: block; margin-bottom: 4px; font-size: 20px; font-weight: 600; letter-spacing: -.045em; }
+.definition-meta { display: block; margin-bottom: 14px; color: #777870; font: 9px var(--mono); letter-spacing: .02em; }
+.name-definition p { margin: 0; font-size: 12px; font-weight: 400; line-height: 1.55; }
+.name-definition .definition-note { margin-top: 11px; color: #696a63; }
 
 .hero {
   position: relative;
@@ -153,8 +164,13 @@ body.is-scrolled .hero-scene { transform: translate3d(calc(-50% + var(--scene-x,
   .header-wordmark { font-size: 16px; }
   .header-place { font-size: 7px; }
   .header-manifesto { left: 20px; font-size: 8px; }
-  .header-mark-group { gap: 9px; }
   .header-product { font-size: 8px; }
+  .header-mark-group { gap: 8px; }
+  .name-definition { top: calc(100% + 11px); width: min(350px, calc(100vw - 32px)); padding: 11px 14px 12px; border-radius: 13px; }
+  .definition-title { margin-bottom: 2px; font-size: 16px; }
+  .definition-meta { margin-bottom: 7px; font-size: 8px; }
+  .name-definition p { font-size: 9px; line-height: 1.32; }
+  .name-definition .definition-note { margin-top: 5px; }
   .hero { min-height: 700px; min-height: 100svh; }
   .hero-lockup { top: 20%; gap: 8px; }
   .hero-wordmark { font-size: clamp(108px, 35vw, 150px); letter-spacing: -.1em; }

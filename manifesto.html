@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f7f4">
+    <meta name="description" content="Riose models possible agricultural worlds before decisions reach the field.">
+    <title>Manifesto — Riose</title>
+    <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="manifesto.css">
+  </head>
+  <body class="manifesto-page">
+    <a class="skip-link" href="#manifesto-title">Skip to content</a>
+    <header class="site-header" aria-label="Riose">
+      <a class="header-manifesto" href="#manifesto-title" aria-current="page">manifesto</a>
+      <div class="header-mark-group">
+        <div class="header-name-control">
+          <button class="header-wordmark meaning-trigger" type="button" aria-label="About the name Riose" aria-expanded="false" aria-controls="riose-definition" aria-describedby="riose-definition">Riose</button>
+          <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
+            <span class="definition-title">Riose</span>
+            <span class="definition-meta">proper noun / origin</span>
+            <p>Named after Bel Riose, a general from <em>Foundation</em>, a character inspired by the Byzantine commander Belisarius.</p>
+            <p class="definition-note">A name for seeing farther and turning the unseen into knowledge.</p>
+          </aside>
+        </div>
+        <a class="header-product" href="simulator.html">· product</a>
+      </div>
+      <span class="header-place">são paulo, brazil</span>
+    </header>
+
+    <main class="manifesto-main">
+      <section class="manifesto-opening" aria-labelledby="manifesto-title">
+        <div class="manifesto-copy" data-reveal>
+          <h1 id="manifesto-title">Every season, decisions are made before anyone knows what the season will bring.</h1>
+          <p>How much to plant. Where to move a <button class="manifesto-term" type="button" data-scenario="herd" aria-pressed="false">herd</button>. When to irrigate. Which machinery to deploy. The land changes, the <button class="manifesto-term" type="button" data-scenario="rain" aria-pressed="false">weather</button> shifts, animals respond, and systems that appeared stable reveal their limits.</p>
+        </div>
+      </section>
+
+      <section class="manifesto-world" aria-label="Interactive farm simulation" data-reveal>
+        <img class="manifesto-world-poster" src="assets/agroville-manifesto-farm.png" alt="" aria-hidden="true" width="500" height="314">
+        <iframe class="manifesto-world-frame" src="index.html?manifesto-world=1" title="Riose farm simulation showing cattle moving through connected pastures, with water, weather and farm structures" loading="eager"></iframe>
+      </section>
+
+      <section class="manifesto-continuation" aria-label="Riose approach" data-reveal>
+        <p>Uncertainty is not a theory. Over three decades, disasters have caused an estimated $3.8 trillion in global crop and livestock production losses, according to the <a href="https://www.fao.org/newsroom/detail/first-ever-global-estimation-of-the-impact-of-disasters-on-agriculture/en" target="_blank" rel="noopener noreferrer">FAO</a>. In Brazil, <a href="https://www.embrapa.br/pt/visao/riscos-na-agricultura" target="_blank" rel="noopener noreferrer">Embrapa's research on agricultural risk</a> documents how <button class="manifesto-term" type="button" data-scenario="drought" aria-pressed="false">droughts</button>, floods, pests, and climate pressures threaten production.</p>
+        <p>Behind those figures are decisions made with incomplete information, and consequences that cannot always be reversed.</p>
+        <p>We started with a question: what if some of those decisions could be examined before they become irreversible?</p>
+        <p>At Riose, we are building worlds where decisions have consequences.</p>
+        <p>In a simulated farm, animals move, pastures recover or degrade, water becomes scarce or abundant, and interventions change what happens next. A scenario is not a static picture. It is a system of interacting processes, shaped by evidence, assumptions, constraints, and time.</p>
+        <p>A useful simulation must do more than look believable. It must make its assumptions visible, be compared with observations, and expose where it is uncertain. It should help someone ask a better question, not pretend to supply a perfect answer.</p>
+        <p>We are building Riose in Brazil, beginning with agriculture because its challenges are physical, interconnected, and often expensive to reverse.</p>
+        <p>But agriculture is our starting point, not our boundary.</p>
+        <p>Factories, energy systems, infrastructure, and environments face the same fundamental challenge: decisions must be made before their consequences are fully understood.</p>
+        <p>Different worlds demand different models. They share the need for a place where alternatives can be explored, compared, and challenged.</p>
+        <p>We do not want to replace human judgment. We want to give it room to experiment.</p>
+        <p>Before a field is altered, a resource is committed, or a risk becomes a loss, there should be another place to try.</p>
+        <p>That is the world we want to build.</p>
+      </section>
+    </main>
+    <script src="header-interaction.js" defer></script>
+    <script src="manifesto.js" defer></script>
+  </body>
+</html>

@@ -17,3 +17,63 @@
 
 .result-card p+p{margin-top:7px;color:#496c3e}
 .intro-actions{display:flex;gap:10px;align-items:center}.intro-actions>button:not(.primary){border:1px solid #b6c4a8;background:#eff3e8;color:#35533a;border-radius:8px;padding:12px 16px;font:inherit;font-weight:650;cursor:pointer}.scientific-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.scientific-form>label,.science-paddocks{display:grid;gap:6px;color:#43533f;font-size:13px}.scientific-form input[type=number],.scientific-form select{width:100%;padding:9px;border:1px solid #c9d3c2;border-radius:6px;background:#fff;font:inherit}.science-paddocks{grid-column:1/-1}.science-paddocks>div{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.science-paddocks label{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #d5ddcf;padding:8px;border-radius:6px}.science-paddocks label input[type=number]{max-width:130px}.science-paddocks label span{display:flex;align-items:center;gap:4px;white-space:nowrap}.scientific-form>button{grid-column:1/-1}.scientific-note,.scientific-result small{color:#687368;font-size:12px;line-height:1.5}.scientific-result{margin-top:16px;overflow:auto}.scientific-result table{border-collapse:collapse;width:100%;font-size:13px}.scientific-result th,.scientific-result td{text-align:left;border-bottom:1px solid #e1e6dd;padding:8px}.scientific-active-panel{display:grid;gap:6px;margin-top:10px;padding:12px 14px;border:1px solid #c5d3b9;border-radius:8px;background:#f3f6ed;color:#40533e;font-size:13px}.scientific-active-panel small{color:#697568}.scientific-active-panel a{color:#456849;font-size:12px}.intro-actions .primary{margin:0}@media(max-width:700px){.intro-actions{align-items:stretch;flex-direction:column}.scientific-form{grid-template-columns:1fr}.science-paddocks>div{grid-template-columns:1fr}}
+
+/* The manifesto reuses the real farm world without exposing the simulator controls. */
+html.manifesto-world-only,
+html.manifesto-world-only body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #f7f7f4;
+}
+html.manifesto-world-only body > header,
+html.manifesto-world-only body > main > .intro,
+html.manifesto-world-only .herd,
+html.manifesto-world-only .inspector,
+html.manifesto-world-only body > main > .below,
+html.manifesto-world-only body > footer,
+html.manifesto-world-only dialog,
+html.manifesto-world-only body > .notice { display: none !important; }
+html.manifesto-world-only body > main {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+html.manifesto-world-only .workspace {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html.manifesto-world-only .world { width: 100%; height: 100%; }
+html.manifesto-world-only .world-toolbar,
+html.manifesto-world-only .scenario-bar,
+html.manifesto-world-only .scenario-status,
+html.manifesto-world-only .map-location,
+html.manifesto-world-only .map-tools,
+html.manifesto-world-only .map-hint,
+html.manifesto-world-only .playback,
+html.manifesto-world-only .metrics { display: none !important; }
+html.manifesto-world-only .map-wrap {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: 576 / 336;
+  background: #7ea466;
+  filter: saturate(.84) sepia(.06);
+}
+html.manifesto-world-only #map {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  touch-action: pan-y;
+  cursor: default;
+}
