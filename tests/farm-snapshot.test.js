@@ -38,6 +38,54 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
   assert.equal(validateFarmSnapshot(missingOperations).semanticValid, true);
 });
 
+test('snapshot accepts optional versioned variable domain classification', () => {
+  const legacy = structuredClone(example);
+  assert.equal(Object.hasOwn(legacy, 'variableClassification'), false);
+  assert.equal(validateSchema(legacy), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(legacy).semanticValid, true);
+
+  const referenceWithoutCatalog = structuredClone(legacy);
+  referenceWithoutCatalog.animals[0].category.variableId = 'category';
+  assert.equal(validateSchema(referenceWithoutCatalog), true);
+  assert.ok(validateFarmSnapshot(referenceWithoutCatalog).errors.some(message => message.includes('não existe em variableClassification.variables')));
+
+  const classified = structuredClone(legacy);
+  classified.animals[0].category.variableId = 'category';
+  classified.variableClassification = {
+    version: '1.0.0',
+    variables: {
+      category: 'animal',
+    },
+  };
+  assert.equal(validateSchema(classified), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(classified).semanticValid, true);
+
+  const invalidLevel = structuredClone(classified);
+  invalidLevel.variableClassification.variables.diet = 'farm-wide';
+  assert.equal(validateSchema(invalidLevel), false);
+  assert.ok(validateFarmSnapshot(invalidLevel).errors.some(message => message.includes('deve ser farm, lot ou animal')));
+
+  const unsupportedVersion = structuredClone(classified);
+  unsupportedVersion.variableClassification.version = '2.0.0';
+  assert.equal(validateSchema(unsupportedVersion), false);
+  assert.ok(validateFarmSnapshot(unsupportedVersion).errors.some(message => message.includes("version deve ser '1.0.0'")));
+
+  const invalidId = structuredClone(classified);
+  invalidId.variableClassification.variables['1-invalid'] = 'animal';
+  assert.equal(validateSchema(invalidId), false);
+  assert.ok(validateFarmSnapshot(invalidId).errors.some(message => message.includes('id de variável inválido')));
+
+  const unknownReference = structuredClone(classified);
+  unknownReference.animals[0].category.variableId = 'not-listed';
+  assert.equal(validateSchema(unknownReference), true);
+  assert.ok(validateFarmSnapshot(unknownReference).errors.some(message => message.includes('não existe em variableClassification.variables')));
+
+  const unreferencedVariable = structuredClone(classified);
+  unreferencedVariable.variableClassification.variables.diet = 'lot';
+  assert.equal(validateSchema(unreferencedVariable), true);
+  assert.ok(validateFarmSnapshot(unreferencedVariable).errors.some(message => message.includes('precisa ser referenciada por ao menos um campo')));
+});
+
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
   const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
