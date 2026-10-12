@@ -42,6 +42,10 @@ export function visualUpdateInterval(distance, nearDistance = 100, mediumDistanc
   return 33 + 87 * progress ** 2;
 }
 
+export function toolAvailableInSystem(toolSystem, domain) {
+  return toolSystem === domain || toolSystem === 'both';
+}
+
 export function clusterFarAnimals(entries, cellWidth = 48, cellHeight = 36) {
   const individual = [], groups = new Map();
   for (const entry of entries) {

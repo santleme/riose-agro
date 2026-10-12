@@ -6,7 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -14,6 +14,13 @@ const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema
 const renderManifest = JSON.parse(await readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8'));
 const assetSourceManifest = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: true, strictRequired: false}).compile(schema);
+
+test('shared Composer tools remain available in both production-system scenes', () => {
+  assert.equal(toolAvailableInSystem('both', 'beef'), true);
+  assert.equal(toolAvailableInSystem('both', 'dairy'), true);
+  assert.equal(toolAvailableInSystem('beef', 'dairy'), false);
+  assert.equal(toolAvailableInSystem('dairy', 'beef'), false);
+});
 
 test('renderer-independent scene schema supports beef and in-progress dairy scenarios', () => {
   assert.equal(validate(scene), true, JSON.stringify(validate.errors));
@@ -214,6 +221,37 @@ test('scene edits resolve canonical asset references and preserve review status 
   assert.ok(scene.assets.some(asset => asset.assetId === 'building-farmhouse-imagegen-v1'));
   assert.ok(scene.assets.some(asset => asset.assetId === 'dairy-heifer' && asset.reviewStatus === 'REVIEW'));
   assert.ok(scene.assets.every(asset => !asset.manifestUri.startsWith('parallel:')));
+});
+
+test('composer palette exposes corral and technology prefabs through the shared scene schema', async () => {
+  const index = await readFile(new URL('../graphics-poc/index.html', import.meta.url), 'utf8');
+  const scene = structuredClone(dairyScene);
+  const assetIds = [
+    'corral-wood-standard-imagegen-v1',
+    'technology-scale-electronic-full-imagegen-v1',
+    'technology-gateway-antenna-imagegen-v1',
+    'technology-traceability-system-imagegen-v1',
+  ];
+
+  for (const assetId of assetIds) {
+    const metadata = renderManifest.assets.find(asset => asset.assetId === assetId);
+    assert.ok(metadata, `${assetId} is declared by the renderer manifest`);
+    assert.match(index, new RegExp(`data-tool="${assetId}"`), `${assetId} is available from the Composer palette`);
+    if (metadata.category === 'technology') assert.match(index, new RegExp(`data-tool="${assetId}" data-system="both"`));
+    scene.prefabs.push({
+      prefabId: `palette-${assetId}`,
+      assetId,
+      position: {x: 2, y: 2, unit: 'grid-cell'},
+      footprint: {columns: metadata.footprint[0], rows: metadata.footprint[1]},
+      layer: 'infrastructure',
+      state: {stateId: 'default'},
+      blocking: metadata.blocking,
+    });
+  }
+
+  normalizeSceneAssetReferences(scene, renderManifest, assetSourceManifest);
+  assert.equal(validate(scene), true, JSON.stringify(validate.errors));
+  assert.ok(assetIds.every(assetId => scene.assets.some(asset => asset.assetId === assetId)));
 });
 
 test('the Graphics Lab serves both editable schema-valid scenes and dairy source art with provenance', async t => {

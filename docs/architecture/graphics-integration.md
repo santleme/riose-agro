@@ -35,6 +35,8 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 - Selected prefabs can rotate by 90° in the inspector; bounds, blocking collisions, zone containment and adjacency use the rotated grid footprint.
 - Prefab placement snaps to cells and checks bounds, blocking collisions, allowed zone kinds, adjacency and row/column alignment when those rules are declared.
 - The `Núcleo de ordenha` composition places an aligned dairy barn, parlor, tank and waiting pen as one validated group.
+- The editor palette can add a corral, water/feed troughs, dairy barns and milking equipment, plus shared electronic-scale, gateway and traceability technology prefabs. Shared technology tools stay available in both production-system scenes; placements resolve through the renderer manifest and retain its review status.
+- Far-herd count badges are compact, float above their representative sprite and use the same screen-space dimensions in Canvas and PixiJS, so they remain readable without covering the animal or growing with camera zoom.
 - The beef and dairy scenes use the same `visual-scene` JSON schema. Both remain editable, persist separately in browser storage and export as renderer-independent JSON.
 - Worker animal coordinates are adapted to scene coordinates and rendered as a separate layer.
 - Renderer, camera, zoom and asset visibility never mutate the Worker snapshot.

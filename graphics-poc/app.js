@@ -1,5 +1,5 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
@@ -205,9 +205,10 @@ function drawCanvasEntry(ctx, entry, time) {
   } else if (meta.imageKey) ctx.drawImage(atlas, p.x + x, p.y + y, width, height);
   else ctx.drawImage(atlas, meta.x, meta.y, meta.w, meta.h, p.x + x, p.y + y, width, height);
   if (entry.kind === 'herd-cluster' && entry.count > 1 && state.activeLayers.overlays) {
-    const label = entry.count.toLocaleString('pt-BR'); ctx.font = 'bold 11px system-ui';
-    const badgeWidth = Math.max(28, ctx.measureText(label).width + 12), badgeX = p.x - badgeWidth / 2, badgeY = screenY + height * .42;
-    ctx.fillStyle = '#173e32'; ctx.fillRect(badgeX, badgeY, badgeWidth, 19); ctx.fillStyle = '#f7f4dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, badgeY + 9.5);
+    const label = entry.count.toLocaleString('pt-BR'); ctx.font = 'bold 9px system-ui';
+    const badgeWidth = Math.max(18, ctx.measureText(label).width + 8), badgeX = p.x - badgeWidth / 2, badgeY = screenY - 16;
+    ctx.fillStyle = 'rgba(23, 62, 50, .94)'; ctx.beginPath(); ctx.roundRect(badgeX, badgeY, badgeWidth, 14, 6); ctx.fill();
+    ctx.fillStyle = '#f7f4dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, badgeY + 7);
   }
   if (state.selection === entry.id && state.activeLayers.overlays) {
     const bounds = screenBounds(entry);
@@ -319,9 +320,11 @@ function syncPixiScene() {
   if (state.activeLayers.overlays) {
     for (const entry of state.visible) {
       if (entry.kind !== 'herd-cluster' || entry.count < 2) continue;
-      const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: String(entry.count), style: {fontFamily: 'Arial', fontSize: 11, fontWeight: 'bold', fill: '#f7f4dc'}});
-      background.roundRect(-17, -10, 34, 20, 7).fill({color: 0x173e32}); label.anchor.set(.5); badge.addChild(background, label);
-      badge.position.set(entry.x, entry.y - 5 / state.camera.zoom); layers.overlays.addChild(badge);
+      const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: entry.count.toLocaleString('pt-BR'), style: {fontFamily: 'Arial', fontSize: 9, fontWeight: 'bold', fill: '#f7f4dc'}});
+      label.anchor.set(.5); const badgeWidth = Math.max(18, label.width + 8);
+      background.roundRect(-badgeWidth / 2, -7, badgeWidth, 14, 6).fill({color: 0x173e32, alpha: .94}); badge.addChild(background, label);
+      const meta = frameBox(entry.assetId), spriteHeight = meta.h * meta.scale;
+      badge.position.set(entry.x, entry.y - spriteHeight - 15 / state.camera.zoom); badge.scale.set(1 / state.camera.zoom); layers.overlays.addChild(badge);
     }
   }
   if (state.activeLayers.overlays && state.selection) {
@@ -510,7 +513,7 @@ async function selectScene(domain) {
   state.selectedDomain = domain; state.selection = null; state.tool = null; state.view = null;
   $('domain-module').value = domain;
   $('scene-picker').value = domain;
-  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', item.dataset.system !== domain);
+  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, domain));
   state.terrainCells = terrainCells(state.scene);
   setSimulationRunning(false);
   if (domain === 'beef') {
@@ -630,7 +633,7 @@ async function initialize() {
   normalizeSceneAssetReferences(state.scene, renderManifest, assetSourceManifest);
   originalBeefModule = structuredClone(scene.domainModule); originalBeefScenario = scene.simulation.scenarioId;
   state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; $('domain-module').value = state.selectedDomain; $('scene-picker').value = state.selectedDomain;
-  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', item.dataset.system !== state.selectedDomain);
+  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
   state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, 'dairy-heifer': dairyHeiferImage, 'dairy-activity-collar': dairyCollarImage, ...Object.fromEntries(dynamicAtlases)};
   state.assetAtlasUrls = renderManifest.atlases;
   state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
