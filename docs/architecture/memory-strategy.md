@@ -20,6 +20,23 @@ The metabolism batch already crosses as packed arrays, but the browser bridge sa
 
 Activity history used `push()` followed by `shift()` after each animal reached 40 entries. In a warmed, alternating-order, five-run 30-day/10,000-animal benchmark, median simulation time fell from 951.2 ms with the old bounded array to 816.6 ms with the ring buffer (14% lower); the resulting 400,000 history entries and snapshots were identical. Snapshot materialization was 426.3 ms versus 436.1 ms, within the noise of this sample. This justifies the small ring-buffer change while leaving the public snapshot shape unchanged. The ring still creates one activity record per transition; packing those records into typed arrays remains a separate experiment.
 
+## Activity-history storage experiment
+
+`npm run bench:history-storage` compares the production object ring with a benchmark-only typed-column ring. Each variant runs in a fresh Node process, performs one untimed 720-hour warm-up, then reports the median of three 720-hour runs. Both use seed `20261012`; the snapshot SHA-256 and number of history entries are checked for equality. Environment: Node `v20.20.2` on Linux x86_64 under WSL2. This is a synthetic engine benchmark, not a browser or production workload.
+
+| Animals | Storage | Tick median | Full snapshot median | Retained heap delta | Retained ArrayBuffer delta |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1,000 | Object ring | 116.5 ms | 52.0 ms | 4.97 MB | 0 MB |
+| 1,000 | Typed columns | 267.2 ms | 4.9 ms | 1.08 MB | 0.64 MB |
+| 10,000 | Object ring | 1,228.3 ms | 629.8 ms | 48.83 MB | 0 MB |
+| 10,000 | Typed columns | 3,525.0 ms | 94.2 ms | 10.13 MB | 6.42 MB |
+
+All snapshots were identical, containing 40 entries per animal (400,000 entries at 10,000 animals). At that size, typed columns reduced retained JS heap by about 79% and combined retained heap plus ArrayBuffer memory by about 66%. They made full snapshot materialization about 6.7× faster, but made the measured tick about 2.9× slower. The typed version uses a benchmark-only direct recording path; this comparison does not isolate the representation from that implementation difference, so the tick regression is a reason to reject this prototype for production, not a general claim about typed arrays.
+
+The benchmark also reports RSS, but do not use it to compare these variants: the median post-warm-up RSS baselines differed by about 99 MB between the two 10,000-animal child processes, and the typed process's post-tick RSS fell below its own baseline after garbage collection. The heap and ArrayBuffer deltas are the interpretable retained-storage comparison here; peak RSS needs a more controlled harness.
+
+Keep the production object ring. Its 40-entry cap bounds memory and the currently shipped views request history only for the selected animal or a full explicit snapshot. No history-wide aggregate query exists, so incremental aggregates would add duplicated state and update work without accelerating an active consumer. Revisit columnar storage if full-history export or analysis becomes a measured bottleneck, and compare equivalent write paths before changing production.
+
 ## Decisions left open
 
 Profile realistic herd sizes and remaining per-animal history-record allocations before choosing SoA, ECS, slab/pool allocation, compact IDs, binary snapshots, shared memory or SIMD. Pasture allocation currently depends on animal iteration order, so changing to parallel reductions changes semantics. Weight/energy updates are independent after per-animal intake is fixed and are the first plausible vectorized stage.

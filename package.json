@@ -8,6 +8,7 @@
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
     "bench:history": "node scripts/benchmark-history.mjs",
+    "bench:history-storage": "node --expose-gc scripts/benchmark-history-storage.mjs",
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "build:graphics-poc": "node scripts/build-graphics-poc.mjs",
     "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
