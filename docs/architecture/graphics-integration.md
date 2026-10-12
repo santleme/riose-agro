@@ -39,7 +39,7 @@ The source environment atlas comes from d99d's runtime manifest but individual e
 
 Run `npm run bench:graphics-poc` with the local app server available at `http://127.0.0.1:8000/`. It builds the bundle, opens local Chromium with WebGL enabled, starts the same Worker and seed, and measures Canvas 2D and PixiJS at 100, 1,000 and 10,000 simulated animals. Each renderer uses the same zoom, scene, visible area, culling rule and atlas frames. The report records frame interval mean FPS/p95, scene update/culling/sort time, render submission time, simulated count, visible animal and sprite counts, post-GC JS heap, one-hour Worker round-trip, asset load time and Pixi initialization time. Browser GPU memory is not exposed by the harness and is not inferred from JS heap.
 
-The first pass is exploratory, not a performance sign-off. Repeat with 30+ samples and representative released assets on target devices before a production renderer decision. PixiJS batching and GPU rendering may help fill-bound scenes, while per-object culling, scene-graph mutation and depth sorting can increase CPU work.
+The current two-repetition run is exploratory, not a performance sign-off. Repeat with 30+ samples and representative released assets on target devices before a production renderer decision. PixiJS batching and GPU rendering may help fill-bound scenes, while per-object culling, scene-graph mutation and depth sorting can increase CPU work.
 
 ## Integration sequence
 
