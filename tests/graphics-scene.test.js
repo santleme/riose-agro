@@ -6,7 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -195,6 +195,18 @@ test('zone ground selection exposes terrain transition cells for auto-tiling', (
   assert.equal(cells.length, scene.projection.columns * scene.projection.rows);
   assert.deepEqual(cells.map(cell => cell.assetId), scene.terrainTiles.map(tile => tile.assetId), 'imported tile atlas IDs stay in source order');
   assert.ok(cells.some(cell => cell.zoneId && cell.assetId !== 'grass-light'), 'Composer terrain preserves distinct ground surfaces');
+});
+
+test('terrain render order follows isometric depth and preserves authored source order', () => {
+  const sourceOrder = terrainCells(scene).map(cell => {
+    const point = projectIso(cell.column + .5, cell.row + .5, scene.projection.cellWidth, scene.projection.cellHeight);
+    return {id: `tile-${cell.column}-${cell.row}`, x: point.x, depth: point.y - 18};
+  });
+  const sorted = sortTerrainBackToFront(sourceOrder);
+  assert.deepEqual(sourceOrder.map(entry => entry.id), scene.terrainTiles.map(tile => `tile-${tile.position.x}-${tile.position.y}`), 'sorting must not mutate Composer-authored tile order');
+  assert.deepEqual(sorted.map(entry => entry.id), [...sourceOrder].sort((a, b) => a.depth - b.depth || a.x - b.x).map(entry => entry.id));
+  assert.notDeepEqual(sorted.map(entry => entry.id), sourceOrder.map(entry => entry.id), 'row-major source order is not the isometric painter order');
+  assert.equal(new Set(sorted.map(entry => entry.id)).size, scene.projection.columns * scene.projection.rows);
 });
 
 test('checked-in beef and dairy scenes are reproducible adaptations of pinned Composer exports', async () => {

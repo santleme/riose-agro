@@ -184,3 +184,7 @@ export function terrainCells(scene) {
   }
   return cells;
 }
+
+export function sortTerrainBackToFront(entries) {
+  return [...entries].sort((a, b) => a.depth - b.depth || a.x - b.x);
+}

@@ -1,5 +1,5 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
@@ -178,7 +178,7 @@ function refreshScene() {
   }
   const {individual, clusters} = clusterFarAnimals(animals);
   const ordered = [...objects, ...individual, ...clusters].sort((a, b) => a.depth - b.depth || a.x - b.x);
-  state.visible = [...terrain, ...ordered];
+  state.visible = [...sortTerrainBackToFront(terrain), ...ordered];
   state.updateMs = performance.now() - started;
   state.visibleAnimalCount = animals.length;
   state.culledAnimalCount = culledAnimalCount;
