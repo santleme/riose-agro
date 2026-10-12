@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "library": "riose-brazilian-cattle",
+  "note": "Existing mixed-farm candidates are not auto-approved; every reuse-candidate must pass the cattle style gate.",
+  "entries": [
+    {
+      "sourceId": "grass-light-01",
+      "sourceCategory": "terrain",
+      "sourceFile": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "pasture-tall-01",
+      "reviewNote": "Re-curate tile and edges against cattle palette; current high cluster count/visual review remains."
+    },
+    {
+      "sourceId": "grass-mid-01",
+      "sourceCategory": "terrain",
+      "sourceFile": "docs/assets/kit-base-v1/terrain/grass-mid-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "pasture-medium-01",
+      "reviewNote": "Re-curate outline and micro-detail; preserve 128×64 grid if artistically approved."
+    },
+    {
+      "sourceId": "soil-dry-01",
+      "sourceCategory": "terrain",
+      "sourceFile": "docs/assets/kit-base-v1/terrain/soil-dry-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "pasture-dry-degraded-01",
+      "reviewNote": "Support state only; validate tile edges and remove noisy clods if needed."
+    },
+    {
+      "sourceId": "dirt-road-straight-01",
+      "sourceCategory": "roads",
+      "sourceFile": "docs/assets/kit-base-v1/roads/dirt-road-straight-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "road-dirt-straight-01",
+      "reviewNote": "Recheck connector endpoints and refined outline."
+    },
+    {
+      "sourceId": "dirt-road-turn-01",
+      "sourceCategory": "roads",
+      "sourceFile": "docs/assets/kit-base-v1/roads/dirt-road-turn-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "road-dirt-turn-connector-01",
+      "reviewNote": "Connection with straight segment not yet functionally approved."
+    },
+    {
+      "sourceId": "fence-straight-01",
+      "sourceCategory": "fences",
+      "sourceFile": "docs/assets/kit-base-v1/fences/fence-straight-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "fence-wire-straight-01",
+      "reviewNote": "Revalidate spacing, line weight and normalized endpoints."
+    },
+    {
+      "sourceId": "fence-corner-01",
+      "sourceCategory": "fences",
+      "sourceFile": "docs/assets/kit-base-v1/fences/fence-corner-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "fence-wire-corner-01",
+      "reviewNote": "Revalidate both isometric connectors."
+    },
+    {
+      "sourceId": "tree-small-01",
+      "sourceCategory": "vegetation",
+      "sourceFile": "docs/assets/kit-base-v1/vegetation/tree-small-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vegetation-pasture-shade-tree-small-01",
+      "reviewNote": "Review canopy cluster density and outline."
+    },
+    {
+      "sourceId": "tree-medium-01",
+      "sourceCategory": "vegetation",
+      "sourceFile": "docs/assets/kit-base-v1/vegetation/tree-medium-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vegetation-pasture-shade-tree-small-01",
+      "reviewNote": "Possible variant only after scale/shape review."
+    },
+    {
+      "sourceId": "tree-large-01",
+      "sourceCategory": "vegetation",
+      "sourceFile": "docs/assets/kit-base-v1/vegetation/tree-large-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vegetation-pasture-shade-tree-large-01",
+      "reviewNote": "Review footprint and pixel density."
+    },
+    {
+      "sourceId": "shrub-01",
+      "sourceCategory": "vegetation",
+      "sourceFile": "docs/assets/kit-base-v1/vegetation/shrub-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vegetation-native-shrub-01",
+      "reviewNote": "Review leaf silhouettes, saturation and outline."
+    },
+    {
+      "sourceId": "pond-small-01",
+      "sourceCategory": "water",
+      "sourceFile": "docs/assets/kit-base-v1/water/pond-small-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "water-pond-small-01",
+      "reviewNote": "Review shore connectors, water detail and tile bounds."
+    },
+    {
+      "sourceId": "farmhouse-small-01",
+      "sourceCategory": "buildings",
+      "sourceFile": "docs/assets/kit-base-v1/buildings/farmhouse-small-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "building-ranch-house-01",
+      "reviewNote": "Review line weight and fine architectural details."
+    },
+    {
+      "sourceId": "farmhouse-hq-01",
+      "sourceCategory": "buildings",
+      "sourceFile": "docs/assets/kit-base-v1/buildings/farmhouse-hq-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "building-ranch-house-01",
+      "reviewNote": "Possible alternate variant; validate scale and details."
+    },
+    {
+      "sourceId": "shed-open-01",
+      "sourceCategory": "buildings",
+      "sourceFile": "docs/assets/kit-base-v1/buildings/shed-open-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "building-livestock-shed-open-01",
+      "reviewNote": "Review roof pixels, rafters and interior readability."
+    },
+    {
+      "sourceId": "grain-silo-01",
+      "sourceCategory": "buildings",
+      "sourceFile": "docs/assets/kit-base-v1/buildings/grain-silo-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "support-only",
+      "targetId": null,
+      "reviewNote": "Optional feed/storage package only; not a core cattle asset."
+    },
+    {
+      "sourceId": "corral-module-01",
+      "sourceCategory": "buildings",
+      "sourceFile": "docs/assets/kit-base-v1/buildings/corral-module-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "corral-modular-pen-01",
+      "reviewNote": "Review joins, handling flow and fine rail detail."
+    },
+    {
+      "sourceId": "feed-trough-01",
+      "sourceCategory": "livestock",
+      "sourceFile": "docs/assets/kit-base-v1/livestock/feed-trough-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "feed-bunk-supplement-01",
+      "reviewNote": "Review empty/stocked states and alpha."
+    },
+    {
+      "sourceId": "water-trough-01",
+      "sourceCategory": "livestock",
+      "sourceFile": "docs/assets/kit-base-v1/livestock/water-trough-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "water-trough-metal-01",
+      "reviewNote": "Review water plane, valve and outline."
+    },
+    {
+      "sourceId": "cow-dairy-01",
+      "sourceCategory": "livestock",
+      "sourceFile": "docs/assets/kit-base-v1/livestock/cow-dairy-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "future-extension",
+      "targetId": null,
+      "reviewNote": "Keep for possible dairy expansion; not part of beef-cattle v1."
+    },
+    {
+      "sourceId": "ox-nelore-01",
+      "sourceCategory": "livestock",
+      "sourceFile": "docs/assets/kit-base-v1/livestock/ox-nelore-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "animals-nelore-adult-standing-01",
+      "reviewNote": "Core content candidate; review zebu anatomy and soften contour."
+    },
+    {
+      "sourceId": "tractor-01",
+      "sourceCategory": "vehicles",
+      "sourceFile": "docs/assets/kit-base-v1/vehicles/tractor-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vehicle-tractor-support-generic-01",
+      "reviewNote": "Support vehicle only; not a hero object in cattle scenes."
+    },
+    {
+      "sourceId": "pickup-01",
+      "sourceCategory": "vehicles",
+      "sourceFile": "docs/assets/kit-base-v1/vehicles/pickup-01.png",
+      "sourceStatus": "candidate",
+      "disposition": "reuse-candidate",
+      "targetId": "vehicle-ranch-pickup-generic-01",
+      "reviewNote": "Remove/check brand-like markings; review contour and scale."
+    },
+    {
+      "sourceId": "soybean-emerging-01",
+      "sourceCategory": "agriculture",
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/soybean-emerging-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "support-only",
+      "targetId": null,
+      "reviewNote": "Optional forage/feed-support package only; never a core pasture asset."
+    },
+    {
+      "sourceId": "soybean-mature-01",
+      "sourceCategory": "agriculture",
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/soybean-mature-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "support-only",
+      "targetId": null,
+      "reviewNote": "Optional feed-support/rotation extension; not a primary scenario zone."
+    },
+    {
+      "sourceId": "maize-growing-01",
+      "sourceCategory": "agriculture",
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/maize-growing-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "support-only",
+      "targetId": null,
+      "reviewNote": "Optional silage/feed-support package only."
+    },
+    {
+      "sourceId": "maize-mature-01",
+      "sourceCategory": "agriculture",
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/maize-mature-02.png",
+      "sourceStatus": "candidate",
+      "disposition": "support-only",
+      "targetId": null,
+      "reviewNote": "Optional silage/feed-support package only."
+    }
+  ]
+}

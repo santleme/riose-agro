@@ -1,0 +1,1852 @@
+{
+  "version": 1,
+  "style": "riose-isometric-farm-v1",
+  "projection": {
+    "type": "isometric-2to1",
+    "logicalModule": [
+      64,
+      32
+    ],
+    "nativeTilePx": [
+      128,
+      64
+    ],
+    "light": "top-left",
+    "pixelFilter": "nearest"
+  },
+  "assets": [
+    {
+      "id": "grass-light-01",
+      "category": "terrain",
+      "file": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary; native-grid variants; 3x3 visual seam check passed",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "ground",
+        "pasture",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [
+        "docs/assets/kit-base-v1/terrain/grass-light-03-02.png",
+        "docs/assets/kit-base-v1/terrain/grass-light-03-03.png"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native 128x64 pixel clusters; three palette-matched variants; clean diamond boundary"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+      "alphaCleanMethod": "hand-authored on native 128x64 logical grid; no image downsampling, color quantization, or post-generation filtering",
+      "sourceFile": "docs/assets/kit-base-v1/terrain/grass-light-02.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "Três variantes nativas repetidas em padrão misto; sem fenda ou linha de borda visível. Aprovação apenas técnica; densidade e acabamento continuam em revisão."
+      },
+      "atlasFrame": {
+        "atlas": "terrain-candidate-v1",
+        "x": 2,
+        "y": 528,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+      "randomVariantFrames": [
+        {
+          "file": "docs/assets/kit-base-v1/terrain/grass-light-03-02.png",
+          "sourceSize": [
+            128,
+            64
+          ],
+          "trim": {
+            "x": 1,
+            "y": 0,
+            "w": 126,
+            "h": 64
+          },
+          "atlasFrame": {
+            "atlas": "terrain-candidate-v1",
+            "x": 132,
+            "y": 528,
+            "w": 126,
+            "h": 64
+          }
+        },
+        {
+          "file": "docs/assets/kit-base-v1/terrain/grass-light-03-03.png",
+          "sourceSize": [
+            128,
+            64
+          ],
+          "trim": {
+            "x": 1,
+            "y": 0,
+            "w": 126,
+            "h": 64
+          },
+          "atlasFrame": {
+            "atlas": "terrain-candidate-v1",
+            "x": 262,
+            "y": 528,
+            "w": 126,
+            "h": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "grass-mid-01",
+      "category": "terrain",
+      "file": "docs/assets/kit-base-v1/terrain/grass-mid-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "ground",
+        "pasture",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 281074,
+        "nonTransparentCanvasEdgePixels": 24,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/terrain/grass-mid-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "terrain-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 1008,
+        "h": 522
+      },
+      "trim": {
+        "x": 383,
+        "y": 193,
+        "w": 1008,
+        "h": 522
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/terrain/grass-mid-01.png"
+    },
+    {
+      "id": "soil-dry-01",
+      "category": "terrain",
+      "file": "docs/assets/kit-base-v1/terrain/soil-dry-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "ground",
+        "dry",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": {
+        "ground": "full diamond; matching base edge"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/terrain/soil-dry-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native ground tile; dry-soil base repeats without a visible seam in the 3x3 test; visual style pending."
+      },
+      "atlasFrame": {
+        "atlas": "terrain-candidate-v1",
+        "x": 392,
+        "y": 528,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/terrain/soil-dry-02.png"
+    },
+    {
+      "id": "dirt-road-straight-01",
+      "category": "roads",
+      "file": "docs/assets/kit-base-v1/roads/dirt-road-straight-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "road",
+        "straight",
+        "tile"
+      ],
+      "connectors": [
+        "east",
+        "west"
+      ],
+      "edgeMask": {
+        "road": "east-west matched"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/roads/dirt-road-straight-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native 2:1 pixel tile; straight connector repeats without a visible seam in the 3x3 test"
+      },
+      "atlasFrame": {
+        "atlas": "roads-candidate-v1",
+        "x": 1306,
+        "y": 2,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/roads/dirt-road-straight-02.png"
+    },
+    {
+      "id": "dirt-road-turn-01",
+      "category": "roads",
+      "file": "docs/assets/kit-base-v1/roads/dirt-road-turn-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "road",
+        "turn",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 489307,
+        "nonTransparentCanvasEdgePixels": 33,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/roads/dirt-road-turn-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "roads-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 1300,
+        "h": 707
+      },
+      "trim": {
+        "x": 237,
+        "y": 91,
+        "w": 1300,
+        "h": 707
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/roads/dirt-road-turn-01.png"
+    },
+    {
+      "id": "fence-straight-01",
+      "category": "fences",
+      "file": "docs/assets/kit-base-v1/fences/fence-straight-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "footprintCells": [
+        1,
+        0
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "fence",
+        "straight",
+        "connector"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 111801,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/fences/fence-straight-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "fences-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 730,
+        "h": 602
+      },
+      "trim": {
+        "x": 524,
+        "y": 169,
+        "w": 730,
+        "h": 602
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/fences/fence-straight-01.png"
+    },
+    {
+      "id": "fence-corner-01",
+      "category": "fences",
+      "file": "docs/assets/kit-base-v1/fences/fence-corner-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "fence",
+        "corner",
+        "connector"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 109832,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/fences/fence-corner-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "fences-candidate-v1",
+        "x": 736,
+        "y": 2,
+        "w": 1020,
+        "h": 495
+      },
+      "trim": {
+        "x": 258,
+        "y": 304,
+        "w": 1020,
+        "h": 495
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/fences/fence-corner-01.png"
+    },
+    {
+      "id": "tree-small-01",
+      "category": "vegetation",
+      "file": "docs/assets/kit-base-v1/vegetation/tree-small-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "tree",
+        "small",
+        "shade"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 290669,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-small-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "vegetation-candidate-v1",
+        "x": 2,
+        "y": 965,
+        "w": 732,
+        "h": 742
+      },
+      "trim": {
+        "x": 412,
+        "y": 161,
+        "w": 732,
+        "h": 742
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-small-01.png"
+    },
+    {
+      "id": "tree-medium-01",
+      "category": "vegetation",
+      "file": "docs/assets/kit-base-v1/vegetation/tree-medium-01.png",
+      "status": "curation-candidate",
+      "sourceSize": [
+        965,
+        895
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        2,
+        2
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "tree",
+        "medium",
+        "shade"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [
+        "docs/assets/kit-base-v1/vegetation/tree-medium-02.png"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-medium-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "variantDiagnostics": [
+        {
+          "file": "docs/assets/kit-base-v1/vegetation/tree-medium-02.png",
+          "status": "candidate; alpha thresholded and reviewed on light/dark matte; visual style review pending",
+          "sourceFile": "docs/assets/kit-base-v1/sources/vegetation/tree-medium-02-generated.png",
+          "sourceSize": [
+            1311,
+            1200
+          ],
+          "cleanedSize": [
+            1105,
+            976
+          ],
+          "alpha": "binary after alpha >= 128 matte cleanup; RGB unchanged for retained pixels"
+        }
+      ],
+      "randomVariantFrames": [
+        {
+          "file": "docs/assets/kit-base-v1/vegetation/tree-medium-02.png",
+          "sourceSize": [
+            1105,
+            976
+          ],
+          "trim": {
+            "x": 12,
+            "y": 12,
+            "w": 1081,
+            "h": 952
+          },
+          "atlasFrame": {
+            "atlas": "vegetation-candidate-v1",
+            "x": 1506,
+            "y": 2,
+            "w": 1081,
+            "h": 952
+          }
+        }
+      ],
+      "atlasFrame": {
+        "atlas": "vegetation-candidate-v1",
+        "x": 2591,
+        "y": 2,
+        "w": 933,
+        "h": 863
+      },
+      "trim": {
+        "x": 16,
+        "y": 16,
+        "w": 933,
+        "h": 863
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-medium-01.png"
+    },
+    {
+      "id": "tree-large-01",
+      "category": "vegetation",
+      "file": "docs/assets/kit-base-v1/vegetation/tree-large-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        3,
+        3
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "tree",
+        "large",
+        "shade"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 850857,
+        "nonTransparentCanvasEdgePixels": 198,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-large-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "vegetation-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 1500,
+        "h": 959
+      },
+      "trim": {
+        "x": 15,
+        "y": 30,
+        "w": 1500,
+        "h": 959
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/tree-large-01.png"
+    },
+    {
+      "id": "shrub-01",
+      "category": "vegetation",
+      "file": "docs/assets/kit-base-v1/vegetation/shrub-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "shrub",
+        "ground-cover"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 206803,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/shrub-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "vegetation-candidate-v1",
+        "x": 738,
+        "y": 965,
+        "w": 746,
+        "h": 473
+      },
+      "trim": {
+        "x": 514,
+        "y": 250,
+        "w": 746,
+        "h": 473
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vegetation/shrub-01.png"
+    },
+    {
+      "id": "pond-small-01",
+      "category": "water",
+      "file": "docs/assets/kit-base-v1/water/pond-small-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        2,
+        2
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "water",
+        "pond",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 419952,
+        "nonTransparentCanvasEdgePixels": 23,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/water/pond-small-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "water-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 1104,
+        "h": 624
+      },
+      "trim": {
+        "x": 239,
+        "y": 222,
+        "w": 1104,
+        "h": 624
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/water/pond-small-01.png"
+    },
+    {
+      "id": "farmhouse-small-01",
+      "category": "buildings",
+      "file": "docs/assets/kit-base-v1/buildings/farmhouse-small-01.png",
+      "status": "curation-candidate",
+      "sourceSize": [
+        1078,
+        844
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        3,
+        3
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "building",
+        "house",
+        "farm"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/farmhouse-small-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "buildings-candidate-v1",
+        "x": 2401,
+        "y": 2,
+        "w": 1046,
+        "h": 812
+      },
+      "trim": {
+        "x": 16,
+        "y": 16,
+        "w": 1046,
+        "h": 812
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/farmhouse-small-01.png"
+    },
+    {
+      "id": "farmhouse-hq-01",
+      "category": "buildings",
+      "file": "docs/assets/kit-base-v1/buildings/farmhouse-hq-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        4,
+        4
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "building",
+        "house",
+        "headquarters"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 722275,
+        "nonTransparentCanvasEdgePixels": 36,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/farmhouse-hq-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "buildings-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 1281,
+        "h": 877
+      },
+      "trim": {
+        "x": 174,
+        "y": 104,
+        "w": 1281,
+        "h": 877
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/farmhouse-hq-01.png"
+    },
+    {
+      "id": "shed-open-01",
+      "category": "buildings",
+      "file": "docs/assets/kit-base-v1/buildings/shed-open-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1619,
+        971
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        5,
+        3
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "building",
+        "shed",
+        "equipment"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 519333,
+        "nonTransparentCanvasEdgePixels": 9,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/shed-open-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "buildings-candidate-v1",
+        "x": 1287,
+        "y": 2,
+        "w": 1110,
+        "h": 844
+      },
+      "trim": {
+        "x": 276,
+        "y": 79,
+        "w": 1110,
+        "h": 844
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/shed-open-01.png"
+    },
+    {
+      "id": "grain-silo-01",
+      "category": "buildings",
+      "file": "docs/assets/kit-base-v1/buildings/grain-silo-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "building",
+        "silo",
+        "grain"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 293393,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/grain-silo-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "buildings-candidate-v1",
+        "x": 1344,
+        "y": 883,
+        "w": 443,
+        "h": 796
+      },
+      "trim": {
+        "x": 547,
+        "y": 102,
+        "w": 443,
+        "h": 796
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/grain-silo-01.png"
+    },
+    {
+      "id": "corral-module-01",
+      "category": "buildings",
+      "file": "docs/assets/kit-base-v1/buildings/corral-module-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        6,
+        5
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "livestock",
+        "corral",
+        "modular"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 547965,
+        "nonTransparentCanvasEdgePixels": 19,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/corral-module-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "buildings-candidate-v1",
+        "x": 2,
+        "y": 883,
+        "w": 1338,
+        "h": 798
+      },
+      "trim": {
+        "x": 79,
+        "y": 66,
+        "w": 1338,
+        "h": 798
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/buildings/corral-module-01.png"
+    },
+    {
+      "id": "feed-trough-01",
+      "category": "livestock",
+      "file": "docs/assets/kit-base-v1/livestock/feed-trough-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1774,
+        887
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        2,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "livestock",
+        "feed",
+        "prop"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 310881,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/feed-trough-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "livestock-candidate-v1",
+        "x": 839,
+        "y": 739,
+        "w": 916,
+        "h": 674
+      },
+      "trim": {
+        "x": 484,
+        "y": 135,
+        "w": 916,
+        "h": 674
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/feed-trough-01.png"
+    },
+    {
+      "id": "water-trough-01",
+      "category": "livestock",
+      "file": "docs/assets/kit-base-v1/livestock/water-trough-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "livestock",
+        "water",
+        "prop"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 445171,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/water-trough-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "livestock-candidate-v1",
+        "x": 864,
+        "y": 2,
+        "w": 1049,
+        "h": 721
+      },
+      "trim": {
+        "x": 271,
+        "y": 209,
+        "w": 1049,
+        "h": 721
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/water-trough-01.png"
+    },
+    {
+      "id": "cow-dairy-01",
+      "category": "livestock",
+      "file": "docs/assets/kit-base-v1/livestock/cow-dairy-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "animal",
+        "cattle",
+        "dairy"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 345674,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/cow-dairy-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "livestock-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 858,
+        "h": 733
+      },
+      "trim": {
+        "x": 336,
+        "y": 168,
+        "w": 858,
+        "h": 733
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/cow-dairy-01.png"
+    },
+    {
+      "id": "ox-nelore-01",
+      "category": "livestock",
+      "file": "docs/assets/kit-base-v1/livestock/ox-nelore-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "animal",
+        "cattle",
+        "nelore"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 357382,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/ox-nelore-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "livestock-candidate-v1",
+        "x": 2,
+        "y": 739,
+        "w": 833,
+        "h": 710
+      },
+      "trim": {
+        "x": 363,
+        "y": 196,
+        "w": 833,
+        "h": 710
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/livestock/ox-nelore-01.png"
+    },
+    {
+      "id": "tractor-01",
+      "category": "vehicles",
+      "file": "docs/assets/kit-base-v1/vehicles/tractor-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        2,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "vehicle",
+        "tractor",
+        "machinery"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 490274,
+        "nonTransparentCanvasEdgePixels": 57,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vehicles/tractor-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "vehicles-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 950,
+        "h": 833
+      },
+      "trim": {
+        "x": 280,
+        "y": 107,
+        "w": 950,
+        "h": 833
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vehicles/tractor-01.png"
+    },
+    {
+      "id": "pickup-01",
+      "category": "vehicles",
+      "file": "docs/assets/kit-base-v1/vehicles/pickup-01.png",
+      "status": "candidate",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "alpha": "candidate; visual review pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprintCells": [
+        2,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "vehicle",
+        "pickup",
+        "utility"
+      ],
+      "connectors": [],
+      "edgeMask": null,
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          254
+        ],
+        "semiTransparentPixelCount": 690460,
+        "nonTransparentCanvasEdgePixels": 19,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "not approved; inspect halo and silhouette over light/dark backgrounds"
+      },
+      "alphaCleanCandidateFile": "docs/assets/kit-base-v1/alpha-cleaned/vehicles/pickup-01.png",
+      "alphaCleanMethod": "alpha-only threshold: source alpha >= 128 becomes opaque; lower alpha becomes transparent; RGB colors and canvas dimensions preserved",
+      "atlasFrame": {
+        "atlas": "vehicles-candidate-v1",
+        "x": 2,
+        "y": 839,
+        "w": 1390,
+        "h": 789
+      },
+      "trim": {
+        "x": 92,
+        "y": 163,
+        "w": 1390,
+        "h": 789
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/alpha-cleaned/vehicles/pickup-01.png"
+    },
+    {
+      "id": "soybean-emerging-01",
+      "category": "agriculture",
+      "file": "docs/assets/kit-base-v1/agriculture/soybean-emerging-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "crop",
+        "soybean",
+        "emerging",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": {
+        "rows": "periodic 2:1 phase matched"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/soybean-emerging-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native 2:1 crop tile; row phase repeats without a visible seam in the 3x3 test"
+      },
+      "atlasFrame": {
+        "atlas": "agriculture-candidate-v1",
+        "x": 2,
+        "y": 2,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/agriculture/soybean-emerging-02.png"
+    },
+    {
+      "id": "soybean-mature-01",
+      "category": "agriculture",
+      "file": "docs/assets/kit-base-v1/agriculture/soybean-mature-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "crop",
+        "soybean",
+        "mature",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": {
+        "rows": "periodic 2:1 phase matched"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/soybean-mature-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native 2:1 crop tile; row phase repeats without a visible seam in the 3x3 test"
+      },
+      "atlasFrame": {
+        "atlas": "agriculture-candidate-v1",
+        "x": 132,
+        "y": 2,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/agriculture/soybean-mature-02.png"
+    },
+    {
+      "id": "maize-growing-01",
+      "category": "agriculture",
+      "file": "docs/assets/kit-base-v1/agriculture/maize-growing-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "crop",
+        "maize",
+        "growing",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": {
+        "rows": "periodic 2:1 phase matched"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/maize-growing-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native 2:1 crop tile; row phase repeats without a visible seam in the 3x3 test"
+      },
+      "atlasFrame": {
+        "atlas": "agriculture-candidate-v1",
+        "x": 262,
+        "y": 2,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/agriculture/maize-growing-02.png"
+    },
+    {
+      "id": "maize-mature-01",
+      "category": "agriculture",
+      "file": "docs/assets/kit-base-v1/agriculture/maize-mature-02.png",
+      "status": "candidate",
+      "sourceSize": [
+        128,
+        64
+      ],
+      "alpha": "binary RGBA; repeat test passed; visual style gate pending",
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "footprintCells": [
+        1,
+        1
+      ],
+      "pixelScale": 2,
+      "tags": [
+        "crop",
+        "maize",
+        "mature",
+        "tile"
+      ],
+      "connectors": [],
+      "edgeMask": {
+        "rows": "periodic 2:1 phase matched"
+      },
+      "collision": null,
+      "randomVariants": [],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "alphaDiagnostics": {
+        "mode": "RGBA",
+        "range": [
+          0,
+          255
+        ],
+        "semiTransparentPixelCount": 0,
+        "nonTransparentCanvasEdgePixels": 0,
+        "opaqueCanvasEdgePixels": 0,
+        "review": "native-grid authored candidate; technical repeat verified, visual style not approved"
+      },
+      "sourceFile": "docs/assets/kit-base-v1/agriculture/maize-mature-01.png",
+      "tileTest3x3": {
+        "status": "pass",
+        "coverageHolesInCentralGridPixels": 0,
+        "notes": "128x64 native 2:1 crop tile; row phase repeats without a visible seam in the 3x3 test"
+      },
+      "atlasFrame": {
+        "atlas": "agriculture-candidate-v1",
+        "x": 2,
+        "y": 70,
+        "w": 126,
+        "h": 64
+      },
+      "trim": {
+        "x": 1,
+        "y": 0,
+        "w": 126,
+        "h": 64
+      },
+      "atlasSourceFile": "docs/assets/kit-base-v1/agriculture/maize-mature-02.png"
+    }
+  ],
+  "atlases": {
+    "terrain-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/terrain-v1.png",
+      "sourceSize": [
+        1024,
+        1024
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "roads-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/roads-v1.png",
+      "sourceSize": [
+        2048,
+        1024
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "fences-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/fences-v1.png",
+      "sourceSize": [
+        2048,
+        1024
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "vegetation-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/vegetation-v1.png",
+      "sourceSize": [
+        4096,
+        2048
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "water-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/water-v1.png",
+      "sourceSize": [
+        2048,
+        1024
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "buildings-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/buildings-v1.png",
+      "sourceSize": [
+        4096,
+        2048
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "livestock-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/livestock-v1.png",
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "vehicles-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/vehicles-v1.png",
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    },
+    "agriculture-candidate-v1": {
+      "image": "docs/assets/kit-base-v1/atlas-candidate-v1/agriculture-v1.png",
+      "sourceSize": [
+        512,
+        256
+      ],
+      "filter": "nearest",
+      "paddingPx": 2,
+      "sourcePolicy": "alphaCleanCandidateFile when present, otherwise file; no resampling or palette change",
+      "reviewStatus": "candidate atlas; visual style and frame/anchor review pending"
+    }
+  },
+  "atlasPolicy": {
+    "status": "review-only; not connected to runtime",
+    "trim": "alpha bounds stored per frame; retain source canvas and anchor metadata",
+    "paddingPx": 2,
+    "resampling": "none"
+  }
+}

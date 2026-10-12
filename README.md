@@ -1,6 +1,6 @@
 # Agroville — MVP 0.1
 
-Small browser-based pixel-art cattle-farm simulator. The MVP lets you select animals, explore the map, change diet, supplement, location, and weather, and compare pasture with confinement over 30 illustrative days. The comparison holds diet, supplement, weather, and starting state constant so housing is the only changed factor. It reports modeled dry-matter intake and per-paddock forage stock alongside weight and feed cost.
+Small browser-based cattle-farm simulator. The MVP lets you select animals, explore an illustrated isometric map, change diet, supplement, location, and weather, and compare pasture with confinement over 30 illustrative days. The comparison holds diet, supplement, weather, and starting state constant so housing is the only changed factor. It reports modeled dry-matter intake and per-paddock forage stock alongside weight and feed cost.
 
 ## Run locally
 
@@ -27,7 +27,24 @@ npm test
 ## Project files
 
 - `index.html`, `style.css` — responsive UI
-- `app.js` — map rendering, controls, charts, and CSV export
+- `app.js` — asset-backed map rendering, controls, charts, and CSV export
+- `public/assets/manifest.json` — atlas frames, anchors, footprints, tags, scale hints, variants, and collision metadata
+- `public/assets/scenario-editor/index.html` — Scenario Composer. Run `npm start` and open `/assets/scenario-editor/index.html`; choose Corte/Leite, click a prefab or asset, place it on the snapped map, select/move sprites, and use “Salvar cena” / “Abrir JSON” to persist edits.
+- `public/assets/scenarios/riose-beef-sample.json`, `riose-dairy-sample.json` — editable cut and dairy dioramas sharing the renderer-independent scene schema. Herd population is independent of representative visible sprites.
+- `public/assets/scenario-editor/previews/simile-vs-beef.png`, `simile-vs-dairy.png` — final side-by-side art-direction screenshots; full Composer captures are beside them.
+- `assets/schemas/scenario.schema.json` — shared scene document schema, including visual lot budgets.
+- `public/assets/scenario-editor/scene-layout.js` — deterministic isometric farm composition and representative animal sampling.
+- `tests/scenario-composer.test.js` — scene determinism, lot budgets, manifest/prefab references, and 2:1 coordinate checks.
+- `public/assets/scenarios.json` — Brazilian farm scenario recipes and visual zone composition
+- `public/assets/atlas/` — legacy semirrealistic atlases still used by the current runtime; preserved, not approved as the pixel-art target
+- `docs/pecuaria-bovina-brasileira.md` — normative cattle-first art direction, 34 ready-to-use prompts, 46-ID kit plan, pipeline, storage, atlas and review gates
+- `docs/assets/kit-pecuaria-bovina-v1/` — 46-ID candidate manifest, six cattle-scenario recipes, reuse inventory and validator; planned assets are not runtime-approved
+- `docs/assets/review-cattle-pixel/README.md` — side-by-side review of generated scenes plus a static asset-first cattle layout; the generated art fails the style gate and the modular scene validates composition only
+- `docs/style-guide.md` — shared pixel-art geometry, alpha, scale and consistency rules; content scope is now cattle-first
+- `docs/mapa-fazenda-teste.md` — v5 full-farm style gate compared with the user's urban reference, plus 3×3 tile review; the full-scene sample is rejected and generated sprites remain candidates until individually curated
+- `docs/assets/kit-base-v1/README.md` — historical mixed-farm candidate kit, alpha and tile reviews, and static test scene; reuse requires per-sprite review under the cattle-first guide
+- `docs/arte-e-pipeline.md` — historical migration diagnosis and superseded semirealistic prompts
+- `docs/amostra-pixel-art.md` — accepted visual direction, side-by-side six-asset sample, and refinements still needed before kit approval
 - `engine.js` — deterministic farm simulation, per-animal activity history, and scenario comparison
 - `worker.js` — simulation worker, isolated from rendering
 - `tests/explanation.test.js` — validated optional explanation API and deterministic fallback
@@ -45,7 +62,7 @@ Saved scenarios stay in browser storage. Comparison manifests export and validat
 
 ## Current limitations
 
-This is an illustrative software prototype, not a validated livestock or nutrition model. Assumptions are in `engine.js`; results must not guide real animal-management decisions. No scientific dataset was used to calibrate or validate the assumptions. Behavior text comes from fixed state rules, not an LLM. Optional explanations can use a server-side provider but never change simulation values or apply actions. The map and sprites were drawn in code for this demo; the project uses the Smallville paper as interaction inspiration but does not copy its source or assets.
+This is an illustrative software prototype, not a validated livestock or nutrition model. Assumptions are in `engine.js`; results must not guide real animal-management decisions. No scientific dataset was used to calibrate or validate the assumptions. Behavior text comes from fixed state rules, not an LLM. Optional explanations can use a server-side provider but never change simulation values or apply actions. The map is composed in code from project-specific illustrated image assets; code handles procedural layout while sprites provide the visual finish. The project uses the Smallville paper as interaction inspiration but does not copy its source or assets.
 
 The inspector's activity history records simulated engine transitions and their rule inputs (hour, modeled thirst, and housing). It describes the software's rules, not observed animal behavior.
 

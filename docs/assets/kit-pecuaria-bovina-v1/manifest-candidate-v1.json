@@ -1,0 +1,2459 @@
+{
+  "version": 1,
+  "library": "riose-brazilian-cattle",
+  "styleVersion": "riose-cattle-isometric-v1",
+  "status": "candidate-planning",
+  "reference": "../../pixel-art-urban-reference-clean.png",
+  "projection": {
+    "type": "isometric-2to1",
+    "logicalModulePx": [
+      64,
+      32
+    ],
+    "groundTilePx": [
+      128,
+      64
+    ],
+    "light": "upper-left"
+  },
+  "atlasPacks": [
+    "pasture-core",
+    "livestock-core",
+    "fences-core",
+    "water-core",
+    "props-core",
+    "corral-core",
+    "buildings-core",
+    "vegetation-core",
+    "vehicles-core",
+    "feed-support",
+    "technology-core"
+  ],
+  "assets": [
+    {
+      "id": "animals-nelore-adult-standing-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-adult-standing-01.png",
+      "variants": [
+        "walking",
+        "grazing",
+        "drinking",
+        "resting"
+      ],
+      "state": "standing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "beef",
+        "adult"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-cow-standing-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-cow-standing-01.png",
+      "variants": [
+        "walking",
+        "grazing",
+        "drinking",
+        "resting",
+        "near-calf"
+      ],
+      "state": "standing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "cow",
+        "adult"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-bull-standing-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-bull-standing-01.png",
+      "variants": [
+        "walking",
+        "resting"
+      ],
+      "state": "standing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "bull",
+        "adult"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-heifer-standing-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-heifer-standing-01.png",
+      "variants": [
+        "walking",
+        "grazing",
+        "drinking"
+      ],
+      "state": "standing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "heifer",
+        "young"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-calf-standing-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-calf-standing-01.png",
+      "variants": [
+        "walking",
+        "resting",
+        "near-cow"
+      ],
+      "state": "standing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "calf",
+        "young"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-adult-walking-01",
+      "category": "animals",
+      "family": "nelore-cattle",
+      "file": "exports/animals/animals-nelore-adult-walking-01.png",
+      "variants": [
+        "toward-corral",
+        "grouped"
+      ],
+      "state": "walking",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "movement",
+        "herd"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "engorda",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "animals-nelore-herd-grazing-01",
+      "category": "animals",
+      "family": "nelore-herd",
+      "file": "exports/animals/animals-nelore-herd-grazing-01.png",
+      "variants": [
+        "drinking",
+        "moving",
+        "resting",
+        "handling"
+      ],
+      "state": "grazing",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        3,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "group",
+        "grazing"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "livestock-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        224,
+        144
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "pasture-tall-01",
+      "category": "pasture",
+      "family": "grass-state",
+      "file": "exports/pasture/pasture-tall-01.png",
+      "variants": [
+        "medium",
+        "low-grazed",
+        "dry-degraded",
+        "trampled-wet"
+      ],
+      "state": "tall",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "pasture",
+        "grass",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "pasture-medium-01",
+      "category": "pasture",
+      "family": "grass-state",
+      "file": "exports/pasture/pasture-medium-01.png",
+      "variants": [],
+      "state": "medium",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "pasture",
+        "grass",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "pasture-low-grazed-01",
+      "category": "pasture",
+      "family": "grass-state",
+      "file": "exports/pasture/pasture-low-grazed-01.png",
+      "variants": [],
+      "state": "grazed-low",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "pasture",
+        "grazed",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "pasture-dry-degraded-01",
+      "category": "pasture",
+      "family": "grass-state",
+      "file": "exports/pasture/pasture-dry-degraded-01.png",
+      "variants": [],
+      "state": "dry-degraded",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "pasture",
+        "degraded",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "pasture-trampled-wet-01",
+      "category": "pasture",
+      "family": "soil-state",
+      "file": "exports/pasture/pasture-trampled-wet-01.png",
+      "variants": [],
+      "state": "trampled-wet",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "pasture",
+        "mud",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "pasture-cattle-trail-01",
+      "category": "pasture",
+      "family": "soil-detail",
+      "file": "exports/pasture/pasture-cattle-trail-01.png",
+      "variants": [],
+      "state": "trail",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "cattle",
+        "trail",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "engorda",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "water-trough-metal-01",
+      "category": "water",
+      "family": "livestock-water",
+      "file": "exports/water/water-trough-metal-01.png",
+      "variants": [
+        "clean",
+        "used",
+        "trampled-edge"
+      ],
+      "state": "clean",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "trough",
+        "metal"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "water-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "water-trough-concrete-01",
+      "category": "water",
+      "family": "livestock-water",
+      "file": "exports/water/water-trough-concrete-01.png",
+      "variants": [
+        "clean",
+        "used",
+        "trampled-edge"
+      ],
+      "state": "clean",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "trough",
+        "concrete"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "water-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "feed-bunk-supplement-01",
+      "category": "feed",
+      "family": "supplement",
+      "file": "exports/feed/feed-bunk-supplement-01.png",
+      "variants": [
+        "empty",
+        "partially-consumed"
+      ],
+      "state": "stocked",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "feed",
+        "bunk",
+        "supplement"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "feed-support",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        192,
+        128
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "feed-mineral-salt-roofed-01",
+      "category": "feed",
+      "family": "mineral-feeder",
+      "file": "exports/feed/feed-mineral-salt-roofed-01.png",
+      "variants": [
+        "empty",
+        "partially-consumed"
+      ],
+      "state": "stocked",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "mineral",
+        "salt",
+        "feeder"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "feed-support",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        144
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "water-pond-small-01",
+      "category": "water",
+      "family": "farm-pond",
+      "file": "exports/water/water-pond-small-01.png",
+      "variants": [],
+      "state": "clean",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        4,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "pond",
+        "edge"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "water-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        320,
+        224
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "fence-wire-straight-01",
+      "category": "fences",
+      "family": "paddock-fence",
+      "file": "exports/fences/fence-wire-straight-01.png",
+      "variants": [],
+      "state": "standard",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "fence",
+        "wire",
+        "connector"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "fences-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "wire-fence",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "start",
+            "direction": "axis-a-out",
+            "position": [
+              0,
+              0.5
+            ]
+          },
+          {
+            "name": "end",
+            "direction": "axis-a-out",
+            "position": [
+              2,
+              0.5
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        192,
+        144
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "fence-wire-corner-01",
+      "category": "fences",
+      "family": "paddock-fence",
+      "file": "exports/fences/fence-wire-corner-01.png",
+      "variants": [],
+      "state": "corner",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "fence",
+        "wire",
+        "corner",
+        "connector"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "fences-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "wire-fence",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "leg-a",
+            "direction": "axis-a-out",
+            "position": [
+              0,
+              1
+            ]
+          },
+          {
+            "name": "leg-b",
+            "direction": "axis-b-out",
+            "position": [
+              1,
+              0
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        256,
+        176
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "fence-gate-timber-01",
+      "category": "fences",
+      "family": "paddock-gate",
+      "file": "exports/fences/fence-gate-timber-01.png",
+      "variants": [],
+      "state": "closed",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "gate",
+        "timber",
+        "connector"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "engorda",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "fences-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "wire-fence",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "start",
+            "direction": "axis-a-out",
+            "position": [
+              0,
+              0.5
+            ]
+          },
+          {
+            "name": "end",
+            "direction": "axis-a-out",
+            "position": [
+              2,
+              0.5
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        192,
+        144
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "corral-modular-pen-01",
+      "category": "corral",
+      "family": "handling-yard",
+      "file": "exports/corral/corral-modular-pen-01.png",
+      "variants": [
+        "occupied",
+        "empty",
+        "ready-for-handling"
+      ],
+      "state": "empty",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        6,
+        5
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "corral",
+        "pen",
+        "modular"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "corral-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "corral-join",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "entry",
+            "direction": "axis-b-in",
+            "position": [
+              0,
+              2.5
+            ]
+          },
+          {
+            "name": "exit",
+            "direction": "axis-a-out",
+            "position": [
+              6,
+              2.5
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        704,
+        448
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "corral-handling-lane-01",
+      "category": "corral",
+      "family": "handling-yard",
+      "file": "exports/corral/corral-handling-lane-01.png",
+      "variants": [],
+      "state": "ready",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        4,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "corral",
+        "lane",
+        "handling"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "corral-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "handling-lane",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "entry",
+            "direction": "axis-a-in",
+            "position": [
+              0,
+              1
+            ]
+          },
+          {
+            "name": "exit",
+            "direction": "axis-a-out",
+            "position": [
+              4,
+              1
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        384,
+        256
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "corral-squeeze-chute-scale-01",
+      "category": "corral",
+      "family": "handling-equipment",
+      "file": "exports/corral/corral-squeeze-chute-scale-01.png",
+      "variants": [],
+      "state": "ready",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "chute",
+        "scale",
+        "weighing"
+      ],
+      "scenarioCompatibility": [
+        "handling",
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "corral-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "handling-lane",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "entry",
+            "direction": "axis-a-in",
+            "position": [
+              0,
+              0.5
+            ]
+          },
+          {
+            "name": "exit",
+            "direction": "axis-a-out",
+            "position": [
+              2,
+              0.5
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        224,
+        192
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "corral-loading-ramp-01",
+      "category": "corral",
+      "family": "handling-equipment",
+      "file": "exports/corral/corral-loading-ramp-01.png",
+      "variants": [],
+      "state": "ready",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        3,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "loading",
+        "ramp",
+        "handling"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "corral-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "loading-lane",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "entry",
+            "direction": "axis-a-in",
+            "position": [
+              0,
+              1
+            ]
+          },
+          {
+            "name": "exit",
+            "direction": "axis-a-out",
+            "position": [
+              3,
+              1
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        320,
+        256
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "corral-gate-sort-01",
+      "category": "corral",
+      "family": "handling-equipment",
+      "file": "exports/corral/corral-gate-sort-01.png",
+      "variants": [],
+      "state": "closed",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "gate",
+        "sorting",
+        "handling"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "corral-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        160,
+        144
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "building-ranch-house-01",
+      "category": "buildings",
+      "family": "farmstead",
+      "file": "exports/buildings/building-ranch-house-01.png",
+      "variants": [],
+      "state": "operational",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "building",
+        "house",
+        "headquarters"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "buildings-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        256,
+        224
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "building-livestock-shed-open-01",
+      "category": "buildings",
+      "family": "livestock-support",
+      "file": "exports/buildings/building-livestock-shed-open-01.png",
+      "variants": [],
+      "state": "operational",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        5,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "building",
+        "shed",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "buildings-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        384,
+        256
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vehicle-tractor-support-generic-01",
+      "category": "vehicles",
+      "family": "ranch-equipment",
+      "file": "exports/vehicles/vehicle-tractor-support-generic-01.png",
+      "variants": [
+        "parked",
+        "working"
+      ],
+      "state": "parked",
+      "dimensionsPx": null,
+      "targetDimensionsPx": [
+        192,
+        128
+      ],
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "wheel-ground-contact"
+      },
+      "tags": [
+        "vehicle",
+        "tractor",
+        "support",
+        "unbranded"
+      ],
+      "scenarioCompatibility": [
+        "recria",
+        "engorda",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vehicles-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Review silhouette, footprint, pixels and alpha before production.",
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vehicle-ranch-pickup-generic-01",
+      "category": "vehicles",
+      "family": "ranch-vehicle",
+      "file": "exports/vehicles/vehicle-ranch-pickup-generic-01.png",
+      "variants": [],
+      "state": "parked",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vehicle",
+        "pickup",
+        "unbranded"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "engorda",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vehicles-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        192,
+        128
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vehicle-livestock-truck-generic-01",
+      "category": "vehicles",
+      "family": "livestock-transport",
+      "file": "exports/vehicles/vehicle-livestock-truck-generic-01.png",
+      "variants": [],
+      "state": "parked",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        3,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vehicle",
+        "livestock-truck",
+        "unbranded"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vehicles-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        320,
+        176
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vegetation-pasture-shade-tree-small-01",
+      "category": "vegetation",
+      "family": "shade-tree",
+      "file": "exports/vegetation/vegetation-pasture-shade-tree-small-01.png",
+      "variants": [],
+      "state": "leafy",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vegetation",
+        "shade",
+        "tree"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vegetation-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        192,
+        224
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vegetation-pasture-shade-tree-large-01",
+      "category": "vegetation",
+      "family": "shade-tree",
+      "file": "exports/vegetation/vegetation-pasture-shade-tree-large-01.png",
+      "variants": [],
+      "state": "leafy",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vegetation",
+        "shade",
+        "tree"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vegetation-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        256,
+        288
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vegetation-native-shrub-01",
+      "category": "vegetation",
+      "family": "pasture-shrub",
+      "file": "exports/vegetation/vegetation-native-shrub-01.png",
+      "variants": [],
+      "state": "leafy",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vegetation",
+        "shrub"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vegetation-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        112
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "vegetation-pasture-grass-tuft-01",
+      "category": "vegetation",
+      "family": "grass-detail",
+      "file": "exports/vegetation/vegetation-pasture-grass-tuft-01.png",
+      "variants": [],
+      "state": "green",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "vegetation",
+        "grass",
+        "detail"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "vegetation-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        112
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "technology-smart-ear-tag-01",
+      "category": "technology",
+      "family": "animal-identification",
+      "file": "exports/technology/technology-smart-ear-tag-01.png",
+      "variants": [],
+      "state": "passive",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "animal-id",
+        "tag"
+      ],
+      "scenarioCompatibility": [
+        "handling",
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "technology-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        64,
+        80
+      ],
+      "revision": 0,
+      "placement": "overlay",
+      "footprintMeaning": "non-ground placement; dimensions are UI/inventory or close-up target only",
+      "tileable": false
+    },
+    {
+      "id": "technology-handheld-tag-reader-01",
+      "category": "technology",
+      "family": "animal-identification",
+      "file": "exports/technology/technology-handheld-tag-reader-01.png",
+      "variants": [],
+      "state": "active",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "reader",
+        "handheld"
+      ],
+      "scenarioCompatibility": [
+        "handling",
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "technology-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        64,
+        80
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "technology-gateway-antenna-post-01",
+      "category": "technology",
+      "family": "ranch-network",
+      "file": "exports/technology/technology-gateway-antenna-post-01.png",
+      "variants": [
+        "passive",
+        "active"
+      ],
+      "state": "active",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "gateway",
+        "antenna"
+      ],
+      "scenarioCompatibility": [
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "technology-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        160
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "technology-corral-reader-post-01",
+      "category": "technology",
+      "family": "handling-reader",
+      "file": "exports/technology/technology-corral-reader-post-01.png",
+      "variants": [
+        "passive",
+        "reading"
+      ],
+      "state": "active",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "reader",
+        "corral"
+      ],
+      "scenarioCompatibility": [
+        "handling",
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "technology-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        160
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "technology-monitored-animal-marker-01",
+      "category": "technology",
+      "family": "ux-overlay",
+      "file": "exports/technology/technology-monitored-animal-marker-01.png",
+      "variants": [],
+      "state": "selected",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "overlay",
+        "monitoring",
+        "selection"
+      ],
+      "scenarioCompatibility": [
+        "technology-demo"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "technology-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "overlay",
+      "footprintMeaning": "non-ground placement; dimensions are UI/inventory or close-up target only",
+      "tileable": false
+    },
+    {
+      "id": "road-dirt-straight-01",
+      "category": "roads",
+      "family": "ranch-road",
+      "file": "exports/roads/road-dirt-straight-01.png",
+      "variants": [],
+      "state": "straight",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "road",
+        "dirt",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "dirt-road",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "start",
+            "direction": "axis-a-out",
+            "position": [
+              0,
+              0.5
+            ]
+          },
+          {
+            "name": "end",
+            "direction": "axis-a-out",
+            "position": [
+              2,
+              0.5
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "road-dirt-turn-connector-01",
+      "category": "roads",
+      "family": "ranch-road",
+      "file": "exports/roads/road-dirt-turn-connector-01.png",
+      "variants": [],
+      "state": "turn",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "diamond-center"
+      },
+      "tags": [
+        "road",
+        "dirt",
+        "connector"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "handling",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "pasture-core",
+        "frame": null
+      },
+      "connectors": {
+        "type": "dirt-road",
+        "coordinateSystem": "isometric-grid-2to1",
+        "ports": [
+          {
+            "name": "entry",
+            "direction": "axis-b-in",
+            "position": [
+              0,
+              1
+            ]
+          },
+          {
+            "name": "exit",
+            "direction": "axis-a-out",
+            "position": [
+              1,
+              0
+            ]
+          }
+        ],
+        "note": "Grid ports are logical planning targets; verify transform against alpha bounds after export."
+      },
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        128,
+        64
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": true
+    },
+    {
+      "id": "props-feed-bale-01",
+      "category": "props",
+      "family": "supplement-props",
+      "file": "exports/props/props-feed-bale-01.png",
+      "variants": [],
+      "state": "stored",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "prop",
+        "feed",
+        "bale"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "props-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "props-plain-supplement-sack-01",
+      "category": "props",
+      "family": "supplement-props",
+      "file": "exports/props/props-plain-supplement-sack-01.png",
+      "variants": [],
+      "state": "stored",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "prop",
+        "feed",
+        "sack"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "props-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "props-ranch-tool-drum-set-01",
+      "category": "props",
+      "family": "ranch-yard-props",
+      "file": "exports/props/props-ranch-tool-drum-set-01.png",
+      "variants": [],
+      "state": "stored",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "prop",
+        "yard",
+        "tools"
+      ],
+      "scenarioCompatibility": [
+        "demo-premium",
+        "handling"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "props-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    },
+    {
+      "id": "props-paddock-rock-01",
+      "category": "props",
+      "family": "pasture-detail",
+      "file": "exports/props/props-paddock-rock-01.png",
+      "variants": [],
+      "state": "static",
+      "dimensionsPx": null,
+      "logicalModulePx": [
+        64,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "prop",
+        "rock",
+        "pasture"
+      ],
+      "scenarioCompatibility": [
+        "cria",
+        "demo-premium",
+        "engorda",
+        "recria"
+      ],
+      "styleVersion": "riose-cattle-isometric-v1",
+      "status": "planned",
+      "atlas": {
+        "pack": "props-core",
+        "frame": null
+      },
+      "connectors": [],
+      "notes": "Planning target only. Final dimensions, connectors and anchor require visual review after sprite creation.",
+      "targetDimensionsPx": [
+        96,
+        96
+      ],
+      "revision": 0,
+      "placement": "world-sprite",
+      "tileable": false
+    }
+  ]
+}

@@ -1,0 +1,918 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "livestock-dairy",
+  "moduleVersion": "0.1.0",
+  "title": "Riose — expansão de pecuária leiteira brasileira",
+  "status": "in-progress",
+  "styleVersion": "riose-livestock-v1-candidate",
+  "principles": [
+    "Animais são arquétipos, com variações de aparência e estados reutilizáveis.",
+    "Infraestrutura, tecnologia e estados carregam a semântica operacional.",
+    "Assets comuns são referenciados do núcleo; o módulo não duplica arquivos nem altera a biblioteca de corte.",
+    "Assets marcados como planejados não são sprites existentes."
+  ],
+  "references": {
+    "style": "docs/assets/pixel-art-urban-reference.png",
+    "farmComposition": "docs/assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png",
+    "animalStyle": "assets/approved/livestock/nelore-adult-idle-v1.png"
+  },
+  "limits": {
+    "animalArchetypes": 20,
+    "infrastructureAssets": 50,
+    "visualStates": 30
+  },
+  "animals": [
+    {
+      "id": "beef-zebu-steer",
+      "name": "Boi de corte zebu branco",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.nelore.adult.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-zebu-cow",
+      "name": "Vaca de corte zebu branca",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.nelore.cow.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-zebu-calf",
+      "name": "Bezerro de corte zebu",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.nelore.calf.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-zebu-heifer",
+      "name": "Novilha de corte zebu",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.nelore.heifer.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-zebu-bull",
+      "name": "Touro zebu",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.nelore.bull.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-dark-steer",
+      "name": "Boi de corte escuro genérico",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.angus.cow.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-dark-cow",
+      "name": "Vaca de corte escura genérica",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.angus.cow.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-crossbred-cow",
+      "name": "Gado cruzado de corte",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.crossbred.cow.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-crossbred-calf",
+      "name": "Bezerro cruzado de corte",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "livestock.crossbred.cow.idle.imagegen.v1",
+      "status": "shared-core"
+    },
+    {
+      "id": "beef-herd",
+      "name": "Lote genérico de bovinos de corte",
+      "family": "livestock-core",
+      "kind": "composed",
+      "sourceRef": "livestock-core herd composition",
+      "status": "planned-composition"
+    },
+    {
+      "id": "dairy-cow-spotted",
+      "name": "Vaca leiteira clara/manchada (Holandesa)",
+      "family": "livestock-dairy-core",
+      "kind": "module",
+      "sourceRef": "dairy.holstein.cow.imagegen.v1",
+      "status": "candidate-generated",
+      "appearanceVariants": [
+        "Holandesa (sprite do pack inicial)",
+        "Jersey (variante visual futura do mesmo arquétipo)"
+      ]
+    },
+    {
+      "id": "dairy-cow-zebu-cross",
+      "name": "Vaca leiteira zebuína/cruzada (Girolando)",
+      "family": "livestock-dairy-core",
+      "kind": "module",
+      "sourceRef": "dairy.girolando.cow.imagegen.v1",
+      "status": "candidate-generated",
+      "appearanceVariants": [
+        "Girolando (sprite do pack inicial)",
+        "outros cruzamentos leiteiros como variante futura"
+      ]
+    },
+    {
+      "id": "dairy-heifer",
+      "name": "Novilha leiteira",
+      "family": "livestock-dairy-core",
+      "kind": "module",
+      "sourceRef": "dairy.heifer.imagegen.v1",
+      "status": "candidate-generated"
+    },
+    {
+      "id": "dairy-heifer-calf",
+      "name": "Bezerra leiteira",
+      "family": "livestock-dairy-core",
+      "kind": "module",
+      "sourceRef": "dairy.heifer.calf.imagegen.v1",
+      "status": "candidate-generated"
+    },
+    {
+      "id": "dairy-herd",
+      "name": "Lote genérico de vacas leiteiras",
+      "family": "livestock-dairy-core",
+      "kind": "composed",
+      "sourceRef": "dairy herd composition",
+      "status": "planned-composition"
+    },
+    {
+      "id": "dairy-lactating-cow",
+      "name": "Vaca em lactação",
+      "family": "livestock-dairy-core",
+      "kind": "state-variant",
+      "sourceRef": "dairy cow + state: lactating",
+      "status": "planned-state-variant"
+    },
+    {
+      "id": "dairy-dry-cow",
+      "name": "Vaca seca",
+      "family": "livestock-dairy-core",
+      "kind": "state-variant",
+      "sourceRef": "dairy cow + state: dry",
+      "status": "planned-state-variant"
+    },
+    {
+      "id": "dairy-milking-queue",
+      "name": "Vaca em espera de ordenha",
+      "family": "livestock-dairy-core",
+      "kind": "state-variant",
+      "sourceRef": "dairy cow + state: waiting-for-milking",
+      "status": "planned-state-variant"
+    },
+    {
+      "id": "livestock-premium",
+      "name": "Bovino robusto para destaque",
+      "family": "livestock-core",
+      "kind": "shared",
+      "sourceRef": "existing approved beef archetype, scale/selection variant",
+      "status": "shared-core"
+    },
+    {
+      "id": "livestock-selected",
+      "name": "Animal selecionado/monitorado",
+      "family": "livestock-core",
+      "kind": "state-variant",
+      "sourceRef": "base animal + reusable selection/monitoring overlay",
+      "status": "planned-state-variant"
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "fence-wood-wire-straight",
+      "name": "Cerca reta de madeira/arame",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "fence.wire.wood-post.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "fence-corner",
+      "name": "Cerca de canto",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "fence.gate.wood.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "paddock-divider",
+      "name": "Cerca de divisão de piquete",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "fence.wire.wood-post.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "gate-simple",
+      "name": "Porteira simples de madeira",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "fence.gate.wood.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "gate-reinforced",
+      "name": "Porteira reforçada",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "fence.gate.wood.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "handling-alley",
+      "name": "Corredor de manejo",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "handling.alley.cattle.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "paddock-access-alley",
+      "name": "Corredor de acesso entre piquetes",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "narrow-driveway",
+      "name": "Passagem estreita de condução",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "fence-post",
+      "name": "Poste/mourão de cerca",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "cattle-grid",
+      "name": "Mata-burro/passagem rural",
+      "family": "fence-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "water-trough-rectangular",
+      "name": "Bebedouro retangular",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "water-trough-round",
+      "name": "Bebedouro circular",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "water.trough.round.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "water-reservoir",
+      "name": "Reservatório/tanque de água",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "water.reservoir.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "pond-small",
+      "name": "Açude pequeno",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "water.pond.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "water-tower",
+      "name": "Caixa d’água rural",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "water-pipe-outlet",
+      "name": "Ponto de abastecimento/tubulação",
+      "family": "water-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "feed-trough-wood",
+      "name": "Cocho de madeira",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "feed.trough.hay.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "feed-trough-metal",
+      "name": "Cocho metálico/concreto",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "salt-lick-simple",
+      "name": "Saleiro simples",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "salt-lick-covered",
+      "name": "Saleiro coberto",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "feed.salt.roofed.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "supplement-area",
+      "name": "Área de suplementação",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "feed-store",
+      "name": "Depósito de ração/suplemento",
+      "family": "feed-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "corral-modular",
+      "name": "Curral modular simples",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "corral.wood.standard.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "corral-reinforced",
+      "name": "Curral reforçado",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "cattle-chute",
+      "name": "Brete/tronco de contenção",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "handling.chute.cattle.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "livestock-scale",
+      "name": "Balança pecuária",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "technology.scale.electronic.full.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "loading-ramp",
+      "name": "Embarcadouro",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "sorting-gate",
+      "name": "Apartador/divisória de curral",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "waiting-pen",
+      "name": "Curral de espera",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "corral.wood.standard.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "weighing-alley",
+      "name": "Corredor de pesagem",
+      "family": "corral-system",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "farmhouse",
+      "name": "Sede da fazenda",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "building.farmhouse.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "staff-house",
+      "name": "Casa de apoio/funcionário",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "building.farmhouse.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "machine-shed",
+      "name": "Galpão de máquinas",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "building.shed.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "storage-barn",
+      "name": "Galpão de armazenamento",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "building.shed.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "rural-workshop",
+      "name": "Oficina rural",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "building.workshop.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "technical-store",
+      "name": "Depósito técnico/almoxarifado",
+      "family": "buildings-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "pasture-tile",
+      "name": "Pastagem-base modular",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "pasture.grass.native.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "rural-road",
+      "name": "Trecho de estrada rural",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "road.rural.dirt.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "mud-track",
+      "name": "Trecho de lama/área pisoteada",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "terrain.mud.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "dry-soil",
+      "name": "Solo seco/terra exposta",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "terrain.soil.dry.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "shade-tree",
+      "name": "Árvore de sombra",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "vegetation.tree.shade.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "shrub-cluster",
+      "name": "Agrupamento de vegetação/arbusto",
+      "family": "terrain-and-pasture",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "rural-pickup",
+      "name": "Caminhonete rural",
+      "family": "vehicles-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "vehicle.pickup.rural.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "livestock-truck",
+      "name": "Caminhão boiadeiro",
+      "family": "vehicles-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "vehicle.livestock-truck.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "tractor",
+      "name": "Trator",
+      "family": "vehicles-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": "vehicle.tractor.imagegen.v1",
+      "status": "available-shared-candidate"
+    },
+    {
+      "id": "farm-trailer",
+      "name": "Carreta/reboque de apoio",
+      "family": "vehicles-core",
+      "kind": "shared-or-planned-core",
+      "sourceRef": null,
+      "status": "planned"
+    },
+    {
+      "id": "milking-parlor",
+      "name": "Sala de ordenha",
+      "family": "dairy-infrastructure",
+      "kind": "module-asset",
+      "sourceRef": "dairy.milking.parlor.imagegen.v1",
+      "status": "candidate-generated"
+    },
+    {
+      "id": "milk-chilling-tank",
+      "name": "Tanque de resfriamento de leite",
+      "family": "dairy-infrastructure",
+      "kind": "module-asset",
+      "sourceRef": "dairy.milk.chilling.tank.imagegen.v1",
+      "status": "candidate-generated"
+    },
+    {
+      "id": "dairy-waiting-pen",
+      "name": "Curral de espera da ordenha",
+      "family": "dairy-infrastructure",
+      "kind": "module-asset",
+      "sourceRef": "dairy.waiting.pen.imagegen.v1",
+      "status": "candidate-generated"
+    },
+    {
+      "id": "dairy-barn",
+      "name": "Galpão/estrutura leiteira principal",
+      "family": "dairy-infrastructure",
+      "kind": "module-asset",
+      "sourceRef": "dairy.barn.imagegen.v1",
+      "status": "candidate-generated"
+    }
+  ],
+  "visualStates": [
+    {
+      "id": "pasture-high",
+      "name": "Pasto alto",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "pasture-medium",
+      "name": "Pasto médio",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "pasture-low",
+      "name": "Pasto baixo",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "pasture-dry",
+      "name": "Pasto seco",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "pasture-degraded",
+      "name": "Pasto degradado",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "pasture-recovered",
+      "name": "Pasto recuperado",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "soil-exposed",
+      "name": "Solo exposto",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "area-trampled",
+      "name": "Área pisoteada",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "mud",
+      "name": "Lama",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "shade-rest-area",
+      "name": "Área sombreada/descanso",
+      "family": "terrain-and-pasture",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "trough-full",
+      "name": "Bebedouro cheio",
+      "family": "water-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "trough-medium",
+      "name": "Bebedouro médio",
+      "family": "water-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "trough-low",
+      "name": "Bebedouro baixo",
+      "family": "water-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "reservoir-full",
+      "name": "Reservatório cheio",
+      "family": "water-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "reservoir-low",
+      "name": "Reservatório baixo",
+      "family": "water-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "feed-empty",
+      "name": "Cocho vazio",
+      "family": "feed-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "feed-partial",
+      "name": "Cocho parcialmente cheio",
+      "family": "feed-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "feed-full",
+      "name": "Cocho cheio",
+      "family": "feed-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "salt-active",
+      "name": "Saleiro ativo/abastecido",
+      "family": "feed-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "salt-low",
+      "name": "Saleiro vazio ou baixo",
+      "family": "feed-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "corral-inactive",
+      "name": "Curral inativo",
+      "family": "corral-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "corral-active",
+      "name": "Curral ativo/em uso",
+      "family": "corral-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "scale-active",
+      "name": "Balança ativa",
+      "family": "corral-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "handling-alley-active",
+      "name": "Corredor de manejo ativo",
+      "family": "corral-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "milking-active",
+      "name": "Área de ordenha ativa",
+      "family": "dairy-infrastructure",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "herd-untagged",
+      "name": "Lote sem tecnologia",
+      "family": "technology-core",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "herd-tagged",
+      "name": "Lote identificado por brinco",
+      "family": "technology-core",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "herd-monitored",
+      "name": "Lote monitorado",
+      "family": "technology-core",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "animal-selected",
+      "name": "Animal selecionado/destacado",
+      "family": "technology-core",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    },
+    {
+      "id": "animal-in-handling",
+      "name": "Animal em manejo/pesagem/ordenha",
+      "family": "corral-system",
+      "kind": "reusable-modifier",
+      "status": "catalogued"
+    }
+  ],
+  "priorityPack": [
+    {
+      "order": 1,
+      "id": "dairy-cow-spotted",
+      "assetRef": "dairy.holstein.cow.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 2,
+      "id": "dairy-cow-zebu-cross",
+      "assetRef": "dairy.girolando.cow.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 3,
+      "id": "dairy-heifer",
+      "assetRef": "dairy.heifer.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 4,
+      "id": "dairy-heifer-calf",
+      "assetRef": "dairy.heifer.calf.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 5,
+      "id": "milking-parlor",
+      "assetRef": "dairy.milking.parlor.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 6,
+      "id": "milk-chilling-tank",
+      "assetRef": "dairy.milk.chilling.tank.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 7,
+      "id": "dairy-waiting-pen",
+      "assetRef": "dairy.waiting.pen.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 8,
+      "id": "feed-trough-wood",
+      "assetRef": "feed.trough.hay.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 9,
+      "id": "water-trough-round",
+      "assetRef": "water.trough.round.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 10,
+      "id": "fence-wood-wire-straight",
+      "assetRef": "fence.wire.wood-post.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 11,
+      "id": "dairy-gateway",
+      "assetRef": "technology.gateway.antenna.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 12,
+      "id": "activity-collar",
+      "assetRef": "dairy.activity.collar.imagegen.v1",
+      "action": "generated-candidate"
+    },
+    {
+      "order": 13,
+      "id": "electronic-ear-tag",
+      "assetRef": "technology.ear-tag.rfid.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 14,
+      "id": "rfid-reader",
+      "assetRef": "technology.reader.handheld.imagegen.v1",
+      "action": "reuse"
+    },
+    {
+      "order": 15,
+      "id": "dairy-barn",
+      "assetRef": "dairy.barn.imagegen.v1",
+      "action": "generated-candidate"
+    }
+  ],
+  "organization": {
+    "modules": [
+      "livestock-core",
+      "livestock-dairy-core",
+      "dairy-infrastructure",
+      "dairy-technology",
+      "state-overrides"
+    ],
+    "pipeline": "scripts/assets/prepare_generated_batch.py",
+    "moduleRuntimeManifest": "public/assets/modules/livestock-dairy/manifest.json"
+  },
+  "redundancyRules": [
+    "Do not duplicate common PNGs: store a core runtime ID reference.",
+    "Breed names are appearance variants of the dairy archetypes, not extra animal counts.",
+    "Lactating, dry, waiting, tagged and selected are states or overlays, not new base anatomy.",
+    "A herd is a composition recipe over one base sprite, not a separate animal illustration.",
+    "Use one modular base for compatible trough, fence and gate types; reserve new sprites for visually meaningful function changes."
+  ]
+}

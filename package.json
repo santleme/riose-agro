@@ -4,6 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "sync:pixi": "node scripts/copy-pixi-bundle.mjs",
+    "scene:generate": "node scripts/scenario/generate-dairy-farm.js"
+  },
+  "dependencies": {
+    "pixi.js": "8.22.0"
   }
 }

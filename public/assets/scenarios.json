@@ -1,0 +1,362 @@
+{
+  "version": 1,
+  "coordinateSystem": {
+    "width": 576,
+    "height": 336,
+    "units": "render-pixels",
+    "projection": "isometric-assets-on-existing-map-coordinates"
+  },
+  "scenarios": [
+    {
+      "id": "extensive-cattle",
+      "name": "Pecuária extensiva",
+      "region": "interior brasileiro",
+      "season": "normal",
+      "palette": [
+        "#78965e",
+        "#a9b878",
+        "#b96f49",
+        "#786b4b"
+      ],
+      "layout": {
+        "pastureShare": 0.68,
+        "fieldCount": 4,
+        "roadDensity": 0.12,
+        "treeDensity": 0.1,
+        "waterAvailability": 0.72
+      },
+      "zones": [
+        {
+          "id": "paddocks",
+          "kind": "pasture",
+          "assets": [
+            "grass-light",
+            "grass-mid",
+            "shade-tree",
+            "fence-straight",
+            "gate"
+          ],
+          "count": [
+            4,
+            8
+          ]
+        },
+        {
+          "id": "handling",
+          "kind": "livestock-yard",
+          "near": "farmstead",
+          "assets": [
+            "corral",
+            "feed-trough",
+            "water-trough",
+            "shed"
+          ]
+        },
+        {
+          "id": "water",
+          "kind": "pond",
+          "assets": [
+            "pond",
+            "shrub"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crop-farm",
+      "name": "Fazenda agrícola",
+      "region": "Centro-Oeste",
+      "season": "normal",
+      "palette": [
+        "#778e55",
+        "#bc995b",
+        "#995d40",
+        "#84969a"
+      ],
+      "layout": {
+        "cropShare": 0.64,
+        "fieldCount": 5,
+        "roadDensity": 0.2,
+        "treeDensity": 0.035,
+        "waterAvailability": 0.4
+      },
+      "zones": [
+        {
+          "id": "fields",
+          "kind": "crop-rotation",
+          "assets": [
+            "field-prepared",
+            "field-soybean-emerged",
+            "field-soybean-growing",
+            "field-soybean-mature",
+            "field-maize-growing",
+            "field-maize-mature",
+            "field-harvested",
+            "field-irrigated",
+            "tractor"
+          ],
+          "crops": [
+            "soybean",
+            "maize"
+          ],
+          "count": [
+            4,
+            7
+          ]
+        },
+        {
+          "id": "grain-yard",
+          "kind": "storage",
+          "near": "main-road",
+          "assets": [
+            "silo",
+            "shed",
+            "tractor",
+            "utility-truck"
+          ]
+        },
+        {
+          "id": "access",
+          "kind": "roads",
+          "assets": [
+            "road-straight",
+            "road-turn"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed",
+      "name": "Fazenda mista",
+      "region": "Sudeste",
+      "season": "normal",
+      "palette": [
+        "#799563",
+        "#a8b276",
+        "#bd8857",
+        "#7a8f81"
+      ],
+      "layout": {
+        "pastureShare": 0.38,
+        "cropShare": 0.34,
+        "fieldCount": 4,
+        "roadDensity": 0.17,
+        "treeDensity": 0.08,
+        "waterAvailability": 0.6
+      },
+      "zones": [
+        {
+          "id": "crop-fields",
+          "kind": "crop-rotation",
+          "assets": [
+            "field-prepared",
+            "field-soybean-emerged",
+            "field-soybean-growing",
+            "field-soybean-mature",
+            "field-maize-growing",
+            "field-maize-mature",
+            "field-harvested",
+            "field-irrigated",
+            "tractor"
+          ]
+        },
+        {
+          "id": "pastures",
+          "kind": "pasture",
+          "assets": [
+            "grass-light",
+            "shade-tree",
+            "fence-straight",
+            "water-trough"
+          ]
+        },
+        {
+          "id": "logistics",
+          "kind": "farmstead",
+          "assets": [
+            "farmhouse",
+            "shed",
+            "silo",
+            "utility-truck"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dry-season",
+      "name": "Estação seca",
+      "region": "Centro-Oeste",
+      "season": "hot",
+      "palette": [
+        "#a88950",
+        "#bc985d",
+        "#996344",
+        "#75815a"
+      ],
+      "layout": {
+        "pastureShare": 0.62,
+        "fieldCount": 4,
+        "roadDensity": 0.12,
+        "treeDensity": 0.06,
+        "waterAvailability": 0.25
+      },
+      "zones": [
+        {
+          "id": "dry-paddocks",
+          "kind": "pasture",
+          "assets": [
+            "soil-dry",
+            "grass-mid",
+            "fence-straight",
+            "water-trough"
+          ]
+        },
+        {
+          "id": "remaining-water",
+          "kind": "pond",
+          "assets": [
+            "pond",
+            "shrub"
+          ],
+          "scale": 0.72
+        },
+        {
+          "id": "shade",
+          "kind": "vegetation",
+          "assets": [
+            "shade-tree",
+            "shrub"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wet-season",
+      "name": "Período chuvoso",
+      "region": "Sul/Sudeste",
+      "season": "rain",
+      "palette": [
+        "#617f5a",
+        "#779b68",
+        "#8d7460",
+        "#628a88"
+      ],
+      "layout": {
+        "pastureShare": 0.6,
+        "fieldCount": 4,
+        "roadDensity": 0.14,
+        "treeDensity": 0.11,
+        "waterAvailability": 0.9
+      },
+      "zones": [
+        {
+          "id": "wet-pasture",
+          "kind": "pasture",
+          "assets": [
+            "grass-light",
+            "grass-mid",
+            "soil-damp",
+            "shade-tree"
+          ]
+        },
+        {
+          "id": "water-edge",
+          "kind": "pond",
+          "assets": [
+            "pond",
+            "shrub"
+          ]
+        },
+        {
+          "id": "muddy-access",
+          "kind": "roads",
+          "assets": [
+            "road-straight",
+            "road-turn",
+            "soil-damp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-premium",
+      "name": "Fazenda Horizonte · demonstração",
+      "region": "Brasil rural",
+      "season": "normal",
+      "palette": [
+        "#779665",
+        "#b0bc80",
+        "#bb7952",
+        "#638b89"
+      ],
+      "layout": {
+        "pastureShare": 0.46,
+        "cropShare": 0.24,
+        "fieldCount": 4,
+        "roadDensity": 0.19,
+        "treeDensity": 0.12,
+        "waterAvailability": 0.76
+      },
+      "zones": [
+        {
+          "id": "paddocks",
+          "kind": "pasture",
+          "assets": [
+            "grass-light",
+            "grass-mid",
+            "cow-dairy",
+            "cow-beef",
+            "calf",
+            "fence-straight",
+            "gate"
+          ]
+        },
+        {
+          "id": "farmstead",
+          "kind": "buildings",
+          "assets": [
+            "farmhouse",
+            "shed",
+            "silo",
+            "corral",
+            "tractor",
+            "pickup"
+          ]
+        },
+        {
+          "id": "water-and-shade",
+          "kind": "landmark",
+          "assets": [
+            "pond",
+            "shade-tree",
+            "fruit-tree",
+            "shrub"
+          ]
+        },
+        {
+          "id": "access",
+          "kind": "roads",
+          "assets": [
+            "road-straight",
+            "road-turn"
+          ]
+        },
+        {
+          "id": "showcase-crop",
+          "kind": "crop-rotation",
+          "assets": [
+            "field-prepared",
+            "field-soybean-emerged",
+            "field-soybean-growing",
+            "field-soybean-mature",
+            "field-maize-growing",
+            "field-maize-mature",
+            "field-harvested",
+            "field-irrigated",
+            "tractor"
+          ]
+        }
+      ]
+    }
+  ]
+}

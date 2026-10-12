@@ -1,0 +1,4177 @@
+{
+  "schemaVersion": 1,
+  "library": "riose-livestock-pilot",
+  "styleVersion": "riose-livestock-v1-candidate",
+  "status": "library-in-progress",
+  "semanticManifest": true,
+  "referenceAuthority": {
+    "style": "docs/assets/pixel-art-urban-reference.png",
+    "rural": "docs/assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png",
+    "livestock": "assets/approved/livestock/nelore-adult-idle-v1.png"
+  },
+  "assets": [
+    {
+      "id": "livestock.nelore.adult.idle.ne.v1",
+      "name": "Nelore adulto parado",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "docs/assets/kit-base-v1/livestock/ox-nelore-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/livestock/ox-nelore-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "4fe617506bd69f4600da8831c8ef866628424bd0855fb087e70ce77ffed2d177"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "beef",
+        "adult",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Candidate legacy sprite; style is close but outline and detail need review. Technical fail: 357,382 partial-alpha pixels (22.7%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Adult Nelore cattle standing at rest.",
+      "materials": [
+        "off-white coat",
+        "pale gray hide",
+        "horn",
+        "dark hoof"
+      ],
+      "orientations": [
+        "NE three-quarter; calm standing"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "4fe617506bd69f4600da8831c8ef866628424bd0855fb087e70ce77ffed2d177"
+    },
+    {
+      "id": "livestock.nelore.adult.walking.ne.v1",
+      "name": "Nelore adulto caminhando",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/source/livestock/nelore-adult-walking-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-adult-walking-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "b040e3da9fe71a494029d17ccab1b6b39456c658e77dee444c65fbb71d822877"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "beef",
+        "adult",
+        "walking"
+      ],
+      "states": [
+        "walking"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Alpha is present; subject is cleanly isolated over checkerboard. Outline and broad soft-looking tone bands are heavier than the urban master. Technical fail: 397,942 partial-alpha pixels (25.3%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Adult Nelore cattle in a walking pose.",
+      "materials": [
+        "off-white coat",
+        "pale gray hide",
+        "horn",
+        "dark hoof"
+      ],
+      "orientations": [
+        "NE three-quarter; walking"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "b040e3da9fe71a494029d17ccab1b6b39456c658e77dee444c65fbb71d822877"
+    },
+    {
+      "id": "livestock.nelore.adult.grazing.ne.v1",
+      "name": "Nelore adulto pastando",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/source/livestock/nelore-adult-grazing-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-adult-grazing-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "71ea137d7a7fe7a9e09b3044265bfd969c27cc9997ea2030ae3407bcbc971782"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "beef",
+        "adult",
+        "grazing"
+      ],
+      "states": [
+        "grazing"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Pose reads as grazing; outline and broad volumetric shade bands remain heavier than the urban master. Technical fail: 430,505 partial-alpha pixels (27.4%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Adult Nelore cattle grazing with its head lowered.",
+      "materials": [
+        "off-white coat",
+        "pale gray hide",
+        "horn",
+        "dark hoof"
+      ],
+      "orientations": [
+        "NE three-quarter; grazing"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "71ea137d7a7fe7a9e09b3044265bfd969c27cc9997ea2030ae3407bcbc971782"
+    },
+    {
+      "id": "livestock.nelore.calf.idle.ne.v1",
+      "name": "Bezerro Nelore parado",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/source/livestock/nelore-calf-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-calf-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "14cc9cb56c178976f173782fde373bf59425efd1422a26996856162b78561e89"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "calf",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Calf proportions are readable; line weight and large shade clusters are still chunkier than the urban master. Technical fail: 322,433 partial-alpha pixels (20.5%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Young Nelore calf standing at rest.",
+      "materials": [
+        "off-white coat",
+        "pale gray hide",
+        "small horn",
+        "dark hoof"
+      ],
+      "orientations": [
+        "NE three-quarter; standing"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "14cc9cb56c178976f173782fde373bf59425efd1422a26996856162b78561e89"
+    },
+    {
+      "id": "fence.wood.modular.straight.ne.v1",
+      "name": "Cerca modular de madeira",
+      "category": "fence",
+      "family": "wood-fence",
+      "file": "docs/assets/kit-base-v1/fences/fence-straight-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/fences/fence-straight-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "62672559efb3556eb79044a5839b2bd7d88ad2f76213a3886b29bb81dcb61f2e"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "wood",
+        "fence",
+        "modular",
+        "straight"
+      ],
+      "states": [
+        "straight",
+        "corner"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Straight and corner candidate pieces exist; connectors and line weight need scene-level curation. Technical fail: 111,801 partial-alpha pixels (7.1%); only 350 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "variants": {
+        "corner": "docs/assets/kit-base-v1/fences/fence-corner-01.png"
+      },
+      "description": "Straight rural cattle-fence segment with a corner variant.",
+      "materials": [
+        "timber post",
+        "wire",
+        "metal fastener"
+      ],
+      "orientations": [
+        "NE-SW axis; straight",
+        "NE-SW axis; corner"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "corral-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "62672559efb3556eb79044a5839b2bd7d88ad2f76213a3886b29bb81dcb61f2e"
+    },
+    {
+      "id": "fence.wood.gate.closed.ne.v1",
+      "name": "Porteira rural fechada",
+      "category": "fence",
+      "family": "wood-gate",
+      "file": "assets/source/infrastructure/ranch-gate-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/ranch-gate-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "2d45c0cf328720924d80c30f8e6d939f961144c5120826cb53ca33cda584ed00"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "wood",
+        "gate",
+        "closed"
+      ],
+      "states": [
+        "closed"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Gate silhouette and hardware are readable; contour weight and material grain density need refinement and connector fit is unverified. Technical fail: 530,062 partial-alpha pixels (33.7%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Closed timber gate candidate intended to join a modular paddock fence.",
+      "materials": [
+        "timber rails",
+        "post",
+        "steel hinge and latch"
+      ],
+      "orientations": [
+        "NE-SW axis; closed"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "corral-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "2d45c0cf328720924d80c30f8e6d939f961144c5120826cb53ca33cda584ed00"
+    },
+    {
+      "id": "water.trough.cattle.galvanized.01",
+      "name": "Bebedouro bovino",
+      "category": "water",
+      "family": "cattle-water-trough",
+      "file": "docs/assets/kit-base-v1/livestock/water-trough-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/livestock/water-trough-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "36bcc39281949ef929e8d561c5e34595d3ff809d6ab12f32df9590d98508ec93"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "cattle",
+        "galvanized"
+      ],
+      "states": [
+        "full"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Candidate legacy sprite; alpha fringe and style need review. Technical fail: 445,171 partial-alpha pixels (28.3%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Galvanized livestock water trough candidate.",
+      "materials": [
+        "galvanized steel",
+        "water"
+      ],
+      "orientations": [
+        "NE-SW long axis; filled candidate"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "water-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "36bcc39281949ef929e8d561c5e34595d3ff809d6ab12f32df9590d98508ec93"
+    },
+    {
+      "id": "feed.trough.supplement.wood.01",
+      "name": "Cocho de suplementação",
+      "category": "feed",
+      "family": "cattle-feed-trough",
+      "file": "docs/assets/kit-base-v1/livestock/feed-trough-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/livestock/feed-trough-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "e328b479b83da13e43db1e1f1825bb12983c24e5df3568b09c7189292ae8f0ed"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "feed",
+        "cattle",
+        "wood"
+      ],
+      "states": [
+        "filled"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Candidate legacy sprite; alpha fringe and style need review. Technical fail: 310,881 partial-alpha pixels (19.8%); only 358 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Wooden supplement feed trough candidate.",
+      "materials": [
+        "timber",
+        "dry forage or supplement"
+      ],
+      "orientations": [
+        "NE-SW long axis; filled candidate"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "e328b479b83da13e43db1e1f1825bb12983c24e5df3568b09c7189292ae8f0ed"
+    },
+    {
+      "id": "corral.wood.standard.module-01",
+      "name": "Módulo de curral de madeira",
+      "category": "corral",
+      "family": "wood-corral",
+      "file": "docs/assets/kit-base-v1/buildings/corral-module-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/buildings/corral-module-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "b9c819680310749dcde5ddcabea18b0e501682d7706d374cc85fe35f97ae8c3f"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        4,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "corral",
+        "wood",
+        "handling"
+      ],
+      "states": [
+        "standard"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Existing file is a composed pen, not a connector-based panel kit; retain as composition candidate. Technical fail: 547,965 partial-alpha pixels (34.8%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Composed wooden cattle-pen candidate; not a connector-based panel kit.",
+      "materials": [
+        "timber rails",
+        "posts",
+        "metal hardware"
+      ],
+      "orientations": [
+        "fixed isometric pen composition"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "corral-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "b9c819680310749dcde5ddcabea18b0e501682d7706d374cc85fe35f97ae8c3f"
+    },
+    {
+      "id": "pasture.grass.medium.tile-01",
+      "name": "Trecho de pastagem média",
+      "category": "pasture",
+      "family": "grass-medium",
+      "file": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+      "source": {
+        "kind": "legacy-unknown",
+        "tool": "not recorded for legacy candidate",
+        "modelVersion": null,
+        "sourceFile": "docs/assets/kit-base-v1/terrain/grass-light-03-01.png",
+        "promptFile": null,
+        "createdAt": null,
+        "sha256": "34a3fff08b9556aec144327311d155e99de8e47266dd1b523cb7e2b3d4fa6589"
+      },
+      "dimensions": {
+        "width": 128,
+        "height": 64,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "pasture",
+        "tile",
+        "medium"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "Legacy project candidate; original prompt, model version and license record are missing. Do not release until provenance is verified."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "pending",
+        "decisionNote": "Existing native 128×64 tile; technical seam test passed, visual style remains under review."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "description": "Medium-density green pasture center tile candidate.",
+      "materials": [
+        "grass",
+        "soil"
+      ],
+      "orientations": [
+        "ground diamond; center tile"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "pasture-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-for-review",
+          "date": null,
+          "detail": "Original creation date/provenance not recorded; legacy source registered as review candidate."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "binary-alpha-tile",
+        "paddingMinPx": 0
+      },
+      "fileSha256": "34a3fff08b9556aec144327311d155e99de8e47266dd1b523cb7e2b3d4fa6589"
+    },
+    {
+      "id": "technology.ear-tag.rfid-candidate.v1",
+      "name": "Brinco eletrônico candidato",
+      "category": "technology",
+      "family": "livestock-identification",
+      "file": "assets/source/technology/electronic-ear-tag-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/electronic-ear-tag-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "59b2e71689ccc25244f95b6e2b462204af89db7abcc04b6e2e9b35647b4b1897"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "ear-tag",
+        "rfid",
+        "candidate"
+      ],
+      "states": [
+        "passive-indicator"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Transparent sprite is isolated; current visual scale and thick outline are too large/coarse for an in-world animal overlay. Technical fail: 175,040 partial-alpha pixels (11.1%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "technologyClass": "C",
+      "capability": "Conceptual visual for a livestock identification tag; no read, radio, location, telemetry, battery, or certification capability is asserted.",
+      "evidence": [],
+      "claimLimits": [
+        "Do not imply continuous location, measured telemetry, validated RF positioning, regulatory acceptance, or certification."
+      ],
+      "depictionMode": "concept",
+      "dataContract": {
+        "requiredUpstreamState": [],
+        "unavailableBehavior": "Sprite presence creates no event, measurement, status, or location."
+      },
+      "description": "Conceptual electronic livestock ear tag illustration; no device performance is asserted.",
+      "materials": [
+        "yellow polymer shell",
+        "dark electronic module"
+      ],
+      "orientations": [
+        "three-quarter product view"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "experimental-tech",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "59b2e71689ccc25244f95b6e2b462204af89db7abcc04b6e2e9b35647b4b1897"
+    },
+    {
+      "id": "technology.reader-station.corral-rfid-candidate.v1",
+      "name": "Estação de leitura pecuária",
+      "category": "technology",
+      "family": "corral-reader-station",
+      "file": "assets/source/technology/livestock-reader-station-draft-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/livestock-reader-station-draft-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "8a6e0b8b092723582188ca52997e7de31ca67799ba105257cda1610e4a7e6363"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "technology",
+        "reader",
+        "corral",
+        "candidate"
+      ],
+      "states": [
+        "online-indicator"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for project review; tool model/version is not exposed; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "fail",
+        "decisionNote": "Readable equipment silhouette; contour and broad shading remain too heavy. Depiction is illustrative only, not a product capability claim. Technical fail: 242,623 partial-alpha pixels (15.4%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+      },
+      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "technologyClass": "C",
+      "capability": "Conceptual static reader-station illustration for future corral workflows; no deployed function is asserted.",
+      "evidence": [],
+      "claimLimits": [
+        "Do not imply a successful animal read, communication range, live tracking, measurement, or validated product capability."
+      ],
+      "depictionMode": "concept",
+      "dataContract": {
+        "requiredUpstreamState": [],
+        "unavailableBehavior": "Sprite presence creates no read event, link state, measurement, or location."
+      },
+      "description": "Conceptual fixed reader-station illustration near a cattle corral.",
+      "materials": [
+        "painted metal post",
+        "sealed reader enclosure",
+        "indicator lens"
+      ],
+      "orientations": [
+        "three-quarter installed view"
+      ],
+      "assetVersion": "v1-draft",
+      "regionalCompatibility": [
+        "Brazil-general-candidate"
+      ],
+      "distributionPackage": "experimental-tech",
+      "frames": [],
+      "history": [
+        {
+          "event": "created",
+          "date": "2026-10-11",
+          "detail": "Generated source preserved; review state recorded."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "8a6e0b8b092723582188ca52997e7de31ca67799ba105257cda1610e4a7e6363"
+    },
+    {
+      "id": "livestock.nelore.adult.idle.imagegen.v1",
+      "name": "Nelore adulto parado · ImageGen aprovado",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/approved/livestock/nelore-adult-idle-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-adult-imagegen-raw-v1.png",
+        "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
+        "createdAt": "2026-10-11",
+        "sha256": "cfcc83d844751b74eaf3b677d1f36fbfe02fb443cd7acbe5d80034920dfae63d"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "beef",
+        "adult",
+        "idle",
+        "imagegen-approved"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "traditional-farm",
+        "breeding",
+        "rearing",
+        "fattening",
+        "precision-livestock",
+        "demo"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Original generated by the built-in OpenAI ImageGen tool. Art approval explicitly granted by the user on 2026-10-12; retain generation provenance and verify terms before public/commercial release."
+      },
+      "atlas": {
+        "file": "public/assets/atlas/livestock-approved-atlas.png",
+        "frame": "nelore-adult"
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User-approved ImageGen Nelore. Original preserved under assets/source; runtime copy normalizes alpha to binary to remove the faint background vignette without changing RGB artwork."
+      },
+      "notes": "First approved livestock visual asset. Integrated into the runtime atlas and farm demo scene.",
+      "description": "Adult white Nelore bull standing in a calm three-quarter view, with characteristic shoulder hump and dewlap.",
+      "materials": [
+        "off-white coat",
+        "pale gray hide",
+        "dark muzzle",
+        "dark hoof"
+      ],
+      "orientations": [
+        "three-quarter view; standing"
+      ],
+      "assetVersion": "v1-approved",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "livestock-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "user-approved-and-integrated",
+          "date": "2026-10-12",
+          "detail": "User explicitly approved the direct ImageGen Nelore as the primary animal reference; alpha-only technical cleanup preserved the RGB artwork."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43"
+    },
+    {
+      "id": "livestock.nelore.cow.idle.imagegen.v1",
+      "name": "Vaca Nelore",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/candidates/livestock/livestock-nelore-cow-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-cow-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "be026001b7b199a5ca81e9f09ebacb63d065ff133624de41a944d9062190d6f2"
+      },
+      "dimensions": {
+        "width": 1219,
+        "height": 884,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Vaca Nelore",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "90b4c4a1bd5f7eee905688c6b4f6a0e7482e32bce680afd30b7e7958428b101d"
+    },
+    {
+      "id": "livestock.nelore.calf.idle.imagegen.v1",
+      "name": "Bezerro Nelore",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/candidates/livestock/livestock-nelore-calf-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-calf-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "eeb0ae9fb44a7c9484415a0b03ab4f18172bb97d515a80b98a81379e88a7794c"
+      },
+      "dimensions": {
+        "width": 981,
+        "height": 751,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "calf",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Bezerro Nelore",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "2541b0d8e5ee6fc0e0af76310c6472fcdacfc75a3e61374e87ab172d854d42a7"
+    },
+    {
+      "id": "livestock.nelore.heifer.idle.imagegen.v1",
+      "name": "Novilha Nelore",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/candidates/livestock/livestock-nelore-heifer-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-heifer-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "a31aac1368f7de740504bddcfaf74e42bcbc96bff2bd1894cb299ebada5ec7b6"
+      },
+      "dimensions": {
+        "width": 1101,
+        "height": 809,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "heifer",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Novilha Nelore",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f56cdc499362fa5ef607b5648f011f4ac914ecc41c53f23a3365ac5b18fc2e9f"
+    },
+    {
+      "id": "livestock.nelore.bull.idle.imagegen.v1",
+      "name": "Touro Nelore",
+      "category": "livestock",
+      "family": "nelore-cattle",
+      "file": "assets/candidates/livestock/livestock-nelore-bull-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/nelore-bull-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "9d98dd18b3616c96b9296fc02c1c510fb77f0584a51b0181d28400128f85912b"
+      },
+      "dimensions": {
+        "width": 1263,
+        "height": 926,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "nelore",
+        "bull",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Touro Nelore",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "c5b573d876df4ef1abfbfe37513c8739870f6787b05adb986044d423c29b4559"
+    },
+    {
+      "id": "livestock.angus.cow.idle.imagegen.v1",
+      "name": "Vaca Angus",
+      "category": "livestock",
+      "family": "angus-cattle",
+      "file": "assets/candidates/livestock/livestock-angus-cow-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/angus-cow-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "f5b784e31fa56e05f012f8a9119bdf87054bda7cfc79a925e692de331f4c7583"
+      },
+      "dimensions": {
+        "width": 1310,
+        "height": 870,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "angus",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Vaca Angus",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "c6302c778f986c43761ecc8a8865c2902252a4bcabc9f443242783836c346a3e"
+    },
+    {
+      "id": "livestock.crossbred.cow.idle.imagegen.v1",
+      "name": "Vaca cruzada",
+      "category": "livestock",
+      "family": "crossbred-cattle",
+      "file": "assets/candidates/livestock/livestock-crossbred-cow-idle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/livestock/crossbred-cow-generated-original-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "ba9fd745fd148517d1eef9dbc5244f20727dc9f45888e78a3d979a93fc593b0f"
+      },
+      "dimensions": {
+        "width": 1288,
+        "height": 902,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "crossbred",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "states": [
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Vaca cruzada",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "animals",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "6313dab28d20ba2c4efa57387ae1b1f0ce1153db59ca81dd5d586246a4bf00d1"
+    },
+    {
+      "id": "corral.wood.standard.imagegen.v1",
+      "name": "Curral de madeira",
+      "category": "corral",
+      "family": "corral",
+      "file": "assets/candidates/handling/corral-wood-standard-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 580,
+        "height": 371,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "corral",
+        "wood",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Curral de madeira",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "64fcb6a5af48dc6c7bcd09fed139eae05d10299ef5d20ef7f4fb6df3137bf85f"
+    },
+    {
+      "id": "handling.chute.cattle.imagegen.v1",
+      "name": "Brete de manejo",
+      "category": "corral",
+      "family": "corral",
+      "file": "assets/candidates/handling/handling-chute-cattle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 369,
+        "height": 349,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "chute",
+        "handling",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Brete de manejo",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "3223635c8e9714e53c3fa930c3cd6bb33f0f8d6dcfd39dca76e610f9945db89f"
+    },
+    {
+      "id": "handling.alley.cattle.imagegen.v1",
+      "name": "Corredor de manejo",
+      "category": "corral",
+      "family": "corral",
+      "file": "assets/candidates/handling/handling-alley-cattle-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 441,
+        "height": 357,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "alley",
+        "handling",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Corredor de manejo",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "35cfab87f495204f5cbdf734b16fc1a0ead9ef7fd1c6a812e42017e6dc835b05"
+    },
+    {
+      "id": "fence.gate.wood.imagegen.v1",
+      "name": "Porteira de madeira",
+      "category": "fence",
+      "family": "fence",
+      "file": "assets/candidates/handling/fence-gate-wood-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 379,
+        "height": 303,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "gate",
+        "wood",
+        "modular"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Porteira de madeira",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "7141cdbfd6ea745c4385376f3cc054fd6b44af162ba730bb3cc8a2dcde5d8bf6"
+    },
+    {
+      "id": "fence.wire.wood-post.imagegen.v1",
+      "name": "Cerca de arame e madeira",
+      "category": "fence",
+      "family": "fence",
+      "file": "assets/candidates/handling/fence-wire-wood-post-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 416,
+        "height": 299,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "fence",
+        "wire",
+        "modular"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Cerca de arame e madeira",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "85ede4f680e95b6e28238447e55941a7bcd97f70c8c5e7b509dc50bf3127ebc3"
+    },
+    {
+      "id": "feed.trough.hay.imagegen.v1",
+      "name": "Cocho de feno",
+      "category": "feed",
+      "family": "feed",
+      "file": "assets/candidates/handling/feed-trough-hay-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 423,
+        "height": 261,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "hay",
+        "trough",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Cocho de feno",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f9916171e6009e2ab7b411bb2f4b338059272c8310d1ecb10c8c1ccab4af85e6"
+    },
+    {
+      "id": "water.trough.round.imagegen.v1",
+      "name": "Bebedouro circular",
+      "category": "water",
+      "family": "water",
+      "file": "assets/candidates/handling/water-trough-round-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 462,
+        "height": 237,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "trough",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Bebedouro circular",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "062b9dfc14f01bfd942e0c886b3f5d1de2f469ce5993e01dab11c88090a27213"
+    },
+    {
+      "id": "feed.salt.roofed.imagegen.v1",
+      "name": "Saleiro coberto",
+      "category": "feed",
+      "family": "feed",
+      "file": "assets/candidates/handling/feed-salt-roofed-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 279,
+        "height": 314,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "salt",
+        "feeder",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Saleiro coberto",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "8fabd32a16ac6669f437065bc0b4af928f453a4d6a3e0dc0120113b71c40e798"
+    },
+    {
+      "id": "technology.scale.electronic.imagegen.v1",
+      "name": "Balança eletrônica",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/handling/technology-scale-electronic-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f"
+      },
+      "dimensions": {
+        "width": 462,
+        "height": 323,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "scale",
+        "electronic",
+        "cattle"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Balança eletrônica",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "handling",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "9ff09a1f0d8249d1cc7c7d0d857f5f3bc621affe97bf7699523c525ab134ac0e"
+    },
+    {
+      "id": "pasture.grass.native.imagegen.v1",
+      "name": "Pastagem com vegetação",
+      "category": "pasture",
+      "family": "pasture",
+      "file": "assets/candidates/environment/pasture-grass-native-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 450,
+        "height": 305,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "pasture",
+        "grass",
+        "tile"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Pastagem com vegetação",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "cca05e88f8de6c987e5459ba8051ae5962e6797d37f021c29ee695752be3d2d1"
+    },
+    {
+      "id": "terrain.soil.dry.imagegen.v1",
+      "name": "Terra seca",
+      "category": "pasture",
+      "family": "pasture",
+      "file": "assets/candidates/environment/terrain-soil-dry-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 425,
+        "height": 297,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "soil",
+        "dry",
+        "terrain"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Terra seca",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "152105337a09cc317e635ab91b80551367bd5f1e8e9b4a41c744cd3cfcb4fd0c"
+    },
+    {
+      "id": "terrain.mud.imagegen.v1",
+      "name": "Lama de curral",
+      "category": "pasture",
+      "family": "pasture",
+      "file": "assets/candidates/environment/terrain-mud-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 429,
+        "height": 305,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "mud",
+        "wet",
+        "terrain"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Lama de curral",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "e7582756ab5079a81ab8035e5920079cfcd0143b5d6c1eeffd0188eeaea227c3"
+    },
+    {
+      "id": "water.pond.imagegen.v1",
+      "name": "Açude",
+      "category": "water",
+      "family": "water",
+      "file": "assets/candidates/environment/water-pond-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 444,
+        "height": 320,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "pond",
+        "water",
+        "shoreline"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Açude",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "32f61e254ebecaf566f6b11d1ef73d24668c6d2136f76e8b1f23d2f9a27774c0"
+    },
+    {
+      "id": "water.reservoir.imagegen.v1",
+      "name": "Reservatório rural",
+      "category": "water",
+      "family": "water",
+      "file": "assets/candidates/environment/water-reservoir-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 437,
+        "height": 321,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "reservoir",
+        "water",
+        "farm"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Reservatório rural",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "920803516fa0c3ae59ac0b0319ffc9a47915d63467fcfd967f6d957ccc4c40aa"
+    },
+    {
+      "id": "road.rural.dirt.imagegen.v1",
+      "name": "Estrada rural de terra",
+      "category": "infrastructure",
+      "family": "infrastructure",
+      "file": "assets/candidates/environment/road-rural-dirt-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 539,
+        "height": 373,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "road",
+        "dirt",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Estrada rural de terra",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "ca167df48504751ea280f50351fc84570b4a85bf251e08711938bcf9290da461"
+    },
+    {
+      "id": "vegetation.tree.shade.imagegen.v1",
+      "name": "Árvore de sombra",
+      "category": "vegetation",
+      "family": "vegetation",
+      "file": "assets/candidates/environment/vegetation-tree-shade-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013"
+      },
+      "dimensions": {
+        "width": 492,
+        "height": 432,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "tree",
+        "shade",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Árvore de sombra",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "environment",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "ea210c67f1f16d16d16674776d402ec7725ace2ac29756fa63ab22aa2915db48"
+    },
+    {
+      "id": "building.farmhouse.imagegen.v1",
+      "name": "Sede rural",
+      "category": "building",
+      "family": "building",
+      "file": "assets/candidates/infrastructure/building-farmhouse-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 547,
+        "height": 414,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "farmhouse",
+        "brazil",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Sede rural",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "6f719af32514973fdd6fb9bcae17c41fa9423dddee5c1506a9cef72122315e67"
+    },
+    {
+      "id": "building.shed.imagegen.v1",
+      "name": "Galpão rural",
+      "category": "building",
+      "family": "building",
+      "file": "assets/candidates/infrastructure/building-shed-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 505,
+        "height": 407,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "shed",
+        "barn",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Galpão rural",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "e98c6441597e3c9d2717e6071355746cea080ea358d7bfd7e125c7dd5692ac0d"
+    },
+    {
+      "id": "building.workshop.imagegen.v1",
+      "name": "Oficina e depósito",
+      "category": "building",
+      "family": "building",
+      "file": "assets/candidates/infrastructure/building-workshop-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 485,
+        "height": 392,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "workshop",
+        "storage",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Oficina e depósito",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f7dd8ba19f5be3ca947b866748fb837b58c7b5889f7d5bf39dbef9ae01cd45ca"
+    },
+    {
+      "id": "vehicle.pickup.rural.imagegen.v1",
+      "name": "Caminhonete rural",
+      "category": "vehicle",
+      "family": "vehicle",
+      "file": "assets/candidates/infrastructure/vehicle-pickup-rural-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 497,
+        "height": 287,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "pickup",
+        "rural",
+        "utility"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Caminhonete rural",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "77e862f356e116c3fdfd48543f2dad52898a73e1ad04c8aa2888062ad422fbdf"
+    },
+    {
+      "id": "vehicle.livestock-truck.imagegen.v1",
+      "name": "Caminhão boiadeiro",
+      "category": "vehicle",
+      "family": "vehicle",
+      "file": "assets/candidates/infrastructure/vehicle-livestock-truck-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 568,
+        "height": 403,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "livestock-truck",
+        "transport",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Caminhão boiadeiro",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "37503f65d5e4203a8f983f82f30041dd4d5da2fbbd863db23c3b9eb7eabac53f"
+    },
+    {
+      "id": "vehicle.tractor.imagegen.v1",
+      "name": "Trator agrícola",
+      "category": "vehicle",
+      "family": "vehicle",
+      "file": "assets/candidates/infrastructure/vehicle-tractor-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b"
+      },
+      "dimensions": {
+        "width": 393,
+        "height": 318,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "tractor",
+        "farm",
+        "rural"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Trator agrícola",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "1720f06c0f77efffce8377c9b7a44ceee5675d9d6e791c285ad6c997715a33c6"
+    },
+    {
+      "id": "technology.ear-tag.rfid.imagegen.v1",
+      "name": "Brinco inteligente RFID",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-ear-tag-rfid-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 358,
+        "height": 368,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "rfid",
+        "ear-tag",
+        "livestock"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Brinco inteligente RFID",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "1fef8500aa46696aead3b81ddcbc4d2b4399eaa1012ce6927afbfea286a51406"
+    },
+    {
+      "id": "technology.reader.handheld.imagegen.v1",
+      "name": "Leitor portátil",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-reader-handheld-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 305,
+        "height": 483,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "reader",
+        "rfid",
+        "handheld"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Leitor portátil",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "3e86d5807a314affa403f415b5a342911bd2e57f39458afec1caf209f9c94033"
+    },
+    {
+      "id": "technology.gateway.antenna.imagegen.v1",
+      "name": "Gateway e antena rural",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-gateway-antenna-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 320,
+        "height": 507,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "gateway",
+        "antenna",
+        "iot"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Gateway e antena rural",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "c320903a2927d86fed72396ee1c6a20005ff8719f19582e00e3f4787ac730897"
+    },
+    {
+      "id": "technology.monitor.station.imagegen.v1",
+      "name": "Estação de monitoramento",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-monitor-station-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 318,
+        "height": 502,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "monitoring",
+        "station",
+        "weather"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Estação de monitoramento",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "fd916ad7daf41ae170fad1f58173e2a18e68942fccff65c81598d4cc6373f2bd"
+    },
+    {
+      "id": "technology.scale.electronic.full.imagegen.v1",
+      "name": "Balança eletrônica de curral",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-scale-electronic-full-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 485,
+        "height": 392,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "scale",
+        "electronic",
+        "livestock"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Balança eletrônica de curral",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "d467d3d59ed02f669e01384d73415423f4d82c2858f94c805d91d70be585a9e3"
+    },
+    {
+      "id": "technology.traceability.system.imagegen.v1",
+      "name": "Infraestrutura de rastreabilidade",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-traceability-system-imagegen-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db"
+      },
+      "dimensions": {
+        "width": 490,
+        "height": 504,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "traceability",
+        "gateway",
+        "livestock"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Infraestrutura de rastreabilidade",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-12",
+          "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "soft-alpha-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f3e0ba044d9dd6c5657f031c400df54efc7f72767f222d63f3c4b066a7f146a5"
+    }
+  ],
+  "notes": "First user-approved ImageGen Nelore is integrated; additional generated assets are progressively packaged in category review atlases and remain art-pending until approved."
+}
