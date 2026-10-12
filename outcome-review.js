@@ -1,4 +1,5 @@
 import {replayComparisonManifest, validateComparisonManifest} from './engine.js';
+import {bundleEngineSources, ENGINE_SOURCE_FILES} from './engine-provenance.js';
 import {validateFarmSnapshot} from './snapshot-validator.js';
 
 const $ = id => document.getElementById(id);
@@ -383,15 +384,19 @@ $('archive-file').addEventListener('change', () => {
 $('archive-create').addEventListener('click', async () => {
   try {
     showStatus('archive-status', 'Reproduzindo a comparação e calculando hashes localmente…');
-    const sourceResponse = await fetch(new URL('./engine.js', import.meta.url));
-    if (!sourceResponse.ok) throw new Error('Não foi possível ler o código do motor servido localmente.');
-    const sourceBytes = await sourceResponse.arrayBuffer();
+    const sourceEntries = await Promise.all(ENGINE_SOURCE_FILES.map(async filename => {
+      const sourceResponse = await fetch(new URL(`./${filename}`, import.meta.url));
+      if (!sourceResponse.ok) throw new Error(`Não foi possível ler ${filename} servido localmente.`);
+      return [filename, new Uint8Array(await sourceResponse.arrayBuffer())];
+    }));
+    const sourceBytes = bundleEngineSources(new Map(sourceEntries));
     const comparison = replayComparisonManifest(manifest);
     archive = {
       type: 'agroville-comparison-result',
       version: 1,
       capturedAt: new Date().toISOString(),
       manifestReference: {type: manifest.type, version: manifest.version, sha256: manifestHash},
+      engineSourceFiles: [...ENGINE_SOURCE_FILES],
       engineSourceSha256: await digestHex(sourceBytes),
       comparison,
     };

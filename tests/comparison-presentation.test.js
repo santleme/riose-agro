@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
@@ -7,6 +8,8 @@ import {SCENARIO_PRESETS,getScenarioPreset} from '../scenario-presets.js';
 import {createServer} from '../server.js';
 import {calculateThi,THI_SOURCE} from '../thermal-index.js';
 import {environmentDiffRows,initialEnvironmentState} from '../environment-inputs.js';
+import {bundleEngineSources,ENGINE_SOURCE_FILES} from '../engine-provenance.js';
+import {engineSourceSha256} from '../scripts/engine-source-hash.js';
 
 const source=await readFile(new URL('../app.js',import.meta.url),'utf8');
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
@@ -163,6 +166,15 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
   const feedingResponse=await fetch('http://127.0.0.1:'+server.address().port+'/feeding-model.js');
   assert.equal(feedingResponse.status,200);
   assert.match(await feedingResponse.text(),/calculateFeeding/);
+  const provenanceResponse=await fetch('http://127.0.0.1:'+server.address().port+'/engine-provenance.js');
+  assert.equal(provenanceResponse.status,200);
+  assert.match(await provenanceResponse.text(),/bundleEngineSources/);
+  const sourceEntries=await Promise.all(ENGINE_SOURCE_FILES.map(async filename=>{
+    const response=await fetch('http://127.0.0.1:'+server.address().port+'/'+filename);
+    assert.equal(response.status,200);
+    return [filename,new Uint8Array(await response.arrayBuffer())];
+  }));
+  assert.equal(createHash('sha256').update(bundleEngineSources(new Map(sourceEntries))).digest('hex'),engineSourceSha256());
 });
 
 test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{
