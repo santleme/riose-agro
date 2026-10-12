@@ -42,7 +42,7 @@
       "reportedPopulation": "2,084 beef animals from 2019–2024 at two West Virginia sites; 130,000+ daily records of individual water intake, DMI, and body weight across grazing and drylot systems. Grazing records are from crossbred steers.",
       "individualDataRetrieved": false,
       "publicDataAssessment": "The article presents cohort and group summaries. No data availability statement, downloadable individual dataset, repository DOI, or data-specific reuse license was found on the accessible full-text page.",
-      "decision": "High-priority source to revisit if a public data deposit appears, because it reports individual DMI and BW in grazing beef steers. Do not use the article's summaries as individual observations; the article license does not establish reuse rights for the underlying data, and ADG/pasture covariates needed for an engine comparison were not located in a public file."
+      "decision": "Exclude from the issue #109 adult-cow target: the article states that its grazing records are exclusively from crossbred steers, so it does not provide the required mature-cow population even though it reports individual DMI and BW. Do not use article summaries as individual observations; no downloadable individual records or data-specific reuse terms were found. Revisit only if an adult-cow cohort and reusable underlying records are separately provided."
     },
     {
       "title": "Generalizable long short-term memory models for beef cattle DMI under grazing",
