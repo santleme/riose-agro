@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 18; `inputFileCount` = 25; `elapsedSeconds` = 0.017646 s (tempo observado).
+**Processamento:** `sourceCount` = 20; `inputFileCount` = 25; `elapsedSeconds` = 0.014530 s (tempo observado).
 
 ## Matriz
 
@@ -50,6 +50,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 **Licença:** No separate open-data license for underlying data found on repository record. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
+| Labeled Sensor Dataset of Beef Cattle Behavior on Desert Rangelands | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 24 mature beef cows aged 4–9 years on desert rangelands, with per-animal sensor and minute-level behavior labels. Animal/time-level behavior observations; no total-DMI outcome or measurement protocol. | Reusable behavior research only; do not infer DMI from behavior labels or treat them as intake measurements. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/10` |
+
+**pasture-dmi-triage-figshare-28801181 — razões.** DMI: The publicly reusable files label sensor and grazing behavior but contain no individual total-DMI outcome in kg DM/animal/day. Source is inaccessible or not reusable. ADG: No individual ADG outcome and paired predictors were identified in the behavior dataset. Source is inaccessible or not reusable.
+**Licença:** CC BY 4.0 for deposited behavior/sensor files; this does not create an absent DMI outcome. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
 | Herbage Selection, Intake, and Digestibility in Grazing Beef Cattle | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 20 nonlactating Angus cows averaging 50 months of age grazing mixed pasture. Article reports aggregate grazing herbage intake; no reusable per-cow total-DMI records retrieved. | Strong adult-cow population and method reference only; do not reconstruct microdata from reported aggregates. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/3` |
 
 **pasture-dmi-triage-livsci-2015 — razões.** DMI: The article describes individual herbage-intake estimates but no downloadable row-level file or data-specific reuse terms were located; herbage intake also does not document the specified total-DMI outcome including supplement. Source is inaccessible or not reusable. ADG: No reusable individual ADG records or paired inputs were retrieved. Source is inaccessible or not reusable.
@@ -84,6 +90,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 **pasture-dmi-triage-teagasc-2019 — razões.** DMI: The institutional full-text and publisher abstract contain cohort metrics but no public microdata, row-level IDs, or data-specific reuse terms. Source is inaccessible or not reusable. ADG: No reusable individual ADG records and paired outcome inputs were retrieved. Source is inaccessible or not reusable.
 **Licença:** Open-access article; no separate data license or public deposit for underlying cow-level records identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| USDA MINDY Grazing-Scenario Model Outputs | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | Pregnant beef-cow grazing-system scenario modelled across 25 management/feed scenarios. Public scenario outputs include modelled DMI but no observed cow-period outcome labels. | Reusable scenario/model-output context only; retain the simulated provenance and do not treat as observed animal data. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/9` |
+
+**pasture-dmi-triage-usda-mindy-28071860 — razões.** DMI: DMI values are generated by the grazing-system model, not measured individual-animal outcomes; simulation outputs cannot serve as supervised field labels or independent validation. Source is inaccessible or not reusable. ADG: No reusable observed individual ADG records with paired field predictors were retrieved. Source is inaccessible or not reusable.
+**Licença:** CC BY 4.0 for deposited files; intake outputs are simulated scenario results, not observed animal records. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
 | Rothamsted dairy-cross beef grazing | available_local | unknown | 248 (unique official tags) [docs/evidence/rothamsted-adg-audit.json#/integrity/uniqueOfficialTagCount] | unknown | ineligible (trainable: false) | conditional (trainable: true) | Young growing dairy-cross beef cattle in temperate pasture; not a mature-cow cohort. Animal-period daily liveweight gain kg/steer/day; repeated periods per official tag. | Held-out cohort ADG component diagnostic only; not full-engine or adult-cow validation. | `manifest: data/rothamsted/manifest.json`, `audit: docs/evidence/rothamsted-adg-audit.json`, `decision: docs/evidence/engine-adg-rothamsted-check.json` |
@@ -130,6 +142,6 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 ## Processamento
 
-`sourceCount` = 18; `inputFileCount` = 25; `elapsedSeconds` = 0.017646 s.
+`sourceCount` = 20; `inputFileCount` = 25; `elapsedSeconds` = 0.014530 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.
