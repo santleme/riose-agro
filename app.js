@@ -1,4 +1,5 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
+import {renderSimulationReport} from './simulation-report.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from './scientific/br_corte_pasture_dmi.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
@@ -6,7 +7,7 @@ const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
 let state                   ,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false;
 const stateRequests=[];
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
-function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
+function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export','report-export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const number=(n       ,digits=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const actionNames={grazing:'Pastando',feeding:'No cocho',drinking:'Bebendo água',resting:'Descansando'};
@@ -214,6 +215,7 @@ function comparisonCSV(data){
   return [headers.join(','),...comparisonRows(data).map(row=>{const base=comparisonConsumption(row,'baseline'),alternative=comparisonConsumption(row,'scenario');return [cell(row.day,0),...[row.baselineWeight,row.scenarioWeight,base,alternative,comparisonPerAnimal(base),comparisonPerAnimal(alternative),row.baselinePastureKgDM,row.scenarioPastureKgDM,row.baselineCost,row.scenarioCost].map(value=>cell(value)),...Array.from({length:4},(_,i)=>[initial[i],row.baselinePastureByPaddock?.[i],row.scenarioPastureByPaddock?.[i]].map(value=>cell(value,2))).flat(),'demonstrativo_nao_validado','nao_disponivel_sem_calibracao'].join(',');})].join('\n');
 }
 $('export').onclick=()=>{if(comparison&&!requestCompare&&!loadingScenario)downloadFile('agroville-comparacao-demonstrativa.csv',comparisonCSV(comparison),'text/csv;charset=utf-8');};
+$('report-export').onclick=()=>{if(!comparison||requestCompare||loadingScenario)return;try{downloadFile('agroville-relatorio-demonstrativo.md',renderSimulationReport(comparison,comparisonManifest),'text/markdown;charset=utf-8');}catch(error){notify('Não foi possível gerar o relatório: '+error.message);}};
 
 let noticeTimer                              ;function notify(message       ){$('notice').textContent=message;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,5000);}
 $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!comparisonManifest){notify('Faça ou importe uma comparação antes de exportar o manifesto.');return;}downloadFile('agroville-manifesto-demonstrativo.json',JSON.stringify(comparisonManifest,null,2),'application/json;charset=utf-8');};
