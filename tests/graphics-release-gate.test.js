@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {assertGraphicsReleaseInputsReady, assertGraphicsReleaseReady, inspectGraphicsReleaseFiles} from '../scripts/assets/graphics-release-gate.mjs';
+import {enrichRuntimeAssetManifest} from '../scripts/assets/runtime-asset-provenance.mjs';
 
 const approvedFixture = JSON.parse(await readFile(new URL('./fixtures/graphics-release/approved-manifests.json', import.meta.url), 'utf8'));
 
@@ -57,6 +58,16 @@ async function withFilesystemFixture(run) {
         frame: {x: 2, y: 3, w: 4, h: 5},
       }],
     },
+    runtimeManifest: {
+      atlases: {livestock: {image: '/graphics-poc/atlas.png', sourceSize: [10, 12]}},
+      atlasSha256: {livestock: sha256(atlasBytes)},
+      assets: [{
+        id: 'nelore-adult',
+        reviewStatus: 'RELEASED',
+        provenance: {sourceFile: 'assets/source.png', sourceManifest: 'assets/manifest.json', rights: {licenseState: 'documented', notes: 'Fixture rights'}},
+        frame: {atlas: 'livestock', x: 2, y: 3, w: 4, h: 5},
+      }],
+    },
   };
   try {
     await run({repositoryRoot, inputs, sourceBytes, atlasBytes});
@@ -71,6 +82,7 @@ test('release packaging refuses the current unreviewed and unresolved graphics m
     assert.match(error.message, /status REVIEW is not release eligible/);
     assert.match(error.message, /unresolved renderer asset reference/);
     assert.match(error.message, /no documented rights basis/);
+    assert.match(error.message, /grass-light runtime status UNRESOLVED is not release eligible/);
     assert.doesNotMatch(error.message, /file is missing or unreadable/);
     assert.doesNotMatch(error.message, /hash does not match|outside generated atlas|not byte-identical|does not match source atlas membership/);
     return true;
@@ -84,6 +96,36 @@ test('fully reviewed release fixture resolves semantic and renderer atlas member
   assert.equal(approvedFixture.rendererManifest.atlases.livestock, '/graphics-poc/assets/livestock.png');
   assert.equal(approvedFixture.rendererManifest.assets[0].atlasKey, 'livestock');
   assert.doesNotThrow(() => assertGraphicsReleaseInputsReady(approvedFixture));
+});
+
+test('runtime release gate treats missing status as unresolved and rejects every non-release status', () => {
+  for (const status of ['REVIEW', 'UNRESOLVED', 'APPROVED']) {
+    const fixture = cloneFixture();
+    fixture.runtimeManifest.assets[0].reviewStatus = status;
+    assert.throws(() => assertGraphicsReleaseInputsReady(fixture), new RegExp(`nelore-adult runtime status ${status} is not release eligible`));
+  }
+  const missing = cloneFixture();
+  delete missing.runtimeManifest.assets[0].reviewStatus;
+  assert.throws(() => assertGraphicsReleaseInputsReady(missing), /nelore-adult runtime status UNRESOLVED is not release eligible/);
+});
+
+test('runtime provenance join preserves explicit source status, rights and unknowns without approving assets', () => {
+  const runtimeManifest = {assets: [{id: 'source-approved'}, {id: 'source-review'}, {id: 'orphan'}, {id: 'renderer-review-conflict'}]};
+  const semanticManifest = {assets: [
+    {id: 'source-approved', status: 'APPROVED', source: {sourceFile: 'approved.png'}, rights: {licenseState: 'documented', notes: 'rights'}, review: {art: 'pass'}},
+    {id: 'source-review', status: 'REVIEW', source: {sourceFile: 'review.png'}, rights: {licenseState: 'unknown', notes: 'pending'}},
+    {id: 'source-released', status: 'RELEASED', source: {sourceFile: 'released.png'}, rights: {licenseState: 'documented', notes: 'released rights'}},
+  ]};
+  const enriched = enrichRuntimeAssetManifest(runtimeManifest, {
+    semanticManifest,
+    dairyManifest: {assets: []},
+    rendererManifest: {assets: [{assetId: 'renderer-review-conflict', sourceSemanticId: 'source-released', reviewStatus: 'REVIEW'}]},
+  });
+  assert.deepEqual(enriched.assets.map(asset => asset.reviewStatus), ['APPROVED', 'REVIEW', 'UNRESOLVED', 'REVIEW']);
+  assert.equal(enriched.assets[0].provenance.rights.licenseState, 'documented');
+  assert.equal(enriched.assets[1].provenance.sourceFile, 'review.png');
+  assert.equal(enriched.assets[2].provenance.rights.licenseState, 'unknown');
+  assert.equal(enriched.assets[2].provenance.sourceManifest, null, 'the runtime manifest is not evidence of an asset source');
 });
 
 test('release gate rejects a renderer asset without a matching semantic source record', () => {
@@ -163,17 +205,21 @@ test('filesystem gate rejects provenance and generated-atlas hash mismatches in 
   await withFilesystemFixture(async ({repositoryRoot, inputs}) => {
     inputs.semanticManifest.assets[0].source.sha256 = '0'.repeat(64);
     inputs.rendererManifest.atlasSha256.livestock = '0'.repeat(64);
+    inputs.runtimeManifest.atlasSha256.livestock = '0'.repeat(64);
     const errors = await inspectGraphicsReleaseFiles(inputs, repositoryRoot);
     assert(errors.some(error => /source hash does not match its provenance record/.test(error)));
     assert(errors.some(error => /renderer atlas livestock hash does not match atlasSha256/.test(error)));
+    assert(errors.some(error => /runtime atlas livestock hash does not match atlasSha256/.test(error)));
   });
 });
 
 test('filesystem gate rejects generated frames that exceed the atlas dimensions', async () => {
   await withFilesystemFixture(async ({repositoryRoot, inputs}) => {
     inputs.rendererManifest.assets[0].frame = {x: 9, y: 3, w: 2, h: 5};
+    inputs.runtimeManifest.assets[0].frame = {atlas: 'livestock', x: 9, y: 3, w: 2, h: 5};
     const errors = await inspectGraphicsReleaseFiles(inputs, repositoryRoot);
     assert(errors.some(error => /outside generated atlas livestock \(10x12\)/.test(error)));
+    assert(errors.some(error => /outside atlas livestock \(10x12\)/.test(error)));
   });
 });
 

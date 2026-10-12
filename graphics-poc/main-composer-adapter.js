@@ -149,7 +149,17 @@ export function adaptMainComposerScene(source, rendererManifest) {
         entityId: `visual-${visualId}`,
         kind: 'animal',
         position: {x: col, y: row, unit: 'grid-cell'},
-        asset: {assetId: placement.assetId, manifestUri: '/graphics-poc/assets/main-composer-render-manifest.json', manifestVersion: 'main-composer-v1', reviewStatus: asset.reviewStatus},
+        asset: {
+          assetId: placement.assetId,
+          manifestUri: '/graphics-poc/assets/main-composer-render-manifest.json',
+          manifestVersion: 'main-composer-v1',
+          reviewStatus: asset.reviewStatus ?? 'UNRESOLVED',
+          sourceStatus: asset.sourceStatus ?? asset.reviewStatus ?? 'UNRESOLVED',
+          sourceSemanticId: asset.sourceSemanticId ?? null,
+          sourceFile: asset.sourceFile ?? null,
+          sourceManifest: asset.sourceManifest ?? asset.manifestSource ?? null,
+          rights: asset.rights ?? {licenseState: 'unknown', notes: 'No source rights record resolves for this asset.'},
+        },
         state: {stateId: stateId(placement)},
         ...(placement.properties?.groupId ? {groupId: placement.properties.groupId} : {}),
         visualId,
@@ -185,7 +195,20 @@ export function adaptMainComposerScene(source, rendererManifest) {
   const missingAssets = [...usedAssetIds].filter(assetId => !assetsById.has(assetId));
   if (missingAssets.length) throw new TypeError(`Scene references assets absent from the renderer manifest: ${missingAssets.join(', ')}`);
   const manifestUri = '/graphics-poc/assets/main-composer-render-manifest.json';
-  const assets = [...usedAssetIds].sort().map(assetId => ({assetId, manifestUri, manifestVersion: 'main-composer-v1', reviewStatus: assetsById.get(assetId).reviewStatus}));
+  const assets = [...usedAssetIds].sort().map(assetId => {
+    const asset = assetsById.get(assetId);
+    return {
+      assetId,
+      manifestUri,
+      manifestVersion: 'main-composer-v1',
+      reviewStatus: asset.reviewStatus ?? 'UNRESOLVED',
+      sourceStatus: asset.sourceStatus ?? asset.reviewStatus ?? 'UNRESOLVED',
+      sourceSemanticId: asset.sourceSemanticId ?? null,
+      sourceFile: asset.sourceFile ?? null,
+      sourceManifest: asset.sourceManifest ?? asset.manifestSource ?? null,
+      rights: asset.rights ?? {licenseState: 'unknown', notes: 'No source rights record resolves for this asset.'},
+    };
+  });
   const isDairy = system === 'dairy';
   const visualGroups = isDairy ? splitDairyGroups(scene.visualGroups, entities) : undefined;
   return {

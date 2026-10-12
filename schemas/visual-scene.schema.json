@@ -62,7 +62,19 @@
         "manifestUri": {"type": "string", "minLength": 1},
         "manifestVersion": {"type": "string", "minLength": 1},
         "variantId": {"$ref": "#/$defs/id"},
-        "reviewStatus": {"enum": ["APPROVED", "REVIEW", "UNRESOLVED"]}
+        "reviewStatus": {"enum": ["APPROVED", "REVIEW", "UNRESOLVED", "RELEASED"]},
+        "sourceStatus": {"type": ["string", "null"]},
+        "sourceSemanticId": {"type": ["string", "null"]},
+        "sourceFile": {"type": ["string", "null"]},
+        "sourceManifest": {"type": ["string", "null"]},
+        "rights": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "licenseState": {"type": "string"},
+            "notes": {"type": "string"}
+          }
+        }
       }
     },
     "entity": {

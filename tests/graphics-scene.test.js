@@ -6,6 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../src/server/server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
+import {enrichRendererManifest} from '../scripts/assets/runtime-asset-provenance.mjs';
 import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, paintZoneTerrainTiles, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
@@ -272,9 +273,14 @@ test('terrain render order follows isometric depth and preserves authored source
 });
 
 test('checked-in beef and dairy scenes are reproducible adaptations of pinned Composer exports', async () => {
-  const [beefSource, dairySource] = await Promise.all(['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)));
-  assert.deepEqual(adaptMainComposerScene(beefSource, renderManifest), scene);
-  assert.deepEqual(adaptMainComposerScene(dairySource, renderManifest), dairyScene);
+  const [beefSource, dairySource, semanticManifest, dairyManifest] = await Promise.all([
+    ...['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)),
+    readFile(new URL('../assets/manifests/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+    readFile(new URL('../public/assets/modules/livestock-dairy/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+  ]);
+  const enrichedRendererManifest = enrichRendererManifest(renderManifest, {semanticManifest, dairyManifest});
+  assert.deepEqual(adaptMainComposerScene(beefSource, enrichedRendererManifest), scene);
+  assert.deepEqual(adaptMainComposerScene(dairySource, enrichedRendererManifest), dairyScene);
 });
 
 test('scene edits resolve canonical asset references and preserve review status in the shared manifest contract', () => {

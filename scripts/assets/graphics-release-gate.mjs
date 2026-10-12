@@ -2,6 +2,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {enrichRuntimeAssetManifest} from './runtime-asset-provenance.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const SEMANTIC_ID = /^[a-z][a-z0-9-]*(\.[a-z0-9-]+)+$/;
@@ -30,7 +31,7 @@ async function fileMetadata(reference, repositoryRoot) {
   };
 }
 
-export async function inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest}, repositoryRoot = root) {
+export async function inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest, runtimeManifest}, repositoryRoot = root) {
   const errors = [];
   const checkFile = async (label, reference) => {
     if (typeof reference !== 'string' || !reference.trim()) {
@@ -67,6 +68,28 @@ export async function inspectGraphicsReleaseFiles({semanticManifest, dairyManife
       if (sprite && asset.spriteSha256) check(sprite.sha256 === asset.spriteSha256,
         `${asset.id} sprite hash does not match its manifest record`, errors);
     }
+  }
+  for (const [atlasKey, atlas] of Object.entries(runtimeManifest?.atlases ?? {})) {
+    const metadata = await checkFile(`runtime atlas ${atlasKey}`, atlas.image);
+    if (metadata) {
+      check(metadata.width !== null && metadata.height !== null, `runtime atlas ${atlasKey} is not a PNG`, errors);
+      check(Array.isArray(atlas.sourceSize) && atlas.sourceSize[0] === metadata.width && atlas.sourceSize[1] === metadata.height,
+        `runtime atlas ${atlasKey} dimensions do not match sourceSize`, errors);
+      check(metadata.sha256 === runtimeManifest.atlasSha256?.[atlasKey],
+        `runtime atlas ${atlasKey} hash does not match atlasSha256`, errors);
+    }
+  }
+  for (const asset of runtimeManifest?.assets ?? []) {
+    const atlasKey = asset.frame?.atlas;
+    const atlas = runtimeManifest.atlases?.[atlasKey];
+    if (!atlas) continue;
+    const metadata = await fileMetadata(atlas.image, repositoryRoot).catch(() => null);
+    if (!metadata) continue;
+    const frame = asset.frame;
+    check(frame && [frame.x, frame.y, frame.w, frame.h].every(Number.isFinite)
+      && frame.x >= 0 && frame.y >= 0 && frame.w > 0 && frame.h > 0
+      && frame.x + frame.w <= metadata.width && frame.y + frame.h <= metadata.height,
+    `runtime asset ${asset.id} frame ${JSON.stringify(frame)} is outside atlas ${atlasKey} (${metadata.width}x${metadata.height})`, errors);
   }
   const sourceAtlasMetadata = new Map();
   for (const [atlasKey, atlas] of Object.entries(dairyManifest.atlases ?? {})) {
@@ -211,25 +234,45 @@ function validateRendererManifest(renderer, sourceManifests, releaseScenes, erro
 }
 
 export async function assertGraphicsReleaseReady() {
-  const [semanticManifest, dairyManifest, rendererManifest, beefScene, dairyScene] = await Promise.all([
+  const [semanticManifest, dairyManifest, rendererManifest, rawRuntimeManifest, beefScene, dairyScene] = await Promise.all([
     readJson('assets/manifests/manifest.json'),
     readJson('public/assets/modules/livestock-dairy/manifest.json'),
     readJson('graphics-poc/assets/main-composer-render-manifest.json'),
+    readJson('public/assets/manifest.json'),
     readJson('graphics-poc/source/main-composer-v1/beef.json'),
     readJson('graphics-poc/source/main-composer-v1/dairy.json'),
   ]);
-  const filesystemErrors = await inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest});
-  assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes: [
+  const runtimeManifest = enrichRuntimeAssetManifest(rawRuntimeManifest, {semanticManifest, dairyManifest, rendererManifest});
+  const filesystemErrors = await inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest, runtimeManifest});
+  assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, runtimeManifest, releaseScenes: [
     ['beef scene', beefScene], ['dairy scene', dairyScene],
   ]}, filesystemErrors);
 }
 
 /** Validate the exact manifest inputs used by a release build; exported for isolated fixture tests. */
-export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes}, initialErrors = []) {
+export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, runtimeManifest, releaseScenes}, initialErrors = []) {
   const errors = [...initialErrors];
   validateManifest(semanticManifest, 'semantic manifest', errors);
   validateRendererManifest(rendererManifest, [semanticManifest, dairyManifest], releaseScenes, errors);
+  validateRuntimeManifest(runtimeManifest, errors);
   if (errors.length) {
     throw new Error(`Graphics release blocked (${errors.length} manifest issue(s)):\n${errors.map(error => `- ${error}`).join('\n')}`);
+  }
+}
+
+function validateRuntimeManifest(runtime, errors) {
+  check(runtime && Array.isArray(runtime.assets), 'runtime Composer manifest has no assets array', errors);
+  if (!Array.isArray(runtime?.assets)) return;
+  uniqueBy(runtime.assets, 'id', 'runtime asset', errors);
+  for (const asset of runtime.assets) {
+    const id = asset?.id ?? '<unnamed runtime asset>';
+    check(asset?.reviewStatus === 'RELEASED', `${id} runtime status ${String(asset?.reviewStatus ?? 'UNRESOLVED')} is not release eligible`, errors);
+    check(typeof asset?.provenance?.sourceFile === 'string' && asset.provenance.sourceFile.length > 0,
+      `${id} runtime asset has no source-file provenance`, errors);
+    check(typeof asset?.provenance?.sourceManifest === 'string' && asset.provenance.sourceManifest.length > 0,
+      `${id} runtime asset has no source-manifest provenance`, errors);
+    check(asset?.provenance?.rights?.licenseState === 'documented'
+      && typeof asset.provenance.rights.notes === 'string' && asset.provenance.rights.notes.trim().length > 0,
+    `${id} runtime asset has no documented rights basis`, errors);
   }
 }

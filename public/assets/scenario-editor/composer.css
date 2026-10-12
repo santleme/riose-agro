@@ -8,3 +8,4 @@
 .scene-title #scene-preset{width:max-content;max-width:190px;border:0;background:transparent;color:#748173;font:8px var(--mono);padding:0;cursor:pointer}
 .compare-card .urban-reference{display:block;width:100%;height:245px;object-fit:cover;object-position:center 48%;background:#e1e6d9}
 .compare-card .urban-reference,.comparison-stage{height:330px}
+.asset-card .asset-review-status{display:block;margin-top:3px;font-size:7px;font-weight:600;letter-spacing:.1px;color:#9b5d3d}.asset-card .asset-review-status.status-released{color:#47794e}.asset-card .asset-review-status.status-review{color:#9b6a31}.asset-card .asset-review-status.status-unresolved{color:#9b453d}

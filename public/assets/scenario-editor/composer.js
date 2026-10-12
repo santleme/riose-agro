@@ -507,7 +507,8 @@ function makePalette() {
     const card = document.createElement('button');
     card.type = 'button';
     card.className = `asset-card${activeAssetId === asset.id ? ' active' : ''}`;
-    card.title = `${nameOfAsset(asset)} · footprint ${asset.footprint.join('×')}`;
+    const provenance = asset.provenance ?? {};
+    card.title = `${nameOfAsset(asset)} · footprint ${asset.footprint.join('×')} · status ${asset.reviewStatus ?? 'UNRESOLVED'} · source ${provenance.sourceFile ?? 'unresolved'} · rights ${provenance.rights?.licenseState ?? 'unknown'}`;
     const thumb = document.createElement('span');
     thumb.className = 'asset-thumb';
     const canvas = document.createElement('canvas');
@@ -526,7 +527,10 @@ function makePalette() {
     title.textContent = nameOfAsset(asset);
     const layer = document.createElement('small');
     layer.textContent = `${CATEGORY_ALIASES[asset.category] ?? LAYER_LABELS[asset.defaultLayer] ?? asset.category} · ${asset.footprint.join('×')}`;
-    card.append(thumb, title, layer);
+    const review = document.createElement('small');
+    review.className = `asset-review-status status-${String(asset.reviewStatus ?? 'UNRESOLVED').toLowerCase()}`;
+    review.textContent = `Status: ${asset.reviewStatus ?? 'UNRESOLVED'}`;
+    card.append(thumb, title, layer, review);
     card.addEventListener('click', () => {
       activeAssetId = asset.id;
       activePrefabId = null;

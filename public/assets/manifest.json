@@ -142,6 +142,19 @@
         "mode": "tile",
         "collision": false,
         "autoTile": "pasture"
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -199,6 +212,19 @@
         "mode": "tile",
         "collision": false,
         "autoTile": "pasture"
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -254,6 +280,19 @@
         "mode": "tile",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -309,6 +348,19 @@
         "mode": "tile",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -367,7 +419,20 @@
         90,
         180,
         270
-      ]
+      ],
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
+      }
     },
     {
       "id": "road-turn",
@@ -425,7 +490,20 @@
         90,
         180,
         270
-      ]
+      ],
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
+      }
     },
     {
       "id": "fence-straight",
@@ -482,6 +560,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": "fence"
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -538,6 +629,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": "fence"
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -593,6 +697,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -649,6 +766,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -699,6 +829,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": "UNRESOLVED",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -758,6 +901,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -812,6 +968,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -870,6 +1039,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -925,6 +1107,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -981,6 +1176,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1038,6 +1246,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1095,6 +1316,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1151,6 +1385,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1210,6 +1457,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1269,6 +1529,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1325,6 +1598,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1381,6 +1667,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1439,6 +1738,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1492,6 +1804,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1545,6 +1870,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1598,6 +1936,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1651,6 +2002,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1704,6 +2068,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1757,6 +2134,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1810,6 +2200,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1863,6 +2266,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1920,6 +2336,19 @@
         "mode": "footprint",
         "collision": true,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -1973,6 +2402,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "livestock.nelore.cow.idle.imagegen.v1",
+        "sourceFile": "assets/source/livestock/nelore-cow-generated-original-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "be026001b7b199a5ca81e9f09ebacb63d065ff133624de41a944d9062190d6f2",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2025,6 +2471,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "livestock.nelore.calf.idle.imagegen.v1",
+        "sourceFile": "assets/source/livestock/nelore-calf-generated-original-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "eeb0ae9fb44a7c9484415a0b03ab4f18172bb97d515a80b98a81379e88a7794c",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2077,6 +2540,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "livestock.nelore.heifer.idle.imagegen.v1",
+        "sourceFile": "assets/source/livestock/nelore-heifer-generated-original-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "a31aac1368f7de740504bddcfaf74e42bcbc96bff2bd1894cb299ebada5ec7b6",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2129,6 +2609,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2182,6 +2675,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2235,6 +2741,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2288,6 +2807,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "corral.wood.standard.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2341,6 +2877,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "handling.chute.cattle.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2394,6 +2947,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2453,7 +3019,24 @@
         90,
         180,
         270
-      ]
+      ],
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "fence.gate.wood.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
+      }
     },
     {
       "id": "fence-wire-wood-post-imagegen-v1",
@@ -2512,7 +3095,24 @@
         90,
         180,
         270
-      ]
+      ],
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "fence.wire.wood-post.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
+      }
     },
     {
       "id": "feed-trough-hay-imagegen-v1",
@@ -2565,6 +3165,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "feed.trough.hay.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2618,6 +3235,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "water.trough.round.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2671,6 +3305,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "feed.salt.roofed.imagegen.v1",
+        "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2724,6 +3375,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2776,6 +3440,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2828,6 +3505,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2880,6 +3570,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -2933,6 +3636,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "water.pond.imagegen.v1",
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -2986,6 +3706,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -3040,6 +3773,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": "road"
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -3092,6 +3838,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "vegetation.tree.shade.imagegen.v1",
+        "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "998885431721ea5379ce4cc1b9e04c85240daa08bcc0498485dc1c4bfe795013",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3144,6 +3907,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "building.farmhouse.imagegen.v1",
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3196,6 +3976,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "building.shed.imagegen.v1",
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3248,6 +4045,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "building.workshop.imagegen.v1",
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3300,6 +4114,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "vehicle.pickup.rural.imagegen.v1",
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3352,6 +4183,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -3404,6 +4248,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "vehicle.tractor.imagegen.v1",
+        "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "8af2a4a36d7c653fc03ed36c44c0afd3cc40bc6ea54e98b781a129f7b0e2d47b",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3456,6 +4317,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -3508,6 +4382,19 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "UNRESOLVED",
+      "provenance": {
+        "sourceSemanticId": null,
+        "sourceFile": null,
+        "sourceManifest": null,
+        "sourceSha256": null,
+        "sourceStatus": null,
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": null
       }
     },
     {
@@ -3560,6 +4447,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "technology.gateway.antenna.imagegen.v1",
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3612,6 +4516,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "technology.monitor.station.imagegen.v1",
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3664,6 +4585,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "technology.scale.electronic.full.imagegen.v1",
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3716,6 +4654,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "technology.traceability.system.imagegen.v1",
+        "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+        "sourceManifest": "/assets/manifests/manifest.json",
+        "sourceSha256": "3b99525274394e8af44fd931246e2523ff461cc326c02609be6f7397ba4bf3db",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "project-generated-review",
+          "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        }
       }
     },
     {
@@ -3784,6 +4739,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-milking-parlor",
+        "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -3852,6 +4824,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-milk-chilling-tank",
+        "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -3920,6 +4909,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-waiting-pen",
+        "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -3988,6 +4994,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-barn",
+        "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -4058,6 +5081,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-holstein-cow",
+        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "0d2239d62f96a1186fb2e6eaed646274f840278dfc0fc9b015b9f6a52ccdd671",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -4128,6 +5168,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-girolando-cow",
+        "sourceFile": "assets/modules/livestock-dairy/source/animals/girolando-cow-imagegen-original-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "0de32f39c65fc752584e9760f7657ba1dd8a9f4de9e86cddd6a5c847e0450c07",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -4196,6 +5253,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-heifer",
+        "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-imagegen-original-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "f3380c6b82f7d24c2c82e2670ed13f5babe170d02d194767d6e59038a6489c9c",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -4264,6 +5338,23 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-heifer-calf",
+        "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-calf-imagegen-original-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "7ca7a24809d8b9ea8bd4ceeeb65b6aa5e4c1160e40ba942f45c5536013df55d0",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     },
     {
@@ -4335,7 +5426,36 @@
         "mode": "footprint",
         "collision": false,
         "autoTile": null
+      },
+      "reviewStatus": "REVIEW",
+      "provenance": {
+        "sourceSemanticId": "dairy-activity-collar",
+        "sourceFile": "assets/modules/livestock-dairy/source/technology/activity-rumination-collar-imagegen-v1.png",
+        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "sourceSha256": "cb6ecb047100c906852c6d1f564e20e78b38ec723038a97ccafa48efe8918719",
+        "sourceStatus": "REVIEW",
+        "rights": {
+          "licenseState": "unknown",
+          "notes": "No source rights record resolves for this runtime asset."
+        },
+        "review": {
+          "art": "pending",
+          "technical": "pass",
+          "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        }
       }
     }
-  ]
+  ],
+  "atlasSha256": {
+    "farm": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
+    "livestock": "7e3f0117d5fd805db0a971e586b0fbd97b0a29d2fe6547bd5f90d0d1f1972dda",
+    "agriculture": "86615f857a8e238ec98729de1573123ebd39c9cbc0a5b9b6b1be0e61dd99d405",
+    "livestock-approved": "021e29831fd1c57c16a900cd9b7a042c2fbdd35256881d716f750caecb25b504",
+    "animals-review": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
+    "handling-review": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
+    "environment-review": "cedc123183a779addaf68ecd939a6ae8c818c69c58b8e1fa789baf0c15b264ec",
+    "infrastructure-review": "f5aa03d2fe2e936a9e320a8b5426f3189017f70636c6bdaf77557393c7f9d98d",
+    "technology-review": "e14fccdabb06c35d201ab094fc1a50a4e5d371cbf127b446c97ba8387e260963",
+    "dairy": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca"
+  }
 }

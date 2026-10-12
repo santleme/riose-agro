@@ -30,6 +30,21 @@
       }
     ]
   },
+  "runtimeManifest": {
+    "atlases": {"livestock": {"image": "/graphics-poc/assets/livestock.png", "sourceSize": [10, 12]}},
+    "atlasSha256": {"livestock": "fixture-atlas-sha256"},
+    "assets": [{
+      "id": "nelore-adult",
+      "reviewStatus": "RELEASED",
+      "provenance": {
+        "sourceSemanticId": "livestock.cattle.nelore.adult.v1",
+        "sourceFile": "assets/approved/livestock/nelore-adult.png",
+        "sourceManifest": "assets/manifests/manifest.json",
+        "rights": {"licenseState": "documented", "notes": "Original project artwork."}
+      },
+      "frame": {"atlas": "livestock", "x": 2, "y": 3, "w": 4, "h": 5}
+    }]
+  },
   "releaseScenes": [
     ["beef scene", {"assets": [{"assetId": "nelore-adult"}]}],
     ["dairy scene", {"assets": []}]
