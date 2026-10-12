@@ -16,12 +16,12 @@ O lote ocupa 44,273 bytes como JSON e 44,271 bytes como JSONL; após gzip nível
 
 | Formato | Gravação (ms) | Leitura completa (ms) | Leitura seletiva (ms) | Bytes gzip nível 6 |
 | --- | ---: | ---: | ---: | ---: |
-| JSON | 0.515 (0.422–0.816) | 0.544 (0.498–0.711) | 0.472 (0.385–0.509) | 5,131 |
-| JSONL | 0.480 (0.412–0.566) | 0.735 (0.633–0.921) | 0.635 (0.548–0.752) | 5,131 |
+| JSON | 0.448 (0.360–0.629) | 0.496 (0.425–0.635) | 0.403 (0.325–0.576) | 5,131 |
+| JSONL | 0.509 (0.399–0.696) | 0.793 (0.654–1.041) | 0.642 (0.536–0.915) | 5,131 |
 
-JSONL foi cerca de 7% mais rápido para escrever, enquanto JSON foi mais rápido para leitura completa e seletiva nesta carga. Tamanho comprimido empatou. Esses números locais não justificam migração de formato nem adoção de Parquet.
+JSON foi cerca de 12% mais rápido para escrever e também teve leitura completa e seletiva mais rápida nesta coleta. Tamanho comprimido empatou. Os tempos variam entre execuções e não alteram a decisão de formato. Esses números locais não justificam migração de formato nem adoção de Parquet.
 
-A evidência foi capturada em `ab1a5f719700595f3750a24146922fd20d1aa599` com `dirty: false`. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
+A evidência foi capturada em `b26b45bab1a8bac7d73670a4848d1873b5d93e43` com `dirty: false`. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
 
 ## Limitações
 
