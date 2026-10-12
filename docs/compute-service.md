@@ -65,3 +65,19 @@ python3 -m unittest tests/test_compute_service.py
 ```
 
 They do not require PyTorch or AMD hardware.
+
+## CPU versus AMD benchmark
+
+Run the reproducible benchmark from the repository root:
+
+```bash
+npm run benchmark:amd
+```
+
+It measures the existing `scale_vector` operation by calling `compute_service.execute_compute` directly. This reuses the service's CPU and ROCm adapters while excluding HTTP transport and server queueing. Both requests use contract version 1, the same 16,384-element deterministic input (`values[i] = ((i * 17 % 2001) - 1000) / 1000`), and factor `1.125`; the JSON includes a SHA-256 digest of that payload. The operation is a small numeric kernel, not the farm simulation.
+
+The benchmark runs three warmups and 15 measured repetitions per backend by default. Set `BENCH_WARMUP` or `BENCH_REPETITIONS` to change those counts. It validates CPU/AMD result equivalence first with relative and absolute tolerances of `1e-12`. It reports individual elapsed times, run count, mean, median, minimum, maximum, population standard deviation, and elements per second at the median. Speedup is `median_cpu_ms / median_amd_ms` and is emitted only after the service reports `backend_used: "amd_rocm"` for the AMD probe and every measured AMD call, and correctness passes.
+
+AMD availability uses the service's `detect_amd_backend`: PyTorch must expose a ROCm/HIP version and `torch.cuda.is_available()` must report a device. If detection or AMD execution is unavailable, the CPU benchmark still runs; AMD is reported as unavailable with its reason, no AMD timing is emitted, and speedup is `null`. If AMD falls back to CPU during a run, those timings are discarded. Tests inject a simulated adapter and do not require physical AMD hardware; simulated values are never used in a real benchmark report.
+
+The JSON report on stdout records the timestamp, commit, OS, architecture, CPU and Python runtime, ROCm/PyTorch versions when exposed, workload digest, backend metadata, correctness result, timings, speedup and limitations. The endpoint does not return an AMD device model, so that field remains `null`. Results describe this operation and environment only; benchmark de software/hardware não implica validação científica do modelo.

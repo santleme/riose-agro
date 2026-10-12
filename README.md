@@ -90,6 +90,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
 - `src/client/app.js` — map rendering, controls, charts, and CSV export
 - `src/client/engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
+- `src/client/scenario-presets.js` — versioned reproducible scenario catalog; see [`docs/catalogo-cenarios.md`](docs/catalogo-cenarios.md)
 - `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `src/client/worker.js` — simulation worker, isolated from rendering
 - `crates/riose-core/`, `src/client/metabolism-wasm.js`, `wasm/riose_core.wasm` — opt-in Rust/WASM batch kernel and JavaScript fallback; rebuild with `npm run build:wasm`
