@@ -1,0 +1,64 @@
+import {readFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {performance} from 'node:perf_hooks';
+import {FarmEngine} from '../engine.js';
+import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
+
+const repetitions=25;
+const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';
+const baselineSource=execFileSync('git',['show',`${baselineCommit}:engine.js`],{encoding:'utf8'});
+const {FarmEngine:BaselineFarmEngine}=await import(`data:text/javascript;base64,${Buffer.from(baselineSource).toString('base64')}`);
+const wasmBytes=await readFile(new URL('../wasm/riose_core.wasm',import.meta.url));
+const wasmKernel=await loadWasmMetabolism(new URL('http://benchmark.local/riose_core.wasm'),async()=>
+  new Response(wasmBytes,{headers:{'content-type':'application/wasm'}}));
+
+function percentiles(values){
+  const sorted=[...values].sort((a,b)=>a-b);
+  return {medianMs:sorted[Math.floor(sorted.length/2)],p95Ms:sorted[Math.ceil(sorted.length*.95)-1]};
+}
+
+function timeSimulation(count,kernel,Engine=FarmEngine){
+  const timings=[];
+  for(let run=0;run<repetitions+3;run++){
+    const engine=new Engine(20261012,count);
+    const start=performance.now();engine.tick(24,kernel);const elapsed=performance.now()-start;
+    if(run>=3)timings.push(elapsed);
+  }
+  return percentiles(timings);
+}
+
+function timeKernel(count,kernel){
+  const input=new Float64Array(count*4);
+  for(let index=0;index<count;index++){
+    const offset=index*4;input[offset]=330+(index%70);input[offset+1]=75;
+    input[offset+2]=(index%100)/100;input[offset+3]=index%6===0?1:0;
+  }
+  const output=new Float64Array(count*2);
+  kernel(input,count,output);
+  const timings=[];
+  for(let run=0;run<repetitions;run++){
+    const start=performance.now();const result=kernel(input,count,output);const elapsed=performance.now()-start;
+    if(result.length!==count*2)throw new Error('kernel returned wrong output length');
+    timings.push(elapsed);
+  }
+  return percentiles(timings);
+}
+
+const simulation=[];
+for(const count of [100,1_000,10_000]){
+  simulation.push({animals:count,baselineJavaScript:timeSimulation(count,updateMetabolismJS,BaselineFarmEngine),javascript:timeSimulation(count,updateMetabolismJS),wasm:timeSimulation(count,wasmKernel)});
+}
+const kernel=[];
+for(const count of [100,1_000,10_000,100_000]){
+  kernel.push({animals:count,javascript:timeKernel(count,updateMetabolismJS),wasm:timeKernel(count,wasmKernel)});
+}
+
+console.log(JSON.stringify({
+  environment:{node:process.version,platform:process.platform,arch:process.arch,wasmBytes:wasmBytes.length},
+  baselineCommit,repetitions,warmupRuns:3,seed:20261012,tickHours:24,
+  notes:['Simulation timings include the JS engine tick and final snapshot clone, but exclude construction and rendering.','Kernel timings include JS/WASM bridge copies and result-buffer handling.','100000 animals is a numeric-kernel-only case because FarmEngine currently caps herds at 10000.','Memory allocation counts are not exposed by this harness.'],
+  simulation,kernel,
+  wasmLinearMemoryBytes:wasmKernel.memoryBytes(),
+  processMemoryAfterBytes:process.memoryUsage(),
+},null,2));
+wasmKernel.dispose();

@@ -16,7 +16,7 @@ async function openFarm(saved=[],activeId=null){
     metrics,createComparisonManifest,validateComparisonManifest,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
-    window:{addEventListener(){}},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
+    window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
     Option:class {},performance:{now:()=>0},requestAnimationFrame(){},setTimeout(){return 1;},clearTimeout(){},
     URL:{createObjectURL(blob){downloads.push(blob);return 'blob:test';},revokeObjectURL(){}},
     fetch(){fetches++;throw new Error('comparison must not invoke the LLM');},

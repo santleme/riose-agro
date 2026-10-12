@@ -1,3 +1,4 @@
+import {METABOLISM_GAIN_FACTOR,METABOLISM_MAINTENANCE_KG_DM,updateMetabolismJS} from './metabolism-wasm.js';
 
 
 
@@ -8,7 +9,7 @@
 
 
 // All constants are illustrative assumptions, not fitted animal nutrition equations.
-export const ASSUMPTIONS = {baseDemandKgDM:8,dailyPastureGrowthKgDM:35,initialPastureKgDM:1800,supplementPrice:1.8,balancedPrice:1.6,concentratePrice:2.1,maintenanceKgDM:5.3,gainFactor:0.22};
+export const ASSUMPTIONS = {baseDemandKgDM:8,dailyPastureGrowthKgDM:35,initialPastureKgDM:1800,supplementPrice:1.8,balancedPrice:1.6,concentratePrice:2.1,maintenanceKgDM:METABOLISM_MAINTENANCE_KG_DM,gainFactor:METABOLISM_GAIN_FACTOR};
 export const DEFAULT_CONFIG        = {diet:'pasture',housing:'pasture',weather:'normal',supplement:0};
 const names=['Aurora','Bento','Cacau','Dália','Estrela','Figo','Gaia','Hugo','Íris','Joca','Kiara','Luna','Milo','Nina','Oliva','Pingo','Quinoa','Rubi','Sol','Teca','Uva','Vento','Wally','Zara'];
 const clamp=(v       ,min       ,max       )=>Math.max(min,Math.min(max,v));
@@ -45,13 +46,16 @@ export class FarmEngine {
     if(c.weather!==previous.weather)this.log('Clima alterado: '+({normal:'ameno',hot:'calor',rain:'chuva'}[c.weather])+'.');
   }
   place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];a.x=b.x+10+this.randomLocomotion()*(b.w-20);a.y=b.y+10+this.randomLocomotion()*(b.h-20);a.targetX=a.x;a.targetY=a.y;}
-  tick(hours=1){
+  tick(hours=1,metabolismKernel=updateMetabolismJS){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
+    const metabolismInput=new Float64Array(this.state.animals.length*4);
+    const metabolismOutput=new Float64Array(this.state.animals.length*2);
     for(let step=0;step<hours;step++){
       const s=this.state,c=s.config;s.hour++;
       const time=s.hour%24;const heat=c.weather==='hot'?0.8:1;
       for(let p=0;p<4;p++)s.pastures[p]=Math.min(2400,s.pastures[p]+ASSUMPTIONS.dailyPastureGrowthKgDM*(c.weather==='rain'?1.3:c.weather==='hot'?0.65:1)/24);
-      for(const a of s.animals){
+      for(let animalIndex=0;animalIndex<s.animals.length;animalIndex++){
+        const a=s.animals[animalIndex];
         const previous=a.action;
         a.thirst=clamp(a.thirst+(c.weather==='hot'?9:5),0,100);
         const observedThirst=a.thirst;
@@ -68,13 +72,21 @@ export class FarmEngine {
         s.intake??={pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};
         s.intake.pastureKgDM+=forage;s.intake.barnBaseKgDM+=barnBaseFeed;s.intake.supplementKgDM+=supplement;s.intake.dietExtraKgDM+=dietExtra;
         const energyIntake=forage+barnBaseFeed+supplement*1.2+dietExtra*1.35;
-        const gain=(energyIntake-ASSUMPTIONS.maintenanceKgDM*(a.weight/360)/24)*ASSUMPTIONS.gainFactor;
-        a.weight=Math.max(200,a.weight+gain);
-        a.energy=clamp(a.energy+(a.action==='resting'?5:energyIntake*4-1.5),0,100);
+        const metabolismOffset=animalIndex*4;
+        metabolismInput[metabolismOffset]=a.weight;
+        metabolismInput[metabolismOffset+1]=a.energy;
+        metabolismInput[metabolismOffset+2]=energyIntake;
+        metabolismInput[metabolismOffset+3]=a.action==='resting'?1:0;
         if(a.action!==previous)this.recordActivity(a,reason,observedThirst);
         const b=c.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];
         a.targetX=b.x+10+this.randomLocomotion()*(b.w-20);a.targetY=b.y+10+this.randomLocomotion()*(b.h-20);
         a.x=clamp(a.x+(a.targetX-a.x)*0.15,b.x+8,b.x+b.w-8);a.y=clamp(a.y+(a.targetY-a.y)*0.15,b.y+8,b.y+b.h-8);
+      }
+      const metabolismResults=metabolismKernel(metabolismInput,s.animals.length,metabolismOutput);
+      if(metabolismResults.length!==s.animals.length*2)throw new Error('Metabolism kernel returned an invalid batch length');
+      for(let animalIndex=0;animalIndex<s.animals.length;animalIndex++){
+        const a=s.animals[animalIndex],offset=animalIndex*2;
+        a.weight=metabolismResults[offset];a.energy=metabolismResults[offset+1];
       }
       if(time===6)this.log('Novo dia: peso médio '+this.metrics().weight.toFixed(1)+' kg.');
     }
@@ -85,7 +97,7 @@ export class FarmEngine {
   static from(snapshot         ){const engine=new FarmEngine(1,1);engine.state=structuredClone(snapshot);if(!Number.isInteger(engine.state.initialSeed))engine.state.initialSeed=engine.state.seed>>>0;else engine.state.initialSeed>>>=0;if(!Number.isInteger(engine.state.locomotionSeed))engine.state.locomotionSeed=deriveLocomotionSeed(engine.state.seed);else engine.state.locomotionSeed>>>=0;return engine;}
 }
 export function metrics(s         )        {const n=s.animals.length,intake=s.intake??{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),pastureByPaddock:[...s.pastures],intake:{...intake,totalKgDM:intake.pastureKgDM+intake.barnBaseKgDM+intake.supplementKgDM+intake.dietExtraKgDM},stress:s.config.weather==='hot'?28:s.config.housing==='barn'?12:5};}
-export function compare(snapshot         ,days=30){
+export function compare(snapshot         ,days=30,metabolismKernel=updateMetabolismJS){
   if(!Number.isInteger(days)||days<1||days>365)throw new Error('Forecast days must be 1–365');
   // Both futures share the exact same state, seed, diet, supplement and weather.
   // Housing is the sole intervention compared in this MVP.
@@ -102,7 +114,7 @@ export function compare(snapshot         ,days=30){
     totalKgDM:current.totalKgDM-startMetrics.intake.totalKgDM
   });
   for(let day=0;day<=days;day++){
-    if(day){baseline.tick(24);scenario.tick(24);}
+    if(day){baseline.tick(24,metabolismKernel);scenario.tick(24,metabolismKernel);}
     const b=baseline.metrics(),s=scenario.metrics();
     const baselineIntake=intakeDelta(b.intake),scenarioIntake=intakeDelta(s.intake);
     rows.push({day,baselineWeight:b.weight,scenarioWeight:s.weight,baselineCost:b.cost-baseCost,scenarioCost:s.cost-baseCost,baselineConsumptionKgDM:baselineIntake.totalKgDM,scenarioConsumptionKgDM:scenarioIntake.totalKgDM,baselineIntakeBySourceKgDM:baselineIntake,scenarioIntakeBySourceKgDM:scenarioIntake,baselinePastureKgDM:b.pasture,scenarioPastureKgDM:s.pasture,baselinePastureByPaddock:b.pastureByPaddock,scenarioPastureByPaddock:s.pastureByPaddock});
@@ -148,7 +160,7 @@ export function validateComparisonManifest(manifest){
   if(reference.housing!=='pasture'||scenario.housing!=='barn')throw new Error('Para o fator alojamento, a referência deve ser pasto e o cenário deve ser confinamento');
   return true;
 }
-export function replayComparisonManifest(manifest){
+export function replayComparisonManifest(manifest,metabolismKernel=updateMetabolismJS){
   validateComparisonManifest(manifest);
-  return compare(manifest.initialSnapshot,manifest.periodDays);
+  return compare(manifest.initialSnapshot,manifest.periodDays,metabolismKernel);
 }

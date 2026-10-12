@@ -1,7 +1,8 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
-const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
+const wasmSelected=/(?:^|[?&])engine=wasm(?:&|$)/.test(location.search);
+const worker=new Worker('./worker.js'+(wasmSelected?'?engine=wasm':''),{type:'module'});
 let state                   ,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false;
 const stateRequests=[];
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
@@ -211,7 +212,7 @@ $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!
 $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&&!loadingScenario)$('manifest-file').click();};
 $('manifest-file').onchange=async event=>{const file=event.target.files?.[0];event.target.value='';if(!file||requestCompare||loadingScenario)return;compareBusy(true);try{const manifest=JSON.parse(await file.text());validateComparisonManifest(manifest);setRunning(false);pendingComparison={snapshot:structuredClone(manifest.initialSnapshot),manifest};notify('Manifesto validado. Reproduzindo a comparação salva…');worker.postMessage({type:'replayComparison',manifest});}catch(error){pendingComparison=null;compareBusy(false);notify('Manifesto inválido: '+error.message);}};
 function downloadFile(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
+worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;$('engine-status').textContent=e.data.engineImplementation==='riose-core-wasm/0.1.0'?'MOTOR LOCAL · RUST/WASM':'MOTOR LOCAL · JAVASCRIPT';if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
 worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setRunning(false);});
 window.addEventListener('pagehide',saveScenarioData);
