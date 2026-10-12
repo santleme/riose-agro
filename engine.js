@@ -9,6 +9,7 @@ import {METABOLISM_GAIN_FACTOR,METABOLISM_MAINTENANCE_KG_DM,updateMetabolismJS} 
 
 
 import {DEFAULT_WEATHER, WEATHER_VALUES, getEnvironmentalStress, getWeatherRules, isWeather} from './environment-model.js';
+import {calculateFeeding} from './feeding-model.js';
 
 // All constants are illustrative assumptions, not fitted animal nutrition equations.
 export const ASSUMPTIONS = {baseDemandKgDM:8,dailyPastureGrowthKgDM:35,initialPastureKgDM:1800,supplementPrice:1.8,balancedPrice:1.6,concentratePrice:2.1,maintenanceKgDM:METABOLISM_MAINTENANCE_KG_DM,gainFactor:METABOLISM_GAIN_FACTOR};
@@ -57,7 +58,7 @@ export class FarmEngine {
     if(c.weather!==previous.weather)this.log('Clima alterado: '+getWeatherRules(c.weather).label+'.');
   }
   place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];a.x=b.x+10+this.randomLocomotion()*(b.w-20);a.y=b.y+10+this.randomLocomotion()*(b.h-20);a.targetX=a.x;a.targetY=a.y;}
-  tick(hours=1,metabolismKernel=updateMetabolismJS,includeSnapshot=true){
+  tick(hours=1,metabolismKernel=updateMetabolismJS,includeSnapshot=true,feedingModel=calculateFeeding){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
     const useBatchKernel=metabolismKernel!==updateMetabolismJS;
     const metabolismInput=useBatchKernel?new Float64Array(this.state.animals.length*4):null;
@@ -75,16 +76,13 @@ export class FarmEngine {
         const reason=time<6||time>=21?'rest_window':observedThirst>65?'thirst_threshold':c.housing==='pasture'?'pasture_housing':'barn_housing';
         a.action=reason==='rest_window'?'resting':reason==='thirst_threshold'?'drinking':reason==='pasture_housing'?'grazing':'feeding';
         if(a.action==='drinking')a.thirst=12;
-        const demand=ASSUMPTIONS.baseDemandKgDM*(a.weight/360)*heat/24;
-        let forage=0,barnBaseFeed=0;
-        if(c.housing==='pasture'){forage=Math.min(demand,s.pastures[a.patch]);s.pastures[a.patch]-=forage;}
-        else {barnBaseFeed=demand;s.cost+=demand*0.65;}
-        const supplement=c.supplement/24;
-        const dietExtra=c.diet==='pasture'?0:c.diet==='balanced'?1.8/24:3.2/24;
-        s.cost+=supplement*ASSUMPTIONS.supplementPrice+dietExtra*(c.diet==='balanced'?ASSUMPTIONS.balancedPrice:ASSUMPTIONS.concentratePrice);
+        const feeding=feedingModel({weight:a.weight,housing:c.housing,heatFactor:heat,pastureAvailableKgDM:s.pastures[a.patch],diet:c.diet,supplementKgDMPerDay:c.supplement,assumptions:ASSUMPTIONS});
+        if(c.housing==='pasture')s.pastures[a.patch]=feeding.pastureAfterFeedingKgDM;
+        else s.cost+=feeding.barnBaseCost;
+        s.cost+=feeding.additionalFeedCost;
         s.intake??={pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};
-        s.intake.pastureKgDM+=forage;s.intake.barnBaseKgDM+=barnBaseFeed;s.intake.supplementKgDM+=supplement;s.intake.dietExtraKgDM+=dietExtra;
-        const energyIntake=forage+barnBaseFeed+supplement*1.2+dietExtra*1.35;
+        s.intake.pastureKgDM+=feeding.forageKgDM;s.intake.barnBaseKgDM+=feeding.barnBaseFeedKgDM;s.intake.supplementKgDM+=feeding.supplementKgDM;s.intake.dietExtraKgDM+=feeding.dietExtraKgDM;
+        const energyIntake=feeding.energyIntakeKgDM;
         if(useBatchKernel){
           const metabolismOffset=animalIndex*4;
           metabolismInput[metabolismOffset]=a.weight;

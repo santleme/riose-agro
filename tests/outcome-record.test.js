@@ -11,6 +11,7 @@ import addFormats from 'ajv-formats';
 import {FarmEngine, createComparisonManifest} from '../engine.js';
 import {createScenarioContract} from '../scenario-contract.js';
 import {createComparisonArchive, sha256Bytes} from '../comparison-archive.js';
+import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
 import {validateOutcomeRecord} from '../outcome-record.js';
 import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
 
@@ -33,7 +34,7 @@ function fixture(manifestVersion = 1) {
   const manifestBytes = Buffer.from(JSON.stringify(manifest));
   const farmSnapshot = linkFarmSnapshotToManifest(sourceSnapshot, manifestBytes);
   const snapshotBytes = Buffer.from(`${JSON.stringify(farmSnapshot, null, 2)}\n`);
-  const engineBytes = readFileSync(new URL('../engine.js', import.meta.url));
+  const engineBytes = readEngineSourceBundle();
   const archive = createComparisonArchive(manifestBytes, engineBytes, '2026-10-11T12:00:00.000Z');
   const archiveBytes = Buffer.from(`${JSON.stringify(archive, null, 2)}\n`);
   const projected = archive.comparison.scenario.weight;
@@ -78,10 +79,25 @@ test('outcome record links exact manifest and archived projection, then reports 
   const report = validateOutcomeRecord(record, archiveBytes, manifestBytes, snapshotBytes);
   assert.equal(report.valid, true, report.errors.join('\n'));
   assert.equal(report.engineSourceSha256, archive.engineSourceSha256);
+  assert.deepEqual(archive.engineSourceFiles, ['engine.js', 'feeding-model.js', 'environment-model.js', 'metabolism-wasm.js']);
   assert.deepEqual(report.coverage, {totalObservations: 1, observedValues: 1, comparableValues: 1, unavailableOrBlocked: 0, comparableFractionOfAll: 1});
   assert.equal(report.comparisons[0].status, 'comparable-descriptive');
   assert.equal(report.comparisons[0].difference, 2);
   assert.match(report.comparisons[0].disclaimer, /não estima efeito causal/);
+});
+
+test('legacy comparison archives without the source-file list remain valid', () => {
+  const {manifestBytes, snapshotBytes, record, archive} = fixture();
+  const legacyArchive = structuredClone(archive);
+  delete legacyArchive.engineSourceFiles;
+  const legacyArchiveBytes = Buffer.from(`${JSON.stringify(legacyArchive, null, 2)}\n`);
+  const legacyRecord = structuredClone(record);
+  legacyRecord.projection.archiveSha256 = sha256Bytes(legacyArchiveBytes);
+
+  const report = validateOutcomeRecord(legacyRecord, legacyArchiveBytes, manifestBytes, snapshotBytes);
+
+  assert.equal(report.valid, true, report.errors.join('\n'));
+  assert.equal(report.engineSourceSha256, archive.engineSourceSha256);
 });
 
 test('tampered archived result is blocked when the stored sidecar hash no longer matches', () => {

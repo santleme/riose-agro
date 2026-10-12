@@ -1,0 +1,7 @@
+# Módulo de alimentação
+
+`feeding-model.js` isola o cálculo de alimentação por hora que já existia no engine. `calculateFeeding` recebe o peso do animal, alojamento e dieta atuais, estoque disponível de pasto, multiplicador de calor, quantidade diária de suplemento e as premissas atuais do engine. Retorna consumo de pasto e cocho, suplemento e extra de dieta, estoque restante, custos e ingestão energética para a etapa de metabolismo existente.
+
+A função não mantém estado e não valida nem normaliza suas entradas. `FarmEngine.configure` continua validando as dietas aceitas e o limite existente de suplemento, de 0 a 4 kg de MS por animal ao dia. O módulo não adiciona campos persistidos nem equações nutricionais; as chamadas existentes do engine e o formato de snapshots legados permanecem compatíveis. Valores desconhecidos de alojamento ou dieta mantêm o fallback do cálculo anterior. Durante a migração, `tick` também aceita um quarto argumento opcional `feedingModel`, para receber um cálculo legado compatível que retorne os mesmos campos; chamadas atuais usam o módulo extraído por padrão.
+
+O hash de proveniência do motor inclui `engine.js` e seus módulos de cálculo diretos (`feeding-model.js`, `environment-model.js` e `metabolism-wasm.js`). Os arquivos são nomeados, ordenados e normalizados para LF antes do hash, para que relatórios, arquivos de comparação e auditorias identifiquem também as regras de alimentação em qualquer plataforma.

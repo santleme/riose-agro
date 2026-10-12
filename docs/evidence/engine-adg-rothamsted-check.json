@@ -19,7 +19,13 @@
     }
   },
   "engine": {
-    "sha256": "5a94a0634a0ccd26786f3ae00e3f9b4b87139639e9d43f6c70b836bb4a0e91f4",
+    "sha256": "fafc860eb927ba1e2590a01d6aecbd6055e00bdc4c04c72b7402fcc76c49dea1",
+    "sourceFiles": [
+      "engine.js",
+      "feeding-model.js",
+      "environment-model.js",
+      "metabolism-wasm.js"
+    ],
     "seed": 20261012,
     "fittedParameters": false,
     "simulatedOneAnimalAtATime": true,

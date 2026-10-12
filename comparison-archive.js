@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {ENGINE_SOURCE_FILES} from './engine-provenance.js';
 import {replayScenarioContract, validateReproducibilityManifest} from './scenario-contract.js';
 
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -19,6 +20,7 @@ export function createComparisonArchive(manifestBytes, engineSourceBytes, captur
       version: manifest.version,
       sha256: sha256(exactManifestBytes),
     },
+    engineSourceFiles: [...ENGINE_SOURCE_FILES],
     engineSourceSha256: sha256(exactEngineBytes),
     comparison: replayScenarioContract(manifest),
   };
