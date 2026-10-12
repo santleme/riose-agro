@@ -1,4 +1,4 @@
-import {validateComparisonManifest} from './engine.js';
+import {validateReproducibilityManifest} from './scenario-contract.js';
 import {sha256Bytes} from './comparison-archive.js';
 import {validateFarmSnapshot} from './snapshot-validator.js';
 import {validateFarmSnapshotManifestReference} from './snapshot-manifest-link.js';
@@ -28,6 +28,8 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
   let archive;
   let manifest;
   let snapshot;
+  let manifestBaseline;
+  let manifestDuration;
   try {
     archive = JSON.parse(archiveRaw.toString('utf8'));
   } catch {
@@ -35,7 +37,9 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
   }
   try {
     manifest = JSON.parse(manifestRaw.toString('utf8'));
-    validateComparisonManifest(manifest);
+    validateReproducibilityManifest(manifest);
+    manifestBaseline = manifest.version === 1 ? manifest.initialSnapshot : manifest.baseline;
+    manifestDuration = manifest.version === 1 ? manifest.periodDays : manifest.duration.value;
   } catch (error) {
     return {valid: false, errors: [`Manifesto de comparação inválido: ${error.message}`], comparisons: []};
   }
@@ -76,7 +80,7 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
   errors.push(...snapshotManifest.errors.map(error => `Snapshot: ${error}`));
   const selectedLot = Array.isArray(snapshot?.lots) ? snapshot.lots.find(lot => lot?.id === record?.subject?.entityId) : undefined;
   if (!selectedLot) errors.push('ID da entidade do registro não corresponde a um lote do snapshot vinculado.');
-  else if (!Array.isArray(selectedLot.animalIds) || selectedLot.animalIds.length !== manifest?.initialSnapshot?.animals?.length || selectedLot.animalIds.length !== archive?.comparison?.herdSize) {
+  else if (!Array.isArray(selectedLot.animalIds) || selectedLot.animalIds.length !== manifestBaseline?.animals?.length || selectedLot.animalIds.length !== archive?.comparison?.herdSize) {
     errors.push('Quantidade de animais do lote no snapshot não corresponde ao rebanho da projeção.');
   }
   if (record?.decision?.status === 'implemented' && typeof record.decision.occurredAt !== 'string') {
@@ -90,7 +94,7 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
     errors.push('Arquivo de projeção não contém resultados reproduzíveis para base e alternativa.');
   } else {
     if (comparison.validated !== false) errors.push('Arquivo de projeção não preserva o estado demonstrativo não validado do motor.');
-    if (comparison.days !== manifest.periodDays) errors.push('Horizonte do resultado arquivado não corresponde ao manifesto.');
+    if (comparison.days !== manifestDuration) errors.push('Horizonte do resultado arquivado não corresponde ao manifesto.');
   }
   const referencesValid = errors.length === 0;
 

@@ -14,7 +14,7 @@ const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
-  'index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'favicon.svg',
+  'index.html', 'style.css', 'app.js', 'engine.js', 'environment-model.js', 'simulation-report.js', 'worker.js', 'favicon.svg',
   'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',

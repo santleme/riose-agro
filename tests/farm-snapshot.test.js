@@ -5,11 +5,13 @@ import {spawnSync} from 'node:child_process';
 import {mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {validateFarmSnapshot} from '../snapshot-validator.js';
 import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
 import {FarmEngine, createComparisonManifest} from '../engine.js';
+import {createScenarioContract} from '../scenario-contract.js';
 
 const example = JSON.parse(readFileSync(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(readFileSync(new URL('../schemas/farm-snapshot.schema.json', import.meta.url), 'utf8'));
@@ -39,14 +41,14 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
   const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
-  const reportRun = spawnSync(process.execPath, [scriptPath.pathname, samplePath.pathname], {encoding: 'utf8'});
+  const reportRun = spawnSync(process.execPath, [fileURLToPath(scriptPath), fileURLToPath(samplePath)], {encoding: 'utf8'});
   assert.equal(reportRun.status, 0, reportRun.stderr);
   const report = JSON.parse(reportRun.stdout);
   assert.equal(report.schemaValid, true);
   assert.equal(report.valid, true);
   assert.equal(report.simulationEligible, false);
 
-  const gateRun = spawnSync(process.execPath, [scriptPath.pathname, samplePath.pathname, '--require-eligible'], {encoding: 'utf8'});
+  const gateRun = spawnSync(process.execPath, [fileURLToPath(scriptPath), fileURLToPath(samplePath), '--require-eligible'], {encoding: 'utf8'});
   assert.equal(gateRun.status, 2, gateRun.stderr);
   assert.equal(JSON.parse(gateRun.stdout).simulationEligible, false);
 });
@@ -59,7 +61,7 @@ test('snapshot CLI rejects structurally invalid documents before eligibility can
     delete invalid.operations;
     writeFileSync(invalidPath, JSON.stringify(invalid));
     const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
-    const run = spawnSync(process.execPath, [scriptPath.pathname, invalidPath, '--require-eligible'], {encoding: 'utf8'});
+    const run = spawnSync(process.execPath, [fileURLToPath(scriptPath), invalidPath, '--require-eligible'], {encoding: 'utf8'});
     assert.equal(run.status, 1, run.stderr);
     const report = JSON.parse(run.stdout);
     assert.equal(report.schemaValid, false);
@@ -233,18 +235,34 @@ test('snapshot links to the comparison manifest by exact file digest and version
     writeFileSync(snapshotPath, JSON.stringify(linked));
     writeFileSync(manifestPath, manifestBytes);
     const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
-    const matching = spawnSync(process.execPath, [scriptPath.pathname, snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
+    const matching = spawnSync(process.execPath, [fileURLToPath(scriptPath), snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(matching.status, 0, matching.stderr);
     assert.equal(JSON.parse(matching.stdout).manifestReferenceChecked, true);
     assert.equal(JSON.parse(matching.stdout).manifestReferenceValid, true);
 
     writeFileSync(manifestPath, Buffer.concat([manifestBytes, Buffer.from(' ')]));
-    const mismatch = spawnSync(process.execPath, [scriptPath.pathname, snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
+    const mismatch = spawnSync(process.execPath, [fileURLToPath(scriptPath), snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(mismatch.status, 1);
     assert.ok(JSON.parse(mismatch.stdout).errors.some(message => message.includes('SHA-256')));
   } finally {
     rmSync(directory, {recursive: true, force: true});
   }
+});
+
+test('existing farm snapshots can reference a validated v2 comparison contract', () => {
+  const source = structuredClone(example);
+  source.snapshotKind = 'farm-baseline';
+  source.simulationEligibility.status = 'review-pending';
+  delete source.simulationEligibility.reason;
+  const manifest = createScenarioContract(new FarmEngine(417, 5).snapshot(), 30);
+  const manifestBytes = Buffer.from(JSON.stringify(manifest));
+  const linked = linkFarmSnapshotToManifest(source, manifestBytes);
+
+  assert.equal(linked.manifestReference.type, 'agroville-comparison');
+  assert.equal(linked.manifestReference.version, 2);
+  assert.equal(linked.manifestReference.sha256, createHash('sha256').update(manifestBytes).digest('hex'));
+  assert.equal(validateSchema(linked), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(linked).semanticValid, true);
 });
 
 test('snapshot link command validates and links the exact manifest bytes without mutating the source', () => {
@@ -261,7 +279,7 @@ test('snapshot link command validates and links the exact manifest bytes without
     writeFileSync(manifestPath, manifestBytes);
 
     const scriptPath = new URL('../scripts/link-farm-snapshot.js', import.meta.url);
-    const run = spawnSync(process.execPath, [scriptPath.pathname, '--snapshot', snapshotPath, '--manifest', manifestPath, '--output', outputPath], {encoding: 'utf8'});
+    const run = spawnSync(process.execPath, [fileURLToPath(scriptPath), '--snapshot', snapshotPath, '--manifest', manifestPath, '--output', outputPath], {encoding: 'utf8'});
     assert.equal(run.status, 0, run.stderr);
     const linked = JSON.parse(readFileSync(outputPath, 'utf8'));
     assert.deepEqual(linked.manifestReference, {
@@ -274,7 +292,7 @@ test('snapshot link command validates and links the exact manifest bytes without
     assert.equal(JSON.parse(run.stdout).simulationEligible, false);
 
     const validationScript = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
-    const check = spawnSync(process.execPath, [validationScript.pathname, outputPath, '--manifest', manifestPath], {encoding: 'utf8'});
+    const check = spawnSync(process.execPath, [fileURLToPath(validationScript), outputPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(check.status, 0, check.stderr);
     assert.equal(JSON.parse(check.stdout).manifestReferenceValid, true);
     assert.equal(JSON.parse(check.stdout).simulationEligible, false);

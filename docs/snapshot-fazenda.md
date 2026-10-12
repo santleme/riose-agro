@@ -2,7 +2,7 @@
 
 Versão do schema: `0.1.0`. O responsável aprovou para prototipagem o caso observacional USDA/CPER de ADG e pastejo, cuja coorte contém novilhos yearling. A issue #1 foi encerrada como definição de escopo. Não houve revisão zootécnica independente; qualquer revisão de domínio futura é separada e não muda o status desta issue.
 
-O snapshot representa o **estado do domínio** no início de um caso: fazenda/local, população, lotes, animais, piquetes, operações, histórico e medições. Ele não contém semente, duração da simulação ou duas configurações de cenário. Esses dados pertencem ao manifesto reproduzível da issue #4; `manifestReference` aponta para o arquivo serializado via tipo, versão e SHA-256, sem copiar seu conteúdo. O vínculo acompanha o contrato atual do PR #17 (`type: agroville-comparison`, `version: 1`); o snapshot não redefine nem valida a estrutura interna do manifesto.
+O snapshot representa o **estado do domínio** no início de um caso: fazenda/local, população, lotes, animais, piquetes, operações, histórico e medições. Ele não contém semente, duração da simulação ou duas configurações de cenário. Esses dados pertencem ao manifesto reproduzível da issue #4; `manifestReference` aponta para o arquivo serializado via tipo, versão e SHA-256, sem copiar seu conteúdo. O vínculo mantém o formato atual (`type: agroville-comparison`) e aceita as versões 1 e 2; o snapshot não redefine a estrutura interna do manifesto. A versão 1 continua disponível, e a versão 2 foi adicionada pela issue #26.
 
 ## Procedência por campo
 

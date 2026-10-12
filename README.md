@@ -48,6 +48,14 @@ Run the deterministic engine and data-contract tests with Node.js:
 npm test
 ```
 
+Run the preset scenario harness and write one `*.result.json` file per scenario:
+
+```bash
+npm run test:scenarios
+```
+
+Add a JSON file under `tests/scenarios/` to add a case; the runner discovers files without code changes. Each case declares an `engine` seed and animal count, optional `configuration`, `run.hours`, and JSON Pointer assertions over `/state` and `/metrics`. Supported operators are `equals`, `greaterThan`, `lessThan`, and `approximatelyEquals` (optional numeric `tolerance`). Results go to `.test-results/scenarios/`. To use another fixture and result directory, run `node scripts/run-scenarios.js <scenario-directory> <result-directory>`. Each invalid or failed case receives its own diagnostic result while other files still run. The harness checks reproducible engine behavior only; its assertions are not scientific validation.
+
 Validate a versioned farm snapshot against JSON Schema and cross-field provenance rules:
 
 ```bash
@@ -76,6 +84,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
 - `app.js` — map rendering, controls, charts, and CSV export
 - `engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
+- `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `worker.js` — simulation worker, isolated from rendering
 - `server.js` — local static server and optional explanation endpoint
 - `snapshot-review.js`, `snapshot-review.css` — read-only snapshot review panel; the local endpoint validates schema, provenance, readiness, and exact manifest linkage
@@ -92,6 +101,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `data/observed-calves-zenodo-7251167.json` — normalized observations from the CC0 Zenodo record; not model output
 - `tests/observed-data.test.js` — source snapshot, missingness, and animal-level summary checks
 - `docs/engenharia-reversa.md` — source evidence and REA availability notes
+- `docs/modelos/interface-modelos-cientificos.md` — opt-in interface and adapter for scientific models
 - `docs/proximo-mvp.md` — increment scope, assumptions, and next steps
 - `docs/caso-zootecnico-demonstrativo.md` — current software case and expert decisions still needed
 - `docs/parametros-e-fontes.md` — parameter assumptions, contextual references, and data/license status
@@ -135,4 +145,7 @@ The inspector's activity history records simulated engine transitions and their 
 Validate the interaction with users, select a well-defined cattle scenario, replace demonstration equations with documented and calibrated models, then test against independent measurements. Move simulation calculations to Rust/WebAssembly only if profiling shows that the JavaScript engine needs it.
 
 Live demo: https://agro-smallville-mvp.qwdqwdwqdqdqwdwwqqw.chatgpt.site
+
 Os exploradores de dados observados estão em [`adult-data.html`](adult-data.html) (USDA/CPER), [`rothamsted-data.html`](rothamsted-data.html), [`cgrec-data.html`](cgrec-data.html) (USDA CGREC 1989–2015) e [`hpgrs-data.html`](hpgrs-data.html) (USDA/ARS HPGRS 1982–2022). CPER, Rothamsted e HPGRS são coortes de animais jovens/yearlings, não de vacas maduras; cada fonte permanece separada e seus limites etários estão documentados. Use `npm run audit:usda-hpgrs-longterm` para conferir integridade e cobertura, `npm run audit:engine-adg-range` para uma checagem descritiva de faixa de ADG e `npm run audit:engine-dmi-mendeley` para a checagem fixa do DMI em Nelore confinado. Esses checks não validam nem calibram o motor completo.
+
+The versioned scenario contract v2 extends the existing comparison manifest while preserving v1 replay. See [the contract and version policy](docs/scenario-contract-v2.md), [the JSON Schema](schemas/scenario-contract.schema.json), and run `npm run example:scenario-contract` for a deterministic round-trip and replay example.

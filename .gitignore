@@ -11,3 +11,4 @@ __pycache__/
 !.env.example
 __pycache__/
 *.py[cod]
+.test-results/scenarios/
