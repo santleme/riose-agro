@@ -4,9 +4,9 @@
 
 1. UI sends a command to the module Worker.
 2. Worker uses JavaScript by default. Opening the page with `?engine=wasm` asks it to initialize Rust/WASM once; if fetch, compilation or ABI checks fail, it keeps the JavaScript fallback. State and comparison envelopes report the active implementation.
-3. For each hourly tick, JS computes behavior, feeding and world effects in existing order, packs the post-intake metabolism inputs, invokes one Rust batch call when opted in, and applies outputs before emitting the state snapshot.
+3. For each hourly tick, JS computes behavior, feeding and world effects in existing order, packs the post-intake metabolism inputs, invokes one Rust batch call when opted in, and applies outputs before returning a compact view with transferable arrays. Reset and load return full snapshots, as do explicit snapshot requests.
 4. Scenario comparison/replay invokes the same kernel for both states and returns implementation metadata in the Worker envelope.
-5. Renderer receives state and remains outside the scientific kernel.
+5. Renderer receives compact views for routine ticks and remains outside the scientific kernel.
 
 ```text
 UI command -> Worker/orchestrator -> domain + world JS -> packed batch ABI

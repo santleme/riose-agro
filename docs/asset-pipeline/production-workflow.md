@@ -6,7 +6,7 @@
 
 ## 1. Current state and authority
 
-The current app is a vanilla JavaScript project. `app.js` loads PNG atlases and frame metadata from `public/assets/manifest.json`; the rendered map still has procedural/runtime fallbacks. The project does not currently depend on PixiJS, React, TypeScript, Sharp, or Zod. The brief lists those as possible future choices, not installed or approved production dependencies. Do not introduce them as part of asset authoring or documentation work.
+The current app is a vanilla JavaScript project. `src/client/app.js` loads PNG atlases and frame metadata from `public/assets/manifest.json`; the rendered map still has procedural/runtime fallbacks. The project does not currently depend on PixiJS, React, TypeScript, Sharp, or Zod. The brief lists those as possible future choices, not installed or approved production dependencies. Do not introduce them as part of asset authoring or documentation work.
 
 The cattle kit at `docs/assets/kit-pecuaria-bovina-v1/` is a planning set. Its 46 IDs and six scenario recipes describe needs and composition; they are not 46 delivered sprites. Existing mixed-farm files and atlases are legacy candidates. Presence in a directory, successful script validation, or appearance in a scene is not artistic approval.
 
@@ -135,7 +135,7 @@ Record `pass`, `revise`, or `reject` for each criterion, with evidence and a sho
 2. Generate a separate graphics manifest for frame geometry, trim, padding/extrusion, texture, and animations. Keep it distinct from the semantic manifest.
 3. Verify deterministic packing, frame bounds, alpha bleed, tile edge integrity, target texture limits, and package references.
 4. Produce a named versioned package with hashes and an explicit consumer. Only then set the packaged revision to `released`.
-5. Runtime integration is a separate task: inspect the current `public/assets/manifest.json` contract and `app.js` loader, prepare a reviewable change, and preserve fallbacks. Do not change renderer architecture or swap runtime art as an incidental part of asset production.
+5. Runtime integration is a separate task: inspect the current `public/assets/manifest.json` contract and `src/client/app.js` loader, prepare a reviewable change, and preserve fallbacks. Do not change renderer architecture or swap runtime art as an incidental part of asset production.
 
 **Gate:** approved source, rights, manifests, package checks, and consumer compatibility all pass. Atlas generation or a successful application load does not grant artistic approval.
 

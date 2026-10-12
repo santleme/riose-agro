@@ -35,8 +35,8 @@ flowchart LR
 ```text
 crates/riose-core/       core runtime primitives and deterministic kernels (native + WASM)
 wasm/                    reproducible WASM artifact served to the Worker
-metabolism-wasm.js       JS ABI adapter and fallback implementation
-engine.js / worker.js    compatibility engine and Worker integration
+src/client/metabolism-wasm.js       JS ABI adapter and fallback implementation
+src/client/engine.js / src/client/worker.js    compatibility engine and Worker integration
 docs/architecture/       contracts, decisions, audits and roadmap
 ```
 
