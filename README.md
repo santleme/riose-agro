@@ -2,6 +2,8 @@
 
 Agroville is a small browser-based cattle-farm simulator with an institutional landing page. The home page introduces the project; **Explorar a fazenda** opens the pixel-art simulator, where you can select animals, explore the map, and set diet, supplement, housing, and weather. The current comparison runs two illustrative 30-day scenarios from the same farm snapshot and seed; its only intervention is housing, from pasture to confinement. Diet, supplement, and weather remain the same in both scenarios. It reports modeled dry-matter intake and per-paddock forage stock alongside weight and feed cost.
 
+Completed and failed comparisons can be listed and replayed from the browser's local history. See [the local execution history guide](docs/historico-execucoes.md) for its storage, retention, and compatibility behavior.
+
 ## Run locally
 
 Requires Node.js 20 or newer for the local server. From this directory:

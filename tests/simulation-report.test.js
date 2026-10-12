@@ -72,7 +72,7 @@ test('comparison dialog exports the generated Markdown report',async()=>{
   assert.equal(downloads[0][2],'text/markdown;charset=utf-8');
 });
 
-test('local app server exposes the imported report module',async t=>{
+test('local app server exposes imported browser modules',async t=>{
   const server=createServer({env:{}});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
@@ -80,4 +80,7 @@ test('local app server exposes the imported report module',async t=>{
   const response=await fetch(`http://127.0.0.1:${server.address().port}/simulation-report.js`);
   assert.equal(response.status,200);
   assert.match(await response.text(),/export function renderSimulationReport/);
+  const historyResponse=await fetch(`http://127.0.0.1:${server.address().port}/run-history.js`);
+  assert.equal(historyResponse.status,200);
+  assert.match(await historyResponse.text(),/export function recordRun/);
 });

@@ -1,5 +1,6 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 import {renderSimulationReport} from './simulation-report.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from './run-history.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from './scientific/br_corte_pasture_dmi.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
@@ -8,7 +9,7 @@ const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
 let state                   ,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false;
 const stateRequests=[];
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
-function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export','report-export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
+function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export','report-export'])$(id).disabled=value||loadingScenario;$('run-history-replay').disabled=value||loadingScenario||!$('run-history-select').value;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const number=(n       ,digits=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const actionNames={grazing:'Pastando',feeding:'No cocho',drinking:'Bebendo água',resting:'Descansando'};
@@ -195,7 +196,9 @@ function renderComparisonContext(data){
   $('comparison-assumptions').innerHTML='<h3>Hipóteses usadas · Sem calibração suficiente · demonstrativas e não validadas</h3><p>Única intervenção: alojamento. Mesmo snapshot, sementes, dieta, suplemento e clima. Não há calibração nem intervalo de confiança sustentado por dados.</p><ul>'+hypotheses.map(([label,value,unit])=>'<li>'+label+': '+comparisonNumber(value,2)+' '+unit+'.</li>').join('')+'</ul><p>No código atual, o alimento-base fornece a mesma demanda de matéria seca e recebe o mesmo fator de ganho nos dois alojamentos. Com estoque suficiente, mudar de alojamento não altera o ganho simulado; altera a fonte de alimento contabilizada, o custo e o estoque de pasto. Se o estoque limitar a demanda no pasto, os ganhos podem divergir. Isso descreve a regra do motor, não uma resposta biológica medida.</p><p>Outras regras fixas do motor: alimento-base no confinamento a 0,65 R$/kg MS; adicionais da dieta de 0 / 1,8 / 3,2 kg MS/animal/dia; suplemento × 1,2 e adicional × 1,35 no equivalente energético; piso de peso 200 kg/animal. Essas constantes são hipóteses, não preços pesquisados ou equações ajustadas. O estoque inicial vem do snapshot usado na comparação.</p><p>Diagnósticos públicos de ADG ajudam a auditar componentes do motor, mas não validam a simulação completa: <a href="/docs/evidence/engine-adg-usda-cper-ltgi-check.json" target="_blank" rel="noopener">holdout temporal CPER LTGI</a>, <a href="/docs/evidence/engine-adg-usda-cgrec-transport-check.json" target="_blank" rel="noopener">transporte externo CGREC</a> e <a href="/docs/evidence/engine-adg-zenodo-cows-check.json" target="_blank" rel="noopener">checagem sem ajuste nas vacas adultas do Zenodo</a>. Neste último conjunto, a discrepância média absoluta foi 1,208 kg/vaca/dia sob as condições padrão do motor; as datas individuais e entradas de manejo não estão alinhadas. Cobertura alta em um único ano não é calibração transferível.</p><p>Fonte das hipóteses e cálculos: <a href="/engine.js" target="_blank" rel="noopener">engine.js · ASSUMPTIONS / tick / compare</a>. Reprodução: <a href="/worker.js" target="_blank" rel="noopener">worker.js · replayComparison</a>. Diferenças: alternativa − base; percentual: diferença / base × 100, indefinido quando a base é zero.</p>';
 }
 function showComparison(data){
-  comparisonSnapshot=pendingComparison?.snapshot??comparisonSnapshot;comparisonManifest=pendingComparison?.manifest??comparisonManifest;pendingComparison=null;
+  const completed=pendingComparison;comparisonSnapshot=completed?.snapshot??comparisonSnapshot;comparisonManifest=completed?.manifest??comparisonManifest;
+  if(completed)persistRun(completed.manifest,data,'completed');
+  pendingComparison=null;
   data=comparisonData(data);
   comparison=data;compareBusy(false);
   const c=data.baselineConfig??{},snapshot=comparisonSnapshot??{},days=comparisonNumber(data.days,0),initial=comparisonArray(data.initialPastureByPaddock),initialTotal=initial.length===4?comparisonCalculation(initial,(...values)=>values.reduce((sum,value)=>sum+value,0)):undefined;
@@ -225,13 +228,40 @@ $('export').onclick=()=>{if(comparison&&!requestCompare&&!loadingScenario)downlo
 $('report-export').onclick=()=>{if(!comparison||requestCompare||loadingScenario)return;try{downloadFile('agroville-relatorio-demonstrativo.md',renderSimulationReport(comparison,comparisonManifest),'text/markdown;charset=utf-8');}catch(error){notify('Não foi possível gerar o relatório: '+error.message);}};
 
 let noticeTimer                              ;function notify(message       ){$('notice').textContent=message;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,5000);}
+function renderRunHistory(){
+  const select=$('run-history-select'),selected=select.value;select.replaceChildren(new Option('Execuções salvas',''));
+  try{
+    const runs=listRuns(localStorage);
+    for(const run of runs){const compatibility=runCompatibility(run),label=run.status==='failed'?'falhou':compatibility.supported?'concluída':'incompatível';select.add(new Option(new Date(run.timestamp).toLocaleString('pt-BR')+' · '+label+' · '+run.id,run.id));}
+    select.value=runs.some(run=>run.id===selected)?selected:(runs[0]?.id??'');
+    $('run-history-status').textContent=runs.length?runs.length+' execução(ões) guardada(s) neste navegador.':'Nenhuma execução salva neste navegador.';
+  }catch(error){select.value='';$('run-history-status').textContent=error.message;}
+  $('run-history-replay').disabled=!select.value||requestCompare||loadingScenario;
+}
+function persistRun(manifest,result,status,error){
+  try{recordRun(createRunRecord({manifest,result,status,error}),localStorage);renderRunHistory();}
+  catch(storageError){$('run-history-status').textContent=storageError.message;notify(storageError.message);}
+}
+function failPendingRun(message){if(pendingComparison)persistRun(pendingComparison.manifest,undefined,'failed',message);pendingComparison=null;}
+function replaySavedRun(){
+  let run;
+  try{run=getRun($('run-history-select').value,localStorage);}catch(error){notify(error.message);return;}
+  if(!run){notify('Selecione uma execução salva.');return;}
+  const compatibility=runCompatibility(run);
+  if(!compatibility.supported){notify(compatibility.reason);return;}
+  setRunning(false);pendingComparison={snapshot:structuredClone(run.manifest.initialSnapshot),manifest:run.manifest};compareBusy(true);
+  notify('Reproduzindo a execução salva com o manifesto original…');worker.postMessage({type:'replayComparison',manifest:run.manifest});
+}
+$('run-history-select').onchange=()=>renderRunHistory();
+$('run-history-replay').onclick=replaySavedRun;
 $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!comparisonManifest){notify('Faça ou importe uma comparação antes de exportar o manifesto.');return;}downloadFile('agroville-manifesto-demonstrativo.json',JSON.stringify(comparisonManifest,null,2),'application/json;charset=utf-8');};
 $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&&!loadingScenario)$('manifest-file').click();};
 $('manifest-file').onchange=async event=>{const file=event.target.files?.[0];event.target.value='';if(!file||requestCompare||loadingScenario)return;compareBusy(true);try{const manifest=JSON.parse(await file.text());validateComparisonManifest(manifest);setRunning(false);pendingComparison={snapshot:structuredClone(manifest.initialSnapshot),manifest};notify('Manifesto validado. Reproduzindo a comparação salva…');worker.postMessage({type:'replayComparison',manifest});}catch(error){pendingComparison=null;compareBusy(false);notify('Manifesto inválido: '+error.message);}};
+$('run-history-select').addEventListener('focus',()=>renderRunHistory());
 function downloadFile(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}buildTerrain(state.initialSeed??state.seed);updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
-worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
+worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}buildTerrain(state.initialSeed??state.seed);updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;failPendingRun(e.data.message);compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
+worker.onerror=()=>{pending=false;loadingScenario=false;failPendingRun('Não foi possível iniciar o motor.');compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setRunning(false);});
 window.addEventListener('pagehide',saveScenarioData);
-renderScenarios();if(activeScenario()){selected=activeScenario().selected??1;loadingScenario=true;compareBusy(false);requestState({type:'load',snapshot:activeScenario().snapshot});}else requestState({type:'snapshot'});
+renderScenarios();renderRunHistory();if(activeScenario()){selected=activeScenario().selected??1;loadingScenario=true;compareBusy(false);requestState({type:'load',snapshot:activeScenario().snapshot});}else requestState({type:'snapshot'});
 requestAnimationFrame(draw);
