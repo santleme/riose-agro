@@ -1,4 +1,5 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
+import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from './scenario-presets.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from './scientific/br_corte_pasture_dmi.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
@@ -6,7 +7,7 @@ const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
 let state                   ,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false;
 const stateRequests=[];
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
-function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
+function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('preset-select').disabled=value||loadingScenario;$('preset-run').disabled=value||loadingScenario||getScenarioPreset($('preset-select').value).status==='unsupported';$('compare').textContent=loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗';}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const number=(n       ,digits=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const actionNames={grazing:'Pastando',feeding:'No cocho',drinking:'Bebendo água',resting:'Descansando'};
@@ -121,6 +122,32 @@ $('explain').onclick=async()=>{if(!state)return;const button=$('explain'),input=
 function beginCompare(){if(!state||requestCompare||loadingScenario)return;setRunning(false);const snapshot=structuredClone(state),manifest=createComparisonManifest(snapshot,30);pendingComparison={snapshot,manifest};compareBusy(true);worker.postMessage({type:'compare',days:30,snapshot});}
 $('compare').onclick=beginCompare;
 $('experiment').onclick=beginCompare;
+function renderPresetCatalog(){
+  const select=$('preset-select');
+  select.replaceChildren(...SCENARIO_PRESETS.map(preset=>{const option=document.createElement('option');option.value=preset.id;option.textContent=preset.status==='unsupported'?preset.name+' · indisponível':preset.name;return option;}));
+  select.value='baseline';
+  updatePresetDescription();
+}
+function updatePresetDescription(){
+  const preset=getScenarioPreset($('preset-select').value);
+  $('preset-description').textContent=preset.status==='unsupported'?preset.unavailableReason:preset.description+' Semente '+preset.seed+' · '+preset.durationDays+' dias.';
+  $('preset-run').textContent=preset.execution==='reset'?'Carregar baseline':'Executar preset · '+preset.durationDays+' dias';
+  $('preset-run').disabled=preset.status==='unsupported'||requestCompare||loadingScenario;
+}
+$('preset-select').onchange=updatePresetDescription;
+$('preset-run').onclick=()=>{
+  const preset=getScenarioPreset($('preset-select').value);
+  if(preset.status==='unsupported'){$('preset-description').textContent=preset.unavailableReason;return;}
+  const snapshot=createScenarioPresetSnapshot(preset.id);
+  if(preset.execution==='reset'){
+    setRunning(false);pending=false;scientificPreviewActive=false;scientificResult=null;renderScientificPanel();$('play').disabled=false;$('day').disabled=false;
+    selected=1;positions.clear();activeScenarioId=null;saveScenarioData();renderScenarios();loadingScenario=true;compareBusy(false);requestState({type:'load',snapshot});
+    $('preset-description').textContent='Baseline carregado · semente '+preset.seed+' · '+snapshot.animals.length+' animais.';
+    return;
+  }
+  setRunning(false);const manifest=createComparisonManifest(snapshot,preset.durationDays);pendingComparison={snapshot,manifest};compareBusy(true);worker.postMessage({type:'compare',days:preset.durationDays,snapshot});
+};
+renderPresetCatalog();
 function comparisonNumber(value,digits=1){return Number.isFinite(value)?number(value,digits):'Indisponível';}
 function comparisonCurrency(value){return Number.isFinite(value)?currency(value):'Indisponível';}
 function comparisonCalculation(values,calculate){return values.every(Number.isFinite)?calculate(...values):undefined;}

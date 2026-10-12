@@ -72,6 +72,7 @@ The command validates the manifest with the engine's existing rules, records the
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
 - `app.js` — map rendering, controls, charts, and CSV export
 - `engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
+- `scenario-presets.js` — versioned reproducible scenario catalog; see [`docs/catalogo-cenarios.md`](docs/catalogo-cenarios.md)
 - `worker.js` — simulation worker, isolated from rendering
 - `server.js` — local static server and optional explanation endpoint
 - `snapshot-review.js`, `snapshot-review.css` — read-only snapshot review panel; the local endpoint validates schema, provenance, readiness, and exact manifest linkage

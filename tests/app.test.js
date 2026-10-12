@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
+import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '../scenario-presets.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null){
@@ -14,7 +15,7 @@ async function openFarm(saved=[],activeId=null){
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -233,4 +234,31 @@ for(const requestType of ['compare','replayComparison'])test(requestType+' worke
   ui.elements.get('export').onclick();
   assert.equal(await ui.downloads.at(-1).text(),previousCSV);
   assert.match(ui.elements.get('compareconfig').textContent,/3 animais/);
+});
+
+test('baseline preset loads its declared deterministic initial state',async()=>{
+  const ui=await openFarm();
+  ui.elements.get('preset-run').onclick();
+  const request=ui.messages.at(-1);
+  assert.equal(request.type,'load');
+  assert.deepEqual(request.snapshot,new FarmEngine(2026,24).snapshot());
+  ui.deliver('state',request.snapshot);
+  assert.match(ui.elements.get('preset-description').textContent,/Baseline carregado/);
+});
+
+test('housing preset uses the current comparison flow and unsupported presets stay unavailable',async()=>{
+  const ui=await openFarm();
+  ui.elements.get('preset-select').value='housing-comparison';
+  ui.elements.get('preset-select').onchange();
+  ui.elements.get('preset-run').onclick();
+  const request=ui.messages.at(-1);
+  assert.equal(request.type,'compare');
+  assert.deepEqual(request.snapshot,createScenarioPresetSnapshot('housing-comparison'));
+  assert.equal(request.days,getScenarioPreset('housing-comparison').durationDays);
+  const messageCount=ui.messages.length;
+  ui.elements.get('preset-select').value='heat';
+  ui.elements.get('preset-select').onchange();
+  assert.equal(ui.elements.get('preset-run').disabled,true);
+  assert.match(ui.elements.get('preset-description').textContent,/Indisponível/);
+  assert.equal(ui.messages.length,messageCount);
 });
