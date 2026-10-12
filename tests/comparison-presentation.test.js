@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
+import {SCENARIO_PRESETS,getScenarioPreset} from '../scenario-presets.js';
 import {createServer} from '../server.js';
 import {calculateThi,THI_SOURCE} from '../thermal-index.js';
 import {environmentDiffRows,initialEnvironmentState} from '../environment-inputs.js';
@@ -12,12 +13,12 @@ const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
 function presentation(snapshot=new FarmEngine(42,2).snapshot()){
   const elements=new Map();
   const element=id=>{
-    if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',attributes:{},setAttribute(key,value){this.attributes[key]=value;},showModal(){this.open=true;}});
+    if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',attributes:{},setAttribute(key,value){this.attributes[key]=value;},replaceChildren(...children){this.children=children;},showModal(){this.open=true;}});
     return elements.get(id);
   };
   const context=vm.createContext({
     $:element,comparisonSnapshot:snapshot,comparisonManifest:undefined,comparison:undefined,comparisonLotContext:null,comparisonEnvironmentState:initialEnvironmentState(null),environmentState:initialEnvironmentState(null),requestCompare:false,loadingScenario:false,pendingComparison:undefined,
-    state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,
+    state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,SCENARIO_PRESETS,getScenarioPreset,document:{createElement(){return {}; }},
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
     scenarioNames:{pasture:'Pasto',barn:'Confinamento',normal:'Ameno',hot:'Calor',rain:'Chuvoso'},calculateThi,THI_SOURCE,environmentDiffRows,
     escapeHtml:value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])),
