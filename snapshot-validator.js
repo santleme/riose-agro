@@ -298,7 +298,7 @@ export function validateFarmSnapshot(snapshot) {
   const manifestReference = snapshot.manifestReference;
   if (manifestReference?.status === 'linked') {
     if (manifestReference.type !== 'agroville-comparison') errors.push("manifestReference.type deve ser 'agroville-comparison'.");
-    if (manifestReference.version !== 1) errors.push('manifestReference.version deve corresponder à versão 1 do manifesto de comparação.');
+    if (![1, 2].includes(manifestReference.version)) errors.push('manifestReference.version deve corresponder a uma versão suportada do manifesto de comparação (1 ou 2).');
     if (typeof manifestReference.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(manifestReference.sha256)) errors.push('manifestReference.sha256 precisa conter o SHA-256 hexadecimal do arquivo do manifesto.');
   } else if (manifestReference?.status === 'not-linked') {
     if (typeof manifestReference.reason !== 'string' || !manifestReference.reason.trim()) errors.push('manifestReference.reason precisa estar presente quando not-linked.');
