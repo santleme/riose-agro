@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "riose.dmi-baseline-evaluation/v1",
+  "evaluationId": "adult-beef-pasture-dmi-baseline-2026-10",
+  "preparedOn": "2026-10-12",
+  "decision": "no_go",
+  "decisionStatus": "preparatory_unsigned",
+  "decisionScope": "Whether a leakage-safe predictive DMI baseline can be evaluated against the mechanistic reference on the current adult beef-pasture cow evidence. This is not full-engine validation.",
+  "sourceReadiness": {
+    "path": "docs/evidence/dmi-supervised-readiness-2026-10.json",
+    "schemaVersion": "riose.supervised-readiness/v1",
+    "decision": "no_go",
+    "signoffStatus": "pending",
+    "eligibleSourcesForTarget": 0,
+    "conditionalSourcesForTarget": 0
+  },
+  "estimand": {
+    "population": "Biologically mature beef cows managed on pasture, with maturity and production class explicitly defined by source metadata.",
+    "outcome": "Individual total DMI in kg DM/animal/day for a defined animal-period.",
+    "unitOfAnalysis": "animal-period",
+    "targetPopulationAvailable": false
+  },
+  "candidateModels": [
+    {
+      "id": "mechanistic-reference",
+      "role": "reference",
+      "status": "not_evaluated",
+      "reason": "No eligible observed cohort exists for a same-case comparison."
+    },
+    {
+      "id": "simple-supervised-baseline",
+      "role": "predictive-baseline",
+      "status": "not_fit",
+      "algorithm": null,
+      "artifact": null,
+      "reason": "Training is gated on an eligible, signed-off dataset readiness decision."
+    }
+  ],
+  "leakageAudit": {
+    "status": "not_run_no_eligible_cohort",
+    "eligibleRows": 0,
+    "reason": "No source has accessible, reusable individual total-DMI labels for the target population, so group separation and train-only preprocessing cannot be executed or empirically verified.",
+    "requiredSplitUnit": "study_or_trial_id; keep all animal-period rows for each animal within its study in one partition",
+    "requiredControls": [
+      "No random split of repeated animal-period rows.",
+      "Fit all preprocessing and feature selection on training groups only.",
+      "Keep trial/study groups disjoint across train, validation, and test where multiple groups exist.",
+      "Record feature provenance and exclude post-outcome or model-derived target leakage."
+    ]
+  },
+  "heldOutEvaluation": {
+    "status": "not_measured",
+    "metrics": {
+      "maeKgDMPerAnimalDay": null,
+      "rmseKgDMPerAnimalDay": null,
+      "biasKgDMPerAnimalDay": null,
+      "subgroups": null
+    },
+    "reason": "No eligible rows or held-out groups are available; null means not measured, not zero error."
+  },
+  "performance": {
+    "trainingRuntimeMs": null,
+    "cpuInferenceMsPerAnimalPeriod": null,
+    "memoryBytes": null,
+    "reason": "No model was fit or run."
+  },
+  "limitations": [
+    "This preparatory no-go follows the current unsigned #109 evidence gate and is not a final signed-off readiness decision.",
+    "No training, held-out evaluation, predictive metric, or product integration was performed.",
+    "The readiness matrix's dairy and feedlot component cohorts do not match the specified mature pasture beef-cow target.",
+    "No result from this artifact establishes empirical validity of the mechanistic reference or full simulation engine."
+  ],
+  "nextEvidenceRequired": [
+    "Complete and sign off the #109 data-readiness decision, including independent domain review tracked by #22.",
+    "Provide a licensed individual-level total-DMI cohort for the target population with animal and study/trial identity.",
+    "Pre-register grouped train/validation/test partitions and feature provenance before fitting any baseline.",
+    "Only after the gate passes, evaluate baseline and mechanistic reference on identical held-out cases and report MAE, RMSE, bias, subgroup limits, CPU inference, training cost, and memory."
+  ]
+}

@@ -93,6 +93,10 @@ class AmdBenchmarkTests(unittest.TestCase):
             "scope": "numeric-kernel-only",
         }])
         self.assertTrue(report["timingBoundaries"][0]["timed"])
+        measurement = report["phases"]["engine"]["measurements"][0]
+        self.assertEqual(measurement["population"]["count"], 8)
+        self.assertTrue(measurement["source"])
+        self.assertEqual(len(measurement["statistics"]["rawObservations"]), 2)
 
     def test_available_simulated_backend_uses_same_deterministic_payload(self):
         payloads = []
@@ -120,6 +124,12 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertEqual({item[0] for item in payloads}, {"scale_vector"})
         self.assertEqual({json.dumps(item[1], sort_keys=True) for item in payloads}, {json.dumps(payloads[0][1], sort_keys=True)})
         self.assertEqual({item[2] for item in payloads}, {"cpu", "amd"})
+        measurements = report["phases"]["engine"]["measurements"]
+        self.assertEqual({measurement["backend"] for measurement in measurements}, {"cpu", "amd_rocm"})
+        for measurement in measurements:
+            self.assertEqual(measurement["population"]["count"], 8)
+            self.assertTrue(measurement["source"])
+            self.assertEqual(len(measurement["statistics"]["rawObservations"]), 2)
 
     def test_correctness_mismatch_prevents_amd_timing_and_speedup(self):
         def mismatching_executor(request, *, amd_detector):

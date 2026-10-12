@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {gzipSync} from 'node:zlib';
+import {createReadStream} from 'node:fs';
 import {mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {createInterface} from 'node:readline';
 import os from 'node:os';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {executeScenario} from './run-scenarios.js';
 
 const repetitions = Number(process.env.FORMAT_STUDY_REPETITIONS ?? 9);
@@ -16,7 +21,7 @@ const fixture = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-p
 if (!Number.isInteger(repetitions) || repetitions < 3) throw new RangeError('FORMAT_STUDY_REPETITIONS must be an integer >= 3');
 if (!Number.isInteger(recordCount) || recordCount < 1) throw new RangeError('FORMAT_STUDY_RECORDS must be a positive integer');
 
-const records = Array.from({length: recordCount}, (_, index) => {
+const scenarios = Array.from({length: recordCount}, (_, index) => {
   const scenario = structuredClone(fixture);
   scenario.scenarioId = `format-study-${String(index + 1).padStart(3, '0')}`;
   scenario.engine.seed = fixture.engine.seed + index;
@@ -28,9 +33,69 @@ const records = Array.from({length: recordCount}, (_, index) => {
   ];
   const result = executeScenario(scenario);
   if (!result.passed) throw new Error(`${scenario.scenarioId} failed: ${result.errors.join('; ')}`);
-  return result;
+  return {scenario, result};
 });
 
+const engineSourceFiles = ['engine.js', 'metabolism-wasm.js', 'environment-model.js', 'feeding-model.js'];
+const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
+  name, await readFile(new URL(`../src/client/${name}`, import.meta.url), 'utf8'),
+])));
+const engineBuildDigest = sha256Digest(engineSources);
+const experimentRuns = scenarios.map(({scenario, result}) => {
+  const runId = scenario.scenarioId;
+  const metrics = result.result.metrics;
+  const outputs = {
+    passed: {value: result.passed, unit: 'boolean'},
+    weight: {value: metrics.weight, unit: 'kg/animal'},
+    gain: {value: metrics.gain, unit: 'kg/animal'},
+    totalDryMatterIntake: {value: metrics.intake.totalKgDM, unit: 'kg DM'},
+    scenarioResultDigest: {value: sha256Digest(result), unit: 'sha256'},
+  };
+  const resultRecord = createExperimentResultRecord({runId, outputs});
+  return {
+    runId,
+    scenarioId: scenario.scenarioId,
+    scenarioDigest: digestScenario(scenario),
+    seed: scenario.engine.seed,
+    engine: {id: 'riose-agro/FarmEngine', version: `source-bundle-${engineBuildDigest.slice(7, 23)}`, buildDigest: engineBuildDigest, status: 'provided'},
+    models: [],
+    datasets: [{id: null, digest: null, uri: null, status: 'missing'}],
+    evidence: [{id: null, digest: null, uri: null, status: 'missing'}],
+    inputs: {
+      animalCount: {value: scenario.engine.animalCount, unit: 'head'},
+      duration: {value: scenario.run.hours, unit: 'h'},
+      configuration: {value: scenario.configuration, unit: 'engine-configuration-v1'},
+    },
+    outputs,
+    status: 'completed',
+    outputDigest: resultRecord.outputDigest,
+    resultRef: `batch-results.jsonl#${runId}`,
+    result: resultRecord,
+  };
+});
+const manifest = createBatchExperimentManifest({
+  experimentId: 'riose-format-study',
+  createdAt: '2026-10-12T00:00:00.000Z',
+  description: 'Logical run records joined from the current batch manifest and JSONL result contract',
+  runs: experimentRuns.map(({result, ...run}) => run),
+});
+const records = manifest.runs.map((run, index) => ({run, result: experimentRuns[index].result}));
+const pythonProbe = spawnSync('python3', ['-c', String.raw`
+import importlib.metadata as metadata, importlib.util, json, os, platform, sys
+packages = {}
+for name in ('pyarrow', 'fastparquet'):
+    available = importlib.util.find_spec(name) is not None
+    size = None
+    version = None
+    if available:
+        distribution = metadata.distribution(name)
+        version = distribution.version
+        size = sum(os.path.getsize(distribution.locate_file(file)) for file in (distribution.files or []) if os.path.isfile(distribution.locate_file(file)))
+    packages[name] = {'available': available, 'version': version, 'installedPackageBytes': size}
+print(json.dumps({'version': platform.python_version(), 'packages': packages}))
+`], {encoding: 'utf8'});
+if (pythonProbe.status !== 0) throw new Error(`Cannot inspect Python format toolchain: ${pythonProbe.stderr}`);
+const pythonToolchain = JSON.parse(pythonProbe.stdout);
 const jsonText = `${JSON.stringify(records)}\n`;
 const jsonlText = `${records.map(record => JSON.stringify(record)).join('\n')}\n`;
 const jsonBytes = Buffer.byteLength(jsonText);
@@ -54,6 +119,7 @@ function median(values) {
 
 async function timeOperation(operation, expected = expectedDigest) {
   const durations = [];
+  const processMemorySamples = [];
   let lastMemory = null;
   for (let iteration = 0; iteration < repetitions; iteration++) {
     if (typeof global.gc === 'function') global.gc();
@@ -62,10 +128,12 @@ async function timeOperation(operation, expected = expectedDigest) {
     const value = await operation(iteration);
     durations.push(performance.now() - started);
     const after = sampleMemory();
-    lastMemory = {before, after, retainedHeapDeltaBytes: after.heapUsedBytes - before.heapUsedBytes};
+    const deltas = Object.fromEntries(Object.keys(before).map(key => [`${key}DeltaBytes`, after[key] - before[key]]));
+    lastMemory = {iteration, before, after, deltas};
+    processMemorySamples.push(lastMemory);
     if (value !== undefined) assert.equal(value, expected);
   }
-  return {medianMs: median(durations), minMs: Math.min(...durations), maxMs: Math.max(...durations), durationsMs: durations, processMemoryLastSample: lastMemory};
+  return {medianMs: median(durations), minMs: Math.min(...durations), maxMs: Math.max(...durations), durationsMs: durations, processMemorySamples, processMemoryLastSample: lastMemory};
 }
 
 try {
@@ -73,22 +141,30 @@ try {
   const jsonlPath = path.join(tempDirectory, 'batch.jsonl');
   const workloads = {
     json: {
-      write: () => writeFile(jsonPath, jsonText),
+      write: () => writeFile(jsonPath, `${JSON.stringify(records)}\n`),
       read: async () => digest(JSON.parse(await readFile(jsonPath, 'utf8'))),
       selectiveMetricRead: async () => {
         const parsed = JSON.parse(await readFile(jsonPath, 'utf8'));
-        return digest(parsed.map(record => ({scenarioId: record.scenarioId, totalIntakeKgDM: record.result.metrics.intake.totalKgDM})));
+        return digest(parsed.map(record => ({scenarioId: record.run.scenarioId, totalIntakeKgDM: record.run.outputs.totalDryMatterIntake.value})));
       },
     },
     jsonl: {
-      write: () => writeFile(jsonlPath, jsonlText),
-      read: async () => digest((await readFile(jsonlPath, 'utf8')).trimEnd().split('\n').map(line => JSON.parse(line))),
+      write: () => writeFile(jsonlPath, `${records.map(record => JSON.stringify(record)).join('\n')}\n`),
+      read: async () => {
+        const rows = [];
+        for await (const line of createInterface({input: createReadStream(jsonlPath, {encoding: 'utf8'}), crlfDelay: Infinity})) {
+          if (line.trim()) rows.push(JSON.parse(line));
+        }
+        return digest(rows);
+      },
       selectiveMetricRead: async () => {
-        const lines = (await readFile(jsonlPath, 'utf8')).trimEnd().split('\n');
-        return digest(lines.map(line => {
+        const projection = [];
+        for await (const line of createInterface({input: createReadStream(jsonlPath, {encoding: 'utf8'}), crlfDelay: Infinity})) {
+          if (!line.trim()) continue;
           const record = JSON.parse(line);
-          return {scenarioId: record.scenarioId, totalIntakeKgDM: record.result.metrics.intake.totalKgDM};
-        }));
+          projection.push({scenarioId: record.run.scenarioId, totalIntakeKgDM: record.run.outputs.totalDryMatterIntake.value});
+        }
+        return digest(projection);
       },
     },
   };
@@ -98,7 +174,21 @@ try {
     const actualDigest = await format.read();
     assert.equal(actualDigest, expectedDigest, `${name} round trip changed normalized records`);
   }
-  const selectedExpectedDigest = digest(records.map(record => ({scenarioId: record.scenarioId, totalIntakeKgDM: record.result.metrics.intake.totalKgDM})));
+const selectedExpectedDigest = digest(records.map(record => ({
+  scenarioId: record.run.scenarioId,
+  totalIntakeKgDM: record.run.outputs.totalDryMatterIntake.value,
+})));
+assert.deepEqual(JSON.parse(jsonText), records, 'JSON round trip changed units, null provenance or result data');
+assert.deepEqual(jsonlText.trimEnd().split('\n').map(line => JSON.parse(line)), records, 'JSONL round trip changed units, null provenance or result data');
+for (const {run, result} of records) {
+  assert.equal(run.outputs.totalDryMatterIntake.unit, 'kg DM');
+  assert.equal(run.datasets[0].status, 'missing');
+  assert.equal(run.datasets[0].id, null);
+  assert.equal(run.evidence[0].status, 'missing');
+  assert.equal(run.evidence[0].id, null);
+  assert.equal(run.engine.status, 'provided');
+  assert.equal(result.outputDigest, run.outputDigest);
+}
   const results = {};
   for (const [name, format] of Object.entries(workloads)) {
     const write = await timeOperation(format.write);
@@ -113,7 +203,7 @@ try {
     };
   }
 
-  const report = {
+  const detailedResults = {
     schemaVersion: 'riose.experiment-format-study/v1',
     generatedAt: new Date().toISOString(),
     decision: {
@@ -124,25 +214,91 @@ try {
     workload: {
       runner: 'scripts/run-scenarios.js executeScenario',
       fixture: 'tests/scenarios/baseline-pasture.json',
+      comparedRecordShape: 'batch manifest run joined to riose-experiment-result v1 by runId',
       records: recordCount,
       animalsPerRecord: animalCount,
       hoursPerRun: hours,
       seedRange: [fixture.engine.seed, fixture.engine.seed + recordCount - 1],
       exactNormalizedRoundTrip: true,
       sha256: expectedDigest,
+      batchManifestDigest: manifest.manifestDigest,
+      roundTripCoverage: ['unit-tagged inputs and outputs', 'null dataset/evidence provenance', 'engine identity and build digest', 'scenario digest and seed', 'result digest and status'],
     },
-    toolchain: {node: process.version, platform: process.platform, python: '3.12.3', pyarrowAvailable: false, fastparquetAvailable: false, parquetBinaryFootprintBytes: null, note: 'Parquet was not installed or measured; its dependency and portability costs are therefore unquantified.'},
+    toolchain: {
+      node: process.version,
+      platform: process.platform,
+      python: pythonToolchain.version,
+      pyarrowAvailable: pythonToolchain.packages.pyarrow.available,
+      fastparquetAvailable: pythonToolchain.packages.fastparquet.available,
+      pyarrow: pythonToolchain.packages.pyarrow,
+      fastparquet: pythonToolchain.packages.fastparquet,
+      parquetMeasurement: pythonToolchain.packages.pyarrow.available || pythonToolchain.packages.fastparquet.available ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed',
+      note: 'Package installation footprint reflects only installed Python distributions; transitive dependencies and portability across target environments require a separate packaging study.',
+    },
     storage: {jsonBytes, jsonlBytes, jsonGzipLevel6Bytes: jsonGzipBytes, jsonlGzipLevel6Bytes: jsonlGzipBytes},
     measurements: results,
     memoryMethod: 'process.memoryUsage heapUsed/RSS/external/ArrayBuffers sampled before and after each operation; RSS is process-level. Output includes last sample and is not a peak-memory claim.',
-    selectiveReadMethod: 'Both formats read the file and parse every whole record before selecting scenarioId and total intake. JSONL does not provide column projection; Parquet was unavailable.',
+    selectiveReadMethod: 'JSON parses the full array before projecting fields. JSONL streams one line at a time and retains only the requested projection, but each selected row still requires parsing its complete JSON object; Parquet was unavailable.',
     limitations: [
       'One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.',
       'JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.',
-      'No Parquet results are reported because no Arrow/Parquet library is present in the current toolchain; no network install or new dependency was introduced.',
+      `No Parquet results are reported because ${pythonToolchain.packages.pyarrow.available || pythonToolchain.packages.fastparquet.available ? 'an installed library requires a separately validated Parquet adapter before comparison' : 'no Arrow/Parquet library is present in the current toolchain'}; no network install or new dependency was introduced.`,
       'Timing is specific to this host and includes local file IO; medians/spread are not cross-host product thresholds.',
     ],
   };
+  const experimentPopulation = {count: recordCount, unit: 'experiment-run records', scope: 'serialized experiment batch'};
+  const source = 'scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract';
+  const phaseMeasurements = [];
+  const addSamples = (metric, unit, samples, population = experimentPopulation, method = source) => {
+    phaseMeasurements.push(measurement('serialization', metric, unit, {
+      ...summarizeSamples(samples),
+      rawObservations: samples,
+    }, {population, source: method}));
+  };
+  const addMemorySamples = (format, operation, operationReport) => {
+    for (const memoryKey of ['heapUsedBytes', 'rssProcessBytes', 'externalBytes', 'arrayBuffersBytes']) {
+      addSamples(`${format}-${operation}-${memoryKey}-delta`, 'bytes',
+        operationReport.processMemorySamples.map(sample => sample.deltas[`${memoryKey}DeltaBytes`]),
+        experimentPopulation, `${source}; process.memoryUsage before and after each ${operation} operation`);
+    }
+  };
+  for (const [format, result] of Object.entries(results)) {
+    addSamples(`${format}-write-duration`, 'ms', result.write.durationsMs);
+    addSamples(`${format}-full-read-duration`, 'ms', result.fullRead.durationsMs);
+    addSamples(`${format}-selective-read-duration`, 'ms', result.selectiveMetricRead.durationsMs);
+    addSamples(`${format}-uncompressed-size`, 'bytes', [result.bytes]);
+    addSamples(`${format}-gzip-level-6-size`, 'bytes', [result.gzipLevel6Bytes]);
+    addMemorySamples(format, 'write', result.write);
+    addMemorySamples(format, 'full-read', result.fullRead);
+    addMemorySamples(format, 'selective-read', result.selectiveMetricRead);
+  }
+  const report = benchmarkReport({
+    name: 'json-jsonl-experiment-output-format-study',
+    runtime: {
+      python: pythonToolchain.version,
+      pyarrowAvailable: pythonToolchain.packages.pyarrow.available,
+      fastparquetAvailable: pythonToolchain.packages.fastparquet.available,
+    },
+    workload: {
+      seed: `${fixture.engine.seed}-${fixture.engine.seed + recordCount - 1} (per-record deterministic seed range)`,
+      populations: [
+        experimentPopulation,
+        {animals: animalCount, scope: 'animals per scenario run'},
+      ],
+      records: recordCount,
+      hoursPerRun: hours,
+      fixture: 'tests/scenarios/baseline-pasture.json',
+    },
+    configuration: {warmupRuns: {write: 1, fullRead: 1, selectiveMetricRead: 0}, repetitions},
+    phases: {serialization: {status: 'measured', measurements: phaseMeasurements}},
+    timingBoundaries: [
+      {phase: 'serialization', timed: ['JSON stringify plus local file write', 'JSONL row serialization plus local file write'], notTimed: ['scenario execution and manifest/result construction', 'gzip compression; compressed byte count only', 'process memory sampling']},
+      {phase: 'serialization', timed: ['full file read, parse, and normalized digest for JSON', 'full line-stream read, parse, accumulation, and normalized digest for JSONL'], notTimed: ['scenario execution', 'manifest/result construction']},
+      {phase: 'serialization', timed: ['JSON full-array parse then selected-field projection and digest', 'JSONL line-stream parse, selected-field projection, and digest'], notTimed: ['scenario execution', 'manifest/result construction']},
+    ],
+    results: detailedResults,
+    limitations: detailedResults.limitations,
+  });
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 } finally {
   await rm(tempDirectory, {recursive: true, force: true});

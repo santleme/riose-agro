@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {BR_CORTE_PASTURE_DMI_MODEL} from '../scientific/br_corte_dmi_adapter.js';
 import {BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE} from '../scientific/br_corte_pasture_dmi.js';
-import {resolveScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
+import {defineScientificModel, registerScientificModel, resolveScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
 import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
 import {renderSimulationReport} from '../src/client/simulation-report.js';
 import {createRunRecord, runCompatibility} from '../src/client/run-history.js';
@@ -12,6 +12,56 @@ test('resolves an exact registered scientific model ID and version', () => {
   assert.equal(resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2023'), BR_CORTE_PASTURE_DMI_MODEL);
   assert.throws(() => resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2024'), /Unknown scientific model version/);
   assert.throws(() => resolveScientificModel('unregistered-model', '2023'), /Unknown scientific model version/);
+});
+
+test('registering a newer version never changes the selected calculation or its provenance', () => {
+  const id = 'issue-93-version-selection-regression';
+  const defineVersion = (version, multiplier) => defineScientificModel({
+    id,
+    version,
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    units: {value: 'kg'},
+    evidence: {status: 'observed', source: `dataset-${version}`, validationNote: `independent-${version}`},
+    implementationSource: `return value * ${multiplier}`,
+    run: ({value}) => ({value: value * multiplier})
+  });
+  const v1 = registerScientificModel(defineVersion('1.0.0', 2));
+  const original = runRegisteredScientificModel({id, version: '1.0.0', inputs: {value: 3}});
+  const v2 = registerScientificModel(defineVersion('2.0.0', 3));
+  const newer = runRegisteredScientificModel({id, version: '2.0.0', inputs: {value: 3}});
+
+  assert.equal(resolveScientificModel(id, '1.0.0'), v1);
+  assert.equal(resolveScientificModel(id, '2.0.0'), v2);
+  assert.deepEqual(original.outputs, {value: 6});
+  assert.equal(original.provenance.version, '1.0.0');
+  assert.equal(original.provenance.evidenceStatus, 'observed');
+  assert.deepEqual(original.provenance.evidenceReferences, [
+    {id: 'dataset-1.0.0', locator: 'dataset-1.0.0', status: 'observed'}
+  ]);
+  assert.equal(newer.outputs.value, 9);
+  assert.equal(newer.provenance.version, '2.0.0');
+});
+
+test('calculation provenance preserves evidence status and does not invent absent references', () => {
+  for (const status of ['demonstrative', 'observed', 'verified']) {
+    const id = `issue-93-evidence-status-${status}`;
+    registerScientificModel(defineScientificModel({
+      id,
+      version: '1',
+      inputs: {value: 'number'},
+      outputs: {value: 'number'},
+      evidence: {status, validationNote: 'retained in the calculation result'},
+      run: ({value}) => ({value})
+    }));
+    const result = runRegisteredScientificModel({id, version: '1', inputs: {value: 7}});
+
+    assert.deepEqual(result.outputs, {value: 7});
+    assert.equal(result.provenance.evidenceStatus, status);
+    assert.deepEqual(result.provenance.evidenceReferences, []);
+    assert.deepEqual(result.evidence, {status, validationNote: 'retained in the calculation result'});
+    assert.deepEqual(result.scientificProvenance, [result.provenance]);
+  }
 });
 
 test('registered model result records exact inputs, units, evidence status and implementation hash', () => {

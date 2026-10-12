@@ -8,6 +8,7 @@
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",
+    "test:graphics-screenshots": "npm run build:graphics-poc && node scripts/graphics-screenshot-regression.mjs",
     "bench:memory": "node --expose-gc scripts/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmark_amd.py",
     "bench:history": "node scripts/benchmark-history.mjs",

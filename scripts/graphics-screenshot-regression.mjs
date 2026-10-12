@@ -51,19 +51,22 @@ try {
   const port=Number(active.split('\n')[0]), created=await fetch(`http://127.0.0.1:${port}/json/new?about:blank`,{method:'PUT'});if(!created.ok)throw new Error(`Chrome DevTools HTTP ${created.status}`);
   const target=await created.json();cdp=new DevTools(target.webSocketDebuggerUrl);await cdp.send('Page.enable');await cdp.send('Runtime.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+  await cdp.send('Emulation.setDefaultBackgroundColorOverride',{color:{r:255,g:255,b:255,a:1}});
   const results=[];
   for(const test of cases){
     await cdp.send('Page.navigate',{url:`${origin}${test.query}`});
     for(let i=0;i<240;i++){const ready=await cdp.evaluate('Boolean(window.__graphicsReady)');if(ready)break;const error=await cdp.evaluate('window.__graphicsError');if(error)throw new Error(error);await delay(50);if(i===239)throw new Error(`Graphics PoC did not signal ready: ${await cdp.evaluate('JSON.stringify({url:location.href,ready:document.readyState,status:document.querySelector("#scene-status")?.textContent,body:document.body.innerText.slice(0,160),resources:performance.getEntriesByType("resource").map(r=>({name:r.name.slice(-65),duration:Math.round(r.duration),size:r.transferSize})).filter(r=>r.duration>200).slice(-10)})')}`);}
     await cdp.evaluate(`(async()=>{localStorage.clear(); ${test.setup} document.querySelector('#renderer').value='canvas'; document.querySelector('#renderer').dispatchEvent(new Event('change',{bubbles:true})); await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));})()`);
     // Capture only the map canvas. This excludes labels, fonts, and controls; measured capture time is never mixed into FPS.
-    const clip=await cdp.evaluate('(()=>{const r=document.querySelector("#canvas-renderer").getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,scale:1}})()');
+    const capture=await cdp.evaluate('(()=>{const r=document.querySelector("#canvas-renderer").getBoundingClientRect();return{devicePixelRatio,viewport:{width:innerWidth,height:innerHeight},canvas:{width:r.width,height:r.height},clip:{x:r.x,y:r.y,width:r.width,height:r.height,scale:1}}})()');
+    if(capture.devicePixelRatio!==1||capture.viewport.width!==width||capture.viewport.height!==height)throw new Error(`Screenshot viewport drifted: ${JSON.stringify(capture)}`);
+    const clip=capture.clip;
     const shot=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false,clip});
-    const png=Buffer.from(shot.data,'base64'), filename=path.join(fixtures,`${test.name}.png`), start=performance.now();
-    if(update){await writeFile(filename,png);results.push({name:test.name,status:'updated',captureMs:Math.round(performance.now()-start)});continue;}
+    const png=Buffer.from(shot.data,'base64'), dimensions=decodePng(png), filename=path.join(fixtures,`${test.name}.png`), start=performance.now();
+    if(update){await writeFile(filename,png);results.push({name:test.name,status:'updated',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},captureMs:Math.round(performance.now()-start)});continue;}
     let baseline;try{baseline=await readFile(filename);}catch{throw new Error(`Missing ${filename}; review the intended visual state, then run with --update to create baselines.`);}
     const diff=comparePng(decodePng(baseline),decodePng(png),{channelTolerance:18,maxChangedRatio:.035});
-    results.push({name:test.name,status:diff.pass?'pass':'fail',changedRatio:diff.changedRatio,maxChannelDelta:diff.maxChannelDelta,captureMs:Math.round(performance.now()-start)});
+    results.push({name:test.name,status:diff.pass?'pass':'fail',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},changedRatio:diff.changedRatio,maxChannelDelta:diff.maxChannelDelta,captureMs:Math.round(performance.now()-start)});
   }
   console.log(JSON.stringify({browser:(await cdp.send('Browser.getVersion')).product,viewport:{width,height,deviceScaleFactor:1},seed:20261012,renderer:'Canvas 2D',results},null,2));
   if(results.some(result=>result.status==='fail'))process.exitCode=1;

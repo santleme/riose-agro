@@ -386,21 +386,24 @@ def run_benchmark(
             "Benchmark de software/hardware não implica validação científica do modelo.",
         ],
     }
-    def phase_statistics(statistics: dict[str, Any] | None) -> dict[str, Any]:
+    def phase_statistics(statistics: dict[str, Any] | None, raw_observations: list[float] | None) -> dict[str, Any]:
         if statistics is None:
-            return {"sampleCount": 0, "median": None, "spread": None}
+            return {"sampleCount": 0, "median": None, "spread": None, "rawObservations": []}
         minimum, maximum = statistics["min_ms"], statistics["max_ms"]
         return {
             "sampleCount": statistics["runs"],
             "median": statistics["median_ms"],
             "spread": {"min": minimum, "max": maximum, "range": maximum - minimum},
+            "rawObservations": raw_observations or [],
         }
 
     compute_measurements = [{
         "phase": "engine",
         "metric": "scale_vector",
         "unit": "ms",
-        "statistics": phase_statistics(cpu_statistics),
+        "statistics": phase_statistics(cpu_statistics, cpu_timings),
+        "population": {"count": len(values), "unit": "numeric-vector-elements", "scope": "numeric-kernel-only"},
+        "source": "compute_service scale_vector CPU operation; input vector preconstructed",
         "scope": "numeric-vector-elements",
         "elements": len(values),
         "backend": "cpu",
@@ -411,7 +414,9 @@ def run_benchmark(
             "phase": "engine",
             "metric": "scale_vector",
             "unit": "ms",
-            "statistics": phase_statistics(amd_statistics),
+            "statistics": phase_statistics(amd_statistics, amd_timings),
+            "population": {"count": len(values), "unit": "numeric-vector-elements", "scope": "numeric-kernel-only"},
+            "source": "compute_service scale_vector AMD ROCm operation; input vector preconstructed",
             "scope": "numeric-vector-elements",
             "elements": len(values),
             "backend": "amd_rocm",
