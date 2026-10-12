@@ -1,5 +1,5 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
@@ -95,6 +95,10 @@ function isoPosition(column, row) {
   return {x: p.x - center.x, y: p.y - center.y};
 }
 
+function sceneTerrainCells(scene) {
+  return sortTerrainCellsBackToFront(terrainCells(scene), scene.projection.cellWidth, scene.projection.cellHeight);
+}
+
 function entityEntries() {
   const entries = [];
   if (state.view && state.selectedDomain === 'beef') {
@@ -178,7 +182,7 @@ function refreshScene() {
   }
   const {individual, clusters} = clusterFarAnimals(animals);
   const ordered = [...objects, ...individual, ...clusters].sort((a, b) => a.depth - b.depth || a.x - b.x);
-  state.visible = [...sortTerrainBackToFront(terrain), ...ordered];
+  state.visible = [...terrain, ...ordered];
   state.updateMs = performance.now() - started;
   state.visibleAnimalCount = animals.length;
   state.culledAnimalCount = culledAnimalCount;
@@ -402,7 +406,7 @@ function finishZone(start, end) {
   const y0 = Math.max(0, Math.min(maxY, start.y)), y1 = Math.max(0, Math.min(maxY, end.y));
   const x = Math.min(x0, x1), y = Math.min(y0, y1), columns = Math.abs(x1 - x0) + 1, rows = Math.abs(y1 - y0) + 1;
   state.scene.zones.push({zoneId: `paddock-${Date.now()}`, kind: 'pasture', origin: {x, y, unit: 'grid-cell'}, footprint: {columns, rows}, groundAssetId: 'grass-mid', transitionAssetIds: {edge: 'grass-light'}});
-  state.terrainCells = terrainCells(state.scene); state.tool = null; $('scene-status').textContent = 'Piquete criado com snapping isométrico e borda de transição.'; persistScene(); refreshScene();
+  state.terrainCells = sceneTerrainCells(state.scene); state.tool = null; $('scene-status').textContent = 'Piquete criado com snapping isométrico e borda de transição.'; persistScene(); refreshScene();
 }
 
 async function endPointer(event) {
@@ -514,7 +518,7 @@ async function selectScene(domain) {
   $('domain-module').value = domain;
   $('scene-picker').value = domain;
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, domain));
-  state.terrainCells = terrainCells(state.scene);
+  state.terrainCells = sceneTerrainCells(state.scene);
   setSimulationRunning(false);
   if (domain === 'beef') {
     state.worker ??= new Worker('/worker.js', {type: 'module'});
@@ -638,7 +642,7 @@ async function initialize() {
   state.assetAtlasUrls = renderManifest.atlases;
   state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
   state.imageLoadMs = performance.now() - startedAt;
-  state.terrainCells = terrainCells(state.scene);
+  state.terrainCells = sceneTerrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
   if (state.selectedDomain === 'beef') {
     state.worker = new Worker('/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;

@@ -185,6 +185,7 @@ export function terrainCells(scene) {
   return cells;
 }
 
-export function sortTerrainBackToFront(entries) {
-  return [...entries].sort((a, b) => a.depth - b.depth || a.x - b.x);
+export function sortTerrainCellsBackToFront(cells, cellWidth = 96, cellHeight = 48) {
+  return [...cells].sort((a, b) => (a.column + a.row - b.column - b.row) * cellHeight
+    || (a.column - a.row - b.column + b.row) * cellWidth);
 }
