@@ -1,5 +1,5 @@
 import {Application, Assets, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Texture} from 'pixi.js';
-import {farmPositionToGrid, placementFits, projectIso, terrainCells, unprojectIso} from './contract.js';
+import {distributePrefab, farmPositionToGrid, placementFits, projectIso, terrainCells, unprojectIso} from './contract.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -320,6 +320,17 @@ function updateHud() {
 
 function persistScene() { try { localStorage.setItem('riose-graphics-scene-v1', JSON.stringify(state.scene)); } catch { $('scene-status').textContent = 'Não foi possível salvar esta cena no navegador.'; } }
 
+function distributeShade() {
+  const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
+  const placed = [];
+  for (const zone of state.scene.zones.filter(item => item.kind === 'pasture')) {
+    placed.push(...distributePrefab(template, zone, state.scene.projection.columns, state.scene.projection.rows, [...state.scene.prefabs, ...placed]));
+  }
+  if (!placed.length) { $('scene-status').textContent = 'Não há posições livres para distribuir árvores nos piquetes.'; return; }
+  state.scene.prefabs.push(...placed); persistScene(); refreshScene(); updateHud();
+  $('scene-status').textContent = `${placed.length} árvores distribuídas de forma determinística nos piquetes.`;
+}
+
 function canvasToBlob(canvas, name) {
   const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([JSON.stringify(state.scene, null, 2)], {type: 'application/json'})); link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0);
 }
@@ -428,6 +439,7 @@ async function initialize() {
     state.tool = {assetId, footprint, blocking: true}; $('scene-status').textContent = `Clique no mapa para colocar ${assetId}; snapping de 1 célula.`;
   });
   $('draw-zone').addEventListener('click', () => { state.tool = 'zone'; state.zoneStart = null; $('scene-status').textContent = 'Clique no primeiro canto e arraste para criar um piquete.'; });
+  $('distribute-shade').addEventListener('click', distributeShade);
   $('save-scene').addEventListener('click', () => { persistScene(); $('scene-status').textContent = 'Layout salvo no navegador; snapshot de simulação continua separado.'; });
   $('export-scene').addEventListener('click', () => canvasToBlob(null, `${state.scene.sceneId}.json`));
   $('run-benchmark').addEventListener('click', async () => { $('scene-status').textContent = 'Benchmark Chromium em andamento…'; const report = await runGraphicsBenchmark(); $('scene-status').textContent = `Benchmark concluído: ${report.results.length} cargas, ambos renderizadores.`; });

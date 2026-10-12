@@ -13,7 +13,7 @@
       <label>Rebanho<select id="herd-size"><option>100</option><option>1000</option><option>10000</option></select></label>
       <label>Módulo<select id="domain-module"><option value="beef">Corte · demonstrativo</option><option value="dairy">Leite · em desenvolvimento</option></select></label>
       <button id="reset-simulation">Reiniciar com semente fixa</button><button id="run-simulation">▶ Simular</button>
-      <button data-tool="farmhouse">＋ Sede</button><button data-tool="pond">＋ Açude</button><button data-tool="shade-tree">＋ Árvore</button><button id="draw-zone">＋ Piquete</button>
+      <button data-tool="farmhouse">＋ Sede</button><button data-tool="pond">＋ Açude</button><button data-tool="shade-tree">＋ Árvore</button><button id="draw-zone">＋ Piquete</button><button id="distribute-shade">Distribuir árvores</button>
       <button id="save-scene">Salvar cena</button><button id="export-scene">Exportar JSON</button><button id="run-benchmark" class="benchmark">Medir 100 / 1.000 / 10.000</button>
     </section>
     <section class="workspace">
@@ -27,7 +27,7 @@
         <output id="benchmark-output" aria-live="polite"></output>
       </aside>
     </section>
-    <p class="help">Arraste para mover a câmera. Clique em animais ou prefabs para selecionar; escolha Sede, Açude, Árvore ou Piquete para editar. A posição do motor é projetada para a cena isométrica; a projeção nunca altera o snapshot ou os resultados.</p>
+    <p class="help">Arraste para mover a câmera. Clique em animais ou prefabs para selecionar; escolha Sede, Açude, Árvore, Piquete ou distribuição de árvores para editar. A posição do motor é projetada para a cena isométrica; a projeção nunca altera o snapshot ou os resultados.</p>
   </main>
   <script type="module" src="./dist/app.js"></script>
 </body>

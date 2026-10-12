@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
-import {farmPositionToGrid, placementFits, projectIso, terrainCells, unprojectIso} from '../graphics-poc/contract.js';
+import {distributePrefab, farmPositionToGrid, placementFits, projectIso, terrainCells, unprojectIso} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema.json', import.meta.url), 'utf8'));
@@ -37,6 +37,20 @@ test('prefab snapping rejects out-of-bounds and overlapping blocking footprints'
   assert.equal(placementFits(home, {x: 2, y: 2}, 14, 10, scene.prefabs), true);
   assert.equal(placementFits(home, {x: 1, y: 6}, 14, 10, scene.prefabs), false, 'pond overlaps the home');
   assert.equal(placementFits(home, {x: 13, y: 9}, 14, 10, []), false);
+});
+
+test('prefab distribution is deterministic, stays inside the pasture, and avoids overlaps', () => {
+  const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
+  const paddock = scene.zones.find(zone => zone.kind === 'pasture');
+  const first = distributePrefab(template, paddock, 14, 10, scene.prefabs);
+  const second = distributePrefab(template, paddock, 14, 10, scene.prefabs);
+  assert.ok(first.length > 0);
+  assert.deepEqual(first, second);
+  for (const prefab of first) {
+    assert.ok(prefab.position.x > paddock.origin.x);
+    assert.ok(prefab.position.y > paddock.origin.y);
+    assert.equal(placementFits(prefab, prefab.position, 14, 10, [...scene.prefabs, ...first.filter(item => item !== prefab)]), true);
+  }
 });
 
 test('zone ground selection exposes terrain transition cells for auto-tiling', () => {

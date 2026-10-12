@@ -23,6 +23,20 @@ export function placementFits(prefab, position, columns, rows, others = []) {
   });
 }
 
+export function distributePrefab(prefabTemplate, zone, columns, rows, others = [], spacing = 3) {
+  const placed = [], occupants = [...others];
+  for (let y = zone.origin.y + 1; y < zone.origin.y + zone.footprint.rows - 1; y += spacing) {
+    for (let x = zone.origin.x + 1; x < zone.origin.x + zone.footprint.columns - 1; x += spacing) {
+      const prefabId = `${prefabTemplate.assetId}-auto-${x}-${y}`;
+      if (occupants.some(item => item.prefabId === prefabId)) continue;
+      const prefab = {...prefabTemplate, prefabId, position: {x, y, unit: 'grid-cell'}};
+      if (!placementFits(prefab, prefab.position, columns, rows, occupants)) continue;
+      placed.push(prefab); occupants.push(prefab);
+    }
+  }
+  return placed;
+}
+
 export function terrainCells(scene) {
   const {columns, rows} = scene.projection, cells = [];
   for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
