@@ -185,9 +185,14 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
     assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
   }
   const provenance = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
+  assert.equal(provenance.sourceRevision.commit, '2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7');
+  assert.ok(provenance.assetSources.every(item => !('sourceWorktree' in item)), 'asset provenance must not depend on a temporary worktree name');
   const dairySources = provenance.assetSources.filter(item => item.assetId.startsWith('dairy-'));
   assert.equal(dairySources.length, 9);
   assert.ok(dairySources.every(item => item.status === 'REVIEW' && /^[a-f0-9]{64}$/.test(item.sha256)));
+  assert.ok(dairySources.every(item => item.sourceManifest === 'public/assets/modules/livestock-dairy/manifest.json'
+    && item.sourceManifestStatus === 'candidate-integration'
+    && item.sourceReview?.art === 'pending' && item.sourceReview?.technical === 'pass'));
   for (const item of [...dairySources, provenance.assetSources.find(source => source.assetId === 'handling-review-atlas-v1')]) {
     const bytes = await readFile(new URL(`../graphics-poc/${item.file}`, import.meta.url));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.assetId);

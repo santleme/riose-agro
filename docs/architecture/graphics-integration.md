@@ -37,7 +37,7 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 - Renderer, camera, zoom and asset visibility never mutate the Worker snapshot.
 - Canvas and Pixi share the same scene, view data, camera, culling bounds, LOD policy and layer visibility.
 
-The source environment atlas comes from d99d's runtime manifest; its individual entries remain review-state/approval-unknown. The only individually approved cattle sprite is `livestock.nelore.adult.idle.imagegen.v1`, with source hash and provenance in `graphics-poc/asset-sources.json`. The dairy scene integrates nine real sprites from d99d as `REVIEW` candidates and preserves their hashes and source paths. The dairy catalog remains `in-progress`, and the scene is a visual layout with no dairy simulation results.
+The source assets are pinned to committed main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; each copied file's SHA-256 matches that revision. The only individually approved cattle sprite is `livestock.nelore.adult.idle.imagegen.v1`, with its approval provenance retained in `graphics-poc/asset-sources.json`. Nine dairy sprites are mapped to semantic IDs in the committed module manifest; all are `REVIEW`, with technical checks passed and art review pending. Farm and handling atlas entries still lack a reliable per-entry approval status. Previewing these candidates does not promote them. The dairy catalog remains `in-progress`, and its scene is a visual layout with no dairy simulation results.
 
 ## Measurement method
 
@@ -47,7 +47,7 @@ The current two-repetition run is exploratory, not a performance sign-off. Repea
 
 ## Integration sequence
 
-1. Review and commit the d99d asset pipeline separately; do not cherry-pick its dirty working tree. Preserve the nine dairy art candidates as `REVIEW` until the visual review gate changes.
+1. Reuse the committed asset pipeline from main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; verify hashes and source manifest status. Preserve the nine dairy art candidates as `REVIEW` until the visual review gate changes.
 2. Choose one released visual manifest revision. Preserve semantic IDs and rights/review metadata; generate a renderer-specific graphics manifest at build time.
 3. Integrate `visual-scene` as layout data alongside (not inside) existing farm snapshot and comparison manifest JSON.
 4. Add a shared view adapter from Worker numeric arrays to stable entity IDs, domain visual state and world coordinates.
@@ -58,7 +58,8 @@ The current two-repetition run is exploratory, not a performance sign-off. Repea
 
 ## Known gaps
 
-- The Graphics Lab is a first Composer path, not yet integrated into the main Scenario Studio.
+- The V2 Graphics Lab is not integrated into the main product; main has a separate compact diorama Composer with a different scene contract.
+- Main now also has a separate compact diorama Composer at `public/assets/scenario-editor/`; its scene JSON and prefab contracts differ from this PoC's `visual-scene` schema. Consolidate behavior by adapting proven features, not by maintaining two unrelated product editors.
 - The current Canvas renderer uses a simple 2D world and the current engine positions are not native isometric world coordinates; the PoC adapts them for display only.
 - The farm atlas asset statuses are not consistently represented in its runtime manifest. Production integration needs a manifest-status join/gate, not an assumption from atlas presence.
 - `livestock-dairy` remains an unfinished visual/domain module and current FarmEngine is beef-oriented and demonstrative.

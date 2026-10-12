@@ -1,8 +1,24 @@
 # Repository-wide branch and worktree audit
 
-Read-only repository inventory refreshed on 2026-10-12 from `codex/architecture-v2` at `ed5ee66`. No fetch, checkout, reset, clean, merge, rebase, stash apply, or edits to another worktree were performed. Remote refs below are the refs already available locally and may be stale. This file is the only audit output written in this worktree.
+The detailed branch comparison below is the read-only snapshot from `codex/architecture-v2` at `ed5ee66`. The live worktree and integration facts were refreshed on 2026-10-12 at `aa7640b`; where they differ, the current refresh supersedes the historical snapshot. No fetch, checkout, reset, clean, merge, rebase, stash apply, or edits to another worktree were performed.
 
-## Worktrees
+## Live status refresh at aa7640b
+
+| Path | HEAD / branch | Working tree at refresh | Current evidence |
+| --- | --- | --- | --- |
+| `/home/lucas_coimbra/projects/hackhatons/riose-agro` | `e714ef0` / `main` | Clean | Main now contains the compact diorama Composer, semantic asset library, runtime manifests, and the dairy visual module committed at `2a360cd`. |
+| `/home/lucas_coimbra/.codex/worktrees/4bb3/riose-agro` | `aa7640b` / `codex/architecture-v2` | Only untracked `.codex/` user data | The V2 Canvas-default/Pixi-optional Graphics Lab, 14×10 editable scenes, culling/LOD, and placement contracts remain isolated here. |
+| `/home/lucas_coimbra/.codex/worktrees/7004/riose-agro` | `e714ef0` / `codex/issue-38-54-lot-comparison` | Dirty: app, schema, validator, style and tests modified; `lot-selection.js` and its test untracked | Active lot-comparison work. Read-only inspection only; do not modify this checkout. |
+
+The former detached `d99d` worktree is no longer registered. Its asset and Composer work is now represented in main: `2a360cd` added the source assets, dairy module manifests, the standalone editor under `public/assets/scenario-editor/`, and the starter-scene code. The nine dairy sprite files in the V2 preview were byte-for-byte hash-verified against that commit. Their source manifest still marks all nine `REVIEW`, with technical checks passed and art approval pending.
+
+Main and V2 have diverged from merge base `913b36b9fe5c0877c7b857af3e0488cedcfd0e03`: main has 17 commits beyond it and V2 has 13. Do not merge automatically. Main's compact Composer uses `public/assets/scenario-editor/scene-layout.js`, `prefabInstances`, and its asset/prefab manifests; V2 uses `schemas/visual-scene.schema.json` with `entities`, `zones`, and `prefabs`. Both contain beef and dairy layouts, so future integration should consolidate the editor and adapt contracts instead of creating a third product path.
+
+The main Composer's checked-in preview HUD reports 1,095 placements for the beef scene and 1,105 for dairy, with a 117.5 MB atlas and 57–58 FPS in those preview captures. Those are preview-reported values, not a new benchmark run. V2's separate exploratory benchmark at 10,000 animals measured 37 FPS for Canvas and retained all 4,643 viewport-visible animals in 2,065 visual units.
+
+## Historical worktree snapshot
+
+## Worktrees at ed5ee66
 
 | Path | HEAD / branch | Working tree at inspection | Assessment |
 | --- | --- | --- | --- |
@@ -12,7 +28,7 @@ Read-only repository inventory refreshed on 2026-10-12 from `codex/architecture-
 
 The detached `d99d` HEAD is an ancestor of current `main`, so its committed code is historical. The relevant new work is in its working tree and is not represented by a branch commit. `main` has two commits after the Architecture V2 merge base (`065dbc1` scientific cattle/pasture research and `764ead1` local-file ignore rules); `codex/architecture-v2` has nine commits after that base. Two stashes remain on `main` as recovery history: `codex-preserve-snapshot-work-before-merged-pr18` and `codex-preserve-local-work-before-merged-pr17`.
 
-## Branch and feature lineage
+## Historical branch and feature lineage at ed5ee66
 
 Ahead/behind counts use current `main` and are not merge-readiness signals. Three-dot diffs were used to distinguish branch-only changes from the shared base.
 
@@ -30,7 +46,7 @@ Ahead/behind counts use current `main` and are not merge-readiness signals. Thre
 
 No branch was fetched, merged, or rewritten. The older `origin/pr-*` refs are local snapshots; verify their remote state before relying on them for a future release decision.
 
-## Cross-worktree component matrix
+## Historical cross-worktree component matrix at ed5ee66
 
 | Component | Branch/worktree | State | Implementation observed | Impact on V2 |
 | --- | --- | --- | --- | --- |
@@ -43,7 +59,7 @@ No branch was fetched, merged, or rewritten. The older `origin/pr-*` refs are lo
 | Technology and hardware | Main; dirty `d99d` | Visual concepts only | d99d includes RFID, weighing, gateway and traceability visual IDs and prefabs. No telemetry device protocol, gateway ingestion, or hardware integration was found in the inspected code. | Model technology assets as visual/domain references only. Hardware interfaces remain future module contracts; do not infer operational connectivity from a rendered device. |
 | Tests and benchmarks | `main`; `codex/architecture-v2`; dirty `d99d` | Main and V2 have executable tests; d99d adds unrun working-tree tests | Main has the existing Node test suite and research audits. V2 has Rust/WASM equivalence, Worker/engine and Graphics POC tests and browser/history benchmarks. d99d adds `tests/scenario-composer.test.js` for deterministic scenes, visual budgets, manifest resolution and isometric coordinate round trips; it was inspected but not run during this read-only audit. | Keep all main scientific tests. Before integration, run both Composer suites against the chosen scene contract and add cross-adapter tests. Benchmark simulation, serialization and rendering separately. |
 
-## Overlaps, gaps, and integration plan
+## Historical overlaps, gaps, and integration plan at ed5ee66
 
 - The main product line already owns scenario save/replay and comparison manifests. The Composer should edit a visual layout document and reference snapshots; it must not become a second simulation-comparison workflow.
 - `d99d` and V2 both contain beef/dairy scenes and interactive editing work. They are independent implementations with incompatible schemas, so treat their overlap as a consolidation decision, not a merge of both editors.
@@ -52,7 +68,7 @@ No branch was fetched, merged, or rewritten. The older `origin/pr-*` refs are lo
 - Keep the contracts for simulation snapshots, comparison manifests, asset manifests, and editable scenes distinct and versioned. Decide how d99d's `placements` map to V2 `entities`/`prefabs` only after inspecting and approving the d99d working tree.
 - Preserve the two main stashes and all three worktrees. No merge recommendation below is an instruction to merge automatically.
 
-## Component summary requested for Architecture V2
+## Historical component summary at ed5ee66
 
 | Component | Branch/worktree | State | Implementation | Impact on V2 |
 | --- | --- | --- | --- | --- |
