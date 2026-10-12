@@ -17,17 +17,20 @@ test('Mader formula matches a published crossbred-calf THI example to reported p
   assert.equal(intermediates.temperatureTerm.value+intermediates.humidityTerm.value+intermediates.constantTerm.value,maderExample.expected.calculatedThi);
   assert.equal(result.value,maderExample.expected.calculatedThi);
   assert.ok(Math.abs(result.value-maderExample.expected.publishedRoundedThi)<maderExample.expected.publishedPrecisionTolerance);
-  assert.equal(result.unit,'THI');
+  assert.equal(result.unit,maderExample.expected.unit);
   assert.match(THI_SOURCE.doi,/10\.2527\/2006\.843712x/);
   assert.equal(Number(result.value.toFixed(1)),75.0);
 });
 
 test('THI requires both finite inputs and validates the documented input ranges',()=>{
+  const [minimumTemperature,maximumTemperature]=maderExample.domainAssumptions.temperatureC;
+  const [minimumHumidity,maximumHumidity]=maderExample.domainAssumptions.relativeHumidityPct;
   assert.equal(calculateThi(null,60).available,false);
   assert.equal(calculateThi(25,null).available,false);
-  assert.equal(calculateThi(25,101).available,false);
+  assert.equal(calculateThi(25,maximumHumidity+1).available,false);
   assert.equal(calculateThi(true,50).available,false);
   assert.equal(calculateThi(25,false).available,false);
-  assert.equal(calculateThi(-41,50).available,false);
-  assert.equal(calculateThi(60,100).available,true);
+  assert.equal(calculateThi(minimumTemperature-1,50).available,false);
+  assert.equal(calculateThi(maximumTemperature,maximumHumidity).available,true);
+  assert.equal(calculateThi(minimumTemperature,minimumHumidity).available,true);
 });

@@ -13,7 +13,7 @@ Entram somente fontes com microdados acessíveis, termos de reutilização espec
 
 ## Evidência e decisão
 
-A matriz de dez fontes [dmi-adg-readiness-v1.json](dmi-adg-readiness-v1.json) não identifica uma fonte elegível para este estimando. As fontes condicionais de DMI disponíveis localmente descrevem vacas leiteiras ou animais de confinamento e só permitem análises de componente dentro desses escopos. O triage de fontes de DMI em pastagem [public-pasture-dmi-source-triage-2026-10.json](public-pasture-dmi-source-triage-2026-10.json) encontrou artigos e candidatos sem microdados individuais reutilizáveis ou sem direitos de reutilização estabelecidos.
+A matriz de quinze fontes [dmi-adg-readiness-v1.json](dmi-adg-readiness-v1.json) não identifica uma fonte elegível para este estimando. As fontes condicionais de DMI disponíveis localmente descrevem vacas leiteiras ou animais de confinamento e só permitem análises de componente dentro desses escopos. O triage de fontes de DMI em pastagem [public-pasture-dmi-source-triage-2026-10.json](public-pasture-dmi-source-triage-2026-10.json) encontrou artigos e candidatos sem microdados individuais reutilizáveis ou sem direitos de reutilização estabelecidos.
 
 O conjunto local de vacas Angus [mdpi-angus-cow-grazing-audit.json](mdpi-angus-cow-grazing-audit.json) cobre uma população de pastagem relevante e está disponível sob os termos indicados no manifesto. Contudo, não mede DMI total: ingestão de suplemento não é ingestão total de forragem. A variação de peso em 84 dias é um outcome descritivo distinto e não pode servir como rótulo de DMI. Por isso, esse conjunto é ineligível para o estimando, mesmo sendo útil como referência populacional.
 

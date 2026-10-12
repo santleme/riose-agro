@@ -225,6 +225,87 @@ SOURCES: list[dict[str, Any]] = [
     },
 ]
 
+# Keep each candidate from the existing pasture-DMI triage visible as its own
+# evaluated source. The shared audit path is paired with the source JSON
+# Pointer so citations and eligibility decisions remain attributable.
+SOURCES = [source for source in SOURCES if source["id"] != "public-pasture-dmi-unavailable"]
+TRIAGE_PATH = "docs/evidence/public-pasture-dmi-source-triage-2026-10.json"
+TRIAGE_CANDIDATES = [
+    {
+        "id": "pasture-dmi-triage-8262715", "doi": "10.21203/rs.3.rs-8262715/v1",
+        "name": "Statistical Methodologies for Prediction of Beef Cattle Pasture DMI",
+        "license": "CC BY 4.0 article license; individual records are confidential and not licensed for reuse.",
+        "population": "881 animals from 38 Brazilian studies; reported holdout is study-level.",
+        "units": "No reusable individual outcomes; article-level metrics are not source records.",
+        "dmiReason": "Data availability statement identifies confidential private records; the article license does not cover underlying observations.",
+        "adgReason": "No reusable individual ADG records or paired input rows were retrieved.",
+        "use": "Methods/literature context only; do not reconstruct records from tables or figures.",
+    },
+    {
+        "id": "pasture-dmi-triage-etd-13250", "doi": "10.33915/etd.13250",
+        "name": "Differences in DMI in Grazing and Drylot Beef Cattle",
+        "license": "No separate open-data license for underlying data found on repository record.",
+        "population": "163 beef cattle across four experimental groups and two grazing seasons.",
+        "units": "No openly licensed individual DMI records retrieved; pasture DMI described as LSTM-estimated.",
+        "dmiReason": "No openly licensed individual file; the pasture target described in the abstract is model-estimated rather than directly measured.",
+        "adgReason": "No reusable individual ADG records with paired predictors were retrieved.",
+        "use": "Literature context only; do not score as independent pasture DMI validation.",
+    },
+    {
+        "id": "pasture-dmi-triage-skab279", "doi": "10.1093/jas/skab279",
+        "name": "Herbage mass, genotype, and intake of beef cows on native grassland",
+        "license": "Open full-text article; no separate individual-data license located.",
+        "population": "24–36 adult multiparous Hereford, Angus, and crossbred cows across eight paddocks and six periods.",
+        "units": "Article-level intake estimated by n-alkane ratio; no reusable individual file retrieved.",
+        "dmiReason": "No reusable individual file or data-specific reuse terms; do not reconstruct observations from tables or figures.",
+        "adgReason": "Reported calf ADG is not the approved adult-cattle target; individual records were not retrieved.",
+        "use": "Peer-reviewed methods and population reference only.",
+    },
+    {
+        "id": "pasture-dmi-triage-skag054", "doi": "10.1093/jas/skag054",
+        "name": "Characterization of Individual Beef Cattle Water Intake",
+        "license": "CC BY-NC-ND 4.0 article license does not license underlying individual records.",
+        "population": "2,084 beef animals across two West Virginia sites, including grazing crossbred steers.",
+        "units": "Article reports daily DMI, body weight, and water records; no downloadable individual file retrieved.",
+        "dmiReason": "Publication summaries are not training records; data-specific reuse license and public deposit were not located.",
+        "adgReason": "No reusable ADG file or paired pasture covariates were located.",
+        "use": "Methods and cohort context only; revisit if a public data deposit and reuse terms appear.",
+    },
+    {
+        "id": "pasture-dmi-triage-skag133", "doi": "10.1093/jas/skag133",
+        "name": "Generalizable LSTM Models for Beef Cattle DMI Under Grazing",
+        "license": "CC BY-NC-ND 4.0 article license; underlying data is available only by author inquiry.",
+        "population": "Individual DMI, BW, water, and climate records across grazing/drylot cohorts, including West Virginia crossbred steers.",
+        "units": "Article describes daily records and animal-grouped partitions; no public individual file retrieved.",
+        "dmiReason": "Author-mediated access is not public reusable access; the article license does not license underlying records.",
+        "adgReason": "No public individual ADG file and aligned inputs were retrieved.",
+        "use": "Methods/benchmark context only; do not reproduce results from aggregate metrics as external validation.",
+    },
+    {
+        "id": "pasture-dmi-triage-1770302", "doi": "10.3389/fanim.2026.1770302",
+        "name": "Deployable DMI Prediction Using GPBoost, MLOps, and Flask",
+        "license": "Open access article; no separate data license or dataset deposit identified.",
+        "population": "Beef-cattle DMI cohorts; article reports animal-ID grouped train/validation/test partitions.",
+        "units": "Article-level model metrics only; no individual data file retrieved.",
+        "dmiReason": "No public individual-level dataset or data-specific reuse terms were identified.",
+        "adgReason": "No individual ADG target file is publicly available in the reviewed source.",
+        "use": "Peer-reviewed workflow/methods reference only; not external validation or calibration evidence.",
+    },
+]
+for candidate_index, candidate in enumerate(TRIAGE_CANDIDATES):
+    SOURCES.append({
+        "id": candidate["id"], "doi": candidate["doi"], "name": candidate["name"],
+        "manifest": None, "audit": TRIAGE_PATH,
+        "sourceAssessmentRef": f"{TRIAGE_PATH}#/sources/{candidate_index}",
+        "decisionRef": TRIAGE_PATH,
+        "access": "unavailable_or_not_reusable", "license": candidate["license"],
+        "population": candidate["population"], "units": candidate["units"],
+        "missingness": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "dmi": {"status": "ineligible", "trainable": False, "reason": candidate["dmiReason"]},
+        "adg": {"status": "ineligible", "trainable": False, "reason": candidate["adgReason"]},
+        "permissibleUse": candidate["use"],
+    })
+
 
 def read_json(path: Path) -> dict[str, Any]:
     with path.open(encoding="utf-8") as stream:
@@ -281,9 +362,10 @@ def build_record(source: dict[str, Any], read_reference=_read_source_reference) 
             "manifest": manifest_ref,
             "audit": audit_ref,
             "decision": source["decisionRef"],
+            "sourceAssessment": source.get("sourceAssessmentRef"),
         },
         "sourceIdentity": {
-            "doi": find_doi(manifest or audit),
+            "doi": source.get("doi") or find_doi(manifest or audit),
             "license": source.get("license"),
         },
         "access": source["access"],
@@ -304,7 +386,7 @@ def build_record(source: dict[str, Any], read_reference=_read_source_reference) 
     }
     # Keep references demonstrably live; the detailed reports remain canonical.
     for ref in result["references"].values():
-        if ref and not (ROOT / ref).is_file():
+        if ref and not (ROOT / ref.split("#", 1)[0]).is_file():
             # Fixture readers may supply virtual references without writing any
             # source data into the repository.
             if read_reference is _read_source_reference:
@@ -337,7 +419,7 @@ def build_readiness_report(
     ordered_sources = sorted(sources, key=lambda source: source["id"])
     records = [build_record(source, read_reference) for source in ordered_sources]
     input_paths = {
-        reference
+        reference.split("#", 1)[0]
         for record in records
         for reference in record["references"].values()
         if reference
@@ -398,7 +480,7 @@ def render_markdown(document: dict[str, Any]) -> str:
         "",
         "Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.",
         "",
-        f"**Entradas processadas:** {document['processing']['sourceCount']} fontes; {document['processing']['inputFileCount']} arquivos de entrada referenciados. **Tempo observado:** {document['processing']['elapsedSeconds']:.6f} s.",
+        f"**Processamento:** `sourceCount` = {document['processing']['sourceCount']}; `inputFileCount` = {document['processing']['inputFileCount']}; `elapsedSeconds` = {document['processing']['elapsedSeconds']:.6f} s (tempo observado).",
         "",
         "## Matriz",
         "",
@@ -438,7 +520,7 @@ def render_markdown(document: dict[str, Any]) -> str:
         "",
         "## Processamento",
         "",
-        f"Fontes: {document['processing']['sourceCount']}; arquivos de entrada referenciados: {document['processing']['inputFileCount']}; tempo observado: {document['processing']['elapsedSeconds']} s.",
+        f"`sourceCount` = {document['processing']['sourceCount']}; `inputFileCount` = {document['processing']['inputFileCount']}; `elapsedSeconds` = {document['processing']['elapsedSeconds']:.6f} s.",
         "",
         f"Gerado pelo script `{document['generator']}`; versão do schema: `{document['schemaVersion']}`.",
         "",

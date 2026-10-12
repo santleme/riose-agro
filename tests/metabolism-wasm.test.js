@@ -70,7 +70,9 @@ test('WASM validates counts and output capacity before calling the ABI or changi
     assert.throws(()=>kernel(new Float64Array(4),1.5,output),/invalid metabolism animal count/);
     assert.throws(()=>kernel(new Float64Array(4),100_001,output),/invalid metabolism animal count/);
     assert.throws(()=>kernel(new Float64Array(3),1,output),/input buffer is too small/);
-    assert.throws(()=>kernel(new Float64Array(4),1,new Float64Array(1)),/output buffer is too small/);
+    const shortOutput=new Float64Array([99]);
+    assert.throws(()=>kernel(new Float64Array(4),1,shortOutput),/output buffer is too small/);
+    assert.deepEqual(Array.from(shortOutput),[99]);
     assert.deepEqual(Array.from(output),[71,72,73]);
     assert.equal(fixture.allocations.length,0);
     kernel.dispose();
@@ -82,15 +84,17 @@ test('WASM capacity grows geometrically, reuses buffers, and recovers after disp
   await withInstantiatedFixture(fixture,async()=>{
     const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
     const input=count=>Float64Array.from({length:count*4},(_,index)=>index);
-    assert.deepEqual(Array.from(kernel(input(2))).slice(0,2),[1,3]);
+    assert.deepEqual(Array.from(kernel(input(2))),[1,3,5,7]);
     assert.equal(fixture.allocations.length,2);
-    kernel(input(1));
+    assert.deepEqual(Array.from(kernel(input(1))),[1,3]);
     assert.equal(fixture.allocations.length,2,'capacity is reused while the batch fits');
-    kernel(input(3));
+    assert.deepEqual(Array.from(kernel(input(3))),[1,3,5,7,9,11]);
     assert.equal(fixture.allocations.length,4,'capacity grows only when required');
     assert.equal(fixture.releases.length,2,'old buffers are released after successful growth');
     kernel.dispose();
     assert.equal(fixture.releases.length,4);
+    kernel.dispose();
+    assert.equal(fixture.releases.length,4,'dispose is idempotent');
     kernel(input(1));
     assert.equal(fixture.allocations.length,6,'disposed kernels allocate again on next use');
     kernel.dispose();
@@ -134,6 +138,20 @@ test('WASM reports allocation, fetch, compilation, export, and ABI failures clea
     [createWasmFixture({missingExport:'riose_update_metabolism_batch'}),/exports do not match riose-core ABI/],
     [createWasmFixture({abiVersion:2}),/exports do not match riose-core ABI/],
   ])await withInstantiatedFixture(fixture,async()=>assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),pattern));
+});
+
+test('failed capacity growth preserves the previous buffers and keeps them usable',async()=>{
+  const fixture=createWasmFixture({allocateFailureAt:4});
+  await withInstantiatedFixture(fixture,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const input=count=>Float64Array.from({length:count*4},(_,index)=>index);
+    assert.deepEqual(Array.from(kernel(input(2))),[1,3,5,7]);
+    assert.throws(()=>kernel(input(3)),/could not allocate metabolism buffers for 4 animals/);
+    assert.equal(fixture.releases.length,1,'only the partially allocated growth buffer is released');
+    assert.deepEqual(Array.from(kernel(input(2))),[1,3,5,7],'old capacity remains live after failed growth');
+    kernel.dispose();
+    assert.equal(fixture.releases.length,3,'the original pair is released on dispose');
+  });
 });
 
 test('WASM-backed ticks and comparison replay match the original JavaScript engine',()=>{

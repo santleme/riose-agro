@@ -39,6 +39,7 @@ def validate(report: dict[str, Any]) -> None:
         matrix_doc = json.load(stream)
     require(matrix_doc.get("schemaVersion") == matrix.get("schemaVersion"), "matrix schema mismatch")
     require(matrix_doc.get("processing", {}).get("sourceCount") == matrix.get("reviewedSourceCount"), "matrix source count mismatch")
+    require(len(matrix_doc.get("sources", [])) == matrix.get("reviewedSourceCount"), "matrix source array count mismatch")
 
     candidates = report.get("candidateEvidence", [])
     require(candidates, "candidateEvidence must be non-empty")

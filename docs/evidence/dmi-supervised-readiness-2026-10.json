@@ -30,7 +30,7 @@
   "reviewedMatrix": {
     "path": "docs/evidence/dmi-adg-readiness-v1.json",
     "schemaVersion": "riose.dmi-adg-readiness/v1",
-    "reviewedSourceCount": 10,
+    "reviewedSourceCount": 15,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
     "ineligibleOrUnavailableSourcesForTarget": 10

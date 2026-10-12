@@ -37,11 +37,43 @@ test('BR-CORTE 2023 Eq. 2.6 reproduces Table 2.14 worked example', () => {
 });
 
 test('equation input and output units and evidence metadata are explicit', () => {
+  assert.deepEqual(BR_CORTE_PASTURE_DMI.validatedDomain, {
+    bodyWeightKg: table214.domainAssumptions.bodyWeightKg,
+    adgKgPerDay: table214.domainAssumptions.adgKgPerDay,
+    supplementKgDMPerDay: table214.domainAssumptions.supplementKgDMPerDay,
+    productionSystem: 'growing Zebu cattle grazing tropical pasture with supplementation'
+  });
+  assert.equal(BR_CORTE_PASTURE_DMI.units.bodyWeightKg, table214.inputs.bodyWeightKg.unit);
+  assert.equal(BR_CORTE_PASTURE_DMI.units.adgKgPerDay, table214.inputs.adgKgPerDay.unit);
+  assert.equal(BR_CORTE_PASTURE_DMI.units.supplementKgDMPerDay, table214.inputs.supplementKgDMPerDay.unit);
+  assert.equal(BR_CORTE_PASTURE_DMI.units.dmiKgDMPerDay, table214.expected.unit);
   const result = predictPastureDmi({bodyWeightKg: 300, adgKgPerDay: 0.5, supplementKgDMPerDay: 1});
-  assert.equal(BR_CORTE_PASTURE_DMI.units.dmiKgDMPerDay, 'kg DM/day');
   assert.equal(BR_CORTE_PASTURE_DMI.rSquared, 0.638);
   assert.equal(result.supplementKgDMPerDay, 1);
   assert.ok(Math.abs(result.totalDmiKgDMPerDay - result.residualForageDmiKgDMPerDay - 1) < 1e-12);
+});
+
+test('reference vector pins each transcribed BR-CORTE term and its rounded table output', () => {
+  const {bodyWeightKg, adgKgPerDay, supplementKgDMPerDay} = Object.fromEntries(
+    Object.entries(table214.inputs).map(([key, input]) => [key, input.value])
+  );
+  const coefficients = table214.equation.coefficients;
+  const metabolicWeight = bodyWeightKg ** 0.75;
+  const terms = {
+    bodyWeightMetabolicKg075: metabolicWeight,
+    supplementTermKgDMPerDay: coefficients.supplement * supplementKgDMPerDay,
+    bodyWeightTermKgDMPerDay: coefficients.metabolicBodyWeight * metabolicWeight,
+    adgTermKgDMPerDay: coefficients.adg * adgKgPerDay,
+    squaredAdgTermKgDMPerDay: coefficients.squaredAdg * adgKgPerDay ** 2
+  };
+  for (const [key, value] of Object.entries(terms)) {
+    assert.ok(Math.abs(value - table214.intermediates[key].value) < 1e-12, `${key} must match the frozen transcription`);
+  }
+  const transcribedOutput = coefficients.intercept + terms.supplementTermKgDMPerDay
+    + terms.bodyWeightTermKgDMPerDay + terms.adgTermKgDMPerDay + terms.squaredAdgTermKgDMPerDay;
+  assert.ok(Math.abs(transcribedOutput - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
+  const result = predictPastureDmi({bodyWeightKg, adgKgPerDay, supplementKgDMPerDay});
+  assert.ok(Math.abs(result.totalDmiKgDMPerDay - table214.expected.calculatedTotalDmiKgDMPerDay) < 1e-12);
 });
 
 test('invalid mathematical inputs and nonpositive BW are rejected', () => {
