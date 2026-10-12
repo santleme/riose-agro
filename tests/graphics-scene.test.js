@@ -42,6 +42,39 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
   assert.equal(validate(rendererCoupled), false, 'renderer implementation details must stay out of scenario JSON');
 });
 
+test('both farm layouts fence every pasture and keep blocking structures collision-free', () => {
+  for (const candidate of [scene, dairyScene]) {
+    const pastureZones = candidate.zones.filter(zone => zone.kind === 'pasture');
+    assert.ok(pastureZones.length >= 2);
+    for (const zone of pastureZones) {
+      const local = candidate.prefabs.filter(prefab => prefab.position.x >= zone.origin.x - 0.01
+        && prefab.position.x <= zone.origin.x + zone.footprint.columns
+        && prefab.position.y >= zone.origin.y - 0.01
+        && prefab.position.y <= zone.origin.y + zone.footprint.rows);
+      assert.ok(local.some(prefab => prefab.assetId === 'fence-straight'), `${zone.zoneId} needs fence runs`);
+      assert.ok(local.some(prefab => prefab.assetId === 'fence-gate'), `${zone.zoneId} needs an access gate`);
+      for (const side of ['north', 'south', 'west', 'east']) {
+        const run = candidate.prefabs.filter(prefab => prefab.prefabId.startsWith(zone.zoneId + '-' + side + '-'))
+          .sort((a, b) => (side === 'north' || side === 'south' ? a.position.x - b.position.x : a.position.y - b.position.y));
+        assert.ok(run.length >= 2, `${zone.zoneId} ${side} fence needs connected segments`);
+        assert.ok(run.every((prefab, index) => index === 0
+          || (side === 'north' || side === 'south' ? prefab.position.x - run[index - 1].position.x : prefab.position.y - run[index - 1].position.y) <= 1.75), `${zone.zoneId} ${side} fence has a visual gap`);
+        assert.ok(run.every(prefab => prefab.rotationDegrees === 0), `${zone.zoneId} fence pieces follow the isometric source art orientation`);
+        assert.ok(run.every(prefab => Boolean(prefab.flipX) === (side === 'west' || side === 'east')), `${zone.zoneId} ${side} fence uses the matching isometric edge direction`);
+      }
+    }
+    const blocking = candidate.prefabs.filter(prefab => prefab.blocking !== false);
+    for (let first = 0; first < blocking.length; first++) for (let second = first + 1; second < blocking.length; second++) {
+      const a = blocking[first], b = blocking[second];
+      const overlap = a.position.x < b.position.x + b.footprint.columns
+        && a.position.x + a.footprint.columns > b.position.x
+        && a.position.y < b.position.y + b.footprint.rows
+        && a.position.y + a.footprint.rows > b.position.y;
+      assert.equal(overlap, false, `${candidate.sceneId}: ${a.prefabId} overlaps ${b.prefabId}`);
+    }
+  }
+});
+
 test('isometric projection and inverse preserve editable grid positions', () => {
   for (const cell of [{x: 0, y: 0}, {x: 4.25, y: 7.75}, {x: 14, y: 10}]) {
     const projected = projectIso(cell.x, cell.y, 64, 32);
@@ -101,10 +134,12 @@ test('placement rules enforce allowed zones, adjacency and alignment; compositio
 test('prefab distribution is deterministic, stays inside the pasture, and avoids overlaps', () => {
   const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
   const paddock = scene.zones.find(zone => zone.kind === 'pasture');
-  const first = distributePrefab(template, paddock, 14, 10, scene.prefabs);
-  const second = distributePrefab(template, paddock, 14, 10, scene.prefabs);
+  const first = distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed);
+  const second = distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed);
   assert.ok(first.length > 0);
   assert.deepEqual(first, second);
+  assert.notDeepEqual(first, distributePrefab(template, paddock, 14, 10, scene.prefabs, 3, scene.simulation.seed + 1));
+  assert.ok(first.some(prefab => prefab.position.x % 1 !== 0 || prefab.position.y % 1 !== 0), 'seeded placement should not form a fixed integer grid');
   for (const prefab of first) {
     assert.ok(prefab.position.x > paddock.origin.x);
     assert.ok(prefab.position.y > paddock.origin.y);
@@ -117,6 +152,7 @@ test('zone ground selection exposes terrain transition cells for auto-tiling', (
   assert.equal(cells.length, scene.projection.columns * scene.projection.rows);
   assert.ok(north.some(cell => cell.assetId === 'grass-mid'), 'edge mask resolves the declared transition asset');
   assert.ok(north.some(cell => cell.assetId === 'grass-light'), 'interior keeps the zone ground asset');
+  assert.ok(cells.some(cell => cell.zoneId === null && cell.transitionZoneId === 'north-paddock' && cell.assetId === 'grass-mid'), 'terrain transition extends one cell beyond the zone boundary');
   assert.ok(cells.some(cell => cell.zoneId === 'handling-yard' && cell.assetId === 'soil-dry'));
 });
 

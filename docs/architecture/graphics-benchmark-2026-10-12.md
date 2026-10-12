@@ -30,3 +30,9 @@ This run does **not** show a PixiJS performance win. In this software-rendered, 
 Post-GC heap was about 2.6 MB for Canvas and 17.3 MB for Pixi at 10,000 animals. Heap is measured in separate fresh page contexts so Pixi's scene and library allocations do not contaminate Canvas measurements. Image load and Pixi initialization are reported separately above and are one-time startup costs. Chromium does not expose GPU texture memory through this harness, so no GPU memory figure is claimed.
 
 This is one exploratory pass on SwiftShader, not a device-level performance sign-off. Repeat on supported hardware with representative released assets, several repetitions, and production camera workloads. Keep Canvas as the product default until those measurements show a repeatable Pixi advantage.
+
+## Scene refinement check
+
+After adding connected pasture fences and avoiding transform/bounds work for untransformed sprites, the same harness was run at zoom 3.2× with two fresh-page repetitions, 400 ms warm-up and 1,000 ms capture for 1,000 and 10,000 animals. Canvas measured 121.0 FPS / 14.7 ms Worker round-trip at 1,000 and 37.0 FPS / 85.5 ms at 10,000. At 10,000, 4,643 animals remained visible and accounted for, represented by 2,065 animal draw units and 81 far-herd clusters. Post-GC heap was 2.8 MB; scene-update and render-submission medians were 9.2 ms and 5.1 ms.
+
+Pixi measured 4.4 FPS / 243 ms Worker round-trip at 1,000 and collected no complete RAF interval in either 1-second 10,000-animal sample; the harness therefore reports 0 FPS for that case. Its 10,000-animal Worker round-trip median was 1,717.8 ms and post-GC JS heap was 16.8 MB. This short check confirms the existing renderer decision: Canvas remains default and Pixi stays opt-in. It is an exploratory regression check, not a replacement for the longer two-repetition table above or a supported-device performance sign-off.

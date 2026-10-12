@@ -82,16 +82,30 @@ export function composePrefabs(recipe, origin, columns, rows, others = []) {
   return {valid: true, reason: null, prefabs};
 }
 
-export function distributePrefab(prefabTemplate, zone, columns, rows, others = [], spacing = 3) {
-  const placed = [], occupants = [...others];
-  for (let y = zone.origin.y + 1; y < zone.origin.y + zone.footprint.rows - 1; y += spacing) {
-    for (let x = zone.origin.x + 1; x < zone.origin.x + zone.footprint.columns - 1; x += spacing) {
-      const prefabId = `${prefabTemplate.assetId}-auto-${x}-${y}`;
-      if (occupants.some(item => item.prefabId === prefabId)) continue;
-      const prefab = {...prefabTemplate, prefabId, position: {x, y, unit: 'grid-cell'}};
-      if (!placementFits(prefab, prefab.position, columns, rows, occupants)) continue;
-      placed.push(prefab); occupants.push(prefab);
-    }
+export function distributePrefab(prefabTemplate, zone, columns, rows, others = [], spacing = 3, seed = 20261012) {
+  const placed = [], occupants = [...others], footprint = prefabTemplate.footprint;
+  const minX = zone.origin.x + 0.75, minY = zone.origin.y + 0.75;
+  const maxX = zone.origin.x + zone.footprint.columns - footprint.columns - 0.25;
+  const maxY = zone.origin.y + zone.footprint.rows - footprint.rows - 0.25;
+  if (maxX < minX || maxY < minY) return placed;
+
+  let state = 2166136261;
+  for (const character of `${seed}:${zone.zoneId}:${prefabTemplate.assetId}`) state = Math.imul(state ^ character.charCodeAt(0), 16777619) >>> 0;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const area = Math.max(1, (maxX - minX + footprint.columns) * (maxY - minY + footprint.rows));
+  const target = Math.max(1, Math.floor(area / (spacing * spacing)));
+  const minimumDistance = Math.max(1.25, spacing * 0.72);
+  const candidates = [];
+  for (let attempt = 0; attempt < target * 80; attempt++) {
+    const x = Math.round((minX + random() * (maxX - minX)) * 4) / 4;
+    const y = Math.round((minY + random() * (maxY - minY)) * 4) / 4;
+    if (candidates.some(point => Math.hypot(point.x - x, point.y - y) < minimumDistance)) continue;
+    const prefabId = `${prefabTemplate.assetId}-auto-${zone.zoneId}-${seed}-${attempt}`;
+    if (occupants.some(item => item.prefabId === prefabId)) continue;
+    const prefab = {...prefabTemplate, prefabId, position: {x, y, unit: 'grid-cell'}};
+    if (!placementFits(prefab, prefab.position, columns, rows, occupants)) continue;
+    candidates.push({x, y}); placed.push(prefab); occupants.push(prefab);
+    if (placed.length >= target) break;
   }
   return placed;
 }
@@ -102,10 +116,17 @@ export function terrainCells(scene) {
     const zone = scene.zones.find(item => column >= item.origin.x && row >= item.origin.y && column < item.origin.x + item.footprint.columns && row < item.origin.y + item.footprint.rows);
     let assetId = zone?.groundAssetId ?? 'grass-light';
     if (zone) {
-      const edges = (column === zone.origin.x || column === zone.origin.x + zone.footprint.columns - 1 || row === zone.origin.y || row === zone.origin.y + zone.footprint.rows - 1);
+      const horizontalEdge = zone.footprint.columns > 2 && (column === zone.origin.x || column === zone.origin.x + zone.footprint.columns - 1);
+      const verticalEdge = zone.footprint.rows > 2 && (row === zone.origin.y || row === zone.origin.y + zone.footprint.rows - 1);
+      const edges = horizontalEdge || verticalEdge;
       if (edges && zone.transitionAssetIds?.edge) assetId = zone.transitionAssetIds.edge;
+    } else {
+      const transition = scene.zones.find(item => item.transitionAssetIds?.edge
+        && column >= item.origin.x - 1 && row >= item.origin.y - 1
+        && column <= item.origin.x + item.footprint.columns && row <= item.origin.y + item.footprint.rows);
+      if (transition) assetId = transition.transitionAssetIds.edge;
     }
-    cells.push({column, row, assetId, zoneId: zone?.zoneId ?? null});
+    cells.push({column, row, assetId, zoneId: zone?.zoneId ?? null, transitionZoneId: !zone && assetId !== 'grass-light' ? scene.zones.find(item => item.transitionAssetIds?.edge === assetId && column >= item.origin.x - 1 && row >= item.origin.y - 1 && column <= item.origin.x + item.footprint.columns && row <= item.origin.y + item.footprint.rows)?.zoneId ?? null : null});
   }
   return cells;
 }

@@ -10,10 +10,17 @@ const frames = {
   'grass-light': {x: 0, y: 0, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'terrain'},
   'grass-mid': {x: 384, y: 0, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'terrain'},
   'soil-dry': {x: 768, y: 0, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'terrain'},
+  'road-straight': {x: 0, y: 256, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'infrastructure'},
+  'road-turn': {x: 384, y: 256, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'infrastructure'},
   'fence-straight': {x: 768, y: 256, w: 384, h: 256, anchor: {x: .5, y: .86}, scale: .22, kind: 'infrastructure'},
+  'fence-gate': {x: 1152, y: 256, w: 384, h: 256, anchor: {x: .5, y: .86}, scale: .22, kind: 'infrastructure'},
   'shade-tree': {x: 0, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .22, kind: 'infrastructure'},
+  'fruit-tree': {x: 384, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .2, kind: 'infrastructure'},
+  'shrub': {x: 768, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .16, kind: 'infrastructure'},
   'pond': {x: 1152, y: 512, w: 384, h: 256, anchor: {x: .5, y: .78}, scale: .24, kind: 'infrastructure'},
   'farmhouse': {x: 0, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .28, kind: 'infrastructure'},
+  'farm-shed': {x: 384, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .25, kind: 'infrastructure'},
+  'grain-silo': {x: 768, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .22, kind: 'infrastructure'},
   'nelore-adult': {x: 0, y: 0, w: 1536, h: 1024, anchor: {x: .5, y: 1}, scale: .04, kind: 'livestock'},
   'nelore-adult-low': {x: 0, y: 0, w: 384, h: 256, anchor: {x: .5, y: 1}, scale: .16, kind: 'livestock', lowResolution: true},
   'dairy-holstein-cow': {imageKey: 'dairy-holstein-cow', w: 1087, h: 771, anchor: {x: .5, y: 1}, scale: .045, kind: 'livestock'},
@@ -107,13 +114,26 @@ function visualJitter(seed, range) {
 }
 
 function screenPoint(x, y) { return {x: state.camera.x + x * state.camera.zoom, y: state.camera.y + y * state.camera.zoom}; }
+function prefabRotation(entry) {
+  return Number.isFinite(entry.prefab?.rotationDegrees)
+    ? entry.prefab.rotationDegrees * Math.PI / 180
+    : ((entry.prefab?.rotationSteps ?? 0) % 4) * Math.PI / 2;
+}
+function prefabFlipX(entry) { return Boolean(entry.prefab?.flipX); }
 
 function screenBounds(entry) {
   const meta = frameBox(entry.assetId), p = screenPoint(entry.x, entry.y);
   const width = meta.w * meta.scale * state.camera.zoom, height = meta.h * meta.scale * state.camera.zoom;
-  const left = p.x - width * meta.anchor.x, motionEnvelope = entry.animalId ? .55 * state.camera.zoom : 0;
-  const top = p.y - height * meta.anchor.y - motionEnvelope;
-  return {left, top, right: left + width, bottom: top + height + motionEnvelope * 2};
+  const rotation = prefabRotation(entry), flip = prefabFlipX(entry) ? -1 : 1;
+  const motionEnvelope = entry.animalId ? .55 * state.camera.zoom : 0;
+  if (rotation === 0 && flip === 1) {
+    const left = p.x - width * meta.anchor.x, top = p.y - height * meta.anchor.y;
+    return {left, top: top - motionEnvelope, right: left + width, bottom: top + height + motionEnvelope};
+  }
+  const cos = Math.cos(rotation), sin = Math.sin(rotation);
+  const corners = [[-width * meta.anchor.x, -height * meta.anchor.y], [width * (1 - meta.anchor.x), -height * meta.anchor.y], [-width * meta.anchor.x, height * (1 - meta.anchor.y)], [width * (1 - meta.anchor.x), height * (1 - meta.anchor.y)]]
+    .map(([x, y]) => ({x: p.x + x * flip * cos - y * sin, y: p.y + x * flip * sin + y * cos}));
+  return {left: Math.min(...corners.map(point => point.x)), top: Math.min(...corners.map(point => point.y)) - motionEnvelope, right: Math.max(...corners.map(point => point.x)), bottom: Math.max(...corners.map(point => point.y)) + motionEnvelope};
 }
 
 function isVisible(entry) {
@@ -160,16 +180,23 @@ function frameBox(assetId) { return frames[assetId] ?? frames['grass-light']; }
 function drawCanvasEntry(ctx, entry, time) {
   const meta = frameBox(entry.assetId), atlas = meta.imageKey ? state.assetImages[meta.imageKey] : meta.atlasKey ? state.assetImages[meta.atlasKey] : meta.kind === 'livestock' ? (meta.lowResolution ? state.assetImages.neloreLow : state.assetImages.nelore) : state.assetImages.farm;
   const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), scale = meta.scale * state.camera.zoom, width = meta.w * scale, height = meta.h * scale;
-  const x = p.x - width * meta.anchor.x, y = p.y - height * meta.anchor.y;
-  if (meta.imageKey) ctx.drawImage(atlas, x, y, width, height);
-  else ctx.drawImage(atlas, meta.x, meta.y, meta.w, meta.h, x, y, width, height);
+  const x = -width * meta.anchor.x, y = -height * meta.anchor.y, rotation = prefabRotation(entry);
+  const screenY = p.y + y;
+  if (rotation !== 0 || prefabFlipX(entry)) {
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(rotation); if (prefabFlipX(entry)) ctx.scale(-1, 1);
+    if (meta.imageKey) ctx.drawImage(atlas, x, y, width, height);
+    else ctx.drawImage(atlas, meta.x, meta.y, meta.w, meta.h, x, y, width, height);
+    ctx.restore();
+  } else if (meta.imageKey) ctx.drawImage(atlas, p.x + x, p.y + y, width, height);
+  else ctx.drawImage(atlas, meta.x, meta.y, meta.w, meta.h, p.x + x, p.y + y, width, height);
   if (entry.kind === 'herd-cluster' && state.activeLayers.overlays) {
     const label = entry.count.toLocaleString('pt-BR'); ctx.font = 'bold 11px system-ui';
-    const badgeWidth = Math.max(28, ctx.measureText(label).width + 12), badgeX = p.x - badgeWidth / 2, badgeY = y + height * .42;
+    const badgeWidth = Math.max(28, ctx.measureText(label).width + 12), badgeX = p.x - badgeWidth / 2, badgeY = screenY + height * .42;
     ctx.fillStyle = '#173e32'; ctx.fillRect(badgeX, badgeY, badgeWidth, 19); ctx.fillStyle = '#f7f4dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, badgeY + 9.5);
   }
   if (state.selection === entry.id && state.activeLayers.overlays) {
-    ctx.strokeStyle = '#fff0a6'; ctx.lineWidth = 2; ctx.strokeRect(x - 4, y - 4, width + 8, height + 8);
+    const bounds = screenBounds(entry);
+    ctx.strokeStyle = '#fff0a6'; ctx.lineWidth = 2; ctx.strokeRect(bounds.left - 4, bounds.top - 4, bounds.right - bounds.left + 8, bounds.bottom - bounds.top + 8);
   }
 }
 
@@ -291,8 +318,8 @@ let PixiGraphics;
 function awaitGraphics() { return PixiGraphics; }
 
 function setSprite(sprite, entry, terrain) {
-  const meta = frameBox(entry.assetId); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(meta.scale);
-  sprite.position.set(entry.x, entry.y + (entry.animationOffset ?? 0)); sprite.zIndex = entry.depth; sprite.visible = true; sprite.renderable = true;
+  const meta = frameBox(entry.assetId); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(meta.scale * (prefabFlipX(entry) ? -1 : 1), meta.scale);
+  sprite.position.set(entry.x, entry.y + (entry.animationOffset ?? 0)); sprite.rotation = prefabRotation(entry); sprite.zIndex = entry.depth; sprite.visible = true; sprite.renderable = true;
   if (!terrain) sprite.eventMode = 'none';
 }
 
@@ -462,7 +489,7 @@ function distributeShade() {
   const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
   const placed = [];
   for (const zone of state.scene.zones.filter(item => item.kind === 'pasture')) {
-    placed.push(...distributePrefab(template, zone, state.scene.projection.columns, state.scene.projection.rows, [...state.scene.prefabs, ...placed]));
+    placed.push(...distributePrefab(template, zone, state.scene.projection.columns, state.scene.projection.rows, [...state.scene.prefabs, ...placed], 3, state.scene.simulation.seed));
   }
   if (!placed.length) { $('scene-status').textContent = 'Não há posições livres para distribuir árvores nos piquetes.'; return; }
   state.scene.prefabs.push(...placed); persistScene(); refreshScene(); updateHud();
