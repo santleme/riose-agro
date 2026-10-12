@@ -20,24 +20,22 @@ As classificações permitidas são:
 
 ## Escopo de domínio das variáveis
 
-O snapshot pode incluir `variableClassification`, um catálogo opcional e versionado separado do status de evidência (`observed`, `derived` etc.). Na versão `1.0.0`, `variables` associa IDs estáveis de variáveis a `farm`, `lot` ou `animal`; por exemplo, clima é da fazenda, dieta/cocho/densidade são do lote, e peso/idade/categoria são do animal. O schema e o validador semântico rejeitam versões, IDs e níveis inválidos. Essa metadata descreve o domínio do dado e não altera fórmulas ou o engine.
+O snapshot pode incluir `variableClassification`, um catálogo opcional e versionado separado do status de evidência (`observed`, `derived` etc.). Na versão `1.0.0`, `variables` associa IDs estáveis a `farm`, `lot` ou `animal`; por exemplo, clima é da fazenda, dieta/cocho/densidade são do lote, e peso/idade/categoria são do animal. Um campo classificado aponta para um desses IDs com `variableId`. O schema valida o formato e os níveis; o validador semântico exige que cada referência exista no catálogo e que cada entrada do catálogo seja usada por ao menos um campo. Essa metadata descreve o domínio do dado e não altera fórmulas ou o engine.
 
-Campos sem uma entrada no catálogo permanecem **não classificados**. Não se deve inferir o nível pelo nome do campo, por sua posição no JSON ou pela entidade que o contém; classifique-o somente quando houver uma decisão explícita. Como o catálogo é opcional, snapshots anteriores continuam válidos sem migração. Um snapshot novo pode declarar, por exemplo:
+Campos sem `variableId` permanecem **não classificados**. Não se deve inferir o nível pelo nome do campo, por sua posição no JSON ou pela entidade que o contém; classifique-o somente quando houver uma decisão explícita. Como o catálogo e `variableId` são opcionais, snapshots anteriores continuam válidos sem migração. Exemplo de fragmentos para classificar a categoria do animal:
 
 ```json
 {
   "variableClassification": {
     "version": "1.0.0",
-    "variables": {
-      "climate": "farm",
-      "diet": "lot",
-      "feed_bunk": "lot",
-      "stocking_density": "lot",
-      "weight_kg": "animal",
-      "age_days": "animal",
-      "category": "animal"
+    "variables": {"category": "animal"}
+  },
+  "animals": [{
+    "category": {
+      "path": "animal.eartag-242.category",
+      "variableId": "category"
     }
-  }
+  }]
 }
 ```
 

@@ -42,16 +42,16 @@ test('snapshot accepts optional versioned variable domain classification', () =>
   assert.equal(validateSchema(legacy), true, JSON.stringify(validateSchema.errors));
   assert.equal(validateFarmSnapshot(legacy).semanticValid, true);
 
+  const referenceWithoutCatalog = structuredClone(legacy);
+  referenceWithoutCatalog.animals[0].category.variableId = 'category';
+  assert.equal(validateSchema(referenceWithoutCatalog), true);
+  assert.ok(validateFarmSnapshot(referenceWithoutCatalog).errors.some(message => message.includes('não existe em variableClassification.variables')));
+
   const classified = structuredClone(legacy);
+  classified.animals[0].category.variableId = 'category';
   classified.variableClassification = {
     version: '1.0.0',
     variables: {
-      climate: 'farm',
-      diet: 'lot',
-      feed_bunk: 'lot',
-      stocking_density: 'lot',
-      weight_kg: 'animal',
-      age_days: 'animal',
       category: 'animal',
     },
   };
@@ -72,6 +72,16 @@ test('snapshot accepts optional versioned variable domain classification', () =>
   invalidId.variableClassification.variables['1-invalid'] = 'animal';
   assert.equal(validateSchema(invalidId), false);
   assert.ok(validateFarmSnapshot(invalidId).errors.some(message => message.includes('id de variável inválido')));
+
+  const unknownReference = structuredClone(classified);
+  unknownReference.animals[0].category.variableId = 'not-listed';
+  assert.equal(validateSchema(unknownReference), true);
+  assert.ok(validateFarmSnapshot(unknownReference).errors.some(message => message.includes('não existe em variableClassification.variables')));
+
+  const unreferencedVariable = structuredClone(classified);
+  unreferencedVariable.variableClassification.variables.diet = 'lot';
+  assert.equal(validateSchema(unreferencedVariable), true);
+  assert.ok(validateFarmSnapshot(unreferencedVariable).errors.some(message => message.includes('precisa ser referenciada por ao menos um campo')));
 });
 
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {

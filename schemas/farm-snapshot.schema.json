@@ -161,6 +161,7 @@
         "sourceLocator": {"type": "string", "minLength": 1},
         "populationValidity": {"type": "string", "minLength": 1},
         "period": {"type": "string"},
+        "variableId": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"},
         "missingReason": {"type": "string"},
         "measurementId": {"type": "string", "minLength": 1},
         "observedAt": {"type": ["string", "null"], "format": "date-time"},

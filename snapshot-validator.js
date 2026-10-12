@@ -27,6 +27,31 @@ function validateVariableClassification(snapshot, errors) {
   }
 }
 
+function validateFieldVariableReferences(snapshot, fields, errors) {
+  const variables = isRecord(snapshot.variableClassification?.variables)
+    ? snapshot.variableClassification.variables
+    : null;
+  const referencedVariables = new Set();
+
+  for (const field of fields) {
+    if (!Object.hasOwn(field, 'variableId')) continue;
+    const variableId = field.variableId;
+    if (typeof variableId !== 'string' || !/^[a-z][a-z0-9_.-]*$/.test(variableId)) {
+      errors.push(`${field.path}: variableId inválido.`);
+    } else if (!variables || !Object.hasOwn(variables, variableId)) {
+      errors.push(`${field.path}: variableId '${variableId}' não existe em variableClassification.variables.`);
+    } else {
+      referencedVariables.add(variableId);
+    }
+  }
+
+  for (const variableId of Object.keys(variables ?? {})) {
+    if (!referencedVariables.has(variableId)) {
+      errors.push(`variableClassification.${variableId} precisa ser referenciada por ao menos um campo.`);
+    }
+  }
+}
+
 function uniqueIds(items, label, errors) {
   if (!Array.isArray(items)) {
     errors.push(`${label} precisa ser uma lista.`);
@@ -254,6 +279,7 @@ export function validateFarmSnapshot(snapshot) {
     observations: Array.isArray(snapshot.observations) ? snapshot.observations : undefined,
   };
   const fields = collectFields(safeSnapshot, sourcesById, errors);
+  validateFieldVariableReferences(snapshot, fields, errors);
   validateMeasurementSeries(safeSnapshot.observations ?? [], errors);
   const byPath = new Map();
   const observationSet = new Set(safeSnapshot.observations ?? []);
