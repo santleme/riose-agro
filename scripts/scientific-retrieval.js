@@ -98,9 +98,11 @@ export function searchScientificSources(query, corpus, {topK = 5} = {}) {
 
   results.sort((left, right) =>
     right.score.value - left.score.value ||
-    compareText(left.source_id, right.source_id) ||
+    compareText(left.location.path, right.location.path) ||
     left.location.start_line - right.location.start_line ||
-    left.location.end_line - right.location.end_line,
+    left.location.end_line - right.location.end_line ||
+    compareText(left.source_id, right.source_id) ||
+    compareText(left.snippet, right.snippet),
   );
   return results.slice(0, topK);
 }

@@ -29,6 +29,16 @@ test('retrieval is deterministic across corpus order and breaks ties by source a
   assert.deepEqual(searchScientificSources(query, corpus), searchScientificSources(query, [...corpus].reverse()));
 });
 
+test('score ties follow source paths even when source IDs sort in the opposite order', () => {
+  const docs = [
+    {source_id: 'z-source', path: 'docs/a.md', content: 'Pasture intake in source A.'},
+    {source_id: 'a-source', path: 'docs/z.md', content: 'Pasture intake in source Z.'},
+  ];
+
+  assert.equal(searchScientificSources('pasture intake', docs, {topK: 1})[0].location.path, 'docs/a.md');
+  assert.deepEqual(searchScientificSources('pasture intake', docs), searchScientificSources('pasture intake', [...docs].reverse()));
+});
+
 test('retrieval returns no results for empty or unmatched queries', () => {
   assert.deepEqual(searchScientificSources('unavailable terminology', corpus), []);
   assert.deepEqual(searchScientificSources('   ', corpus), []);
