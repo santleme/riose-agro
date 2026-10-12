@@ -58,3 +58,7 @@ One short validation used the same headless Chrome 156/SwiftShader environment, 
 | PixiJS | 10,000 | 11.8 | 100.0 ms | 7.4 ms | 0.3 ms | 293.5 | 109.4 ms | 8.5 MB |
 
 This one-repetition run is exploratory, not a release benchmark. Its visibility count is intentionally lower than the 4,643 map-centered count above because the close-up is focused on one animal rather than showing the whole map. It demonstrates correct camera focus, culling accounting, LOD tiering and stable representation; it does not provide a directly comparable performance delta against older runs with different camera targets.
+
+## 100,000-animal boundary check
+
+The existing browser benchmark was also invoked with `BENCH_HERDS=100000`, one repeat, an 800 ms capture, and the 3.2× close-up camera. It stopped during Worker reset with `Animal count must be 1–10000`, before either renderer produced a sample. The application and simulation currently support up to 10,000 animals; this attempt gives no evidence about 100,000-animal rendering performance. Keep 100,000 out of renderer comparisons until the simulation's supported population limit is deliberately expanded and its memory and tick costs are measured separately.
