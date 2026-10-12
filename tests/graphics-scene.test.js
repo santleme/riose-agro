@@ -114,6 +114,16 @@ test('prefab snapping rejects out-of-bounds and overlapping blocking footprints'
   assert.equal(placementFits(home, {x: 13, y: 9}, 14, 10, []), false);
 });
 
+test('quarter-turn rotation swaps prefab footprint for bounds, collision, zones and adjacency', () => {
+  const rotated = {assetId: 'handling-review-atlas-v1', footprint: {columns: 3, rows: 1}, rotationSteps: 1, blocking: true,
+    placementRules: {allowedZoneKinds: ['handling'], adjacentTo: ['dairy-barn']}};
+  const neighbor = {assetId: 'dairy-barn', position: {x: 5, y: 5}, footprint: {columns: 1, rows: 3}, blocking: true};
+  const handling = {kind: 'handling', origin: {x: 4, y: 4}, footprint: {columns: 1, rows: 4}};
+  assert.deepEqual(placementValidation(rotated, {x: 4, y: 5}, 14, 10, [neighbor], [handling]), {valid: true, reason: null});
+  assert.deepEqual(placementValidation({...rotated, placementRules: {}}, {x: 13, y: 7}, 14, 10), {valid: true, reason: null}, 'the rotated 1×3 footprint fits the map edge');
+  assert.equal(placementValidation({...rotated, rotationSteps: 0}, {x: 13, y: 7}, 14, 10).reason, 'out-of-bounds');
+});
+
 test('placement rules enforce allowed zones, adjacency and alignment; composition stamps an atomic aligned service line', () => {
   const barn = {prefabId: 'barn-1', assetId: 'dairy-barn', position: {x: 0, y: 0}, footprint: {columns: 3, rows: 2}, blocking: true};
   const parlor = {assetId: 'dairy-milking-parlor', footprint: {columns: 3, rows: 2}, blocking: true, placementRules: {adjacentTo: ['dairy-barn'], alignment: {axis: 'row', value: 0}}};

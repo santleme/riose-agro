@@ -38,13 +38,24 @@ export function placementFits(prefab, position, columns, rows, others = []) {
   return placementValidation(prefab, position, columns, rows, others).valid;
 }
 
+function orientedFootprint(prefab) {
+  const degreeTurns = prefab.rotationDegrees / 90;
+  const quarterTurns = Number.isInteger(degreeTurns)
+    ? degreeTurns
+    : Number.isFinite(prefab.rotationDegrees) ? 0 : prefab.rotationSteps ?? 0;
+  return Math.abs(quarterTurns) % 2
+    ? {columns: prefab.footprint.rows, rows: prefab.footprint.columns}
+    : prefab.footprint;
+}
+
 export function placementValidation(prefab, position, columns, rows, others = [], zones = []) {
-  const width = prefab.footprint.columns, height = prefab.footprint.rows;
+  const footprint = orientedFootprint(prefab), width = footprint.columns, height = footprint.rows;
   if (position.x < 0 || position.y < 0 || position.x + width > columns || position.y + height > rows) return {valid: false, reason: 'out-of-bounds'};
   const overlaps = prefab.blocking !== false && others.some(other => {
     if (other.prefabId === prefab.prefabId || other.blocking === false) return false;
     const a = {x: position.x, y: position.y, w: width, h: height};
-    const b = {x: other.position.x, y: other.position.y, w: other.footprint.columns, h: other.footprint.rows};
+    const otherFootprint = orientedFootprint(other);
+    const b = {x: other.position.x, y: other.position.y, w: otherFootprint.columns, h: otherFootprint.rows};
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   });
   if (overlaps) return {valid: false, reason: 'collision'};
@@ -60,7 +71,8 @@ export function placementValidation(prefab, position, columns, rows, others = []
   if (rules.adjacentTo?.length) {
     const adjacent = others.some(other => {
       if (!rules.adjacentTo.includes(other.assetId)) return false;
-      const a = {x: position.x, y: position.y, w: width, h: height}, b = {x: other.position.x, y: other.position.y, w: other.footprint.columns, h: other.footprint.rows};
+      const otherFootprint = orientedFootprint(other);
+      const a = {x: position.x, y: position.y, w: width, h: height}, b = {x: other.position.x, y: other.position.y, w: otherFootprint.columns, h: otherFootprint.rows};
       const verticalTouch = (a.x + a.w === b.x || b.x + b.w === a.x) && a.y < b.y + b.h && a.y + a.h > b.y;
       const horizontalTouch = (a.y + a.h === b.y || b.y + b.h === a.y) && a.x < b.x + b.w && a.x + a.w > b.x;
       return verticalTouch || horizontalTouch;
