@@ -10,7 +10,7 @@
     "nExperiments": 3
   },
   "model": {
-    "engineSha256": "fafc860eb927ba1e2590a01d6aecbd6055e00bdc4c04c72b7402fcc76c49dea1",
+    "engineSha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
     "engineSourceFiles": [
       "engine.js",
       "feeding-model.js",

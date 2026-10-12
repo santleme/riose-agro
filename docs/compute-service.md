@@ -5,7 +5,7 @@ This is a small, standalone Python endpoint for reproducible compute operations.
 ## Run
 
 ```bash
-python3 compute_service.py
+python3 src/server/compute_service.py
 ```
 
 The service listens on `127.0.0.1:8766` by default. Set `COMPUTE_HOST` or `COMPUTE_PORT` to override the bind address or port. `GET /health` returns the service and contract version.

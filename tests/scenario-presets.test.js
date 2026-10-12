@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SCENARIO_PRESET_CATALOG_VERSION,SCENARIO_PRESETS,createScenarioPresetSnapshot,getScenarioPreset,runScenarioPreset,validateScenarioPresetCatalog} from '../scenario-presets.js';
+import {SCENARIO_PRESET_CATALOG_VERSION,SCENARIO_PRESETS,createScenarioPresetSnapshot,getScenarioPreset,runScenarioPreset,validateScenarioPresetCatalog} from '../src/client/scenario-presets.js';
 
 test('scenario preset catalog is versioned, valid, and has unique IDs',()=>{
   assert.equal(SCENARIO_PRESET_CATALOG_VERSION,1);

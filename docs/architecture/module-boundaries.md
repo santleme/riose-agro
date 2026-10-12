@@ -2,11 +2,11 @@
 
 | Module | Owns | Must not own | Current implementation / boundary |
 | --- | --- | --- | --- |
-| Simulation Core | Time, deterministic execution, entity IDs, command/event ordering, snapshot lifecycle and metrics | UI, animal-specific equations, rendering, persistence backend | `engine.js` and `worker.js`; future Rust core starts with a pure batch kernel |
+| Simulation Core | Time, deterministic execution, entity IDs, command/event ordering, snapshot lifecycle and metrics | UI, animal-specific equations, rendering, persistence backend | `src/client/engine.js` and `src/client/worker.js`; future Rust core starts with a pure batch kernel |
 | Livestock domain | Animal state and domain transitions | DOM, pixels, network/storage | Animal records currently live inside `FarmEngine`; behavior/feed rules remain JS in this prototype |
 | Scientific Models | Versioned equations and metadata for units, inputs, provenance, limitations and validation | Rendering and UI claims | Existing ADG/pasture case remains demonstrative and unvalidated |
 | World System | Paddocks, world coordinates, topology, obstacles and scenario generation | Weight/energy equations and UI layout | Four pasture stocks and movement coordinates currently share the engine state |
-| Visual Adapter / Renderer | Visual IDs, draw state, interpolation, viewport culling, camera and asset resolution | Scientific calculations and authoritative model state | `worker.js` transfers compact view buffers; `app.js` canvas resolves state to the preserved art and presentation |
+| Visual Adapter / Renderer | Visual IDs, draw state, interpolation, viewport culling, camera and asset resolution | Scientific calculations and authoritative model state | `src/client/worker.js` transfers compact view buffers; `src/client/app.js` canvas resolves state to the preserved art and presentation |
 | Data Platform | Scenario inputs, reproducible results, imports/exports, provenance and retention | Animal model math | JSON, schemas, browser localStorage, local server; no database |
 | Asset System | Asset manifests, IDs, variants, atlas layout, licensing and pipeline | Simulation state | Baseline artwork plus uncommitted V7 asset work in the `d99d` worktree |
 | Hardware Adapters | Device-specific decode, clock sync, quality and observation ingestion | Direct mutation of model state without provenance | No runtime integration observed; design only when a device is selected |

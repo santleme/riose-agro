@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import test from 'node:test';
-import {FarmEngine,compare} from '../engine.js';
-import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
-import {createServer} from '../server.js';
+import {FarmEngine,compare} from '../src/client/engine.js';
+import {loadWasmMetabolism,updateMetabolismJS} from '../src/client/metabolism-wasm.js';
+import {createServer} from '../src/server/server.js';
 
 const wasmBytes=await readFile(new URL('../wasm/riose_core.wasm',import.meta.url));
 const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';
@@ -53,7 +53,7 @@ test('local server serves the compiled WASM module with its binary MIME type',as
   assert.equal(response.status,200);
   assert.equal(response.headers.get('content-type'),'application/wasm');
   assert.deepEqual(Buffer.from(await response.arrayBuffer()).subarray(0,4),Buffer.from([0,97,115,109]));
-  for(const path of ['/worker.js?engine=wasm','/metabolism-wasm.js','/scenario-storage.js']){
+  for(const path of ['/worker.js?engine=wasm','/src/client/metabolism-wasm.js','/scenario-storage.js']){
     const asset=await fetch(`http://127.0.0.1:${server.address().port}${path}`);
     assert.equal(asset.status,200,`${path} should be available to the browser Worker`);
   }
@@ -65,7 +65,7 @@ test('Worker runs the JavaScript default and the opt-in WASM route with identica
     const harness={messages:[],transfers:[],postMessage(message,transfer=[]){this.messages.push(message);this.transfers.push(transfer);}};
     globalThis.self=harness;
     if(fetchImpl)globalThis.fetch=fetchImpl;
-    const url=new URL(`../worker.js?engine=${engine}&run=${Math.random()}`,import.meta.url);
+    const url=new URL(`../src/client/worker.js?engine=${engine}&run=${Math.random()}`,import.meta.url);
     await import(url.href);
     for(const data of [
       {type:'reset',seed:917,count:40},

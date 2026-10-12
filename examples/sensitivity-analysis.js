@@ -1,5 +1,5 @@
-import {FarmEngine} from '../engine.js';
-import {analyzeSensitivity} from '../sensitivity-analysis.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {analyzeSensitivity} from '../src/client/sensitivity-analysis.js';
 
 const engine = new FarmEngine(417, 4);
 engine.configure({diet: 'balanced', housing: 'pasture', weather: 'normal', supplement: 1});

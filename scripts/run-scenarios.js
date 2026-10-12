@@ -3,7 +3,7 @@ import {readdir, readFile, mkdir, writeFile} from 'node:fs/promises';
 import {basename, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 
 const schemaPath = fileURLToPath(new URL('../schemas/scenario.schema.json', import.meta.url));
 const schema = JSON.parse(await readFile(schemaPath, 'utf8'));

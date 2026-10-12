@@ -1,8 +1,8 @@
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {FarmEngine} from '../engine.js';
-import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {loadWasmMetabolism,updateMetabolismJS} from '../src/client/metabolism-wasm.js';
 
 const repetitions=25;
 const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';

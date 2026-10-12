@@ -5,7 +5,7 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, renameSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 import {fileURLToPath} from 'node:url';
 

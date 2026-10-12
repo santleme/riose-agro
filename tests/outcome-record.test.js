@@ -8,12 +8,12 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {FarmEngine, createComparisonManifest} from '../engine.js';
-import {createScenarioContract} from '../scenario-contract.js';
-import {createComparisonArchive, sha256Bytes} from '../comparison-archive.js';
+import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
+import {createScenarioContract} from '../src/client/scenario-contract.js';
+import {createComparisonArchive, sha256Bytes} from '../src/client/comparison-archive.js';
 import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
-import {validateOutcomeRecord} from '../outcome-record.js';
-import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
+import {validateOutcomeRecord} from '../src/client/outcome-record.js';
+import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 
 const schema = JSON.parse(readFileSync(new URL('../schemas/outcome-record.schema.json', import.meta.url), 'utf8'));
 const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});

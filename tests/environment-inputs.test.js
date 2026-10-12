@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {environmentBaseline,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../environment-inputs.js';
+import {environmentBaseline,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
 
 test('legacy snapshots without numeric environment stay explicitly missing',()=>{
   const state=initialEnvironmentState({snapshotId:'old',farm:{},observations:[]});

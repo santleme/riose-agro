@@ -1,4 +1,4 @@
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 import {ActivityHistoryColumns} from './activity-history-columns.mjs';
 
 export class ColumnHistoryEngine extends FarmEngine {

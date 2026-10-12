@@ -1,6 +1,6 @@
 # Catálogo de cenários
 
-O catálogo versionado fica em `scenario-presets.js` (`SCENARIO_PRESET_CATALOG_VERSION = 1`). Cada preset registra ID e versão, descrição, estado inicial, intervenção, horizonte, semente quando aplicável, fatores constantes e estado de suporte.
+O catálogo versionado fica em `src/client/scenario-presets.js` (`SCENARIO_PRESET_CATALOG_VERSION = 1`). Cada preset registra ID e versão, descrição, estado inicial, intervenção, horizonte, semente quando aplicável, fatores constantes e estado de suporte.
 
 ## Presets
 

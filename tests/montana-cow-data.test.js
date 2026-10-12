@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createServer} from '../server.js';
+import {createServer} from '../src/server/server.js';
 
 test('Montana cow explorer derives period ADG from the article-reported 84-day grazing period', async t => {
   const report = JSON.parse(readFileSync(new URL('../docs/evidence/mdpi-angus-cow-grazing-audit.json', import.meta.url), 'utf8'));
   const rows = JSON.parse(readFileSync(new URL('../data/mdpi-angus-cow-grazing/weight-change-observations.json', import.meta.url), 'utf8'));
   const page = readFileSync(new URL('../montana-cow-data.html', import.meta.url), 'utf8');
-  const script = readFileSync(new URL('../montana-cow-data.js', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../src/client/montana-cow-data.js', import.meta.url), 'utf8');
   const gpsAssociation = JSON.parse(readFileSync(new URL('../docs/evidence/mdpi-angus-gps-adg-association.json', import.meta.url), 'utf8'));
   assert.equal(rows.length, 408);
   assert.equal(new Set(rows.map(row => row.animalId)).size, 241);

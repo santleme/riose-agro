@@ -5,7 +5,7 @@
     "repositoryUrl": "https://repository.rothamsted.ac.uk/id/eprint/33688/",
     "license": "CC BY 4.0",
     "dataSha256": "52842cf922dcc4cd6838346649440f96dc5d4e9259ed734d014e9eb8efeb0c28",
-    "integrityAuditSha256": "afea5f0c4634118c4afb6060261ff14a1775a48fbddf9d0c181582ed3d834045"
+    "integrityAuditSha256": "7a4265911b28b794599d9eb308c6d70d786b6dd1b59ecc113b1d97c68238e1a8"
   },
   "population": {
     "classification": "young growing dairy-cross-beef cattle; not a mature-cow cohort",
@@ -19,7 +19,7 @@
     }
   },
   "engine": {
-    "sha256": "fafc860eb927ba1e2590a01d6aecbd6055e00bdc4c04c72b7402fcc76c49dea1",
+    "sha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
     "sourceFiles": [
       "engine.js",
       "feeding-model.js",
