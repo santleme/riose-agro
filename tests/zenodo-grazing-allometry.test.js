@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {createServer} from '../server.js';
-import {parseAllometryTsv, summarizeAllometryRows} from '../adult-cow-data-model.js';
+import {createServer} from '../src/server/server.js';
+import {parseAllometryTsv, summarizeAllometryRows} from '../src/client/adult-cow-data-model.js';
 
 test('Zenodo allometry audit reproduces adult-cow ADG summaries and stays exploratory', () => {
   execFileSync('npm', ['run', 'audit:zenodo-grazing-allometry'], {stdio: 'ignore'});
@@ -68,7 +68,7 @@ test('adult cow explorer preserves observed weights, explicit 70-day ADG derivat
   assert.ok(Math.abs(summary.AH.absoluteDifferenceFromPublishedRoundedMeanKgPerDay - 0.0380952381) < 1e-9);
 
   const page = readFileSync(new URL('../adult-cow-data.html', import.meta.url), 'utf8');
-  const pageScript = readFileSync(new URL('../adult-cow-data.js', import.meta.url), 'utf8');
+  const pageScript = readFileSync(new URL('../src/client/adult-cow-data.js', import.meta.url), 'utf8');
   assert.match(page, /ADG é calculado com a suposição de 70 dias/);
   assert.match(page, /não substituem o caso USDA\/CPER/);
   assert.match(page, /API do registro declara CC BY 4\.0 em <code>metadata\.license\.id<\/code>/);

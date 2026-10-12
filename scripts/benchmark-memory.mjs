@@ -1,8 +1,8 @@
 import {performance} from 'node:perf_hooks';
 import {readFile} from 'node:fs/promises';
-import {FarmEngine} from '../engine.js';
-import {encodeScenarioSnapshot} from '../scenario-storage.js';
-import {loadWasmMetabolism, updateMetabolismJS} from '../metabolism-wasm.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {encodeScenarioSnapshot} from '../src/client/scenario-storage.js';
+import {loadWasmMetabolism, updateMetabolismJS} from '../src/client/metabolism-wasm.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const herds = (process.env.BENCH_MEMORY_HERDS ?? '100,1000,10000,100000').split(',').map(Number);

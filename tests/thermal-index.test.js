@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {calculateThi,THI_SOURCE} from '../thermal-index.js';
+import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 
 const numericReferences = JSON.parse(readFileSync(new URL('./fixtures/scientific-numeric-reference-v1.json', import.meta.url), 'utf8'));
 const maderExample = numericReferences.fixtures.mader2006ThiPublishedExample;

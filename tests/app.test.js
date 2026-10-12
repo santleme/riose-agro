@@ -2,16 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
-import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '../scenario-presets.js';
+import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../src/client/engine.js';
+import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '../src/client/scenario-presets.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
-import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from '../run-history.js';
-import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../scenario-storage.js';
-import {resolveLotSelection,formatLotArea} from '../lot-selection.js';
-import {validateFarmSnapshot} from '../snapshot-validator.js';
-import {calculateLotMetrics,findPaddockField} from '../lot-metrics.js';
-import {calculateThi,THI_SOURCE} from '../thermal-index.js';
-import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../environment-inputs.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from '../src/client/run-history.js';
+import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../src/client/scenario-storage.js';
+import {resolveLotSelection,formatLotArea} from '../src/client/lot-selection.js';
+import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
+import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js';
+import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
+import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[]){
@@ -31,7 +31,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[]){
     fetch(url){if(String(url).startsWith('/api/')){fetches++;throw new Error('comparison must not invoke the LLM');}if(String(url)==='/assets/manifest.json')return Promise.resolve({ok:true,json:async()=>({atlases:{test:{image:'test.png'}},assets:['cow-beef','cow-dairy'].map(id=>({id,frame:{atlas:'test',x:0,y:0,w:1,h:1}}))})});return Promise.resolve({ok:false,json:async()=>({})});},
     prompt:()=>promptValue,confirm:()=>true
   });
-  let source=(await readFile(new URL('../app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'');
+  let source=(await readFile(new URL('../src/client/app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'');
   const workerStart=source.indexOf('const workerUrl=');
   const workerEnd=source.indexOf("const worker=new Worker(workerUrl,{type:'module'});",workerStart)+"const worker=new Worker(workerUrl,{type:'module'});".length;
   source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);

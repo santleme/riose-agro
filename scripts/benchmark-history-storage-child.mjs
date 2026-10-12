@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 import {ColumnHistoryEngine} from './column-history-engine.mjs';
 
 const [variant, countText, hoursText, repetitionsText] = process.argv.slice(2);

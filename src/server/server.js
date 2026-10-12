@@ -1,14 +1,14 @@
 import {createServer as createHttpServer} from 'node:http';
-import {readFileSync} from 'node:fs';
+import {readFileSync, readdirSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {extname, resolve, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateFarmSnapshot} from './snapshot-validator.js';
-import {validateFarmSnapshotManifestReference} from './snapshot-manifest-link.js';
+import {validateFarmSnapshot} from '../client/snapshot-validator.js';
+import {validateFarmSnapshotManifestReference} from '../client/snapshot-manifest-link.js';
 
-const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
+const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
 const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
@@ -50,6 +50,7 @@ const PUBLIC_FILES = new Set([
   'data/rothamsted/Cattle_LWt_collated_2018-2025.csv', 'data/rothamsted/2018-2025_Pasture_DM_herbage_mass.csv',
   'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json',
 ]);
+const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
 
 for (const file of [
   'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
@@ -178,7 +179,7 @@ async function readJsonWithLimit(request, maxBytes) {
   }
 }
 
-const schemaPath = fileURLToPath(new URL('./schemas/farm-snapshot.schema.json', import.meta.url));
+const schemaPath = resolve(ROOT, 'schemas/farm-snapshot.schema.json');
 const snapshotSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
 const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
 addFormats(ajv);
@@ -274,8 +275,12 @@ async function serveStatic(pathname, response) {
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
   const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
   const isProjectAsset = relative.startsWith('assets/') && !relative.split('/').some(part => part === '.' || part === '..');
-  if (!PUBLIC_FILES.has(relative) && !isProjectAsset) return sendJson(response, 404, {error: 'not_found'});
-  const path = isProjectAsset ? resolve(ROOT, 'public', relative) : resolve(ROOT, relative);
+  const isClientFile = relative.startsWith('src/client/') && CLIENT_FILES.has(relative.slice('src/client/'.length));
+  const isLegacyClientFile = CLIENT_FILES.has(relative) && PUBLIC_FILES.has(relative);
+  if (!PUBLIC_FILES.has(relative) && !isProjectAsset && !isClientFile) return sendJson(response, 404, {error: 'not_found'});
+  const path = isProjectAsset ? resolve(ROOT, 'public', relative)
+    : isLegacyClientFile ? resolve(ROOT, 'src/client', relative)
+      : resolve(ROOT, relative);
   const allowedRoot = isProjectAsset ? resolve(ROOT, 'public') : ROOT;
   if (path !== allowedRoot && !path.startsWith(allowedRoot + sep)) return sendJson(response, 404, {error: 'not_found'});
   try {

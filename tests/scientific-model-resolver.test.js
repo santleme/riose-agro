@@ -4,9 +4,9 @@ import {createHash} from 'node:crypto';
 import {BR_CORTE_PASTURE_DMI_MODEL} from '../scientific/br_corte_dmi_adapter.js';
 import {BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE} from '../scientific/br_corte_pasture_dmi.js';
 import {resolveScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
-import {FarmEngine, compare, createComparisonManifest} from '../engine.js';
-import {renderSimulationReport} from '../simulation-report.js';
-import {createRunRecord, runCompatibility} from '../run-history.js';
+import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
+import {renderSimulationReport} from '../src/client/simulation-report.js';
+import {createRunRecord, runCompatibility} from '../src/client/run-history.js';
 
 test('resolves an exact registered scientific model ID and version', () => {
   assert.equal(resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2023'), BR_CORTE_PASTURE_DMI_MODEL);

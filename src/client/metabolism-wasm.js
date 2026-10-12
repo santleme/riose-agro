@@ -19,7 +19,7 @@ export function updateMetabolismJS(input, count = input.length / INPUT_WIDTH, ou
   return output;
 }
 
-export async function loadWasmMetabolism(url = new URL('./wasm/riose_core.wasm', import.meta.url), fetchImpl = fetch) {
+export async function loadWasmMetabolism(url = new URL('../../wasm/riose_core.wasm', import.meta.url), fetchImpl = fetch) {
   const response = await fetchImpl(url);
   if (!response.ok) throw new Error(`WASM fetch failed: ${response.status}`);
   const {instance} = await WebAssembly.instantiateStreaming(response, {});

@@ -5,7 +5,7 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 
 const dataDir = new URL('../data/zenodo-maremmana-silvopastoral/', import.meta.url);
 const reportPath = new URL('../docs/evidence/zenodo-maremmana-adg-audit.json', import.meta.url);

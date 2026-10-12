@@ -1,4 +1,4 @@
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 class ShiftHistoryEngine extends FarmEngine{

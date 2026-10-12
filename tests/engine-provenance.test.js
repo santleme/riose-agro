@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
-import {bundleEngineSources, ENGINE_SOURCE_FILES} from '../engine-provenance.js';
+import {bundleEngineSources, ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
 import {engineSourceSha256, readEngineSourceBundle} from '../scripts/engine-source-hash.js';
 
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -14,7 +14,7 @@ function fixtureSources() {
 test('engine provenance deterministically bundles every direct model source', () => {
   const sources = fixtureSources();
   const bundle = bundleEngineSources(sources);
-  const engineSource = readFileSync(new URL('../engine.js', import.meta.url), 'utf8');
+  const engineSource = readFileSync(new URL('../src/client/engine.js', import.meta.url), 'utf8');
   const directModules = [...engineSource.matchAll(/from\s+['"]\.\/([^'"]+)['"]/g)].map(([, filename]) => filename);
 
   assert.deepEqual(directModules.sort(), ENGINE_SOURCE_FILES.filter(filename => filename !== 'engine.js').sort());

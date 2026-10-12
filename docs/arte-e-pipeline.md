@@ -4,7 +4,7 @@
 
 ## Diagnóstico e decisão de arte
 
-O mapa anterior era desenhado dentro de `app.js` com retângulos: terreno, estradas, cercas, árvores, casas, curral, água e até os bovinos eram formas de poucos pixels. Isso resolvia a composição inicial, mas deixava a arte com aparência de protótipo e misturava visual e simulação no mesmo lugar.
+O mapa anterior era desenhado dentro de `src/client/app.js` com retângulos: terreno, estradas, cercas, árvores, casas, curral, água e até os bovinos eram formas de poucos pixels. Isso resolvia a composição inicial, mas deixava a arte com aparência de protótipo e misturava visual e simulação no mesmo lugar.
 
 A correção é **asset-first, image-based e code-composed**. O estilo-alvo é um diorama isométrico ilustrado premium: câmera consistente, volumes com silhueta clara, contorno fino, luz vinda do alto à esquerda, sombras macias e detalhe rural brasileiro legível em zoom médio. A referência urbana serve só para perspectiva, acabamento, escala e paleta; não entram edifícios nem objetos urbanos. Layout, seed, hit-test, estado do rebanho e clima continuam sendo responsabilidade do código.
 
@@ -14,7 +14,7 @@ O protótipo atual usa atlas ilustrados com alfa para chão, infraestrutura, veg
 
 | Parte atual | Decisão |
 | --- | --- |
-| Motor de simulação em `engine.js` e `worker.js` | Manter separado do desenho. |
+| Motor de simulação em `src/client/engine.js` e `src/client/worker.js` | Manter separado do desenho. |
 | Seed determinística, bounds dos piquetes e posições do rebanho | Manter; reutilizar como entrada do compositor. |
 | Pan, zoom, interação e seleção do canvas | Manter; converter o hit-test quando a projeção virar uma grade isométrica completa. |
 | Canvas 2D e composição em camadas | Manter neste MVP; PixiJS passa a valer quando o volume de sprites/chunks justificar a mudança. |

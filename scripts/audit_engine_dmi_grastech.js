@@ -6,7 +6,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);

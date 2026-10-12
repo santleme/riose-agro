@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {calculateLotMetrics} from '../lot-metrics.js';
+import {calculateLotMetrics} from '../src/client/lot-metrics.js';
 
 const field=(value,unit,status='observed')=>({value,unit,status});
 

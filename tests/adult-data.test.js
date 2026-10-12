@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {filterAdultCperRows, parseAdultCperCsv, parseCgrecCsv, parseHpgrsCsv, parseRothamstedCattleCsv, parseRothamstedHerbageCsv, summarizeAdultCperRows} from '../adult-data-model.js';
-import {createServer} from '../server.js';
+import {filterAdultCperRows, parseAdultCperCsv, parseCgrecCsv, parseHpgrsCsv, parseRothamstedCattleCsv, parseRothamstedHerbageCsv, summarizeAdultCperRows} from '../src/client/adult-data-model.js';
+import {createServer} from '../src/server/server.js';
 
 const csv = readFileSync(new URL('../data/usda-cper/period.csv', import.meta.url), 'utf8');
 
@@ -28,13 +28,13 @@ test('USDA adult explorer parses every animal-period row with observed ADG and g
   assert.equal(filterAdultCperRows(rows, {period: '1', paddock: '15E'}).length, 0);
 
   const dailyText = readFileSync(new URL('../data/usda-cper/daily.csv', import.meta.url), 'utf8');
-  const {parseDailyCperCsv} = await import('../adult-data-model.js');
+  const {parseDailyCperCsv} = await import('../src/client/adult-data-model.js');
   const daily = parseDailyCperCsv(dailyText);
   assert.equal(daily.length, 644);
   assert.ok(daily.every(row => Number.isFinite(row.turnAngle)));
   assert.equal(daily[0].turnAngle, 49.29458395);
   const page = readFileSync(new URL('../adult-data.html', import.meta.url), 'utf8');
-  const script = readFileSync(new URL('../adult-data.js', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../src/client/adult-data.js', import.meta.url), 'utf8');
   const association = JSON.parse(readFileSync(new URL('../docs/evidence/usda-cper-association.json', import.meta.url), 'utf8'));
   const caseSpec = readFileSync(new URL('../docs/caso-zootecnico-demonstrativo.md', import.meta.url), 'utf8');
   const reviewBrief = readFileSync(new URL('../docs/revisao-independente-caso.md', import.meta.url), 'utf8');
@@ -76,7 +76,7 @@ test('USDA adult explorer parses every animal-period row with observed ADG and g
 });
 
 test('adult observed-data explorer is linked from project pages and served with its local dataset', () => {
-  for (const path of ['../adult-data.html', '../adult-data.js', '../adult-data.css', '../adult-data-model.js']) {
+  for (const path of ['../adult-data.html', '../src/client/adult-data.js', '../src/client/adult-data.css', '../src/client/adult-data-model.js']) {
     assert.ok(readFileSync(new URL(path, import.meta.url), 'utf8').length > 0);
   }
   const home = readFileSync(new URL('../home.html', import.meta.url), 'utf8');
@@ -146,7 +146,7 @@ test('Rothamsted explorer parses public animal-period and plot-level forage file
   assert.ok(Number.isNaN(incompleteForage[0].biomass));
 
   const page = readFileSync(new URL('../rothamsted-data.html', import.meta.url), 'utf8');
-  const script = readFileSync(new URL('../rothamsted-data.js', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../src/client/rothamsted-data.js', import.meta.url), 'utf8');
   assert.match(page, /CC BY 4\.0/);
   assert.match(page, /a coorte não representa vacas adultas maduras/);
   assert.match(page, /USDA \/ CPER/);

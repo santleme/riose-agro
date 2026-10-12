@@ -2,7 +2,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {createComparisonArchive} from '../comparison-archive.js';
+import {createComparisonArchive} from '../src/client/comparison-archive.js';
 import {readEngineSourceBundle} from './engine-source-hash.js';
 
 const [manifestArg, outputArg] = process.argv.slice(2);

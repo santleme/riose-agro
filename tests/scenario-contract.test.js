@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
-import {FarmEngine, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
+import {FarmEngine, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
 import {
   createScenarioContract,
   replayScenarioContract,
   SCENARIO_ENGINE_VERSION,
   upgradeComparisonManifestToScenarioContract,
   validateScenarioContract,
-} from '../scenario-contract.js';
+} from '../src/client/scenario-contract.js';
 
 const schema = JSON.parse(await readFile(new URL('../schemas/scenario-contract.schema.json', import.meta.url), 'utf8'));
 const validateSchema = new Ajv2020({allErrors: true, strict: false}).compile(schema);

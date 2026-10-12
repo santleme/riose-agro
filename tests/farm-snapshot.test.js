@@ -8,10 +8,10 @@ import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateFarmSnapshot} from '../snapshot-validator.js';
-import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
-import {FarmEngine, createComparisonManifest} from '../engine.js';
-import {createScenarioContract} from '../scenario-contract.js';
+import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
+import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
+import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
+import {createScenarioContract} from '../src/client/scenario-contract.js';
 
 const example = JSON.parse(readFileSync(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(readFileSync(new URL('../schemas/farm-snapshot.schema.json', import.meta.url), 'utf8'));

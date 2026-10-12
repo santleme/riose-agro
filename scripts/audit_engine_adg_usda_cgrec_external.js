@@ -5,8 +5,8 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {parseCgrecCsv} from '../adult-data-model.js';
-import {FarmEngine, metrics} from '../engine.js';
+import {parseCgrecCsv} from '../src/client/adult-data-model.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const dataDir = new URL('../data/usda-cgrec-longterm/', import.meta.url);

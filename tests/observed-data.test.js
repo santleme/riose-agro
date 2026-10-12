@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {compareObservedGroups, summarizeObservedData} from '../observed-data-model.js';
+import {compareObservedGroups, summarizeObservedData} from '../src/client/observed-data-model.js';
 
 const data = JSON.parse(readFileSync(new URL('../data/observed-calves-zenodo-7251167.json', import.meta.url), 'utf8'));
 

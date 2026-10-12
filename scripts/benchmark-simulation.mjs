@@ -1,8 +1,8 @@
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {FarmEngine} from '../engine.js';
-import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {loadWasmMetabolism,updateMetabolismJS} from '../src/client/metabolism-wasm.js';
 import {benchmarkReport,measurement} from './benchmark-report.mjs';
 
 const repetitions=25;

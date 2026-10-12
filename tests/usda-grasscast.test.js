@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {createServer} from '../server.js';
+import {createServer} from '../src/server/server.js';
 
 test('public Grass-Cast audit verifies provenance and keeps aggregate tables separate', () => {
   execFileSync('npm', ['run', 'audit:usda-grasscast'], {stdio: 'ignore'});
