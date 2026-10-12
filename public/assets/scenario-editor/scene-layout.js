@@ -577,13 +577,47 @@ function pointInPolygon(point, polygon = []) {
 
 function rectFitsZone(origin, footprint, polygon) {
   const [width, height] = footprint;
-  return [
+  const cornersAndCenter = [
     {col: origin.col, row: origin.row},
     {col: origin.col + width, row: origin.row},
     {col: origin.col, row: origin.row + height},
     {col: origin.col + width, row: origin.row + height},
     {col: origin.col + width / 2, row: origin.row + height / 2},
-  ].every((point) => pointInPolygon(point, polygon));
+  ];
+  if (!cornersAndCenter.every((point) => pointInPolygon(point, polygon))) return false;
+
+  const rect = {left: origin.col, right: origin.col + width, top: origin.row, bottom: origin.row + height};
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
+    if (segmentIntersectsRectInterior(polygon[previous], polygon[index], rect)) return false;
+  }
+  return true;
+}
+
+function segmentIntersectsRectInterior(a, b, rect) {
+  const epsilon = Math.min(1e-9, (rect.right - rect.left) / 4, (rect.bottom - rect.top) / 4);
+  const bounds = [
+    [a.col, b.col - a.col, rect.left + epsilon, rect.right - epsilon],
+    [a.row, b.row - a.row, rect.top + epsilon, rect.bottom - epsilon],
+  ];
+  let lower = 0;
+  let upper = 1;
+  for (const [start, delta, minimum, maximum] of bounds) {
+    if (Math.abs(delta) < Number.EPSILON) {
+      if (start <= minimum || start >= maximum) return false;
+      continue;
+    }
+    const enter = (minimum - start) / delta;
+    const exit = (maximum - start) / delta;
+    lower = Math.max(lower, Math.min(enter, exit));
+    upper = Math.min(upper, Math.max(enter, exit));
+    if (lower > upper) return false;
+  }
+  const midpoint = (lower + upper) / 2;
+  const col = a.col + (b.col - a.col) * midpoint;
+  const row = a.row + (b.row - a.row) * midpoint;
+  return lower <= upper
+    && col > rect.left + epsilon && col < rect.right - epsilon
+    && row > rect.top + epsilon && row < rect.bottom - epsilon;
 }
 
 function fingerprint(value) {

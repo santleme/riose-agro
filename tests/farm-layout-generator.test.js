@@ -9,6 +9,16 @@ const [prefabDocument, manifest] = await Promise.all([
 ]);
 const prefabs = prefabDocument.prefabs;
 
+function containsPoint(point, polygon) {
+  let inside = false;
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
+    const a = polygon[index], b = polygon[previous];
+    if ((a.row > point.row) !== (b.row > point.row)
+      && point.col < ((b.col - a.col) * (point.row - a.row)) / (b.row - a.row) + a.col) inside = !inside;
+  }
+  return inside;
+}
+
 test('seeded beef and dairy farm layouts are deterministic, traceable, and valid', () => {
   for (const scenarioType of ['beef', 'dairy']) {
     const input = {scenarioType, seed: 417, prefabs, manifest};
@@ -113,4 +123,25 @@ test('layout validation checks assigned placement zones and prefab child bounds'
 
   invalidPolygon.zones[0].polygon[1] = null;
   assert.doesNotThrow(() => validateFarmLayout(invalidPolygon, {prefabs, manifest}));
+});
+
+test('concave zone edges cannot cut through a prefab footprint when sampled points remain inside', () => {
+  const scene = generateFarmLayout({scenarioType: 'dairy', seed: 417, prefabs, manifest});
+  const module = scene.prefabInstances.find(item => item.id === 'module-network');
+  const service = scene.zones.find(zone => zone.id === 'zone-service');
+  service.polygon = [
+    {col: 19, row: 6}, {col: 20.5, row: 6}, {col: 20.5, row: 7.75},
+    {col: 21.5, row: 7.75}, {col: 21.5, row: 6}, {col: 23, row: 6},
+    {col: 23, row: 10}, {col: 19, row: 10},
+  ];
+  const samplePoints = [
+    {col: module.col, row: module.row},
+    {col: module.col + 2, row: module.row},
+    {col: module.col, row: module.row + 2},
+    {col: module.col + 2, row: module.row + 2},
+    {col: module.col + 1, row: module.row + 1},
+  ];
+  assert.ok(samplePoints.every(point => containsPoint(point, service.polygon)));
+  assert.ok(validateFarmLayout(scene, {prefabs, manifest}).some(item =>
+    item.code === 'prefab-zone-mismatch' && item.path === '$.prefabInstances[4]'));
 });
