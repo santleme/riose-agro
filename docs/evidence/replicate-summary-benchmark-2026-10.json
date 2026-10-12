@@ -3,8 +3,8 @@
   "benchmark": {
     "name": "replicated-scenario-summary",
     "source": {
-      "revision": "20725589ae7b085d7d32845a2af6e8cb4f97dc9c",
-      "dirty": true
+      "revision": "4aa9919e5d8414c0ad556708b9e08ca3e9d50f56",
+      "dirty": false
     }
   },
   "runtime": {
@@ -18,8 +18,24 @@
     "gpuMemoryBytes": null
   },
   "workload": {
-    "seed": null,
-    "populations": [],
+    "seed": "deterministic-index-no-rng",
+    "populations": [
+      {
+        "count": 1000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      },
+      {
+        "count": 10000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      },
+      {
+        "count": 100000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      }
+    ],
     "runCounts": [
       1000,
       10000,
@@ -69,14 +85,16 @@
           "unit": "ms",
           "statistics": {
             "sampleCount": 21,
-            "median": 11.085324999999997,
+            "median": 12.511415999999997,
             "spread": {
-              "min": 1.466200999999998,
-              "max": 143.7952160000001,
-              "range": 142.32901500000008
+              "min": 1.8029969999999764,
+              "max": 139.803902,
+              "range": 138.00090500000002
             }
           },
-          "details": "Per-size measurements are in results."
+          "details": "Per-size measurements are in results.",
+          "population": "all configured populations",
+          "source": "replicated-scenario-summary layout measurement"
         },
         {
           "phase": "layout",
@@ -85,12 +103,14 @@
           "statistics": {
             "sampleCount": 3,
             "values": [
-              5936776,
-              13948352,
-              86321352
+              14847504,
+              25075336,
+              113637408
             ]
           },
-          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs."
+          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs.",
+          "population": "all configured populations",
+          "source": "replicated-scenario-summary layout measurement"
         }
       ]
     },
@@ -103,45 +123,58 @@
       "measurements": []
     }
   },
+  "timingBoundaries": [
+    {
+      "phase": "layout",
+      "timed": [
+        "One summarizeReplicates call over the already constructed result records."
+      ],
+      "notTimed": [
+        "Synthetic input construction.",
+        "Initial warm-up aggregation.",
+        "Heap sampling after each timed call."
+      ]
+    }
+  ],
   "results": [
     {
       "runs": 1000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 1.466200999999998,
+        "median": 1.8029969999999764,
         "spread": {
-          "min": 1.2625730000000033,
-          "max": 2.3818979999999996,
-          "range": 1.1193249999999964
+          "min": 1.3120910000000094,
+          "max": 3.8654149999999987,
+          "range": 2.5533239999999893
         }
       },
-      "heapUsedBytes": 5936776
+      "heapUsedBytes": 14847504
     },
     {
       "runs": 10000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 11.085324999999997,
+        "median": 12.511415999999997,
         "spread": {
-          "min": 10.657347999999999,
-          "max": 11.875861,
-          "range": 1.2185130000000015
+          "min": 12.226009000000005,
+          "max": 16.946735999999987,
+          "range": 4.720726999999982
         }
       },
-      "heapUsedBytes": 13948352
+      "heapUsedBytes": 25075336
     },
     {
       "runs": 100000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 143.7952160000001,
+        "median": 139.803902,
         "spread": {
-          "min": 128.25463200000002,
-          "max": 160.89096399999994,
-          "range": 32.636331999999925
+          "min": 136.501126,
+          "max": 152.98004500000008,
+          "range": 16.478919000000076
         }
       },
-      "heapUsedBytes": 86321352
+      "heapUsedBytes": 113637408
     }
   ],
   "limitations": [
