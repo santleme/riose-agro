@@ -6,7 +6,7 @@ import {BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE} from '../scientific/br_corte
 import {defineScientificModel, registerScientificModel, resolveScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
 import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
 import {renderSimulationReport} from '../src/client/simulation-report.js';
-import {createRunRecord, runCompatibility} from '../src/client/run-history.js';
+import {createRunRecord, getRun, recordRun, runCompatibility} from '../src/client/run-history.js';
 
 test('resolves an exact registered scientific model ID and version', () => {
   assert.equal(resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2023'), BR_CORTE_PASTURE_DMI_MODEL);
@@ -46,6 +46,30 @@ test('registering a newer version never changes the selected calculation or its 
   ]);
   assert.equal(newer.outputs.value, 9);
   assert.equal(newer.provenance.version, '2.0.0');
+});
+
+test('model IDs and versions remain exact even when they contain the registry delimiter', () => {
+  const first = registerScientificModel(defineScientificModel({
+    id: 'issue-93-pair@first',
+    version: 'version',
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    evidence: {status: 'demonstrative'},
+    run: ({value}) => ({value: value + 1})
+  }));
+  const second = registerScientificModel(defineScientificModel({
+    id: 'issue-93-pair',
+    version: 'first@version',
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    evidence: {status: 'observed'},
+    run: ({value}) => ({value: value + 2})
+  }));
+
+  assert.equal(resolveScientificModel(first.id, first.version), first);
+  assert.equal(resolveScientificModel(second.id, second.version), second);
+  assert.equal(runRegisteredScientificModel({id: first.id, version: first.version, inputs: {value: 5}}).outputs.value, 6);
+  assert.equal(runRegisteredScientificModel({id: second.id, version: second.version, inputs: {value: 5}}).outputs.value, 7);
 });
 
 test('calculation provenance preserves evidence status and does not invent absent references', () => {
@@ -137,4 +161,11 @@ test('old replay manifests remain compatible and new reports retain their select
   assert.equal(savedProvenance.evidenceStatus, scientific.provenance.evidenceStatus);
   assert.equal(savedProvenance.implementationHash, scientific.provenance.implementationHash);
   assert.equal(withProvenance.manifest.version, 1);
+
+  const values = new Map();
+  const storage = {getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, String(value))};
+  recordRun(withProvenance, storage);
+  const reopened = getRun('model-run', storage);
+  assert.deepEqual(reopened.result.scientificProvenance, scientific.scientificProvenance);
+  assert.equal(reopened.result.scientificProvenance[0].version, '2023');
 });

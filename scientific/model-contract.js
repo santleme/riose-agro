@@ -1,7 +1,18 @@
 const SUPPORTED_FIELD_TYPES = new Set(['array', 'boolean', 'integer', 'number', 'object', 'string']);
 
 export const SCIENTIFIC_MODEL_INTERFACE_VERSION = 1;
+// Keep IDs and versions as separate keys. Delimiter concatenation can alias
+// distinct pairs (for example, ["a@b", "c"] and ["a", "b@c"]).
 const registeredModels = new Map();
+
+function modelsForId(id, create = false) {
+  let versions = registeredModels.get(id);
+  if (!versions && create) {
+    versions = new Map();
+    registeredModels.set(id, versions);
+  }
+  return versions;
+}
 
 function assertShape(shape, name) {
   if (!shape || typeof shape !== 'object' || Array.isArray(shape) || Object.keys(shape).length === 0) {
@@ -77,16 +88,17 @@ export function defineScientificModel({id, version, inputs, outputs, units = {},
 
 export function registerScientificModel(model) {
   if (!model || model.interfaceVersion !== SCIENTIFIC_MODEL_INTERFACE_VERSION) throw new TypeError('Cannot register an unsupported scientific model');
+  const versions = modelsForId(model.id, true);
+  const existing = versions.get(model.version);
   const key = `${model.id}@${model.version}`;
-  const existing = registeredModels.get(key);
   if (existing && existing !== model) throw new Error(`Scientific model version is already registered: ${key}`);
-  registeredModels.set(key, model);
+  versions.set(model.version, model);
   return model;
 }
 
 export function resolveScientificModel(id, version) {
   if (typeof id !== 'string' || typeof version !== 'string') throw new TypeError('Scientific model ID and version are required');
-  const model = registeredModels.get(`${id}@${version}`);
+  const model = modelsForId(id)?.get(version);
   if (!model) throw new Error(`Unknown scientific model version: ${id}@${version}`);
   return model;
 }
