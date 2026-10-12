@@ -1,0 +1,115 @@
+{
+  "title": "27 years of livestock production data under different stocking rate levels at the Central Grasslands Research Extension Center near Streeter, North Dakota",
+  "doi": "10.15482/USDA.ADC/1524719",
+  "url": "https://agdatacommons.nal.usda.gov/articles/dataset/27_years_of_livestock_production_data_under_different_stocking_rate_levels_at_the_Central_Grasslands_Research_Extension_Center_near_Streeter_North_Dakota/24855519",
+  "license": {
+    "value": 96,
+    "name": "U.S. Public Domain",
+    "url": "https://www.usa.gov/publicdomain/label/1.0/"
+  },
+  "published_date": "2024-02-16T21:36:36Z",
+  "authors": [
+    {
+      "id": 17483547,
+      "full_name": "Bob Patton",
+      "first_name": "Bob",
+      "last_name": "Patton",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17483550,
+      "full_name": "Paul Nyren",
+      "first_name": "Paul",
+      "last_name": "Nyren",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17483553,
+      "full_name": "Ann Nyren",
+      "first_name": "Ann",
+      "last_name": "Nyren",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17483556,
+      "full_name": "Kevin Sedivec",
+      "first_name": "Kevin",
+      "last_name": "Sedivec",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-3759-3861"
+    }
+  ],
+  "files": [
+    {
+      "name": "Streeter-ND_1989-2015_compiled.csv",
+      "url": "https://ndownloader.figshare.com/files/44530532",
+      "size": 966968,
+      "sha256": "e4143fab462ef20c700ad50750769a7b09dda2632969de164cdb196fd4b66b67",
+      "md5_expected": "650a892956aa1ab2d22eff26dbadb8d1",
+      "md5_verified": true
+    },
+    {
+      "name": "Streeter-ND_1989-2015_compiled_DataDict.csv",
+      "url": "https://ndownloader.figshare.com/files/44530535",
+      "size": 102138,
+      "sha256": "2a658fc403021b30be6ba74a36852b3488e3d87c8dd7880195b86a0d48bc82d8",
+      "md5_expected": "a9b2fd74535290ea93d61cd7f3c5b381",
+      "md5_verified": true
+    },
+    {
+      "name": "Pasture_and_RangeSites.csv",
+      "url": "https://ndownloader.figshare.com/files/44530538",
+      "size": 816,
+      "sha256": "133cb29a8b5d090fb7bb884e925f534df8d4ea301998e1ac70d6d10fbe23da16",
+      "md5_expected": "77ba0a83e202b818d35cf4533af2324f",
+      "md5_verified": true
+    },
+    {
+      "name": "Pasture_and_RangeSites_DataDict.csv",
+      "url": "https://ndownloader.figshare.com/files/44530541",
+      "size": 1033,
+      "sha256": "2ce77470828c28ab0aec27f45f42f37f4c61483d701438b88a527d262dae28a4",
+      "md5_expected": "bdfd3bbb04bf89d20ea52ca68a817f95",
+      "md5_verified": true
+    },
+    {
+      "name": "StockingHistory1989-2015.csv",
+      "url": "https://ndownloader.figshare.com/files/44530544",
+      "size": 4954,
+      "sha256": "8a71a5d593d35b3f23b7009cd9277883598b9d5cfc79c90d562e8387944b6c8a",
+      "md5_expected": "66c72097b8570f3af2c41da858a05a67",
+      "md5_verified": true
+    },
+    {
+      "name": "StockingHistory1989-2015_DataDict.csv",
+      "url": "https://ndownloader.figshare.com/files/44530547",
+      "size": 501,
+      "sha256": "7c297aa66508c3933a64b1b6714b0e2246a35d94670232762d10d39863c92c2c",
+      "md5_expected": "866fc6ea0fe62492ae68e4a911237e9d",
+      "md5_verified": true
+    },
+    {
+      "name": "AUM_Calcs_AUMperAcre.csv",
+      "url": "https://ndownloader.figshare.com/files/44530553",
+      "size": 353,
+      "sha256": "b5e6f64092a41e46bc7f3ecb5d668dbab4ecf4dbce14b4485736cae2da1b0bdc",
+      "md5_expected": "1f46fa3cc284ad320c2ac1e8b4cd3c7a",
+      "md5_verified": true
+    },
+    {
+      "name": "AUM_Calcs_DataDict_AUMperAcre.csv",
+      "url": "https://ndownloader.figshare.com/files/44530556",
+      "size": 666,
+      "sha256": "c967637669a596cfff7c4d76a368e35d9dce6e8dd4d3343f46c14c0094f2aeb5",
+      "md5_expected": "dcdf9999567e36236b2193a66f2fec7f",
+      "md5_verified": true
+    }
+  ]
+}

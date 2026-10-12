@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — USDA CGREC 1989–2015</title>
+  <link rel="stylesheet" href="adult-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ adultos observados</span></a>
+    <nav aria-label="Conjuntos de dados"><a class="back-link" href="adult-data.html">USDA / CPER</a><a class="back-link" href="hpgrs-data.html">USDA HPGRS</a><a class="back-link" href="index.html">← Voltar à fazenda</a></nav>
+  </header>
+  <main>
+    <section class="intro">
+      <div><div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · BOVINOS ADULTOS</div><h1>ADG em 27 temporadas de pastejo</h1><p>Inspecione pesos e ganhos publicados pelo USDA no Central Grasslands Research Extension Center, em Dakota do Norte. Esta trilha fica separada do USDA/CPER do Colorado.</p></div>
+      <div class="data-badge"><span></span> USDA AG DATA COMMONS · DOMÍNIO PÚBLICO</div>
+    </section>
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">SÉRIE HISTÓRICA · 1989–2015</div><h2>Novilhas e novilhos em pradaria de gramíneas mistas</h2></div><a href="https://doi.org/10.15482/USDA.ADC/1524719" target="_blank" rel="noopener">Fonte, arquivos e dicionário ↗</a></div>
+      <p>O arquivo reúne registros por animal e temporada, com peso inicial/final, ADG, dias de pastejo e manejo informado. As raças são desconhecidas e variam sexo, ano e piquete. Não use diferenças brutas entre manejos como estimativa causal.</p>
+      <div class="study-facts" id="facts" aria-live="polite"><span>Carregando dados públicos…</span></div>
+    </section>
+    <section class="explorer">
+      <div class="explorer-head"><div><div class="eyebrow">INSPEÇÃO DESCRITIVA</div><h2>Registros por temporada</h2></div><div class="daily-controls">
+        <label class="measure-control" for="year">Ano<select id="year"><option value="all">Todos</option></select></label>
+        <label class="measure-control" for="treatment">Manejo informado<select id="treatment"><option value="all">Todos</option></select></label>
+      </div></div>
+      <p class="measure-note">Uma linha representa um animal-season. Vários animais compartilham piquete e manejo; medidas repetidas em anos/ambientes não são réplicas independentes. O ADG original está em lb/animal/dia; a tabela também o exibe convertido para kg/animal/dia.</p>
+      <div class="adult-summary" id="summary" aria-live="polite"></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Animal · ID</th><th>Sexo</th><th>Piquete</th><th>Manejo</th><th>Peso inicial (kg)</th><th>Peso final (kg)</th><th>Dias</th><th>ADG (kg/d)</th><th>Retorno bruto (US$)</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note" id="row-count"></p>
+    </section>
+    <section class="limits"><h2>Como interpretar</h2><ul>
+      <li>O conjunto descreve produção em Dakota do Norte, não bovinos brasileiros nem a pastagem tropical do cenário do Agroville.</li>
+      <li>O desenho contém variação histórica e de lotação, mas as médias mostradas são descritivas; não ajustamos clima, piquete, sexo, raça ou ano e não estimamos efeito de manejo.</li>
+      <li>Há um registro com ID de brinco duplicado dentro do mesmo ano; exibimos os IDs de linha originais para não fundir observações. O relatório de auditoria documenta esse caso e os valores ausentes. As variáveis econômicas são valores históricos definidos no dicionário do estudo. Não são custos atuais nem estimativas aplicáveis a outra fazenda.</li>
+      <li>Não há CMS individual nem braço de confinamento. Estes dados ajudam a explorar ADG de pastejo e não validam as previsões de consumo, custo atual ou contrafactual do <code>engine.js</code>.</li>
+    </ul><p class="citation">Patton et al. (2022), <a href="https://doi.org/10.15482/USDA.ADC/1524719" target="_blank" rel="noopener">USDA Ag Data Commons ↗</a>. Licença: U.S. Public Domain. O <a href="data/usda-cgrec-longterm/manifest.json">manifesto local com checksums ↗</a> preserva a procedência dos oito arquivos.</p></section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Medidas observadas · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="cgrec-data.js"></script>
+</body>
+</html>

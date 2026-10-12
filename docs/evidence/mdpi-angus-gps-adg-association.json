@@ -1,0 +1,111 @@
+{
+  "source": {
+    "articleDoi": "10.3390/ani11061518",
+    "license": "CC-BY-4.0",
+    "supplementSha256Verified": true,
+    "supplementSha256": "f63a323691cb1f647b11b744ef2b5e3c5cc7b0242508e09f59e817d7aa30b2c0",
+    "weightTable": "Table S1.csv",
+    "gpsTable": "Table S3.csv"
+  },
+  "join": {
+    "ageClasses": [
+      "4",
+      "5-7",
+      "8+"
+    ],
+    "yearMap": {
+      "Y1": "2018",
+      "Y2": "2019"
+    },
+    "key": "mapped year + cow ID",
+    "matchedCowSeasons": 37,
+    "uniqueCowIds": 37,
+    "cowDays": 1657,
+    "gpsDaysPerCowSeason": {
+      "min": 30,
+      "mean": 44.784,
+      "max": 49
+    },
+    "rowsByYear": {
+      "2018": 18,
+      "2019": 19
+    },
+    "ageClassesMatched": {
+      "4": 19,
+      "8+": 18
+    },
+    "rfiClassesMatched": {
+      "High": 18,
+      "Low": 19
+    }
+  },
+  "method": {
+    "adg": "S1 Tot_Wt_Ch_kg / 84 days, using the article-reported study period.",
+    "grazingHours": "Mean of non-missing daily Time_gr_hr values for each matched cow-season.",
+    "distanceKm": "Mean of non-missing daily Dist_km values for each matched cow-season.",
+    "association": "Spearman rank correlation across cow-season means; also reported separately by year.",
+    "pValues": "Not calculated or reported."
+  },
+  "association": {
+    "pooled": {
+      "grazingHours": {
+        "nCowSeasons": 37,
+        "spearmanRho": 0.178821,
+        "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+        "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+      },
+      "distanceKm": {
+        "nCowSeasons": 37,
+        "spearmanRho": 0.123325,
+        "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+        "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+      }
+    },
+    "byYear": {
+      "2018": {
+        "nCowSeasons": 18,
+        "grazingHours": {
+          "nCowSeasons": 18,
+          "spearmanRho": -0.06615,
+          "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+          "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+        },
+        "distanceKm": {
+          "nCowSeasons": 18,
+          "spearmanRho": 0.143669,
+          "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+          "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+        }
+      },
+      "2019": {
+        "nCowSeasons": 19,
+        "grazingHours": {
+          "nCowSeasons": 19,
+          "spearmanRho": 0.014925,
+          "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+          "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+        },
+        "distanceKm": {
+          "nCowSeasons": 19,
+          "spearmanRho": -0.000878,
+          "outcome": "ADG derived from study-period weight change; not an observed daily series.",
+          "grazingMetric": "Mean of available daily GPS measurements per cow-season."
+        }
+      }
+    }
+  },
+  "interpretation": {
+    "use": "Exploratory, separate-cohort evidence for the specialist review of the #1 population question.",
+    "causalInference": false,
+    "validatesEngine": false,
+    "uncertaintyCalibration": false,
+    "limitations": [
+      "The GPS subset is selected and represents only part of the reported 84-day weight-change period.",
+      "Per-cow GPS coverage varies; the matched rows have 30-49 observed cow-days each.",
+      "ADG is derived from study-level duration, not verified individual start/end dates or a daily series.",
+      "The overall correlations can reflect between-year differences; the year-specific estimates are also small and not stable evidence of a repeatable association.",
+      "The sample is small (37 cow-seasons from 37 IDs) and does not control all age, RFI, forage, weather, or animal-state factors.",
+      "This Montana cohort is separate from the approved USDA/CPER cohort; do not pool records or transfer its associations to CPER or Brazilian farms."
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "classification": "public_treatment_mean_candidate_not_individual_engine_validation",
+  "source": {
+    "title": "National Animal Nutrition Program (NANP) Modeling: Animal Performance Information",
+    "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/National_Animal_Nutrition_Program_NANP_Modeling_Animal_Performance_Information/24662358",
+    "downloadUrl": "https://modeling.animalnutrition.org/download-all-tables-zip-csv",
+    "license": "U.S. Public Domain label on Ag Data Commons catalog record",
+    "retrievedAt": "2026-10-12",
+    "archiveBytes": 11071388,
+    "sha256": "93735077cdab0f92ab1f4e773a8fe1e4b5517519d20987c5376b729c2db27dca",
+    "sha256Verified": true,
+    "zipIntegrityVerified": true
+  },
+  "coverage": {
+    "csvTableRows": {
+      "subjects.csv": 33227,
+      "performance.csv": 428532,
+      "labels.csv": 533,
+      "performance_datas.csv": 424102,
+      "infusions.csv": 2411,
+      "dietary_ingredients.csv": 30907,
+      "study_descriptors.csv": 8448,
+      "dietary_nutrients.csv": 68878,
+      "acknowledgments.csv": 10,
+      "genome_transcripts.csv": 914,
+      "in_vitro_datas.csv": 266
+    },
+    "performanceRowsByDataset": {
+      "Beef Digestibility (2019)": 7131,
+      "Broiler Chickens Data (2019)": 4430,
+      "Dairy Amino Acid Supplementation (2019)": 3136,
+      "Dairy Digestion (2019)": 12705,
+      "Dairy Digestion (NRC 2001)": 14204,
+      "Dairy Fat Digestion (2019)": 875,
+      "Environmental Stress Data": 3982,
+      "Lofgreen Garrett Beef Data": 1007,
+      "Microbial Data (2019)": 26,
+      "USDA Beltsville": 381036
+    },
+    "beefDigestibilityGroupsWithDmiAdgBw": 98,
+    "groupsAlsoWithDaysOnFeed": 62,
+    "groupsIdentifiedAsBeef": 98,
+    "groupsClassifiedAsTreatmentMeans": 98,
+    "targetVariableNames": [
+      "In_DM",
+      "An_ADG",
+      "An_BW",
+      "An_DaysOnFeed"
+    ],
+    "targetUnits": {
+      "In_DM": "kg/d",
+      "An_ADG": "kg/d",
+      "An_BW": "kg"
+    }
+  },
+  "granularity": {
+    "groupsWithoutSubjectId": 98,
+    "targetValuesWithoutN": 294,
+    "targetValuesWithoutSEM": 294,
+    "targetValuesChecked": 294,
+    "declaredDataType": "Treatment Means",
+    "interpretation": "Rows are study-treatment summaries, not independently identified animals."
+  },
+  "decision": "Do not use these rows as individual predictions, independent animal folds, or uncertainty calibration. They may support a separately specified treatment-mean benchmarking study after confirming source-study protocols and outcome alignment.",
+  "limits": [
+    "The target records do not provide usable individual SubjectID, sample size N, SEM, or SED for DMI, ADG, and BW.",
+    "The database compiles heterogeneous studies and treatment summaries; rows within a publication/trial are not independent validation units.",
+    "This source is not the approved USDA/CPER adult grazing cohort and cannot validate pasture behavior, costs, forage stock, or the pasture-versus-confinement counterfactual.",
+    "The catalog carries a U.S. Public Domain label, while the export endpoint is mutable; the archived bytes and retrieval date define this audit snapshot."
+  ]
+}

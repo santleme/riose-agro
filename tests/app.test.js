@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
+import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null){
@@ -13,7 +14,7 @@ async function openFarm(saved=[],activeId=null){
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -23,7 +24,7 @@ async function openFarm(saved=[],activeId=null){
     prompt:()=>null,confirm:()=>true
   });
   const source=(await readFile(new URL('../app.js',import.meta.url),'utf8'))
-    .replace(/^import .*;\r?\n/,'')
+    .replace(/^import .*;\r?\n/gm,'')
     .replace("new Worker(new URL('./worker.js',import.meta.url),{type:'module'})",'new Worker()');
   vm.runInContext(source,context,{filename:'app.js'});
   const deliver=(type,value)=>worker.onmessage({data:{type,...(type==='state'?{state:value}:type==='error'?{message:value}:{data:value})}});
@@ -127,6 +128,22 @@ test('invalid manifest leaves the current comparison available',async()=>{
   assert.equal(ui.elements.get('compare').disabled,false);
   ui.elements.get('manifest-export').onclick();
   assert.deepEqual(JSON.parse(await ui.downloads.at(-1).text()).initialSnapshot,snapshot);
+});
+
+test('manifest claiming validation is rejected without replacing the current demonstrative result',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(6,2).snapshot();
+  ui.deliver('state',snapshot);
+  ui.elements.get('compare').onclick();
+  ui.deliver('comparison',compare(snapshot,2));
+  const previous=ui.elements.get('results').innerHTML;
+  const forged={...createComparisonManifest(snapshot,2),validated:true};
+  await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(forged)}]}});
+  assert.match(ui.elements.get('notice').textContent,/Manifesto inválido: Manifesto deve preservar/);
+  assert.equal(ui.messages.some(message=>message.type==='replayComparison'),false);
+  assert.equal(ui.elements.get('compare').disabled,false);
+  assert.equal(ui.elements.get('results').innerHTML,previous);
+  ui.elements.get('manifest-export').onclick();
+  assert.equal(JSON.parse(await ui.downloads.at(-1).text()).validated,false);
 });
 
 test('comparison displays signed absolute and relative differences for all four indicators',async()=>{

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Agroville — comportamento observado em pasto</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#18372c;background:#f3f3eb;font-synthesis:none}*{box-sizing:border-box}body{margin:0}.shell{max-width:1120px;margin:auto;padding:28px 24px 64px}.brand{color:#284b3b;text-decoration:none;font-weight:750;letter-spacing:.04em}.version{color:#a56b35;font-size:.72rem;margin-left:8px}.hero{padding:48px 0 25px}.eyebrow{font-size:.72rem;letter-spacing:.16em;color:#7a865f;font-weight:750}h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.02;letter-spacing:-.045em;max-width:760px;margin:12px 0 18px}.intro{max-width:760px;color:#536355;line-height:1.7}.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:22px 0 30px}.fact,section{background:#fffefa;border:1px solid #e2e3d8;border-radius:14px}.fact{padding:15px}.fact span{display:block;color:#718071;font-size:.78rem}.fact strong{display:block;font-size:1.35rem;margin-top:5px}.panel{padding:22px;margin:14px 0}h2{font-size:1.1rem;margin:0 0 12px}.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin:20px 0}.controls label{display:grid;gap:6px;font-size:.83rem;font-weight:650}select{font:inherit;color:inherit;border:1px solid #ccd2c6;border-radius:8px;background:#fffefa;padding:10px 12px;min-width:190px}.caption,.note{font-size:.87rem;line-height:1.6;color:#667264}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:#5d695a;margin:12px 0}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.chart-wrap{overflow:auto}svg{display:block;min-width:600px;width:100%;height:auto}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.88rem}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #e8e9e0}th{font-size:.75rem;color:#75806f}.source{font-size:.82rem;line-height:1.7;color:#5b685b}a{color:#285d49}footer{margin-top:28px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#788273;font-size:.72rem;letter-spacing:.08em}.warning{border-left:4px solid #c38343;padding:12px 15px;background:#f7f1e8;border-radius:0 8px 8px 0;color:#5f5647;line-height:1.65}@media(max-width:640px){.shell{padding:20px 15px 45px}.hero{padding-top:35px}.panel{padding:16px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <a class="brand" href="./">▦ agroville<span class="version">/ PROTÓTIPO DE COMPORTAMENTO</span></a>
+    <header class="hero">
+      <div class="eyebrow">AMOSTRA PÚBLICA · VACAS ADULTAS · PASTAGEM ÁRIDA</div>
+      <h1>O que foi observado durante as sessões de pasto?</h1>
+      <p class="intro">Explore rótulos comportamentais anotados em vídeo e sincronizados com o índice de movimento de sensores usados em 24 vacas adultas no Novo México. Esta amostra independente ajuda a prototipar leitura temporal de comportamento.</p>
+      <p class="source"><a href="adult-data.html">Abrir o caso observacional ADG e pastejo USDA/CPER ↗</a> · as coortes permanecem separadas.</p>
+    </header>
+    <div id="facts" class="facts" aria-live="polite"></div>
+    <section class="panel">
+      <h2>Composição dos rótulos por dia observado</h2>
+      <div class="controls">
+        <label>Animal e raça<select id="animal-select"><option>Carregando…</option></select></label>
+      </div>
+      <div class="legend" aria-label="Legenda de comportamentos">
+        <span><i class="dot" style="background:#6d9a62"></i>Pastejo</span><span><i class="dot" style="background:#d29a56"></i>Caminhada</span><span><i class="dot" style="background:#7392a0"></i>Repouso</span><span><i class="dot" style="background:#9b83a6"></i>Ruminação</span>
+      </div>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 330" role="img" aria-label="Composição dos comportamentos por dia de observação"></svg></div>
+      <p id="chart-note" class="caption">Carregando observações…</p>
+    </section>
+    <section class="panel">
+      <h2>Resumo do animal selecionado</h2>
+      <p id="integrity-note" class="note" role="status" aria-live="polite"></p>
+      <div id="summary" class="table-wrap"></div>
+      <p class="note">As porcentagens são calculadas somente sobre os minutos observados naquele dia. A duração da sessão varia; não extrapolar para 24 horas.</p>
+    </section>
+    <section class="panel">
+      <h2>Escopo desta amostra</h2>
+      <p class="warning">Este protótipo não contém peso, ADG ou consumo de matéria seca. Não combina a amostra do Novo México com a análise observacional de ADG/pastejo do USDA/CPER e não testa nem calibra o motor de simulação. É dado de comportamento rotulado, não uma recomendação de manejo.</p>
+      <p class="source">Fonte primária: Perea et al. (2025), <a href="https://doi.org/10.1016/j.atech.2025.101002" target="_blank" rel="noopener">artigo revisado por pares</a> · <a href="https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181" target="_blank" rel="noopener">dados Figshare v2</a> sob <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> · <a href="data/perea-rangeland-behavior/README_V2.txt">README e dicionário de dados</a> · <a href="docs/evidence/perea-rangeland-behavior-audit.json">auditoria reproduzível</a>.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Comportamento observado · sem validação do motor</span></footer>
+  </main>
+  <script type="module" src="rangeland-behavior.js"></script>
+</body>
+</html>

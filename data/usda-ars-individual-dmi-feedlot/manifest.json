@@ -1,0 +1,21 @@
+{
+  "title": "Relationships between individual animal variation in dry matter intake and animal performance and feed efficiency",
+  "doi": "10.17632/wcc46fhff8.1",
+  "version": 1,
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://data.mendeley.com/datasets/wcc46fhff8/1",
+  "public_files_api": "https://data.mendeley.com/public-api/datasets/wcc46fhff8/files?folder_id=root&version=1&$start=0&$limit=1000",
+  "article_doi": "10.15232/aas.2024-02583",
+  "related_experiments": [
+    "10.15232/aas.2023-02435",
+    "10.1093/jas/skae167",
+    "10.1093/jas/skae050"
+  ],
+  "institution": "USDA-ARS Plains Area",
+  "file": "supplemental material.xlsx",
+  "file_id": "f7510a46-d3ab-4423-8322-45fa6ad75b6f",
+  "bytes": 61209,
+  "sha256": "bc1d6178c6af20ac97361e6745475b76df75c82f49490623f8e7b17a9c177249",
+  "repository_sha256": "bc1d6178c6af20ac97361e6745475b76df75c82f49490623f8e7b17a9c177249"
+}

@@ -1,0 +1,4 @@
+COLUMN_NAME,UNITS,DESCRIPTION,DATA_TYPE
+Grazing Treatement,NA,"The grazing treatment specifies what percentage of forage remains at the end of the grazing season, which is usually in October: 65% for light, 50% for moderate, 35% for heavy and 20 for extreme.  These grazing treatments are accomplished by placing less to more animals out on pasture.  ",String
+Acres required,Acres,"Acres required to provide forage, assuming an average year’s forage production on a loamy ecological site (2,848 lbs/acre in an average year)",Numeric
+Stocking rate in AUM/acre,Tons forage per acre,Stocking rate in AUM/acre is the inverse of the number of acres provided.,Numeric

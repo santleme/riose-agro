@@ -1,0 +1,95 @@
+{
+  "title": "Maize silage supplementation in grazing dairy cows: milk production, pasture intake, behaviour and methane emissions",
+  "datasetDoi": "10.57745/GTTJAR",
+  "persistentUrl": "https://doi.org/10.57745/GTTJAR",
+  "articleDoi": "10.1016/j.dib.2024.110361",
+  "license": "Etalab Open License 2.0",
+  "version": "1.1",
+  "releaseTime": "2023-05-31T07:50:15Z",
+  "retrieved": "2026-10-12",
+  "api": "https://entrepot.recherche.data.gouv.fr/api/datasets/:persistentId/",
+  "authenticated": false,
+  "sourceFiles": [
+    {
+      "path": "GrASTech_1_Periods.xlsx",
+      "dataFileId": 163380,
+      "fileDoi": "doi:10.57745/5V3RKK",
+      "bytes": 8932,
+      "md5": "828d59fdd6f1e8b9af7a90816c9b11ef",
+      "sha256": "6963d22378e8e067b02ca0305bc597d594b2db9a111949bacd9d6ba1410fa6bc",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163380?format=original"
+    },
+    {
+      "path": "GrASTech_2_Treatments.xlsx",
+      "dataFileId": 163387,
+      "fileDoi": "doi:10.57745/23LPGS",
+      "bytes": 9771,
+      "md5": "cfd6f1a5592444259665322b62c0ee23",
+      "sha256": "7bf83e528bf5cc38950ece4e4b798250bfb8e1279415659c4a8423810d9287ee",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163387?format=original"
+    },
+    {
+      "path": "GrASTech_3_Cows.xlsx",
+      "dataFileId": 163386,
+      "fileDoi": "doi:10.57745/HPHB5B",
+      "bytes": 17529,
+      "md5": "0e9b71e0fc57e36f7304a1ed25ce9d5b",
+      "sha256": "e72dd914b3a428f45098db712c777755bc36afe4124b1df89d321332b5ddf25f",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163386?format=original"
+    },
+    {
+      "path": "GrASTech_4_CowMeasurements.xlsx",
+      "dataFileId": 163383,
+      "fileDoi": "doi:10.57745/0KNRLW",
+      "bytes": 64444,
+      "md5": "23476caf93bbe86f2de1cded00e5a756",
+      "sha256": "353a337f9d4d76f52a5e41fe27c9fb0a593e342998dca066707beafbfd1c9902",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163383?format=original"
+    },
+    {
+      "path": "GrASTech_5_HerbageMeasurements.xlsx",
+      "dataFileId": 163376,
+      "fileDoi": "doi:10.57745/CBQYMK",
+      "bytes": 19889,
+      "md5": "06f08b8e99daca421c6a16b2fb8d518a",
+      "sha256": "3b344e984c5343ae97191a1b1c82ed37ebab59acaa1c364c6dbcb0a12d6cb418",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163376?format=original"
+    },
+    {
+      "path": "GrASTech_6_Feed.xlsx",
+      "dataFileId": 163389,
+      "fileDoi": "doi:10.57745/LXRA1Y",
+      "bytes": 10073,
+      "md5": "9970742d41c62a889d082ea481b2e89f",
+      "sha256": "1d0fe05107d924d26d36cde65aba7d060a38018964b44aaf3ce992ef86544032",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163389?format=original"
+    },
+    {
+      "path": "GrASTech_7_Weather.xlsx",
+      "dataFileId": 163390,
+      "fileDoi": "doi:10.57745/UQAY1D",
+      "bytes": 18119,
+      "md5": "5b1d33a21e64abb99539960b9712c2e2",
+      "sha256": "2aaf6ff6cbb8d29464e2562e454c29cfb32d110cdfc7f4574a1461e4253d4e98",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163390?format=original"
+    },
+    {
+      "path": "GrASTech_9_GrazingSchedule.xlsx",
+      "dataFileId": 163388,
+      "fileDoi": "doi:10.57745/GDXYDO",
+      "bytes": 30899,
+      "md5": "b05f1e192eb44ab56dcbef2e4655a38c",
+      "sha256": "c1ccc292727bc8f2736dc890325d79be6a1eec11ac4e8246dc065dc630749ce4",
+      "restricted": false,
+      "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/163388?format=original"
+    }
+  ],
+  "scopeLimit": "Two grazing experiments with lactating Holstein dairy cows; independent component diagnostic only, not the approved beef-steer CPER case."
+}

@@ -1,0 +1,13 @@
+COLUMN_NAME,UNITS,DESCRIPTION,DATA_TYPE,NOTES
+PASTURE,NA,Pasture number in dataset,String,
+CLAY_ACCY,acres,Acres in a clayey ecological site,Numeric,
+ACRES_OVERFLOW_ACOV,acres,Acres in a loamy overflow,Numeric,
+SUBIRRIGATED_ACSB,acres,"Acres in a subirrigated ecological site, including both loamy subirrigated and clayey subirrigated sites",Numeric,
+SHALLOW_ACSG,acres,"Acres associated with associated with non-glaciated soils, which may include soils in the Lehr and Wabek series.",Numeric,
+SILTY_ACSI,acres,Acres in a loamy ecological site,Numeric,
+SHALLOW/MARSH_ACSM,acres,Acres in a shallow marsh ecological site and may include acres described as wet meadow,Numeric,
+THIN_UPLAND_ACTU,acres,Acres in a thin loamy ecological site,Numeric,
+PROPORTION_OVLIKE,percent acres,Proportion of acres in a loamy overflow,Numeric,
+PROPORTION_SILIKE,percent acres,Proportion of acres in a loamy ecological sites,Numeric,
+ACRES OF PASTURE,acres,Pasture size in acres,Numeric,
+HECTARES,hectares,Pasture size in hectares,Numeric,

@@ -41,9 +41,13 @@ test('comparison renders derived metadata, periods, units, assumptions and real-
   assert.match(ui.element('pasture-summary').innerHTML,/KG MS\/PIQUETE/);
   assert.match(ui.element('comparison-coverage').innerHTML,/Observações reais · nenhuma conectada/);
   assert.match(ui.element('comparison-coverage').innerHTML,/issue #12/);
+  assert.match(ui.element('comparison-coverage').innerHTML,/explorador separado e não está conectado a esta comparação/);
+  assert.doesNotMatch(ui.element('comparison-coverage').innerHTML,/não está disponível neste checkout/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/Hipóteses usadas/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/8,00 kg MS\/animal\/dia/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/Não há calibração nem intervalo de confiança/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/mesma demanda de matéria seca/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/não uma resposta biológica medida/);
   for(const id of ['comparison-coverage','comparison-assumptions','chart-note'])assert.match(html,new RegExp('id="'+id+'"'));
 });
 
@@ -92,7 +96,8 @@ test('missing final day cannot be presented as a result for that day; chart gaps
 
 test('import keeps its own population, config and snapshot; validated true cannot upgrade evidence',async()=>{
   const snapshot=new FarmEngine(41,2).snapshot();snapshot.config={diet:'balanced',supplement:1.5,weather:'hot',housing:'barn'};snapshot.hour=54;
-  const manifest=createComparisonManifest(snapshot,2);manifest.validated=true;
+  const manifest=createComparisonManifest(snapshot,2);
+  assert.throws(()=>validateComparisonManifest({...manifest,validated:true}),/não validado/);
   const ui=presentation();
   await ui.element('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}],value:'import'}});
   const replaySnapshot=ui.context.pendingComparison?.snapshot??ui.context.comparisonSnapshot;
@@ -115,21 +120,35 @@ test('import keeps its own population, config and snapshot; validated true canno
   assert.equal(csv[5],(data.rows.at(-1).baselineConsumptionKgDM/2).toFixed(4));
   assert.equal(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/2).toFixed(4));
   assert.notEqual(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/24).toFixed(4));
+  const csvLines=ui.context.comparisonCSV(data).split('\n'),headers=csvLines[0].split(','),statusIndex=headers.indexOf('status_modelo'),intervalIndex=headers.indexOf('intervalo_probabilistico');
+  for(const line of csvLines.slice(1)){
+    const row=line.split(',');
+    assert.equal(row[statusIndex],'demonstrativo_nao_validado');
+    assert.equal(row[intervalIndex],'nao_disponivel_sem_calibracao');
+  }
   assert.match(ui.element('results').innerHTML,/Derivado · demonstrativo · não validado/);
 });
 
-test('all presentation provenance links resolve through the existing static server',async t=>{
+test('all presentation provenance and public ADG diagnostic links resolve through the existing static server',async t=>{
   const snapshot=new FarmEngine(42,2).snapshot(),ui=presentation(snapshot);
   ui.context.showComparison(compare(snapshot,1));
   const links=[...new Set([...ui.markup().matchAll(/href="([^"]+)"/g)].map(match=>match[1]))];
-  assert.deepEqual(links.sort(),['/engine.js','/worker.js']);
+  assert.deepEqual(links.sort(),[
+    '/docs/evidence/engine-adg-usda-cgrec-transport-check.json',
+    '/docs/evidence/engine-adg-usda-cper-ltgi-check.json',
+    '/docs/evidence/engine-adg-zenodo-cows-check.json',
+    '/engine.js','/worker.js',
+  ]);
   const server=createServer({env:{}});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   for(const link of links){
     const response=await fetch('http://127.0.0.1:'+server.address().port+link);
     assert.equal(response.status,200);
-    assert.match(await response.text(),link==='/engine.js'?/ASSUMPTIONS|function compare/:/replayComparison/);
+    const body=await response.text();
+    if(link==='/engine.js')assert.match(body,/ASSUMPTIONS|function compare/);
+    else if(link==='/worker.js')assert.match(body,/replayComparison/);
+    else assert.doesNotThrow(()=>JSON.parse(body));
   }
 });
 
@@ -154,7 +173,8 @@ test('invalid initial pasture values cannot become apparently available trajecto
     assert.doesNotMatch(ui.markup(),/NaN|Infinity|undefined|5\.820/);
     const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
     assert.equal(csv[0],'3');
-    assert.ok(csv.slice(1).every(value=>value==='Indisponível'));
+    assert.ok(csv.slice(1,-2).every(value=>value==='Indisponível'));
+    assert.deepEqual(csv.slice(-2),['demonstrativo_nao_validado','nao_disponivel_sem_calibracao']);
   }
   const validSnapshot=new FarmEngine(42,2).snapshot();validSnapshot.pastures=[0,1800,1800,1800];
   const valid=presentation(validSnapshot);

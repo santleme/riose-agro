@@ -1,0 +1,1427 @@
+{
+  "classification": "public_individual_finishing_cattle_dataset_integrity_audit_not_grazing_case_validation",
+  "source": {
+    "doi": "10.17632/wcc46fhff8.1",
+    "articleDoi": "10.15232/aas.2024-02583",
+    "relatedExperiments": [
+      "10.15232/aas.2023-02435",
+      "10.1093/jas/skae167",
+      "10.1093/jas/skae050"
+    ],
+    "license": "CC BY 4.0",
+    "sha256": "bc1d6178c6af20ac97361e6745475b76df75c82f49490623f8e7b17a9c177249",
+    "sheet": "All data",
+    "rowUnit": "individual animal summarized over its finishing experiment",
+    "columnDescriptions": {
+      "Experiment": "Experiment",
+      "TAG": "Animal ID",
+      "TRT": "Treatment",
+      "int.BW": "initial body weight (BW), kg",
+      "fin.BW": "final BW, kg",
+      "av.BW": "average BW, kg",
+      "av.BW^0.75": "average metabolic BW",
+      "ADG": "average daily gain, kg/d",
+      "DMI": "Dry matter intake, kg/d",
+      "G:F": "gain to feed, kg ADG/kg DMI",
+      "Euclid.sum": "Euclidean distance of day-to-day DMI",
+      "CV": "day-to-day coefficient of variation ",
+      "pred.DMI": "predicted DMI",
+      "RFI": "residual feed intake",
+      "pred.ADG": "predicted ADG",
+      "RADG": "residual ADG",
+      "RIG": "residual intake and gain",
+      "YG": "Yield grade",
+      "Marb": "marbling score",
+      "QGS": "quality grade score",
+      "HCW": "hot carcass weight, kg",
+      "Dressing": "dressing percentage,%",
+      "BF": "back fat thickness, cm",
+      "REA": "ribeye area, cm^2",
+      "EBF.%": "calculated empty body fat, %"
+    }
+  },
+  "coverage": {
+    "nAnimalExperimentRows": 150,
+    "nAnimals": 149,
+    "nExperiments": 3,
+    "uniqueExperimentAnimalKeys": 150,
+    "byExperiment": {
+      "Beck et al. (2023)": {
+        "n": 42,
+        "meanDmiKgPerDay": 10.958547086167654,
+        "meanAdgKgPerDay": 1.5209879673056246,
+        "meanAverageWeightKg": 591.6207752942446
+      },
+      "Foote et al. (2024)": {
+        "n": 55,
+        "meanDmiKgPerDay": 12.215531434472725,
+        "meanAdgKgPerDay": 1.5063692795999994,
+        "meanAverageWeightKg": 565.7179642240001
+      },
+      "Proctor et al. (2024)": {
+        "n": 53,
+        "meanDmiKgPerDay": 10.75771999607547,
+        "meanAdgKgPerDay": 1.9390027083773584,
+        "meanAverageWeightKg": 602.8806059588505
+      }
+    }
+  },
+  "rows": [
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "2",
+      "treatment": "20MB",
+      "initialWeightKg": 514.9659863945578,
+      "averageWeightKg": 590.8163265306123,
+      "adgKgPerDay": 1.648920437740314,
+      "dmiKgPerDay": 11.2354503999402
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "3",
+      "treatment": "10MB",
+      "initialWeightKg": 550.1133786848072,
+      "averageWeightKg": 616.6666666666666,
+      "adgKgPerDay": 1.446810608301292,
+      "dmiKgPerDay": 10.896432515035
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "4",
+      "treatment": "CON",
+      "initialWeightKg": 456.4625850340136,
+      "averageWeightKg": 524.6031746031746,
+      "adgKgPerDay": 1.481317164546978,
+      "dmiKgPerDay": 9.642559617253495
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "5",
+      "treatment": "20MB",
+      "initialWeightKg": 496.3718820861678,
+      "averageWeightKg": 562.2448979591836,
+      "adgKgPerDay": 1.432022084195997,
+      "dmiKgPerDay": 11.66430099576062
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "7",
+      "treatment": "CON",
+      "initialWeightKg": 473.922902494331,
+      "averageWeightKg": 536.0544217687075,
+      "adgKgPerDay": 1.350685201616878,
+      "dmiKgPerDay": 8.18215616681455
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "8",
+      "treatment": "CON",
+      "initialWeightKg": 496.1451247165533,
+      "averageWeightKg": 581.9727891156463,
+      "adgKgPerDay": 1.86581879128463,
+      "dmiKgPerDay": 12.0793256433008
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "9",
+      "treatment": "20MB",
+      "initialWeightKg": 512.4716553287982,
+      "averageWeightKg": 572.4489795918367,
+      "adgKgPerDay": 1.303854875283447,
+      "dmiKgPerDay": 10.27498602078194
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "12",
+      "treatment": "CON",
+      "initialWeightKg": 515.8730158730159,
+      "averageWeightKg": 593.5374149659864,
+      "adgKgPerDay": 1.688356502021098,
+      "dmiKgPerDay": 9.900666469486344
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "13",
+      "treatment": "10MB",
+      "initialWeightKg": 545.124716553288,
+      "averageWeightKg": 618.8208616780046,
+      "adgKgPerDay": 1.602090111406882,
+      "dmiKgPerDay": 11.70402099970423
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "14",
+      "treatment": "10MB",
+      "initialWeightKg": 544.8979591836735,
+      "averageWeightKg": 612.3582766439908,
+      "adgKgPerDay": 1.466528640441684,
+      "dmiKgPerDay": 12.2653353489544
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "15",
+      "treatment": "CON",
+      "initialWeightKg": 527.8911564625851,
+      "averageWeightKg": 583.7868480725624,
+      "adgKgPerDay": 1.215123730651681,
+      "dmiKgPerDay": 9.454475007394262
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "18",
+      "treatment": "20MB",
+      "initialWeightKg": 468.2539682539683,
+      "averageWeightKg": 521.8820861678005,
+      "adgKgPerDay": 1.1658286503007,
+      "dmiKgPerDay": 9.006468500443654
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "19",
+      "treatment": "20MB",
+      "initialWeightKg": 536.734693877551,
+      "averageWeightKg": 623.4693877551019,
+      "adgKgPerDay": 1.885536823425022,
+      "dmiKgPerDay": 12.39218081435473
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "22",
+      "treatment": "10MB",
+      "initialWeightKg": 490.0226757369614,
+      "averageWeightKg": 541.4965986394558,
+      "adgKgPerDay": 1.118998323967268,
+      "dmiKgPerDay": 6.456979908242366
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "23",
+      "treatment": "CON",
+      "initialWeightKg": 556.235827664399,
+      "averageWeightKg": 643.5374149659863,
+      "adgKgPerDay": 1.897860593512768,
+      "dmiKgPerDay": 12.00646258503401
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "24",
+      "treatment": "CON",
+      "initialWeightKg": 559.1836734693877,
+      "averageWeightKg": 627.2108843537414,
+      "adgKgPerDay": 1.478852410529429,
+      "dmiKgPerDay": 9.68300529100529
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "26",
+      "treatment": "10MB",
+      "initialWeightKg": 490.249433106576,
+      "averageWeightKg": 561.4512471655329,
+      "adgKgPerDay": 1.547865523020803,
+      "dmiKgPerDay": 10.97536675539781
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "27",
+      "treatment": "CON",
+      "initialWeightKg": 513.1519274376417,
+      "averageWeightKg": 570.1814058956916,
+      "adgKgPerDay": 1.239771270827172,
+      "dmiKgPerDay": 10.568552071235
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "28",
+      "treatment": "CON",
+      "initialWeightKg": 537.4149659863946,
+      "averageWeightKg": 605.7823129251701,
+      "adgKgPerDay": 1.486246672582076,
+      "dmiKgPerDay": 10.92849058463965
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "30",
+      "treatment": "20MB",
+      "initialWeightKg": 531.7460317460317,
+      "averageWeightKg": 591.3832199546484,
+      "adgKgPerDay": 1.2964606132308,
+      "dmiKgPerDay": 9.12295918367347
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "31",
+      "treatment": "CON",
+      "initialWeightKg": 502.2675736961451,
+      "averageWeightKg": 570.0680272108843,
+      "adgKgPerDay": 1.473922902494331,
+      "dmiKgPerDay": 10.19246039221549
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "32",
+      "treatment": "20MB",
+      "initialWeightKg": 492.7437641723356,
+      "averageWeightKg": 574.4897959183673,
+      "adgKgPerDay": 1.777087646652864,
+      "dmiKgPerDay": 11.78923888395938
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "33",
+      "treatment": "10MB",
+      "initialWeightKg": 554.1950113378684,
+      "averageWeightKg": 614.625850340136,
+      "adgKgPerDay": 1.313713891353643,
+      "dmiKgPerDay": 11.24323241384466
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "34",
+      "treatment": "10MB",
+      "initialWeightKg": 532.1995464852607,
+      "averageWeightKg": 600.3401360544217,
+      "adgKgPerDay": 1.481317164546978,
+      "dmiKgPerDay": 11.263891754504
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "35",
+      "treatment": "CON",
+      "initialWeightKg": 531.5192743764172,
+      "averageWeightKg": 605.6689342403628,
+      "adgKgPerDay": 1.611949127477078,
+      "dmiKgPerDay": 11.41863945578231
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "36",
+      "treatment": "10MB",
+      "initialWeightKg": 497.5056689342404,
+      "averageWeightKg": 566.8934240362812,
+      "adgKgPerDay": 1.508429458740018,
+      "dmiKgPerDay": 11.83673321502514
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "37",
+      "treatment": "CON",
+      "initialWeightKg": 505.2154195011338,
+      "averageWeightKg": 578.6848072562358,
+      "adgKgPerDay": 1.597160603371784,
+      "dmiKgPerDay": 11.72137188208617
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "38",
+      "treatment": "20MB",
+      "initialWeightKg": 519.9546485260771,
+      "averageWeightKg": 604.0816326530612,
+      "adgKgPerDay": 1.828847481021394,
+      "dmiKgPerDay": 12.33089371980676
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "39",
+      "treatment": "CON",
+      "initialWeightKg": 624.9433106575964,
+      "averageWeightKg": 700.6802721088436,
+      "adgKgPerDay": 1.646455683722764,
+      "dmiKgPerDay": 11.59801390121266
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "40",
+      "treatment": "20MB",
+      "initialWeightKg": 499.7732426303855,
+      "averageWeightKg": 548.9795918367347,
+      "adgKgPerDay": 1.069703243616287,
+      "dmiKgPerDay": 9.285103026717934
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "41",
+      "treatment": "20MB",
+      "initialWeightKg": 561.6780045351474,
+      "averageWeightKg": 634.4671201814058,
+      "adgKgPerDay": 1.582372079266489,
+      "dmiKgPerDay": 12.4443113477275
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "44",
+      "treatment": "20MB",
+      "initialWeightKg": 553.2879818594104,
+      "averageWeightKg": 621.4285714285713,
+      "adgKgPerDay": 1.481317164546978,
+      "dmiKgPerDay": 11.53704081632653
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "45",
+      "treatment": "10MB",
+      "initialWeightKg": 537.4149659863946,
+      "averageWeightKg": 615.1927437641723,
+      "adgKgPerDay": 1.690821256038647,
+      "dmiKgPerDay": 10.86021788425515
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "46",
+      "treatment": "20MB",
+      "initialWeightKg": 541.0430839002267,
+      "averageWeightKg": 624.0362811791383,
+      "adgKgPerDay": 1.804199940845904,
+      "dmiKgPerDay": 11.86423641920536
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "47",
+      "treatment": "CON",
+      "initialWeightKg": 517.0068027210884,
+      "averageWeightKg": 596.2585034013605,
+      "adgKgPerDay": 1.722863058266785,
+      "dmiKgPerDay": 12.05394755003451
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "49",
+      "treatment": "20MB",
+      "initialWeightKg": 508.843537414966,
+      "averageWeightKg": 572.7891156462584,
+      "adgKgPerDay": 1.390121265897663,
+      "dmiKgPerDay": 11.68335551611949
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "50",
+      "treatment": "10MB",
+      "initialWeightKg": 570.7482993197278,
+      "averageWeightKg": 634.6938775510204,
+      "adgKgPerDay": 1.390121265897663,
+      "dmiKgPerDay": 11.55987232574189
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "52",
+      "treatment": "10MB",
+      "initialWeightKg": 504.0816326530612,
+      "averageWeightKg": 573.1292517006802,
+      "adgKgPerDay": 1.501035196687371,
+      "dmiKgPerDay": 11.15037267080745
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "53",
+      "treatment": "10MB",
+      "initialWeightKg": 486.8480725623583,
+      "averageWeightKg": 574.2630385487528,
+      "adgKgPerDay": 1.900325347530316,
+      "dmiKgPerDay": 11.98277136941733
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "54",
+      "treatment": "20MB",
+      "initialWeightKg": 531.2925170068027,
+      "averageWeightKg": 596.9387755102041,
+      "adgKgPerDay": 1.427092576160899,
+      "dmiKgPerDay": 11.68725426402445
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "55",
+      "treatment": "10MB",
+      "initialWeightKg": 500.6802721088435,
+      "averageWeightKg": 567.8004535147393,
+      "adgKgPerDay": 1.459134378389037,
+      "dmiKgPerDay": 11.07535640343094
+    },
+    {
+      "experiment": "Beck et al. (2023)",
+      "animalId": "57",
+      "treatment": "10MB",
+      "initialWeightKg": 519.047619047619,
+      "averageWeightKg": 592.8571428571429,
+      "adgKgPerDay": 1.604554865424431,
+      "dmiKgPerDay": 11.24048752834467
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7201",
+      "treatment": "Neutral",
+      "initialWeightKg": 567.4447297039853,
+      "averageWeightKg": 652.153205541091,
+      "adgKgPerDay": 2.117711896,
+      "dmiKgPerDay": 11.96318811
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7203",
+      "treatment": "Neutral",
+      "initialWeightKg": 579.0113488945941,
+      "averageWeightKg": 654.4211700882693,
+      "adgKgPerDay": 1.88524553,
+      "dmiKgPerDay": 11.89389095
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7204",
+      "treatment": "High",
+      "initialWeightKg": 585.5884460814109,
+      "averageWeightKg": 658.0499133637543,
+      "adgKgPerDay": 1.811536682,
+      "dmiKgPerDay": 10.67693002
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7205",
+      "treatment": "High",
+      "initialWeightKg": 592.3923397229455,
+      "averageWeightKg": 665.4207981420835,
+      "adgKgPerDay": 1.82571146,
+      "dmiKgPerDay": 11.43657101
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7206",
+      "treatment": "Neutral",
+      "initialWeightKg": 522.9926245792926,
+      "averageWeightKg": 590.9181627672797,
+      "adgKgPerDay": 1.698138455,
+      "dmiKgPerDay": 9.657175738
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7207",
+      "treatment": "High",
+      "initialWeightKg": 527.5285536736491,
+      "averageWeightKg": 612.3504277381137,
+      "adgKgPerDay": 2.120546852,
+      "dmiKgPerDay": 11.48104936
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7208",
+      "treatment": "Low",
+      "initialWeightKg": 582.8668886247971,
+      "averageWeightKg": 643.5349402618139,
+      "adgKgPerDay": 1.516701291,
+      "dmiKgPerDay": 10.23850222
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7210",
+      "treatment": "Neutral",
+      "initialWeightKg": 547.0330487793815,
+      "averageWeightKg": 628.7931707051555,
+      "adgKgPerDay": 2.044003048,
+      "dmiKgPerDay": 11.34221093
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7212",
+      "treatment": "High",
+      "initialWeightKg": 546.3526594152281,
+      "averageWeightKg": 612.6906224201904,
+      "adgKgPerDay": 1.658449075,
+      "dmiKgPerDay": 10.34571977
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7213",
+      "treatment": "Low",
+      "initialWeightKg": 502.354147199971,
+      "averageWeightKg": 542.8373143671018,
+      "adgKgPerDay": 1.012079179,
+      "dmiKgPerDay": 9.832521634
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7214",
+      "treatment": "Low",
+      "initialWeightKg": 521.4050493962679,
+      "averageWeightKg": 566.1973492030373,
+      "adgKgPerDay": 1.119807495,
+      "dmiKgPerDay": 9.52866348
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7217",
+      "treatment": "Neutral",
+      "initialWeightKg": 484.2104308225454,
+      "averageWeightKg": 539.3219693189757,
+      "adgKgPerDay": 1.377788462,
+      "dmiKgPerDay": 9.419677526
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7220",
+      "treatment": "High",
+      "initialWeightKg": 496.2306429225899,
+      "averageWeightKg": 563.7025882011413,
+      "adgKgPerDay": 1.686798632,
+      "dmiKgPerDay": 11.03290496
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7223",
+      "treatment": "Neutral",
+      "initialWeightKg": 459.489617258303,
+      "averageWeightKg": 542.8373143671018,
+      "adgKgPerDay": 2.083692428,
+      "dmiKgPerDay": 9.842457259
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7224",
+      "treatment": "High",
+      "initialWeightKg": 542.4971196850252,
+      "averageWeightKg": 631.1745334796927,
+      "adgKgPerDay": 2.216935345,
+      "dmiKgPerDay": 11.00274581
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7225",
+      "treatment": "High",
+      "initialWeightKg": 517.549509666065,
+      "averageWeightKg": 601.917790821094,
+      "adgKgPerDay": 2.109207029,
+      "dmiKgPerDay": 11.64937356
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7226",
+      "treatment": "Low",
+      "initialWeightKg": 515.2815451188867,
+      "averageWeightKg": 608.8350826899874,
+      "adgKgPerDay": 2.338838439,
+      "dmiKgPerDay": 10.0408847
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7227",
+      "treatment": "Low",
+      "initialWeightKg": 526.3945714000599,
+      "averageWeightKg": 609.5154720541409,
+      "adgKgPerDay": 2.078022516,
+      "dmiKgPerDay": 10.72692998
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7228",
+      "treatment": "Low",
+      "initialWeightKg": 468.7882719017337,
+      "averageWeightKg": 554.2905353303518,
+      "adgKgPerDay": 2.137556586,
+      "dmiKgPerDay": 10.87175199
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7229",
+      "treatment": "Neutral",
+      "initialWeightKg": 507.3436692037631,
+      "averageWeightKg": 593.5263219965345,
+      "adgKgPerDay": 2.15456632,
+      "dmiKgPerDay": 11.13054676
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7230",
+      "treatment": "Neutral",
+      "initialWeightKg": 521.6318458509857,
+      "averageWeightKg": 616.0925692409576,
+      "adgKgPerDay": 2.361518085,
+      "dmiKgPerDay": 10.99067421
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7232",
+      "treatment": "Neutral",
+      "initialWeightKg": 506.8900762943274,
+      "averageWeightKg": 590.1243751757672,
+      "adgKgPerDay": 2.080857472,
+      "dmiKgPerDay": 10.19464814
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7233",
+      "treatment": "Neutral",
+      "initialWeightKg": 537.0540047717975,
+      "averageWeightKg": 632.0817192985639,
+      "adgKgPerDay": 2.375692863,
+      "dmiKgPerDay": 11.85518326
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7234",
+      "treatment": "High",
+      "initialWeightKg": 529.7965182,
+      "averageWeightKg": 601.124003219168,
+      "adgKgPerDay": 1.783187125,
+      "dmiKgPerDay": 11.12248736
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7236",
+      "treatment": "Low",
+      "initialWeightKg": 554.9709246945052,
+      "averageWeightKg": 633.7826927089477,
+      "adgKgPerDay": 1.9702942,
+      "dmiKgPerDay": 9.764690009
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7237",
+      "treatment": "Neutral",
+      "initialWeightKg": 520.044270667961,
+      "averageWeightKg": 597.2684634993786,
+      "adgKgPerDay": 1.930604821,
+      "dmiKgPerDay": 11.3302361
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7238",
+      "treatment": "High",
+      "initialWeightKg": 519.1370848490897,
+      "averageWeightKg": 592.0521450408687,
+      "adgKgPerDay": 1.822876505,
+      "dmiKgPerDay": 9.605696399
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7239",
+      "treatment": "Low",
+      "initialWeightKg": 509.3848372962235,
+      "averageWeightKg": 591.0315609946385,
+      "adgKgPerDay": 2.041168092,
+      "dmiKgPerDay": 11.18132411
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7240",
+      "treatment": "High",
+      "initialWeightKg": 525.9409784906243,
+      "averageWeightKg": 609.8556667362177,
+      "adgKgPerDay": 2.097867206,
+      "dmiKgPerDay": 9.835851079
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7261",
+      "treatment": "Low",
+      "initialWeightKg": 550.8885885095845,
+      "averageWeightKg": 624.597436292876,
+      "adgKgPerDay": 1.842721195,
+      "dmiKgPerDay": 10.47161603
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7262",
+      "treatment": "Low",
+      "initialWeightKg": 513.4671734811442,
+      "averageWeightKg": 603.3919677767598,
+      "adgKgPerDay": 2.248119857,
+      "dmiKgPerDay": 11.05393238
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7263",
+      "treatment": "High",
+      "initialWeightKg": 483.530041458392,
+      "averageWeightKg": 556.1049069680943,
+      "adgKgPerDay": 1.814371638,
+      "dmiKgPerDay": 9.395906982
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7264",
+      "treatment": "Low",
+      "initialWeightKg": 530.0233146755451,
+      "averageWeightKg": 590.0109769484084,
+      "adgKgPerDay": 1.499691557,
+      "dmiKgPerDay": 12.00870841
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7265",
+      "treatment": "Low",
+      "initialWeightKg": 509.1580408415056,
+      "averageWeightKg": 600.557012092787,
+      "adgKgPerDay": 2.284974281,
+      "dmiKgPerDay": 11.16015436
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7266",
+      "treatment": "High",
+      "initialWeightKg": 480.8084840017781,
+      "averageWeightKg": 564.8365704747304,
+      "adgKgPerDay": 2.100702162,
+      "dmiKgPerDay": 10.89218374
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7267",
+      "treatment": "Low",
+      "initialWeightKg": 554.5173317850696,
+      "averageWeightKg": 638.8856129400986,
+      "adgKgPerDay": 2.109207029,
+      "dmiKgPerDay": 11.39130233
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7268",
+      "treatment": "Low",
+      "initialWeightKg": 519.1370848490897,
+      "averageWeightKg": 595.454091861636,
+      "adgKgPerDay": 1.907925175,
+      "dmiKgPerDay": 10.39027525
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7269",
+      "treatment": "High",
+      "initialWeightKg": 535.4664295887727,
+      "averageWeightKg": 609.402073826782,
+      "adgKgPerDay": 1.848391106,
+      "dmiKgPerDay": 10.34368937
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7270",
+      "treatment": "High",
+      "initialWeightKg": 578.1041630757229,
+      "averageWeightKg": 657.7097186816777,
+      "adgKgPerDay": 1.99013889,
+      "dmiKgPerDay": 11.29478694
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7271",
+      "treatment": "Low",
+      "initialWeightKg": 472.4170151772188,
+      "averageWeightKg": 528.6625359472381,
+      "adgKgPerDay": 1.406138019,
+      "dmiKgPerDay": 8.552232786
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7273",
+      "treatment": "Neutral",
+      "initialWeightKg": 515.9619344830402,
+      "averageWeightKg": 582.1864992606436,
+      "adgKgPerDay": 1.655614119,
+      "dmiKgPerDay": 10.20493698
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7274",
+      "treatment": "Neutral",
+      "initialWeightKg": 562.4552077001932,
+      "averageWeightKg": 640.4731881231232,
+      "adgKgPerDay": 1.950449511,
+      "dmiKgPerDay": 11.31502535
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7275",
+      "treatment": "Neutral",
+      "initialWeightKg": 497.1378287414611,
+      "averageWeightKg": 557.8058803784779,
+      "adgKgPerDay": 1.516701291,
+      "dmiKgPerDay": 11.87696925
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7276",
+      "treatment": "High",
+      "initialWeightKg": 510.9724124792482,
+      "averageWeightKg": 585.1348531719752,
+      "adgKgPerDay": 1.854061017,
+      "dmiKgPerDay": 11.18147281
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7277",
+      "treatment": "Low",
+      "initialWeightKg": 535.6932260434905,
+      "averageWeightKg": 625.731418566465,
+      "adgKgPerDay": 2.250954813,
+      "dmiKgPerDay": 12.48546278
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7279",
+      "treatment": "High",
+      "initialWeightKg": 526.3945714000599,
+      "averageWeightKg": 620.5151001079552,
+      "adgKgPerDay": 2.353013218,
+      "dmiKgPerDay": 11.01076644
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7280",
+      "treatment": "Neutral",
+      "initialWeightKg": 557.2388892416834,
+      "averageWeightKg": 637.5248342117916,
+      "adgKgPerDay": 2.007148624,
+      "dmiKgPerDay": 12.04638525
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7282",
+      "treatment": "Neutral",
+      "initialWeightKg": 522.3122352151391,
+      "averageWeightKg": 615.638976331522,
+      "adgKgPerDay": 2.333168528,
+      "dmiKgPerDay": 11.21506049
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7285",
+      "treatment": "Neutral",
+      "initialWeightKg": 510.2920231150947,
+      "averageWeightKg": 588.9903929021782,
+      "adgKgPerDay": 1.967459245,
+      "dmiKgPerDay": 10.42713289
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7286",
+      "treatment": "Neutral",
+      "initialWeightKg": 534.7860402246192,
+      "averageWeightKg": 619.2677196070072,
+      "adgKgPerDay": 2.112041985,
+      "dmiKgPerDay": 10.98852144
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7287",
+      "treatment": "Low",
+      "initialWeightKg": 517.0959167566293,
+      "averageWeightKg": 606.0001270060147,
+      "adgKgPerDay": 2.222605256,
+      "dmiKgPerDay": 10.19876602
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7288",
+      "treatment": "High",
+      "initialWeightKg": 487.3855811885949,
+      "averageWeightKg": 568.9189066596512,
+      "adgKgPerDay": 2.038333137,
+      "dmiKgPerDay": 10.09109586
+    },
+    {
+      "experiment": "Proctor et al. (2024)",
+      "animalId": "7289",
+      "treatment": "High",
+      "initialWeightKg": 519.1370848490897,
+      "averageWeightKg": 598.9694369097623,
+      "adgKgPerDay": 1.995808802,
+      "dmiKgPerDay": 10.16828922
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "13",
+      "treatment": null,
+      "initialWeightKg": 506.2559306,
+      "averageWeightKg": 555.72110389,
+      "adgKgPerDay": 1.570322962,
+      "dmiKgPerDay": 12.45931175
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "408",
+      "treatment": null,
+      "initialWeightKg": 508.533803,
+      "averageWeightKg": 553.4277920549999,
+      "adgKgPerDay": 1.425206002,
+      "dmiKgPerDay": 12.88104603
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "1001",
+      "treatment": null,
+      "initialWeightKg": 569.4590778,
+      "averageWeightKg": 612.5449955250001,
+      "adgKgPerDay": 1.367806912,
+      "dmiKgPerDay": 13.50773333
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "2002",
+      "treatment": null,
+      "initialWeightKg": 502.8573679,
+      "averageWeightKg": 555.9146956,
+      "adgKgPerDay": 1.68435961,
+      "dmiKgPerDay": 13.34419175
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "2402",
+      "treatment": null,
+      "initialWeightKg": 513.6839048,
+      "averageWeightKg": 566.05993225,
+      "adgKgPerDay": 1.662731029,
+      "dmiKgPerDay": 11.2801127
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "3036",
+      "treatment": null,
+      "initialWeightKg": 520.4640782,
+      "averageWeightKg": 575.1775830500001,
+      "adgKgPerDay": 1.736936662,
+      "dmiKgPerDay": 13.91700714
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "3355",
+      "treatment": null,
+      "initialWeightKg": 488.0201701,
+      "averageWeightKg": 533.167429845,
+      "adgKgPerDay": 1.433246341,
+      "dmiKgPerDay": 11.84217397
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "3363",
+      "treatment": null,
+      "initialWeightKg": 477.7792137,
+      "averageWeightKg": 529.74367625,
+      "adgKgPerDay": 1.649665478,
+      "dmiKgPerDay": 11.46080095
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "3389",
+      "treatment": null,
+      "initialWeightKg": 520.3295797,
+      "averageWeightKg": 556.79141215,
+      "adgKgPerDay": 1.157518491,
+      "dmiKgPerDay": 11.13535444
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "3402",
+      "treatment": null,
+      "initialWeightKg": 515.7776068,
+      "averageWeightKg": 569.8755231499999,
+      "adgKgPerDay": 1.717394171,
+      "dmiKgPerDay": 13.81146619
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "4366",
+      "treatment": null,
+      "initialWeightKg": 497.8024459,
+      "averageWeightKg": 551.5134209500001,
+      "adgKgPerDay": 1.705110319,
+      "dmiKgPerDay": 11.59852064
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "4372",
+      "treatment": null,
+      "initialWeightKg": 485.1207477,
+      "averageWeightKg": 539.489523,
+      "adgKgPerDay": 1.725992867,
+      "dmiKgPerDay": 11.32577064
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "4394",
+      "treatment": null,
+      "initialWeightKg": 517.8226416,
+      "averageWeightKg": 556.23526424,
+      "adgKgPerDay": 1.219448338,
+      "dmiKgPerDay": 9.848509206
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "4402",
+      "treatment": null,
+      "initialWeightKg": 489.9772679,
+      "averageWeightKg": 539.35977645,
+      "adgKgPerDay": 1.567698684,
+      "dmiKgPerDay": 11.11033762
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "5353",
+      "treatment": null,
+      "initialWeightKg": 564.0872284,
+      "averageWeightKg": 619.2967217,
+      "adgKgPerDay": 1.752682327,
+      "dmiKgPerDay": 13.69740111
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "5380",
+      "treatment": null,
+      "initialWeightKg": 570.2985719,
+      "averageWeightKg": 623.6507468,
+      "adgKgPerDay": 1.693719838,
+      "dmiKgPerDay": 13.28330873
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "5395",
+      "treatment": null,
+      "initialWeightKg": 468.0535499,
+      "averageWeightKg": 510.45528499,
+      "adgKgPerDay": 1.346086828,
+      "dmiKgPerDay": 11.18047222
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "5402",
+      "treatment": null,
+      "initialWeightKg": 554.2974117,
+      "averageWeightKg": 619.9683916500001,
+      "adgKgPerDay": 2.084793014,
+      "dmiKgPerDay": 13.28929524
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "5415",
+      "treatment": null,
+      "initialWeightKg": 499.123555,
+      "averageWeightKg": 534.7925108500001,
+      "adgKgPerDay": 1.132347805,
+      "dmiKgPerDay": 10.77606064
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6000",
+      "treatment": null,
+      "initialWeightKg": 573.2388901,
+      "averageWeightKg": 617.665031905,
+      "adgKgPerDay": 1.410353708,
+      "dmiKgPerDay": 12.98556968
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6027",
+      "treatment": null,
+      "initialWeightKg": 467.3070936,
+      "averageWeightKg": 509.82491109,
+      "adgKgPerDay": 1.349771984,
+      "dmiKgPerDay": 10.9023981
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6056",
+      "treatment": null,
+      "initialWeightKg": 521.3801167,
+      "averageWeightKg": 563.1433985850001,
+      "adgKgPerDay": 1.325818473,
+      "dmiKgPerDay": 13.48135079
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6354",
+      "treatment": null,
+      "initialWeightKg": 519.857297,
+      "averageWeightKg": 571.3539123,
+      "adgKgPerDay": 1.634813184,
+      "dmiKgPerDay": 14.45544905
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6371",
+      "treatment": null,
+      "initialWeightKg": 485.5527875,
+      "averageWeightKg": 534.474484095,
+      "adgKgPerDay": 1.553069733,
+      "dmiKgPerDay": 12.88971064
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6383",
+      "treatment": null,
+      "initialWeightKg": 525.4991708,
+      "averageWeightKg": 581.74109395,
+      "adgKgPerDay": 1.785457877,
+      "dmiKgPerDay": 12.62968889
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6391",
+      "treatment": null,
+      "initialWeightKg": 495.5593494,
+      "averageWeightKg": 534.967377125,
+      "adgKgPerDay": 1.251048499,
+      "dmiKgPerDay": 10.59462984
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6393",
+      "treatment": null,
+      "initialWeightKg": 555.4834093,
+      "averageWeightKg": 610.7663656499999,
+      "adgKgPerDay": 1.755014487,
+      "dmiKgPerDay": 11.24121937
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6403",
+      "treatment": null,
+      "initialWeightKg": 513.0055729,
+      "averageWeightKg": 559.123703635,
+      "adgKgPerDay": 1.464067642,
+      "dmiKgPerDay": 13.05307571
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6409",
+      "treatment": null,
+      "initialWeightKg": 507.4866379,
+      "averageWeightKg": 552.5494740849999,
+      "adgKgPerDay": 1.430566228,
+      "dmiKgPerDay": 11.35542143
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6416",
+      "treatment": null,
+      "initialWeightKg": 544.0662165,
+      "averageWeightKg": 588.678793675,
+      "adgKgPerDay": 1.416272291,
+      "dmiKgPerDay": 12.21749238
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "6422",
+      "treatment": null,
+      "initialWeightKg": 569.1570217,
+      "averageWeightKg": 629.57087595,
+      "adgKgPerDay": 1.917900135,
+      "dmiKgPerDay": 15.20444064
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7003",
+      "treatment": null,
+      "initialWeightKg": 511.0365958,
+      "averageWeightKg": 562.7055759,
+      "adgKgPerDay": 1.640285082,
+      "dmiKgPerDay": 13.79136302
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7020",
+      "treatment": null,
+      "initialWeightKg": 525.3817271,
+      "averageWeightKg": 569.2327333750001,
+      "adgKgPerDay": 1.392095437,
+      "dmiKgPerDay": 12.76837524
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7033",
+      "treatment": null,
+      "initialWeightKg": 515.6729673,
+      "averageWeightKg": 552.7718472649999,
+      "adgKgPerDay": 1.177742221,
+      "dmiKgPerDay": 11.46971
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7055",
+      "treatment": null,
+      "initialWeightKg": 521.4867727,
+      "averageWeightKg": 584.5705221999999,
+      "adgKgPerDay": 2.002658714,
+      "dmiKgPerDay": 12.91622508
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7061",
+      "treatment": null,
+      "initialWeightKg": 494.8628286,
+      "averageWeightKg": 538.465840655,
+      "adgKgPerDay": 1.384222605,
+      "dmiKgPerDay": 11.93994444
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7133",
+      "treatment": null,
+      "initialWeightKg": 527.9661142,
+      "averageWeightKg": 566.07631811,
+      "adgKgPerDay": 1.209847743,
+      "dmiKgPerDay": 12.20342333
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7147",
+      "treatment": null,
+      "initialWeightKg": 502.2475462,
+      "averageWeightKg": 533.76919446,
+      "adgKgPerDay": 1.000687246,
+      "dmiKgPerDay": 12.53248349
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7307",
+      "treatment": null,
+      "initialWeightKg": 502.921701,
+      "averageWeightKg": 543.450385205,
+      "adgKgPerDay": 1.286624895,
+      "dmiKgPerDay": 10.06257
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7342",
+      "treatment": null,
+      "initialWeightKg": 509.8049578,
+      "averageWeightKg": 557.86834816,
+      "adgKgPerDay": 1.525821916,
+      "dmiKgPerDay": 13.61455714
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7355",
+      "treatment": null,
+      "initialWeightKg": 529.8326857,
+      "averageWeightKg": 573.4374565749999,
+      "adgKgPerDay": 1.384278441,
+      "dmiKgPerDay": 10.95042571
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7360",
+      "treatment": null,
+      "initialWeightKg": 509.3131534,
+      "averageWeightKg": 564.0442465,
+      "adgKgPerDay": 1.737495019,
+      "dmiKgPerDay": 14.12990286
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7440",
+      "treatment": null,
+      "initialWeightKg": 561.0732766,
+      "averageWeightKg": 605.56602705,
+      "adgKgPerDay": 1.412468268,
+      "dmiKgPerDay": 11.00232841
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "7462",
+      "treatment": null,
+      "initialWeightKg": 526.1558513,
+      "averageWeightKg": 563.597701995,
+      "adgKgPerDay": 1.188630181,
+      "dmiKgPerDay": 12.34271508
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8015",
+      "treatment": null,
+      "initialWeightKg": 541.1453383,
+      "averageWeightKg": 580.8948370850001,
+      "adgKgPerDay": 1.26188885,
+      "dmiKgPerDay": 11.46536603
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8026",
+      "treatment": null,
+      "initialWeightKg": 517.7168645,
+      "averageWeightKg": 555.11122694,
+      "adgKgPerDay": 1.187122617,
+      "dmiKgPerDay": 12.34376
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8031",
+      "treatment": null,
+      "initialWeightKg": 524.6769583,
+      "averageWeightKg": 567.7681524950001,
+      "adgKgPerDay": 1.367974419,
+      "dmiKgPerDay": 10.68730778
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8388",
+      "treatment": null,
+      "initialWeightKg": 499.5358561,
+      "averageWeightKg": 537.614401175,
+      "adgKgPerDay": 1.208842701,
+      "dmiKgPerDay": 10.87732524
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8391",
+      "treatment": null,
+      "initialWeightKg": 513.9716729,
+      "averageWeightKg": 573.87019165,
+      "adgKgPerDay": 1.901540278,
+      "dmiKgPerDay": 11.14024238
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8395",
+      "treatment": null,
+      "initialWeightKg": 576.1921473,
+      "averageWeightKg": 642.8339982499999,
+      "adgKgPerDay": 2.115614316,
+      "dmiKgPerDay": 14.23624222
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8411",
+      "treatment": null,
+      "initialWeightKg": 479.2574235,
+      "averageWeightKg": 520.91869358,
+      "adgKgPerDay": 1.322580003,
+      "dmiKgPerDay": 11.30399841
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8450",
+      "treatment": null,
+      "initialWeightKg": 529.1371831,
+      "averageWeightKg": 582.1363394,
+      "adgKgPerDay": 1.682512898,
+      "dmiKgPerDay": 12.67192603
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "8454",
+      "treatment": null,
+      "initialWeightKg": 507.2861724,
+      "averageWeightKg": 561.606565,
+      "adgKgPerDay": 1.724456908,
+      "dmiKgPerDay": 12.27491841
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "9355",
+      "treatment": null,
+      "initialWeightKg": 515.7100792,
+      "averageWeightKg": 560.27516812,
+      "adgKgPerDay": 1.414764728,
+      "dmiKgPerDay": 11.33317365
+    },
+    {
+      "experiment": "Foote et al. (2024)",
+      "animalId": "9356",
+      "treatment": null,
+      "initialWeightKg": 514.9796661,
+      "averageWeightKg": 558.857054735,
+      "adgKgPerDay": 1.392932973,
+      "dmiKgPerDay": 11.03662413
+    }
+  ],
+  "limitations": [
+    "The source compiles three published finishing/feedlot experiments using individual feeding systems; it is not a pasture dataset.",
+    "Each row is an animal-level summary, not a daily time series; DMI variability calculations cannot be independently reproduced from this workbook.",
+    "The combined file does not document treatment allocation and all experiment-specific measurement protocols in a single data dictionary; use the source articles for those details.",
+    "This dataset does not provide pasture state or an intervention-aligned full-engine trajectory, so it cannot validate the approved CPER case or the complete simulator."
+  ]
+}

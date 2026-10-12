@@ -88,8 +88,9 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
   const comparison = archive?.comparison;
   if (!isRecord(comparison) || !isRecord(comparison.baseline) || !isRecord(comparison.scenario)) {
     errors.push('Arquivo de projeção não contém resultados reproduzíveis para base e alternativa.');
-  } else if (comparison.days !== manifest.periodDays) {
-    errors.push('Horizonte do resultado arquivado não corresponde ao manifesto.');
+  } else {
+    if (comparison.validated !== false) errors.push('Arquivo de projeção não preserva o estado demonstrativo não validado do motor.');
+    if (comparison.days !== manifest.periodDays) errors.push('Horizonte do resultado arquivado não corresponde ao manifesto.');
   }
   const referencesValid = errors.length === 0;
 

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — USDA HPGRS 1982–2022</title>
+  <link rel="stylesheet" href="adult-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ adultos observados</span></a>
+    <nav aria-label="Conjuntos de dados"><a class="back-link" href="adult-data.html">USDA / CPER</a><a class="back-link" href="cgrec-data.html">CGREC</a><a class="back-link" href="index.html">← Voltar à fazenda</a></nav>
+  </header>
+  <main>
+    <section class="intro">
+      <div><div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · BOVINOS DE UM ANO</div><h1>Pesos de entrada, saída e ganho</h1><p>Explore registros de novilhos e novilhas <em>yearling</em> em pastejo de longo prazo no High Plains Grasslands Research Station, em Wyoming. Esta é uma coorte separada do USDA/CPER no Colorado e não representa vacas adultas.</p></div>
+      <div class="data-badge"><span></span> USDA / ARS · DOMÍNIO PÚBLICO</div>
+    </section>
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">LONG-TERM GRAZING INTENSITY · 1982–2022</div><h2>Pastagem de gramíneas mistas · bovinos de um ano</h2></div><a href="https://catalog.data.gov/dataset/data-from-usda-ars-high-plains-grasslands-research-station-east-unit-near-cheyen-1982-2022" target="_blank" rel="noopener">Registro USDA e downloads ↗</a></div>
+      <p>O catálogo descreve pastejo sazonal e manejo contínuo leve, moderado e intenso. As categorias são dados observados de um estudo histórico; esta página não estima seu efeito causal.</p>
+      <div class="study-facts" id="facts" aria-live="polite"><span>Carregando arquivo público…</span></div>
+    </section>
+    <section class="explorer">
+      <div class="explorer-head"><div><div class="eyebrow">INSPEÇÃO DESCRITIVA</div><h2>Ganho médio diário por temporada</h2></div><div class="daily-controls">
+        <label class="measure-control" for="year">Ano<select id="year"><option value="all">Todos</option></select></label>
+        <label class="measure-control" for="treatment">Lotação<select id="treatment"><option value="all">Todas</option></select></label>
+      </div></div>
+      <p class="measure-note">ADG calculado como ganho de peso publicado (kg) dividido pelos dias de pastejo. A média abaixo dá o mesmo peso a cada linha; ela não controla ano, lotação, gênero ou clima.</p>
+      <div class="adult-summary" id="summary" aria-live="polite"></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Brinco</th><th>Gênero</th><th>Lotação</th><th>AUD/ha</th><th>Dias</th><th>Entrada (kg)</th><th>Saída (kg)</th><th>ADG (kg/d)</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note" id="row-count"></p>
+    </section>
+    <section class="limits"><h2>Limites importantes</h2><ul>
+      <li>O arquivo tem 1.018 linhas e 38 anos entre 1982 e 2022; o catálogo informa que não houve pastejo em 1989, 2000 e 2002 por seca.</li>
+      <li>O identificador de brinco está ausente em 495 linhas e não há coluna de piquete/parcela. Não é possível garantir splits por animal ou unidade experimental para toda a série.</li>
+      <li>O catálogo informa que valores de ganho fora de ±2 desvios-padrão da média do tratamento foram removidos antes da publicação.</li>
+      <li>Há pesos inicial/final e taxa de lotação, mas não DMI individual, biomassa medida, custos atuais ou comparador de confinamento. Não valida as saídas do <code>engine.js</code>.</li>
+      <li>As populações, clima, períodos e manejo são específicos do leste de Wyoming; não representam fazendas brasileiras.</li>
+    </ul><p class="citation">USDA ARS, High Plains Grasslands Research Station, DOI <a href="https://doi.org/10.15482/USDA.ADC/1528521" target="_blank" rel="noopener">10.15482/USDA.ADC/1528521 ↗</a>. Licença: U.S. Public Domain. <a href="data/usda-hpgrs-1982-2022/EastUnit_LTGI_DataDictionary.csv">Baixar dicionário de dados ↗</a>. Checksums e auditoria: <code>data/usda-hpgrs-1982-2022/manifest.json</code> e <code>docs/evidence/usda-hpgrs-longterm-audit.json</code>.</p></section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Medidas observadas · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="hpgrs-data.js"></script>
+</body>
+</html>

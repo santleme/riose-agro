@@ -1,0 +1,67 @@
+{
+  "source": {
+    "doi": "10.17632/3wdjvxmvsp.1",
+    "articleDoi": "10.1016/j.dib.2024.110520",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "sha256Verified": true,
+    "file": "Complete_Dataset.csv"
+  },
+  "coverage": {
+    "rows": 390,
+    "columns": 71,
+    "animals": 26,
+    "intervals": 15,
+    "animalIntervalKeys": 390,
+    "daysRange": [
+      12,
+      28
+    ],
+    "missingValuesByColumn": {
+      "B1": 26,
+      "B11": 26,
+      "B12": 26,
+      "B2": 26,
+      "B3": 26,
+      "B4": 26,
+      "B5": 26,
+      "B6": 26,
+      "B7": 26,
+      "B8": 26,
+      "B8A": 26,
+      "B9": 26,
+      "DVI": 26,
+      "EVI": 26,
+      "GCI": 26,
+      "GEMI": 26,
+      "LAI": 26,
+      "NDVI": 26,
+      "NDWI": 26,
+      "SAVI": 26
+    }
+  },
+  "qualityChecks": {
+    "duplicateAnimalIntervals": 0,
+    "intervalDaysMatchDates": true,
+    "reportedGmdVsWeightDeltaMismatches": 154,
+    "gmdMismatchToleranceKgPerDay": 0.002,
+    "intervalsWithAnyGmdMismatch": 6,
+    "maxAbsoluteGmdDifferenceKgPerDay": 0.286,
+    "gemiObservedRange": [
+      -2453009.070054,
+      -79935.976358
+    ],
+    "gemiAllNegativeAndExtreme": true
+  },
+  "interpretation": {
+    "engineValidation": false,
+    "primaryUse": "independent descriptive reference for growing male Nelore pasture and supplementation",
+    "notSuitableFor": [
+      "validating the current CPER engine",
+      "causal effect of supplementation (one paddock and no untreated comparison)",
+      "pasture DMI calibration (the file has no measured forage intake)",
+      "using the reported GMD without checking the weight and interval fields"
+    ],
+    "releaseNote": "The Mendeley record v1 file is publicly downloadable under CC BY 4.0. The current v7 metadata page is public, but its files API returned no downloadable file entries during this audit; the archived local CSV is therefore pinned to v1, not assumed equivalent to v7."
+  }
+}

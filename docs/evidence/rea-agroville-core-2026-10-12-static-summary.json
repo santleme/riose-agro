@@ -1,0 +1,45 @@
+{
+  "captureType": "rea-evidence-summary",
+  "capturedAt": "2026-10-12",
+  "operation": "analyze_javascript_application",
+  "authority": "shipped-artifact",
+  "confidence": "derived",
+  "provider": {
+    "id": "rea-javascript-application",
+    "name": "REA JavaScript application analyzer",
+    "version": "1"
+  },
+  "evidenceId": "ev_2f3a4ce3385f33647966e34bd9ec00ab42b4262a09bdef62a4e9356fcb941878",
+  "subject": {
+    "path": "/home/lucas_coimbra/projects/hackhatons/riose-agro",
+    "snapshotFiles": ["engine.js", "worker.js"],
+    "snapshotSha256": "3f592776fda1931de13f75e6d94c582c89a85239d04be53932669e0f4c793100",
+    "fileSha256": {
+      "engine.js": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+      "worker.js": "41a8a3646597dbc58b9065759b5e685ff3a9368a456a77d6845b9d7fd374bc67"
+    }
+  },
+  "statistics": {
+    "relevantFiles": 2,
+    "textBytesRead": 14814,
+    "parsedJavaScriptFiles": 2,
+    "visitedAstNodes": 3052,
+    "findings": 12,
+    "parseFailures": 0
+  },
+  "graph": {
+    "id": "jag_14ad8dd6a0ac5fc9e314f79b3ebcf49cd6ebfe774775dab0c06646c34f6cf051",
+    "nodes": 13,
+    "edges": 16,
+    "coverage": "complete"
+  },
+  "observations": [
+    "worker.js statically imports FarmEngine, compare, and replayComparisonManifest from engine.js.",
+    "engine.js statically exports FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest, metrics, and assumptions."
+  ],
+  "limitations": [
+    "REA parsed JavaScript as inert source; it did not execute the worker or engine.",
+    "Static imports and exports do not prove runtime invocation or result correctness.",
+    "This two-file graph does not include the UI, server, data pages, or scientific validation."
+  ]
+}

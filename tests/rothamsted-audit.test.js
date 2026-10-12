@@ -12,6 +12,14 @@ test('Rothamsted audit verifies the cohort holdout and does not claim engine val
   assert.equal(report.integrity.animalPeriodRowCount, 2362);
   assert.equal(report.integrity.uniqueOfficialTagCount, 248);
   assert.equal(report.integrity.dlwgReconcilesWithWeightEndpointsAndDays, true);
+  assert.match(report.population.classification, /not a mature-cow cohort/);
+  const age = report.population.ageAtFirstObservedIntervalDays;
+  assert.equal(age.animalCount, 248);
+  assert.equal(age.minimumDays, 173);
+  assert.equal(age.medianDays, 231);
+  assert.ok(Math.abs(age.meanDays - 311.2782258064516) < 1e-12);
+  assert.equal(age.maximumDays, 747);
+  assert.match(age.method, /Date_From minus DOB/);
   assert.equal(report.cohorts['1'].rowCount + report.cohorts['2'].rowCount + report.cohorts['3'].rowCount, 1864);
   assert.equal(report.cohorts['4'].rowCount, 498);
 
@@ -22,8 +30,9 @@ test('Rothamsted audit verifies the cohort holdout and does not claim engine val
   assert.equal(report.heldOutBaseline.scope, 'later cohorts on the same six North Wyke plots; not new-farm generalization and not a feature model');
   assert.ok(Number.isFinite(report.heldOutBaseline.maeKgPerSteerDay));
   assert.ok(Number.isFinite(report.heldOutBaseline.rmseKgPerSteerDay));
-  assert.equal(report.engineValidation.evaluated, false);
-  assert.match(report.engineValidation.reason, /cannot validate engine\.js/);
+  assert.equal(report.fullEngineValidation.evaluated, false);
+  assert.match(report.fullEngineValidation.reason, /does not establish end-to-end validation of engine\.js/);
+  assert.equal(report.separateFrozenComponentDiagnostic.reportPath, 'docs/evidence/engine-adg-rothamsted-check.json');
   assert.equal(report.descriptiveTreatmentMeans['set-stocked'].animalPeriodRowCount, 1175);
   assert.match(report.descriptiveTreatmentMeans['set-stocked'].warning, /three plots per arm/);
 });

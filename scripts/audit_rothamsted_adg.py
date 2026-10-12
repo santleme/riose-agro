@@ -22,7 +22,7 @@ MANIFEST_PATH = DATA_DIR / "manifest.json"
 WEIGHTS_PATH = DATA_DIR / "Cattle_LWt_collated_2018-2025.csv"
 HERBAGE_PATH = DATA_DIR / "2018-2025_Pasture_DM_herbage_mass.csv"
 REQUIRED_WEIGHT_COLUMNS = {
-    "Plot_ID", "Year", "Cohort_number", "Tag_Official", "Date_From",
+    "Plot_ID", "Year", "Cohort_number", "Tag_Official", "DOB", "Date_From",
     "Date_To", "LWt_Start", "LWt_End", "DLWG",
 }
 
@@ -38,6 +38,20 @@ def summarize_errors(observed: list[float], predicted: float) -> dict:
         "maeKgPerSteerDay": sum(abs(error) for error in errors) / len(errors),
         "rmseKgPerSteerDay": math.sqrt(sum(error * error for error in errors) / len(errors)),
         "biasKgPerSteerDay": sum(errors) / len(errors),
+    }
+
+
+def summarize_ages(values: list[int]) -> dict:
+    ordered = sorted(values)
+    middle = len(ordered) // 2
+    median = ordered[middle] if len(ordered) % 2 else (ordered[middle - 1] + ordered[middle]) / 2
+    return {
+        "animalCount": len(ordered),
+        "minimumDays": min(ordered),
+        "medianDays": median,
+        "meanDays": sum(ordered) / len(ordered),
+        "maximumDays": max(ordered),
+        "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB.",
     }
 
 
@@ -63,6 +77,7 @@ def audit() -> dict:
     tags_by_cohort: dict[int, set[str]] = defaultdict(set)
     tags = set()
     year_cohorts: dict[int, set[int]] = defaultdict(set)
+    first_age_by_tag: dict[str, tuple[date, int]] = {}
     plots = set()
     invalid_or_unreconciled = []
     treatment_values: dict[str, list[float]] = defaultdict(list)
@@ -72,6 +87,7 @@ def audit() -> dict:
             year = int(row["Year"])
             start_date = date.fromisoformat(row["Date_From"])
             end_date = date.fromisoformat(row["Date_To"])
+            dob = date.fromisoformat(row["DOB"])
             start_weight = float(row["LWt_Start"])
             end_weight = float(row["LWt_End"])
             dlwg = float(row["DLWG"])
@@ -86,6 +102,9 @@ def audit() -> dict:
         if start_date.year != year or end_date.year not in (year, year + 1):
             raise ValueError(f"Date/year mismatch at CSV line {row_number}")
         days = (end_date - start_date).days
+        age_at_start_days = (start_date - dob).days
+        if age_at_start_days < 0:
+            raise ValueError(f"DOB is after Date_From at CSV line {row_number}")
         calculated = (end_weight - start_weight) / days
         difference = abs(calculated - dlwg)
         if difference > 0.011:
@@ -94,6 +113,8 @@ def audit() -> dict:
         cohorts[cohort].append(row)
         tags_by_cohort[cohort].add(tag)
         tags.add(tag)
+        if tag not in first_age_by_tag or start_date < first_age_by_tag[tag][0]:
+            first_age_by_tag[tag] = (start_date, age_at_start_days)
         year_cohorts[year].add(cohort)
         plots.add(plot)
         treatment = "set-stocked" if plot.startswith("C") else "cell-grazed" if plot.startswith("T") else "unknown"
@@ -129,10 +150,17 @@ def audit() -> dict:
 
     cohort_summary = {}
     for cohort, group in sorted(cohorts.items()):
+        earliest_age_by_tag = {}
+        for row in group:
+            tag = row["Tag_Official"].strip()
+            observation_date = date.fromisoformat(row["Date_From"])
+            if tag not in earliest_age_by_tag or observation_date < earliest_age_by_tag[tag][0]:
+                earliest_age_by_tag[tag] = (observation_date, (observation_date - date.fromisoformat(row["DOB"])).days)
         cohort_summary[str(cohort)] = {
             "rowCount": len(group),
             "animalCount": len(tags_by_cohort[cohort]),
             "years": sorted({int(row["Year"]) for row in group}),
+            "ageAtFirstObservedIntervalDays": summarize_ages([value[1] for value in earliest_age_by_tag.values()]),
         }
 
     return {
@@ -146,6 +174,10 @@ def audit() -> dict:
             "plotIds": sorted(plots),
             "dlwgReconcilesWithWeightEndpointsAndDays": True,
             "herbageMassRowCount": herbage_rows,
+        },
+        "population": {
+            "classification": "young growing dairy-cross-beef cattle; not a mature-cow cohort",
+            "ageAtFirstObservedIntervalDays": summarize_ages([value[1] for value in first_age_by_tag.values()]),
         },
         "cohorts": cohort_summary,
         "heldOutBaseline": {
@@ -167,9 +199,13 @@ def audit() -> dict:
             }
             for treatment, values in sorted(treatment_values.items())
         },
-        "engineValidation": {
+        "fullEngineValidation": {
             "evaluated": False,
-            "reason": "The study contains ADG and plot-level herbage mass, but lacks the approved USDA CPER bout-duration/velocity predictors, individual dry-matter intake, feed costs, and a confinement arm. Its pasture treatment comparison cannot validate engine.js outputs or a pasture-versus-confinement counterfactual.",
+            "reason": "This dataset audit does not establish end-to-end validation of engine.js: it lacks the approved USDA CPER bout-duration/velocity predictors, individual dry-matter intake, feed costs, and a confinement arm, and its pasture treatment comparison cannot validate a pasture-versus-confinement counterfactual.",
+        },
+        "separateFrozenComponentDiagnostic": {
+            "reportPath": "docs/evidence/engine-adg-rothamsted-check.json",
+            "scope": "ADG component only; not full-engine validation, calibration, or product prediction interval",
         },
     }
 

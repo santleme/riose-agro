@@ -1,0 +1,21 @@
+{
+  "source": "https://zenodo.org/api/records/3707638",
+  "capturedAt": "2026-10-12",
+  "doi": "10.5281/zenodo.3707638",
+  "title": "Data on anatomy, movement, and foraging behaviour of three cattle breeds of different productivity",
+  "published": "2020-03-12",
+  "modified": "2025-04-02T09:43:23.967900+00:00",
+  "metadataLicenseFieldPath": "metadata.license.id",
+  "license": {
+    "id": "cc-by-4.0"
+  },
+  "topLevelLicense": null,
+  "files": [
+    {
+      "key": "Zenodo Data Allometry.txt",
+      "size": 6370,
+      "checksum": "md5:2fb19085ccc3426fd263da77e96c73f6"
+    }
+  ],
+  "note": "Live API rechecked on 2026-10-12: metadata.license.id is cc-by-4.0; the response has no top-level license object. The rendered Zenodo record page has an empty License display. This records the repository metadata declaration, not an independent legal review; preserve both observations when citing reuse terms."
+}

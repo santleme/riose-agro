@@ -1,0 +1,30 @@
+{
+  "article": {
+    "title": "Integrating multiple precision livestock technologies to advance rangeland grazing management",
+    "authors": "McFadden et al.",
+    "doi": "10.3389/fvets.2025.1625448",
+    "pmcid": "PMC12411203",
+    "publicationDate": "2025-08-22",
+    "license": "CC BY",
+    "licenseEvidence": "https://pmc-oa-opendata.s3.amazonaws.com/PMC12411203.1/PMC12411203.1.json"
+  },
+  "supplement": {
+    "name": "Data_Sheet_1.ZIP",
+    "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC12411203.1/Data_Sheet_1.ZIP?md5=3df4dd63d52f7df82fdb904d823328bb",
+    "md5": "3df4dd63d52f7df82fdb904d823328bb",
+    "sha256": "655c37fa00030b55cc80029349f2cbf6594eb341ad3b495c24dc0dfbdb70977c",
+    "retrieved": "2026-10-11"
+  },
+  "files": {
+    "intake.final.xlsx": "ffb6870b6c2caa2a15e938020e715ec33356b02295105cdc3e7ce633323093e7",
+    "Forage_Data.xlsx": "83c96a5a1f059406c30a0c3e65eaf144456db84b69d9e286ced5115378433cbc",
+    "ScaleWeights.xlsx": "e4b828960143e007ab221b92ad69557f1eb63ec418c394540bd3c55613e42e79"
+  },
+  "derivation": {
+    "script": "scripts/audit_sdsu_individual_dmi.py",
+    "output": "individual-dmi-derived.csv",
+    "formula": "DMI_kg_day = IntakeLb * (period_mean_DM_pct / 100) * 0.45359237",
+    "periodMatching": "trim surrounding whitespace for key matching; preserve raw label in output",
+    "missingForage": "retain intake row and leave derived DMI blank"
+  }
+}

@@ -4,44 +4,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#183c2f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Agroville — ADG e pastejo observados</title>
   <link rel="stylesheet" href="adult-data.css">
 </head>
 <body>
   <header>
-    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ adultos observados</span></a>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ coorte yearling observada</span></a>
     <a class="back-link" href="index.html">← Voltar à fazenda</a>
   </header>
   <main>
     <section class="intro">
       <div>
-        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · BOVINOS ADULTOS</div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · NOVILHOS DE UM ANO</div>
         <h1>ADG e indicadores de pastejo</h1>
         <p>Explore os registros publicados por animal e período. A página descreve observações e não executa nem calibra o motor do Agroville.</p>
       </div>
-      <div class="data-badge"><span></span> USDA / CPER · DOMÍNIO PÚBLICO</div>
+      <div class="data-badge"><span></span> USDA / CPER · DOMÍNIO PÚBLICO<br><a href="adult-cow-data.html">Comparar coorte separada de vacas adultas ↗</a><br><a href="rangeland-behavior.html">Comportamento observado em vacas maduras ↗</a><br><a href="usda-cgrec-cow-calf.html">Explorar USDA CGREC vacas-bezerros ↗</a><br><a href="grasscast-data.html">Contexto histórico CPER ↗</a><br><a href="rothamsted-data.html">Explorar Rothamsted ↗</a><br><a href="cgrec-data.html">Explorar USDA CGREC 1989–2015 ↗</a><br><a href="hpgrs-data.html">Explorar USDA HPGRS 1982–2022 ↗</a></div>
     </section>
 
     <section class="study-card">
       <div class="study-heading"><div><div class="eyebrow">ESTUDO OBSERVACIONAL</div><h2>Novilhos em shortgrass steppe</h2></div><a href="https://doi.org/10.15482/USDA.ADC/1524788" target="_blank" rel="noopener">Fonte e arquivos ↗</a></div>
-      <p>Central Plains Experimental Range, Colorado · períodos de pastejo em 2019–2020 · os mesmos animais podem aparecer em mais de um período. Não houve comparação randomizada com confinamento.</p>
+      <p>Central Plains Experimental Range, Colorado · novilhos de um ano (<em>yearlings</em>) em períodos de pastejo de 2019–2020 · os mesmos animais podem aparecer em mais de um período. Não houve comparação randomizada com confinamento.</p>
+      <p class="domain-review-note" role="note"><strong>Revisão de domínio pendente:</strong> a equivalência da categoria <em>yearling</em> ao recorte “adultos” aprovado para prototipagem ainda aguarda parecer zootécnico independente. <a href="docs/revisao-independente-caso.md">Ver brief e perguntas para revisão ↗</a></p>
       <div class="study-facts" id="study-facts" aria-live="polite"><span>Carregando resumo…</span></div>
     </section>
 
     <section class="explorer adult-explorer" aria-labelledby="explorer-title">
       <div class="explorer-head">
         <div><div class="eyebrow">ASSOCIAÇÃO DESCRITIVA</div><h2 id="explorer-title">ADG observado e pastejo</h2></div>
-        <label class="measure-control" for="predictor">Eixo horizontal<select id="predictor"><option value="GBD_5min">Duração do bout (min/dia)</option><option value="MeanVelo">Velocidade ao pastejar (m/min)</option><option value="GrazeHrs_5min">Horas de pastejo (h/dia)</option></select></label>
+        <div class="adult-chart-controls">
+          <label class="measure-control" for="predictor">Eixo horizontal<select id="predictor"><option value="GBD_5min">Duração do bout (min/dia)</option><option value="MeanVelo">Velocidade ao pastejar (m/min)</option><option value="GrazeHrs_5min">Horas de pastejo (h/dia)</option><option value="MeanTA">Ângulo médio de giro (graus)</option></select></label>
+          <label class="measure-control" for="period-filter">Período ADG<select id="period-filter"><option value="all">Todos os períodos</option></select></label>
+          <label class="measure-control" for="paddock-filter">Piquete<select id="paddock-filter"><option value="all">Todos os piquetes</option></select></label>
+        </div>
       </div>
-      <p class="measure-note" id="chart-note">Cada ponto representa uma linha animal-período. Repetições do mesmo brinco não são independentes.</p>
+      <p class="measure-note" id="chart-note">Cada ponto representa uma linha animal-período. Repetições do mesmo brinco não são independentes. Use período e piquete para inspecionar os contextos; os recortes são descritivos.</p>
       <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 390" role="img" aria-label="ADG observado em relação ao indicador de pastejo selecionado"></svg></div>
+      <p class="filter-summary" id="filter-summary" aria-live="polite">Carregando registros…</p>
       <div class="adult-summary" id="summary" aria-live="polite"></div>
+      <section class="association-report" aria-labelledby="association-title">
+        <div class="study-heading"><div><div class="eyebrow">RESUMO AGRUPADO POR ANIMAL</div><h3 id="association-title">Associação observada neste estudo</h3></div><span class="association-scope">ADG × duas variáveis pré-especificadas</span></div>
+        <div class="association-table-wrap"><table><thead><tr><th>Indicador</th><th>ρ Spearman<br>todos os períodos</th><th>Bootstrap por brinco<br>intervalo percentil 95%</th><th>ρ parcial ajustado<br>período + piquete</th><th>Bootstrap por brinco<br>intervalo percentil 95%</th><th>ρ por período<br>1 · 2 · 3</th><th>ρ por piquete<br>15E · 19N · 22W · 23E</th><th>ρ retirando cada período<br>1 · 2 · 3</th></tr></thead><tbody id="association-results"><tr><td colspan="8">Carregando análise observacional…</td></tr></tbody></table></div>
+        <p class="association-takeaway" id="association-takeaway" aria-live="polite">A síntese será exibida quando a análise carregar.</p>
+        <p class="table-note">Nas fatias, cada valor mostra ρ e os totais de registros animal-período/animais únicos. Os intervalos reamostram os 33 brincos deste conjunto, mantendo juntas as repetições do mesmo animal. A sensibilidade parcial residualiza os postos de ADG e do indicador por efeitos aditivos de período e piquete; seu intervalo também é descritivo. Com apenas 36 registros, uma unidade de estudo e células esparsas, ela não substitui um modelo confirmatório. As colunas não estimam causalidade, validação independente ou incerteza de previsão do motor.</p>
+      </section>
       <p class="table-note">As médias acima dão o mesmo peso a cada registro animal-período. Como alguns animais aparecem mais de uma vez, elas não são médias por animal independente.</p>
+      <p class="table-note">Ângulo médio de giro (<code>MeanTA</code>) vem do dicionário da fonte em graus. É uma descrição do movimento observado durante o pastejo, sem interpretação causal.</p>
     </section>
 
     <section class="data-table-card">
       <div class="study-heading"><div><div class="eyebrow">REGISTROS PUBLICADOS</div><h2>Animal por período</h2></div><span id="row-count"></span></div>
-      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Período</th><th>Piquete</th><th>Brinco</th><th>ADG (kg/d)</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Velocidade (m/min)</th></tr></thead><tbody id="records"></tbody></table></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Período</th><th>Piquete</th><th>Brinco</th><th>ADG (kg/d)</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Velocidade (m/min)</th><th>Ângulo de giro (graus)</th></tr></thead><tbody id="records"></tbody></table></div>
       <p class="table-note">Dados ausentes não são preenchidos. 60dADG_INT identifica o intervalo do estudo; as datas exatas não constam nesta tabela-resumo.</p>
     </section>
 
@@ -50,13 +64,13 @@
         <div><div class="eyebrow">SÉRIE DIÁRIA PUBLICADA</div><h2 id="daily-title">Sinais observados no piquete</h2></div>
         <div class="daily-controls">
           <label class="measure-control" for="animal-select">Animal<select id="animal-select"></select></label>
-          <label class="measure-control" for="daily-measure">Medida<select id="daily-measure"><option value="grazingHours">Horas de pastejo (h/dia)</option><option value="bout">Duração do bout (min/dia)</option><option value="velocity">Velocidade ao pastejar (m/min)</option><option value="biomass">Biomassa estimada (kg MS/ha)</option></select></label>
+          <label class="measure-control" for="daily-measure">Medida<select id="daily-measure"><option value="grazingHours">Horas de pastejo (h/dia)</option><option value="bout">Duração do bout (min/dia)</option><option value="turnAngle">Ângulo médio de giro (graus)</option><option value="velocity">Velocidade ao pastejar (m/min)</option><option value="biomass">Biomassa estimada (kg MS/ha)</option></select></label>
         </div>
       </div>
       <p class="measure-note">Um ponto é um dia-animal observado. Dias sem observação ficam em branco; não interpolamos valores nem tratamos ADG como diário.</p>
       <div class="chart-wrap daily-chart-wrap"><svg id="daily-chart" viewBox="0 0 900 320" role="img" aria-label="Série diária observada para o animal selecionado"></svg></div>
       <div class="study-facts daily-facts" id="daily-facts" aria-live="polite"><span>Carregando dados diários…</span></div>
-      <div class="table-scroll daily-table-scroll"><table><thead><tr><th>Data</th><th>Piquete</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Velocidade (m/min)</th><th>Biomassa (kg MS/ha)</th><th>Dia completo</th></tr></thead><tbody id="daily-records"></tbody></table></div>
+      <div class="table-scroll daily-table-scroll"><table><thead><tr><th>Data</th><th>Piquete</th><th>Bout (min/d)</th><th>Pastejo (h/d)</th><th>Ângulo de giro (graus)</th><th>Velocidade (m/min)</th><th>Biomassa (kg MS/ha)</th><th>Dia completo</th></tr></thead><tbody id="daily-records"></tbody></table></div>
       <p class="table-note">A marca de dia completo segue o dicionário da fonte: 1.368–1.512 minutos registrados (±5% de 24 horas). Biomassa é estimativa por satélite. O dicionário tem códigos inconsistentes nas colunas de intervalo; por isso a série é organizada apenas por data, animal e piquete. ADG fica no nível de intervalo do arquivo-resumo acima, nunca replicado por dia.</p>
     </section>
 

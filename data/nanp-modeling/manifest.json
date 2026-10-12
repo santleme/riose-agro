@@ -1,0 +1,14 @@
+{
+  "title": "National Animal Nutrition Program (NANP) Modeling: Animal Performance Information",
+  "publisher": "National Animal Nutrition Program; USDA Ag Data Commons record",
+  "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/National_Animal_Nutrition_Program_NANP_Modeling_Animal_Performance_Information/24662358",
+  "landingPage": "https://animalnutrition.org/animal-performance-nutrition",
+  "downloadUrl": "https://modeling.animalnutrition.org/download-all-tables-zip-csv",
+  "license": "U.S. Public Domain label on Ag Data Commons catalog record",
+  "retrievedAt": "2026-10-12",
+  "archivePath": "animal-nutrition-metabolism-2026-10-12.zip",
+  "archiveBytes": 11071388,
+  "archiveSha256": "93735077cdab0f92ab1f4e773a8fe1e4b5517519d20987c5376b729c2db27dca",
+  "archiveFormat": "ZIP payload preceded by one newline; download server returned text/html Content-Type despite ZIP bytes",
+  "versioning": "The export endpoint does not expose an immutable release/version; this local byte snapshot and retrieval date define this audit input."
+}

@@ -1,0 +1,550 @@
+{
+  "classification": "fixed_default_engine_dmi_component_diagnostic_out_of_approved_cper_domain_not_full_validation",
+  "source": {
+    "title": "Maize silage supplementation in grazing dairy cows: milk production, pasture intake, behaviour and methane emissions",
+    "datasetDoi": "10.57745/GTTJAR",
+    "datasetUrl": "https://doi.org/10.57745/GTTJAR",
+    "articleDoi": "10.1016/j.dib.2024.110361",
+    "license": "Etalab Open License 2.0",
+    "version": "1.1",
+    "retrieved": "2026-10-12",
+    "sourceManifestSha256": "bbd78adad5df54dd67c9e226aa6e912d5fe558bae5bc4f31d5ccfa4bebe93987",
+    "archivedSourceFiles": [
+      {
+        "path": "GrASTech_1_Periods.xlsx",
+        "bytes": 8932,
+        "md5": "828d59fdd6f1e8b9af7a90816c9b11ef",
+        "sha256": "6963d22378e8e067b02ca0305bc597d594b2db9a111949bacd9d6ba1410fa6bc"
+      },
+      {
+        "path": "GrASTech_2_Treatments.xlsx",
+        "bytes": 9771,
+        "md5": "cfd6f1a5592444259665322b62c0ee23",
+        "sha256": "7bf83e528bf5cc38950ece4e4b798250bfb8e1279415659c4a8423810d9287ee"
+      },
+      {
+        "path": "GrASTech_3_Cows.xlsx",
+        "bytes": 17529,
+        "md5": "0e9b71e0fc57e36f7304a1ed25ce9d5b",
+        "sha256": "e72dd914b3a428f45098db712c777755bc36afe4124b1df89d321332b5ddf25f"
+      },
+      {
+        "path": "GrASTech_4_CowMeasurements.xlsx",
+        "bytes": 64444,
+        "md5": "23476caf93bbe86f2de1cded00e5a756",
+        "sha256": "353a337f9d4d76f52a5e41fe27c9fb0a593e342998dca066707beafbfd1c9902"
+      },
+      {
+        "path": "GrASTech_5_HerbageMeasurements.xlsx",
+        "bytes": 19889,
+        "md5": "06f08b8e99daca421c6a16b2fb8d518a",
+        "sha256": "3b344e984c5343ae97191a1b1c82ed37ebab59acaa1c364c6dbcb0a12d6cb418"
+      },
+      {
+        "path": "GrASTech_6_Feed.xlsx",
+        "bytes": 10073,
+        "md5": "9970742d41c62a889d082ea481b2e89f",
+        "sha256": "1d0fe05107d924d26d36cde65aba7d060a38018964b44aaf3ce992ef86544032"
+      },
+      {
+        "path": "GrASTech_7_Weather.xlsx",
+        "bytes": 18119,
+        "md5": "5b1d33a21e64abb99539960b9712c2e2",
+        "sha256": "2aaf6ff6cbb8d29464e2562e454c29cfb32d110cdfc7f4574a1461e4253d4e98"
+      },
+      {
+        "path": "GrASTech_9_GrazingSchedule.xlsx",
+        "bytes": 30899,
+        "md5": "b05f1e192eb44ab56dcbef2e4655a38c",
+        "sha256": "c1ccc292727bc8f2736dc890325d79be6a1eec11ac4e8246dc065dc630749ce4"
+      }
+    ],
+    "normalizedFile": "data/grastech-dairy-grazing-dmi/individual-dmi-observations.tsv",
+    "normalizedFileSha256": "25888154443e964b8d6065c1d89af1d291ae3cd907af9bec9d2801708c05648f",
+    "population": "Lactating Holstein dairy cows at one INRAE farm in France; experiment E1, one observation per cow under zero maize-silage/soybean-meal supplementation.",
+    "target": "Measured total dry matter intake (kg DM/cow/day), equal to n-alkane-derived herbage intake in this zero-supplement arm.",
+    "sourceCoverage": {
+      "allRows": 168,
+      "cows": 48,
+      "experiments": [
+        "E1",
+        "E2"
+      ],
+      "evaluatedRows": 24,
+      "evaluatedCows": 24,
+      "evaluatedGroups": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ]
+    },
+    "exclusions": "E1 supplement arms (4/8 kg DM/day) and all E2 arms (5 kg DM/day) are outside the engine configuration/input match and are not included in the score."
+  },
+  "model": {
+    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "seed": 20261012,
+    "configuration": {
+      "housing": "pasture",
+      "diet": "pasture",
+      "weather": "normal",
+      "supplementKgDmPerCowDay": 0,
+      "simulatedHours": 24,
+      "animals": 1
+    },
+    "inputs": [
+      "observed morning body weight"
+    ],
+    "calibrationOrParameterFitting": false,
+    "targetOutput": "FarmEngine metrics intake.totalKgDM after 24 hours (kg DM/cow/day)."
+  },
+  "evaluation": {
+    "split": "Leave-one-Latin-square group out within the E1 zero-supplement arm; the held-out group is excluded from the constant-mean baseline training data.",
+    "folds": 6,
+    "animalIdentityLeakage": false,
+    "engineDefault": {
+      "nAnimalPeriods": 24,
+      "uniqueCows": 24,
+      "meanObservedDmiKgDmPerCowDay": 14.266479664002619,
+      "meanPredictedDmiKgDmPerCowDay": 13.121250646809008,
+      "maeKgDmPerCowDay": 1.5628474129953132,
+      "rmseKgDmPerCowDay": 1.8486903619651394,
+      "biasPredictedMinusObservedKgDmPerCowDay": -1.1452290171936073
+    },
+    "constantTrainingMeanBaseline": {
+      "nAnimalPeriods": 24,
+      "uniqueCows": 24,
+      "meanObservedDmiKgDmPerCowDay": 14.266479664002619,
+      "meanPredictedDmiKgDmPerCowDay": 14.266479664002615,
+      "maeKgDmPerCowDay": 1.4964921273865253,
+      "rmseKgDmPerCowDay": 1.9405597543866588,
+      "biasPredictedMinusObservedKgDmPerCowDay": 1.3322676295501878e-15
+    },
+    "engineMinusBaselineMaeKgDmPerCowDay": 0.0663552856087879,
+    "byHeldOutGroup": {
+      "1": {
+        "trainingGroups": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 15.774681836340866,
+          "meanPredictedDmiKgDmPerCowDay": 13.357780192005638,
+          "maeKgDmPerCowDay": 2.4169016443352285,
+          "rmseKgDmPerCowDay": 2.760584453133945,
+          "biasPredictedMinusObservedKgDmPerCowDay": -2.4169016443352285
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 15.774681836340866,
+          "meanPredictedDmiKgDmPerCowDay": 13.964839229534963,
+          "maeKgDmPerCowDay": 1.9674984185484448,
+          "rmseKgDmPerCowDay": 2.641341382083816,
+          "biasPredictedMinusObservedKgDmPerCowDay": -1.809842606805904
+        }
+      },
+      "2": {
+        "trainingGroups": [
+          "1",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 14.151366014851547,
+          "meanPredictedDmiKgDmPerCowDay": 13.09646253580407,
+          "maeKgDmPerCowDay": 1.5069684576839233,
+          "rmseKgDmPerCowDay": 1.7602435708594464,
+          "biasPredictedMinusObservedKgDmPerCowDay": -1.0549034790474767
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 14.151366014851547,
+          "meanPredictedDmiKgDmPerCowDay": 14.28950239383283,
+          "maeKgDmPerCowDay": 1.4495616961652962,
+          "rmseKgDmPerCowDay": 1.7510628704461582,
+          "biasPredictedMinusObservedKgDmPerCowDay": 0.13813637898128306
+        }
+      },
+      "3": {
+        "trainingGroups": [
+          "1",
+          "2",
+          "4",
+          "5",
+          "6"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 15.582349456786325,
+          "meanPredictedDmiKgDmPerCowDay": 13.532918621162008,
+          "maeKgDmPerCowDay": 2.049430835624317,
+          "rmseKgDmPerCowDay": 2.2613907403645683,
+          "biasPredictedMinusObservedKgDmPerCowDay": -2.049430835624317
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 15.582349456786325,
+          "meanPredictedDmiKgDmPerCowDay": 14.003305705445872,
+          "maeKgDmPerCowDay": 1.6052268569915906,
+          "rmseKgDmPerCowDay": 2.141574505146232,
+          "biasPredictedMinusObservedKgDmPerCowDay": -1.5790437513404534
+        }
+      },
+      "4": {
+        "trainingGroups": [
+          "1",
+          "2",
+          "3",
+          "5",
+          "6"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 13.207987527989655,
+          "meanPredictedDmiKgDmPerCowDay": 12.864779413805788,
+          "maeKgDmPerCowDay": 1.487452835561046,
+          "rmseKgDmPerCowDay": 1.5370583188253089,
+          "biasPredictedMinusObservedKgDmPerCowDay": -0.3432081141838679
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 13.207987527989655,
+          "meanPredictedDmiKgDmPerCowDay": 14.478178091205205,
+          "maeKgDmPerCowDay": 1.584105276883295,
+          "rmseKgDmPerCowDay": 1.9397815333772566,
+          "biasPredictedMinusObservedKgDmPerCowDay": 1.2701905632155501
+        }
+      },
+      "5": {
+        "trainingGroups": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "6"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 14.029758347424414,
+          "meanPredictedDmiKgDmPerCowDay": 13.287836019345729,
+          "maeKgDmPerCowDay": 0.7419223280786857,
+          "rmseKgDmPerCowDay": 0.804748604940822,
+          "biasPredictedMinusObservedKgDmPerCowDay": -0.7419223280786857
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 14.029758347424414,
+          "meanPredictedDmiKgDmPerCowDay": 14.313823927318257,
+          "maeKgDmPerCowDay": 0.6760666796748347,
+          "rmseKgDmPerCowDay": 1.0042384188363436,
+          "biasPredictedMinusObservedKgDmPerCowDay": 0.28406557989384273
+        }
+      },
+      "6": {
+        "trainingGroups": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "trainingN": 20,
+        "evaluation": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 12.852734800622875,
+          "meanPredictedDmiKgDmPerCowDay": 12.587727098730806,
+          "maeKgDmPerCowDay": 1.1744083766886777,
+          "rmseKgDmPerCowDay": 1.2894168068041603,
+          "biasPredictedMinusObservedKgDmPerCowDay": -0.26500770189206735
+        },
+        "constantTrainingMeanBaseline": {
+          "nAnimalPeriods": 4,
+          "uniqueCows": 4,
+          "meanObservedDmiKgDmPerCowDay": 12.852734800622875,
+          "meanPredictedDmiKgDmPerCowDay": 14.549228636678563,
+          "maeKgDmPerCowDay": 1.6964938360556894,
+          "rmseKgDmPerCowDay": 1.7872154120074655,
+          "biasPredictedMinusObservedKgDmPerCowDay": 1.6964938360556894
+        }
+      }
+    },
+    "rows": [
+      {
+        "cowId": "E1_C4",
+        "group": "4",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 620.5,
+        "observedDmiKgDmPerCowDay": 12.750568284327407,
+        "engineDmiKgDmPerCowDay": 13.799796227495522,
+        "baselineDmiKgDmPerCowDay": 14.478178091205205
+      },
+      {
+        "cowId": "E1_C5",
+        "group": "4",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 586.33,
+        "observedDmiKgDmPerCowDay": 15.106007518540695,
+        "engineDmiKgDmPerCowDay": 13.039862243460837,
+        "baselineDmiKgDmPerCowDay": 14.478178091205205
+      },
+      {
+        "cowId": "E1_C10",
+        "group": "1",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 554.67,
+        "observedDmiKgDmPerCowDay": 14.549605228120887,
+        "engineDmiKgDmPerCowDay": 12.335750158750914,
+        "baselineDmiKgDmPerCowDay": 13.964839229534963
+      },
+      {
+        "cowId": "E1_C13",
+        "group": "1",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 627.5,
+        "observedDmiKgDmPerCowDay": 16.18973781116378,
+        "engineDmiKgDmPerCowDay": 13.955474831190076,
+        "baselineDmiKgDmPerCowDay": 13.964839229534963
+      },
+      {
+        "cowId": "E1_C15",
+        "group": "1",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 640,
+        "observedDmiKgDmPerCowDay": 18.70985670002892,
+        "engineDmiKgDmPerCowDay": 14.233472337787486,
+        "baselineDmiKgDmPerCowDay": 13.964839229534963
+      },
+      {
+        "cowId": "E1_C16",
+        "group": "4",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 555.67,
+        "observedDmiKgDmPerCowDay": 11.118728459692461,
+        "engineDmiKgDmPerCowDay": 12.357989959278703,
+        "baselineDmiKgDmPerCowDay": 14.478178091205205
+      },
+      {
+        "cowId": "E1_C17",
+        "group": "1",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 580.33,
+        "observedDmiKgDmPerCowDay": 13.649527606049881,
+        "engineDmiKgDmPerCowDay": 12.906423440294079,
+        "baselineDmiKgDmPerCowDay": 13.964839229534963
+      },
+      {
+        "cowId": "E1_C22",
+        "group": "4",
+        "periodId": "E1_P1",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 551.33,
+        "observedDmiKgDmPerCowDay": 13.856645849398056,
+        "engineDmiKgDmPerCowDay": 12.261469224988087,
+        "baselineDmiKgDmPerCowDay": 14.478178091205205
+      },
+      {
+        "cowId": "E1_C6",
+        "group": "6",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 620.5,
+        "observedDmiKgDmPerCowDay": 12.260232509126483,
+        "engineDmiKgDmPerCowDay": 13.799796227495522,
+        "baselineDmiKgDmPerCowDay": 14.549228636678563
+      },
+      {
+        "cowId": "E1_C7",
+        "group": "3",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 640,
+        "observedDmiKgDmPerCowDay": 17.505602053831645,
+        "engineDmiKgDmPerCowDay": 14.233472337787486,
+        "baselineDmiKgDmPerCowDay": 14.003305705445872
+      },
+      {
+        "cowId": "E1_C11",
+        "group": "6",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 560.25,
+        "observedDmiKgDmPerCowDay": 13.72850804399309,
+        "engineDmiKgDmPerCowDay": 12.459848245695994,
+        "baselineDmiKgDmPerCowDay": 14.549228636678563
+      },
+      {
+        "cowId": "E1_C12",
+        "group": "3",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 647.25,
+        "observedDmiKgDmPerCowDay": 16.42861352798302,
+        "engineDmiKgDmPerCowDay": 14.394710891613986,
+        "baselineDmiKgDmPerCowDay": 14.003305705445872
+      },
+      {
+        "cowId": "E1_C14",
+        "group": "3",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 622.5,
+        "observedDmiKgDmPerCowDay": 14.444242751187037,
+        "engineDmiKgDmPerCowDay": 13.84427582855111,
+        "baselineDmiKgDmPerCowDay": 14.003305705445872
+      },
+      {
+        "cowId": "E1_C18",
+        "group": "6",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 573.75,
+        "observedDmiKgDmPerCowDay": 12.480847921597022,
+        "engineDmiKgDmPerCowDay": 12.760085552821204,
+        "baselineDmiKgDmPerCowDay": 14.549228636678563
+      },
+      {
+        "cowId": "E1_C21",
+        "group": "6",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 509.5,
+        "observedDmiKgDmPerCowDay": 12.941350727774902,
+        "engineDmiKgDmPerCowDay": 11.331178368910507,
+        "baselineDmiKgDmPerCowDay": 14.549228636678563
+      },
+      {
+        "cowId": "E1_C24",
+        "group": "3",
+        "periodId": "E1_P2",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 524.25,
+        "observedDmiKgDmPerCowDay": 13.950939494143597,
+        "engineDmiKgDmPerCowDay": 11.65921542669545,
+        "baselineDmiKgDmPerCowDay": 14.003305705445872
+      },
+      {
+        "cowId": "E1_C1",
+        "group": "5",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 631.5,
+        "observedDmiKgDmPerCowDay": 14.523344600255964,
+        "engineDmiKgDmPerCowDay": 14.044434033301249,
+        "baselineDmiKgDmPerCowDay": 14.313823927318257
+      },
+      {
+        "cowId": "E1_C2",
+        "group": "2",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 557.5,
+        "observedDmiKgDmPerCowDay": 11.494558836971672,
+        "engineDmiKgDmPerCowDay": 12.398688794244565,
+        "baselineDmiKgDmPerCowDay": 14.28950239383283
+      },
+      {
+        "cowId": "E1_C3",
+        "group": "2",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 597.75,
+        "observedDmiKgDmPerCowDay": 16.260002182540866,
+        "engineDmiKgDmPerCowDay": 13.293840765488232,
+        "baselineDmiKgDmPerCowDay": 14.28950239383283
+      },
+      {
+        "cowId": "E1_C8",
+        "group": "2",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 602,
+        "observedDmiKgDmPerCowDay": 14.94185323949282,
+        "engineDmiKgDmPerCowDay": 13.388359917731355,
+        "baselineDmiKgDmPerCowDay": 14.28950239383283
+      },
+      {
+        "cowId": "E1_C9",
+        "group": "2",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 598.25,
+        "observedDmiKgDmPerCowDay": 13.90904980040083,
+        "engineDmiKgDmPerCowDay": 13.304960665752128,
+        "baselineDmiKgDmPerCowDay": 14.28950239383283
+      },
+      {
+        "cowId": "E1_C19",
+        "group": "5",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 539.67,
+        "observedDmiKgDmPerCowDay": 12.393559408180902,
+        "engineDmiKgDmPerCowDay": 12.002153150834017,
+        "baselineDmiKgDmPerCowDay": 14.313823927318257
+      },
+      {
+        "cowId": "E1_C20",
+        "group": "5",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 618.25,
+        "observedDmiKgDmPerCowDay": 14.86340984439287,
+        "engineDmiKgDmPerCowDay": 13.749756676307989,
+        "baselineDmiKgDmPerCowDay": 14.313823927318257
+      },
+      {
+        "cowId": "E1_C23",
+        "group": "5",
+        "periodId": "E1_P3",
+        "treatmentId": "E1_T1",
+        "bodyWeightKg": 600.5,
+        "observedDmiKgDmPerCowDay": 14.338719536867922,
+        "engineDmiKgDmPerCowDay": 13.35500021693966,
+        "baselineDmiKgDmPerCowDay": 14.313823927318257
+      }
+    ]
+  },
+  "limitations": [
+    "This is a narrow DMI component diagnostic in lactating dairy cows, not the approved USDA/CPER beef-yearling cohort and not a model of ADG.",
+    "The engine has no representation of lactation or milk-energy demand; observed liveweight is supplied as the only animal input.",
+    "Only the zero-supplement E1 arm is scored so the simulated forage-only configuration matches the treatment. Supplemented arms and E2 have unsupported input combinations and are excluded before scoring.",
+    "All observations come from one farm and one experiment. The held-out Latin-square groups do not test site/year transport; there are only four independent groups, so no inferential confidence interval is reported.",
+    "The n-alkane intake method and pasture/diet protocol are source-specific; this audit does not validate pasture biomass, costs, animal weight change, or the full engine.",
+    "No parameters were fitted or selected using the evaluated rows. The report is a diagnostic, not product calibration or permission to display a prediction interval."
+  ],
+  "validated": false,
+  "calibrated": false,
+  "productPredictiveIntervalsAvailable": false
+}

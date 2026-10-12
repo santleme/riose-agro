@@ -1,0 +1,28 @@
+@import url('./observed-data.css');
+
+.measure-control{display:grid;gap:7px;color:#718070;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
+.measure-control select{min-width:230px;padding:11px 38px 11px 13px;border:1px solid #d7dfd2;border-radius:8px;background:#fff;color:#263b2c;font:inherit;text-transform:none;letter-spacing:normal}
+.notice{margin:12px 0;padding:12px 14px;border-left:3px solid #b48b51;border-radius:4px;background:#faf5e9;color:#62533c;font-size:.86rem;line-height:1.6}
+.explorer h2,.data-table-card h2{margin:4px 0 0;font-size:1.5rem;color:#203c2d}
+.cow-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.cow-metric{padding:16px;border:1px solid #e1e7dd;border-radius:10px;background:#fafbf8}
+.cow-metric span{display:block;color:#788579;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em}
+.cow-metric strong{display:block;margin:8px 0 4px;color:#203c2d;font-size:1.25rem}
+.cow-metric small{color:#798578;line-height:1.45}
+.association-explorer{margin-top:20px}
+.association-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.association-summary article{padding:14px 16px;border:1px solid #e1e7dd;border-radius:10px;background:#fafbf8}
+.association-summary span{display:block;color:#788579;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em}
+.association-summary strong{display:block;margin:7px 0 2px;color:#203c2d;font-size:1.1rem}
+.association-summary small{color:#798578;line-height:1.45}
+.data-table-card{margin-top:20px;padding:24px 28px;border:1px solid #e0e6dd;border-radius:12px;background:#fff}
+.data-table-card .study-heading{align-items:center}
+.data-table-card #row-count{color:#788579;font:11px ui-monospace,monospace}
+.table-scroll{overflow:auto;margin-top:18px}
+.table-scroll table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:.84rem}
+.table-scroll th,.table-scroll td{padding:10px 12px;border-bottom:1px solid #edf0ea;text-align:right;font-variant-numeric:tabular-nums}
+.table-scroll th{color:#718070;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+.table-scroll th:first-child,.table-scroll td:first-child{text-align:left}
+.table-scroll tbody tr:hover{background:#f7f9f5}
+.table-note{margin:13px 0 0;color:#7b8678;font-size:.8rem;line-height:1.6}
+@media(max-width:700px){.cow-summary,.association-summary{grid-template-columns:1fr}.data-table-card{padding:18px 14px}.measure-control select{min-width:0;width:100%}.explorer-head{align-items:flex-start;flex-direction:column}}

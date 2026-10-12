@@ -1,0 +1,217 @@
+{
+  "classification": "within_study_observational_association_exploration_not_engine_validation",
+  "source": {
+    "title": "Data from: Can measurements of foraging behaviour predict variation in weight gains of free-ranging cattle?",
+    "publisher": "USDA Agricultural Research Service / Ag Data Commons",
+    "doi": "10.15482/USDA.ADC/1524788",
+    "catalogUrl": "https://catalog.data.gov/dataset/data-from-can-measurements-of-foraging-behaviour-predict-variation-in-weight-gains-of-free",
+    "articleDoi": "10.1071/AN21560",
+    "license": "U.S. Public Domain",
+    "licenseUrl": "https://www.usa.gov/publicdomain/label/1.0/",
+    "retrieved": "2026-10-11",
+    "file": "data/usda-cper/period.csv",
+    "sha256": "1128d3e644a57a138ca8e1d8c3af1d8afc19f5b3b05bd513363e82fbeda0fb3a",
+    "sha256Verified": true
+  },
+  "question": "Among observed yearling beef steers (approximately one year old) in the USDA/CPER 2019-2020 shortgrass study, how are mean grazing-bout duration and mean grazing velocity associated with observed ADG?",
+  "coverage": {
+    "animalPeriodRows": 36,
+    "uniqueAnimals": 33,
+    "repeatedAnimalIds": {
+      "685": 2,
+      "360": 2,
+      "855": 2
+    },
+    "rowsByPeriod": {
+      "1": 9,
+      "2": 14,
+      "3": 13
+    },
+    "rowsByPasture": {
+      "15E": 6,
+      "19N": 11,
+      "22W": 9,
+      "23E": 10
+    },
+    "target": "ADG_60d (kg/steer/day)"
+  },
+  "features": {
+    "GBD_5min": {
+      "meaning": "mean grazing-bout duration at 5-minute resolution (minutes)",
+      "pooledAnimalPeriodRows": 36,
+      "uniqueAnimals": 33,
+      "spearmanRho": -0.5786357786357786,
+      "animalClusterBootstrap95PercentileInterval": [
+        -0.8132551671231029,
+        -0.27270109598452635
+      ],
+      "bootstrapReplicates": 5000,
+      "bootstrapSeed": 20261011,
+      "clusterUnit": "Eartag; all periods for a sampled animal are kept together",
+      "adjustedFixedEffectsRankSensitivity": {
+        "partialSpearmanRho": -0.06519624219367127,
+        "animalClusterBootstrap95PercentileInterval": [
+          -0.46135207974203996,
+          0.24680976557781242
+        ],
+        "bootstrapReplicates": 5000,
+        "bootstrapSeed": 20261012,
+        "adjustment": "Additive fixed effects for 60dADG_INT and Pasture, applied to within-sample average ranks",
+        "clusterUnit": "Eartag; all periods for a sampled animal are kept together",
+        "interpretation": "Secondary descriptive sensitivity; not causal and not an engine validation"
+      },
+      "withinPeriodDescriptiveAssociations": {
+        "1": {
+          "nAnimalPeriods": 9,
+          "nUniqueAnimals": 9,
+          "spearmanRho": -0.38333333333333336
+        },
+        "2": {
+          "nAnimalPeriods": 14,
+          "nUniqueAnimals": 14,
+          "spearmanRho": -0.3098901098901099
+        },
+        "3": {
+          "nAnimalPeriods": 13,
+          "nUniqueAnimals": 13,
+          "spearmanRho": -0.5714285714285714
+        }
+      },
+      "withinPastureDescriptiveAssociations": {
+        "15E": {
+          "nAnimalPeriods": 6,
+          "nUniqueAnimals": 5,
+          "spearmanRho": -0.2
+        },
+        "19N": {
+          "nAnimalPeriods": 11,
+          "nUniqueAnimals": 9,
+          "spearmanRho": -0.7181818181818181
+        },
+        "22W": {
+          "nAnimalPeriods": 9,
+          "nUniqueAnimals": 9,
+          "spearmanRho": -0.6833333333333333
+        },
+        "23E": {
+          "nAnimalPeriods": 10,
+          "nUniqueAnimals": 10,
+          "spearmanRho": -0.41818181818181815
+        }
+      },
+      "leaveOnePeriodOutSensitivity": {
+        "1": {
+          "omittedPeriod": "1",
+          "nAnimalPeriods": 27,
+          "nUniqueAnimals": 24,
+          "spearmanRho": -0.6001221001221001
+        },
+        "2": {
+          "omittedPeriod": "2",
+          "nAnimalPeriods": 22,
+          "nUniqueAnimals": 22,
+          "spearmanRho": -0.49520045172219085
+        },
+        "3": {
+          "omittedPeriod": "3",
+          "nAnimalPeriods": 23,
+          "nUniqueAnimals": 23,
+          "spearmanRho": -0.5237154150197628
+        }
+      }
+    },
+    "MeanVelo": {
+      "meaning": "mean velocity while grazing (meters/minute)",
+      "pooledAnimalPeriodRows": 36,
+      "uniqueAnimals": 33,
+      "spearmanRho": 0.7274131274131274,
+      "animalClusterBootstrap95PercentileInterval": [
+        0.5397464434635754,
+        0.8362527951155962
+      ],
+      "bootstrapReplicates": 5000,
+      "bootstrapSeed": 20261011,
+      "clusterUnit": "Eartag; all periods for a sampled animal are kept together",
+      "adjustedFixedEffectsRankSensitivity": {
+        "partialSpearmanRho": 0.1867531114800654,
+        "animalClusterBootstrap95PercentileInterval": [
+          -0.2553660855046415,
+          0.5614761435411961
+        ],
+        "bootstrapReplicates": 5000,
+        "bootstrapSeed": 20261012,
+        "adjustment": "Additive fixed effects for 60dADG_INT and Pasture, applied to within-sample average ranks",
+        "clusterUnit": "Eartag; all periods for a sampled animal are kept together",
+        "interpretation": "Secondary descriptive sensitivity; not causal and not an engine validation"
+      },
+      "withinPeriodDescriptiveAssociations": {
+        "1": {
+          "nAnimalPeriods": 9,
+          "nUniqueAnimals": 9,
+          "spearmanRho": -0.5833333333333334
+        },
+        "2": {
+          "nAnimalPeriods": 14,
+          "nUniqueAnimals": 14,
+          "spearmanRho": 0.14285714285714285
+        },
+        "3": {
+          "nAnimalPeriods": 13,
+          "nUniqueAnimals": 13,
+          "spearmanRho": 0.554945054945055
+        }
+      },
+      "withinPastureDescriptiveAssociations": {
+        "15E": {
+          "nAnimalPeriods": 6,
+          "nUniqueAnimals": 5,
+          "spearmanRho": 0.6571428571428571
+        },
+        "19N": {
+          "nAnimalPeriods": 11,
+          "nUniqueAnimals": 9,
+          "spearmanRho": 0.6272727272727273
+        },
+        "22W": {
+          "nAnimalPeriods": 9,
+          "nUniqueAnimals": 9,
+          "spearmanRho": 0.8666666666666667
+        },
+        "23E": {
+          "nAnimalPeriods": 10,
+          "nUniqueAnimals": 10,
+          "spearmanRho": 0.6606060606060606
+        }
+      },
+      "leaveOnePeriodOutSensitivity": {
+        "1": {
+          "omittedPeriod": "1",
+          "nAnimalPeriods": 27,
+          "nUniqueAnimals": 24,
+          "spearmanRho": 0.8015873015873016
+        },
+        "2": {
+          "omittedPeriod": "2",
+          "nAnimalPeriods": 22,
+          "nUniqueAnimals": 22,
+          "spearmanRho": 0.19028797289666854
+        },
+        "3": {
+          "omittedPeriod": "3",
+          "nAnimalPeriods": 23,
+          "nUniqueAnimals": 23,
+          "spearmanRho": 0.6689723320158103
+        }
+      }
+    }
+  },
+  "limits": [
+    "The data are observational; these associations do not estimate causal effects of grazing behavior or management.",
+    "All observations come from one study, site, and shortgrass system. Period-specific correlations use small samples and are descriptive.",
+    "Period and pasture stratifications are unadjusted descriptive slices, not a joint model; repeated animal-period observations can occur in more than one slice. Leave-one-period-out summaries are sensitivity checks, not independent validation folds.",
+    "Animal-cluster bootstrap intervals describe resampling variation in this dataset; they are not prediction intervals, do not measure engine.js uncertainty, and do not generalize automatically to another herd or year.",
+    "The two features were pre-specified in the approved case and also reported by the original study; this is a descriptive re-analysis of the same dataset, not independent confirmation of the published relationship.",
+    "The analysis does not validate DMI, weight trajectories, costs, pasture stock, or pasture-versus-confinement scenarios in engine.js.",
+    "The secondary partial-Spearman sensitivity residualizes within-sample ranks against additive period and pasture effects. Its animal-cluster bootstrap is descriptive; the small one-site dataset, sparse period-pasture cells, possible effect interactions, and unresampled site/year/paddock structure limit inference."
+  ]
+}

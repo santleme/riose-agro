@@ -1,0 +1,62 @@
+{
+  "classification": "public_observational_group_level_association_not_causal_not_engine_validation",
+  "source": {
+    "title": "Grass-Cast Database",
+    "publisher": "USDA Ag Data Commons",
+    "doi": "10.15482/USDA.ADC/1521120",
+    "license": "CC BY 4.0 package; see source site list and manifest for component policies",
+    "inputFile": "data/usda-grasscast/cper-grouped-observations.json"
+  },
+  "question": "Within the CPER group/year/treatment records, how is mean ADG associated with annual ANPP before and after absorbing year and grazing-treatment intercepts?",
+  "populationAndUnit": "CPER site; annual group means by grazing treatment; not individual-animal records",
+  "completeCases": {
+    "n": 136,
+    "allMatchedKeys": 243,
+    "adgAndAnppBothPresent": 136,
+    "years": 48,
+    "yearRange": [
+      1940,
+      2019
+    ],
+    "yearsWithThreeTreatments": 43,
+    "rowsByTreatment": {
+      "Heavy": 45,
+      "Light": 46,
+      "Moderate": 45
+    },
+    "unweighted": true,
+    "precisionWeightsAvailable": false
+  },
+  "measures": {
+    "outcome": {
+      "field": "meanAdgKgPerAnimalDay",
+      "unit": "kg/animal/day"
+    },
+    "exposure": {
+      "field": "anppKgDMPerHectare",
+      "unit": "kg dry matter/ha/year",
+      "method": "cage clipping"
+    }
+  },
+  "descriptiveResults": {
+    "rawPearsonR": 0.41362084155329454,
+    "fixedEffects": {
+      "absorbedIntercepts": [
+        "year",
+        "grazing treatment"
+      ],
+      "residualPearsonR": -0.08791960960340994,
+      "slopeKgAdgPerKgAnppPerHectare": -3.34467075505373e-05,
+      "slopeUnit": "(kg/animal/day) per (kg dry matter/ha/year)"
+    },
+    "pValue": null,
+    "confidenceInterval": null
+  },
+  "interpretation": [
+    "The raw and fixed-effect-adjusted summaries describe different mixtures of between-year, between-treatment, and within-year/treatment co-variation; their contrast is not a causal estimate.",
+    "The analysis is an unweighted association of group means. It does not establish an individual-animal relationship or account for unavailable group sample sizes and standard deviations.",
+    "No p-value or interval is reported: the same site and treatment groups recur over time, temporal dependence is not modeled, and precision fields are absent for the complete pairs.",
+    "ANPP is annual cage-clipping productivity, not standing forage stock or individual intake.",
+    "This historical series is independent of the CPER 2019–2020 animal-period cohort and is not validation, calibration, or prediction evidence for engine.js."
+  ]
+}

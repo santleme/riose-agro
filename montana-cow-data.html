@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Agroville — Vacas Angus em pastejo dormente</title>
+  <link rel="stylesheet" href="adult-cow-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ coorte independente</span></a>
+    <a class="back-link" href="adult-cow-data.html">← Outras coortes de vacas</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · MONTANA, EUA</div>
+        <h1>Vacas Angus em pastagem dormente</h1>
+      <p>Inspecione ADG médio derivado da mudança de peso e a condição corporal, com repetição de animais entre anos. Esta coorte permanece separada do caso principal USDA/CPER.</p>
+      </div>
+      <div class="data-badge"><span></span> SUPLEMENTO CC BY 4.0<br><a href="adult-data.html">Trilha principal: USDA / CPER ↗</a></div>
+    </section>
+
+    <section class="study-card">
+      <div class="study-heading">
+        <div><div class="eyebrow">PARSONS ET AL. · 2021 · ESTUDO DE CAMPO</div><h2>Vacas prenhes, não lactantes, em duas estações de pastejo</h2></div>
+        <a href="https://doi.org/10.3390/ani11061518" target="_blank" rel="noopener">Artigo e suplemento ↗</a>
+      </div>
+      <p>A Tabela S1 informa mudança de peso e de escore corporal por vaca-estação. O artigo descreve a mudança ao longo de 84 dias de pastejo, permitindo derivar ADG médio do período. Os arquivos S2–S5 contêm ingestão de suplemento, comportamento de pastejo e métricas de uso espacial.</p>
+      <div class="study-facts" id="facts" aria-live="polite"><span>Carregando o suplemento local…</span></div>
+    </section>
+
+    <section class="explorer" aria-labelledby="change-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">DESCRITIVO · ADG MÉDIO DERIVADO</div><h2 id="change-title">ADG por classe etária</h2></div>
+        <div class="contrast-controls">
+          <label for="year-filter">Safra<select id="year-filter"><option value="all">Ambas</option><option value="Y1">Y1 · 2018/19</option><option value="Y2">Y2 · 2019/20</option></select></label>
+          <label for="age-filter">Idade no artigo<select id="age-filter"><option value="all">Todas</option><option value="4+">4 anos ou mais</option><option value="1">1 ano</option><option value="2">2 anos</option><option value="3">3 anos</option><option value="4">4 anos</option><option value="5-7">5–7 anos</option><option value="8+">8 anos ou mais</option></select></label>
+        </div>
+      </div>
+      <p class="measure-note">ADG médio derivado = mudança de peso publicada ÷ 84 dias, duração informada no artigo. Cada registro é uma vaca-estação; IDs repetidos entre anos são mantidos, portanto as linhas não são animais independentes. A figura mostra mediana e faixa mínima–máxima dos ADGs derivados disponíveis. O filtro 4+ reúne as classes de 4, 5–7 e 8+ anos publicadas; é um recorte etário descritivo, não uma definição clínica de maturidade. Não é uma série diária, previsão do motor ou efeito causal de manejo.</p>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 330" role="img" aria-label="ADG médio derivado do período por classe etária"></svg></div>
+      <div class="association-summary" id="summary" aria-live="polite"></div>
+    </section>
+
+    <section class="association-explorer" aria-labelledby="gps-association-title">
+      <div class="study-heading">
+        <div><div class="eyebrow">RECORTE GPS PAREADO · CLASSES 4+</div><h2 id="gps-association-title">ADG derivada e medidas de pastejo</h2></div>
+        <a href="docs/evidence/mdpi-angus-gps-adg-association.json">Auditoria da análise ↗</a>
+      </div>
+      <p class="measure-note">Associação de postos entre ADG média derivada (mudança de peso ÷ 84 dias) e médias por vaca-estação das medidas GPS. Este resumo fixo usa 37 vaca-estações em 1.657 vaca-dias e não acompanha os filtros da tabela acima. Cada vaca tem 30–49 dias GPS observados; o artigo informa um período de ganho de 84 dias.</p>
+      <div class="table-scroll"><table><thead><tr><th>Medida GPS média</th><th>Conjunto (n=37)</th><th>2018 (n=18)</th><th>2019 (n=19)</th></tr></thead><tbody id="gps-association-rows"><tr><td colspan="4">Carregando análise local…</td></tr></tbody></table></div>
+      <p class="table-note" id="gps-association-note">As estimativas são descritivas; não são p-valores, efeito causal, previsão ou validação do motor.</p>
+    </section>
+
+    <section class="data-table-card">
+      <div class="study-heading"><div><div class="eyebrow">TABELA SUPLEMENTAR S1</div><h2>Registros publicados e ADG derivado</h2></div><span id="row-count"></span></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano do estudo</th><th>ID publicado</th><th>Classe etária</th><th>RFI</th><th>Mudança de peso (kg)</th><th>ADG médio derivado (kg/d)</th><th>Mudança de BCS</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note">Ausências permanecem como “—”. Há 408 registros de vaca-estação e 241 IDs únicos; 167 IDs aparecem nos dois anos. A Tabela S1 tem cinco mudanças de peso ausentes e três valores BCS ausentes. ADG foi derivada dividindo a mudança de peso do período pelos 84 dias reportados no artigo; a tabela não informa a duração individual de cada registro.</p>
+    </section>
+
+    <section class="limits">
+      <h2>Limites de uso</h2>
+      <ul>
+        <li>O artigo inclui idades de 1 a 10 anos, incluindo uma classe de um ano; esta página não rotula toda a coorte como vacas maduras.</li>
+        <li>O artigo informa mudança de peso ao longo de 84 dias. O ADG médio é derivado como mudança de peso ÷ 84; não é uma medida diária independente nem uma série temporal individual.</li>
+        <li>A ingestão disponível é de suplemento, não de matéria seca total da forragem.</li>
+        <li>É uma população Angus prenhe de Montana; não misturar com USDA/CPER, USDA/CGREC ou Zenodo suíço. Os dados não validam o motor nem identificam efeito causal.</li>
+      </ul>
+      <p class="citation">Parsons et al. (2021), <a href="https://doi.org/10.3390/ani11061518" target="_blank" rel="noopener">artigo ↗</a> · <a href="data/mdpi-angus-cow-grazing/supplement.zip">ZIP suplementar arquivado ↗</a> · <a href="docs/evidence/mdpi-angus-cow-grazing-audit.json">auditoria e limitações ↗</a>.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Observações publicadas · ADG médio derivado · sem validação do motor</span></footer>
+  </main>
+  <script type="module" src="montana-cow-data.js"></script>
+</body>
+</html>

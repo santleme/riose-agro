@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — Grass-Cast histórico do CPER</title>
+  <link rel="stylesheet" href="adult-data.css">
+  <link rel="stylesheet" href="grasscast-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ CPER histórico</span></a>
+    <nav aria-label="Dados observados"><a class="back-link" href="adult-data.html">CPER 2019–2020</a><a class="back-link" href="index.html">← Voltar à fazenda</a></nav>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · CPER, COLORADO</div>
+        <h1>Ganho do grupo e produtividade do pasto</h1>
+        <p>Contexto histórico por ano e tratamento de pastejo (1939–2019). Os dados ficam separados do estudo individual de 2019–2020 e não alimentam o motor.</p>
+      </div>
+      <div class="data-badge"><span></span> USDA / GRASS-CAST · CC BY 4.0<br><a href="https://doi.org/10.15482/USDA.ADC/1521120" target="_blank" rel="noopener">Fonte e arquivos ↗</a></div>
+    </section>
+
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">SÉRIE HISTÓRICA AGREGADA</div><h2>Grupo de pastejo por ano × tratamento</h2></div><a href="data/usda-grasscast/manifest.json">Manifesto e checksums ↗</a></div>
+      <p>O ganho médio por animal e ANPP compartilham chaves de ano e intensidade de pastejo nas tabelas CPER. São médias/resumos do grupo, não dados individuais pareados. ANPP é produtividade anual em kg de matéria seca por hectare, não estoque instantâneo do piquete.</p>
+      <div class="study-facts" id="facts" aria-live="polite"><span>Carregando resumo…</span></div>
+    </section>
+
+    <section class="explorer">
+      <div class="explorer-head"><div><div class="eyebrow">FILTROS DESCRITIVOS</div><h2>Período e intensidade</h2></div><div class="daily-controls">
+        <label class="measure-control" for="start-year">Ano inicial<input id="start-year" type="number" min="1939" max="2020" value="1939"></label>
+        <label class="measure-control" for="end-year">Ano final<input id="end-year" type="number" min="1939" max="2020" value="2020"></label>
+        <label class="measure-control" for="treatment">Tratamento<select id="treatment"><option value="all">Todos</option></select></label>
+      </div></div>
+      <p class="measure-note" id="filter-note">Uma linha por ano e intensidade no mesmo local. Os grupos cobrem 1939–2019; NDVI, 1982–2020. Períodos repetidos não são animais independentes.</p>
+    </section>
+
+    <section class="explorer" aria-labelledby="adg-chart-title">
+      <div class="explorer-head"><div><div class="eyebrow">RESULTADO ANIMAL AGREGADO</div><h2 id="adg-chart-title">Ganho médio diário por grupo</h2></div><span class="association-scope">kg/animal/dia</span></div>
+      <div class="chart-wrap"><svg id="adg-chart" viewBox="0 0 900 340" role="img" aria-label="Série histórica de ganho médio diário do CPER por intensidade de pastejo"></svg></div>
+      <p class="table-note">O dicionário define `weight_kg_day` como ganho médio por animal por dia de pastejo. Valores ausentes aparecem como lacunas, sem interpolação.</p>
+    </section>
+
+    <section class="explorer" aria-labelledby="anpp-chart-title">
+      <div class="explorer-head"><div><div class="eyebrow">PRODUTIVIDADE VEGETAL</div><h2 id="anpp-chart-title">ANPP anual por grupo</h2></div><span class="association-scope">kg MS/ha/ano</span></div>
+      <div class="chart-wrap"><svg id="anpp-chart" viewBox="0 0 900 340" role="img" aria-label="Série histórica de produtividade anual da vegetação do CPER por intensidade de pastejo"></svg></div>
+      <p class="table-note">ANPP foi medida por cage-clipping. O catálogo alerta que métodos, época de amostragem, biomassa morta e remoção pelo pastejo variam entre conjuntos.</p>
+    </section>
+
+    <section class="explorer" aria-labelledby="scatter-title">
+      <div class="explorer-head"><div><div class="eyebrow">ASSOCIAÇÃO OBSERVACIONAL</div><h2 id="scatter-title">ADG e ANPP no mesmo ano/tratamento</h2></div><span class="association-scope" id="scatter-count"></span></div>
+      <div class="chart-wrap"><svg id="scatter-chart" viewBox="0 0 900 340" role="img" aria-label="Dispersão descritiva de ADG por ANPP no CPER, agregada por ano e tratamento"></svg></div>
+      <p class="table-note">Cada ponto é um grupo-ano-tratamento, não um animal. O gráfico não ajusta tendência temporal, clima ou diferenças entre tratamentos; não estima efeito causal nem erro do motor.</p>
+      <div class="adjusted-summary" id="adjusted-summary" aria-live="polite">Carregando resumo ajustado por ano e tratamento…</div>
+    </section>
+
+    <section class="explorer" aria-labelledby="ndvi-title">
+      <div class="explorer-head"><div><div class="eyebrow">SÉRIE DE SATÉLITE SEPARADA</div><h2 id="ndvi-title">NDVI acumulado na estação de crescimento</h2></div><label class="measure-control" for="ndvi-measure">Índice<select id="ndvi-measure"><option value="baselineAdjustedGrowingSeasonNdvi">Ajustado pela linha de base</option><option value="growingSeasonNdvi">Soma da estação</option></select></label></div>
+      <div class="chart-wrap"><svg id="ndvi-chart" viewBox="0 0 900 340" role="img" aria-label="Série anual de NDVI do CPER por satélite"></svg></div>
+      <p class="table-note">MODIS e AVHRR são mantidos como séries próprias. Este índice não está convertido em biomassa nem ligado aos registros de ADG/ANPP.</p>
+    </section>
+
+    <section class="data-table-card">
+      <div class="study-heading"><div><div class="eyebrow">TABELA AGREGADA</div><h2>CPER por ano e tratamento</h2></div><span id="row-count"></span></div>
+      <div class="table-scroll"><table><thead><tr><th>Ano</th><th>Tratamento</th><th>Dias de pastejo</th><th>Animais (n)</th><th>ADG médio (kg/animal/d)</th><th>ANPP (kg MS/ha/ano)</th><th>AUM/acre</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note">Os dados brutos, dicionários e regras de licença estão no manifesto local e na página oficial USDA Ag Data Commons. O explorador não combina esta série agregada com a coorte CPER individual de 2019–2020.</p>
+    </section>
+
+    <section class="limits"><h2>Limites de interpretação</h2><ul>
+      <li>Há 243 chaves CPER ano × tratamento comuns entre ganho e ANPP; 136 têm ambos os valores numéricos. A correspondência é no nível do grupo, não dos animais.</li>
+      <li>A série inclui décadas de mudanças de clima, manejo, tamanho dos grupos e protocolo. Os contrastes são observacionais e não estimam o efeito causal da intensidade.</li>
+      <li>ANPP é produtividade anual, não massa disponível em um dia; NDVI é um sinal de satélite, não medição direta de kg MS por piquete.</li>
+      <li>Não há DMI individual, custos atuais, estado inicial do motor ou janela de previsão pareada. A série não valida os outputs do <code>engine.js</code>.</li>
+    </ul><p class="citation">USDA Ag Data Commons, Grass-Cast Database, DOI <a href="https://doi.org/10.15482/USDA.ADC/1521120" target="_blank" rel="noopener">10.15482/USDA.ADC/1521120 ↗</a>. Artigo do sistema: <a href="https://doi.org/10.1002/ecs2.3280" target="_blank" rel="noopener">Hartman et al. (2020) ↗</a>. Licença do pacote: CC BY 4.0; consulte o manifesto e a lista de sites para atribuição/políticas dos componentes.</p></section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Medidas observadas · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="grasscast-data.js"></script>
+</body>
+</html>

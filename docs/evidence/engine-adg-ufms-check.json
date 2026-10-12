@@ -1,0 +1,212 @@
+{
+  "source": {
+    "doi": "10.17632/3wdjvxmvsp.1",
+    "articleDoi": "10.1016/j.dib.2024.110520",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "sha256": "81efd9e84fb30b3ddf2ed3732d5420f25942772483917411be83aea8ecd473ca"
+  },
+  "engine": {
+    "file": "engine.js",
+    "sha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "fitted": false,
+    "seed": 20261012,
+    "configuration": {
+      "housing": "pasture",
+      "diet": "pasture",
+      "weather": "normal",
+      "supplementKgPerAnimalDay": 0
+    }
+  },
+  "protocol": {
+    "target": "(FINAL_WEIGHT - START_WEIGHT) / AMOUNT_DAYS",
+    "prediction": "Frozen default engine ADG from the same starting weight and interval; no parameter fitting or endpoint update.",
+    "repeatedMeasureHandling": "Animal-cluster bootstrap resamples all 15 interval records together for each of 26 animals; it does not create independent records.",
+    "bootstrapReplicates": 5000,
+    "bootstrapSeed": 20261012,
+    "uncertaintyMeaning": "95% percentile intervals describe metric stability across sampled animals in this cohort; they are not prediction intervals or calibrated uncertainty."
+  },
+  "overall": {
+    "records": 390,
+    "animals": 26,
+    "observedEndpointAdgMeanKgPerDay": 0.5652461142845756,
+    "frozenEngineAdgMeanKgPerDay": 0.5497386017295813,
+    "biasPredictedMinusObservedKgPerDay": -0.01550751255499453,
+    "maeKgPerDay": 0.4486787770003557,
+    "rmseKgPerDay": 0.5687276577282152
+  },
+  "animalClusterBootstrap95Percent": {
+    "biasPredictedMinusObservedKgPerDay": [
+      -0.04855685680165705,
+      0.019590393410369538
+    ],
+    "maeKgPerDay": [
+      0.4179345992073031,
+      0.4823263067528917
+    ],
+    "rmseKgPerDay": [
+      0.5315944236855461,
+      0.607767793906603
+    ]
+  },
+  "byInterval": [
+    {
+      "period": "23/12/2022–20/01/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.7499999999999998,
+      "frozenEngineAdgMeanKgPerDay": 0.6419543011282247,
+      "biasPredictedMinusObservedKgPerDay": -0.10804569887177548,
+      "maeKgPerDay": 0.43900901603312936,
+      "rmseKgPerDay": 0.578044846088584
+    },
+    {
+      "period": "21/01/2023–16/02/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 1.2041420118343196,
+      "frozenEngineAdgMeanKgPerDay": 0.4755904384097133,
+      "biasPredictedMinusObservedKgPerDay": -0.7285515734246062,
+      "maeKgPerDay": 0.7781138269806819,
+      "rmseKgPerDay": 0.8119848408313979
+    },
+    {
+      "period": "17/02/2023–07/03/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.6303418803418803,
+      "frozenEngineAdgMeanKgPerDay": 0.45815092930789836,
+      "biasPredictedMinusObservedKgPerDay": -0.172190951033982,
+      "maeKgPerDay": 0.22520662946850367,
+      "rmseKgPerDay": 0.338915140426415
+    },
+    {
+      "period": "08/03/2023–21/03/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 1.0236686390532541,
+      "frozenEngineAdgMeanKgPerDay": 0.4606545089804224,
+      "biasPredictedMinusObservedKgPerDay": -0.563014130072832,
+      "maeKgPerDay": 0.575974594326345,
+      "rmseKgPerDay": 0.6698526196923487
+    },
+    {
+      "period": "22/03/2023–12/04/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.8168498168498168,
+      "frozenEngineAdgMeanKgPerDay": 0.4830598476847018,
+      "biasPredictedMinusObservedKgPerDay": -0.333789969165115,
+      "maeKgPerDay": 0.3501662956824553,
+      "rmseKgPerDay": 0.4290386972056487
+    },
+    {
+      "period": "13/04/2023–28/04/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.730769230769231,
+      "frozenEngineAdgMeanKgPerDay": 0.509318931544049,
+      "biasPredictedMinusObservedKgPerDay": -0.22145029922518172,
+      "maeKgPerDay": 0.3659389742173719,
+      "rmseKgPerDay": 0.4650257909162525
+    },
+    {
+      "period": "29/04/2023–11/05/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.8493589743589742,
+      "frozenEngineAdgMeanKgPerDay": 0.5263214498891354,
+      "biasPredictedMinusObservedKgPerDay": -0.32303752446983885,
+      "maeKgPerDay": 0.4672244960373643,
+      "rmseKgPerDay": 0.5824093612848611
+    },
+    {
+      "period": "12/05/2023–30/05/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.4722222222222221,
+      "frozenEngineAdgMeanKgPerDay": 0.5460128493040688,
+      "biasPredictedMinusObservedKgPerDay": 0.07379062708184655,
+      "maeKgPerDay": 0.43189422629075724,
+      "rmseKgPerDay": 0.5268820419649218
+    },
+    {
+      "period": "31/05/2023–16/06/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.7115384615384616,
+      "frozenEngineAdgMeanKgPerDay": 0.5593197723379991,
+      "biasPredictedMinusObservedKgPerDay": -0.1522186892004624,
+      "maeKgPerDay": 0.33432155851818585,
+      "rmseKgPerDay": 0.3904537106846421
+    },
+    {
+      "period": "17/06/2023–11/07/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.4086538461538462,
+      "frozenEngineAdgMeanKgPerDay": 0.5822046377977294,
+      "biasPredictedMinusObservedKgPerDay": 0.17355079164388312,
+      "maeKgPerDay": 0.3213669325067456,
+      "rmseKgPerDay": 0.49725286057266516
+    },
+    {
+      "period": "12/07/2023–03/08/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.2010489510489511,
+      "frozenEngineAdgMeanKgPerDay": 0.5977181775855198,
+      "biasPredictedMinusObservedKgPerDay": 0.39666922653656883,
+      "maeKgPerDay": 0.43848231703153634,
+      "rmseKgPerDay": 0.5197222218153696
+    },
+    {
+      "period": "04/08/2023–22/08/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.2457264957264958,
+      "frozenEngineAdgMeanKgPerDay": 0.5957382143698662,
+      "biasPredictedMinusObservedKgPerDay": 0.3500117186433705,
+      "maeKgPerDay": 0.438202567868326,
+      "rmseKgPerDay": 0.5350245383808466
+    },
+    {
+      "period": "23/08/2023–15/09/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": -0.11538461538461535,
+      "frozenEngineAdgMeanKgPerDay": 0.6056526008968408,
+      "biasPredictedMinusObservedKgPerDay": 0.7210372162814562,
+      "maeKgPerDay": 0.7210372162814562,
+      "rmseKgPerDay": 0.8067006925419105
+    },
+    {
+      "period": "16/09/2023–04/10/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.1816239316239317,
+      "frozenEngineAdgMeanKgPerDay": 0.5987011247235287,
+      "biasPredictedMinusObservedKgPerDay": 0.4170771930995969,
+      "maeKgPerDay": 0.514761550250481,
+      "rmseKgPerDay": 0.7142812823710071
+    },
+    {
+      "period": "05/10/2023–26/10/2023",
+      "records": 26,
+      "animals": 26,
+      "observedEndpointAdgMeanKgPerDay": 0.36813186813186805,
+      "frozenEngineAdgMeanKgPerDay": 0.605681241984023,
+      "biasPredictedMinusObservedKgPerDay": 0.23754937385215477,
+      "maeKgPerDay": 0.32848145351199765,
+      "rmseKgPerDay": 0.40072028861241626
+    }
+  ],
+  "comparisonCaveats": [
+    "Growing male Nelore from one 16-ha paddock are not mature adult cows and are not merged with USDA/CPER.",
+    "Observed target is derived from endpoint body weights and exact interval dates; the paper-reported GMD disagrees in 154 of 390 records and is not used as the target.",
+    "The simulator receives only starting weight, duration and frozen default configuration; breed, age, supplement treatment, pasture biomass, forage quality and weather are not aligned.",
+    "No direct forage DMI or comparable initial/final pasture-stock measurements are available in this file.",
+    "This no-fit transfer diagnostic is not calibration, independent holdout validation, full-engine validation, a causal comparison, or evidence for uncertainty-band coverage."
+  ],
+  "decision": "Retain only as a separate growing-male ADG transfer diagnostic. Keep Sem calibração suficiente for the product and retain the incompatibility decision for #6 and #15."
+}

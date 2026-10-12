@@ -1,0 +1,51 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFileSync} from 'node:fs';
+import {createServer} from '../server.js';
+
+test('Perea public mature-cow behavior explorer preserves source rows and reports repeated timestamps', async t => {
+  execFileSync('python3', ['scripts/audit_perea_rangeland_behavior.py'], {encoding: 'utf8'});
+  const report = JSON.parse(readFileSync(new URL('../docs/evidence/perea-rangeland-behavior-audit.json', import.meta.url), 'utf8'));
+  const page = readFileSync(new URL('../rangeland-behavior.html', import.meta.url), 'utf8');
+  const adultPage = readFileSync(new URL('../adult-data.html', import.meta.url), 'utf8');
+  const reviewBrief = readFileSync(new URL('../docs/revisao-independente-caso.md', import.meta.url), 'utf8');
+  const uncertaintyPolicy = readFileSync(new URL('../docs/politica-incerteza.md', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../rangeland-behavior.js', import.meta.url), 'utf8');
+  const csv = readFileSync(new URL('../data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv', import.meta.url), 'utf8').trim().split(/\r?\n/);
+
+  assert.equal(report.source.doi, '10.6084/m9.figshare.28801181.v2');
+  assert.equal(report.source.license, 'CC BY 4.0');
+  assert.equal(report.audit.records, 9222);
+  assert.equal(report.audit.animals, 24);
+  assert.equal(report.audit.animalsByBreed.AH, 6);
+  assert.equal(report.audit.animalsByBreed.BH, 6);
+  assert.equal(report.audit.animalsByBreed.BR, 6);
+  assert.equal(report.audit.animalsByBreed.RC, 6);
+  assert.equal(report.audit.duplicateAnimalTimestampKeys, 290);
+  assert.equal(report.audit.recordsAtRepeatedAnimalTimestamps, 304);
+  assert.equal(report.audit.invalidRows.length, 0);
+  assert.equal(csv.length - 1, report.audit.records);
+  assert.match(page, /não contém peso, ADG ou consumo de matéria seca/);
+  assert.match(page, /adult-data\.html/);
+  assert.match(page, /integrity-note/);
+  assert.match(adultPage, /rangeland-behavior\.html/);
+  assert.match(reviewBrief, /Perea et al\. \(2025\).*Sem peso, ADG ou DMI/);
+  assert.match(reviewBrief, /não se junta ao CPER/);
+  assert.match(uncertaintyPolicy, /não estima erro do motor nem calibra faixas/);
+  assert.match(script, /timestampCounts/);
+  assert.match(script, /linhas excedentes/);
+
+  const server = createServer();
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const html = await fetch(`${base}/rangeland-behavior.html`);
+  assert.equal(html.status, 200);
+  const data = await fetch(`${base}/data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv`);
+  assert.equal(data.status, 200);
+  assert.equal((await data.text()).trim().split(/\r?\n/).length - 1, 9222);
+  const audit = await fetch(`${base}/docs/evidence/perea-rangeland-behavior-audit.json`);
+  assert.equal(audit.status, 200);
+  assert.equal((await audit.json()).audit.recordsAtRepeatedAnimalTimestamps, 304);
+});

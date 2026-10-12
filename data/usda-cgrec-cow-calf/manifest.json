@@ -1,0 +1,39 @@
+{
+  "title": "Central Grasslands Research Extension Center (North Dakota) patch-burning and grazing management",
+  "doi": "10.15482/USDA.ADC/25464097",
+  "versionDoi": "10.15482/USDA.ADC/25464097.v1",
+  "landingPage": "https://agdatacommons.nal.usda.gov/articles/dataset/Central_Grasslands_Research_Extension_Center_North_Dakota_patch-burning_and_grazing_management/25464097",
+  "downloadUrl": "https://ndownloader.figshare.com/files/45222205",
+  "publisher": "USDA National Agricultural Library, Ag Data Commons",
+  "datasetAuthors": ["Devan McGranahan", "Kevin Sedivec"],
+  "publicationYear": 2024,
+  "relatedArticle": {
+    "citation": "McGranahan, D.A., Wanchuk, M.R., Sedivec, K.K., Berti, M., Swanson, K.C., Hovick, T.J. (2025). Variability in weight gains of cows and their calves across grazing management and dam age class: Implications for maternal productivity. Rangeland Ecology & Management, 100, 121–125.",
+    "doi": "10.1016/j.rama.2025.03.001",
+    "url": "https://doi.org/10.1016/j.rama.2025.03.001",
+    "officialPublicationRecord": "https://www.ars.usda.gov/research/publications/publication/?seqNo115=414810"
+  },
+  "license": {
+    "declared": "CC BY-SA 4.0",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "Ag Data Commons dataset page"
+  },
+  "intendedUse": "Non-commercial research (as separately stated in the dataset record)",
+  "publicAccessLevel": "Public",
+  "citation": "McGranahan, Devan; Sedivec, Kevin (2024). Central Grasslands Research Extension Center (North Dakota) patch-burning and grazing management. USDA Ag Data Commons. https://doi.org/10.15482/USDA.ADC/25464097",
+  "fourYearStudyDescription": "2017–2020; cow-calf pairs on four pastures in each of three management strategies, from the DataCite abstract and dataset record.",
+  "sourceNotes": [
+    "The workbook is public and the catalog declares CC BY-SA 4.0; preserve attribution and the share-alike license for derivatives.",
+    "The record separately says intended use is non-commercial research. This field is retained as source metadata and is not represented as a license clause.",
+    "The analyzed CowCalfGains18-20 worksheet contains three observed grazing management labels; workbook metadata says one of four experimental treatments."
+  ],
+  "files": [
+    {
+      "name": "CentralGrasslandsFireForageNAL.xlsx",
+      "url": "https://ndownloader.figshare.com/files/45222205",
+      "size": 1553915,
+      "md5Expected": "ce0e381084f5c93f82c5200f069f139b",
+      "sha256": "f0c317adb513984ecb73499383a7d306805700cbaa4418bf8357490645f33750"
+    }
+  ]
+}

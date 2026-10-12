@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Agroville — USDA CGREC vacas e bezerros</title>
+  <link rel="stylesheet" href="usda-cgrec-cow-calf.css">
+</head>
+<body>
+  <header><a href="./" class="brand">▦ agroville <span>/ dados observados</span></a><a class="back" href="adult-data.html">← Caso principal USDA / CPER</a></header>
+  <main>
+    <section class="hero">
+      <div><div class="eyebrow">USDA AG DATA COMMONS · COORTE COMPLEMENTAR</div><h1>Vacas e bezerros no pasto</h1><p>ADG observado por par vaca-bezerro e ano de estudo, com a classe etária da vaca e o manejo registrados. Explore sem juntar esta amostra ao CPER.</p></div>
+      <a class="source-pill" href="https://doi.org/10.15482/USDA.ADC/25464097" target="_blank" rel="noopener">Fonte pública USDA ↗<br><small>CC BY-SA 4.0 · intended use: pesquisa não comercial</small></a>
+    </section>
+
+    <section class="notice"><strong>Trilha separada do simulador.</strong> São dados de um rebanho Angus experimental no norte de Dakota, 2018–2020. “Old” corresponde a vacas com quatro ou mais safras de bezerros e é descrito como classe madura no artigo. Não são medições do CPER, não calibram <code>engine.js</code> e não estimam efeito causal. Linhas repetem algumas vacas entre anos; os manejos são aplicados em pastagens.</section>
+
+    <section class="metrics" id="metrics" aria-live="polite"><span>Carregando e verificando registros…</span></section>
+
+    <section class="panel">
+      <div class="panel-head"><div><div class="eyebrow">INSPEÇÃO DESCRITIVA</div><h2>Ganho por ano de estudo</h2></div><div class="filters">
+        <label>Ano<select id="year"><option value="all">Todos</option></select></label>
+        <label>Classe da vaca<select id="age"><option value="all">Todas</option><option value="Young">Jovem · 1–3 crias</option><option value="Old">Madura · 4+ crias</option></select></label>
+        <label>Manejo<select id="treatment"><option value="all">Todos</option></select></label>
+      </div></div>
+      <p class="note">Os cartões mostram médias aritméticas das linhas que passaram pelos filtros, em kg/cabeça/dia. Uma linha equivale a uma vaca com seu bezerro em um ano de estudo; isso não corrige repetição anual nem a estrutura por pastagem.</p>
+      <div class="plot-wrap"><svg id="plot" viewBox="0 0 900 390" role="img" aria-label="ADG observado de vacas versus ADG de seus bezerros"></svg></div>
+      <div class="summary" id="summary" aria-live="polite"></div>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="panel-head"><div><div class="eyebrow">REGISTROS DE ORIGEM</div><h2>Par vaca-bezerro por ano</h2></div><span id="row-count"></span></div>
+      <div class="table-wrap"><table><thead><tr><th>Ano</th><th>Manejo</th><th>Classe</th><th>Pastagem</th><th>ID vaca</th><th>ID bezerro</th><th>ADG vaca (kg/d)</th><th>ADG bezerro (kg/d)</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="note">Os IDs ajudam a identificar repetições da mesma vaca entre anos. Não agregamos nem reamostramos as observações.</p>
+    </section>
+
+    <section class="panel limits"><div class="eyebrow">FONTE, LICENÇA E LIMITES</div><h2>O que estes dados sustentam</h2><ul>
+      <li>O artigo revisado por pares descreve três estratégias de pastejo: patch-burn, contínuo e rotacional. As médias aqui são descrição dos registros, sem interpretação causal.</li>
+      <li>A planilha contém 859 pares-ano de 471 vacas; 275 vacas aparecem em mais de um ano. Tratamento é atribuído no nível de pastagem, não no nível de cada linha animal.</li>
+      <li>Não há DMI individual nem todas as entradas compatíveis de custo, condição corporal, forragem e ambiente para validar a simulação completa ou calcular intervalos de previsão.</li>
+      <li>O catálogo declara CC BY-SA 4.0 e registra separadamente “non-commercial research” como uso pretendido. Atribuição e licença share-alike acompanham o arquivo e esta transformação.</li>
+      <li>O dicionário da planilha diz “um de quatro tratamentos”, enquanto a aba analisada e o artigo contêm três classes de manejo; a auditoria registra a discrepância.</li>
+    </ul>
+      <p class="citation">Artigo: McGranahan et al. (2025), <a href="https://doi.org/10.1016/j.rama.2025.03.001" target="_blank" rel="noopener">Rangeland Ecology &amp; Management ↗</a> · <a href="https://www.ars.usda.gov/research/publications/publication/?seqNo115=414810" target="_blank" rel="noopener">registro USDA-ARS ↗</a> · <a href="https://doi.org/10.15482/USDA.ADC/25464097" target="_blank" rel="noopener">dataset USDA ↗</a> · <a href="./data/usda-cgrec-cow-calf/CentralGrasslandsFireForageNAL.xlsx" download>baixar planilha original ↧</a> · <a href="./docs/evidence/usda-cgrec-cow-calf-audit.json">auditoria reproduzível</a>.</p>
+    </section>
+    <footer>AGROVILLE / EXPLORADOR DE DADOS PÚBLICOS <span>Coorte independente · somente descrição · sem validação do motor</span></footer>
+  </main>
+  <script type="module" src="usda-cgrec-cow-calf.js"></script>
+</body>
+</html>

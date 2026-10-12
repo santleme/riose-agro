@@ -1,0 +1,131 @@
+{
+  "classification": "public_observational_group_and_site_level_context_only_not_engine_validation",
+  "source": {
+    "title": "Grass-Cast Database - Data on aboveground net primary productivity (ANPP), climate data, NDVI, and cattle weight gain for Western U.S. rangelands",
+    "publisher": "USDA Ag Data Commons / Figshare",
+    "doi": "10.15482/USDA.ADC/1521120",
+    "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Grass-Cast_Database_-_Data_on_aboveground_net_primary_productivity_ANPP_climate_data_NDVI_and_cattle_weight_gain_for_Western_U_S_rangelands/24854193",
+    "articleDoi": "10.1002/ecs2.3280",
+    "version": 1,
+    "license": "CC BY 4.0 (package-level; consult the included site list for component-specific data policies)",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "retrieved": "2026-10-11",
+    "files": {
+      "Cattle_weight_gains.xlsx": {
+        "md5": "281ec7f52ca96d8dde881fc0e41b82e1",
+        "sha256": "495e22843d472d4c21d0b2cb75574ccc9fed656a9499659ead7576c3ffb189ab"
+      },
+      "ANPP.xlsx": {
+        "md5": "e1ed5d4dbce1da371a91031b1b41410a",
+        "sha256": "3690a359e79ec597081704462bbb84c81dd5b86917dd13e6df70fa2e48fef114"
+      },
+      "NDVI.xlsx": {
+        "md5": "cfc9745e4c18648c485fe45fe4591605",
+        "sha256": "4b846c7dc82ec3bc7858ffc1500297c536eace5c0c1c3a0befc787c6e46560b6"
+      },
+      "Grass-Cast_sitelist.xlsx": {
+        "md5": "3072a22b02edb3ac3b4589be510652a0",
+        "sha256": "c99d9e25cf6ad26a1f7835157e4ac97fddb0a7d56f52d65de14eed7c68d45f21"
+      }
+    }
+  },
+  "cattleWeightGains": {
+    "sheet": "weightall",
+    "rows": 942,
+    "sites": [
+      "CPER",
+      "Cottonwood",
+      "HPGRS",
+      "Hays",
+      "Mandan"
+    ],
+    "years": [
+      1916,
+      2019
+    ],
+    "grazingTreatments": [
+      "Heavy",
+      "Light",
+      "Moderate"
+    ],
+    "nonmissingMeanDailyGainRows": 747,
+    "missingMeanDailyGainRows": 195,
+    "hasIndividualAnimalIdentifier": false,
+    "cper": {
+      "rows": 243,
+      "years": [
+        1939,
+        2019
+      ],
+      "nonmissingMeanDailyGainRows": 219,
+      "treatments": [
+        "Heavy",
+        "Light",
+        "Moderate"
+      ],
+      "duplicateGroupKeysInWeightTable": 0
+    }
+  },
+  "anpp": {
+    "sheet": "ANPP",
+    "rows": 3190,
+    "sites": [
+      "BBR",
+      "CPER",
+      "Cottonwood",
+      "GSL",
+      "HPGRS",
+      "Hays",
+      "Jornada",
+      "Konza",
+      "Mandan",
+      "Miles City",
+      "RCEW",
+      "SantaRita",
+      "Sevilleta",
+      "Torell"
+    ],
+    "missingSiteRows": 13,
+    "years": [
+      1916,
+      2019
+    ],
+    "cperRows": 243,
+    "duplicateGroupKeysInCperTable": 0
+  },
+  "ndvi": {
+    "sheet": "data",
+    "rows": 989,
+    "cperRows": 55,
+    "cperYears": [
+      1982,
+      2020
+    ]
+  },
+  "cperGroupJoin": {
+    "key": [
+      "site=CPER",
+      "year",
+      "grazing.treatment"
+    ],
+    "weightRows": 243,
+    "anppRows": 243,
+    "matchedGroupKeys": 243,
+    "weightKeysWithoutAnpp": 0,
+    "anppKeysWithoutWeight": 0,
+    "matchedRowsWithBothAdgAndAnpp": 136,
+    "individualAnimalRecords": false,
+    "derivedFile": "data/usda-grasscast/cper-grouped-observations.json"
+  },
+  "cperComponentPoliciesInSiteList": [
+    "CC-BY",
+    "U.S. Public Domain - http://www.usa.gov/publicdomain/label/1.0/"
+  ],
+  "interpretation": [
+    "The cattle weight workbook contains site/year/treatment summaries, not individual animal records; its head/count columns do not identify animals.",
+    "CPER cattle weight and ANPP tables match exactly on site/year/grazing treatment, so they can be inspected as paired group-level observations; they are not paired individual-animal records.",
+    "NDVI has no grazing-treatment key and remains a separate site-year time series; it is not joined to group ADG or ANPP.",
+    "The source package is CC BY 4.0, while the site list includes component-specific policies that should be checked before any reuse.",
+    "This source can add historical context for grazing and forage at CPER and other sites, but cannot validate individual engine outputs, pasture-stock balance, causal treatment effects, or the full engine."
+  ]
+}

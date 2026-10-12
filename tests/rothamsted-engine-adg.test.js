@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFileSync, writeFileSync} from 'node:fs';
+
+test('frozen engine ADG diagnostic uses the public Rothamsted cohort holdout without fitting', () => {
+  const sourceAudit = execFileSync('python3', ['scripts/audit_rothamsted_adg.py'], {encoding: 'utf8'});
+  writeFileSync('docs/evidence/rothamsted-adg-audit.json', `${JSON.stringify(JSON.parse(sourceAudit), null, 2)}\n`);
+  execFileSync('node', ['scripts/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
+  const path = 'docs/evidence/engine-adg-rothamsted-check.json';
+  const firstRun = readFileSync(path, 'utf8');
+  const report = JSON.parse(firstRun);
+  assert.equal(report.classification, 'frozen_external_site_component_diagnostic_not_full_validation_or_calibration');
+  assert.equal(report.split.trainingRows, 1864);
+  assert.equal(report.split.heldOutRows, 498);
+  assert.equal(report.split.heldOutAnimals, 58);
+  assert.equal(report.split.animalLeakage, false);
+  assert.match(report.population.classification, /not a mature-cow cohort/);
+  assert.equal(report.population.ageAtFirstObservedIntervalDays.minimumDays, 173);
+  assert.equal(report.population.ageAtFirstObservedIntervalDays.maximumDays, 747);
+  assert.equal(report.engine.fittedParameters, false);
+  assert.equal(report.evaluation.engineDefault.nAnimalPeriods, 498);
+  assert.equal(report.evaluation.baseline.nAnimalPeriods, 498);
+  assert.equal(report.evaluation.animalClusterBootstrap.replicates, 10000);
+  assert.match(report.evaluation.animalClusterBootstrap.resamplingUnit, /animal Tag_Official/);
+  assert.ok(report.evaluation.animalClusterBootstrap.metricIntervals95.pairedEngineMinusBaselineMaeKgPerAnimalDay.lower95 > 0);
+  assert.match(report.evaluation.animalClusterBootstrap.limitation, /not predictive intervals/);
+  assert.equal(report.validated, false);
+  assert.equal(report.calibrated, false);
+  assert.equal(report.productPredictiveIntervalsAvailable, false);
+  execFileSync('node', ['scripts/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
+  assert.equal(readFileSync(path, 'utf8'), firstRun);
+});

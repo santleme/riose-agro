@@ -132,6 +132,7 @@ export function createComparisonManifest(snapshot,days=30){
 }
 export function validateComparisonManifest(manifest){
   if(!manifest||manifest.type!==MANIFEST_TYPE||manifest.version!==1)throw new Error('Tipo ou versão de manifesto não suportado');
+  if(manifest.validated!==false)throw new Error('Manifesto deve preservar o estado demonstrativo não validado do motor');
   assertSnapshot(manifest.initialSnapshot);
   const expectedSeed=Number.isInteger(manifest.initialSnapshot.initialSeed)?manifest.initialSnapshot.initialSeed:manifest.initialSnapshot.seed;
   if(!Number.isInteger(manifest.seed)||manifest.seed!==expectedSeed)throw new Error('Semente do manifesto não corresponde ao snapshot inicial');

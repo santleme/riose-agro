@@ -1,0 +1,23 @@
+Column_Name,Type,Units,Column_Description
+Concatenate,string,,"Year and Pasture joined, used to merge additional meta data files"
+Year,date,YYYY,"Study year, grazing occurred from May to October"
+Pasture,string,,"Pasture grazed, named by township sections"
+Treatment,string,,"moderate = moderate stocking rate, heavy = heavy stocking rate, light = light stocking rate"
+Allocation.number,numeric,,"number of animals allocated to the study, i.e. grazing treatment applied"
+Type,string,,"The sex of the research animal, heifer = unbread female, reproductive, steer = yearling, non-reproductive"
+Owner,string,,"Livestock provider. Local = Weld county producers, Non-local = other providers."
+Tag.Color,string,,"The color of the ear tag. Specifically revelvant during years with heifers as ranchers may have same numbers, but all had unique tag colors"
+Tag,string,,The number on the tag.
+QAQC.Notes,string,,Any specific notes the field techs recorded for the animal or weight.
+Actual.on.date,date,MM/DD/YYYY,The physical date the animal entered the study pasture.
+Actual.off.date,date,MM/DD/YYYY,The physical date the animal left the study pasture.
+Season.on.date,date,MM/DD/YYYY,The first full-day all study animals were on pasture. These are defined by CPER research scientists.
+Season.off.date,date,MM/DD/YYYY,The last full-day all study animals were on pasture. These are defined by CPER research scientists.
+Season.Days,numeric,,"Days grazed (season length, defined by Season.on.date and Season.off.date), used to calculate average daily gain"
+on_Weight,numeric,lbs,"The starting weight as read off the chute. Note: 2000 - 2013 (spring) animals were held in dry-lot overnight the day before weight taken. 2013 (fall) - 2019 the cattle were gathered from pasture and weighed, pencil shrink applied to gain and adg calculations."
+on_Shrink,numeric,lbs,"The assigned shrink percent. Note: 2000 - 2013 (spring) no pencil-shrink applied, starting 2013 (fall) - 2019 the applied pencil shrink defnied by Derner et al. 2016 (https://doi.org/10.1016/j.rala.2016.02.004)."
+off_Weight,numeric,lbs,"The ending weight as read off the chute. Note: 2000 - 2013 (spring) animals were held in dry-lot overnight the day before weight taken. In 2013 (fall) - 2019 the cattle were gathered from pasture and weighed, pencil shrink applied to gain and adg calculations."
+off_Shrink,numeric,lbs,"The assigned shrink percent. Note: 2000 - 2013 (spring) no pencil-shrink applied, starting 2013 (fall) - 2019 the applied pencil shrink defnied by Derner et al. 2016 (https://doi.org/10.1016/j.rala.2016.02.004)."
+Gain_shrunk,numeric,lbs,Gain (total pounds gained for the season) with shrink applied.
+ADG_shrunk,numeric,lbsPerHeadPerDay,Average daily gain (lbs per hd per day) with shrink applied.
+Use.Flag,string,,"0 = good value to use to calculate means, outlier = If the animal's ADG is outside the pasture mean by +/- 2*standard deviation, non-local, not included in mean calculations = These animals did not enter the research station within the accepted weight range and researchers are advised to use these weights with precaution. They were not included when the mean ADG was calculated to flagged standard outliers., remove.from.study = These animals were removed BEFORE the mean was calculated to flag outliers. Review the QAQC.Notes if there are futher questions why they were removed."

@@ -1,0 +1,43 @@
+{
+  "source": {
+    "title": "Grass-Cast Database - Data on aboveground net primary productivity (ANPP), climate data, NDVI, and cattle weight gain for Western U.S. rangelands",
+    "publisher": "USDA Ag Data Commons / Figshare",
+    "doi": "10.15482/USDA.ADC/1521120",
+    "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Grass-Cast_Database_-_Data_on_aboveground_net_primary_productivity_ANPP_climate_data_NDVI_and_cattle_weight_gain_for_Western_U_S_rangelands/24854193",
+    "articleDoi": "10.1002/ecs2.3280",
+    "version": 1,
+    "license": "CC BY 4.0 (package-level; consult the included site list for component-specific data policies)",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "retrieved": "2026-10-11"
+  },
+  "files": [
+    {
+      "path": "Cattle_weight_gains.xlsx",
+      "upstreamFilename": "Cattle_weight_gains.xlsx",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44528687",
+      "md5": "281ec7f52ca96d8dde881fc0e41b82e1",
+      "sha256": "495e22843d472d4c21d0b2cb75574ccc9fed656a9499659ead7576c3ffb189ab"
+    },
+    {
+      "path": "ANPP.xlsx",
+      "upstreamFilename": "ANPP.xlsx",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44528684",
+      "md5": "e1ed5d4dbce1da371a91031b1b41410a",
+      "sha256": "3690a359e79ec597081704462bbb84c81dd5b86917dd13e6df70fa2e48fef114"
+    },
+    {
+      "path": "NDVI.xlsx",
+      "upstreamFilename": "NDVI.xlsx",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44528690",
+      "md5": "cfc9745e4c18648c485fe45fe4591605",
+      "sha256": "4b846c7dc82ec3bc7858ffc1500297c536eace5c0c1c3a0befc787c6e46560b6"
+    },
+    {
+      "path": "Grass-Cast_sitelist.xlsx",
+      "upstreamFilename": "Grass-Cast_sitelist.xlsx",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44528696",
+      "md5": "3072a22b02edb3ac3b4589be510652a0",
+      "sha256": "c99d9e25cf6ad26a1f7835157e4ac97fddb0a7d56f52d65de14eed7c68d45f21"
+    }
+  ]
+}

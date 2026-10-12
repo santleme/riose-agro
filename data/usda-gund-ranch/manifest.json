@@ -1,0 +1,28 @@
+{
+  "source": {
+    "title": "Data on Pregnancy rates, calf weaning weights, and sale prices on the University of Nevada Agricultural Experiment Station’s Gund Ranch from 2008-2020",
+    "publisher": "USDA Ag Data Commons / University of Nevada, Reno",
+    "doi": "10.15482/USDA.ADC/1528484",
+    "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Data_on_Pregnancy_rates_calf_weaning_weights_and_sale_prices_on_the_University_of_Nevada_Agricultural_Experiment_Station_s_Gund_Ranch_from_2008-2020/24856392",
+    "license": "U.S. Public Domain",
+    "licenseUrl": "https://www.usa.gov/publicdomain/label/1.0/",
+    "temporalExtent": "2008–2020",
+    "retrieved": "2026-10-12"
+  },
+  "files": [
+    {
+      "path": "Gund_Ranch_Data.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44532857",
+      "bytes": 2162,
+      "md5": "1aa78d76661f91dc645fac891ee382ec",
+      "sha256": "b5d399bc188a49d16a4079f24e891af2728880dffc9129d7a989b9ebbee6b6a4"
+    },
+    {
+      "path": "Gund_Ranch_DataDictionary.csv",
+      "downloadUrl": "https://ndownloader.figshare.com/files/44532860",
+      "bytes": 1448,
+      "md5": "d90302f3df1a35b4fea92cb7a747039a",
+      "sha256": "c72b80ec034c03dd7c578d5a6f888d21dece964a3252fbb29e10435bbc7f886b"
+    }
+  ]
+}

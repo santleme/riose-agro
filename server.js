@@ -13,13 +13,51 @@ const MAX_BODY_BYTES = 16 * 1024;
 const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
-const PUBLIC_FILES = new Set(['index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js', 'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json']);
+const PUBLIC_FILES = new Set([
+  'index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'favicon.svg',
+  'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
+  'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
+  'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',
+  'montana-cow-data.html', 'montana-cow-data.js',
+  'rangeland-behavior.html', 'rangeland-behavior.js',
+  'data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv',
+  'docs/evidence/perea-rangeland-behavior-audit.json',
+  'usda-cgrec-cow-calf.html', 'usda-cgrec-cow-calf.css', 'usda-cgrec-cow-calf.js',
+  'observed-data.html', 'observed-data.css', 'observed-data.js', 'observed-data-model.js',
+  'data/observed-calves-zenodo-7251167.json',
+  'data/mdpi-angus-cow-grazing/weight-change-observations.json',
+  'data/mdpi-angus-cow-grazing/supplement.zip',
+  'docs/evidence/mdpi-angus-cow-grazing-audit.json',
+  'docs/evidence/mdpi-angus-gps-adg-association.json',
+  'rothamsted-data.html', 'rothamsted-data.css', 'rothamsted-data.js',
+  'cgrec-data.html', 'cgrec-data.js', 'hpgrs-data.html', 'hpgrs-data.js',
+  'grasscast-data.html', 'grasscast-data.js', 'grasscast-data.css',
+  'data/usda-cper/period.csv', 'data/usda-cper/daily.csv',
+  'docs/evidence/usda-cper-association.json',
+  'docs/evidence/usda-grasscast-cper-association.json',
+  'docs/evidence/zenodo-grazing-allometry-association.json',
+  'docs/evidence/engine-adg-usda-cper-ltgi-check.json',
+  'docs/evidence/engine-adg-usda-cgrec-transport-check.json',
+  'docs/evidence/engine-adg-zenodo-cows-check.json',
+  'docs/evidence/usda-cgrec-cow-calf-audit.json',
+  'data/usda-cgrec-longterm/Streeter-ND_1989-2015_compiled.csv', 'data/usda-cgrec-longterm/manifest.json',
+  'data/usda-cgrec-cow-calf/cow-calf-observations.json', 'data/usda-cgrec-cow-calf/manifest.json',
+  'data/usda-cgrec-cow-calf/CentralGrasslandsFireForageNAL.xlsx',
+  'data/usda-grasscast/manifest.json', 'data/usda-grasscast/cper-grouped-observations.json',
+  'data/usda-hpgrs-1982-2022/EastUnit_LTGI.csv', 'data/usda-hpgrs-1982-2022/EastUnit_LTGI_DataDictionary.csv', 'data/usda-hpgrs-1982-2022/manifest.json',
+  'data/zenodo-grazing-allometry/Zenodo_Data_Allometry.txt', 'data/zenodo-grazing-allometry/manifest.json',
+  'data/rothamsted/Cattle_LWt_collated_2018-2025.csv', 'data/rothamsted/2018-2025_Pasture_DM_herbage_mass.csv',
+  'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json',
+]);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.csv': 'text/csv; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 };
 
 const enumValue = (value, options) => options.includes(value);

@@ -1,0 +1,41 @@
+{
+  "title": "Dataset for: Long-term assessment of beef cattle performance and hair cortisol accumulation in a silvopastoral system",
+  "recordUrl": "https://zenodo.org/records/12568499",
+  "apiUrl": "https://zenodo.org/api/records/12568499",
+  "doi": "10.5281/zenodo.12568499",
+  "articleDoi": "10.1016/j.animal.2025.101425",
+  "license": "CC BY 4.0",
+  "retrievedAt": "2026-10-12",
+  "files": [
+    {
+      "path": "BGHI.csv",
+      "bytes": 16303,
+      "sha256": "5b95ebe51e1f0ca97e334715c8957ef2712e6543dcc8886643d14e120e9d633d",
+      "zenodoMd5": "542fc7e44204790f4c37e8fc272ae803"
+    },
+    {
+      "path": "BGHI_classification.csv",
+      "bytes": 689,
+      "sha256": "50b14a82f674dc6ac36d8358278570f7725a909ab604baaf652b900685d095b9",
+      "zenodoMd5": "cb3785bf7e88adaf5ed3efbc755c5d22"
+    },
+    {
+      "path": "average_daily_gain.csv",
+      "bytes": 23002,
+      "sha256": "00c19a79c74f56decae06b57bd80745ebff0caee0037f572de2ea6b85e427d74",
+      "zenodoMd5": "7ab3dc7a0015e03aef6481b68cb39706"
+    },
+    {
+      "path": "cortisol.csv",
+      "bytes": 14582,
+      "sha256": "d2d2651be02b87a7d231176304328660633a487672ec727666a9c51b5a38e588",
+      "zenodoMd5": "ef80e0e292636f5dfd36ff5be2bc2b89"
+    },
+    {
+      "path": "glucose.csv",
+      "bytes": 15182,
+      "sha256": "f12113036b760d67657865e0e06820486f38c674a1b909be14951b7748671009",
+      "zenodoMd5": "c5911b72d70d9a5304883fa5e56571d5"
+    }
+  ]
+}

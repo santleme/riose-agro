@@ -1,0 +1,195 @@
+{
+  "source": {
+    "datasetDoi": "10.5281/zenodo.3707638",
+    "articleDoi": "10.3389/fvets.2020.00494",
+    "localAudit": "zenodo-grazing-allometry-audit.json"
+  },
+  "population": {
+    "nCows": 27,
+    "nPerBreed": {
+      "AH": 9,
+      "HC": 9,
+      "OB": 9
+    },
+    "ageMonthsMin": 34,
+    "ageMonthsMax": 124
+  },
+  "outcome": {
+    "field": "(Weight_2 - Weight_1) / 70",
+    "unit": "kg/cow/day",
+    "horizonDaysAssumed": 70,
+    "interpretation": "derived endpoint change; exact individual weighing dates unavailable"
+  },
+  "method": {
+    "pooled": "Spearman correlation across cows with complete outcome and behavior field",
+    "withinBreedCenteredRankCorrelation": "Pearson correlation of within-breed centered average ranks; descriptive adjustment for three breed groups",
+    "uncertainty": "No inferential p-values or confidence intervals; sample is small and exact weighing dates and stable animal IDs are unavailable",
+    "missingValues": "NA values are excluded separately for each behavior field; no imputation"
+  },
+  "associations": {
+    "Steps_mean": {
+      "meaning": "mean_steps_per_hour",
+      "nComplete": 17,
+      "nMissing": 10,
+      "nByBreed": {
+        "AH": 6,
+        "HC": 6,
+        "OB": 5
+      },
+      "pooledSpearman": -0.5110429447852761,
+      "withinBreedCenteredRankCorrelation": -0.21229381566543046,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 6,
+          "spearman": -0.4058397249567139
+        },
+        "HC": {
+          "n": 6,
+          "spearman": -0.4857142857142857
+        },
+        "OB": {
+          "n": 5,
+          "spearman": 0.6
+        }
+      }
+    },
+    "Speed_mean": {
+      "meaning": "mean_distance_per_hour_m_per_h",
+      "nComplete": 24,
+      "nMissing": 3,
+      "nByBreed": {
+        "AH": 6,
+        "HC": 9,
+        "OB": 9
+      },
+      "pooledSpearman": -0.486510054767236,
+      "withinBreedCenteredRankCorrelation": 0.18681444011771772,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 6,
+          "spearman": -0.14285714285714285
+        },
+        "HC": {
+          "n": 9,
+          "spearman": 0.4725780464326393
+        },
+        "OB": {
+          "n": 9,
+          "spearman": 0.0
+        }
+      }
+    },
+    "Lying_mean": {
+      "meaning": "lying_ratio",
+      "nComplete": 17,
+      "nMissing": 10,
+      "nByBreed": {
+        "AH": 6,
+        "HC": 6,
+        "OB": 5
+      },
+      "pooledSpearman": 0.22140480531656637,
+      "withinBreedCenteredRankCorrelation": 0.32768884566153733,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 6,
+          "spearman": 0.4411764705882353
+        },
+        "HC": {
+          "n": 6,
+          "spearman": 0.23190841426097938
+        },
+        "OB": {
+          "n": 5,
+          "spearman": 0.3
+        }
+      }
+    },
+    "Space_evenness_mean": {
+      "meaning": "space_use_evenness",
+      "nComplete": 25,
+      "nMissing": 2,
+      "nByBreed": {
+        "AH": 7,
+        "HC": 9,
+        "OB": 9
+      },
+      "pooledSpearman": 0.6736880547242892,
+      "withinBreedCenteredRankCorrelation": 0.06908967804943121,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 7,
+          "spearman": 0.12613124477737825
+        },
+        "HC": {
+          "n": 9,
+          "spearman": 0.10970561792186269
+        },
+        "OB": {
+          "n": 9,
+          "spearman": 0.0
+        }
+      }
+    },
+    "Sel_evenness_mean": {
+      "meaning": "forage_selection_evenness",
+      "nComplete": 27,
+      "nMissing": 0,
+      "nByBreed": {
+        "AH": 9,
+        "HC": 9,
+        "OB": 9
+      },
+      "pooledSpearman": 0.6452028001675616,
+      "withinBreedCenteredRankCorrelation": -0.005682185070281537,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 9,
+          "spearman": 0.4060422341881011
+        },
+        "HC": {
+          "n": 9,
+          "spearman": -0.7039210111780244
+        },
+        "OB": {
+          "n": 9,
+          "spearman": 0.2742640448046567
+        }
+      }
+    },
+    "Sel_quality_mean": {
+      "meaning": "selected_forage_quality_indicator",
+      "nComplete": 27,
+      "nMissing": 0,
+      "nByBreed": {
+        "AH": 9,
+        "HC": 9,
+        "OB": 9
+      },
+      "pooledSpearman": -0.5459965620147615,
+      "withinBreedCenteredRankCorrelation": 0.25035185405311083,
+      "byBreedSpearman": {
+        "AH": {
+          "n": 9,
+          "spearman": -0.15062893357603013
+        },
+        "HC": {
+          "n": 9,
+          "spearman": 0.6540142606880276
+        },
+        "OB": {
+          "n": 9,
+          "spearman": 0.2510482226267169
+        }
+      }
+    }
+  },
+  "limits": [
+    "ADG is derived from two endpoints over an assumed 70 days, not a repeated daily growth series.",
+    "Behavior summaries cover only 9–10 days for movement and three short observations per cow for forage selection, not the full ADG horizon.",
+    "Pedometer step and lying measures are available for six cows per breed; GPS movement measures are missing for three cows.",
+    "Pooled associations combine three breeds with strong productivity differences; within-breed rank associations are descriptive and underpowered.",
+    "The source supports exploratory adult-cow domain review only; it does not validate the Agroville engine, estimate causal effects, or transfer to Brazilian farms."
+  ],
+  "classification": "exploratory_adult_cow_domain_evidence_not_engine_validation"
+}

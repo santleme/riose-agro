@@ -1,0 +1,98 @@
+{
+  "classification": "frozen_no_fit_mature_cow_adg_component_diagnostic_not_validation",
+  "source": {
+    "title": "Data on anatomy, movement, and foraging behaviour of three cattle breeds of different productivity",
+    "datasetDoi": "10.5281/zenodo.3707638",
+    "datasetUrl": "https://zenodo.org/records/3707638",
+    "articleDoi": "10.3389/fvets.2020.00494",
+    "licenseDeclaration": "CC-BY-4.0",
+    "licenseEvidence": "zenodo-record-api-metadata.json",
+    "licenseCaveat": "Zenodo API metadata declares CC BY 4.0 at metadata.license.id; the rendered record page has an empty license field; no independent legal review.",
+    "file": "Zenodo_Data_Allometry.txt",
+    "sha256": "71c71623bf56124ea2593e0e0576cd6d085f060d26d733c473822d5e320eccb0",
+    "attribution": "Pauler, C. M. et al. (2020). Data on anatomy, movement, and foraging behaviour of three cattle breeds of different productivity. Frontiers in Veterinary Science. https://doi.org/10.3389/fvets.2020.00494. Dataset: https://doi.org/10.5281/zenodo.3707638."
+  },
+  "evaluation": {
+    "nCows": 27,
+    "nBreeds": 3,
+    "horizonDays": 70,
+    "horizonBasis": "Article describes a 10-week grazing experiment; exact individual weighing dates are absent from the deposited file.",
+    "observedAdgFormula": "(Weight_2 - Weight_1) / 70; both endpoints are recorded in kg.",
+    "engineInputs": "Observed initial weight only; 1 simulated animal; default initial pasture ledger and default pasture/diet/normal-weather/no-supplement configuration. No cow-specific forage, intake, supplementation, weather, or measured pasture state is supplied.",
+    "engineParameterFitting": "none; engine.js is unchanged by this diagnostic.",
+    "allCows": {
+      "nCowsByStudyDesign": 27,
+      "ageMonths": {
+        "minimum": 34,
+        "maximum": 124
+      },
+      "meanObservedAdgKgPerCowDay": -0.2634920634920635,
+      "meanFrozenEngineAdgKgPerCowDay": 0.9442013388599043,
+      "maeKgPerCowDay": 1.2076934023519679,
+      "rmseKgPerCowDay": 1.3301163046090474,
+      "biasEngineMinusObservedKgPerCowDay": 1.2076934023519679,
+      "observedAdgRangeKgPerCowDay": {
+        "minimum": -1.2,
+        "maximum": 0.38571428571428573
+      }
+    },
+    "byBreed": {
+      "AH": {
+        "nCowsByStudyDesign": 9,
+        "ageMonths": {
+          "minimum": 60,
+          "maximum": 110
+        },
+        "meanObservedAdgKgPerCowDay": -0.5619047619047619,
+        "meanFrozenEngineAdgKgPerCowDay": 1.1877658993781028,
+        "maeKgPerCowDay": 1.7496706612828647,
+        "rmseKgPerCowDay": 1.7819229202052378,
+        "biasEngineMinusObservedKgPerCowDay": 1.7496706612828647,
+        "observedAdgRangeKgPerCowDay": {
+          "minimum": -1.2,
+          "maximum": -0.11428571428571428
+        }
+      },
+      "HC": {
+        "nCowsByStudyDesign": 9,
+        "ageMonths": {
+          "minimum": 53,
+          "maximum": 124
+        },
+        "meanObservedAdgKgPerCowDay": 0.07777777777777777,
+        "meanFrozenEngineAdgKgPerCowDay": 0.6267252986738217,
+        "maeKgPerCowDay": 0.5489475208960438,
+        "rmseKgPerCowDay": 0.5770670421647361,
+        "biasEngineMinusObservedKgPerCowDay": 0.5489475208960438,
+        "observedAdgRangeKgPerCowDay": {
+          "minimum": -0.05714285714285714,
+          "maximum": 0.38571428571428573
+        }
+      },
+      "OB": {
+        "nCowsByStudyDesign": 9,
+        "ageMonths": {
+          "minimum": 34,
+          "maximum": 75
+        },
+        "meanObservedAdgKgPerCowDay": -0.3063492063492063,
+        "meanFrozenEngineAdgKgPerCowDay": 1.0181128185277886,
+        "maeKgPerCowDay": 1.324462024876995,
+        "rmseKgPerCowDay": 1.341406905698254,
+        "biasEngineMinusObservedKgPerCowDay": 1.324462024876995,
+        "observedAdgRangeKgPerCowDay": {
+          "minimum": -0.6,
+          "maximum": 0.07142857142857142
+        }
+      }
+    },
+    "interpretation": "This compares one frozen engine component with derived endpoint ADG in a small, separate mature-cow grazing cohort. It has no animal identifiers or exact interval dates and does not align management/forage inputs. It is not an independent full-engine validation, calibration, prediction-interval assessment, causal estimate, or evidence to mix into the approved USDA/CPER yearling-steer case."
+  },
+  "limits": [
+    "Twenty-seven cows at one Swiss alpine research setting, nine per breed, are not representative of Brazilian farms or the USDA/CPER yearling-steer cohort.",
+    "The 70-day horizon is inferred from the article; exact per-cow weighing dates are not deposited.",
+    "The input file lacks a stable individual identifier, so metrics are descriptive and no animal-cluster bootstrap is claimed.",
+    "The engine scenario uses default pasture state and does not receive measured forage quality, pasture mass, weather, DMI, or cow management inputs.",
+    "The result measures only ADG component discrepancy; it cannot validate weight trajectories, DMI, cost, forage inventory, treatment effects, or uncertainty coverage."
+  ]
+}

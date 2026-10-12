@@ -1,0 +1,78 @@
+{
+  "reviewed": "2026-10-12",
+  "purpose": "Identify publicly reusable individual dry-matter-intake data for adult beef cattle on pasture relevant to issue #6.",
+  "sources": [
+    {
+      "title": "Statistical Methodologies for the Prediction of Dry Matter Intake in Beef Cattle Raised on Pasture",
+      "doi": "10.21203/rs.3.rs-8262715/v1",
+      "url": "https://doi.org/10.21203/rs.3.rs-8262715/v1",
+      "publicationLicense": "CC BY 4.0",
+      "reportedPopulation": "881 animals from 38 Brazilian studies; paper describes a study-level holdout of 15 studies and 77 animals.",
+      "dataAvailabilityStatement": "This manuscript relies on confidential private data that cannot be disclosed.",
+      "individualDataRetrieved": false,
+      "decision": "Exclude from numerical validation. The paper license applies to the manuscript; its explicit data statement does not make the underlying individual records public. Do not reconstruct individual observations from tables or figures."
+    },
+    {
+      "title": "Differences in Dry Matter Intake in Grazing and Drylot Beef Cattle",
+      "doi": "10.33915/etd.13250",
+      "url": "https://doi.org/10.33915/etd.13250",
+      "publicationLicense": "No separate open-data license for underlying data found on repository record.",
+      "reportedPopulation": "163 beef cattle across four experimental groups and two grazing seasons (2024 and 2025). The abstract says pasture DMI was estimated with an LSTM; drylot intake was measured with automated equipment.",
+      "repositoryDownloadStatus": 403,
+      "individualDataRetrieved": false,
+      "decision": "Do not score as independent pasture-DMI validation: no openly licensed individual data file was found on the repository record, and the pasture target described in the abstract is model-estimated rather than a direct field measurement."
+    },
+    {
+      "title": "Herbage mass and allowance and animal genotype affect daily herbage intake, productivity, and efficiency of beef cows grazing native subtropical grassland",
+      "doi": "10.1093/jas/skab279",
+      "url": "https://doi.org/10.1093/jas/skab279",
+      "openArticleUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8525499/",
+      "publicationLicense": "Open full-text article in PMC; no separate license for individual data located.",
+      "reportedPopulation": "24 to 36 adult multiparous Hereford, Angus, and crossbred beef cows across eight paddocks and six periods in native subtropical grassland. Herbage intake was estimated using the C32:C33 n-alkane ratio; cow weight/condition and calf ADG/weaning outcomes were also reported.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The accessible article reports methods, group/treatment summaries, and results. No downloadable individual-data package, repository DOI, or data-specific reuse license was located in the article record or full-text page during this review.",
+      "decision": "Retain as a relevant peer-reviewed methodological and population reference only. Do not reconstruct individual observations from tables/figures or score engine accuracy: no reusable individual file was located, intake is estimated by a tracer method, and calf ADG is not the approved adult-cattle ADG target."
+    },
+    {
+      "title": "Characterization of individual beef cattle water intake",
+      "doi": "10.1093/jas/skag054",
+      "url": "https://doi.org/10.1093/jas/skag054",
+      "openArticleUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13023050/",
+      "publicationLicense": "Article is CC BY-NC-ND 4.0; this is not a license for the underlying individual records.",
+      "reportedPopulation": "2,084 beef animals from 2019–2024 at two West Virginia sites; 130,000+ daily records of individual water intake, DMI, and body weight across grazing and drylot systems. Grazing records are from crossbred steers.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The article presents cohort and group summaries. No data availability statement, downloadable individual dataset, repository DOI, or data-specific reuse license was found on the accessible full-text page.",
+      "decision": "High-priority source to revisit if a public data deposit appears, because it reports individual DMI and BW in grazing beef steers. Do not use the article's summaries as individual observations; the article license does not establish reuse rights for the underlying data, and ADG/pasture covariates needed for an engine comparison were not located in a public file."
+    },
+    {
+      "title": "Generalizable long short-term memory models for beef cattle DMI under grazing",
+      "doi": "10.1093/jas/skag133",
+      "url": "https://doi.org/10.1093/jas/skag133",
+      "publisherArticleUrl": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag133/8675989",
+      "publicationLicense": "Open Access article under CC BY-NC-ND 4.0; this license covers the article and does not by itself license the underlying data.",
+      "reportedPopulation": "Individual daily DMI, body weight, water and climate records for beef cattle across grazing and drylot cohorts, including strictly held-out 2023 grazing animals; grazing cohort includes Bos taurus/crossbred steers in West Virginia.",
+      "dataAvailabilityStatement": "Data may be available by contacting the corresponding author.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The publisher's full text names no public data repository or downloadable microdata file. The statement indicates possible author-mediated access, not an open download or reusable data license.",
+      "decision": "Use as a peer-reviewed methods and benchmark reference only while prioritizing open data. Do not reproduce its evaluation from aggregate article metrics or treat the underlying records as public. If authorized access is later provided with explicit reuse terms, assess only the DMI component and keep it separate from the approved USDA/CPER ADG observational case."
+    },
+    {
+      "title": "Deployable DMI prediction using GPBoost, MLOps, and flask without the need for exact birth dates",
+      "doi": "10.3389/fanim.2026.1770302",
+      "url": "https://doi.org/10.3389/fanim.2026.1770302",
+      "publisherArticleUrl": "https://www.frontiersin.org/journals/animal-science/articles/10.3389/fanim.2026.1770302/full",
+      "publicationLicense": "Open access article; no separate data license or dataset deposit identified.",
+      "reportedPopulation": "Beef cattle DMI prediction using animal intake, body weight, age, water behavior, and climate features; the paper reports animal-ID grouped 60:20:20 train/validation/test partitions.",
+      "dataAvailabilityStatement": "The original contributions presented in the study are included in the article. Further inquiries can be directed to the corresponding author.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "No downloadable individual-level dataset, data-specific license, public repository, code repository, or supplementary data package was found on the publisher article page. The article also states that its partitions came from the same broader experimental framework, rather than independent external management, climatic, and geographic settings.",
+      "decision": "Retain as a peer-reviewed workflow and methods reference only. Article-level metrics and plotted summaries are not individual observations and cannot reproduce the model evaluation. Do not use as an external validation or to calibrate Agroville."
+    }
+  ],
+  "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",
+  "limits": [
+    "A source-level search is not proof that no other dataset exists.",
+    "A publication license is not assumed to license its underlying data.",
+    "This review does not request access from authors or repositories."
+  ]
+}
