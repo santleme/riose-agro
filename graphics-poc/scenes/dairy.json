@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "sceneId": "riose-dairy-complete-layout-v1",
+  "name": "Fazenda leiteira · layout brasileiro",
+  "domainModule": {
+    "moduleId": "livestock-dairy",
+    "version": "0.1.0",
+    "status": "in-progress",
+    "modelIds": []
+  },
+  "simulation": {
+    "scenarioId": "dairy-layout-only-in-progress",
+    "seed": 20261012,
+    "populationCount": 24,
+    "productionSystem": "dairy",
+    "initialConditions": {"housing": "pasture-and-milking", "weather": "normal", "diet": "pasture", "simulationStatus": "layout-only"}
+  },
+  "projection": {"type": "isometric-2to1", "cellWidth": 64, "cellHeight": 32, "columns": 14, "rows": 10},
+  "assets": [
+    {"assetId": "grass-light", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "grass-mid", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "soil-dry", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "dairy-barn", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-milking-parlor", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-milk-chilling-tank", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-waiting-pen", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-activity-collar", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-holstein-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-girolando-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-heifer", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "dairy-heifer-calf", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"},
+    {"assetId": "water-trough", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1-review"},
+    {"assetId": "feed-trough", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1-review"}
+  ],
+  "entities": [
+    {"entityId": "dairy-cow-holstein-01", "kind": "animal", "position": {"x": 2.3, "y": 5.2, "unit": "grid-cell"}, "asset": {"assetId": "dairy-holstein-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-cow-girolando-02", "kind": "animal", "position": {"x": 3.7, "y": 6.1, "unit": "grid-cell"}, "asset": {"assetId": "dairy-girolando-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-cow-holstein-03", "kind": "animal", "position": {"x": 5.3, "y": 5.4, "unit": "grid-cell"}, "asset": {"assetId": "dairy-holstein-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "resting"}},
+    {"entityId": "dairy-heifer-04", "kind": "animal", "position": {"x": 6.1, "y": 7.2, "unit": "grid-cell"}, "asset": {"assetId": "dairy-heifer", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-calf-05", "kind": "animal", "position": {"x": 1.8, "y": 7.7, "unit": "grid-cell"}, "asset": {"assetId": "dairy-heifer-calf", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "resting"}},
+    {"entityId": "dairy-cow-girolando-06", "kind": "animal", "position": {"x": 4.4, "y": 8.0, "unit": "grid-cell"}, "asset": {"assetId": "dairy-girolando-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-cow-holstein-07", "kind": "animal", "position": {"x": 9.2, "y": 5.6, "unit": "grid-cell"}, "asset": {"assetId": "dairy-holstein-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-cow-girolando-08", "kind": "animal", "position": {"x": 11.2, "y": 6.8, "unit": "grid-cell"}, "asset": {"assetId": "dairy-girolando-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-heifer-09", "kind": "animal", "position": {"x": 8.7, "y": 8.1, "unit": "grid-cell"}, "asset": {"assetId": "dairy-heifer", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-calf-10", "kind": "animal", "position": {"x": 12.1, "y": 8.0, "unit": "grid-cell"}, "asset": {"assetId": "dairy-heifer-calf", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "resting"}},
+    {"entityId": "dairy-cow-holstein-11", "kind": "animal", "position": {"x": 10.1, "y": 4.5, "unit": "grid-cell"}, "asset": {"assetId": "dairy-holstein-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "grazing"}},
+    {"entityId": "dairy-cow-girolando-12", "kind": "animal", "position": {"x": 9.8, "y": 7.4, "unit": "grid-cell"}, "asset": {"assetId": "dairy-girolando-cow", "manifestUri": "parallel:d99d/public/assets/modules/livestock-dairy/manifest.json", "manifestVersion": "dairy-module-0.1.0-review"}, "state": {"stateId": "resting"}}
+  ],
+  "zones": [
+    {"zoneId": "dairy-pasture-west", "kind": "pasture", "origin": {"x": 1, "y": 4, "unit": "grid-cell"}, "footprint": {"columns": 6, "rows": 5}, "groundAssetId": "grass-light", "transitionAssetIds": {"edge": "grass-mid"}, "domainZoneId": "dairy-paddock-west"},
+    {"zoneId": "dairy-pasture-east", "kind": "pasture", "origin": {"x": 8, "y": 4, "unit": "grid-cell"}, "footprint": {"columns": 5, "rows": 5}, "groundAssetId": "grass-mid", "transitionAssetIds": {"edge": "grass-light"}, "domainZoneId": "dairy-paddock-east"},
+    {"zoneId": "dairy-service-yard", "kind": "handling", "origin": {"x": 3, "y": 1, "unit": "grid-cell"}, "footprint": {"columns": 8, "rows": 3}, "groundAssetId": "soil-dry", "domainZoneId": "dairy-service"}
+  ],
+  "prefabs": [
+    {"prefabId": "dairy-barn-01", "assetId": "dairy-barn", "position": {"x": 0, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 3, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true, "placementRules": {"alignment": {"axis": "row", "value": 0}}},
+    {"prefabId": "dairy-parlor-01", "assetId": "dairy-milking-parlor", "position": {"x": 3, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 3, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "milking-ready"}, "blocking": true, "placementRules": {"adjacentTo": ["dairy-barn"], "alignment": {"axis": "row", "value": 0}}},
+    {"prefabId": "dairy-tank-01", "assetId": "dairy-milk-chilling-tank", "position": {"x": 6, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "cooling"}, "blocking": true, "placementRules": {"adjacentTo": ["dairy-milking-parlor"], "alignment": {"axis": "row", "value": 0}}},
+    {"prefabId": "dairy-waiting-pen-01", "assetId": "dairy-waiting-pen", "position": {"x": 8, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "waiting"}, "blocking": true, "placementRules": {"adjacentTo": ["dairy-milk-chilling-tank"], "alignment": {"axis": "row", "value": 0}}},
+    {"prefabId": "dairy-activity-collar-01", "assetId": "dairy-activity-collar", "position": {"x": 3, "y": 2, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "monitoring"}, "blocking": false},
+    {"prefabId": "dairy-water-01", "assetId": "water-trough", "position": {"x": 4, "y": 8, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "full"}, "blocking": true},
+    {"prefabId": "dairy-feed-01", "assetId": "feed-trough", "position": {"x": 10, "y": 8, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "full"}, "blocking": true}
+  ],
+  "layerOrder": ["terrain", "infrastructure", "livestock", "overlays"]
+}

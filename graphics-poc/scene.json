@@ -24,7 +24,9 @@
     {"assetId": "shade-tree", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
     {"assetId": "pond", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
     {"assetId": "fence-straight", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
-    {"assetId": "nelore-adult", "manifestUri": "parallel:d99d/assets/manifests/manifest.json", "manifestVersion": "semantic-47-v1"}
+    {"assetId": "nelore-adult", "manifestUri": "parallel:d99d/assets/manifests/manifest.json", "manifestVersion": "semantic-47-v1"},
+    {"assetId": "water-trough", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1-review"},
+    {"assetId": "feed-trough", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1-review"}
   ],
   "entities": [],
   "zones": [
@@ -36,7 +38,9 @@
     {"prefabId": "home-01", "assetId": "farmhouse", "position": {"x": 0, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
     {"prefabId": "pond-01", "assetId": "pond", "position": {"x": 1, "y": 6, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
     {"prefabId": "shade-01", "assetId": "shade-tree", "position": {"x": 11, "y": 5, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
-    {"prefabId": "fence-north-01", "assetId": "fence-straight", "position": {"x": 3, "y": 4, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "straight"}, "blocking": false}
+    {"prefabId": "fence-north-01", "assetId": "fence-straight", "position": {"x": 3, "y": 4, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "straight"}, "blocking": false},
+    {"prefabId": "water-trough-01", "assetId": "water-trough", "position": {"x": 3, "y": 3, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "full"}, "blocking": true},
+    {"prefabId": "feed-trough-01", "assetId": "feed-trough", "position": {"x": 9, "y": 5, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "partial"}, "blocking": true}
   ],
   "layerOrder": ["terrain", "infrastructure", "livestock", "overlays"]
 }

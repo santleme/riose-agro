@@ -4,19 +4,33 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
-import {distributePrefab, farmPositionToGrid, placementFits, projectIso, terrainCells, unprojectIso} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, terrainCells, unprojectIso, visualLod} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
+const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: true, strictRequired: false}).compile(schema);
 
 test('renderer-independent scene schema supports beef and in-progress dairy scenarios', () => {
   assert.equal(validate(scene), true, JSON.stringify(validate.errors));
-  const dairy = structuredClone(scene);
-  dairy.sceneId = 'riose-dairy-layout-contract-example';
-  dairy.domainModule = {moduleId: 'livestock-dairy', version: '0.1.0', status: 'in-progress', modelIds: []};
-  dairy.simulation.scenarioId = 'dairy-layout-only-in-progress'; dairy.simulation.productionSystem = 'dairy';
-  assert.equal(validate(dairy), true, JSON.stringify(validate.errors));
+  assert.equal(validate(dairyScene), true, JSON.stringify(validate.errors));
+  for (const candidate of [scene, dairyScene]) {
+    const declaredAssets = new Set(candidate.assets.map(asset => asset.assetId));
+    for (const prefab of candidate.prefabs) assert.ok(declaredAssets.has(prefab.assetId), `${candidate.sceneId} missing ${prefab.assetId}`);
+    for (const entity of candidate.entities) if (entity.asset) assert.ok(declaredAssets.has(entity.asset.assetId), `${candidate.sceneId} missing ${entity.asset.assetId}`);
+  }
+  assert.equal(dairyScene.simulation.productionSystem, 'dairy');
+  assert.equal(dairyScene.domainModule.status, 'in-progress');
+  assert.equal(dairyScene.entities.filter(entity => entity.kind === 'animal').length, 12);
+  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-milking-parlor'));
+  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-milk-chilling-tank'));
+  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-waiting-pen'));
+  let placed = [];
+  for (const prefab of dairyScene.prefabs) {
+    const result = placementValidation(prefab, prefab.position, dairyScene.projection.columns, dairyScene.projection.rows, placed, dairyScene.zones);
+    assert.equal(result.valid, true, `${prefab.prefabId}: ${result.reason}`);
+    placed.push(prefab);
+  }
 
   const withAnimal = structuredClone(scene);
   withAnimal.entities.push({entityId: 'animal-17', kind: 'animal', domainEntityId: '17', position: {x: 12.5, y: 8.25, unit: 'world-meter'}, asset: withAnimal.assets.at(-1), state: {stateId: 'grazing'}});
@@ -38,11 +52,50 @@ test('isometric projection and inverse preserve editable grid positions', () => 
   assert.deepEqual(farmPositionToGrid(288, 168, 14, 10), {column: 7, row: 5});
 });
 
+test('sprite culling keeps partial edge intersections and rejects off-screen bounds', () => {
+  assert.equal(intersectsViewport({left: -20, top: 20, right: 15, bottom: 60}, 100, 80), true);
+  assert.equal(intersectsViewport({left: -40, top: 20, right: -1, bottom: 60}, 100, 80), false);
+  assert.equal(intersectsViewport({left: 105, top: 20, right: 150, bottom: 60}, 100, 80), false);
+});
+
+test('distance LOD reduces far draw units while preserving every stable animal ID', () => {
+  const animals = [
+    {id: 'animal-1', animalId: 1, x: 0, y: 0, depth: 0, screenX: 50, screenY: 50, lod: visualLod(40)},
+    {id: 'animal-2', animalId: 2, x: 1, y: 1, depth: 1, screenX: 400, screenY: 300, lod: visualLod(140)},
+    {id: 'animal-3', animalId: 3, x: 2, y: 2, depth: 2, screenX: 410, screenY: 305, lod: visualLod(300)},
+    {id: 'animal-4', animalId: 4, x: 3, y: 3, depth: 3, screenX: 420, screenY: 310, lod: visualLod(320)},
+  ];
+  const result = clusterFarAnimals(animals, 48, 36);
+  assert.deepEqual(result.individual.map(item => item.animalId), [1, 2]);
+  assert.equal(result.clusters.length, 1);
+  assert.equal(result.clusters[0].count, 2);
+  assert.deepEqual(result.clusters[0].animalIds, [3, 4]);
+  assert.deepEqual([...result.individual.map(item => item.animalId), ...result.clusters.flatMap(item => item.animalIds)].sort((a, b) => a - b), [1, 2, 3, 4]);
+  assert.equal(visualLod(100), 'near'); assert.equal(visualLod(101), 'medium'); assert.equal(visualLod(221), 'far');
+});
+
 test('prefab snapping rejects out-of-bounds and overlapping blocking footprints', () => {
   const home = scene.prefabs[0];
-  assert.equal(placementFits(home, {x: 2, y: 2}, 14, 10, scene.prefabs), true);
+  assert.equal(placementFits(home, {x: 0, y: 3}, 14, 10, scene.prefabs), true);
   assert.equal(placementFits(home, {x: 1, y: 6}, 14, 10, scene.prefabs), false, 'pond overlaps the home');
   assert.equal(placementFits(home, {x: 13, y: 9}, 14, 10, []), false);
+});
+
+test('placement rules enforce allowed zones, adjacency and alignment; composition stamps an atomic aligned service line', () => {
+  const barn = {prefabId: 'barn-1', assetId: 'dairy-barn', position: {x: 0, y: 0}, footprint: {columns: 3, rows: 2}, blocking: true};
+  const parlor = {assetId: 'dairy-milking-parlor', footprint: {columns: 3, rows: 2}, blocking: true, placementRules: {adjacentTo: ['dairy-barn'], alignment: {axis: 'row', value: 0}}};
+  assert.deepEqual(placementValidation(parlor, {x: 3, y: 0}, 14, 10, [barn]), {valid: true, reason: null});
+  assert.equal(placementValidation(parlor, {x: 4, y: 0}, 14, 10, [barn]).reason, 'adjacency');
+  assert.equal(placementValidation(parlor, {x: 3, y: 1}, 14, 10, [barn]).reason, 'alignment');
+  assert.equal(placementValidation({...parlor, placementRules: {allowedZoneKinds: ['handling']}}, {x: 3, y: 0}, 14, 10, [barn], [{kind: 'pasture', origin: {x: 0, y: 0}, footprint: {columns: 8, rows: 4}}]).reason, 'zone');
+  const recipe = [
+    {...barn, offset: {x: 0, y: 0}},
+    {assetId: 'dairy-milking-parlor', footprint: {columns: 3, rows: 2}, blocking: true, placementRules: {adjacentTo: ['dairy-barn']}, offset: {x: 3, y: 0}},
+    {assetId: 'dairy-milk-chilling-tank', footprint: {columns: 2, rows: 1}, blocking: true, placementRules: {adjacentTo: ['dairy-milking-parlor']}, offset: {x: 6, y: 0}}
+  ];
+  const placed = composePrefabs(recipe, {x: 0, y: 0}, 14, 10);
+  assert.equal(placed.valid, true); assert.equal(placed.prefabs.length, 3);
+  assert.equal(composePrefabs(recipe, {x: 5, y: 9}, 14, 10).reason, 'out-of-bounds');
 });
 
 test('prefab distribution is deterministic, stays inside the pasture, and avoids overlaps', () => {
@@ -67,16 +120,28 @@ test('zone ground selection exposes terrain transition cells for auto-tiling', (
   assert.ok(cells.some(cell => cell.zoneId === 'handling-yard' && cell.assetId === 'soil-dry'));
 });
 
-test('the Graphics Lab server publishes its scene, schema and source art with explicit PNG MIME', async t => {
+test('the Graphics Lab serves both editable schema-valid scenes and dairy source art with provenance', async t => {
   const server = createServer(); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
-  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/schemas/visual-scene.schema.json']) {
+  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
   const image = await fetch(origin + '/graphics-poc/assets/nelore-adult-idle-v1.png');
   assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');
   const digest = createHash('sha256').update(Buffer.from(await image.arrayBuffer())).digest('hex');
   assert.equal(digest, '975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43');
+  for (const file of ['dairy/dairy-holstein-cow.png', 'dairy/dairy-girolando-cow.png', 'dairy/dairy-heifer.png', 'dairy/dairy-heifer-calf.png', 'dairy/dairy-barn.png', 'dairy/dairy-milking-parlor.png', 'dairy/dairy-milk-chilling-tank.png', 'dairy/dairy-waiting-pen.png', 'dairy/dairy-activity-collar.png', 'handling-review-atlas-v1.png']) {
+    const response = await fetch(`${origin}/graphics-poc/assets/${file}`);
+    assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
+  }
+  const provenance = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
+  const dairySources = provenance.assetSources.filter(item => item.assetId.startsWith('dairy-'));
+  assert.equal(dairySources.length, 9);
+  assert.ok(dairySources.every(item => item.status === 'REVIEW' && /^[a-f0-9]{64}$/.test(item.sha256)));
+  for (const item of [...dairySources, provenance.assetSources.find(source => source.assetId === 'handling-review-atlas-v1')]) {
+    const bytes = await readFile(new URL(`../graphics-poc/${item.file}`, import.meta.url));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.assetId);
+  }
   assert.equal((await fetch(origin + '/graphics-poc/app.js')).status, 404, 'source modules remain outside the static allowlist');
 });

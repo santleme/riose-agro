@@ -97,7 +97,15 @@
         "layer": {"enum": ["infrastructure", "livestock", "overlays"]},
         "state": {"$ref": "#/$defs/visualState"},
         "blocking": {"type": "boolean", "default": true},
-        "rotationSteps": {"type": "integer", "minimum": 0, "maximum": 3, "default": 0}
+        "rotationSteps": {"type": "integer", "minimum": 0, "maximum": 3, "default": 0},
+        "placementRules": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "allowedZoneKinds": {"type": "array", "items": {"enum": ["pasture", "handling", "water", "farmstead", "crop"]}, "uniqueItems": true},
+            "adjacentTo": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true},
+            "alignment": {"type": "object", "additionalProperties": false, "required": ["axis", "value"], "properties": {"axis": {"enum": ["row", "column"]}, "value": {"type": "number"}}}
+          }
+        }
       }
     },
     "eventEnvelope": {
