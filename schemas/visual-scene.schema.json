@@ -4,7 +4,7 @@
   "title": "Riose renderer-independent scene and scenario contract",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "sceneId", "name", "domainModule", "simulation", "projection", "assets", "zones", "prefabs", "layerOrder"],
+  "required": ["schemaVersion", "sceneId", "name", "domainModule", "simulation", "projection", "assets", "entities", "zones", "prefabs", "layerOrder"],
   "properties": {
     "schemaVersion": {"const": "1.0.0"},
     "sceneId": {"$ref": "#/$defs/id"},
@@ -24,6 +24,7 @@
       }
     },
     "assets": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}, "uniqueItems": true},
+    "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}, "uniqueItems": true},
     "zones": {"type": "array", "items": {"$ref": "#/$defs/zone"}},
     "prefabs": {"type": "array", "items": {"$ref": "#/$defs/prefab"}},
     "layerOrder": {"type": "array", "items": {"enum": ["terrain", "infrastructure", "livestock", "overlays"]}, "uniqueItems": true},

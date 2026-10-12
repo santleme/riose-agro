@@ -90,6 +90,7 @@ test('Worker runs the JavaScript default and the opt-in WASM route with identica
   assert.deepEqual(withoutImplementation(unavailableWasm.views),withoutImplementation(javascript.views));
   assert.equal(javascript.views.at(-1).animalValues.length,40*4);
   assert.equal(javascript.views.at(-1).animalActions.length,40);
-  assert.equal(javascript.transfers.at(-2).length,2,'view buffers are transferred instead of copied');
+  assert.deepEqual(Array.from(javascript.views.at(-1).animalIds),Array.from({length:40},(_,index)=>index+1));
+  assert.equal(javascript.transfers.at(-2).length,3,'entity IDs and packed view buffers are transferred instead of copied');
   assert.equal(javascript.views.at(-1).selectedHistory.length,javascript.snapshot.state.animals[0].history.length);
 });

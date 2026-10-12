@@ -19,6 +19,8 @@ The PixiJS PoC uses `Application.init`, `Assets.load`, `Texture` atlas frames, c
 - prefab IDs, asset IDs, footprints, layer, state, rotation and blocking policy;
 - stable event envelopes and optional versioned snapshot digest references.
 
+The live Worker view uses three aligned transferable arrays: `animalIds` (`Uint32Array`), `animalValues` (`Float64Array`, stride 4: x, y, weight, initial weight) and `animalActions` (`Uint8Array`). The index in each buffer refers to the same stable engine ID. The renderer projects those values into scene space; it does not copy simulation animals into editable scene layout or write visual coordinates back to the engine.
+
 The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, texture objects, camera transform, GPU properties or frame timing. Existing farm snapshots and comparison manifests remain the reproducible simulation contracts; layout JSON is separate from both. Scene editing changes layout, not authoritative model state.
 
 ## Composer behavior in the PoC

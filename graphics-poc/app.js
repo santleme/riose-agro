@@ -26,10 +26,10 @@ function image(url) {
 }
 
 function makeView(snapshot) {
-  const animals = snapshot.animals, values = new Float64Array(animals.length * 4), actions = new Uint8Array(animals.length);
+  const animals = snapshot.animals, ids = new Uint32Array(animals.length), values = new Float64Array(animals.length * 4), actions = new Uint8Array(animals.length);
   const actionCodes = {grazing: 0, feeding: 1, drinking: 2, resting: 3};
-  animals.forEach((animal, index) => { const offset = index * 4; values[offset] = animal.x; values[offset + 1] = animal.y; values[offset + 2] = animal.weight; values[offset + 3] = animal.initialWeight; actions[index] = actionCodes[animal.action] ?? 0; });
-  return {type: 'view', hour: snapshot.hour, config: snapshot.config, events: snapshot.events, animalValues: values, animalActions: actions, selectedAnimalId: state.view?.selectedAnimalId ?? 1, engineImplementation: 'javascript-fallback'};
+  animals.forEach((animal, index) => { const offset = index * 4; ids[index] = animal.id; values[offset] = animal.x; values[offset + 1] = animal.y; values[offset + 2] = animal.weight; values[offset + 3] = animal.initialWeight; actions[index] = actionCodes[animal.action] ?? 0; });
+  return {type: 'view', hour: snapshot.hour, config: snapshot.config, events: snapshot.events, animalIds: ids, animalValues: values, animalActions: actions, selectedAnimalId: state.view?.selectedAnimalId ?? 1, engineImplementation: 'javascript-fallback'};
 }
 
 function askWorker(message) {
@@ -64,7 +64,7 @@ function entityEntries() {
   const count = state.view.animalActions.length, entries = [], origin = sceneCenter();
   for (let index = 0; index < count; index++) {
     const offset = index * 4, grid = farmPositionToGrid(state.view.animalValues[offset], state.view.animalValues[offset + 1], state.scene.projection.columns, state.scene.projection.rows);
-    const position = isoPosition(grid.column, grid.row), id = index + 1;
+    const position = isoPosition(grid.column, grid.row), id = state.view.animalIds[index];
     entries.push({id: `animal-${id}`, kind: 'livestock', assetId: 'nelore-adult', x: position.x, y: position.y, depth: position.y, animalId: id, actionCode: state.view.animalActions[index], weight: state.view.animalValues[offset + 2]});
   }
   for (const prefab of state.scene.prefabs) {
@@ -452,7 +452,7 @@ async function initialize() {
   window.addEventListener('resize', () => { syncCanvasSize(); refreshScene(); });
   window.__graphicsReady = true; window.__runGraphicsBenchmark = runGraphicsBenchmark; window.__graphicsStats = frameStats;
   window.__graphicsControl = {
-    setRenderer: renderer => { switchRenderer(renderer); return initPixi(); },
+    setRenderer: renderer => { switchRenderer(renderer); return renderer === 'pixi' ? initPixi() : Promise.resolve(); },
     reset: count => resetSimulation(count),
     setCameraZoom: zoom => { state.camera.zoom = zoom; syncCanvasSize(); refreshScene(); },
     clearStats: () => { state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.lastFrame = 0; },

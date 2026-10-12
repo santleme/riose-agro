@@ -13,14 +13,15 @@ const scope=self                                                                
 const actionCodes={grazing:0,feeding:1,drinking:2,resting:3};
 function postSnapshot(){scope.postMessage({type:'state',state:engine.snapshot(),engineImplementation});}
 function postView(){
-  const state=engine.state,animals=state.animals,values=new Float64Array(animals.length*4),actions=new Uint8Array(animals.length);
+  const state=engine.state,animals=state.animals,ids=new Uint32Array(animals.length),values=new Float64Array(animals.length*4),actions=new Uint8Array(animals.length);
   for(let index=0;index<animals.length;index++){
     const animal=animals[index],offset=index*4;
+    ids[index]=animal.id;
     values[offset]=animal.x;values[offset+1]=animal.y;values[offset+2]=animal.weight;values[offset+3]=animal.initialWeight;
     actions[index]=actionCodes[animal.action]??0;
   }
   const selectedAnimal=animals.find(animal=>animal.id===selectedAnimalId)??animals[0];
-  scope.postMessage({type:'view',hour:state.hour,pastures:state.pastures,cost:state.cost,intake:state.intake,config:state.config,events:state.events.slice(0,20),animalValues:values,animalActions:actions,selectedAnimalId:selectedAnimal?.id??null,selectedHistory:engine.historyFor(selectedAnimal),engineImplementation},[values.buffer,actions.buffer]);
+  scope.postMessage({type:'view',hour:state.hour,pastures:state.pastures,cost:state.cost,intake:state.intake,config:state.config,events:state.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,selectedAnimalId:selectedAnimal?.id??null,selectedHistory:engine.historyFor(selectedAnimal),engineImplementation},[ids.buffer,values.buffer,actions.buffer]);
 }
 scope.onmessage=async(event)=>{await wasmReady;try{
   const m=event.data;

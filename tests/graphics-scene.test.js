@@ -18,6 +18,12 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
   dairy.simulation.scenarioId = 'dairy-layout-only-in-progress'; dairy.simulation.productionSystem = 'dairy';
   assert.equal(validate(dairy), true, JSON.stringify(validate.errors));
 
+  const withAnimal = structuredClone(scene);
+  withAnimal.entities.push({entityId: 'animal-17', kind: 'animal', domainEntityId: '17', position: {x: 12.5, y: 8.25, unit: 'world-meter'}, asset: withAnimal.assets.at(-1), state: {stateId: 'grazing'}});
+  assert.equal(validate(withAnimal), true, JSON.stringify(validate.errors));
+  withAnimal.entities[0].renderer = 'pixi';
+  assert.equal(validate(withAnimal), false, 'visual entities must stay renderer-independent');
+
   const rendererCoupled = structuredClone(scene); rendererCoupled.renderer = 'pixi';
   assert.equal(validate(rendererCoupled), false, 'renderer implementation details must stay out of scenario JSON');
 });

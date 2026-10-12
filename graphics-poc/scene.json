@@ -26,6 +26,7 @@
     {"assetId": "fence-straight", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
     {"assetId": "nelore-adult", "manifestUri": "parallel:d99d/assets/manifests/manifest.json", "manifestVersion": "semantic-47-v1"}
   ],
+  "entities": [],
   "zones": [
     {"zoneId": "north-paddock", "kind": "pasture", "origin": {"x": 1, "y": 1, "unit": "grid-cell"}, "footprint": {"columns": 5, "rows": 4}, "groundAssetId": "grass-light", "transitionAssetIds": {"edge": "grass-mid"}, "domainZoneId": "paddock-1"},
     {"zoneId": "east-paddock", "kind": "pasture", "origin": {"x": 7, "y": 1, "unit": "grid-cell"}, "footprint": {"columns": 5, "rows": 4}, "groundAssetId": "grass-mid", "transitionAssetIds": {"edge": "grass-light"}, "domainZoneId": "paddock-2"},
