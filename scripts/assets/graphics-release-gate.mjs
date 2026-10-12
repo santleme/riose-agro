@@ -1,4 +1,5 @@
 import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -8,6 +9,109 @@ const SHIP_STATUSES = new Set(['RELEASED']);
 
 async function readJson(relativePath) {
   return JSON.parse(await readFile(path.join(root, relativePath), 'utf8'));
+}
+
+function resolveRepoPath(reference, repositoryRoot) {
+  const normalized = reference.startsWith('/assets/') ? `public${reference}` : reference.replace(/^\//, '');
+  const resolved = path.resolve(repositoryRoot, normalized);
+  const relative = path.relative(repositoryRoot, resolved);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error(`path escapes repository: ${reference}`);
+  return resolved;
+}
+
+async function fileMetadata(reference, repositoryRoot) {
+  const filePath = resolveRepoPath(reference, repositoryRoot);
+  const bytes = await readFile(filePath);
+  return {
+    size: bytes.length,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+    width: bytes.length >= 24 && bytes.toString('hex', 0, 8) === '89504e470d0a1a0a' ? bytes.readUInt32BE(16) : null,
+    height: bytes.length >= 24 && bytes.toString('hex', 0, 8) === '89504e470d0a1a0a' ? bytes.readUInt32BE(20) : null,
+  };
+}
+
+export async function inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest}, repositoryRoot = root) {
+  const errors = [];
+  const checkFile = async (label, reference) => {
+    if (typeof reference !== 'string' || !reference.trim()) {
+      errors.push(`${label} has no file path`);
+      return null;
+    }
+    try {
+      const details = await fileMetadata(reference, repositoryRoot);
+      if (!details.size) errors.push(`${label} file is empty: ${reference}`);
+      return details;
+    } catch (error) {
+      errors.push(`${label} file is missing or unreadable: ${reference} (${error.message})`);
+      return null;
+    }
+  };
+
+  for (const asset of semanticManifest.assets ?? []) {
+    await checkFile(`${asset.id} export`, asset.file);
+    await checkFile(`${asset.id} source`, asset.source?.sourceFile);
+    if (asset.source?.sha256) {
+      const source = await fileMetadata(asset.source.sourceFile, repositoryRoot).catch(() => null);
+      if (source) check(source.sha256 === asset.source.sha256, `${asset.id} source hash does not match its provenance record`, errors);
+    }
+  }
+  for (const asset of dairyManifest.assets ?? []) {
+    await checkFile(`${asset.id} atlas export`, asset.file);
+    await checkFile(`${asset.id} source`, asset.sourceFile);
+    if (asset.sourceSha256) {
+      const source = await fileMetadata(asset.sourceFile, repositoryRoot).catch(() => null);
+      if (source) check(source.sha256 === asset.sourceSha256, `${asset.id} source hash does not match its provenance record`, errors);
+    }
+    if (asset.spriteFile) {
+      const sprite = await checkFile(`${asset.id} sprite export`, asset.spriteFile);
+      if (sprite && asset.spriteSha256) check(sprite.sha256 === asset.spriteSha256,
+        `${asset.id} sprite hash does not match its manifest record`, errors);
+    }
+  }
+  const sourceAtlasMetadata = new Map();
+  for (const [atlasKey, atlas] of Object.entries(dairyManifest.atlases ?? {})) {
+    const metadata = await checkFile(`source atlas ${atlasKey}`, atlas.image);
+    if (metadata) sourceAtlasMetadata.set(atlasKey, metadata);
+  }
+
+  const atlasMetadata = new Map();
+  for (const [atlasKey, atlasPath] of Object.entries(rendererManifest.atlases ?? {})) {
+    const metadata = await checkFile(`renderer atlas ${atlasKey}`, atlasPath);
+    if (!metadata) continue;
+    atlasMetadata.set(atlasKey, metadata);
+    const expectedHash = rendererManifest.atlasSha256?.[atlasKey];
+    check(typeof expectedHash === 'string' && metadata.sha256 === expectedHash,
+      `renderer atlas ${atlasKey} hash does not match atlasSha256`, errors);
+  }
+
+  for (const asset of rendererManifest.assets ?? []) {
+    const label = asset.assetId ?? '<unnamed renderer asset>';
+    await checkFile(`${label} source`, asset.sourceFile);
+    await checkFile(`${label} source manifest`, asset.manifestSource);
+    const metadata = atlasMetadata.get(asset.atlasKey);
+    const frame = asset.frame;
+    check(Boolean(metadata), `${label} has no generated atlas membership for ${String(asset.atlasKey)}`, errors);
+    if (metadata) {
+      check(metadata.width !== null && metadata.height !== null, `${label} atlas is not a PNG`, errors);
+      check(frame && [frame.x, frame.y, frame.w, frame.h].every(Number.isInteger)
+        && frame.x >= 0 && frame.y >= 0 && frame.w > 0 && frame.h > 0
+        && frame.x + frame.w <= metadata.width && frame.y + frame.h <= metadata.height,
+      `${label} frame ${JSON.stringify(frame)} is outside generated atlas ${asset.atlasKey} (${metadata.width}x${metadata.height})`, errors);
+    }
+    const source = dairyManifest.assets?.find(entry => entry.id === asset.assetId || entry.semanticId === asset.sourceSemanticId);
+    if (source?.frame?.atlas) {
+      const sourceAtlas = sourceAtlasMetadata.get(source.frame.atlas);
+      check(Boolean(sourceAtlas), `${label} source frame atlas ${source.frame.atlas} has no generated image`, errors);
+      if (sourceAtlas && metadata) {
+        check(sourceAtlas.sha256 === metadata.sha256,
+          `${label} renderer atlas is not byte-identical to source atlas ${source.frame.atlas}`, errors);
+        check(['x', 'y', 'w', 'h'].every(key => frame?.[key] === source.frame[key]),
+          `${label} renderer frame does not match source atlas membership`, errors);
+      }
+    }
+  }
+
+  return errors;
 }
 
 function check(condition, message, errors) {
@@ -80,6 +184,15 @@ function validateRendererManifest(renderer, sourceManifests, releaseScenes, erro
         `${id} source record has no documented rights basis`, errors);
       check(source.source?.kind && !['unknown', 'legacy-unknown'].includes(source.source.kind), `${id} source origin is unknown`, errors);
       if (source.atlas) check(source.atlas.pack === asset.atlasKey, `${id} renderer atlas does not match semantic atlas membership`, errors);
+      if (source.frame?.atlas) {
+        const ownerManifest = sourceManifests.find(manifest => (manifest.assets ?? []).includes(source));
+        const sourceAtlas = ownerManifest?.atlases?.[source.frame.atlas];
+        check(Boolean(sourceAtlas), `${id} source frame references undeclared atlas ${source.frame.atlas}`, errors);
+        if (sourceAtlas && ownerManifest?.moduleId === 'livestock-dairy') {
+          check(sourceAtlas.image?.endsWith('/dairy-assets-atlas-v1.png') && asset.atlasKey === 'dairy',
+            `${id} renderer frame is not linked to the generated dairy atlas`, errors);
+        }
+      }
     }
   }
 
@@ -105,14 +218,15 @@ export async function assertGraphicsReleaseReady() {
     readJson('graphics-poc/source/main-composer-v1/beef.json'),
     readJson('graphics-poc/source/main-composer-v1/dairy.json'),
   ]);
+  const filesystemErrors = await inspectGraphicsReleaseFiles({semanticManifest, dairyManifest, rendererManifest});
   assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes: [
     ['beef scene', beefScene], ['dairy scene', dairyScene],
-  ]});
+  ]}, filesystemErrors);
 }
 
 /** Validate the exact manifest inputs used by a release build; exported for isolated fixture tests. */
-export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes}) {
-  const errors = [];
+export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, releaseScenes}, initialErrors = []) {
+  const errors = [...initialErrors];
   validateManifest(semanticManifest, 'semantic manifest', errors);
   validateRendererManifest(rendererManifest, [semanticManifest, dairyManifest], releaseScenes, errors);
   if (errors.length) {

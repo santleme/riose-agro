@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-10-12",
+  "purpose": "Atlas byte size and local browser fetch/decode evidence for the current graphics PoC manifest.",
+  "scope": "Only atlases listed by graphics-poc/assets/main-composer-render-manifest.json; review/unresolved candidates remain unapproved. No renderer comparison was performed.",
+  "manifest": {
+    "path": "graphics-poc/assets/main-composer-render-manifest.json",
+    "sourceRevision": {
+      "branch": "main",
+      "commit": "e714ef0b4cb2800dc041d507d8f26d101d299c63",
+      "assetManifestCommit": "2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7",
+      "verification": "Copied atlas SHA-256 values match the source files. Asset review joins the semantic manifest by ID; unlinked runtime tiles remain UNRESOLVED."
+    }
+  },
+  "environment": {
+    "browser": "Chrome/156.0.8078.4",
+    "browserRevision": "@f842f52ef39fd97b449eb27cff414bf05a98ddce",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "origin": "http://127.0.0.1:8000",
+    "cacheDisabled": true,
+    "repeats": 3,
+    "method": "Sequential fetch(cache=no-store), Blob read, createImageBitmap decode; browser performance.now() timing."
+  },
+  "atlasCount": 7,
+  "totalBytes": 17309191,
+  "totalMiB": 16.507,
+  "unresolvedAssetIds": [
+    "fruit-tree",
+    "grain-silo"
+  ],
+  "atlases": [
+    {
+      "key": "farm",
+      "url": "/graphics-poc/assets/farm-starter-atlas.png",
+      "file": "graphics-poc/assets/farm-starter-atlas.png",
+      "byteSize": 2864960,
+      "sha256": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
+      "expectedSha256": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
+      "semanticStatuses": {
+        "UNRESOLVED": 7
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 2864960,
+          "width": 1536,
+          "height": 1024,
+          "fetchMs": 11.700000002980232,
+          "decodeMs": 16.799999997019768,
+          "totalMs": 28.5
+        },
+        {
+          "repeat": 2,
+          "byteSize": 2864960,
+          "width": 1536,
+          "height": 1024,
+          "fetchMs": 13.599999997764826,
+          "decodeMs": 15.400000002235174,
+          "totalMs": 29
+        },
+        {
+          "repeat": 3,
+          "byteSize": 2864960,
+          "width": 1536,
+          "height": 1024,
+          "fetchMs": 12.699999999254942,
+          "decodeMs": 15,
+          "totalMs": 27.699999999254942
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 28.5,
+        "minTotalMs": 27.7,
+        "maxTotalMs": 29
+      }
+    },
+    {
+      "key": "handling-review",
+      "url": "/graphics-poc/assets/handling-review-atlas-v1.png",
+      "file": "graphics-poc/assets/handling-review-atlas-v1.png",
+      "byteSize": 1482069,
+      "sha256": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
+      "expectedSha256": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
+      "semanticStatuses": {
+        "REVIEW": 7
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 1482069,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 4.5,
+          "decodeMs": 12.200000002980232,
+          "totalMs": 16.700000002980232
+        },
+        {
+          "repeat": 2,
+          "byteSize": 1482069,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 7.800000000745058,
+          "decodeMs": 12.099999997764826,
+          "totalMs": 19.899999998509884
+        },
+        {
+          "repeat": 3,
+          "byteSize": 1482069,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 7.599999997764826,
+          "decodeMs": 12.199999999254942,
+          "totalMs": 19.799999997019768
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 19.8,
+        "minTotalMs": 16.7,
+        "maxTotalMs": 19.9
+      }
+    },
+    {
+      "key": "environment-review",
+      "url": "/graphics-poc/assets/main-composer/environment-review-atlas-v1.png",
+      "file": "graphics-poc/assets/main-composer/environment-review-atlas-v1.png",
+      "byteSize": 1334238,
+      "sha256": "cedc123183a779addaf68ecd939a6ae8c818c69c58b8e1fa789baf0c15b264ec",
+      "expectedSha256": "cedc123183a779addaf68ecd939a6ae8c818c69c58b8e1fa789baf0c15b264ec",
+      "semanticStatuses": {
+        "REVIEW": 2
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 1334238,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 4.5,
+          "decodeMs": 11.5,
+          "totalMs": 16
+        },
+        {
+          "repeat": 2,
+          "byteSize": 1334238,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 7.199999999254942,
+          "decodeMs": 11.399999998509884,
+          "totalMs": 18.599999997764826
+        },
+        {
+          "repeat": 3,
+          "byteSize": 1334238,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 7.200000002980232,
+          "decodeMs": 11.799999997019768,
+          "totalMs": 19
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 18.6,
+        "minTotalMs": 16,
+        "maxTotalMs": 19
+      }
+    },
+    {
+      "key": "infrastructure-review",
+      "url": "/graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png",
+      "file": "graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png",
+      "byteSize": 1703390,
+      "sha256": "f5aa03d2fe2e936a9e320a8b5426f3189017f70636c6bdaf77557393c7f9d98d",
+      "expectedSha256": "f5aa03d2fe2e936a9e320a8b5426f3189017f70636c6bdaf77557393c7f9d98d",
+      "semanticStatuses": {
+        "REVIEW": 5
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 1703390,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 5.200000002980232,
+          "decodeMs": 12.699999999254942,
+          "totalMs": 17.900000002235174
+        },
+        {
+          "repeat": 2,
+          "byteSize": 1703390,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 8.200000002980232,
+          "decodeMs": 12.699999999254942,
+          "totalMs": 20.900000002235174
+        },
+        {
+          "repeat": 3,
+          "byteSize": 1703390,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 8.199999999254942,
+          "decodeMs": 12.5,
+          "totalMs": 20.699999999254942
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 20.7,
+        "minTotalMs": 17.9,
+        "maxTotalMs": 20.9
+      }
+    },
+    {
+      "key": "technology-review",
+      "url": "/graphics-poc/assets/main-composer/technology-review-atlas-v1.png",
+      "file": "graphics-poc/assets/main-composer/technology-review-atlas-v1.png",
+      "byteSize": 1098273,
+      "sha256": "e14fccdabb06c35d201ab094fc1a50a4e5d371cbf127b446c97ba8387e260963",
+      "expectedSha256": "e14fccdabb06c35d201ab094fc1a50a4e5d371cbf127b446c97ba8387e260963",
+      "semanticStatuses": {
+        "REVIEW": 4
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 1098273,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 3.899999998509884,
+          "decodeMs": 11.5,
+          "totalMs": 15.399999998509884
+        },
+        {
+          "repeat": 2,
+          "byteSize": 1098273,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 6,
+          "decodeMs": 11.399999998509884,
+          "totalMs": 17.399999998509884
+        },
+        {
+          "repeat": 3,
+          "byteSize": 1098273,
+          "width": 2048,
+          "height": 1024,
+          "fetchMs": 5.800000000745058,
+          "decodeMs": 11.400000002235174,
+          "totalMs": 17.200000002980232
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 17.2,
+        "minTotalMs": 15.4,
+        "maxTotalMs": 17.4
+      }
+    },
+    {
+      "key": "animals-review",
+      "url": "/graphics-poc/assets/main-composer/animals-review-atlas-v1.png",
+      "file": "graphics-poc/assets/main-composer/animals-review-atlas-v1.png",
+      "byteSize": 3913717,
+      "sha256": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
+      "expectedSha256": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
+      "semanticStatuses": {
+        "REVIEW": 3
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 3913717,
+          "width": 3072,
+          "height": 2688,
+          "fetchMs": 8.300000000745058,
+          "decodeMs": 47.80000000074506,
+          "totalMs": 56.100000001490116
+        },
+        {
+          "repeat": 2,
+          "byteSize": 3913717,
+          "width": 3072,
+          "height": 2688,
+          "fetchMs": 16,
+          "decodeMs": 44.69999999925494,
+          "totalMs": 60.69999999925494
+        },
+        {
+          "repeat": 3,
+          "byteSize": 3913717,
+          "width": 3072,
+          "height": 2688,
+          "fetchMs": 15.899999998509884,
+          "decodeMs": 45.100000001490116,
+          "totalMs": 61
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 60.7,
+        "minTotalMs": 56.1,
+        "maxTotalMs": 61
+      }
+    },
+    {
+      "key": "dairy",
+      "url": "/graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png",
+      "file": "graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png",
+      "byteSize": 4912544,
+      "sha256": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca",
+      "expectedSha256": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca",
+      "semanticStatuses": {
+        "REVIEW": 7
+      },
+      "browserSamples": [
+        {
+          "repeat": 1,
+          "byteSize": 4912544,
+          "width": 2048,
+          "height": 4096,
+          "fetchMs": 9.399999998509884,
+          "decodeMs": 48.100000001490116,
+          "totalMs": 57.5
+        },
+        {
+          "repeat": 2,
+          "byteSize": 4912544,
+          "width": 2048,
+          "height": 4096,
+          "fetchMs": 18.699999999254942,
+          "decodeMs": 48.19999999925494,
+          "totalMs": 66.89999999850988
+        },
+        {
+          "repeat": 3,
+          "byteSize": 4912544,
+          "width": 2048,
+          "height": 4096,
+          "fetchMs": 19,
+          "decodeMs": 48.70000000298023,
+          "totalMs": 67.70000000298023
+        }
+      ],
+      "browserLoad": {
+        "repeats": 3,
+        "medianTotalMs": 66.9,
+        "minTotalMs": 57.5,
+        "maxTotalMs": 67.7
+      }
+    }
+  ],
+  "limitations": [
+    "Local loopback timing is a development-host baseline, not a network/CDN or supported-device estimate.",
+    "Browser cache was disabled and each atlas was fetched and decoded sequentially; concurrency behavior was not measured.",
+    "The measurements cover current REVIEW/UNRESOLVED atlas candidates only and do not imply visual, technical, rights, or release approval."
+  ]
+}
