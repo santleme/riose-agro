@@ -23,6 +23,7 @@
     "animals-review": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
     "dairy": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca"
   },
+  "unresolvedAssetIds": ["fruit-tree", "grain-silo"],
   "assets": [
     {
       "assetId": "building-farmhouse-imagegen-v1",

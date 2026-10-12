@@ -38,7 +38,7 @@ The budget controls semantic variety, not pixel quality. Prefer a smaller number
 - Input resolves a rendered hit to a stable entity ID and sends a command to the simulation. Rendering never writes model state directly.
 - Asset manifests, atlases, style tokens and approval metadata stay in the Asset System. Neither the simulation engine nor scientific models import browser graphics libraries.
 
-This boundary allows the model to process 10,000 animals while the view draws only visible sprites or aggregated visual representatives, and allows different renderers or low-detail modes without changing scientific calculations. A one-repeat headless map-fit sample at 10,000 animals produced 325 animal draw units and 40 far-herd clusters; it is exploratory and not a production performance guarantee. The existing `app.js` canvas and parallel asset pipeline remain the current presentation; this policy does not migrate or rewrite either one.
+This boundary allows the model to process 10,000 animals while the view draws only visible sprites or aggregated visual representatives, and allows different renderers or low-detail modes without changing scientific calculations. A two-repeat headless map-fit sample at 10,000 animals produced 325 animal draw units and 40 far-herd clusters; it is exploratory and not a production performance guarantee. The existing `app.js` canvas and parallel asset pipeline remain the current presentation; this policy does not migrate or rewrite either one.
 
 ## Acceptance checks for a new set
 

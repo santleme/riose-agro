@@ -1,5 +1,6 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
 import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -37,7 +38,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -203,7 +204,7 @@ function drawCanvasEntry(ctx, entry, time) {
     ctx.restore();
   } else if (meta.imageKey) ctx.drawImage(atlas, p.x + x, p.y + y, width, height);
   else ctx.drawImage(atlas, meta.x, meta.y, meta.w, meta.h, p.x + x, p.y + y, width, height);
-  if (entry.kind === 'herd-cluster' && state.activeLayers.overlays) {
+  if (entry.kind === 'herd-cluster' && entry.count > 1 && state.activeLayers.overlays) {
     const label = entry.count.toLocaleString('pt-BR'); ctx.font = 'bold 11px system-ui';
     const badgeWidth = Math.max(28, ctx.measureText(label).width + 12), badgeX = p.x - badgeWidth / 2, badgeY = screenY + height * .42;
     ctx.fillStyle = '#173e32'; ctx.fillRect(badgeX, badgeY, badgeWidth, 19); ctx.fillStyle = '#f7f4dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, badgeY + 9.5);
@@ -232,7 +233,8 @@ function drawCanvas(time) {
   updateVisualMotion(time);
   const start = performance.now();
   ctx.setTransform(size.ratio, 0, 0, size.ratio, 0, 0);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = state.camera.zoom < .8;
+  ctx.imageSmoothingQuality = 'high';
   ctx.clearRect(0, 0, size.width, size.height); ctx.fillStyle = '#7c9562'; ctx.fillRect(0, 0, size.width, size.height);
   for (const entry of state.visible) if (entry.kind !== 'livestock' || state.activeLayers.livestock) drawCanvasEntry(ctx, entry, time);
   state.paintMs = performance.now() - start;
@@ -316,7 +318,7 @@ function syncPixiScene() {
   layers.overlays.removeChildren();
   if (state.activeLayers.overlays) {
     for (const entry of state.visible) {
-      if (entry.kind !== 'herd-cluster') continue;
+      if (entry.kind !== 'herd-cluster' || entry.count < 2) continue;
       const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: String(entry.count), style: {fontFamily: 'Arial', fontSize: 11, fontWeight: 'bold', fill: '#f7f4dc'}});
       background.roundRect(-17, -10, 34, 20, 7).fill({color: 0x173e32}); label.anchor.set(.5); badge.addChild(background, label);
       badge.position.set(entry.x, entry.y - 5 / state.camera.zoom); layers.overlays.addChild(badge);
@@ -412,10 +414,10 @@ async function endPointer(event) {
     const meta = state.tool;
     if (meta.kind === 'livestock') {
       const id = `${meta.assetId}-${Date.now()}`;
-      state.scene.entities.push({entityId: id, kind: 'animal', position: {x: cell.x + .5, y: cell.y + .5, unit: 'grid-cell'}, asset: {assetId: meta.assetId, manifestUri: 'parallel:d99d/public/assets/modules/livestock-dairy/manifest.json', manifestVersion: 'dairy-module-0.1.0-review'}, state: {stateId: 'idle'}});
+      state.scene.entities.push({entityId: id, kind: 'animal', position: {x: cell.x + .5, y: cell.y + .5, unit: 'grid-cell'}, asset: sceneAssetReference(meta.assetId, state.renderManifest, state.assetSourceManifest), state: {stateId: 'idle'}, representationMode: 'sampled-miniature'});
       state.selection = id; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
     }
-    const prefab = {prefabId: `${meta.assetId}-${Date.now()}`, assetId: meta.assetId, position: {x: cell.x, y: cell.y, unit: 'grid-cell'}, footprint: meta.footprint, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
+    const prefab = {prefabId: `${meta.assetId}-${Date.now()}`, assetId: meta.assetId, position: {x: cell.x, y: cell.y, unit: 'grid-cell'}, footprint: meta.footprint, layer: 'infrastructure', state: {stateId: 'default'}, blocking: meta.blocking};
     const validation = placementValidation(prefab, prefab.position, state.scene.projection.columns, state.scene.projection.rows, state.scene.prefabs, state.scene.zones);
     if (!validation.valid) { $('scene-status').textContent = placementMessage(validation.reason); return; }
     state.scene.prefabs.push(prefab); state.selection = prefab.prefabId; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
@@ -496,7 +498,7 @@ function updateHud() {
   $('engine-badge').textContent = state.selectedDomain === 'dairy' ? 'livestock-dairy · in-progress' : (state.view?.engineImplementation ?? 'Simulation Worker');
 }
 
-function persistScene() { try { localStorage.setItem(`riose-graphics-scene-v1:${state.scene.sceneId}`, JSON.stringify(state.scene)); } catch { $('scene-status').textContent = 'Não foi possível salvar esta cena no navegador.'; } }
+function persistScene() { try { normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest); localStorage.setItem(`riose-graphics-scene-v1:${state.scene.sceneId}`, JSON.stringify(state.scene)); } catch (error) { $('scene-status').textContent = `Não foi possível salvar as referências da cena: ${error.message}`; } }
 
 async function selectScene(domain) {
   const base = state.scenes[domain];
@@ -504,6 +506,7 @@ async function selectScene(domain) {
   const savedScene = stored ? JSON.parse(stored) : null;
   const sameGrid = savedScene?.projection?.columns === base.projection.columns && savedScene?.projection?.rows === base.projection.rows;
   state.scene = savedScene?.schemaVersion === base.schemaVersion && sameGrid ? savedScene : structuredClone(base);
+  normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest);
   state.selectedDomain = domain; state.selection = null; state.tool = null; state.view = null;
   $('domain-module').value = domain;
   $('scene-picker').value = domain;
@@ -523,7 +526,8 @@ async function selectScene(domain) {
 }
 
 function distributeShade() {
-  const template = {assetId: 'shade-tree', footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true};
+  const assetId = 'vegetation-tree-shade-imagegen-v1', meta = frameBox(assetId);
+  const template = {assetId, footprint: meta.footprint ?? {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: meta.blocking};
   const placed = [];
   for (const zone of state.scene.zones.filter(item => item.kind === 'pasture')) {
     placed.push(...distributePrefab(template, zone, state.scene.projection.columns, state.scene.projection.rows, [...state.scene.prefabs, ...placed], 3, state.scene.simulation.seed));
@@ -534,6 +538,7 @@ function distributeShade() {
 }
 
 function canvasToBlob(canvas, name) {
+  normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest);
   const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([JSON.stringify(state.scene, null, 2)], {type: 'application/json'})); link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0);
 }
 
@@ -606,13 +611,15 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
 }
 
 async function initialize() {
-  const [scene, dairyScene, renderManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
+  const [scene, dairyScene, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
     fetch('/graphics-poc/assets/main-composer-render-manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de renderização do Composer ausente'); return response.json(); }),
+    fetch('/graphics-poc/asset-sources.json').then(response => { if (!response.ok) throw new Error('Manifesto de proveniência local ausente'); return response.json(); }),
     image(farmAtlasUrl), image(neloreUrl), image('/graphics-poc/assets/handling-review-atlas-v1.png'),
     image('/graphics-poc/assets/dairy/dairy-heifer.png'), image('/graphics-poc/assets/dairy/dairy-activity-collar.png')
   ]);
+  state.renderManifest = renderManifest; state.assetSourceManifest = assetSourceManifest;
   const dynamicAtlases = await Promise.all(Object.entries(renderManifest.atlases).map(async ([key, url]) => [key, await image(url)]));
   state.scenes = {beef: scene, dairy: dairyScene};
   const initialDomain = new URLSearchParams(location.search).get('scene') === 'dairy' ? 'dairy' : 'beef';
@@ -620,12 +627,13 @@ async function initialize() {
   const savedScene = stored ? JSON.parse(stored) : null;
   const sameGrid = savedScene?.projection?.columns === baseScene.projection.columns && savedScene?.projection?.rows === baseScene.projection.rows;
   state.scene = savedScene?.schemaVersion === baseScene.schemaVersion && sameGrid ? savedScene : structuredClone(baseScene);
+  normalizeSceneAssetReferences(state.scene, renderManifest, assetSourceManifest);
   originalBeefModule = structuredClone(scene.domainModule); originalBeefScenario = scene.simulation.scenarioId;
   state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; $('domain-module').value = state.selectedDomain; $('scene-picker').value = state.selectedDomain;
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', item.dataset.system !== state.selectedDomain);
   state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, 'dairy-heifer': dairyHeiferImage, 'dairy-activity-collar': dairyCollarImage, ...Object.fromEntries(dynamicAtlases)};
   state.assetAtlasUrls = renderManifest.atlases;
-  state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'animal' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus}]));
+  state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
   state.imageLoadMs = performance.now() - startedAt;
   state.terrainCells = terrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
@@ -645,9 +653,9 @@ async function initialize() {
   $('scene-picker').addEventListener('change', event => selectScene(event.target.value));
   $('domain-module').addEventListener('change', event => { $('scene-picker').value = event.target.value; selectScene(event.target.value); });
   for (const button of document.querySelectorAll('[data-tool]')) button.addEventListener('click', () => {
-    const assetId = button.dataset.tool, meta = frameBox(assetId), footprint = ({farmhouse: {columns: 2, rows: 2}, pond: {columns: 3, rows: 2}, 'feed-trough': {columns: 2, rows: 1}, 'dairy-barn': {columns: 3, rows: 2}, 'dairy-milking-parlor': {columns: 3, rows: 2}, 'dairy-milk-chilling-tank': {columns: 2, rows: 1}, 'dairy-waiting-pen': {columns: 2, rows: 2}})[assetId] ?? {columns: 1, rows: 1};
+    const assetId = button.dataset.tool, meta = frameBox(assetId), footprint = meta.footprint ?? ({'dairy-barn': {columns: 3, rows: 2}, 'dairy-milking-parlor': {columns: 3, rows: 2}, 'dairy-milk-chilling-tank': {columns: 2, rows: 1}, 'dairy-waiting-pen': {columns: 2, rows: 2}})[assetId] ?? {columns: 1, rows: 1};
     const adjacentTo = ({'dairy-milking-parlor': ['dairy-barn'], 'dairy-milk-chilling-tank': ['dairy-milking-parlor'], 'dairy-waiting-pen': ['dairy-milk-chilling-tank']})[assetId];
-    state.tool = {assetId, footprint, blocking: meta.kind !== 'livestock', kind: meta.kind, ...(adjacentTo ? {placementRules: {adjacentTo}} : {})}; $('scene-status').textContent = `Clique no mapa para colocar ${assetId}; snapping de 1 célula.`;
+    state.tool = {assetId, footprint, blocking: meta.blocking ?? meta.kind !== 'livestock', kind: meta.kind, ...(adjacentTo ? {placementRules: {adjacentTo}} : {})}; $('scene-status').textContent = `Clique no mapa para colocar ${assetId}; snapping de 1 célula.`;
   });
   $('compose-dairy-core').addEventListener('click', () => { state.tool = {compositionId: 'dairy-service'}; $('scene-status').textContent = 'Clique na célula superior esquerda. O núcleo precisa de 10 colunas livres e coloca estruturas adjacentes e alinhadas.'; });
   $('rotate-selection').addEventListener('click', rotateSelection);

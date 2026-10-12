@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
+import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
 import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
@@ -11,6 +12,7 @@ const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', im
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema.json', import.meta.url), 'utf8'));
 const renderManifest = JSON.parse(await readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8'));
+const assetSourceManifest = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: true, strictRequired: false}).compile(schema);
 
 test('renderer-independent scene schema supports beef and in-progress dairy scenarios', () => {
@@ -192,6 +194,26 @@ test('checked-in beef and dairy scenes are reproducible adaptations of pinned Co
   const [beefSource, dairySource] = await Promise.all(['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)));
   assert.deepEqual(adaptMainComposerScene(beefSource, renderManifest), scene);
   assert.deepEqual(adaptMainComposerScene(dairySource, renderManifest), dairyScene);
+});
+
+test('scene edits resolve canonical asset references and preserve review status in the shared manifest contract', () => {
+  const scene = structuredClone(dairyScene);
+  scene.entities.push({entityId: 'heifer-tool-test', kind: 'animal', position: {x: 24.5, y: 8.5, unit: 'grid-cell'}, asset: sceneAssetReference('dairy-heifer', renderManifest, assetSourceManifest), state: {stateId: 'idle'}, representationMode: 'sampled-miniature'});
+  scene.prefabs.push(
+    {prefabId: 'headquarters-tool-test', assetId: 'farmhouse', position: {x: 0, y: 0, unit: 'grid-cell'}, footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true},
+    {prefabId: 'fruit-tree-legacy', assetId: 'fruit-tree', position: {x: 1, y: 0, unit: 'grid-cell'}, footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: false},
+  );
+  normalizeSceneAssetReferences(scene, renderManifest, assetSourceManifest);
+  assert.equal(validate(scene), true, JSON.stringify(validate.errors));
+  const editedHeifer = scene.entities.find(entity => entity.entityId === 'heifer-tool-test');
+  assert.equal(scene.prefabs.find(prefab => prefab.prefabId === 'headquarters-tool-test')?.assetId, 'building-farmhouse-imagegen-v1', 'legacy tool IDs resolve to current semantic Composer IDs');
+  assert.equal(scene.assets.find(asset => asset.assetId === 'fruit-tree')?.reviewStatus, 'UNRESOLVED', 'unmapped legacy art stays explicitly unresolved');
+  assert.equal(editedHeifer.asset.manifestUri, '/graphics-poc/asset-sources.json');
+  assert.equal(editedHeifer.asset.manifestVersion, assetSourceManifest.sourceRevision.commit);
+  assert.equal(editedHeifer.asset.reviewStatus, 'REVIEW');
+  assert.ok(scene.assets.some(asset => asset.assetId === 'building-farmhouse-imagegen-v1'));
+  assert.ok(scene.assets.some(asset => asset.assetId === 'dairy-heifer' && asset.reviewStatus === 'REVIEW'));
+  assert.ok(scene.assets.every(asset => !asset.manifestUri.startsWith('parallel:')));
 });
 
 test('the Graphics Lab serves both editable schema-valid scenes and dairy source art with provenance', async t => {
