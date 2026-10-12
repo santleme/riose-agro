@@ -33,7 +33,7 @@
     "reviewedSourceCount": 15,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
-    "ineligibleOrUnavailableSourcesForTarget": 10
+    "ineligibleOrUnavailableSourcesForTarget": 15
   },
   "candidateEvidence": [
     {
@@ -70,10 +70,10 @@
     {
       "id": "dmi-adg-readiness-matrix",
       "source": "docs/evidence/dmi-adg-readiness-v1.json",
-      "decision": "The ten-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional DMI sources are dairy or feedlot component datasets and are out of population scope.",
+      "decision": "The 15-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
       "access": "mixed; assessed per source in the linked matrix",
       "license": "Assessed per source in the linked matrix and source manifests.",
-      "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome.",
+      "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome. The SDSU beef-cow source is a hay-feeding experiment, not pasture DMI.",
       "outcomeFit": "No eligible supervised DMI label source for this target.",
       "missingnessAndIdentity": "Source-specific limitations are in the linked matrix and its audit references.",
       "references": ["docs/evidence/dmi-adg-readiness-v1.json"]
@@ -82,11 +82,13 @@
   "blockers": [
     "No locally accessible, individually reusable source was found that satisfies both the mature pasture beef-cow population and total-DMI outcome criteria.",
     "The only locally available adult-cow candidate in the reviewed evidence lacks total forage DMI; age-derived period weight change is not a substitute label.",
-    "An independent zootechnical review tracked by issue #22 has not been obtained. The population definition and this readiness gate therefore remain unsigned and must not be represented as domain-expert approval."
+    "An independent zootechnical review tracked by issue #22 has not been obtained. The current #22 brief focuses on the USDA/CPER yearling ADG and grazing-behavior case; its reviewer must explicitly assess this separate mature-cow total-DMI estimand for the review to satisfy #109.",
+    "No project-owner signoff or attribution is recorded; the prepared no-go remains unsigned."
   ],
   "nextEvidenceRequired": [
     "A public or authorized individual-level dataset with data-specific reuse terms, adult pasture beef-cow metadata, total DMI in kg DM/animal/day, documented measurement protocol, missingness, animal IDs, and study/trial IDs.",
-    "Independent zootechnical review of population eligibility and outcome interpretation, recorded under issue #22.",
+    "Independent zootechnical review, with reviewer identity/credentials, date, conflicts and rationale, recorded under issue #22; it must explicitly assess the adult-pasture-cow and total-DMI scope in this gate, not only the CPER yearling ADG case.",
+    "Project-owner signoff and attribution for this no-go decision, recorded after reviewing the source matrix and any applicable expert review.",
     "Rebuild this gate after new source evidence arrives; only then consider a pre-registered study/trial-held-out supervised evaluation."
   ],
   "signoff": {

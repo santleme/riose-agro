@@ -17,9 +17,19 @@ test('supervised DMI readiness report validates its target, evidence links, and 
   assert.equal(report.decision, 'no_go');
   assert.equal(report.estimand.unitOfAnalysis, 'animal-period');
   assert.equal(report.eligibility.outcomeUnit, 'kg DM/animal/day');
+  assert.equal(report.reviewedMatrix.reviewedSourceCount, 15);
   assert.equal(report.reviewedMatrix.eligibleSourcesForTarget, 0);
+  assert.equal(report.reviewedMatrix.conditionalSourcesForTarget, 0);
+  assert.equal(report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget, 15);
+  assert.equal(
+    report.reviewedMatrix.eligibleSourcesForTarget + report.reviewedMatrix.conditionalSourcesForTarget + report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget,
+    report.reviewedMatrix.reviewedSourceCount
+  );
   assert.equal(report.signoff.status, 'pending');
+  assert.equal(report.signoff.projectOwner, 'not_recorded');
   assert.equal(report.signoff.domainExpertReview, 'pending_not_obtained');
+  assert.ok(report.blockers.some(reason => reason.includes('total-DMI estimand')));
+  assert.ok(report.nextEvidenceRequired.some(requirement => requirement.includes('Project-owner signoff')));
   assert.equal(report.performance.modelTrainingPerformed, false);
   for (const candidate of report.candidateEvidence) {
     assert.equal(existsSync(new URL(`../${candidate.source}`, import.meta.url)), true, candidate.source);

@@ -40,6 +40,13 @@ def validate(report: dict[str, Any]) -> None:
     require(matrix_doc.get("schemaVersion") == matrix.get("schemaVersion"), "matrix schema mismatch")
     require(matrix_doc.get("processing", {}).get("sourceCount") == matrix.get("reviewedSourceCount"), "matrix source count mismatch")
     require(len(matrix_doc.get("sources", [])) == matrix.get("reviewedSourceCount"), "matrix source array count mismatch")
+    target_counts = [
+        matrix.get("eligibleSourcesForTarget"),
+        matrix.get("conditionalSourcesForTarget"),
+        matrix.get("ineligibleOrUnavailableSourcesForTarget"),
+    ]
+    require(all(isinstance(count, int) and count >= 0 for count in target_counts), "invalid target-readiness source counts")
+    require(sum(target_counts) == matrix.get("reviewedSourceCount"), "target-readiness counts must classify every reviewed source exactly once")
 
     candidates = report.get("candidateEvidence", [])
     require(candidates, "candidateEvidence must be non-empty")
@@ -56,6 +63,8 @@ def validate(report: dict[str, Any]) -> None:
 
     require(report.get("decision") == "no_go", "current evidence requires no_go")
     require(matrix.get("eligibleSourcesForTarget") == 0, "eligible source count must be zero for this gate")
+    require(matrix.get("conditionalSourcesForTarget") == 0, "conditional source count must be zero for this target")
+    require(matrix.get("ineligibleOrUnavailableSourcesForTarget") == matrix.get("reviewedSourceCount"), "every reviewed source must be excluded from this target")
     require(report.get("blockers"), "no_go requires blockers")
     require(report.get("nextEvidenceRequired"), "decision must state reopening evidence")
     signoff = report.get("signoff", {})
