@@ -2,6 +2,8 @@
 
 Estado: a comparação exibe `Sem calibração suficiente`; ainda não há intervalos probabilísticos calibrados no Agroville. O motor mantém `validated: false`; os resultados atuais são determinísticos e demonstrativos. A exportação CSV preserva isso em cada linha com `status_modelo=demonstrativo_nao_validado` e `intervalo_probabilistico=nao_disponivel_sem_calibracao`.
 
+O inventário estruturado por desfecho da issue #15 está em [`uncertainty-readiness-issue-15.json`](evidence/uncertainty-readiness-issue-15.json). Valide as referências, os requisitos de avaliação independente e o estado não calibrado com `node scripts/validate-uncertainty-readiness.mjs`.
+
 ## Fontes de incerteza
 
 | Fonte | Como poderia ser quantificada | Situação atual |

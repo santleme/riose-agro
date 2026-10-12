@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "riose.supervised-readiness/v1",
+  "decisionId": "adult-beef-pasture-dmi-2026-10",
+  "preparedOn": "2026-10-12",
+  "decision": "no_go",
+  "decisionScope": "Dataset readiness for supervised estimation of individual total dry matter intake (DMI), not validation of the simulation engine.",
+  "estimand": {
+    "population": "Biologically mature beef cows managed on pasture, with maturity and production class explicitly defined by source metadata; yearling steers and dairy cows are outside scope.",
+    "outcome": "Individual total DMI, including forage and supplement, measured for a defined animal-period and expressed as kg dry matter per animal per day.",
+    "unitOfAnalysis": "animal-period",
+    "intendedUse": "Supervised estimation of individual animal-period DMI for the stated pasture cow population."
+  },
+  "eligibility": {
+    "inclusion": [
+      "Beef cows in a pasture or rangeland management system, with biological maturity and production class specified.",
+      "Individual animal-period outcome measures total DMI in kg DM/animal/day, with a documented measurement or derivation protocol.",
+      "Animal identity and study/trial or pasture grouping are available for leakage-safe evaluation.",
+      "The individual data are locally accessible under explicit data-specific reuse terms that permit the proposed analysis."
+    ],
+    "exclusion": [
+      "Yearling or growing cattle, dairy cows, and feedlot-only cohorts.",
+      "Group means, publication plots, or reconstructed observations without source microdata.",
+      "Supplement intake alone, model-predicted DMI used as the reference outcome, or outcomes with undocumented units/protocol.",
+      "Sources without explicit reuse rights for the individual records or without animal and study grouping keys."
+    ],
+    "groupIdentity": ["study_or_trial_id", "animal_id", "animal_period_id"],
+    "splitUnit": "Hold out whole studies/trials where multiple studies are available; keep every repeated record for an animal in one partition within each study. Do not randomly split animal-period rows.",
+    "outcomeUnit": "kg DM/animal/day"
+  },
+  "reviewedMatrix": {
+    "path": "docs/evidence/dmi-adg-readiness-v1.json",
+    "schemaVersion": "riose.dmi-adg-readiness/v1",
+    "reviewedSourceCount": 10,
+    "eligibleSourcesForTarget": 0,
+    "conditionalSourcesForTarget": 0,
+    "ineligibleOrUnavailableSourcesForTarget": 10
+  },
+  "candidateEvidence": [
+    {
+      "id": "public-pasture-dmi-unavailable",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "No reusable individual adult beef-pasture DMI records were retrieved; private/confidential records and article-level summaries are excluded.",
+      "access": "unavailable_or_not_reusable",
+      "license": "Underlying-data reuse rights not established for reviewed candidates.",
+      "populationFit": "Some sources match adult pasture beef cows, but source-level population match does not supply usable individual outcomes.",
+      "outcomeFit": "No eligible individual total DMI outcome file located.",
+      "missingnessAndIdentity": "Individual records unavailable; animal/trial keys and row-level missingness cannot be audited.",
+      "references": [
+        "https://doi.org/10.1093/jas/skab279",
+        "https://doi.org/10.33915/etd.13250",
+        "https://doi.org/10.1093/jas/skag054",
+        "https://doi.org/10.1093/jas/skag133",
+        "https://doi.org/10.21203/rs.3.rs-8262715/v1"
+      ]
+    },
+    {
+      "id": "mdpi-angus-cows",
+      "source": "docs/evidence/mdpi-angus-cow-grazing-audit.json",
+      "decision": "Locally available CC-BY article supplements contain pregnant Angus cow-season weight/condition changes and supplement intake, but not total forage DMI; derived 84-day weight change is descriptive and is not the specified DMI outcome.",
+      "access": "available_local",
+      "license": "CC-BY-4.0 for article and supplementary materials as recorded in manifest; no inference beyond those materials.",
+      "populationFit": "Pregnant non-lactating commercial Angus cows on dormant mixed-grass rangeland; relevant population context, but not a DMI label source.",
+      "outcomeFit": "Ineligible: total forage DMI is absent; supplement intake is not total DMI.",
+      "missingnessAndIdentity": "Cow IDs recur across years; source audit reports missing weight/BCS changes and states the cow-season grain.",
+      "references": [
+        "data/mdpi-angus-cow-grazing/manifest.json",
+        "docs/evidence/mdpi-angus-cow-grazing-audit.json"
+      ]
+    },
+    {
+      "id": "dmi-adg-readiness-matrix",
+      "source": "docs/evidence/dmi-adg-readiness-v1.json",
+      "decision": "The ten-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional DMI sources are dairy or feedlot component datasets and are out of population scope.",
+      "access": "mixed; assessed per source in the linked matrix",
+      "license": "Assessed per source in the linked matrix and source manifests.",
+      "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome.",
+      "outcomeFit": "No eligible supervised DMI label source for this target.",
+      "missingnessAndIdentity": "Source-specific limitations are in the linked matrix and its audit references.",
+      "references": ["docs/evidence/dmi-adg-readiness-v1.json"]
+    }
+  ],
+  "blockers": [
+    "No locally accessible, individually reusable source was found that satisfies both the mature pasture beef-cow population and total-DMI outcome criteria.",
+    "The only locally available adult-cow candidate in the reviewed evidence lacks total forage DMI; age-derived period weight change is not a substitute label.",
+    "An independent zootechnical review tracked by issue #22 has not been obtained. The population definition and this readiness gate therefore remain unsigned and must not be represented as domain-expert approval."
+  ],
+  "nextEvidenceRequired": [
+    "A public or authorized individual-level dataset with data-specific reuse terms, adult pasture beef-cow metadata, total DMI in kg DM/animal/day, documented measurement protocol, missingness, animal IDs, and study/trial IDs.",
+    "Independent zootechnical review of population eligibility and outcome interpretation, recorded under issue #22.",
+    "Rebuild this gate after new source evidence arrives; only then consider a pre-registered study/trial-held-out supervised evaluation."
+  ],
+  "signoff": {
+    "status": "pending",
+    "projectOwner": "not_recorded",
+    "domainExpertReview": "pending_not_obtained",
+    "reference": "https://github.com/santleme/riose-agro/issues/22",
+    "note": "This artifact is an evidence-backed preparatory no-go, not a signed-off decision."
+  },
+  "performance": {
+    "modelTrainingPerformed": false,
+    "benchmarkTarget": null,
+    "reason": "No dataset passed population, outcome, access, and rights gates."
+  }
+}
