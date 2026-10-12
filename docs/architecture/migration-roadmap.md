@@ -5,7 +5,7 @@
 1. Inventory all accessible worktrees, branches, stashes and parallel uncommitted work; record `repository-wide-audit.md`.
 2. Record executable system behavior and baseline test/throughput results in `current-system-audit.md`.
 3. Add the initial architecture and contracts while preserving comparison manifest v1, current UI, assets and JS engine.
-4. Implement a pure Rust metabolism batch kernel, compile native and WASM, connect it to the existing Worker behind `?engine=wasm`, retain JS as the default/fallback, and verify equivalence.
+4. Implement Rust runtime primitives for clock, IDs, seed, metrics, command/event envelopes and versioned JSON core snapshots; add a pure metabolism batch kernel, compile native and WASM, connect it to the existing Worker behind `?engine=wasm`, retain JS as the default/fallback, and verify equivalence.
 5. Add reproducible JS/WASM and native benchmarks. The current bridge is slower for isolated WASM batches and has no consistent whole-tick advantage, so no further domain rules move yet.
 
 ## Next steps, ordered by dependency

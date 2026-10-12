@@ -33,14 +33,14 @@ flowchart LR
 ## Initial buildable layout
 
 ```text
-crates/riose-core/       dependency-light deterministic kernels (native + WASM)
+crates/riose-core/       core runtime primitives and deterministic kernels (native + WASM)
 wasm/                    reproducible WASM artifact served to the Worker
 metabolism-wasm.js       JS ABI adapter and fallback implementation
 engine.js / worker.js    compatibility engine and Worker integration
 docs/architecture/       contracts, decisions, audits and roadmap
 ```
 
-Future crates such as `riose-domain-livestock`, `riose-world`, `riose-simulation` and `riose-bench` should be split when ownership or independent release/build needs exist, not just to mirror folder names. The current first crate is intentionally small.
+The crate contains a deterministic clock, stable entity-ID allocation, 32-bit model and locomotion seed streams matching the current JS LCG, execution counters, versioned command/event envelopes, generic component snapshots and JSON snapshot encode/decode, plus the metabolism kernel. These primitives are native/WASM-capable; only the metabolism batch is currently exposed to the Worker. Existing JS snapshots and comparison manifest v1 are not replaced. Future crates such as `riose-domain-livestock`, `riose-world`, `riose-simulation` and `riose-bench` should be split when ownership or independent release/build needs exist, not just to mirror folder names.
 
 ## Runtime choices
 

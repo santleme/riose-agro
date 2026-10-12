@@ -48,8 +48,9 @@ export class FarmEngine {
   place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];a.x=b.x+10+this.randomLocomotion()*(b.w-20);a.y=b.y+10+this.randomLocomotion()*(b.h-20);a.targetX=a.x;a.targetY=a.y;}
   tick(hours=1,metabolismKernel=updateMetabolismJS){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
-    const metabolismInput=new Float64Array(this.state.animals.length*4);
-    const metabolismOutput=new Float64Array(this.state.animals.length*2);
+    const useBatchKernel=metabolismKernel!==updateMetabolismJS;
+    const metabolismInput=useBatchKernel?new Float64Array(this.state.animals.length*4):null;
+    const metabolismOutput=useBatchKernel?new Float64Array(this.state.animals.length*2):null;
     for(let step=0;step<hours;step++){
       const s=this.state,c=s.config;s.hour++;
       const time=s.hour%24;const heat=c.weather==='hot'?0.8:1;
@@ -72,21 +73,29 @@ export class FarmEngine {
         s.intake??={pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};
         s.intake.pastureKgDM+=forage;s.intake.barnBaseKgDM+=barnBaseFeed;s.intake.supplementKgDM+=supplement;s.intake.dietExtraKgDM+=dietExtra;
         const energyIntake=forage+barnBaseFeed+supplement*1.2+dietExtra*1.35;
-        const metabolismOffset=animalIndex*4;
-        metabolismInput[metabolismOffset]=a.weight;
-        metabolismInput[metabolismOffset+1]=a.energy;
-        metabolismInput[metabolismOffset+2]=energyIntake;
-        metabolismInput[metabolismOffset+3]=a.action==='resting'?1:0;
+        if(useBatchKernel){
+          const metabolismOffset=animalIndex*4;
+          metabolismInput[metabolismOffset]=a.weight;
+          metabolismInput[metabolismOffset+1]=a.energy;
+          metabolismInput[metabolismOffset+2]=energyIntake;
+          metabolismInput[metabolismOffset+3]=a.action==='resting'?1:0;
+        }else{
+          const gain=(energyIntake-ASSUMPTIONS.maintenanceKgDM*(a.weight/360)/24)*ASSUMPTIONS.gainFactor;
+          a.weight=Math.max(200,a.weight+gain);
+          a.energy=clamp(a.energy+(a.action==='resting'?5:energyIntake*4-1.5),0,100);
+        }
         if(a.action!==previous)this.recordActivity(a,reason,observedThirst);
         const b=c.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];
         a.targetX=b.x+10+this.randomLocomotion()*(b.w-20);a.targetY=b.y+10+this.randomLocomotion()*(b.h-20);
         a.x=clamp(a.x+(a.targetX-a.x)*0.15,b.x+8,b.x+b.w-8);a.y=clamp(a.y+(a.targetY-a.y)*0.15,b.y+8,b.y+b.h-8);
       }
-      const metabolismResults=metabolismKernel(metabolismInput,s.animals.length,metabolismOutput);
-      if(metabolismResults.length!==s.animals.length*2)throw new Error('Metabolism kernel returned an invalid batch length');
-      for(let animalIndex=0;animalIndex<s.animals.length;animalIndex++){
-        const a=s.animals[animalIndex],offset=animalIndex*2;
-        a.weight=metabolismResults[offset];a.energy=metabolismResults[offset+1];
+      if(useBatchKernel){
+        const metabolismResults=metabolismKernel(metabolismInput,s.animals.length,metabolismOutput);
+        if(metabolismResults.length!==s.animals.length*2)throw new Error('Metabolism kernel returned an invalid batch length');
+        for(let animalIndex=0;animalIndex<s.animals.length;animalIndex++){
+          const a=s.animals[animalIndex],offset=animalIndex*2;
+          a.weight=metabolismResults[offset];a.energy=metabolismResults[offset+1];
+        }
       }
       if(time===6)this.log('Novo dia: peso médio '+this.metrics().weight.toFixed(1)+' kg.');
     }

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 import {FarmEngine,compare} from '../engine.js';
@@ -6,6 +7,9 @@ import {loadWasmMetabolism,updateMetabolismJS} from '../metabolism-wasm.js';
 import {createServer} from '../server.js';
 
 const wasmBytes=await readFile(new URL('../wasm/riose_core.wasm',import.meta.url));
+const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';
+const baselineSource=execFileSync('git',['show',`${baselineCommit}:engine.js`],{encoding:'utf8'});
+const {FarmEngine:BaselineFarmEngine}=await import(`data:text/javascript;base64,${Buffer.from(baselineSource).toString('base64')}`);
 const wasmKernel=await loadWasmMetabolism(new URL('http://local.test/wasm/riose_core.wasm'),async()=>
   new Response(wasmBytes,{headers:{'content-type':'application/wasm'}}));
 
@@ -19,13 +23,14 @@ test('WASM metabolism batch matches the legacy JavaScript formula across clamps 
   wasmKernel.dispose();
 });
 
-test('WASM-backed engine ticks and comparison replay match the JavaScript fallback',()=>{
-  const js=new FarmEngine(917,40),wasm=new FarmEngine(917,40);
-  js.configure({housing:'barn',weather:'hot',diet:'balanced',supplement:1.5});
-  wasm.configure({housing:'barn',weather:'hot',diet:'balanced',supplement:1.5});
-  js.tick(48);wasm.tick(48,wasmKernel);
+test('WASM-backed ticks and comparison replay match the original JavaScript engine',()=>{
+  const original=new BaselineFarmEngine(917,40),js=new FarmEngine(917,40),wasm=new FarmEngine(917,40);
+  for(const engine of [original,js,wasm])engine.configure({housing:'barn',weather:'hot',diet:'balanced',supplement:1.5});
+  original.tick(48);js.tick(48);wasm.tick(48,wasmKernel);
+  assert.deepEqual(js.snapshot(),original.snapshot());
   assert.deepEqual(wasm.snapshot(),js.snapshot());
-  assert.deepEqual(compare(wasm.snapshot(),3,wasmKernel),compare(js.snapshot(),3));
+  assert.deepEqual(compare(js.snapshot(),3),compare(original.snapshot(),3));
+  assert.deepEqual(compare(wasm.snapshot(),3,wasmKernel),compare(original.snapshot(),3));
   wasmKernel.dispose();
 });
 

@@ -16,7 +16,7 @@ UI command -> Worker/orchestrator -> domain + world JS -> packed batch ABI
 
 ## Native and future batch runs
 
-Native `riose-core` builds as an `rlib`/`cdylib`; the included benchmark executable uses the same pure function without browser or renderer. A future native simulation runner can own scenario scheduling and write versioned results. Python calibration tools exchange scenario/result files or batched numeric inputs, not per-animal RPCs.
+Native `riose-core` builds as an `rlib`/`cdylib` and includes clock/ID/RNG/metrics primitives, command/event values and versioned JSON core snapshots. The included benchmark executable uses the same pure kernel without browser or renderer. A future native simulation runner can own scenario scheduling and write versioned results. Python calibration tools exchange scenario/result files or batched numeric inputs, not per-animal RPCs.
 
 ## Determinism and concurrency
 

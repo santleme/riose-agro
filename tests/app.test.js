@@ -22,11 +22,9 @@ async function openFarm(saved=[],activeId=null){
     fetch(){fetches++;throw new Error('comparison must not invoke the LLM');},
     prompt:()=>null,confirm:()=>true
   });
-  const source=(await readFile(new URL('../app.js',import.meta.url),'utf8'))
-    .replace(/^import .*;\r?\n/,'')
-    .replace("new Worker(new URL('./worker.js',import.meta.url),{type:'module'})",'new Worker()');
+  const source=(await readFile(new URL('../app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/,'');
   vm.runInContext(source,context,{filename:'app.js'});
-  const deliver=(type,value)=>worker.onmessage({data:{type,...(type==='state'?{state:value}:type==='error'?{message:value}:{data:value})}});
+  const deliver=(type,value,engineImplementation='javascript-fallback')=>worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:{data:value})}});
   return {elements,messages,downloads,storage,deliver,fetches:()=>fetches};
 }
 
@@ -35,7 +33,8 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   farm.configure({diet:'balanced',supplement:1.5,weather:'rain',housing:'barn'});
   farm.tick(24);
   const snapshot=farm.snapshot();
-  ui.deliver('state',snapshot);
+  ui.deliver('state',snapshot,'riose-core-wasm/0.1.0');
+  assert.match(ui.elements.get('engine-status').textContent,/RUST\/WASM/);
   assert.match(ui.elements.get('animal-history').innerHTML,/Estado observado pelo motor/);
   assert.doesNotMatch(ui.elements.get('animal-history').innerHTML,/Estado simulado registrado pelo motor/);
   ui.messages.length=0;

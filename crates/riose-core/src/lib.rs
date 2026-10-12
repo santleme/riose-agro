@@ -1,5 +1,8 @@
 //! Small deterministic numerical kernels shared by native and WebAssembly builds.
 
+mod runtime;
+pub use runtime::*;
+
 pub const MAX_BATCH: usize = 100_000;
 const MAINTENANCE_KG_DM: f64 = 5.3;
 const GAIN_FACTOR: f64 = 0.22;

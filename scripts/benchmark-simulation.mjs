@@ -19,10 +19,10 @@ function percentiles(values){
 
 function timeSimulation(count,kernel,Engine=FarmEngine){
   const timings=[];
-  for(let run=0;run<repetitions+3;run++){
+  for(let run=0;run<repetitions+10;run++){
     const engine=new Engine(20261012,count);
     const start=performance.now();engine.tick(24,kernel);const elapsed=performance.now()-start;
-    if(run>=3)timings.push(elapsed);
+    if(run>=10)timings.push(elapsed);
   }
   return percentiles(timings);
 }
@@ -34,7 +34,7 @@ function timeKernel(count,kernel){
     input[offset+2]=(index%100)/100;input[offset+3]=index%6===0?1:0;
   }
   const output=new Float64Array(count*2);
-  kernel(input,count,output);
+  for(let warmup=0;warmup<50;warmup++)kernel(input,count,output);
   const timings=[];
   for(let run=0;run<repetitions;run++){
     const start=performance.now();const result=kernel(input,count,output);const elapsed=performance.now()-start;
@@ -42,6 +42,26 @@ function timeKernel(count,kernel){
     timings.push(elapsed);
   }
   return percentiles(timings);
+}
+
+function timeSnapshotTransfer(count){
+  const engine=new FarmEngine(20261012,count);
+  const snapshot=engine.snapshot();
+  const json=JSON.stringify(snapshot);
+  const measure=operation=>{
+    for(let warmup=0;warmup<10;warmup++)operation();
+    const timings=[];
+    for(let run=0;run<repetitions;run++){
+      const start=performance.now();operation();timings.push(performance.now()-start);
+    }
+    return percentiles(timings);
+  };
+  return {
+    animals:count,
+    engineSnapshotClone:measure(()=>engine.snapshot()),
+    structuredCloneProxy:measure(()=>structuredClone(snapshot)),
+    jsonStringify:{...measure(()=>JSON.stringify(snapshot)),bytes:Buffer.byteLength(json)},
+  };
 }
 
 const simulation=[];
@@ -52,12 +72,13 @@ const kernel=[];
 for(const count of [100,1_000,10_000,100_000]){
   kernel.push({animals:count,javascript:timeKernel(count,updateMetabolismJS),wasm:timeKernel(count,wasmKernel)});
 }
+const stateTransfer=[100,1_000,10_000].map(timeSnapshotTransfer);
 
 console.log(JSON.stringify({
   environment:{node:process.version,platform:process.platform,arch:process.arch,wasmBytes:wasmBytes.length},
-  baselineCommit,repetitions,warmupRuns:3,seed:20261012,tickHours:24,
-  notes:['Simulation timings include the JS engine tick and final snapshot clone, but exclude construction and rendering.','Kernel timings include JS/WASM bridge copies and result-buffer handling.','100000 animals is a numeric-kernel-only case because FarmEngine currently caps herds at 10000.','Memory allocation counts are not exposed by this harness.'],
-  simulation,kernel,
+  baselineCommit,repetitions,warmupRuns:{simulation:10,kernel:50,stateTransfer:10},seed:20261012,tickHours:24,
+  notes:['Simulation timings include the JS engine tick and final snapshot clone, but exclude construction and rendering.','State-transfer rows separately time engine snapshot cloning, structuredClone as a Worker-transfer proxy, and JSON.stringify.','Kernel timings include JS/WASM bridge copies and result-buffer handling.','100000 animals is a numeric-kernel-only case because FarmEngine currently caps herds at 10000.','Memory allocation counts are not exposed by this harness.'],
+  simulation,kernel,stateTransfer,
   wasmLinearMemoryBytes:wasmKernel.memoryBytes(),
   processMemoryAfterBytes:process.memoryUsage(),
 },null,2));

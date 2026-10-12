@@ -17,4 +17,6 @@ Domain and scientific kernels depend on stable core value types, not the browser
 
 ## First cut boundary
 
-The metabolism batch receives a packed array of four `f64` values per animal—weight kg, energy score, energy intake kg DM/hour, and resting flag—and writes two values—updated weight kg and energy score. ABI errors are explicit status codes. Behavior choice, forage allocation, pasture depletion, feed-cost accounting, RNG, movement, history, events and snapshots stay in the JS engine. This boundary is narrow enough to compare results and replace the implementation without changing scenario or visual contracts.
+The Rust crate provides clock, ID, seed, metrics, command/event and JSON snapshot primitives. These are reusable foundations, not a replacement for JS scenario orchestration or the existing farm snapshot schema.
+
+The metabolism batch receives a packed array of four `f64` values per animal—weight kg, energy score, energy intake kg DM/hour, and resting flag—and writes two values—updated weight kg and energy score. ABI v1 is checked at initialization and errors are explicit status codes. Behavior choice, forage allocation, pasture depletion, feed-cost accounting, movement and activity logs stay in the JS engine. This boundary is narrow enough to compare results and replace the implementation without changing scenario or visual contracts.
