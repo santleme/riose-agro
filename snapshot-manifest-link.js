@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {validateComparisonManifest} from './engine.js';
+import {validateReproducibilityManifest} from './scenario-contract.js';
 
 export function linkFarmSnapshotToManifest(snapshot, manifestBytes) {
   if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
@@ -14,7 +14,7 @@ export function linkFarmSnapshotToManifest(snapshot, manifestBytes) {
 
   const bytes = Buffer.isBuffer(manifestBytes) ? manifestBytes : Buffer.from(manifestBytes);
   const manifest = JSON.parse(bytes.toString('utf8'));
-  validateComparisonManifest(manifest);
+  validateReproducibilityManifest(manifest);
 
   const linkedSnapshot = structuredClone(snapshot);
   linkedSnapshot.manifestReference = {
@@ -36,7 +36,7 @@ export function validateFarmSnapshotManifestReference(snapshot, manifestBytes) {
     return {checked: true, valid: false, errors: ['Não foi possível ler o JSON do manifesto selecionado.']};
   }
   try {
-    validateComparisonManifest(manifest);
+    validateReproducibilityManifest(manifest);
   } catch (error) {
     errors.push(`Manifesto de comparação inválido: ${error.message}`);
   }

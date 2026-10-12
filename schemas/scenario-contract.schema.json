@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://santleme.github.io/riose-agro/schemas/scenario-contract.schema.json",
+  "title": "Agroville Scenario Contract",
+  "description": "Version 2 of the existing agroville-comparison manifest. Outputs are modeled software results, not scientific predictions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type", "version", "scenario_id", "baseline", "intervention", "target_scope",
+    "duration", "seed", "engine_version", "inputs", "expected_outputs", "validated"
+  ],
+  "properties": {
+    "type": {"const": "agroville-comparison"},
+    "version": {"const": 2},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "baseline": {"type": "object", "description": "The complete initial FarmEngine snapshot; see runtime validator for semantic checks."},
+    "intervention": {
+      "type": "object", "additionalProperties": false, "required": ["factor", "value"],
+      "properties": {"factor": {"const": "housing"}, "value": {"const": "barn"}}
+    },
+    "target_scope": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "animal_ids"],
+      "properties": {
+        "kind": {"const": "whole-herd"},
+        "animal_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "duration": {
+      "type": "object", "additionalProperties": false, "required": ["value", "unit"],
+      "properties": {"value": {"type": "integer", "minimum": 1, "maximum": 365}, "unit": {"const": "day"}}
+    },
+    "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "engine_version": {"type": "string", "minLength": 1},
+    "inputs": {
+      "type": "object", "additionalProperties": false, "required": ["baseline_config", "scenario_config"],
+      "properties": {
+        "baseline_config": {"$ref": "#/$defs/config"},
+        "scenario_config": {"$ref": "#/$defs/config"}
+      }
+    },
+    "expected_outputs": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["weight", "cost", "pasture", "intake"]}
+    },
+    "validated": {"const": false}
+  },
+  "$defs": {
+    "config": {
+      "type": "object", "additionalProperties": false,
+      "required": ["diet", "housing", "weather", "supplement"],
+      "properties": {
+        "diet": {"enum": ["pasture", "balanced", "concentrate"]},
+        "housing": {"enum": ["pasture", "barn"]},
+        "weather": {"enum": ["normal", "hot", "rain"]},
+        "supplement": {"type": "number", "minimum": 0, "maximum": 4}
+      }
+    }
+  }
+}
