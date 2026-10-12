@@ -97,8 +97,10 @@ test('adult cow explorer preserves observed weights, explicit 70-day ADG derivat
   assert.equal(coreStatic.graph.edges, 16);
   assert.equal(coreStatic.statistics.parseFailures, 0);
   assert.match(coreStatic.limitations.join(' '), /did not execute the worker or engine/);
+  assert.match(coreStatic.subject.sourceCommit, /^[a-f0-9]{40}$/);
   for (const [path, expected] of Object.entries(coreStatic.subject.fileSha256)) {
-    assert.equal(createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex'), expected);
+    const capturedFile = execFileSync('git', ['show', `${coreStatic.subject.sourceCommit}:${path}`]);
+    assert.equal(createHash('sha256').update(capturedFile).digest('hex'), expected);
   }
 
   const server = createServer();
