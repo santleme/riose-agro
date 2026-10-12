@@ -35,6 +35,26 @@ test('floating-point summaries are permutation-stable and use compensated accumu
   assert.equal(forward[0].outputs.weight.mean, 1 / 3);
 });
 
+test('finite extreme outputs retain representable means, SDs, and quantiles', () => {
+  const result = summarizeReplicates([
+    record('large-a', 'completed', 1, 1e308),
+    record('large-b', 'completed', 1, 1e308),
+    record('negative', 'completed', 1, -1e308),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(result.mean, 1e308 / 3);
+  assert.ok(Math.abs(result.standardDeviation / (1e308 * Math.sqrt(4 / 3)) - 1) < 1e-15);
+  assert.ok(Number.isFinite(result.quantiles.p50));
+  assert.equal(result.quantiles.p50, 1e308);
+  assert.ok(Number.isFinite(result.quantiles.p05));
+});
+
+test('statistics that exceed the finite numeric range fail explicitly', () => {
+  assert.throws(() => summarizeReplicates([
+    record('negative-max', 'completed', 1, -Number.MAX_VALUE),
+    record('positive-max', 'completed', 1, Number.MAX_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight.standardDeviation, /outside the finite numeric range/);
+});
+
 test('failed runs and completed runs missing an output remain visible in counts', () => {
   const result = summarizeReplicates([
     record('r1', 'completed', 1, 390), record('r2', 'completed', 1), record('r3', 'failed', 1),
