@@ -3,7 +3,7 @@
   "benchmark": {
     "name": "replicated-scenario-summary",
     "source": {
-      "revision": "4aa9919e5d8414c0ad556708b9e08ca3e9d50f56",
+      "revision": "ab1a5f719700595f3750a24146922fd20d1aa599",
       "dirty": false
     }
   },
@@ -85,32 +85,60 @@
           "unit": "ms",
           "statistics": {
             "sampleCount": 21,
-            "median": 12.511415999999997,
+            "median": 12.469234999999998,
             "spread": {
-              "min": 1.8029969999999764,
-              "max": 139.803902,
-              "range": 138.00090500000002
+              "min": 1.4323280000000125,
+              "max": 160.61041100000006,
+              "range": 159.17808300000004
             }
           },
-          "details": "Per-size measurements are in results.",
-          "population": "all configured populations",
-          "source": "replicated-scenario-summary layout measurement"
+          "population": "all configured synthetic result-record populations",
+          "source": "performance.now() around one summarizeReplicates call over already constructed records",
+          "observations": [
+            2.6813789999999926,
+            4.010059999999996,
+            1.4323280000000125,
+            1.5235619999999983,
+            2.6300560000000246,
+            2.1001010000000235,
+            1.9911369999999806,
+            18.055564000000004,
+            12.809544000000017,
+            12.753405999999984,
+            12.469234999999998,
+            12.273959999999988,
+            11.978778000000005,
+            12.199299999999994,
+            160.61041100000006,
+            147.23206100000004,
+            146.17234300000007,
+            147.0809190000001,
+            141.40308800000003,
+            146.1296729999999,
+            147.749411
+          ],
+          "details": "Raw timing observations by population are also retained in results."
         },
         {
           "phase": "layout",
-          "metric": "peak_observed_heap_used",
+          "metric": "process_heap_used_after_aggregation",
           "unit": "byte",
           "statistics": {
             "sampleCount": 3,
             "values": [
-              14847504,
-              25075336,
-              113637408
+              14083448,
+              24297360,
+              103266664
             ]
           },
-          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs.",
-          "population": "all configured populations",
-          "source": "replicated-scenario-summary layout measurement"
+          "population": "one process-level sample after each configured population",
+          "source": "process.memoryUsage().heapUsed sampled after aggregation; synthetic input records remain retained",
+          "observations": [
+            14083448,
+            24297360,
+            103266664
+          ],
+          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs."
         }
       ]
     },
@@ -141,44 +169,71 @@
       "runs": 1000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 1.8029969999999764,
+        "median": 2.1001010000000235,
         "spread": {
-          "min": 1.3120910000000094,
-          "max": 3.8654149999999987,
-          "range": 2.5533239999999893
+          "min": 1.4323280000000125,
+          "max": 4.010059999999996,
+          "range": 2.5777319999999833
         }
       },
-      "heapUsedBytes": 14847504
+      "runtimeObservationsMs": [
+        2.6813789999999926,
+        4.010059999999996,
+        1.4323280000000125,
+        1.5235619999999983,
+        2.6300560000000246,
+        2.1001010000000235,
+        1.9911369999999806
+      ],
+      "heapUsedBytes": 14083448
     },
     {
       "runs": 10000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 12.511415999999997,
+        "median": 12.469234999999998,
         "spread": {
-          "min": 12.226009000000005,
-          "max": 16.946735999999987,
-          "range": 4.720726999999982
+          "min": 11.978778000000005,
+          "max": 18.055564000000004,
+          "range": 6.0767859999999985
         }
       },
-      "heapUsedBytes": 25075336
+      "runtimeObservationsMs": [
+        18.055564000000004,
+        12.809544000000017,
+        12.753405999999984,
+        12.469234999999998,
+        12.273959999999988,
+        11.978778000000005,
+        12.199299999999994
+      ],
+      "heapUsedBytes": 24297360
     },
     {
       "runs": 100000,
       "summarizeMs": {
         "sampleCount": 7,
-        "median": 139.803902,
+        "median": 147.0809190000001,
         "spread": {
-          "min": 136.501126,
-          "max": 152.98004500000008,
-          "range": 16.478919000000076
+          "min": 141.40308800000003,
+          "max": 160.61041100000006,
+          "range": 19.20732300000003
         }
       },
-      "heapUsedBytes": 113637408
+      "runtimeObservationsMs": [
+        160.61041100000006,
+        147.23206100000004,
+        146.17234300000007,
+        147.0809190000001,
+        141.40308800000003,
+        146.1296729999999,
+        147.749411
+      ],
+      "heapUsedBytes": 103266664
     }
   ],
   "limitations": [
     "Synthetic inputs isolate reducer cost and are not scenario-engine runtime.",
-    "Heap is sampled process heap after each workload, not a per-call allocation profile."
+    "Heap is sampled process heap after each workload, not a peak or per-call allocation profile."
   ]
 }

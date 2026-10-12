@@ -1,239 +1,2592 @@
 {
-  "schemaVersion": "riose.experiment-format-study/v1",
-  "generatedAt": "2026-10-12T20:25:54.411Z",
-  "decision": {
-    "default": "JSON/JSONL",
-    "parquet": "no-go for adoption in this study: neither pyarrow nor fastparquet is installed in the existing Python toolchain; no dependency was added.",
-    "threshold": "Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable."
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "json-jsonl-experiment-output-format-study",
+    "source": {
+      "revision": "ab1a5f719700595f3750a24146922fd20d1aa599",
+      "dirty": false
+    }
   },
-  "workload": {
-    "runner": "scripts/run-scenarios.js executeScenario",
-    "fixture": "tests/scenarios/baseline-pasture.json",
-    "records": 25,
-    "animalsPerRecord": 100,
-    "hoursPerRun": 24,
-    "seedRange": [
-      417,
-      441
-    ],
-    "exactNormalizedRoundTrip": true,
-    "sha256": "acfe77be653e7404d494cb2f26fca19e84c1c665f36cba43cf416680aa1a4d39"
-  },
-  "toolchain": {
+  "runtime": {
     "node": "v20.20.2",
     "platform": "linux",
     "python": "3.12.3",
     "pyarrowAvailable": false,
-    "fastparquetAvailable": false,
-    "parquetBinaryFootprintBytes": null,
-    "note": "Parquet was not installed or measured; its dependency and portability costs are therefore unquantified."
+    "fastparquetAvailable": false
   },
-  "storage": {
-    "jsonBytes": 2264732,
-    "jsonlBytes": 2264730,
-    "jsonGzipLevel6Bytes": 254263,
-    "jsonlGzipLevel6Bytes": 254390
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
   },
-  "measurements": {
-    "json": {
-      "bytes": 2264732,
-      "gzipLevel6Bytes": 254263,
-      "write": {
-        "medianMs": 5.192244999999957,
-        "minMs": 4.596755999999971,
-        "maxMs": 10.334474,
-        "durationsMs": [
-          5.192244999999957,
-          5.562449000000015,
-          6.012657000000047,
-          4.6830830000000105,
-          4.960472000000038,
-          4.596755999999971,
-          10.334474,
-          5.9853689999999915,
-          4.90319199999999
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14175944,
-            "rssProcessBytes": 90136576,
-            "externalBytes": 4299462,
-            "arrayBuffersBytes": 16619
-          },
-          "after": {
-            "heapUsedBytes": 14217152,
-            "rssProcessBytes": 90136576,
-            "externalBytes": 4299462,
-            "arrayBuffersBytes": 2282551
-          },
-          "retainedHeapDeltaBytes": 41208
-        }
+  "workload": {
+    "seed": "417-441 (per-record deterministic seed range)",
+    "populations": [
+      {
+        "count": 25,
+        "unit": "experiment-run records",
+        "scope": "serialized experiment batch"
       },
-      "fullRead": {
-        "medianMs": 20.23319299999997,
-        "minMs": 18.045317000000068,
-        "maxMs": 28.204320999999993,
-        "durationsMs": [
-          28.204320999999993,
-          20.449415000000045,
-          19.400956000000008,
-          22.871031000000016,
-          24.489832999999976,
-          20.23319299999997,
-          18.79516799999999,
-          18.045317000000068,
-          18.405891999999994
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14196288,
-            "rssProcessBytes": 96907264,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 16619
-          },
-          "after": {
-            "heapUsedBytes": 26475336,
-            "rssProcessBytes": 96899072,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 542314
-          },
-          "retainedHeapDeltaBytes": 12279048
-        }
-      },
-      "selectiveMetricRead": {
-        "medianMs": 11.084789,
-        "minMs": 10.78157699999997,
-        "maxMs": 12.208947999999964,
-        "durationsMs": [
-          11.202210000000036,
-          10.958589000000075,
-          11.084789,
-          10.78157699999997,
-          10.902305999999953,
-          11.538757000000032,
-          11.025094999999965,
-          12.208947999999964,
-          11.288270000000011
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14205856,
-            "rssProcessBytes": 94732288,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 16619
-          },
-          "after": {
-            "heapUsedBytes": 21592960,
-            "rssProcessBytes": 94765056,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 542314
-          },
-          "retainedHeapDeltaBytes": 7387104
-        },
-        "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
+      {
+        "animals": 100,
+        "scope": "animals per scenario run"
       }
+    ],
+    "records": 25,
+    "hoursPerRun": 24,
+    "fixture": "tests/scenarios/baseline-pasture.json"
+  },
+  "configuration": {
+    "warmupRuns": {
+      "write": 1,
+      "fullRead": 1,
+      "selectiveMetricRead": 0
     },
-    "jsonl": {
-      "bytes": 2264730,
-      "gzipLevel6Bytes": 254390,
-      "write": {
-        "medianMs": 3.802832999999964,
-        "minMs": 3.4177550000000565,
-        "maxMs": 4.20506899999998,
-        "durationsMs": [
-          4.143520999999964,
-          3.8396659999999656,
-          3.802832999999964,
-          3.4177550000000565,
-          3.5696060000000216,
-          4.20506899999998,
-          3.5335430000000088,
-          3.6794269999999187,
-          3.9340960000000678
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14208760,
-            "rssProcessBytes": 90238976,
-            "externalBytes": 4299460,
-            "arrayBuffersBytes": 16619
+    "repetitions": 9
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "serialization",
+          "metric": "json-write-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.5145160000000146,
+            "spread": {
+              "min": 0.4215899999999806,
+              "max": 0.8155109999999581,
+              "range": 0.39392099999997754
+            },
+            "rawObservations": [
+              0.44973599999997305,
+              0.558983000000012,
+              0.5217000000000098,
+              0.4740480000000389,
+              0.47837499999997135,
+              0.5145160000000146,
+              0.8155109999999581,
+              0.537304000000006,
+              0.4215899999999806
+            ]
           },
-          "after": {
-            "heapUsedBytes": 14230744,
-            "rssProcessBytes": 90238976,
-            "externalBytes": 4299460,
-            "arrayBuffersBytes": 2282549
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
           },
-          "retainedHeapDeltaBytes": 21984
-        }
-      },
-      "fullRead": {
-        "medianMs": 19.090787999999975,
-        "minMs": 18.326963999999975,
-        "maxMs": 19.88638400000002,
-        "durationsMs": [
-          18.434847999999988,
-          19.090787999999975,
-          19.515566000000035,
-          19.88638400000002,
-          18.326963999999975,
-          19.466129000000024,
-          18.58508500000005,
-          19.047378999999978,
-          19.273247000000083
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14209760,
-            "rssProcessBytes": 96993280,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 16619
-          },
-          "after": {
-            "heapUsedBytes": 26490672,
-            "rssProcessBytes": 96985088,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 542314
-          },
-          "retainedHeapDeltaBytes": 12280912
-        }
-      },
-      "selectiveMetricRead": {
-        "medianMs": 10.985101999999983,
-        "minMs": 10.694762000000082,
-        "maxMs": 14.061494999999923,
-        "durationsMs": [
-          14.061494999999923,
-          11.19172500000002,
-          10.985101999999983,
-          11.471566999999936,
-          10.843116000000009,
-          10.859951000000024,
-          10.694762000000082,
-          10.854370999999901,
-          12.638279000000011
-        ],
-        "processMemoryLastSample": {
-          "before": {
-            "heapUsedBytes": 14219872,
-            "rssProcessBytes": 94715904,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 16619
-          },
-          "after": {
-            "heapUsedBytes": 21609872,
-            "rssProcessBytes": 94617600,
-            "externalBytes": 2559225,
-            "arrayBuffersBytes": 542314
-          },
-          "retainedHeapDeltaBytes": 7390000
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
         },
-        "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
-      }
+        {
+          "phase": "serialization",
+          "metric": "json-full-read-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.5442529999999692,
+            "spread": {
+              "min": 0.4975069999999846,
+              "max": 0.7109110000000101,
+              "range": 0.21340400000002546
+            },
+            "rawObservations": [
+              0.5308310000000347,
+              0.5034300000000371,
+              0.566566000000023,
+              0.6101010000000429,
+              0.5442529999999692,
+              0.5960199999999531,
+              0.4975069999999846,
+              0.7109110000000101,
+              0.501119000000017
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-selective-read-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.47178299999995943,
+            "spread": {
+              "min": 0.38479300000000194,
+              "max": 0.5090669999999591,
+              "range": 0.12427399999995714
+            },
+            "rawObservations": [
+              0.5050979999999754,
+              0.5090669999999591,
+              0.49266600000004246,
+              0.38479300000000194,
+              0.399737000000016,
+              0.39722399999999425,
+              0.4534219999999891,
+              0.47178299999995943,
+              0.4719949999999926
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-uncompressed-size",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 44273,
+            "spread": {
+              "min": 44273,
+              "max": 44273,
+              "range": 0
+            },
+            "rawObservations": [
+              44273
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-gzip-level-6-size",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 5131,
+            "spread": {
+              "min": 5131,
+              "max": 5131,
+              "range": 0
+            },
+            "rawObservations": [
+              5131
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-write-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 278352,
+            "spread": {
+              "min": 114280,
+              "max": 307264,
+              "range": 192984
+            },
+            "rawObservations": [
+              118080,
+              114280,
+              119480,
+              298488,
+              293664,
+              290208,
+              307264,
+              278352,
+              277280
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-write-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": -946176,
+              "max": 131072,
+              "range": 1077248
+            },
+            "rawObservations": [
+              131072,
+              -946176,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-write-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": -321441,
+              "max": 0,
+              "range": 321441
+            },
+            "rawObservations": [
+              -321441,
+              -65543,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-write-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 44673,
+            "spread": {
+              "min": 44673,
+              "max": 44673,
+              "range": 0
+            },
+            "rawObservations": [
+              44673,
+              44673,
+              44673,
+              44673,
+              44673,
+              44673,
+              44673,
+              44673,
+              44673
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-full-read-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 241888,
+            "spread": {
+              "min": 229680,
+              "max": 380584,
+              "range": 150904
+            },
+            "rawObservations": [
+              375320,
+              373368,
+              370552,
+              380584,
+              241888,
+              239696,
+              236336,
+              233008,
+              229680
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-full-read-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-full-read-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 200,
+              "range": 200
+            },
+            "rawObservations": [
+              200,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-full-read-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 44873,
+            "spread": {
+              "min": 44873,
+              "max": 44873,
+              "range": 0
+            },
+            "rawObservations": [
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-selective-read-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 133888,
+            "spread": {
+              "min": 123816,
+              "max": 245400,
+              "range": 121584
+            },
+            "rawObservations": [
+              139016,
+              133888,
+              130560,
+              127232,
+              123904,
+              123816,
+              245400,
+              242072,
+              238744
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-selective-read-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-selective-read-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "json-selective-read-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 44873,
+            "spread": {
+              "min": 44873,
+              "max": 44873,
+              "range": 0
+            },
+            "rawObservations": [
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873,
+              44873
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-write-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.4795520000000124,
+            "spread": {
+              "min": 0.41206600000003846,
+              "max": 0.565527999999972,
+              "range": 0.1534619999999336
+            },
+            "rawObservations": [
+              0.505437000000029,
+              0.44290699999999106,
+              0.41206600000003846,
+              0.43999100000002045,
+              0.4795520000000124,
+              0.565527999999972,
+              0.5563940000000116,
+              0.5419729999999845,
+              0.4335439999999835
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-full-read-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.7351270000000341,
+            "spread": {
+              "min": 0.6327990000000341,
+              "max": 0.9213550000000055,
+              "range": 0.2885559999999714
+            },
+            "rawObservations": [
+              0.8700159999999642,
+              0.7967780000000175,
+              0.66473000000002,
+              0.7351270000000341,
+              0.9213550000000055,
+              0.6327990000000341,
+              0.6861480000000029,
+              0.7526440000000321,
+              0.6957890000000475
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-selective-read-duration",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0.6351449999999659,
+            "spread": {
+              "min": 0.5475429999999619,
+              "max": 0.7522240000000124,
+              "range": 0.20468100000005052
+            },
+            "rawObservations": [
+              0.7522240000000124,
+              0.683669000000009,
+              0.6727059999999483,
+              0.6326219999999694,
+              0.585597000000007,
+              0.604471999999987,
+              0.6351449999999659,
+              0.6571950000000015,
+              0.5475429999999619
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-uncompressed-size",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 44271,
+            "spread": {
+              "min": 44271,
+              "max": 44271,
+              "range": 0
+            },
+            "rawObservations": [
+              44271
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-gzip-level-6-size",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 5131,
+            "spread": {
+              "min": 5131,
+              "max": 5131,
+              "range": 0
+            },
+            "rawObservations": [
+              5131
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-write-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 265104,
+            "spread": {
+              "min": 159576,
+              "max": 284064,
+              "range": 124488
+            },
+            "rawObservations": [
+              272096,
+              268576,
+              265104,
+              263968,
+              284064,
+              159576,
+              261000,
+              274864,
+              257824
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-write-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-write-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": -202,
+              "max": 0,
+              "range": 202
+            },
+            "rawObservations": [
+              -202,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-write-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 44671,
+            "spread": {
+              "min": 44671,
+              "max": 44671,
+              "range": 0
+            },
+            "rawObservations": [
+              44671,
+              44671,
+              44671,
+              44671,
+              44671,
+              44671,
+              44671,
+              44671,
+              44671
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each write operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-full-read-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 378168,
+            "spread": {
+              "min": 312536,
+              "max": 474568,
+              "range": 162032
+            },
+            "rawObservations": [
+              432864,
+              410208,
+              415456,
+              355688,
+              378168,
+              312536,
+              359512,
+              368264,
+              474568
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-full-read-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 131072,
+              "range": 131072
+            },
+            "rawObservations": [
+              0,
+              131072,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-full-read-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 130679,
+              "range": 130679
+            },
+            "rawObservations": [
+              130679,
+              65543,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-full-read-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 175350,
+            "spread": {
+              "min": 175350,
+              "max": 175350,
+              "range": 0
+            },
+            "rawObservations": [
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each full-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-selective-read-heapUsedBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 287392,
+            "spread": {
+              "min": 187056,
+              "max": 332608,
+              "range": 145552
+            },
+            "rawObservations": [
+              332608,
+              210264,
+              311904,
+              309800,
+              294144,
+              187056,
+              287392,
+              281912,
+              187080
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-selective-read-rssProcessBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-selective-read-externalBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        },
+        {
+          "phase": "serialization",
+          "metric": "jsonl-selective-read-arrayBuffersBytes-delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 9,
+            "median": 175350,
+            "spread": {
+              "min": 175350,
+              "max": 175350,
+              "range": 0
+            },
+            "rawObservations": [
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350,
+              175350
+            ]
+          },
+          "population": {
+            "count": 25,
+            "unit": "experiment-run records",
+            "scope": "serialized experiment batch"
+          },
+          "source": "scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract; process.memoryUsage before and after each selective-read operation"
+        }
+      ]
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
     }
   },
-  "memoryMethod": "process.memoryUsage heapUsed/RSS/external/ArrayBuffers sampled before and after each operation; RSS is process-level. Output includes last sample and is not a peak-memory claim.",
-  "selectiveReadMethod": "Both formats read the file and parse every whole record before selecting scenarioId and total intake. JSONL does not provide column projection; Parquet was unavailable.",
+  "timingBoundaries": [
+    {
+      "phase": "serialization",
+      "timed": [
+        "JSON stringify plus local file write",
+        "JSONL row serialization plus local file write"
+      ],
+      "notTimed": [
+        "scenario execution and manifest/result construction",
+        "gzip compression; compressed byte count only",
+        "process memory sampling"
+      ]
+    },
+    {
+      "phase": "serialization",
+      "timed": [
+        "full file read, parse, and normalized digest for JSON",
+        "full line-stream read, parse, accumulation, and normalized digest for JSONL"
+      ],
+      "notTimed": [
+        "scenario execution",
+        "manifest/result construction"
+      ]
+    },
+    {
+      "phase": "serialization",
+      "timed": [
+        "JSON full-array parse then selected-field projection and digest",
+        "JSONL line-stream parse, selected-field projection, and digest"
+      ],
+      "notTimed": [
+        "scenario execution",
+        "manifest/result construction"
+      ]
+    }
+  ],
+  "results": {
+    "schemaVersion": "riose.experiment-format-study/v1",
+    "generatedAt": "2026-10-12T21:30:44.254Z",
+    "decision": {
+      "default": "JSON/JSONL",
+      "parquet": "no-go for adoption in this study: neither pyarrow nor fastparquet is installed in the existing Python toolchain; no dependency was added.",
+      "threshold": "Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable."
+    },
+    "workload": {
+      "runner": "scripts/run-scenarios.js executeScenario",
+      "fixture": "tests/scenarios/baseline-pasture.json",
+      "comparedRecordShape": "batch manifest run joined to riose-experiment-result v1 by runId",
+      "records": 25,
+      "animalsPerRecord": 100,
+      "hoursPerRun": 24,
+      "seedRange": [
+        417,
+        441
+      ],
+      "exactNormalizedRoundTrip": true,
+      "sha256": "9af9d8e4decaafae3a01f4cfb568c03946fb98d7c47d5da55225eec33651f125",
+      "batchManifestDigest": "sha256:8dfd1dea2862e70137a04e6c06ed86bc1bebb95c6a14ed738379092728357b50",
+      "roundTripCoverage": [
+        "unit-tagged inputs and outputs",
+        "null dataset/evidence provenance",
+        "engine identity and build digest",
+        "scenario digest and seed",
+        "result digest and status"
+      ]
+    },
+    "toolchain": {
+      "node": "v20.20.2",
+      "platform": "linux",
+      "python": "3.12.3",
+      "pyarrowAvailable": false,
+      "fastparquetAvailable": false,
+      "pyarrow": {
+        "available": false,
+        "version": null,
+        "installedPackageBytes": null
+      },
+      "fastparquet": {
+        "available": false,
+        "version": null,
+        "installedPackageBytes": null
+      },
+      "parquetMeasurement": "skipped-no-library-installed",
+      "note": "Package installation footprint reflects only installed Python distributions; transitive dependencies and portability across target environments require a separate packaging study."
+    },
+    "storage": {
+      "jsonBytes": 44273,
+      "jsonlBytes": 44271,
+      "jsonGzipLevel6Bytes": 5131,
+      "jsonlGzipLevel6Bytes": 5131
+    },
+    "measurements": {
+      "json": {
+        "bytes": 44273,
+        "gzipLevel6Bytes": 5131,
+        "write": {
+          "medianMs": 0.5145160000000146,
+          "minMs": 0.4215899999999806,
+          "maxMs": 0.8155109999999581,
+          "durationsMs": [
+            0.44973599999997305,
+            0.558983000000012,
+            0.5217000000000098,
+            0.4740480000000389,
+            0.47837499999997135,
+            0.5145160000000146,
+            0.8155109999999581,
+            0.537304000000006,
+            0.4215899999999806
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11340880,
+                "rssProcessBytes": 97415168,
+                "externalBytes": 2613036,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11458960,
+                "rssProcessBytes": 97546240,
+                "externalBytes": 2291595,
+                "arrayBuffersBytes": 126835
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 118080,
+                "rssProcessBytesDeltaBytes": 131072,
+                "externalBytesDeltaBytes": -321441,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11299768,
+                "rssProcessBytes": 97546240,
+                "externalBytes": 2291595,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11414048,
+                "rssProcessBytes": 96600064,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 114280,
+                "rssProcessBytesDeltaBytes": -946176,
+                "externalBytesDeltaBytes": -65543,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11499480,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11618960,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 119480,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11305520,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11604008,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 298488,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11305936,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11599600,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 293664,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11301384,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11591592,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 290208,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11302912,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11610176,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 307264,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11311728,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11590080,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 278352,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11312360,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11589640,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 61292
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 277280,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44673
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11312360,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226052,
+              "arrayBuffersBytes": 16619
+            },
+            "after": {
+              "heapUsedBytes": 11589640,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226052,
+              "arrayBuffersBytes": 61292
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 277280,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 44673
+            }
+          }
+        },
+        "fullRead": {
+          "medianMs": 0.5442529999999692,
+          "minMs": 0.4975069999999846,
+          "maxMs": 0.7109110000000101,
+          "durationsMs": [
+            0.5308310000000347,
+            0.5034300000000371,
+            0.566566000000023,
+            0.6101010000000429,
+            0.5442529999999692,
+            0.5960199999999531,
+            0.4975069999999846,
+            0.7109110000000101,
+            0.501119000000017
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11313992,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226052,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11689312,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 375320,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 200,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11315584,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11688952,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 373368,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11316032,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11686584,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 370552,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11316448,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11697032,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 380584,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11326496,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11568384,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 241888,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11327504,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11567200,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 239696,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11328016,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11564352,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 236336,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11328432,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11561440,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 233008,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11328848,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11558528,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 229680,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11328848,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226252,
+              "arrayBuffersBytes": 16619
+            },
+            "after": {
+              "heapUsedBytes": 11558528,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226252,
+              "arrayBuffersBytes": 61492
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 229680,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 44873
+            }
+          }
+        },
+        "selectiveMetricRead": {
+          "medianMs": 0.47178299999995943,
+          "minMs": 0.38479300000000194,
+          "maxMs": 0.5090669999999591,
+          "durationsMs": [
+            0.5050979999999754,
+            0.5090669999999591,
+            0.49266600000004246,
+            0.38479300000000194,
+            0.399737000000016,
+            0.39722399999999425,
+            0.4534219999999891,
+            0.47178299999995943,
+            0.4719949999999926
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11328952,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11467968,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 139016,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11332008,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11465896,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 133888,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11332424,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11462984,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 130560,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11332840,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11460072,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 127232,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11333256,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11457160,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 123904,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11333672,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11457488,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 123816,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11334088,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11579488,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 245400,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11334504,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11576576,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 242072,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11334920,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11573664,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 61492
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 238744,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44873
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11334920,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226252,
+              "arrayBuffersBytes": 16619
+            },
+            "after": {
+              "heapUsedBytes": 11573664,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226252,
+              "arrayBuffersBytes": 61492
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 238744,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 44873
+            }
+          },
+          "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
+        }
+      },
+      "jsonl": {
+        "bytes": 44271,
+        "gzipLevel6Bytes": 5131,
+        "write": {
+          "medianMs": 0.4795520000000124,
+          "minMs": 0.41206600000003846,
+          "maxMs": 0.565527999999972,
+          "durationsMs": [
+            0.505437000000029,
+            0.44290699999999106,
+            0.41206600000003846,
+            0.43999100000002045,
+            0.4795520000000124,
+            0.565527999999972,
+            0.5563940000000116,
+            0.5419729999999845,
+            0.4335439999999835
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11336416,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226252,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11608512,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 272096,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": -202,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11337888,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11606464,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 268576,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11339168,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11604272,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 265104,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11339752,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11603720,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 263968,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11340168,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11624232,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 284064,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11347744,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11507320,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 159576,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11348600,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11609600,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 261000,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11349312,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11624176,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 274864,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11355992,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11613816,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 61290
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 257824,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 44671
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11355992,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226050,
+              "arrayBuffersBytes": 16619
+            },
+            "after": {
+              "heapUsedBytes": 11613816,
+              "rssProcessBytes": 95453184,
+              "externalBytes": 2226050,
+              "arrayBuffersBytes": 61290
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 257824,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 44671
+            }
+          }
+        },
+        "fullRead": {
+          "medianMs": 0.7351270000000341,
+          "minMs": 0.6327990000000341,
+          "maxMs": 0.9213550000000055,
+          "durationsMs": [
+            0.8700159999999642,
+            0.7967780000000175,
+            0.66473000000002,
+            0.7351270000000341,
+            0.9213550000000055,
+            0.6327990000000341,
+            0.6861480000000029,
+            0.7526440000000321,
+            0.6957890000000475
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11355856,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2226050,
+                "arrayBuffersBytes": 16619
+              },
+              "after": {
+                "heapUsedBytes": 11788720,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2356729,
+                "arrayBuffersBytes": 191969
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 432864,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 130679,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11379424,
+                "rssProcessBytes": 95453184,
+                "externalBytes": 2356729,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11789632,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 410208,
+                "rssProcessBytesDeltaBytes": 131072,
+                "externalBytesDeltaBytes": 65543,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11389984,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11805440,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 415456,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11403856,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11759544,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 355688,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11412544,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11790712,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 378168,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11435072,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11747608,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 312536,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11436376,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11795888,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 359512,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11445952,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11814216,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 368264,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11470208,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11944776,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 474568,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11470208,
+              "rssProcessBytes": 95584256,
+              "externalBytes": 2422272,
+              "arrayBuffersBytes": 82162
+            },
+            "after": {
+              "heapUsedBytes": 11944776,
+              "rssProcessBytes": 95584256,
+              "externalBytes": 2422272,
+              "arrayBuffersBytes": 257512
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 474568,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 175350
+            }
+          }
+        },
+        "selectiveMetricRead": {
+          "medianMs": 0.6351449999999659,
+          "minMs": 0.5475429999999619,
+          "maxMs": 0.7522240000000124,
+          "durationsMs": [
+            0.7522240000000124,
+            0.683669000000009,
+            0.6727059999999483,
+            0.6326219999999694,
+            0.585597000000007,
+            0.604471999999987,
+            0.6351449999999659,
+            0.6571950000000015,
+            0.5475429999999619
+          ],
+          "processMemorySamples": [
+            {
+              "iteration": 0,
+              "before": {
+                "heapUsedBytes": 11485656,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11818264,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 332608,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 1,
+              "before": {
+                "heapUsedBytes": 11508520,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11718784,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 210264,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 2,
+              "before": {
+                "heapUsedBytes": 11519456,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11831360,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 311904,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 3,
+              "before": {
+                "heapUsedBytes": 11529632,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11839432,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 309800,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 4,
+              "before": {
+                "heapUsedBytes": 11546520,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11840664,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 294144,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 5,
+              "before": {
+                "heapUsedBytes": 11555704,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11742760,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 187056,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 6,
+              "before": {
+                "heapUsedBytes": 11556688,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11844080,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 287392,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 7,
+              "before": {
+                "heapUsedBytes": 11564368,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11846280,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 281912,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            },
+            {
+              "iteration": 8,
+              "before": {
+                "heapUsedBytes": 11573408,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 82162
+              },
+              "after": {
+                "heapUsedBytes": 11760488,
+                "rssProcessBytes": 95584256,
+                "externalBytes": 2422272,
+                "arrayBuffersBytes": 257512
+              },
+              "deltas": {
+                "heapUsedBytesDeltaBytes": 187080,
+                "rssProcessBytesDeltaBytes": 0,
+                "externalBytesDeltaBytes": 0,
+                "arrayBuffersBytesDeltaBytes": 175350
+              }
+            }
+          ],
+          "processMemoryLastSample": {
+            "iteration": 8,
+            "before": {
+              "heapUsedBytes": 11573408,
+              "rssProcessBytes": 95584256,
+              "externalBytes": 2422272,
+              "arrayBuffersBytes": 82162
+            },
+            "after": {
+              "heapUsedBytes": 11760488,
+              "rssProcessBytes": 95584256,
+              "externalBytes": 2422272,
+              "arrayBuffersBytes": 257512
+            },
+            "deltas": {
+              "heapUsedBytesDeltaBytes": 187080,
+              "rssProcessBytesDeltaBytes": 0,
+              "externalBytesDeltaBytes": 0,
+              "arrayBuffersBytesDeltaBytes": 175350
+            }
+          },
+          "expectedDigest": "c865ceb481cfd84c0c6ffca32a4149395ef22d6b35fa78917091f61d05a978c2"
+        }
+      }
+    },
+    "memoryMethod": "process.memoryUsage heapUsed/RSS/external/ArrayBuffers sampled before and after each operation; RSS is process-level. Output includes last sample and is not a peak-memory claim.",
+    "selectiveReadMethod": "JSON parses the full array before projecting fields. JSONL streams one line at a time and retains only the requested projection, but each selected row still requires parsing its complete JSON object; Parquet was unavailable.",
+    "limitations": [
+      "One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.",
+      "JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.",
+      "No Parquet results are reported because no Arrow/Parquet library is present in the current toolchain; no network install or new dependency was introduced.",
+      "Timing is specific to this host and includes local file IO; medians/spread are not cross-host product thresholds."
+    ]
+  },
   "limitations": [
     "One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.",
     "JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.",
