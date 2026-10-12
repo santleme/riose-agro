@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from '../run-history.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null){
@@ -14,7 +15,7 @@ async function openFarm(saved=[],activeId=null){
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,createRunRecord,recordRun,listRuns,getRun,runCompatibility,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -62,6 +63,31 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
   assert.equal(ui.fetches(),0);
+});
+
+test('completed comparison is persisted and its original manifest can be replayed',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(17,3).snapshot();
+  ui.deliver('state',farm);
+  ui.elements.get('compare').onclick();
+  const request=ui.messages.at(-1),result=compare(request.snapshot,request.days);
+  ui.deliver('comparison',result);
+  const saved=listRuns({getItem:key=>ui.storage.get(key)??null});
+  assert.equal(saved.length,1);
+  assert.equal(saved[0].status,'completed');
+  ui.elements.get('run-history-select').value=saved[0].id;
+  ui.elements.get('run-history-replay').onclick();
+  assert.equal(ui.messages.at(-1).type,'replayComparison');
+  assert.deepEqual(ui.messages.at(-1).manifest,saved[0].manifest);
+});
+
+test('failed comparison is recorded without a stack trace',async()=>{
+  const ui=await openFarm();ui.deliver('state',new FarmEngine(17,3).snapshot());
+  ui.elements.get('compare').onclick();
+  ui.deliver('error','engine failed');
+  const saved=listRuns({getItem:key=>ui.storage.get(key)??null});
+  assert.equal(saved[0].status,'failed');
+  assert.equal(saved[0].error,'engine failed');
+  assert.doesNotMatch(JSON.stringify(saved[0]),/stack|C:\\\\Users/);
 });
 
 test('manifest can be reopened from the map and uses its herd, conditions and horizon in UI and CSV',async()=>{
