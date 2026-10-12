@@ -23,12 +23,13 @@ test('WASM metabolism batch matches the legacy JavaScript formula across clamps 
   wasmKernel.dispose();
 });
 
-function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocateFailureAt=Infinity,missingExport}={}){
+function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocateFailureAt=Infinity,allocateThrowAt=Infinity,missingExport}={}){
   const memory=new WebAssembly.Memory({initial:1,maximum:32});
   const allocations=[],releases=[];
   let nextPointer=8,allocationCount=0;
   const allocate=length=>{
     allocationCount++;
+    if(allocationCount===allocateThrowAt)throw new RangeError('simulated linear-memory allocation trap');
     if(allocationCount===allocateFailureAt)return 0;
     const pointer=nextPointer;
     nextPointer+=length*Float64Array.BYTES_PER_ELEMENT+8;
@@ -117,7 +118,9 @@ test('WASM reads fresh views after memory growth and preserves caller output on 
     const output=new Float64Array([88,89]);
     assert.throws(()=>kernel(Float64Array.of(10,20,30,0),1,output),/WASM metabolism returned status -3/);
     assert.deepEqual(Array.from(output),[88,89]);
+    assert.equal(failing.releases.length,0,'status failures retain owned buffers until dispose');
     kernel.dispose();
+    assert.equal(failing.releases.length,2,'dispose releases both buffers after a status failure');
   });
 });
 
@@ -136,8 +139,24 @@ test('WASM reports allocation, fetch, compilation, export, and ABI failures clea
   finally{WebAssembly.instantiateStreaming=original;}
   for(const [fixture,pattern] of [
     [createWasmFixture({missingExport:'riose_update_metabolism_batch'}),/exports do not match riose-core ABI/],
+    [createWasmFixture({abiVersion:0}),/exports do not match riose-core ABI/],
     [createWasmFixture({abiVersion:2}),/exports do not match riose-core ABI/],
   ])await withInstantiatedFixture(fixture,async()=>assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),pattern));
+});
+
+test('WASM cleans up partial allocations when the allocator traps',async()=>{
+  const fixture=createWasmFixture({allocateThrowAt:2});
+  await withInstantiatedFixture(fixture,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    assert.throws(()=>kernel(new Float64Array(4)),error=>{
+      assert.match(error.message,/could not allocate metabolism buffers for 1 animals/);
+      assert.match(error.cause?.message??'',/simulated linear-memory allocation trap/);
+      return true;
+    });
+    assert.equal(fixture.releases.length,1,'the first allocation is released after the second allocation traps');
+    kernel.dispose();
+    assert.equal(fixture.releases.length,1,'failed allocation leaves no partially owned buffer to dispose');
+  });
 });
 
 test('failed capacity growth preserves the previous buffers and keeps them usable',async()=>{
