@@ -1,6 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
+
+test('fixed-seed feeding cases preserve pre-extraction engine outputs', () => {
+  const cases = [
+    {name: 'pasture-normal', seed: 417, count: 4, config: {}, hours: 48, hash: '31fcf1cc89eb8ae3f24d74f349fcc7cb6219e8682b06d3b4135b5405ae041ffe'},
+    {name: 'balanced-pasture-rain', seed: 12, count: 5, config: {housing: 'pasture', diet: 'balanced', supplement: 1.5, weather: 'rain'}, hours: 72, hash: '217f33889555ecfe090d001249c60dafbfcd0021d5700abdd597af9e52c795ad'},
+    {name: 'concentrate-barn-hot-boundary-supplement', seed: 81, count: 3, config: {housing: 'barn', diet: 'concentrate', supplement: 4, weather: 'hot'}, hours: 72, hash: '49ea107eaa6a03e58a59aaf8a8edf35b3b03c5c9eeb0115ae4b23a344f040a2f'},
+    {name: 'zero-pasture-stock', seed: 93, count: 4, config: {diet: 'balanced', supplement: 0}, hours: 24, emptyPasture: true, hash: '4e0bc549741d2bffd9601aa1cc4f8e0f3613317a0aef918ef9a0902c7e193ccc'}
+  ];
+
+  for (const scenario of cases) {
+    const engine = new FarmEngine(scenario.seed, scenario.count);
+    engine.configure(scenario.config);
+    if (scenario.emptyPasture) engine.state.pastures = [0, 0, 0, 0];
+    engine.tick(scenario.hours);
+    const hash = createHash('sha256').update(JSON.stringify(engine.snapshot())).digest('hex');
+
+    assert.equal(hash, scenario.hash, scenario.name);
+  }
+
+  const comparison = compare(new FarmEngine(445, 4).snapshot(), 3);
+  const comparisonHash = createHash('sha256').update(JSON.stringify(comparison)).digest('hex');
+  assert.equal(comparisonHash, 'faa05c79be6db45a9b835a309558845c7c207c332e74eb8fa296183384135888');
+});
 
 test('same seed and actions reproduce the same farm state', () => {
   const first = new FarmEngine(417, 8);

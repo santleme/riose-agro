@@ -2,8 +2,8 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {createComparisonArchive} from '../src/client/comparison-archive.js';
+import {readEngineSourceBundle} from './engine-source-hash.js';
 
 const [manifestArg, outputArg] = process.argv.slice(2);
 if (!manifestArg || !outputArg) {
@@ -13,8 +13,7 @@ if (!manifestArg || !outputArg) {
   try {
     const manifestPath = resolve(manifestArg);
     const outputPath = resolve(outputArg);
-    const enginePath = fileURLToPath(new URL('../src/client/engine.js', import.meta.url));
-    const archive = createComparisonArchive(readFileSync(manifestPath), readFileSync(enginePath));
+    const archive = createComparisonArchive(readFileSync(manifestPath), readEngineSourceBundle());
     writeFileSync(outputPath, `${JSON.stringify(archive, null, 2)}\n`, {flag: 'wx'});
     process.stdout.write(`${JSON.stringify({created: outputPath, archiveSha256: archiveDigest(outputPath), manifestSha256: archive.manifestReference.sha256, engineSourceSha256: archive.engineSourceSha256}, null, 2)}\n`);
   } catch (error) {

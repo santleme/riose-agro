@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import {execFileSync} from 'node:child_process';
-import {createHash as createDigest} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {FarmEngine} from '../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const EXPORTER = resolve(ROOT, 'scripts/export_mendeley_nellore_dmi_weight_pairs.py');
@@ -62,7 +62,8 @@ export function auditDmi() {
       exactSameAnimalDateObservedDmiPairs: source.exactDatePairsWithObservedDmi,
     },
     model: {
-      engineSha256: createHash(),
+      engineSha256: engineSourceSha256(),
+      engineSourceFiles: ENGINE_SOURCE_FILES,
       configuration: 'One animal, observed same-date liveweight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       treatmentAndWeatherInputsRepresented: false,
@@ -130,9 +131,6 @@ function mean(values) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-function createHash() {
-  return createDigest('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex');
-}
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const report = auditDmi();

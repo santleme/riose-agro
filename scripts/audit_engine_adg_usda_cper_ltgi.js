@@ -6,12 +6,12 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, renameSync, writeFileSync} from 'node:fs';
 import {FarmEngine, metrics} from '../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 import {fileURLToPath} from 'node:url';
 
 const inputPath = new URL('../docs/evidence/usda-cper-ltgi-audit.json', import.meta.url);
 const reportPath = new URL('../docs/evidence/engine-adg-usda-cper-ltgi-check.json', import.meta.url);
 const input = JSON.parse(readFileSync(inputPath, 'utf8'));
-const engineBytes = readFileSync(new URL('../src/client/engine.js', import.meta.url));
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const HOLDOUT_YEARS = [2014, 2015, 2016, 2017, 2018];
 const FINAL_HOLDOUT_YEAR = 2019;
@@ -160,7 +160,8 @@ const report = {
     sourceRows: input.source.rows,
   },
   engine: {
-    sha256: digest(engineBytes),
+    sha256: engineSourceSha256(),
+    sourceFiles: ENGINE_SOURCE_FILES,
     seed: 20261011,
     inputConfiguration: {housing: 'pasture', diet: 'pasture', weather: 'normal', supplementKgDMPerHeadDay: 0},
     fittedParameters: false,

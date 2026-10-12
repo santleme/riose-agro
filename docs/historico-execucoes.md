@@ -6,7 +6,7 @@ Cada item tem `id` UUID, timestamp ISO 8601, operação (`comparison`), status (
 
 O módulo [`run-history.js`](../run-history.js) expõe `createRunRecord`, `recordRun`, `listRuns`, `getRun` e `runCompatibility`. Listagem ordena por timestamp decrescente. `recordRun` rejeita IDs repetidos, e o gerador usa UUID quando disponível. O aplicativo registra o resultado após a comparação terminar e registra um erro resumido quando ela falha. Erros de armazenamento não apagam o resultado que já está em memória.
 
-O botão **Reproduzir** usa o manifesto original salvo e o validador/replayer existente em [`engine.js`](../engine.js). Versões de motor ou manifesto incompatíveis são identificadas e não executadas. O histórico não cria outro formato de snapshot ou replay, nem substitui os arquivos exportáveis de manifesto.
+O botão **Reproduzir** usa o manifesto original salvo e o validador/replayer existente em [`engine.js`](../src/client/engine.js). Versões de motor ou manifesto incompatíveis são identificadas e não executadas. O histórico não cria outro formato de snapshot ou replay, nem substitui os arquivos exportáveis de manifesto.
 
 Ausência de dados inicia um histórico vazio. JSON truncado, estrutura desconhecida e armazenamento inacessível geram erro visível e não são sobrescritos; registros inválidos não são descartados silenciosamente. O limite é de 20 itens: ao persistir o 21º, o mais antigo sai da janela local de retenção. O navegador também pode negar gravações por quota; nesse caso, a comparação continua visível e uma mensagem explica que ela não foi salva.
 

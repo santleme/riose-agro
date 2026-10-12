@@ -89,7 +89,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `simulator.html` — direct link to the farm experience
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
 - `src/client/app.js` — map rendering, controls, charts, and CSV export
-- `src/client/engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
+- `src/client/engine.js`, `src/client/feeding-model.js` — deterministic farm simulation and extracted feeding calculation
 - `src/client/scenario-presets.js` — versioned reproducible scenario catalog; see [`docs/catalogo-cenarios.md`](docs/catalogo-cenarios.md)
 - `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `src/client/worker.js` — simulation worker, isolated from rendering

@@ -1,7 +1,13 @@
 {
   "classification": "face_validity_range_check_only_not_validation_or_calibration",
   "engine": {
-    "sha256": "5a94a0634a0ccd26786f3ae00e3f9b4b87139639e9d43f6c70b836bb4a0e91f4",
+    "sha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
+    "sourceFiles": [
+      "engine.js",
+      "feeding-model.js",
+      "environment-model.js",
+      "metabolism-wasm.js"
+    ],
     "seed": 1,
     "assumptions": "engine.js defaults; no values fitted to CPER"
   },

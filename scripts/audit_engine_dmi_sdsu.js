@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {predictDefaultBarnDmiKgPerDay} from './audit_engine_dmi_mendeley.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const INPUT = resolve(ROOT, 'data/sdsu-individual-dmi/individual-dmi-derived.csv');
@@ -74,7 +74,8 @@ export function auditSdsuDmi() {
       measurementCaveat: 'Observed DMI is locally derived from the supplement spreadsheet and a period-average DM sample, not an independently curated individual DMI table.',
     },
     model: {
-      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex'),
+      engineSha256: engineSourceSha256(),
+      engineSourceFiles: ENGINE_SOURCE_FILES,
       configuration: 'One engine animal, same-day observed weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       targetOutput: 'Total modeled dry matter intake over 24 hours (kg MS/animal/day).',

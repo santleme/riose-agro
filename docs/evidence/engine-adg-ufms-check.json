@@ -8,7 +8,13 @@
   },
   "engine": {
     "file": "engine.js",
-    "sha256": "520c052234de2824497329a7584aeeb63c49ba1ffba94597736809e82d7bd0cb",
+    "sourceFiles": [
+      "engine.js",
+      "feeding-model.js",
+      "environment-model.js",
+      "metabolism-wasm.js"
+    ],
+    "sha256": "b884df30bf874fb64e47d98531fd3ea32417ec9c62ef10fbd81ec9586529ec4f",
     "fitted": false,
     "seed": 20261012,
     "configuration": {
