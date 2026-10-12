@@ -87,4 +87,30 @@ test('layout validation reports out-of-bounds instances, collisions, and unsatis
 
 test('layout generation rejects unsupported production-system types', () => {
   assert.throws(() => generateFarmLayout({scenarioType: 'poultry', prefabs, manifest}), /Unsupported farm scenario/);
+  assert.throws(() => generateFarmLayout({scenarioType: 'dairy', seed: '417', prefabs, manifest}), /safe integer/);
+  assert.throws(() => generateFarmLayout({scenarioType: 'dairy', prefabs, manifest, constraints: {type: 'must-be-adjacent'}}), /constraints must be an array/);
+  assert.throws(() => generateFarmLayout({scenarioType: 'dairy', prefabs: {}, manifest}), /prefabs must be an array/);
+});
+
+test('layout validation checks assigned placement zones and prefab child bounds', () => {
+  const scene = generateFarmLayout({scenarioType: 'dairy', seed: 417, prefabs, manifest});
+  const invalidZone = structuredClone(scene);
+  const animal = invalidZone.placements.find(item => item.layer === 'animals');
+  animal.properties.zoneId = 'zone-service';
+  const zoneDiagnostics = validateFarmLayout(invalidZone, {prefabs, manifest});
+  assert.ok(zoneDiagnostics.some(item => item.code === 'placement-outside-zone'));
+  assert.ok(zoneDiagnostics.some(item => item.code === 'asset-zone-mismatch'));
+
+  const invalidPrefabs = structuredClone(prefabs);
+  const gateway = invalidPrefabs.find(item => item.id === 'gateway-antenna');
+  gateway.placements[0].col = gateway.footprint[0] + 1;
+  const footprintDiagnostics = validateFarmLayout(scene, {prefabs: invalidPrefabs, manifest});
+  assert.ok(footprintDiagnostics.some(item => item.code === 'prefab-child-out-of-bounds'));
+
+  const invalidPolygon = structuredClone(scene);
+  invalidPolygon.zones[0].polygon[0].col = invalidPolygon.grid.width + 1;
+  assert.ok(validateFarmLayout(invalidPolygon, {prefabs, manifest}).some(item => item.code === 'zone-out-of-bounds'));
+
+  invalidPolygon.zones[0].polygon[1] = null;
+  assert.doesNotThrow(() => validateFarmLayout(invalidPolygon, {prefabs, manifest}));
 });

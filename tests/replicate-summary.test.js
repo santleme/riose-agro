@@ -16,10 +16,23 @@ test('replicate summaries are order-independent and label spread as descriptive'
   const reverse = summarizeReplicates([...records].reverse(), options);
   assert.deepEqual(forward, reverse);
   assert.deepEqual(forward[0].outputs.weight, {
-    unit: 'kg', missingRuns: 0, n: 3, mean: 400, standardDeviation: 10,
+    unit: 'kg', missingRuns: 0,
+    provenance: {includedRunIds: ['r1', 'r2', 'r3'], missingRunIds: []},
+    n: 3, mean: 400, standardDeviation: 10,
     quantiles: {p05: 391, p25: 395, p50: 400, p75: 405, p95: 409},
     label: 'descriptive replicate variability; quantiles are not confidence intervals',
   });
+  assert.deepEqual(forward[0].provenance, {
+    runIds: ['r1', 'r2', 'r3'], completedRunIds: ['r1', 'r2', 'r3'], failedRunIds: [], incompleteRunIds: [],
+  });
+});
+
+test('floating-point summaries are permutation-stable and use compensated accumulation', () => {
+  const records = [1e16, 1, -1e16].map((value, index) => record(`r${index}`, 'completed', 1, value));
+  const forward = summarizeReplicates(records, {groupBy: ['supplement']});
+  const shuffled = summarizeReplicates([records[2], records[0], records[1]], {groupBy: ['supplement']});
+  assert.deepEqual(forward, shuffled);
+  assert.equal(forward[0].outputs.weight.mean, 1 / 3);
 });
 
 test('failed runs and completed runs missing an output remain visible in counts', () => {
@@ -33,6 +46,10 @@ test('failed runs and completed runs missing an output remain visible in counts'
   assert.equal(result.outputs.cost.n, 0);
   assert.equal(result.outputs.cost.missingRuns, 2);
   assert.equal(result.outputs.cost.mean, null);
+  assert.deepEqual(result.provenance, {
+    runIds: ['r1', 'r2', 'r3'], completedRunIds: ['r1', 'r2'], failedRunIds: ['r3'], incompleteRunIds: [],
+  });
+  assert.deepEqual(result.outputs.weight.provenance, {includedRunIds: ['r1'], missingRunIds: ['r2']});
 });
 
 test('incompatible output units are rejected', () => {
@@ -65,5 +82,14 @@ test('manifest linked summaries verify digests and aggregate only completed nume
   assert.equal(summary[0].completedRuns, 1);
   assert.equal(summary[0].incompleteRuns, 1);
   assert.equal(summary[0].failedRuns, 1);
+  assert.equal(summary[0].provenance.experimentId, 'summary');
+  assert.equal(summary[0].provenance.manifestDigest, manifest.manifestDigest);
+  assert.deepEqual(summary[0].provenance.resultRecordDigests, [{runId: 'done', outputDigest: record.outputDigest}]);
   assert.throws(() => summarizeExperimentReplicates(manifest, [{...record, outputDigest: sha256Digest({weight: {value: 1, unit: 'kg'}})}]), /Result digest mismatch/);
+});
+
+test('duplicate generic run identities are rejected to protect provenance', () => {
+  assert.throws(() => summarizeReplicates([
+    record('same', 'completed', 1, 390), record('same', 'failed', 1),
+  ]), /Duplicate runId same/);
 });

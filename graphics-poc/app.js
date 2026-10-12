@@ -40,7 +40,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, selectedAnimalIds: [], tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, selectedAnimalIds: [], tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', sceneSelectionGeneration: 0, assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -64,7 +64,7 @@ function makeView(snapshot) {
 
 function askWorker(message) {
   assertSceneCommandAllowed(state.scene, message.type);
-  return new Promise((resolve, reject) => { state.pending.push({resolve, reject, messageType: message.type, started: performance.now()}); state.worker.postMessage(message); });
+  return new Promise((resolve, reject) => { state.pending.push({resolve, reject, messageType: message.type, generation: state.sceneSelectionGeneration, started: performance.now()}); state.worker.postMessage(message); });
 }
 
 function acceptSnapshot(snapshot) {
@@ -74,6 +74,8 @@ function acceptSnapshot(snapshot) {
 
 function workerMessage(event) {
   const message = event.data, pending = state.pending.shift();
+  if (pending && pending.generation !== state.sceneSelectionGeneration) { pending.resolve({type: 'stale'}); return; }
+  if (!sceneExecutionAvailability(state.scene).available) { pending?.resolve({type: 'ignored'}); return; }
   if (message.type === 'error') { pending?.reject(new Error(message.message)); return; }
   if (message.type === 'state') acceptSnapshot(message.state);
   else if (message.type === 'view') { state.view = message; refreshScene(); updateHud(); }
@@ -581,6 +583,7 @@ function updateHud() {
 function persistScene() { try { normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest); localStorage.setItem(`riose-graphics-scene-v1:${state.scene.sceneId}`, JSON.stringify(state.scene)); } catch (error) { $('scene-status').textContent = `Não foi possível salvar as referências da cena: ${error.message}`; } }
 
 async function selectScene(domain) {
+  const generation = ++state.sceneSelectionGeneration;
   const base = state.scenes[domain];
   const stored = localStorage.getItem(`riose-graphics-scene-v1:${base.sceneId}`) ?? (domain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
   const savedScene = stored ? JSON.parse(stored) : null;
@@ -597,6 +600,7 @@ async function selectScene(domain) {
     state.worker ??= new Worker('/worker.js', {type: 'module'});
     state.worker.onmessage = workerMessage;
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
+    if (generation !== state.sceneSelectionGeneration) return;
     $('scene-status').textContent = 'Fazenda de corte · motor demonstrativo no Worker · cena editável.';
   } else {
     const unavailable = unavailableExecutionState(state.scene);
@@ -650,16 +654,21 @@ function pixiFrame(time) {
 
 async function resetSimulation(count = Number($('herd-size').value)) {
   if (state.selectedDomain !== 'beef') return;
+  const generation = state.sceneSelectionGeneration;
   state.scene.simulation.populationCount = count;
   state.scene.simulation.seed = 20261012;
   state.scene.simulation.scenarioId = `beef-rotation-demo-${count}-${state.scene.simulation.seed}`;
   await askWorker({type: 'reset', seed: state.scene.simulation.seed, count});
+  if (generation !== state.sceneSelectionGeneration || state.selectedDomain !== 'beef') return;
   persistScene(); refreshScene();
 }
 
 function setSimulationRunning(value) {
   clearInterval(state.timer); state.running = value;
-  if (value && state.selectedDomain === 'beef') state.timer = setInterval(() => state.worker.postMessage({type: 'tick', hours: 1}), 700);
+  if (value && state.selectedDomain === 'beef') state.timer = setInterval(() => {
+    if (state.selectedDomain !== 'beef') { setSimulationRunning(false); return; }
+    Promise.resolve().then(() => askWorker({type: 'tick', hours: 1})).catch(error => { setSimulationRunning(false); $('scene-status').textContent = error.message; });
+  }, 700);
   $('run-simulation').textContent = state.running ? 'Ⅱ Pausar' : '▶ Simular';
 }
 

@@ -12,6 +12,11 @@ test('resolves an exact registered scientific model ID and version', () => {
   assert.equal(resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2023'), BR_CORTE_PASTURE_DMI_MODEL);
   assert.throws(() => resolveScientificModel(BR_CORTE_PASTURE_DMI_MODEL.id, '2024'), /Unknown scientific model version/);
   assert.throws(() => resolveScientificModel('unregistered-model', '2023'), /Unknown scientific model version/);
+  assert.throws(() => runRegisteredScientificModel({
+    id: BR_CORTE_PASTURE_DMI_MODEL.id,
+    version: '2024',
+    inputs: {bodyWeightKg: 330, adgKgPerDay: 0.5, supplementKgDMPerDay: 1.6}
+  }), /Unknown scientific model version/);
 });
 
 test('registering a newer version never changes the selected calculation or its provenance', () => {
@@ -124,6 +129,12 @@ test('old replay manifests remain compatible and new reports retain their select
     id: 'model-run'
   });
   assert.equal(runCompatibility(withProvenance).supported, true);
-  assert.equal(withProvenance.result.scientificProvenance[0].version, '2023');
+  const savedProvenance = withProvenance.result.scientificProvenance[0];
+  assert.equal(savedProvenance.modelId, BR_CORTE_PASTURE_DMI_MODEL.id);
+  assert.equal(savedProvenance.version, '2023');
+  assert.deepEqual(savedProvenance.inputs, scientific.provenance.inputs);
+  assert.deepEqual(savedProvenance.evidenceReferences, scientific.provenance.evidenceReferences);
+  assert.equal(savedProvenance.evidenceStatus, scientific.provenance.evidenceStatus);
+  assert.equal(savedProvenance.implementationHash, scientific.provenance.implementationHash);
   assert.equal(withProvenance.manifest.version, 1);
 });

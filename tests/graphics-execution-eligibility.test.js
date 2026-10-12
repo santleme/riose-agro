@@ -55,9 +55,21 @@ test('unavailable state is serializable without numeric outputs and the runtime 
   const app = await readFile(new URL('../graphics-poc/app.js', import.meta.url), 'utf8');
   assert.match(app, /function askWorker\(message\) \{\s*assertSceneCommandAllowed\(state\.scene, message\.type\);/);
   assert.match(app, /import \{assertSceneCommandAllowed, sceneExecutionAvailability, unavailableExecutionState\}/);
+  assert.match(app, /function setSimulationRunning\(value\)[\s\S]*?askWorker\(\{type: 'tick', hours: 1\}\)/,
+    'periodic Worker ticks must pass through the same command gate');
+  assert.doesNotMatch(app, /state\.worker\.postMessage\(\{type: 'tick'/,
+    'no direct periodic tick may bypass askWorker');
+  assert.match(app, /pending\.generation !== state\.sceneSelectionGeneration/,
+    'late Worker responses from the previous scene must be discarded');
+  assert.match(app, /\$\('run-simulation'\)\.disabled = !execution\.available/,
+    'simulation UI actions must be disabled while execution is unavailable');
+  assert.match(app, /Cena visual carregada · execução numérica indisponível/,
+    'the UI must show an explicit unavailable state while preserving the scene');
 
   const dairy = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
   assert.equal(dairy.domainModule.status, 'in-progress');
   assert.equal(sceneExecutionAvailability(dairy).available, false);
+  assert.equal(dairy.simulation.initialConditions.layoutOnly, true);
+  assert.equal(Object.hasOwn(dairy, 'outputs'), false);
   assert.equal(dairy.entities.length > 0, true, 'visual entities remain loadable while numeric execution is unavailable');
 });

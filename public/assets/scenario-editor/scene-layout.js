@@ -277,6 +277,9 @@ export function generateFarmLayout({
   if (!['beef', 'dairy'].includes(scenarioType)) {
     throw new TypeError(`Unsupported farm scenario: ${scenarioType}`);
   }
+  if (!Number.isSafeInteger(seed)) throw new TypeError('Farm layout seed must be a safe integer');
+  if (!Array.isArray(prefabs)) throw new TypeError('Farm layout prefabs must be an array');
+  if (!Array.isArray(constraints)) throw new TypeError('Farm layout constraints must be an array');
   const scene = scenarioType === 'beef'
     ? createBeefFarmScene(prefabs, seed)
     : createDairyFarmScene(prefabs, seed);
@@ -369,14 +372,7 @@ function originFitsGrid(origin, prefab, grid) {
 
 function originFitsZone(origin, prefab, zone) {
   if (prefab.zones?.length && !prefab.zones.includes(zone.type)) return false;
-  const [width, height] = prefab.footprint;
-  const corners = [
-    {col: origin.col, row: origin.row},
-    {col: origin.col + width, row: origin.row},
-    {col: origin.col, row: origin.row + height},
-    {col: origin.col + width, row: origin.row + height},
-  ];
-  return corners.every((point) => pointInPolygon(point, zone.polygon));
+  return rectFitsZone(origin, prefab.footprint, zone.polygon);
 }
 
 function prefabBoxesOverlap(originA, prefabA, instanceB, prefabById) {
@@ -455,6 +451,23 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
   const {width, height} = scene.grid;
   const prefabById = new Map(prefabs.map((item) => [item.id, item]));
   const assetById = new Map((manifest?.assets ?? []).map((item) => [item.id, item]));
+  const zones = Array.isArray(scene.zones) ? scene.zones : [];
+  if (!Array.isArray(scene.zones)) report('invalid-zones', 'Scene zones must be an array.', '$.zones');
+  const zoneIds = new Set();
+  for (const [index, zone] of zones.entries()) {
+    if (!zone?.id || zoneIds.has(zone.id)) report('invalid-zone-id', `Zone ID is missing or duplicated: ${zone?.id ?? '(missing)'}.`, `$.zones[${index}]`);
+    if (zone?.id) zoneIds.add(zone.id);
+    if (!Array.isArray(zone?.polygon) || zone.polygon.length < 3) {
+      report('invalid-zone-polygon', `Zone ${zone?.id ?? index} needs at least three polygon vertices.`, `$.zones[${index}].polygon`);
+      continue;
+    }
+    for (const [pointIndex, point] of zone.polygon.entries()) {
+      if (!Number.isFinite(point?.col) || !Number.isFinite(point?.row)
+        || point.col < 0 || point.row < 0 || point.col > width || point.row > height) {
+        report('zone-out-of-bounds', `Zone ${zone.id} has a vertex outside the ${width}×${height} grid.`, `$.zones[${index}].polygon[${pointIndex}]`);
+      }
+    }
+  }
   const boxes = [];
   const insideGrid = (col, row, footprint) => Number.isFinite(col) && Number.isFinite(row)
     && col >= 0 && row >= 0 && col + footprint[0] <= width && row + footprint[1] <= height;
@@ -478,6 +491,10 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
       const childAsset = assetById.get(child.assetId);
       if (!childAsset && manifest) report('unresolved-prefab-asset', `Asset ${child.assetId} is not in the supplied manifest.`, `$.prefabInstances[${index}].placements[${childIndex}]`);
       const childFootprint = childAsset?.footprint ?? [1, 1];
+      if (!Array.isArray(childFootprint) || childFootprint.length !== 2 || childFootprint.some((value) => !Number.isFinite(value) || value <= 0)) {
+        report('invalid-footprint', `Invalid asset footprint for ${child.assetId}.`, `$.prefabInstances[${index}].placements[${childIndex}]`);
+        continue;
+      }
       if (!Number.isFinite(child.col) || !Number.isFinite(child.row)
         || child.col < 1 || child.row < 1
         || child.col + childFootprint[0] - 1 > prefab.footprint[0]
@@ -485,10 +502,10 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
         report('prefab-child-out-of-bounds', `${child.assetId} exceeds prefab ${prefab.id} footprint.`, `$.prefabInstances[${index}].placements[${childIndex}]`);
       }
     }
-    const center = {col: instance.col + prefab.footprint[0] / 2, row: instance.row + prefab.footprint[1] / 2};
-    const occupiedZones = (scene.zones ?? []).filter((item) => pointInPolygon(center, item.polygon));
-    if (prefab.zones?.length && !occupiedZones.some((zone) => prefab.zones.includes(zone.type))) {
-      report('prefab-zone-mismatch', `${instance.prefabId} has no compatible zone at its footprint center.`, `$.prefabInstances[${index}]`);
+    const occupiedZones = zones.filter((item) => prefab.zones?.includes(item?.type)
+      && rectFitsZone(instance, prefab.footprint, item.polygon));
+    if (prefab.zones?.length && !occupiedZones.length) {
+      report('prefab-zone-mismatch', `${instance.prefabId} footprint does not fit a compatible zone.`, `$.prefabInstances[${index}]`);
     }
   }
 
@@ -501,7 +518,7 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
     if (!asset && manifest) report('unresolved-asset', `Asset ${item.assetId} is not in the supplied manifest.`, `$.placements[${index}]`);
     const assignedZoneId = item.properties?.zoneId;
     if (assignedZoneId) {
-      const zone = scene.zones?.find((candidate) => candidate.id === assignedZoneId);
+      const zone = zones.find((candidate) => candidate?.id === assignedZoneId);
       if (!zone) report('unknown-zone', `Placement ${item.id ?? item.assetId} references missing zone ${assignedZoneId}.`, `$.placements[${index}]`);
       else {
         if (!pointInPolygon(position, zone.polygon)) report('placement-outside-zone', `${item.id ?? item.assetId} is outside assigned zone ${zone.id}.`, `$.placements[${index}]`);
@@ -541,6 +558,8 @@ export function validateFarmLayout(scene, {prefabs = [], manifest, constraints =
 }
 
 function pointInPolygon(point, polygon = []) {
+  if (!Array.isArray(polygon) || polygon.length < 3 || !Number.isFinite(point?.col) || !Number.isFinite(point?.row)) return false;
+  if (polygon.some(vertex => !Number.isFinite(vertex?.col) || !Number.isFinite(vertex?.row))) return false;
   let inside = false;
   for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
     const a = polygon[index]; const b = polygon[previous];
@@ -554,6 +573,17 @@ function pointInPolygon(point, polygon = []) {
     if (crosses) inside = !inside;
   }
   return inside;
+}
+
+function rectFitsZone(origin, footprint, polygon) {
+  const [width, height] = footprint;
+  return [
+    {col: origin.col, row: origin.row},
+    {col: origin.col + width, row: origin.row},
+    {col: origin.col, row: origin.row + height},
+    {col: origin.col + width, row: origin.row + height},
+    {col: origin.col + width / 2, row: origin.row + height / 2},
+  ].every((point) => pointInPolygon(point, polygon));
 }
 
 function fingerprint(value) {

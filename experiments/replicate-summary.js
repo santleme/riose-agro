@@ -21,11 +21,24 @@ function quantile(sortedValues, probability) {
   return sortedValues[lower] + (sortedValues[upper] - sortedValues[lower]) * (index - lower);
 }
 
+function stableSum(values) {
+  let sum = 0;
+  let correction = 0;
+  for (const value of values) {
+    const next = sum + value;
+    correction += Math.abs(sum) >= Math.abs(value) ? (sum - next) + value : (value - next) + sum;
+    sum = next;
+  }
+  return sum + correction;
+}
+
 function describe(values) {
+  // Sort before every reduction so permuting result rows cannot change the
+  // floating-point accumulation order (which would make summaries drift).
   const sorted = [...values].sort((a, b) => a - b);
   const n = sorted.length;
-  const mean = n ? sorted.reduce((sum, value) => sum + value, 0) / n : null;
-  const variance = n > 1 ? sorted.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (n - 1) : null;
+  const mean = n ? stableSum(sorted) / n : null;
+  const variance = n > 1 ? stableSum(sorted.map(value => (value - mean) ** 2)) / (n - 1) : null;
   return {
     n,
     mean,
@@ -42,39 +55,55 @@ export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
   const outputNames = outputs ? [...new Set(outputs)] : [...new Set(records.flatMap(record => Object.entries(record.outputs ?? [])
     .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name)))].sort();
   const groups = new Map();
+  const runIds = new Set();
 
   for (const record of records) {
     if (!record || typeof record.runId !== 'string' || !record.runId) throw new TypeError('Each run record requires a runId');
+    if (runIds.has(record.runId)) throw new TypeError(`Duplicate runId ${record.runId}`);
+    runIds.add(record.runId);
     const grouping = Object.fromEntries(groupBy.map(field => [field, record.inputs?.[field] ?? null]));
     const key = canonical(grouping);
     let group = groups.get(key);
     if (!group) {
-      group = {grouping, rows: [], failures: 0, incomplete: 0};
+      group = {grouping, rows: [], failedIds: [], incompleteIds: []};
       groups.set(key, group);
     }
-    if (record.status === 'failed') group.failures++;
+    if (record.status === 'failed') group.failedIds.push(record.runId);
     else if (record.status === 'completed') group.rows.push(record);
-    else if (record.status === 'planned' || record.status === 'running') group.incomplete++;
+    else if (record.status === 'planned' || record.status === 'running') group.incompleteIds.push(record.runId);
     else throw new TypeError(`Run ${record.runId} has unsupported status ${record.status}`);
   }
 
-  return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, group]) => ({
+  return [...groups.entries()].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, group]) => ({
     grouping: group.grouping,
     completedRuns: group.rows.length,
-    failedRuns: group.failures,
-    incompleteRuns: group.incomplete,
+    failedRuns: group.failedIds.length,
+    incompleteRuns: group.incompleteIds.length,
+    provenance: {
+      runIds: [...group.rows.map(record => record.runId), ...group.failedIds, ...group.incompleteIds].sort(),
+      completedRunIds: group.rows.map(record => record.runId).sort(),
+      failedRunIds: [...group.failedIds].sort(),
+      incompleteRunIds: [...group.incompleteIds].sort(),
+    },
     outputs: Object.fromEntries(outputNames.sort().map(name => {
       let unit = null;
       const values = [];
       let missing = 0;
+      const includedRunIds = [];
+      const missingRunIds = [];
       for (const record of group.rows) {
         const item = outputValue(record, name);
-        if (!item) { missing++; continue; }
+        if (!item) { missing++; missingRunIds.push(record.runId); continue; }
         if (unit === null) unit = item.unit;
         else if (unit !== item.unit) throw new TypeError(`Output ${name} has incompatible units: ${unit} and ${item.unit}`);
         values.push(item.value);
+        includedRunIds.push(record.runId);
       }
-      return [name, {unit, missingRuns: missing, ...describe(values)}];
+      return [name, {
+        unit, missingRuns: missing,
+        provenance: {includedRunIds: includedRunIds.sort(), missingRunIds: missingRunIds.sort()},
+        ...describe(values),
+      }];
     })),
   }));
 }
@@ -91,5 +120,17 @@ export function summarizeExperimentReplicates(manifest, resultRecords, options =
     inputs: run.inputs,
     outputs: run.status === 'completed' ? resultsByRunId.get(run.runId).outputs : {},
   }));
-  return summarizeReplicates(records, options);
+  const summary = summarizeReplicates(records, options);
+  return summary.map(group => ({
+    ...group,
+    provenance: {
+      ...group.provenance,
+      experimentId: manifest.experimentId,
+      manifestDigest: manifest.manifestDigest,
+      resultRecordCount: resultRecords.length,
+      resultRecordDigests: resultRecords.filter(record => group.provenance.completedRunIds.includes(record.runId))
+        .map(record => ({runId: record.runId, outputDigest: record.outputDigest}))
+        .sort((a, b) => a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0),
+    },
+  }));
 }
