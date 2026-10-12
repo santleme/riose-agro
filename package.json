@@ -7,6 +7,8 @@
     "test": "node --test",
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
+    "bench:history": "node scripts/benchmark-history.mjs",
+    "bench:browser": "node scripts/benchmark-browser.mjs",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "archive:comparison": "node scripts/archive-comparison.js",
     "validate:outcome": "node scripts/validate-outcome-record.js",

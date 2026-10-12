@@ -31,9 +31,18 @@ export class FarmEngine {
   log(text       ,animalId        ){this.state.events.unshift({hour:this.state.hour,text,...(animalId===undefined?{}:{animalId})});this.state.events.length=Math.min(this.state.events.length,100);}
   recordActivity(animal,reason,observedThirst=animal.thirst,announce=true){
     const record={hour:this.state.hour,action:animal.action,reason,observed:{hour:this.state.hour%24,thirst:observedThirst,housing:this.state.config.housing}};
-    animal.history??=[];animal.history.push(record);if(animal.history.length>40)animal.history.shift();
+    animal.history??=[];
+    if(animal.history.length<40){animal.history.push(record);animal.historyNext=animal.history.length%40;}
+    else if(animal.history.length===40){const next=animal.historyNext??0;animal.history[next]=record;animal.historyNext=(next+1)%40;}
+    else{animal.history.push(record);animal.history.shift();}
     const activity={grazing:'pastando',feeding:'no cocho',drinking:'bebendo água',resting:'descansando'}[animal.action];
     if(announce)this.log(animal.name+': '+activity+'.',animal.id);
+  }
+  historyFor(animal){
+    const history=animal?.history??[];
+    if(history.length<40)return history;
+    const next=animal.historyNext??0;
+    return next?history.slice(next).concat(history.slice(0,next)):history;
   }
   configure(patch                ){
     const previous=this.state.config;
@@ -46,7 +55,7 @@ export class FarmEngine {
     if(c.weather!==previous.weather)this.log('Clima alterado: '+({normal:'ameno',hot:'calor',rain:'chuva'}[c.weather])+'.');
   }
   place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];a.x=b.x+10+this.randomLocomotion()*(b.w-20);a.y=b.y+10+this.randomLocomotion()*(b.h-20);a.targetX=a.x;a.targetY=a.y;}
-  tick(hours=1,metabolismKernel=updateMetabolismJS){
+  tick(hours=1,metabolismKernel=updateMetabolismJS,includeSnapshot=true){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
     const useBatchKernel=metabolismKernel!==updateMetabolismJS;
     const metabolismInput=useBatchKernel?new Float64Array(this.state.animals.length*4):null;
@@ -99,9 +108,17 @@ export class FarmEngine {
       }
       if(time===6)this.log('Novo dia: peso médio '+this.metrics().weight.toFixed(1)+' kg.');
     }
-    return this.snapshot();
+    return includeSnapshot?this.snapshot():undefined;
   }
-  snapshot()          {return structuredClone(this.state);}
+  snapshot(){
+    const snapshot=structuredClone(this.state);
+    for(const animal of snapshot.animals){
+      const next=animal.historyNext??0;
+      if(animal.history?.length===40&&next)animal.history=animal.history.slice(next).concat(animal.history.slice(0,next));
+      delete animal.historyNext;
+    }
+    return snapshot;
+  }
   metrics()         {return metrics(this.state);}
   static from(snapshot         ){const engine=new FarmEngine(1,1);engine.state=structuredClone(snapshot);if(!Number.isInteger(engine.state.initialSeed))engine.state.initialSeed=engine.state.seed>>>0;else engine.state.initialSeed>>>=0;if(!Number.isInteger(engine.state.locomotionSeed))engine.state.locomotionSeed=deriveLocomotionSeed(engine.state.seed);else engine.state.locomotionSeed>>>=0;return engine;}
 }

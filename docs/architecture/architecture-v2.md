@@ -9,7 +9,7 @@ Evolve the existing local, browser-based livestock simulator into a modular scie
 ```mermaid
 flowchart LR
   UI[Browser UI and canvas] -->|commands / JSON| W[Simulation Worker]
-  W -->|versioned state envelope| VA[Visual state adapter]
+  W -->|packed transferable view + explicit snapshots| VA[Visual state adapter]
   VA --> UI
   W -->|batch numeric ABI v1| WASM[Rust/WASM metabolism kernel]
   W -->|same kernel API| JS[JavaScript fallback]
@@ -41,6 +41,8 @@ docs/architecture/       contracts, decisions, audits and roadmap
 ```
 
 The crate contains a deterministic clock, stable entity-ID allocation, 32-bit model and locomotion seed streams matching the current JS LCG, execution counters, versioned command/event envelopes, generic component snapshots and JSON snapshot encode/decode, plus the metabolism kernel. These primitives are native/WASM-capable; only the metabolism batch is currently exposed to the Worker. Existing JS snapshots and comparison manifest v1 are not replaced. Future crates such as `riose-domain-livestock`, `riose-world`, `riose-simulation` and `riose-bench` should be split when ownership or independent release/build needs exist, not just to mirror folder names.
+
+The browser simulation advances the full model herd independently from rendering. Routine Worker ticks send a compact visual-state buffer; camera, culling and animation stay in the adapter. The initial asset library is capped at 80 reusable semantic sets, including variants and animation within a set; see [visual-asset-budget.md](visual-asset-budget.md).
 
 ## Runtime choices
 

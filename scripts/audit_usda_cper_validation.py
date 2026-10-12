@@ -186,6 +186,8 @@ def audit(path: Path) -> dict:
             "sha256": current_hash,
             "sha256Verified": current_hash == expected_current_hash if expected_current_hash else False,
             "verifiedSnapshotFiles": verified_files,
+            "verifiedDataFiles": [name for name in verified_files if not name.endswith("_dict.csv")],
+            "verifiedDictionaryFiles": [name for name in verified_files if name.endswith("_dict.csv")],
         },
         "coverage": {
             "rowCount": len(rows),

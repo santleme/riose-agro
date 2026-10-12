@@ -53,7 +53,7 @@ test('local server serves the compiled WASM module with its binary MIME type',as
   assert.equal(response.status,200);
   assert.equal(response.headers.get('content-type'),'application/wasm');
   assert.deepEqual(Buffer.from(await response.arrayBuffer()).subarray(0,4),Buffer.from([0,97,115,109]));
-  for(const path of ['/worker.js?engine=wasm','/metabolism-wasm.js']){
+  for(const path of ['/worker.js?engine=wasm','/metabolism-wasm.js','/scenario-storage.js']){
     const asset=await fetch(`http://127.0.0.1:${server.address().port}${path}`);
     assert.equal(asset.status,200,`${path} should be available to the browser Worker`);
   }
@@ -62,7 +62,7 @@ test('local server serves the compiled WASM module with its binary MIME type',as
 test('Worker runs the JavaScript default and the opt-in WASM route with identical state',async t=>{
   const originalFetch=globalThis.fetch,originalSelf=globalThis.self;
   const run=async(engine,fetchImpl)=>{
-    const harness={messages:[],postMessage(message){this.messages.push(message);}};
+    const harness={messages:[],transfers:[],postMessage(message,transfer=[]){this.messages.push(message);this.transfers.push(transfer);}};
     globalThis.self=harness;
     if(fetchImpl)globalThis.fetch=fetchImpl;
     const url=new URL(`../worker.js?engine=${engine}&run=${Math.random()}`,import.meta.url);
@@ -71,17 +71,25 @@ test('Worker runs the JavaScript default and the opt-in WASM route with identica
       {type:'reset',seed:917,count:40},
       {type:'configure',patch:{housing:'barn',weather:'hot',diet:'balanced',supplement:1.5}},
       {type:'tick',hours:48},
+      {type:'snapshot'},
     ])await harness.onmessage({data});
-    return harness.messages.at(-1);
+    return {snapshot:harness.messages.at(-1),views:harness.messages.filter(message=>message.type==='view'),transfers:harness.transfers};
   };
   t.after(()=>{globalThis.fetch=originalFetch;globalThis.self=originalSelf;});
   const fetchWasm=async()=>new Response(wasmBytes,{headers:{'content-type':'application/wasm'}});
   const javascript=await run('js',originalFetch);
   const wasm=await run('wasm',fetchWasm);
   const unavailableWasm=await run('wasm',async()=>{throw new Error('simulated missing WASM artifact');});
-  assert.equal(javascript.engineImplementation,'javascript-fallback');
-  assert.equal(wasm.engineImplementation,'riose-core-wasm/0.1.0');
-  assert.equal(unavailableWasm.engineImplementation,'javascript-fallback');
-  assert.deepEqual(wasm.state,javascript.state);
-  assert.deepEqual(unavailableWasm.state,javascript.state);
+  assert.equal(javascript.snapshot.engineImplementation,'javascript-fallback');
+  assert.equal(wasm.snapshot.engineImplementation,'riose-core-wasm/0.1.0');
+  assert.equal(unavailableWasm.snapshot.engineImplementation,'javascript-fallback');
+  assert.deepEqual(wasm.snapshot.state,javascript.snapshot.state);
+  assert.deepEqual(unavailableWasm.snapshot.state,javascript.snapshot.state);
+  const withoutImplementation=views=>views.map(({engineImplementation,...view})=>view);
+  assert.deepEqual(withoutImplementation(wasm.views),withoutImplementation(javascript.views));
+  assert.deepEqual(withoutImplementation(unavailableWasm.views),withoutImplementation(javascript.views));
+  assert.equal(javascript.views.at(-1).animalValues.length,40*4);
+  assert.equal(javascript.views.at(-1).animalActions.length,40);
+  assert.equal(javascript.transfers.at(-2).length,2,'view buffers are transferred instead of copied');
+  assert.equal(javascript.views.at(-1).selectedHistory.length,javascript.snapshot.state.animals[0].history.length);
 });
