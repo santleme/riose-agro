@@ -1,4 +1,4 @@
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 
 class ShiftHistoryEngine extends FarmEngine{
   recordActivity(animal,reason,observedThirst=animal.thirst,announce=true){

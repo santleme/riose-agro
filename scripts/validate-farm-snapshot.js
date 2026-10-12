@@ -4,8 +4,8 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateFarmSnapshot} from '../snapshot-validator.js';
-import {validateFarmSnapshotManifestReference} from '../snapshot-manifest-link.js';
+import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
+import {validateFarmSnapshotManifestReference} from '../src/client/snapshot-manifest-link.js';
 
 const usage = 'Uso: npm run validate:snapshot -- <snapshot.json> [--manifest <comparacao.json>] [--require-eligible]';
 const args = process.argv.slice(2);

@@ -8,11 +8,11 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {FarmEngine, createComparisonManifest} from '../engine.js';
-import {createScenarioContract} from '../scenario-contract.js';
-import {createComparisonArchive, sha256Bytes} from '../comparison-archive.js';
-import {validateOutcomeRecord} from '../outcome-record.js';
-import {linkFarmSnapshotToManifest} from '../snapshot-manifest-link.js';
+import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
+import {createScenarioContract} from '../src/client/scenario-contract.js';
+import {createComparisonArchive, sha256Bytes} from '../src/client/comparison-archive.js';
+import {validateOutcomeRecord} from '../src/client/outcome-record.js';
+import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 
 const schema = JSON.parse(readFileSync(new URL('../schemas/outcome-record.schema.json', import.meta.url), 'utf8'));
 const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
@@ -33,7 +33,7 @@ function fixture(manifestVersion = 1) {
   const manifestBytes = Buffer.from(JSON.stringify(manifest));
   const farmSnapshot = linkFarmSnapshotToManifest(sourceSnapshot, manifestBytes);
   const snapshotBytes = Buffer.from(`${JSON.stringify(farmSnapshot, null, 2)}\n`);
-  const engineBytes = readFileSync(new URL('../engine.js', import.meta.url));
+  const engineBytes = readFileSync(new URL('../src/client/engine.js', import.meta.url));
   const archive = createComparisonArchive(manifestBytes, engineBytes, '2026-10-11T12:00:00.000Z');
   const archiveBytes = Buffer.from(`${JSON.stringify(archive, null, 2)}\n`);
   const projected = archive.comparison.scenario.weight;

@@ -7,7 +7,7 @@ import {
   classifyConfiguration,
   classifyFactor,
   isFactorCategory,
-} from '../factor-classification.js';
+} from '../src/client/factor-classification.js';
 
 test('classifies external environmental factors and management factors', () => {
   for (const factor of ['temperature', 'humidity', 'rain', 'wind', 'environment', 'weather', 'chuva', 'umidade']) {

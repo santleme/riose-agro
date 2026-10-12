@@ -71,7 +71,7 @@ export function auditDryadFinishingDmi() {
       dmiUnit: 'kg/head/day',
     },
     model: {
-      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'engine.js'))).digest('hex'),
+      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex'),
       configuration: 'One animal, observed shrunk mid-body weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       dietCompositionUsed: false,

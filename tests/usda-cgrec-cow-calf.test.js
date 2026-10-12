@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {createServer} from '../server.js';
+import {createServer} from '../src/server/server.js';
 
 test('public USDA CGREC cow-calf cohort is reproducible, age-aware, and separate from engine validation', () => {
   execFileSync('npm', ['run', 'audit:usda-cgrec-cow-calf'], {stdio: 'ignore'});
   const report = JSON.parse(readFileSync(new URL('../docs/evidence/usda-cgrec-cow-calf-audit.json', import.meta.url), 'utf8'));
   const data = JSON.parse(readFileSync(new URL('../data/usda-cgrec-cow-calf/cow-calf-observations.json', import.meta.url), 'utf8'));
   const page = readFileSync(new URL('../usda-cgrec-cow-calf.html', import.meta.url), 'utf8');
-  const script = readFileSync(new URL('../usda-cgrec-cow-calf.js', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../src/client/usda-cgrec-cow-calf.js', import.meta.url), 'utf8');
 
   assert.equal(report.classification, 'public_usda_cgrec_mature_and_young_cow_grazing_observations_exploratory_not_engine_validation');
   assert.equal(report.source.doi, '10.15482/USDA.ADC/25464097');

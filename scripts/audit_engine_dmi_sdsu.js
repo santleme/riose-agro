@@ -74,7 +74,7 @@ export function auditSdsuDmi() {
       measurementCaveat: 'Observed DMI is locally derived from the supplement spreadsheet and a period-average DM sample, not an independently curated individual DMI table.',
     },
     model: {
-      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'engine.js'))).digest('hex'),
+      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex'),
       configuration: 'One engine animal, same-day observed weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       targetOutput: 'Total modeled dry matter intake over 24 hours (kg MS/animal/day).',

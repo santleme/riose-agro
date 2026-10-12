@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {FarmEngine, compare, createComparisonManifest} from '../engine.js';
-import {renderSimulationReport} from '../simulation-report.js';
-import {createServer} from '../server.js';
+import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
+import {renderSimulationReport} from '../src/client/simulation-report.js';
+import {createServer} from '../src/server/server.js';
 
 test('renders a deterministic report using the engine result and manifest',()=>{
   const snapshot=new FarmEngine(42,2).snapshot();
@@ -52,7 +52,7 @@ test('explains invalid report inputs',()=>{
 });
 
 test('comparison dialog exports the generated Markdown report',async()=>{
-  const app=await readFile(new URL('../app.js',import.meta.url),'utf8');
+  const app=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const binding=app.split('\n').find(line=>line.startsWith("$('report-export').onclick="));
   assert.ok(binding);
@@ -77,10 +77,10 @@ test('local app server exposes imported browser modules',async t=>{
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
 
-  const response=await fetch(`http://127.0.0.1:${server.address().port}/simulation-report.js`);
+  const response=await fetch(`http://127.0.0.1:${server.address().port}/src/client/simulation-report.js`);
   assert.equal(response.status,200);
   assert.match(await response.text(),/export function renderSimulationReport/);
-  const historyResponse=await fetch(`http://127.0.0.1:${server.address().port}/run-history.js`);
+  const historyResponse=await fetch(`http://127.0.0.1:${server.address().port}/src/client/run-history.js`);
   assert.equal(historyResponse.status,200);
   assert.match(await historyResponse.text(),/export function recordRun/);
 });

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server/server.js",
     "test": "node --test --test-concurrency=1",
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",

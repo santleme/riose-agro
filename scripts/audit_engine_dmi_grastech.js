@@ -6,7 +6,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {FarmEngine, metrics} from '../engine.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const INPUT = resolve(ROOT, 'data/grastech-dairy-grazing-dmi/individual-dmi-observations.tsv');
@@ -112,7 +112,7 @@ const byHeldOutGroup = Object.fromEntries(groups.map(group => {
     constantTrainingMeanBaseline: summarize(rows, 'baselinePredictionKgDmPerDay'),
   }];
 }));
-const engineBytes = readFileSync(resolve(ROOT, 'engine.js'));
+const engineBytes = readFileSync(resolve(ROOT, 'src/client/engine.js'));
 const report = {
   classification: 'fixed_default_engine_dmi_component_diagnostic_out_of_approved_cper_domain_not_full_validation',
   source: {

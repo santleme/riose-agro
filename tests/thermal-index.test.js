@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {calculateThi,THI_SOURCE} from '../thermal-index.js';
+import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 
 test('Mader feedlot THI reproduces the published bovine example to reported precision',()=>{
   const result=calculateThi(26.8,57.5);

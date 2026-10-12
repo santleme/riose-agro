@@ -6,7 +6,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from compute_service import create_server, detect_amd_backend, execute_compute
+from src.server.compute_service import create_server, detect_amd_backend, execute_compute
 
 
 UNAVAILABLE = {
@@ -132,19 +132,19 @@ class ComputeServiceTests(unittest.TestCase):
         self.assertFalse(result["fallback_used"])
 
     def test_amd_detection_requires_rocm_and_an_available_device(self):
-        with patch("compute_service.import_module", return_value=SimpleNamespace(
+        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
             version=SimpleNamespace(hip=None),
             cuda=SimpleNamespace(is_available=lambda: True),
             __version__="test",
         )):
             self.assertFalse(detect_amd_backend()["available"])
-        with patch("compute_service.import_module", return_value=SimpleNamespace(
+        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
             version=SimpleNamespace(hip="test-rocm"),
             cuda=SimpleNamespace(is_available=lambda: False),
             __version__="test",
         )):
             self.assertFalse(detect_amd_backend()["available"])
-        with patch("compute_service.import_module", return_value=SimpleNamespace(
+        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
             version=SimpleNamespace(hip="test-rocm"),
             cuda=SimpleNamespace(is_available=lambda: True),
             __version__="test",

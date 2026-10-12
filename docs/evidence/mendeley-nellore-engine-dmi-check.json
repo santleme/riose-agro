@@ -9,7 +9,7 @@
     "exactSameAnimalDateObservedDmiPairs": 219
   },
   "model": {
-    "engineSha256": "5a94a0634a0ccd26786f3ae00e3f9b4b87139639e9d43f6c70b836bb4a0e91f4",
+    "engineSha256": "520c052234de2824497329a7584aeeb63c49ba1ffba94597736809e82d7bd0cb",
     "configuration": "One animal, observed same-date liveweight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
     "calibrationOrParameterFitting": false,
     "treatmentAndWeatherInputsRepresented": false

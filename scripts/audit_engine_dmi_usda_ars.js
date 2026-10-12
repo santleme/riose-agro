@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const REPORT = resolve(ROOT, 'docs/evidence/usda-ars-feedlot-engine-dmi-check.json');
@@ -90,7 +90,7 @@ export function auditDmi() {
       nExperiments: source.coverage.nExperiments,
     },
     model: {
-      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'engine.js'))).digest('hex'),
+      engineSha256: createHash('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex'),
       configuration: 'One animal, observed average BW as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.',
       calibrationOrParameterFitting: false,
       treatmentInputsRepresented: false,

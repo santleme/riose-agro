@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {DEFAULT_CONFIG, FarmEngine, createComparisonManifest, metrics, replayComparisonManifest} from '../engine.js';
-import {DEFAULT_WEATHER, WEATHER_VALUES, getEnvironmentalStress, getWeatherRules, isWeather} from '../environment-model.js';
+import {DEFAULT_CONFIG, FarmEngine, createComparisonManifest, metrics, replayComparisonManifest} from '../src/client/engine.js';
+import {DEFAULT_WEATHER, WEATHER_VALUES, getEnvironmentalStress, getWeatherRules, isWeather} from '../src/client/environment-model.js';
 
 const expectedRules = {
   normal: {label: 'ameno', heatMultiplier: 1, pastureGrowthMultiplier: 1, thirstPerHour: 5},

@@ -5,11 +5,11 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../engine.js';
-import {parseAdultCperCsv} from '../adult-data-model.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
+import {parseAdultCperCsv} from '../src/client/adult-data-model.js';
 
 const root = new URL('../', import.meta.url);
-const engineBytes = readFileSync(new URL('engine.js', root));
+const engineBytes = readFileSync(new URL('src/client/engine.js', root));
 const cperBytes = readFileSync(new URL('data/usda-cper/period.csv', root));
 const manifest = JSON.parse(readFileSync(new URL('data/usda-cper/manifest.json', root), 'utf8'));
 const sourceFile = manifest.files.find(file => file.path === 'period.csv');

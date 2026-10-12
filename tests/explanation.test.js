@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createServer, deterministicExplanation, explain, validateExplanationInput} from '../server.js';
+import {createServer, deterministicExplanation, explain, validateExplanationInput} from '../src/server/server.js';
 
 const input = {
   hour: 30,

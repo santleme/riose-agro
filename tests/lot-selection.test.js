@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {resolveLotSelection, formatLotArea} from '../lot-selection.js';
+import {resolveLotSelection, formatLotArea} from '../src/client/lot-selection.js';
 
 const example = JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
 

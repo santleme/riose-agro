@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../engine.js';
+import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
 
 test('same seed and actions reproduce the same farm state', () => {
   const first = new FarmEngine(417, 8);

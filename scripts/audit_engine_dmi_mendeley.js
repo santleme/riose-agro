@@ -4,7 +4,7 @@ import {createHash as createDigest} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine} from '../engine.js';
+import {FarmEngine} from '../src/client/engine.js';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const EXPORTER = resolve(ROOT, 'scripts/export_mendeley_nellore_dmi_weight_pairs.py');
@@ -131,7 +131,7 @@ function mean(values) {
 }
 
 function createHash() {
-  return createDigest('sha256').update(readFileSync(resolve(ROOT, 'engine.js'))).digest('hex');
+  return createDigest('sha256').update(readFileSync(resolve(ROOT, 'src/client/engine.js'))).digest('hex');
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

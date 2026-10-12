@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {FarmEngine} from '../engine.js';
-import {createScenarioContract, replayScenarioContract, validateScenarioContract} from '../scenario-contract.js';
+import {FarmEngine} from '../src/client/engine.js';
+import {createScenarioContract, replayScenarioContract, validateScenarioContract} from '../src/client/scenario-contract.js';
 
 const engine = new FarmEngine(2741, 5);
 engine.configure({diet: 'balanced', supplement: 1.5, weather: 'rain'});
