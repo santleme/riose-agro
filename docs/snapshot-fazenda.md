@@ -8,6 +8,8 @@ O snapshot representa o **estado do domínio** no início de um caso: fazenda/lo
 
 Cada medição guarda ID próprio, caminho estável do indicador, instante de coleta, valor, unidade, classificação, fonte, localizador dentro da fonte, população de validade e período quando conhecido. O mesmo caminho pode se repetir quando o ID e o instante/período distinguem medições. Se a fonte não fornecer data exata, `observedAt` fica `null`, `period` mantém o período disponível e `timeMissingReason` explica a lacuna; o contrato não fabrica uma data.
 
+Para a camada ambiental, o snapshot pode declarar `farm.environment.temperature_c` em °C e `farm.environment.relative_humidity_pct` em %. Ambos são campos opcionais com a mesma proveniência. No painel de lote, observações espaciais também podem declarar área em `paddock.<id>.area_ha`, `area_m2`, `area_acres` ou `lot.<id>.area_*`; comprimento do cocho pode usar `paddock.<id>.trough_length_m` (a unidade do campo determina a conversão). Área e infraestrutura ausentes continuam ausentes e não geram métricas calculadas.
+
 As classificações permitidas são:
 
 - `observed`: medida ou categoria publicada na fonte;

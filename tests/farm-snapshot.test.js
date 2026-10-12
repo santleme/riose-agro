@@ -55,6 +55,19 @@ test('optional visual paddock and lot links are schema-checked and must resolve 
   assert.ok(validateFarmSnapshot(duplicateZone).errors.some(message => message.includes("domainZoneId duplicado 'paddock-1'")));
 });
 
+test('numeric environmental inputs are optional, provenance checked and backwards compatible',()=>{
+  assert.equal(validateSchema(example),true,'legacy snapshots remain valid without numeric environment');
+  const withEnvironment=structuredClone(example);
+  withEnvironment.farm.environment={
+    temperature_c:{path:'farm.environment.temperature_c',value:26.8,unit:'°C',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'meteorological station',populationValidity:'same site'},
+    relative_humidity_pct:{path:'farm.environment.relative_humidity_pct',value:57.5,unit:'%',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'meteorological station',populationValidity:'same site'}
+  };
+  assert.equal(validateSchema(withEnvironment),true,JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(withEnvironment).semanticValid,true,JSON.stringify(validateFarmSnapshot(withEnvironment).errors));
+  withEnvironment.farm.environment.temperature_c.sourceId='not-in-source-catalog';
+  assert.equal(validateFarmSnapshot(withEnvironment).semanticValid,false);
+});
+
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
   const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);

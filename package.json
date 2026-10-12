@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "example:scenario-contract": "node examples/scenario-contract-v2.js",
     "test:scenarios": "node scripts/run-scenarios.js",
     "archive:comparison": "node scripts/archive-comparison.js",

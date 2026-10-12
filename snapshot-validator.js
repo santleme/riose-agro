@@ -35,6 +35,9 @@ function collectFields(snapshot, sourcesById, errors) {
   for (const key of ['country', 'region']) {
     add(snapshot.farm?.location?.[key], `farm.location.${key}`, `farm.location.${key}`);
   }
+  for (const [key, path] of [['temperature_c', 'farm.environment.temperature_c'], ['relative_humidity_pct', 'farm.environment.relative_humidity_pct']]) {
+    if (snapshot.farm?.environment?.[key] !== undefined) add(snapshot.farm.environment[key], path, path);
+  }
   add(snapshot.population?.species, 'population.species', 'population.species');
   add(snapshot.population?.productionClass, 'population.production_class', 'population.productionClass');
   for (const animal of snapshot.animals) {

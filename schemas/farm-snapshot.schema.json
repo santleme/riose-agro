@@ -53,6 +53,13 @@
             "country": {"$ref": "#/$defs/field"},
             "region": {"$ref": "#/$defs/field"}
           }
+        },
+        "environment": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "temperature_c": {"$ref": "#/$defs/field"},
+            "relative_humidity_pct": {"$ref": "#/$defs/field"}
+          }
         }
       }
     },

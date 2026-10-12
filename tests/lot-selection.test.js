@@ -26,3 +26,18 @@ test('area and missing fields remain explicit instead of becoming zero', () => {
   assert.deepEqual(formatLotArea(null), {value: 'Não informada', detail: 'O snapshot não declara a área do piquete.'});
   assert.deepEqual(formatLotArea({value: 12.5, unit: 'ha', status: 'observed', sourceLocator: 'mapa'}), {value: '12,5 ha', detail: 'observed · mapa'});
 });
+
+test('snapshot with no lots still resolves its linked paddock as an explicit empty selection',()=>{
+  const snapshot=structuredClone(example);snapshot.paddocks[0].domainZoneId='paddock-1';snapshot.lots=[];
+  const selection=resolveLotSelection(snapshot,'paddock-1');
+  assert.equal(selection.paddock.id,'19N');
+  assert.deepEqual(selection.lots,[]);
+});
+
+test('area resolves from a linked lot or paddock observation and can use square metres',()=>{
+  const snapshot=structuredClone(example);snapshot.paddocks[0].domainZoneId='paddock-1';snapshot.lots[0].paddockId='19N';
+  snapshot.observations.push({path:`lot.${snapshot.lots[0].id}.area_m2`,value:24000,unit:'m²',status:'observed',sourceId:snapshot.sourceCatalog[0].id,sourceLocator:'survey',populationValidity:'lot area',measurementId:'lot-area-fixture',observedAt:'2019-01-01T00:00:00Z'});
+  const selection=resolveLotSelection(snapshot,'paddock-1');
+  assert.equal(selection.lots[0].area.value,24000);
+  assert.equal(selection.lots[0].area.unit,'m²');
+});

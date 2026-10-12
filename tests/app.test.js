@@ -6,17 +6,20 @@ import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonMa
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
 import {resolveLotSelection,formatLotArea} from '../lot-selection.js';
 import {validateFarmSnapshot} from '../snapshot-validator.js';
+import {calculateLotMetrics,findPaddockField} from '../lot-metrics.js';
+import {calculateThi,THI_SOURCE} from '../thermal-index.js';
+import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../environment-inputs.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
-async function openFarm(saved=[],activeId=null){
+async function openFarm(saved=[],activeId=null,seedStorage=[]){
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-  const elements=new Map(),messages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId]]);
+  const elements=new Map(),messages=[],downloads=[],storage=new Map([...seedStorage,['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId]]);
   const drawing=new Proxy({}, {get:()=>()=>{}});
   function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,resolveLotSelection,formatLotArea,validateFarmSnapshot,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -55,6 +58,9 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   ui.deliver('state',otherFarm.snapshot());
   const result=compare(request.snapshot,request.days);
   ui.deliver('comparison',result);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/Não informado/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/Alojamento/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/Mantida/);
   assert.match(ui.elements.get('compareconfig').textContent,/5 animais.*Balanceada.*1,5.*chuva/);
   assert.equal(ui.elements.get('comparison').open,true);
   assert.match(ui.elements.get('results').innerHTML,/Diferença alternativa − base:/);
@@ -91,6 +97,35 @@ test('connected snapshot selection persists real lot IDs through the existing co
   ui.elements.get('comparison').close();
   assert.equal(JSON.parse(ui.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id,'closing results returns to the same farm and lot');
   assert.equal(ui.elements.get('lot-selection-details').innerHTML.includes('eartag-242'),true);
+});
+
+test('environment editing, THI and lot selection persist across reload and appear in existing comparison',async()=>{
+  const ui=await openFarm(),engine=new FarmEngine(702,8),simulatorSnapshot=engine.snapshot();ui.deliver('state',simulatorSnapshot);
+  const farmSnapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
+  farmSnapshot.paddocks[0].domainZoneId='paddock-1';farmSnapshot.lots[0].paddockId='19N';farmSnapshot.farm.environment={temperature_c:{path:'farm.environment.temperature_c',value:24,unit:'°C',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'},relative_humidity_pct:{path:'farm.environment.relative_humidity_pct',value:60,unit:'%',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'}};farmSnapshot.observations.push({path:'paddock.19N.area_ha',value:0.5,unit:'ha',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'área do piquete',measurementId:'fixture-area-0-5ha',observedAt:'2019-01-01T00:00:00Z'},{path:'paddock.19N.trough_length_m',value:12,unit:'m',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'infraestrutura do piquete',measurementId:'fixture-trough-12m',observedAt:'2019-01-01T00:00:00Z'});
+  await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify(farmSnapshot)}]}});
+  const patch={x:28,y:38,w:148,h:104};let point;for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(simulatorSnapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
+  const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
+  assert.equal(ui.elements.get('environment-temperature').value,'24');
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/12,00 m\/animal/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/2,00 animais\/ha/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/5.000,00 m²\/animal/);
+  ui.elements.get('environment-temperature').value='26.8';ui.elements.get('environment-temperature').onchange({target:ui.elements.get('environment-temperature')});
+  ui.elements.get('environment-humidity').value='57.5';ui.elements.get('environment-humidity').onchange({target:ui.elements.get('environment-humidity')});
+  assert.match(ui.elements.get('environment-thi').textContent,/75,0/);
+  const persisted=JSON.parse(ui.storage.get('agroville-environment-scenario-v1'));
+  assert.equal(persisted.baseline.temperatureC.value,24);assert.equal(persisted.current.temperatureC,'26.8');
+  ui.elements.get('lot-compare').onclick();assert.deepEqual(ui.messages.at(-1).snapshot,simulatorSnapshot);
+  ui.deliver('comparison',compare(simulatorSnapshot,30));
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/24 °C/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/26\.8 °C/);
+  assert.match(ui.elements.get('comparison-thermal').innerHTML,/75,0/);
+  assert.match(ui.elements.get('comparison-thermal').innerHTML,/índice ambiental/);
+  ui.elements.get('comparison').close();
+  const reopened=await openFarm([],null,[...ui.storage]);
+  assert.equal(reopened.elements.get('environment-temperature').value,'26.8');
+  assert.match(reopened.elements.get('lot-selection-details').innerHTML,/eartag-242/);
+  assert.equal(JSON.parse(reopened.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id);
 });
 
 test('snapshot integration refuses incomplete contracts without replacing the active lot snapshot',async()=>{
