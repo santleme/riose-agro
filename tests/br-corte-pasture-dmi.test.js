@@ -98,6 +98,41 @@ test('BR-CORTE independent-validation range endpoints remain in-domain', () => {
   assert.equal(predictPastureDmi({bodyWeightKg: maximumBw, adgKgPerDay: maximumAdg, supplementKgDMPerDay: maximumSupplement}).inValidatedDomain, true);
 });
 
+test('each published validation boundary is inclusive and each feasible outside value is flagged', () => {
+  const ranges = Object.fromEntries(Object.entries(table214.domainAssumptions)
+    .filter(([, range]) => Array.isArray(range)));
+  const middle = {
+    bodyWeightKg: 300,
+    adgKgPerDay: 0.5,
+    supplementKgDMPerDay: 1.6
+  };
+  const epsilon = 1e-9;
+
+  for (const [input, [minimum, maximum]] of Object.entries(ranges)) {
+    for (const boundary of [minimum, maximum]) {
+      const result = predictPastureDmi({...middle, [input]: boundary});
+      assert.equal(result.inValidatedDomain, true, `${input}=${boundary} should be inside the inclusive validation range`);
+      assert.equal(result.evidenceStatus, 'within-independent-validation-ranges');
+    }
+
+    const aboveMaximum = predictPastureDmi({...middle, [input]: maximum + epsilon});
+    assert.equal(aboveMaximum.inValidatedDomain, false, `${input} just above ${maximum} should be flagged`);
+    assert.equal(aboveMaximum.evidenceStatus, 'outside-independent-validation-ranges');
+
+    if (input !== 'supplementKgDMPerDay') {
+      const belowMinimum = predictPastureDmi({...middle, [input]: minimum - epsilon});
+      assert.equal(belowMinimum.inValidatedDomain, false, `${input} just below ${minimum} should be flagged`);
+      assert.equal(belowMinimum.evidenceStatus, 'outside-independent-validation-ranges');
+    } else {
+      assert.throws(
+        () => predictPastureDmi({...middle, [input]: minimum - epsilon}),
+        /cannot be negative/,
+        `${input} below zero must be rejected as mathematically invalid`
+      );
+    }
+  }
+});
+
 test('100-animal simulation has deterministic identified animals and supports 30, 60, and 90 days', () => {
   for (const days of [30, 60, 90]) {
     const first = simulateNelorePastureScenario({seed: 42, animalCount: 100, days, initialWeightSpreadKg: 10});
