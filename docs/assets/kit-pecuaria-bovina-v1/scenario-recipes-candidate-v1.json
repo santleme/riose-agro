@@ -1,0 +1,554 @@
+{
+  "version": 1,
+  "library": "riose-brazilian-cattle",
+  "styleVersion": "riose-cattle-isometric-v1",
+  "status": "design-recipes",
+  "note": "Static visual composition recipes only; not runtime simulator scenarios.",
+  "scenarios": [
+    {
+      "id": "cria",
+      "name": "Cria a pasto",
+      "focus": "cow-calf",
+      "zones": [
+        {
+          "id": "residence",
+          "kind": "farmstead",
+          "assets": [
+            [
+              "building-ranch-house-01",
+              1
+            ],
+            [
+              "vegetation-pasture-shade-tree-small-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "maternity-paddock",
+          "kind": "pasture",
+          "assets": [
+            [
+              "pasture-tall-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "animals-nelore-cow-standing-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "animals-nelore-calf-standing-01",
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              "water-trough-metal-01",
+              1
+            ],
+            [
+              "fence-wire-straight-01",
+              [
+                8,
+                12
+              ]
+            ],
+            [
+              "fence-gate-timber-01",
+              1
+            ]
+          ]
+        },
+        {
+          "id": "water-edge",
+          "kind": "water",
+          "assets": [
+            [
+              "water-pond-small-01",
+              1
+            ],
+            [
+              "vegetation-native-shrub-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recria",
+      "name": "Recria rotacionada",
+      "focus": "paddock-rotation",
+      "zones": [
+        {
+          "id": "paddocks",
+          "kind": "pasture",
+          "assets": [
+            [
+              "pasture-medium-01",
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              "pasture-low-grazed-01",
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              "pasture-cattle-trail-01",
+              [
+                1,
+                2
+              ]
+            ],
+            [
+              "fence-wire-straight-01",
+              [
+                12,
+                20
+              ]
+            ],
+            [
+              "fence-wire-corner-01",
+              [
+                4,
+                8
+              ]
+            ],
+            [
+              "fence-gate-timber-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "herd",
+          "kind": "livestock",
+          "assets": [
+            [
+              "animals-nelore-adult-standing-01",
+              [
+                8,
+                14
+              ]
+            ],
+            [
+              "animals-nelore-heifer-standing-01",
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              "animals-nelore-adult-walking-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "water-access",
+          "kind": "water",
+          "assets": [
+            [
+              "water-trough-concrete-01",
+              [
+                2,
+                3
+              ]
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engorda",
+      "name": "Engorda a pasto",
+      "focus": "pasture-finishing",
+      "zones": [
+        {
+          "id": "finishing-paddock",
+          "kind": "pasture",
+          "assets": [
+            [
+              "pasture-medium-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "pasture-low-grazed-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "animals-nelore-herd-grazing-01",
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              "feed-bunk-supplement-01",
+              [
+                1,
+                2
+              ]
+            ],
+            [
+              "feed-mineral-salt-roofed-01",
+              [
+                1,
+                2
+              ]
+            ],
+            [
+              "water-trough-metal-01",
+              2
+            ]
+          ]
+        },
+        {
+          "id": "support",
+          "kind": "operations",
+          "assets": [
+            [
+              "vehicle-ranch-pickup-generic-01",
+              1
+            ],
+            [
+              "road-dirt-straight-01",
+              [
+                4,
+                8
+              ]
+            ],
+            [
+              "building-livestock-shed-open-01",
+              1
+            ],
+            [
+              "vehicle-tractor-support-generic-01",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "handling",
+      "name": "Manejo e pesagem",
+      "focus": "handling-weighing",
+      "zones": [
+        {
+          "id": "handling-yard",
+          "kind": "corral",
+          "assets": [
+            [
+              "corral-modular-pen-01",
+              1
+            ],
+            [
+              "corral-handling-lane-01",
+              1
+            ],
+            [
+              "corral-squeeze-chute-scale-01",
+              1
+            ],
+            [
+              "corral-loading-ramp-01",
+              1
+            ],
+            [
+              "corral-gate-sort-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "access",
+          "kind": "transport",
+          "assets": [
+            [
+              "vehicle-livestock-truck-generic-01",
+              1
+            ],
+            [
+              "vehicle-ranch-pickup-generic-01",
+              1
+            ],
+            [
+              "road-dirt-turn-connector-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "lot",
+          "kind": "livestock",
+          "assets": [
+            [
+              "animals-nelore-adult-walking-01",
+              [
+                4,
+                8
+              ]
+            ],
+            [
+              "animals-nelore-herd-grazing-01",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology-demo",
+      "name": "Fazenda tecnificada",
+      "focus": "herd-monitoring",
+      "zones": [
+        {
+          "id": "reader-network",
+          "kind": "technology",
+          "assets": [
+            [
+              "technology-gateway-antenna-post-01",
+              1
+            ],
+            [
+              "technology-corral-reader-post-01",
+              [
+                1,
+                2
+              ]
+            ],
+            [
+              "technology-handheld-tag-reader-01",
+              1
+            ]
+          ]
+        },
+        {
+          "id": "identified-herd",
+          "kind": "livestock",
+          "assets": [
+            [
+              "technology-smart-ear-tag-01",
+              [
+                4,
+                8
+              ]
+            ],
+            [
+              "technology-monitored-animal-marker-01",
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              "animals-nelore-cow-standing-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "animals-nelore-calf-standing-01",
+              [
+                2,
+                4
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "weighing",
+          "kind": "corral",
+          "assets": [
+            [
+              "corral-squeeze-chute-scale-01",
+              1
+            ],
+            [
+              "corral-modular-pen-01",
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-premium",
+      "name": "Demonstração premium",
+      "focus": "connected-ranch-map",
+      "zones": [
+        {
+          "id": "headquarters",
+          "kind": "farmstead",
+          "assets": [
+            [
+              "building-ranch-house-01",
+              1
+            ],
+            [
+              "building-livestock-shed-open-01",
+              1
+            ],
+            [
+              "vehicle-ranch-pickup-generic-01",
+              1
+            ],
+            [
+              "vehicle-tractor-support-generic-01",
+              1
+            ]
+          ]
+        },
+        {
+          "id": "pasture-mosaic",
+          "kind": "pasture",
+          "assets": [
+            [
+              "pasture-tall-01",
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              "pasture-medium-01",
+              [
+                4,
+                6
+              ]
+            ],
+            [
+              "pasture-low-grazed-01",
+              [
+                2,
+                3
+              ]
+            ],
+            [
+              "pasture-dry-degraded-01",
+              [
+                1,
+                2
+              ]
+            ],
+            [
+              "fence-wire-straight-01",
+              [
+                18,
+                28
+              ]
+            ],
+            [
+              "fence-gate-timber-01",
+              [
+                3,
+                5
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "herd-and-water",
+          "kind": "livestock",
+          "assets": [
+            [
+              "animals-nelore-herd-grazing-01",
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              "animals-nelore-calf-standing-01",
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              "water-pond-small-01",
+              1
+            ],
+            [
+              "water-trough-metal-01",
+              [
+                2,
+                3
+              ]
+            ]
+          ]
+        },
+        {
+          "id": "handling",
+          "kind": "corral",
+          "assets": [
+            [
+              "corral-modular-pen-01",
+              1
+            ],
+            [
+              "corral-squeeze-chute-scale-01",
+              1
+            ],
+            [
+              "vehicle-livestock-truck-generic-01",
+              1
+            ]
+          ]
+        },
+        {
+          "id": "telemetry",
+          "kind": "technology",
+          "assets": [
+            [
+              "technology-gateway-antenna-post-01",
+              1
+            ],
+            [
+              "technology-corral-reader-post-01",
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -58,6 +58,7 @@ const MIME_TYPES = {
   '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.png': 'image/png',
 };
 
 const enumValue = (value, options) => options.includes(value);
@@ -256,9 +257,11 @@ async function serveStatic(pathname, response) {
   let decoded;
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
   const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
-  if (!PUBLIC_FILES.has(relative)) return sendJson(response, 404, {error: 'not_found'});
-  const path = resolve(ROOT, relative);
-  if (path !== ROOT && !path.startsWith(ROOT + sep)) return sendJson(response, 404, {error: 'not_found'});
+  const isProjectAsset = relative.startsWith('assets/') && !relative.split('/').some(part => part === '.' || part === '..');
+  if (!PUBLIC_FILES.has(relative) && !isProjectAsset) return sendJson(response, 404, {error: 'not_found'});
+  const path = isProjectAsset ? resolve(ROOT, 'public', relative) : resolve(ROOT, relative);
+  const allowedRoot = isProjectAsset ? resolve(ROOT, 'public') : ROOT;
+  if (path !== allowedRoot && !path.startsWith(allowedRoot + sep)) return sendJson(response, 404, {error: 'not_found'});
   try {
     const body = await readFile(path);
     response.writeHead(200, {'content-type': MIME_TYPES[extname(path)] ?? 'application/octet-stream', 'x-content-type-options': 'nosniff'});

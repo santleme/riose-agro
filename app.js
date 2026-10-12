@@ -2,6 +2,7 @@ import {metrics,createComparisonManifest,validateComparisonManifest} from './eng
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from './scientific/br_corte_pasture_dmi.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
+if(new URLSearchParams(location.search).has('scenePreview'))document.body.classList.add('scene-preview');
 const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});
 let state                   ,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false;
 const stateRequests=[];
@@ -23,48 +24,54 @@ function saveScenarioData(){try{localStorage.setItem(scenarioStorageKey,JSON.str
 function renderScenarios(){const select=$('scenario-select'),active=activeScenario();select.replaceChildren(new Option('Fazenda atual · não salva',''));for(const scenario of scenarios){const config=scenario.snapshot.config;select.add(new Option(scenario.name+' · D'+(Math.floor(scenario.snapshot.hour/24)+1)+' · '+scenarioNames[config.housing]+' · '+scenarioNames[config.diet],scenario.id));}select.value=activeScenarioId??'';$('scenario-rename').disabled=!active;$('scenario-delete').disabled=!active;$('event-scope').textContent=active?active.name.toLocaleUpperCase('pt-BR'):'AO VIVO';if(active){const snapshot=active.snapshot,c=snapshot.config;$('scenario-status').textContent='D'+String(Math.floor(snapshot.hour/24)+1).padStart(2,'0')+' · '+scenarioNames[c.housing]+' · dieta '+scenarioNames[c.diet]+' · '+number(c.supplement)+' kg MS/animal/dia · '+scenarioNames[c.weather]+' · '+snapshot.events.length+' eventos';}else $('scenario-status').textContent='Cenário atual ainda não salvo.';}
 const cowSvg='<svg viewBox="0 0 18 14" aria-hidden="true"><path fill="#45613e" d="M3 3h10v7H3zM12 2h4v6h-4zM3 9h2v4H3zM10 9h2v4h-2zM1 4h2v4H1z"/><path fill="#edf1e1" d="M4 3h5v3H4zM8 7h5v3H8zM13 2h2v3h-2z"/><path fill="#293b23" d="M15 4h1v1h-1z"/></svg>';
 const canvas=$                   ('map'),ctx=canvas.getContext('2d') ;
-ctx.imageSmoothingEnabled=false;
+ctx.imageSmoothingEnabled=true;
 const terrain=document.createElement('canvas');terrain.width=576;terrain.height=336;const t=terrain.getContext('2d') ;
 function rect(g                         ,x       ,y       ,w       ,h       ,color       ){g.fillStyle=color;g.fillRect(Math.round(x),Math.round(y),w,h);}
 let terrainSeed=9;function rand(){terrainSeed=(Math.imul(1664525,terrainSeed)+1013904223)>>>0;return terrainSeed/4294967296;}
-function tree(x       ,y       ,size=1){rect(t,x-8*size,y+6*size,23*size,8*size,'#48674355');rect(t,x+2*size,y+7*size,4*size,10*size,'#755642');rect(t,x-5*size,y-9*size,16*size,21*size,'#345e3e');rect(t,x-9*size,y-3*size,24*size,10*size,'#3f7147');rect(t,x-2*size,y-13*size,10*size,7*size,'#558149');rect(t,x-5*size,y-6*size,8*size,8*size,'#5e8a4c');rect(t,x+5*size,y+3*size,7*size,6*size,'#2b593a');}
-function fence(x       ,y       ,w       ,h       ){rect(t,x,y,w,2,'#d0b785');rect(t,x,y+5,w,1,'#baa26c');rect(t,x,y+h,w,2,'#d0b785');rect(t,x,y+h+5,w,1,'#a88c5c');for(let a=x;a<=x+w;a+=12){rect(t,a,y-2,2,10,'#e0c796');rect(t,a,y+h-2,2,10,'#dac08b');}rect(t,x,y,2,h,'#baa06c');rect(t,x+w,y,2,h,'#b79b64');for(let a=y;a<y+h;a+=12){rect(t,x-1,a,4,3,'#e0c796');rect(t,x+w-1,a,4,3,'#e0c796');}}
-function house(x       ,y       ,w       ,h       ,roof       ,wall       ){rect(t,x+4,y+6,w,h,'#52684955');rect(t,x,y,w,h,wall);rect(t,x-3,y-6,w+6,15,roof);rect(t,x,y-12,w,7,roof);rect(t,x+5,y-16,w-10,5,roof);rect(t,x+4,y-6,w-8,2,'#ffffff22');for(let xx=x+5;xx<x+w-5;xx+=10){rect(t,xx,y+16,5,7,'#2b4845');rect(t,xx,y+16,5,1,'#ecdaae');}rect(t,x+w/2-4,y+h-13,9,13,'#6b5948');rect(t,x+w/2-3,y+h-11,6,11,'#403b32');}
-function buildTerrain(){
-  rect(t,0,0,576,336,'#7ea466');
-  for(let y=0;y<336;y+=8)for(let x=0;x<576;x+=8){const n=rand();if(n<.42)rect(t,x,y,8,8,n<.2?'#82a86a':'#7b9f60');if(n>.8){rect(t,x+2,y+5,1,2,'#5e874e');rect(t,x+4,y+4,1,3,'#689251');}}
-  // Crossroads and paths connect the four fields with a small farm village.
-  rect(t,0,151,576,20,'#c7b88b');rect(t,179,0,13,336,'#c7b88b');rect(t,353,0,17,336,'#c7b88b');rect(t,375,151,12,150,'#c7b88b');rect(t,352,294,224,14,'#c7b88b');
-  for(let i=0;i<480;i++){const x=rand()*576,y=151+rand()*20;rect(t,x,y,2,1,'#b6a77d');}for(let i=0;i<160;i++)rect(t,353+rand()*17,rand()*336,1,2,'#b8aa7e');
-  const patches=[{x:28,y:38,w:148,h:104},{x:195,y:38,w:147,h:104},{x:28,y:178,w:148,h:105},{x:195,y:178,w:147,h:105}];
-  patches.forEach((p,i)=>{rect(t,p.x+3,p.y+2,p.w-4,p.h-3,['#8bb16b','#98b673','#86a764','#91ae6b'][i]);for(let j=0;j<180;j++){const x=p.x+6+rand()*(p.w-12),y=p.y+7+rand()*(p.h-12);rect(t,x,y,1,2,j%3===0?'#cad390':'#769655');if(j%4===0)rect(t,x+2,y-1,1,3,'#6f944f');}fence(p.x,p.y,p.w,p.h);rect(t,p.x+p.w-18,p.y+14,13,7,'#4f7775');rect(t,p.x+p.w-17,p.y+15,11,4,'#8cbfc0');rect(t,p.x+59,p.y+p.h-1,16,2,'#857548');});
-  // Water, orchards, houses, barns, feed storage and vegetable beds.
-  rect(t,460,44,77,54,'#537e87');rect(t,451,55,95,30,'#537e87');rect(t,457,51,82,40,'#71a7a4');rect(t,465,45,66,52,'#71a7a4');rect(t,470,57,20,2,'#a0c7b1');rect(t,511,78,21,2,'#9dc5b4');rect(t,454,84,8,5,'#acb481');
-  house(393,57,44,45,'#a47851','#ebd9aa');rect(t,419,31,5,16,'#856653');rect(t,388,108,54,3,'#c3b389');rect(t,399,115,5,5,'#c08d64');
-  house(468,115,44,21,'#7c6660','#d3c2a0');
-  // Covered feeding shed: animals occupy the open paddock below its roof.
-  rect(t,389,188,140,97,'#bcae82');for(let i=0;i<90;i++)rect(t,395+rand()*128,192+rand()*83,2,1,'#a89d73');fence(389,188,140,97);rect(t,391,188,136,12,'#79684f');rect(t,390,175,138,16,'#a2634d');rect(t,395,168,128,8,'#b97556');for(let x=394;x<525;x+=7)rect(t,x,175,1,14,'#895442');rect(t,398,202,12,65,'#776f55');rect(t,400,204,8,61,'#d6b85e');
-  rect(t,545,198,17,51,'#677765');rect(t,542,193,23,6,'#899987');rect(t,545,188,17,6,'#b3bc9d');rect(t,548,197,4,43,'#a0ad92');rect(t,545,239,17,4,'#59685a');
-  for(let x=393;x<440;x+=9){rect(t,x,313,7,15,'#806b45');for(let y=314;y<328;y+=5){rect(t,x+1,y,5,2,'#568554');rect(t,x+3,y-1,2,4,'#91a863');}}
-  rect(t,473,311,52,16,'#97805a');for(let x=476;x<523;x+=8){rect(t,x,313,4,12,'#aba45e');rect(t,x,313,4,2,'#c8bc7b');}
-  for(let i=0;i<10;i++)tree(10+i*57,18,0.7);[ [16,82],[18,129],[15,216],[15,268],[23,315],[66,309],[120,317],[164,313],[225,313],[286,315],[330,318],[379,26],[439,20],[551,34],[555,107],[540,137],[564,277] ].forEach(([x,y])=>tree(x,y,.8));
-  // Tractor and farm worker.
-  rect(t,354,215,16,8,'#396e55');rect(t,354,212,8,5,'#518666');rect(t,358,212,4,4,'#b9cabc');rect(t,352,221,6,5,'#384237');rect(t,365,221,5,4,'#384237');rect(t,354,222,2,2,'#989b77');rect(t,366,222,2,2,'#989b77');
-  rect(t,366,148,4,4,'#d9b889');rect(t,365,152,6,6,'#7d8274');rect(t,365,148,6,2,'#c5a46c');rect(t,365,158,2,4,'#4b5143');rect(t,369,158,2,4,'#4b5143');
-  t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>t.fillText('PIQUETE '+String.fromCharCode(65+i),p.x+8,p.y+14));t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);
+const assetFrames={},assetAtlases={};let assetReady=false,terrainVisualKey='',worldScenarioId='demo-premium',worldScenarioData=null;
+function drawAssetOn(g,id,x,y,w,h,anchor='center',rotation=0){const frame=assetFrames[id],atlas=frame&&assetAtlases[frame.atlas];if(!assetReady||!frame||!atlas)return;g.save();g.translate(x,y);g.rotate(rotation);g.drawImage(atlas,frame.x,frame.y,frame.w,frame.h,-w/2,anchor==='bottom'?-h:-h/2,w,h);g.restore();}
+function drawSprite(id,x,y,w,h,anchor='center',rotation=0){drawAssetOn(t,id,x,y,w,h,anchor,rotation);}
+function fence(x,y,w,h){for(let a=x+18;a<x+w-16;a+=38){drawSprite('fence-straight',a,y,42,31,'center');drawSprite('fence-straight',a,y+h,42,31,'center');}for(let a=y+18;a<y+h-12;a+=34){drawSprite('fence-straight',x,a,38,28,'center',Math.PI/2);drawSprite('fence-straight',x+w,a,38,28,'center',Math.PI/2);}}
+const patches=[{x:28,y:38,w:148,h:104},{x:195,y:38,w:147,h:104},{x:28,y:178,w:148,h:105},{x:195,y:178,w:147,h:105}];
+function buildTerrain(seed=9){
+  if(!assetReady){rect(t,0,0,576,336,'#718d5d');return;}
+  const nextKey=[seed,state?.config?.weather??'normal',state?.config?.housing??'pasture',worldScenarioId].join(':');if(nextKey===terrainVisualKey)return;terrainVisualKey=nextKey;terrainSeed=(Number(seed)||9)>>>0;
+  rect(t,0,0,576,336,'#718d5d');
+  // Ground uses illustrated isometric tile sprites; seed controls their variants.
+  for(let row=-1;row<8;row++)for(let col=-1;col<9;col++){
+    const weather=state?.config?.weather??'normal',wet=worldScenarioId==='wet-season'||weather==='rain',dry=worldScenarioId==='dry-season'||weather==='hot';const variant=wet?(rand()<.34?'soil-damp':rand()<.48?'grass-light':'grass-mid'):dry?(rand()<.28?'soil-dry':rand()<.44?'grass-light':'grass-mid'):(rand()<.07?'soil-dry':rand()<.07?'soil-damp':rand()<.44?'grass-light':'grass-mid');
+    drawSprite(variant,col*100-row*50,row*34,104,70,'center');
+  }
+  // Road and field layouts remain generated in world coordinates while the art comes from sprites.
+  for(let x=-20;x<600;x+=88)drawSprite('road-straight',x,162,95,52,'center');
+  for(let y=2;y<350;y+=84)drawSprite('road-straight',361,y,61,93,'center',Math.PI/2);
+  const cattle=worldScenarioId!=='crop-farm',crop=['crop-farm','mixed','demo-premium'].includes(worldScenarioId);
+  patches.forEach((p,i)=>{const cropField=crop&&(worldScenarioId==='crop-farm'||worldScenarioId==='mixed'&&i<2||worldScenarioId==='demo-premium'&&i===1);if(!cropField){fence(p.x,p.y,p.w,p.h);drawSprite('gate',p.x+p.w-17,p.y+14,37,28,'center');if(cattle)drawSprite('water-trough',p.x+p.w-18,p.y+34,24,22,'bottom');}});
+  const cropTiles=worldScenarioId==='crop-farm'?patches.map((p,i)=>[p,i%2?'field-maize-growing':'field-soybean-mature']):worldScenarioId==='mixed'?patches.slice(0,2).map((p,i)=>[p,i?'field-maize-growing':'field-soybean-growing']):worldScenarioId==='demo-premium'?[[patches[1],'field-soybean-mature']]:[];
+  cropTiles.forEach(([p,id])=>drawSprite(id,p.x+p.w/2,p.y+p.h/2,p.w+12,p.h+7,'center'));
+  if(worldScenarioId!=='dry-season')drawSprite('pond',498,73,worldScenarioId==='wet-season'?102:88,worldScenarioId==='wet-season'?70:61,'center');
+  drawSprite('farmhouse',413,99,75,65,'bottom');drawSprite('farmhouse',489,137,65,53,'bottom');
+  drawSprite('shed',460,240,128,91,'bottom');if(crop)drawSprite('silo',553,241,42,77,'bottom');if(cattle)drawSprite('corral-wood-standard-imagegen-v1',453,259,93,74,'bottom');
+  const trees=[[33,29,.56],[92,26,.62],[149,23,.55],[380,27,.56],[442,24,.62],[548,29,.57],[15,100,.55],[16,242,.61],[556,108,.55],[544,289,.58],[65,315,.5],[153,314,.5],[313,317,.5],[566,277,.52],[349,112,.48],[350,247,.5]];
+  trees.filter((_,i)=>worldScenarioId!=='dry-season'||i%3===0).filter((_,i)=>worldScenarioId!=='crop-farm'||i%2===0).forEach(([x,y,s],i)=>drawSprite(i%4===0?'fruit-tree':i%5===0?'shrub':'shade-tree',x,y,66*s,79*s,'bottom'));
+  if(crop)drawSprite('tractor',361,226,49,39,'bottom');if(worldScenarioId==='crop-farm'||worldScenarioId==='mixed')drawSprite('pickup',398,235,42,34,'bottom');
+  if(cattle){drawSprite('feed-trough',417,262,54,29,'bottom');drawSprite('nelore-adult',365,223,47,44,'bottom');}
+  t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>{const cropField=cropTiles.some(([field])=>field===p);t.fillText((cropField?'TALHÃO ':'PIQUETE ')+String.fromCharCode(65+i),p.x+8,p.y+14);});if(cattle){t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);}
 }
-buildTerrain();
+fetch('/assets/manifest.json').then(response=>{if(!response.ok)throw new Error('manifest');return response.json();}).then(manifest=>{
+  let loaded=0,failed=false;const atlases=Object.entries(manifest.atlases);
+  for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length&&!failed){for(const asset of manifest.assets)assetFrames[asset.id]=asset.frame;assetReady=true;buildTerrain();}};atlas.onerror=()=>{failed=true;buildTerrain();};atlas.src=definition.image;}
+}).catch(()=>buildTerrain());
+const worldScenarioSelect=$('world-scenario');
+if(worldScenarioSelect)worldScenarioSelect.addEventListener('change',()=>{worldScenarioId=worldScenarioSelect.value;const scenario=worldScenarioData?.scenarios.find(item=>item.id===worldScenarioId);if(scenario&&$('world-title'))$('world-title').textContent=scenario.name;terrainVisualKey='';buildTerrain(state?.initialSeed??state?.seed??9);});
+fetch('/assets/scenarios.json').then(response=>{if(!response.ok)throw new Error('scenarios');return response.json();}).then(data=>{worldScenarioData=data;if(worldScenarioSelect){worldScenarioSelect.replaceChildren(...data.scenarios.map(scenario=>new Option(scenario.name,scenario.id)));worldScenarioSelect.value=worldScenarioId;}const scenario=data.scenarios.find(item=>item.id===worldScenarioId);if(scenario&&$('world-title'))$('world-title').textContent=scenario.name;terrainVisualKey='';buildTerrain(state?.initialSeed??state?.seed??9);}).catch(()=>{});
 let zoom=1,panX=0,panY=0,drag                                                           =null;
 const positions=new Map                            ();
 function drawCow(a       ,x       ,y       ,time       ){
   const sel=a.id===selected;const resting=a.action==='resting';const dx=resting?0:Math.sin(time*.003+a.id)*.5;
-  x=Math.round(x);y=Math.round(y+dx);rect(ctx,x-6,y+4,15,3,'#40583a55');
-  if(sel){ctx.strokeStyle='#f4e4a1';ctx.lineWidth=1;ctx.strokeRect(x-9,y-8,21,19);}
-  rect(ctx,x-5,y-3,11,7,a.id%4===0?'#a68460':'#e9e3d0');rect(ctx,x-4,y-2,4,3,'#38483a');rect(ctx,x+2,y+1,4,3,'#38483a');
-  rect(ctx,x+5,y-4,5,5,a.id%4===0?'#806343':'#e9e3d0');rect(ctx,x+8,y-3,1,1,'#2a392d');rect(ctx,x+5,y-5,1,2,'#c7b586');rect(ctx,x+9,y-5,1,2,'#c7b586');rect(ctx,x-7,y-3,2,1,'#38483a');
-  if(!resting){rect(ctx,x-4,y+4,2,3,'#43503d');rect(ctx,x+3,y+4,2,3,'#43503d');}
-  if(a.action==='drinking')rect(ctx,x+9,y+2,2,2,'#83c4cb');
-  if(sel){ctx.fillStyle='#f5f3dd';ctx.fillRect(x-18,y-18,39,9);ctx.fillStyle='#3d5635';ctx.font='6px monospace';ctx.fillText(a.name,x-15,y-12);}
+  x=Math.round(x);y=Math.round(y+dx);
+  drawAssetOn(ctx,a.id%4===0?'cow-beef':'cow-dairy',x,y+4,29,27,'bottom');
+  if(sel){ctx.strokeStyle='#f4e4a1';ctx.lineWidth=1;ctx.strokeRect(x-17,y-22,34,28);ctx.fillStyle='#f5f3dd';ctx.fillRect(x-18,y-33,39,9);ctx.fillStyle='#3d5635';ctx.font='6px monospace';ctx.fillText(a.name,x-15,y-27);}
 }
 function draw(time       ){
   ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);ctx.drawImage(terrain,0,0);
@@ -220,7 +227,7 @@ $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!
 $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&&!loadingScenario)$('manifest-file').click();};
 $('manifest-file').onchange=async event=>{const file=event.target.files?.[0];event.target.value='';if(!file||requestCompare||loadingScenario)return;compareBusy(true);try{const manifest=JSON.parse(await file.text());validateComparisonManifest(manifest);setRunning(false);pendingComparison={snapshot:structuredClone(manifest.initialSnapshot),manifest};notify('Manifesto validado. Reproduzindo a comparação salva…');worker.postMessage({type:'replayComparison',manifest});}catch(error){pendingComparison=null;compareBusy(false);notify('Manifesto inválido: '+error.message);}};
 function downloadFile(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
+worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}buildTerrain(state.initialSeed??state.seed);updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
 worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setRunning(false);});
 window.addEventListener('pagehide',saveScenarioData);

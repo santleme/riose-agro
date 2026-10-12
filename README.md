@@ -64,6 +64,10 @@ npm run link:snapshot -- --snapshot farm-snapshot.json --manifest comparison.jso
 
 The command validates the manifest with the engine's existing rules, records the exact file SHA-256 without copying scenario fields, and refuses to overwrite the output. It rejects observed-study slices. Then validate the linked copy with `npm run validate:snapshot -- farm-snapshot-linked.json --manifest comparison.json`; the exact bytes must remain available. Linking does not make a snapshot eligible for simulation.
 
+## Scenario Composer
+
+Open `/assets/scenario-editor/index.html` after running `npm start`. The Composer edits renderer-independent JSON scenes using the shared manifests and includes cut and dairy sample dioramas. Screenshots and Simile comparisons are stored under `public/assets/scenario-editor/previews/`.
+
 ## Project files
 
 - `index.html`, `style.css` — interactive cattle-farm simulator and Scenario Studio

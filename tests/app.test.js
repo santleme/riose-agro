@@ -17,10 +17,10 @@ async function openFarm(saved=[],activeId=null){
     metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
-    window:{addEventListener(){}},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
-    Option:class {},performance:{now:()=>0},requestAnimationFrame(){},setTimeout(){return 1;},clearTimeout(){},
+    window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
+    Option:class {},URLSearchParams,performance:{now:()=>0},requestAnimationFrame(){},setTimeout(){return 1;},clearTimeout(){},
     URL:{createObjectURL(blob){downloads.push(blob);return 'blob:test';},revokeObjectURL(){}},
-    fetch(){fetches++;throw new Error('comparison must not invoke the LLM');},
+    fetch(url){if(String(url).startsWith('/api/')){fetches++;throw new Error('comparison must not invoke the LLM');}return Promise.resolve({ok:false,json:async()=>({})});},
     prompt:()=>null,confirm:()=>true
   });
   const source=(await readFile(new URL('../app.js',import.meta.url),'utf8'))

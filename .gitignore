@@ -1,5 +1,6 @@
 .DS_Store
 Thumbs.db
+.codex/
 node_modules/
 coverage/
 .codex/
@@ -8,3 +9,5 @@ __pycache__/
 .env
 .env.*
 !.env.example
+__pycache__/
+*.py[cod]

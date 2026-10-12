@@ -1,0 +1,26 @@
+[
+  {
+    "name": "imagegen-direct",
+    "path": "assets/previews/pilot-v2/rejected/nelore-imagegen-direct-v1-rejected.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha_zero": 1047318,
+    "alpha_255": 0,
+    "alpha_partial": 525546,
+    "sha256": "cfcc83d844751b74eaf3b677d1f36fbfe02fb443cd7acbe5d80034920dfae63d"
+  },
+  {
+    "name": "flux-kontext",
+    "path": "assets/previews/pilot-v2/rejected/nelore-flux-kontext-v1-rejected.png",
+    "size": [
+      1232,
+      832
+    ],
+    "alpha_zero": 0,
+    "alpha_255": 1025024,
+    "alpha_partial": 0,
+    "sha256": "35a8b28f2dded64c8bdfe9c2b4b8471a0d8da42549a79ffda997c81e15c04c8d"
+  }
+]

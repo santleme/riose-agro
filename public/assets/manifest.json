@@ -1,0 +1,4341 @@
+{
+  "version": 1,
+  "style": "br-farm-diorama-v1",
+  "atlases": {
+    "farm": {
+      "image": "/assets/atlas/farm-starter-atlas.png",
+      "cellLayout": "4x4",
+      "sourceSize": [
+        1536,
+        1024
+      ]
+    },
+    "livestock": {
+      "image": "/assets/atlas/livestock-equipment-atlas.png",
+      "cellLayout": "4x2",
+      "sourceSize": [
+        1774,
+        887
+      ]
+    },
+    "agriculture": {
+      "image": "/assets/atlas/crop-stages-atlas.png",
+      "cellLayout": "4x2",
+      "sourceSize": [
+        1774,
+        887
+      ]
+    },
+    "livestock-approved": {
+      "image": "/assets/atlas/livestock-approved-atlas.png",
+      "cellLayout": "1x1",
+      "sourceSize": [
+        1024,
+        1024
+      ]
+    },
+    "animals-review": {
+      "image": "/assets/atlas/animals-review-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        3072,
+        2688
+      ]
+    },
+    "handling-review": {
+      "image": "/assets/atlas/handling-review-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        2048,
+        1024
+      ]
+    },
+    "environment-review": {
+      "image": "/assets/atlas/environment-review-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        2048,
+        1024
+      ]
+    },
+    "infrastructure-review": {
+      "image": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        2048,
+        1024
+      ]
+    },
+    "technology-review": {
+      "image": "/assets/atlas/technology-review-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        2048,
+        1024
+      ]
+    },
+    "dairy": {
+      "image": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "cellLayout": "free-rects",
+      "sourceSize": [
+        2048,
+        4096
+      ]
+    }
+  },
+  "assets": [
+    {
+      "id": "grass-light",
+      "category": "terrain",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "terrain",
+        "pasture",
+        "tile",
+        "wet-season"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "crop-farm",
+        "mixed",
+        "wet-season",
+        "demo"
+      ],
+      "randomVariants": [
+        "grass-mid",
+        "soil-dry"
+      ],
+      "scaleHints": {
+        "min": 0.2,
+        "default": 0.27,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "terrain",
+      "displaySize": [
+        98,
+        66
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "tile",
+        "collision": false,
+        "autoTile": "pasture"
+      }
+    },
+    {
+      "id": "grass-mid",
+      "category": "terrain",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 384,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "terrain",
+        "pasture",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [
+        "grass-light",
+        "soil-dry"
+      ],
+      "scaleHints": {
+        "min": 0.2,
+        "default": 0.27,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "terrain",
+      "displaySize": [
+        98,
+        66
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "tile",
+        "collision": false,
+        "autoTile": "pasture"
+      }
+    },
+    {
+      "id": "soil-dry",
+      "category": "terrain",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 768,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "terrain",
+        "dry",
+        "drought"
+      ],
+      "scenarioCompatibility": [
+        "dry-season",
+        "extensive-cattle"
+      ],
+      "randomVariants": [
+        "grass-mid"
+      ],
+      "scaleHints": {
+        "min": 0.2,
+        "default": 0.27,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "terrain",
+      "displaySize": [
+        98,
+        66
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "tile",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "soil-damp",
+      "category": "terrain",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "terrain",
+        "wet",
+        "rain"
+      ],
+      "scenarioCompatibility": [
+        "wet-season",
+        "mixed"
+      ],
+      "randomVariants": [
+        "grass-mid"
+      ],
+      "scaleHints": {
+        "min": 0.2,
+        "default": 0.27,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "terrain",
+      "displaySize": [
+        98,
+        66
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "tile",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "road-straight",
+      "category": "infrastructure",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "road",
+        "dirt",
+        "modular"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.26,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "roads",
+      "displaySize": [
+        96,
+        62
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": "road"
+      },
+      "rotationModes": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "id": "road-turn",
+      "category": "infrastructure",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 384,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "road",
+        "bend",
+        "dirt"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.26,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "roads",
+      "displaySize": [
+        96,
+        62
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": "road"
+      },
+      "rotationModes": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "id": "fence-straight",
+      "category": "livestock",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 768,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.86
+      },
+      "footprint": [
+        1,
+        0
+      ],
+      "tags": [
+        "fence",
+        "wire",
+        "wood",
+        "modular"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.16,
+        "max": 0.28
+      },
+      "collision": {
+        "type": "segment",
+        "radius": 2
+      },
+      "defaultLayer": "fences",
+      "displaySize": [
+        92,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "service"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": "fence"
+      }
+    },
+    {
+      "id": "gate",
+      "category": "livestock",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.86
+      },
+      "footprint": [
+        1,
+        0
+      ],
+      "tags": [
+        "fence",
+        "gate",
+        "wood"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.18,
+        "max": 0.3
+      },
+      "collision": {
+        "type": "segment",
+        "radius": 2
+      },
+      "defaultLayer": "fences",
+      "displaySize": [
+        92,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "service"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": "fence"
+      }
+    },
+    {
+      "id": "shade-tree",
+      "category": "vegetation",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "tree",
+        "shade",
+        "native-canopy"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [
+        "fruit-tree"
+      ],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.23,
+        "max": 0.42
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.35
+      },
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "fruit-tree",
+      "category": "vegetation",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 384,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "tree",
+        "orchard",
+        "fruit"
+      ],
+      "scenarioCompatibility": [
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [
+        "shade-tree"
+      ],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.32
+      },
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "shrub",
+      "category": "vegetation",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 768,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "shrub",
+        "flower",
+        "understory"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.2,
+        "max": 0.36
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "pond",
+      "category": "water",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.78
+      },
+      "footprint": [
+        3,
+        2
+      ],
+      "tags": [
+        "water",
+        "pond",
+        "shoreline"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "wet-season",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.18,
+        "default": 0.24,
+        "max": 0.5
+      },
+      "collision": {
+        "type": "polygon",
+        "blocks": [
+          "building"
+        ]
+      },
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "farmhouse",
+      "category": "buildings",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.94
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "tags": [
+        "building",
+        "house",
+        "farmstead"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.16,
+        "default": 0.22,
+        "max": 0.38
+      },
+      "collision": {
+        "type": "rect",
+        "width": 2,
+        "height": 2
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "shed",
+      "category": "buildings",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 384,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        3,
+        2
+      ],
+      "tags": [
+        "building",
+        "shed",
+        "hay",
+        "equipment"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.16,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": {
+        "type": "rect",
+        "width": 3,
+        "height": 2
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "silo",
+      "category": "buildings",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 768,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.98
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "building",
+        "grain",
+        "silo"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.13,
+        "default": 0.2,
+        "max": 0.36
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.45
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "tractor",
+      "category": "vehicles",
+      "file": "/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.94
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "vehicle",
+        "tractor",
+        "machinery"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.12,
+        "default": 0.18,
+        "max": 0.3
+      },
+      "collision": {
+        "type": "rect",
+        "width": 2,
+        "height": 1
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "water-trough",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 0,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "water",
+        "trough",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.18,
+        "max": 0.28
+      },
+      "collision": {
+        "type": "rect",
+        "width": 1,
+        "height": 1
+      },
+      "defaultLayer": "water",
+      "displaySize": [
+        108,
+        82
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "feed-trough",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 443.5,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "feed",
+        "trough",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.19,
+        "max": 0.32
+      },
+      "collision": {
+        "type": "rect",
+        "width": 2,
+        "height": 1
+      },
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "corral",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 887,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": [
+        3,
+        3
+      ],
+      "tags": [
+        "livestock",
+        "corral",
+        "handling"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.4
+      },
+      "collision": {
+        "type": "rect",
+        "width": 3,
+        "height": 3
+      },
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "cow-dairy",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 1330.5,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "animal",
+        "cow",
+        "dairy",
+        "sprite"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [
+        "cow-beef",
+        "calf"
+      ],
+      "scaleHints": {
+        "min": 0.05,
+        "default": 0.14,
+        "max": 0.24
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.4
+      },
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "cow-beef",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 0,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "animal",
+        "cow",
+        "nelore",
+        "beef",
+        "sprite"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [
+        "cow-dairy"
+      ],
+      "scaleHints": {
+        "min": 0.05,
+        "default": 0.14,
+        "max": 0.24
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.4
+      },
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "calf",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 443.5,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "animal",
+        "calf",
+        "livestock",
+        "sprite"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.04,
+        "default": 0.11,
+        "max": 0.2
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.32
+      },
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "pickup",
+      "category": "vehicles",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 887,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "vehicle",
+        "pickup",
+        "farm"
+      ],
+      "scenarioCompatibility": [
+        "all"
+      ],
+      "randomVariants": [
+        "utility-truck"
+      ],
+      "scaleHints": {
+        "min": 0.07,
+        "default": 0.13,
+        "max": 0.23
+      },
+      "collision": {
+        "type": "rect",
+        "width": 2,
+        "height": 1
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "utility-truck",
+      "category": "vehicles",
+      "file": "/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 1330.5,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "vehicle",
+        "truck",
+        "farm"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [
+        "pickup"
+      ],
+      "scaleHints": {
+        "min": 0.07,
+        "default": 0.13,
+        "max": 0.23
+      },
+      "collision": {
+        "type": "rect",
+        "width": 2,
+        "height": 1
+      },
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-prepared",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 0,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "prepared",
+        "soil",
+        "row-crop"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-soybean-emerged",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 443.5,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "seedling",
+        "soybean",
+        "crop-stage"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-soybean-growing",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 887,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "growing",
+        "soybean",
+        "crop-stage"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-soybean-mature",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 1330.5,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "mature",
+        "soybean",
+        "crop-stage"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-maize-growing",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 0,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "growing",
+        "maize",
+        "crop-stage"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-maize-mature",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 443.5,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "mature",
+        "maize",
+        "crop-stage"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-harvested",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 887,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "harvested",
+        "crop",
+        "row-crop"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "field-irrigated",
+      "category": "agriculture",
+      "file": "/assets/atlas/crop-stages-atlas.png",
+      "frame": {
+        "atlas": "agriculture",
+        "x": 1330.5,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "tags": [
+        "crop-field",
+        "irrigated",
+        "crop",
+        "irrigation"
+      ],
+      "scenarioCompatibility": [
+        "crop-farm",
+        "mixed",
+        "demo"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.15,
+        "default": 0.25,
+        "max": 0.42
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "nelore-adult",
+      "category": "livestock",
+      "file": "/assets/atlas/livestock-approved-atlas.png",
+      "frame": {
+        "atlas": "livestock-approved",
+        "x": 4,
+        "y": 4,
+        "w": 1016,
+        "h": 761
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "livestock",
+        "nelore",
+        "adult",
+        "bull",
+        "approved"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.1,
+        "default": 0.24,
+        "max": 0.38
+      },
+      "collision": {
+        "type": "circle",
+        "radius": 0.34
+      },
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": true,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-nelore-cow-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 8,
+        "y": 942,
+        "w": 1219,
+        "h": 884
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "nelore",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-nelore-calf-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 1117,
+        "y": 1834,
+        "w": 981,
+        "h": 751
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "nelore",
+        "calf",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-nelore-heifer-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 8,
+        "y": 1834,
+        "w": 1101,
+        "h": 809
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "nelore",
+        "heifer",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-nelore-bull-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 8,
+        "y": 8,
+        "w": 1263,
+        "h": 926
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "nelore",
+        "bull",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-angus-cow-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 1235,
+        "y": 942,
+        "w": 1310,
+        "h": 870
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "angus",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "livestock-crossbred-cow-idle-imagegen-v1",
+      "category": "livestock",
+      "file": "/assets/atlas/animals-review-atlas-v1.png",
+      "frame": {
+        "atlas": "animals-review",
+        "x": 1279,
+        "y": 8,
+        "w": 1288,
+        "h": 902
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "crossbred",
+        "cow",
+        "adult",
+        "idle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "animals",
+      "displaySize": [
+        76,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "corral-wood-standard-imagegen-v1",
+      "category": "corral",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 8,
+        "y": 8,
+        "w": 580,
+        "h": 371
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "corral",
+        "wood",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "handling-chute-cattle-imagegen-v1",
+      "category": "corral",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 1045,
+        "y": 8,
+        "w": 369,
+        "h": 349
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "chute",
+        "handling",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "handling-alley-cattle-imagegen-v1",
+      "category": "corral",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 596,
+        "y": 8,
+        "w": 441,
+        "h": 357
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "alley",
+        "handling",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "fence-gate-wood-imagegen-v1",
+      "category": "fence",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 295,
+        "y": 387,
+        "w": 379,
+        "h": 303
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "gate",
+        "wood",
+        "modular"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "fences",
+      "displaySize": [
+        92,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "service"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      },
+      "rotationModes": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "id": "fence-wire-wood-post-imagegen-v1",
+      "category": "fence",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 682,
+        "y": 387,
+        "w": 416,
+        "h": 299
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "fence",
+        "wire",
+        "modular"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "fences",
+      "displaySize": [
+        92,
+        58
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "service"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": "fence"
+      },
+      "rotationModes": [
+        0,
+        90,
+        180,
+        270
+      ]
+    },
+    {
+      "id": "feed-trough-hay-imagegen-v1",
+      "category": "feed",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 1106,
+        "y": 387,
+        "w": 423,
+        "h": 261
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "hay",
+        "trough",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "water-trough-round-imagegen-v1",
+      "category": "water",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 1537,
+        "y": 387,
+        "w": 462,
+        "h": 237
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "water",
+        "trough",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "water",
+      "displaySize": [
+        108,
+        82
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "feed-salt-roofed-imagegen-v1",
+      "category": "feed",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 8,
+        "y": 387,
+        "w": 279,
+        "h": 314
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "salt",
+        "feeder",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-scale-electronic-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 1422,
+        "y": 8,
+        "w": 462,
+        "h": 323
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "scale",
+        "electronic",
+        "cattle"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support",
+        "handling"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "pasture-grass-native-imagegen-v1",
+      "category": "pasture",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 8,
+        "y": 448,
+        "w": 450,
+        "h": 305
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "pasture",
+        "grass",
+        "tile"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "terrain-soil-dry-imagegen-v1",
+      "category": "pasture",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 903,
+        "y": 448,
+        "w": 425,
+        "h": 297
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "soil",
+        "dry",
+        "terrain"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "terrain-mud-imagegen-v1",
+      "category": "pasture",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 466,
+        "y": 448,
+        "w": 429,
+        "h": 305
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "mud",
+        "wet",
+        "terrain"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "water-pond-imagegen-v1",
+      "category": "water",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 1500,
+        "y": 8,
+        "w": 444,
+        "h": 320
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "pond",
+        "water",
+        "shoreline"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "water-reservoir-imagegen-v1",
+      "category": "water",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 1055,
+        "y": 8,
+        "w": 437,
+        "h": 321
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "reservoir",
+        "water",
+        "farm"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "handling",
+      "displaySize": [
+        130,
+        92
+      ],
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "road-rural-dirt-imagegen-v1",
+      "category": "infrastructure",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 508,
+        "y": 8,
+        "w": 539,
+        "h": 373
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "road",
+        "dirt",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "roads",
+      "displaySize": [
+        96,
+        62
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "handling",
+        "service",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": "road"
+      }
+    },
+    {
+      "id": "vegetation-tree-shade-imagegen-v1",
+      "category": "vegetation",
+      "file": "/assets/atlas/environment-review-atlas-v1.png",
+      "frame": {
+        "atlas": "environment-review",
+        "x": 8,
+        "y": 8,
+        "w": 492,
+        "h": 432
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "tree",
+        "shade",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "pasture",
+      "displaySize": [
+        112,
+        128
+      ],
+      "allowedZones": [
+        "pasture",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "building-farmhouse-imagegen-v1",
+      "category": "building",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 8,
+        "y": 8,
+        "w": 547,
+        "h": 414
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "farmhouse",
+        "brazil",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "building-shed-imagegen-v1",
+      "category": "building",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 563,
+        "y": 8,
+        "w": 505,
+        "h": 407
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "shed",
+        "barn",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "building-workshop-imagegen-v1",
+      "category": "building",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 8,
+        "y": 430,
+        "w": 485,
+        "h": 392
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "workshop",
+        "storage",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "vehicle-pickup-rural-imagegen-v1",
+      "category": "vehicle",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 902,
+        "y": 430,
+        "w": 497,
+        "h": 287
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "pickup",
+        "rural",
+        "utility"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "vehicle-livestock-truck-imagegen-v1",
+      "category": "vehicle",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 1076,
+        "y": 8,
+        "w": 568,
+        "h": 403
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "livestock-truck",
+        "transport",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "vehicle-tractor-imagegen-v1",
+      "category": "vehicle",
+      "file": "/assets/atlas/infrastructure-review-atlas-v1.png",
+      "frame": {
+        "atlas": "infrastructure-review",
+        "x": 501,
+        "y": 430,
+        "w": 393,
+        "h": 318
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "tractor",
+        "farm",
+        "rural"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "buildings",
+      "displaySize": [
+        172,
+        128
+      ],
+      "allowedZones": [
+        "service",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-ear-tag-rfid-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 8,
+        "y": 523,
+        "w": 358,
+        "h": 368
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "rfid",
+        "ear-tag",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-reader-handheld-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 1160,
+        "y": 8,
+        "w": 305,
+        "h": 483
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "reader",
+        "rfid",
+        "handheld"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-gateway-antenna-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 8,
+        "y": 8,
+        "w": 320,
+        "h": 507
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "gateway",
+        "antenna",
+        "iot"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-monitor-station-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 834,
+        "y": 8,
+        "w": 318,
+        "h": 502
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "monitoring",
+        "station",
+        "weather"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-scale-electronic-full-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 1473,
+        "y": 8,
+        "w": 485,
+        "h": 392
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "scale",
+        "electronic",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "technology-traceability-system-imagegen-v1",
+      "category": "technology",
+      "file": "/assets/atlas/technology-review-atlas-v1.png",
+      "frame": {
+        "atlas": "technology-review",
+        "x": 336,
+        "y": 8,
+        "w": 490,
+        "h": 504
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "traceability",
+        "gateway",
+        "livestock"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.22,
+        "max": 0.4
+      },
+      "collision": null,
+      "defaultLayer": "technology",
+      "displaySize": [
+        78,
+        86
+      ],
+      "allowedZones": [
+        "tech",
+        "dairy",
+        "support"
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-milking-parlor",
+      "semanticId": "dairy.milking.parlor.imagegen.v1",
+      "category": "building",
+      "family": "dairy-infrastructure",
+      "frame": {
+        "atlas": "dairy",
+        "x": 1136,
+        "y": 2416,
+        "w": 894,
+        "h": 559
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+      "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+      "spriteFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milking-parlor.png",
+      "spriteSha256": "4dbf86990f5a729c8c45605244308336101c48c51e19515ec3522d1c916b984d",
+      "dimensions": [
+        894,
+        559
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "tags": [
+        "dairy",
+        "milking",
+        "parlor"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "buildings",
+      "allowedZones": [
+        "dairy",
+        "service"
+      ],
+      "displaySize": [
+        188,
+        136
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-milk-chilling-tank",
+      "semanticId": "dairy.milk.chilling.tank.imagegen.v1",
+      "category": "building",
+      "family": "dairy-infrastructure",
+      "frame": {
+        "atlas": "dairy",
+        "x": 859,
+        "y": 3087,
+        "w": 580,
+        "h": 439
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+      "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+      "spriteFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milk-chilling-tank.png",
+      "spriteSha256": "74505610a27ce2d3cffaba2eb5f4d937af7fa83396937647842b3cf1855849ba",
+      "dimensions": [
+        580,
+        439
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "tags": [
+        "dairy",
+        "milk",
+        "cooling-tank"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "water",
+      "allowedZones": [
+        "dairy",
+        "service"
+      ],
+      "displaySize": [
+        108,
+        82
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-waiting-pen",
+      "semanticId": "dairy.waiting.pen.imagegen.v1",
+      "category": "building",
+      "family": "dairy-infrastructure",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 3609,
+        "w": 688,
+        "h": 424
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+      "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+      "spriteFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-waiting-pen.png",
+      "spriteSha256": "4a8aa84934ed0098aeea4ee9836958555daf875dcede0c76a5b99c039cbd95a7",
+      "dimensions": [
+        688,
+        424
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "tags": [
+        "dairy",
+        "waiting-pen",
+        "corral"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "handling",
+      "allowedZones": [
+        "handling",
+        "dairy"
+      ],
+      "displaySize": [
+        164,
+        100
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-barn",
+      "semanticId": "dairy.barn.imagegen.v1",
+      "category": "building",
+      "family": "dairy-infrastructure",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 3087,
+        "w": 843,
+        "h": 514
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
+      "sourceSha256": "694a2c92889fb3bc55fd19e90302d0eb43f39cb761e4a303fb9cef489cec3fad",
+      "spriteFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-barn.png",
+      "spriteSha256": "aa3d6f232b2e6a2a679f201622f086f71b91b135a746b8b9996d59146855eb1e",
+      "dimensions": [
+        843,
+        514
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "tags": [
+        "dairy",
+        "barn",
+        "free-stall"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "buildings",
+      "allowedZones": [
+        "dairy",
+        "service"
+      ],
+      "displaySize": [
+        188,
+        136
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-holstein-cow",
+      "semanticId": "dairy.holstein.cow.imagegen.v1",
+      "category": "livestock",
+      "family": "livestock-dairy-core",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 1637,
+        "w": 1087,
+        "h": 771
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
+      "sourceSha256": "0d2239d62f96a1186fb2e6eaed646274f840278dfc0fc9b015b9f6a52ccdd671",
+      "spriteFile": "assets/modules/livestock-dairy/assets/animals/dairy-holstein-cow.png",
+      "spriteSha256": "c6b68cadb145d87fb4f9cbe4ed5b41d19f466e83019ee00fee946743ca0277dc",
+      "dimensions": [
+        1087,
+        771
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "dairy",
+        "holstein",
+        "cow",
+        "adult"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "animals",
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "displaySize": [
+        60,
+        46
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-girolando-cow",
+      "semanticId": "dairy.girolando.cow.imagegen.v1",
+      "category": "livestock",
+      "family": "livestock-dairy-core",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 8,
+        "w": 1164,
+        "h": 831
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/animals/girolando-cow-imagegen-original-v1.png",
+      "sourceSha256": "0de32f39c65fc752584e9760f7657ba1dd8a9f4de9e86cddd6a5c847e0450c07",
+      "spriteFile": "assets/modules/livestock-dairy/assets/animals/dairy-girolando-cow.png",
+      "spriteSha256": "98b859a1dcbbb097f411ba86b03d149910e903ea79a4120a92abf94c1c3929b4",
+      "dimensions": [
+        1164,
+        831
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "dairy",
+        "girolando",
+        "cow",
+        "adult"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "animals",
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "displaySize": [
+        60,
+        46
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-heifer",
+      "semanticId": "dairy.heifer.imagegen.v1",
+      "category": "livestock",
+      "family": "livestock-dairy-core",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 847,
+        "w": 1070,
+        "h": 782
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-imagegen-original-v1.png",
+      "sourceSha256": "f3380c6b82f7d24c2c82e2670ed13f5babe170d02d194767d6e59038a6489c9c",
+      "spriteFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer.png",
+      "spriteSha256": "0b1b99678bc6203f414610e984a7fe2957c23fef1836bb7b4804684ac44d6eb5",
+      "dimensions": [
+        1070,
+        782
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "dairy",
+        "heifer"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "animals",
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "displaySize": [
+        76,
+        58
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-heifer-calf",
+      "semanticId": "dairy.heifer.calf.imagegen.v1",
+      "category": "livestock",
+      "family": "livestock-dairy-core",
+      "frame": {
+        "atlas": "dairy",
+        "x": 1103,
+        "y": 1637,
+        "w": 909,
+        "h": 750
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-calf-imagegen-original-v1.png",
+      "sourceSha256": "7ca7a24809d8b9ea8bd4ceeeb65b6aa5e4c1160e40ba942f45c5536013df55d0",
+      "spriteFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer-calf.png",
+      "spriteSha256": "d96eacd68a8ad98c7af07985ea40592b1811b3ae4c048ea058546fc776e2b98b",
+      "dimensions": [
+        909,
+        750
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "dairy",
+        "calf"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "animals",
+      "allowedZones": [
+        "pasture",
+        "handling",
+        "dairy"
+      ],
+      "displaySize": [
+        76,
+        58
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    },
+    {
+      "id": "dairy-activity-collar",
+      "semanticId": "dairy.activity.collar.imagegen.v1",
+      "category": "technology",
+      "family": "dairy-technology",
+      "frame": {
+        "atlas": "dairy",
+        "x": 8,
+        "y": 2416,
+        "w": 1120,
+        "h": 663
+      },
+      "sourceFile": "assets/modules/livestock-dairy/source/technology/activity-rumination-collar-imagegen-v1.png",
+      "sourceSha256": "cb6ecb047100c906852c6d1f564e20e78b38ec723038a97ccafa48efe8918719",
+      "spriteFile": "assets/modules/livestock-dairy/assets/technology/dairy-activity-collar.png",
+      "spriteSha256": "ad877413e359e28621da50b5d112a510a2065dc9fc39c17ad1c459911402cbe9",
+      "dimensions": [
+        1120,
+        663
+      ],
+      "alpha": true,
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "tags": [
+        "dairy",
+        "sensor",
+        "activity",
+        "rumination",
+        "collar"
+      ],
+      "status": "REVIEW",
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "file": "/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png",
+      "scenarioCompatibility": [
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "randomVariants": [],
+      "scaleHints": {
+        "min": 0.08,
+        "default": 0.14,
+        "max": 0.3
+      },
+      "defaultLayer": "technology",
+      "allowedZones": [
+        "dairy",
+        "tech",
+        "support"
+      ],
+      "displaySize": [
+        66,
+        50
+      ],
+      "placementRules": {
+        "mode": "footprint",
+        "collision": false,
+        "autoTile": null
+      }
+    }
+  ]
+}
