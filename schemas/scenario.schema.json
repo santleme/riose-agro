@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:riose-agro:scenario:v1",
+  "title": "Reproducible farm simulation scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["scenarioId", "engine", "run", "assertions"],
+  "properties": {
+    "scenarioId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+    },
+    "description": {"type": "string"},
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "animalCount"],
+      "properties": {
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "animalCount": {"type": "integer", "minimum": 1, "maximum": 10000}
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "diet": {"enum": ["pasture", "balanced", "concentrate"]},
+        "housing": {"enum": ["pasture", "barn"]},
+        "weather": {"enum": ["normal", "hot", "rain"]},
+        "supplement": {"type": "number", "minimum": 0, "maximum": 4}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hours"],
+      "properties": {"hours": {"type": "integer", "minimum": 1, "maximum": 8760}}
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "operator", "value"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^(?:/(?:[^~/]|~[01])*)+$"},
+          "operator": {"enum": ["equals", "greaterThan", "lessThan", "approximatelyEquals"]},
+          "value": {"anyOf": [{"type": "number"}, {"type": "string"}, {"type": "boolean"}, {"type": "null"}]},
+          "tolerance": {"type": "number", "minimum": 0}
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {"operator": {"enum": ["greaterThan", "lessThan", "approximatelyEquals"]}},
+              "required": ["operator"]
+            },
+            "then": {"properties": {"value": {"type": "number"}}}
+          },
+          {
+            "if": {
+              "properties": {"operator": {"const": "approximatelyEquals"}},
+              "required": ["operator"]
+            },
+            "then": {"properties": {"tolerance": {"type": "number", "minimum": 0}}}
+          },
+          {
+            "if": {
+              "properties": {"operator": {"not": {"const": "approximatelyEquals"}}},
+              "required": ["operator"]
+            },
+            "then": {"not": {"required": ["tolerance"]}}
+          }
+        ]
+      }
+    }
+  }
+}

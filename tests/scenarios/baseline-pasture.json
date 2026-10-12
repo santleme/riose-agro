@@ -1,0 +1,22 @@
+{
+  "scenarioId": "baseline-pasture",
+  "description": "One-day deterministic pasture baseline.",
+  "engine": {
+    "seed": 417,
+    "animalCount": 3
+  },
+  "configuration": {
+    "diet": "pasture",
+    "housing": "pasture",
+    "weather": "normal",
+    "supplement": 0
+  },
+  "run": {
+    "hours": 24
+  },
+  "assertions": [
+    {"path": "/state/hour", "operator": "equals", "value": 30},
+    {"path": "/metrics/weight", "operator": "greaterThan", "value": 300},
+    {"path": "/metrics/intake/totalKgDM", "operator": "greaterThan", "value": 0}
+  ]
+}
