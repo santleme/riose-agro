@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "replicated-scenario-summary",
+    "source": {
+      "revision": "20725589ae7b085d7d32845a2af6e8cb4f97dc9c",
+      "dirty": true
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": null,
+    "populations": [],
+    "runCounts": [
+      1000,
+      10000,
+      100000
+    ],
+    "outputsPerRun": 2,
+    "groups": 2,
+    "resultsAreSynthetic": true
+  },
+  "configuration": {
+    "warmupRuns": 1,
+    "repetitions": 7,
+    "aggregation": "sample SD and Type 7 descriptive quantiles"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "summary_runtime",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 11.085324999999997,
+            "spread": {
+              "min": 1.466200999999998,
+              "max": 143.7952160000001,
+              "range": 142.32901500000008
+            }
+          },
+          "details": "Per-size measurements are in results."
+        },
+        {
+          "phase": "layout",
+          "metric": "peak_observed_heap_used",
+          "unit": "byte",
+          "statistics": {
+            "sampleCount": 3,
+            "values": [
+              5936776,
+              13948352,
+              86321352
+            ]
+          },
+          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs."
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "results": [
+    {
+      "runs": 1000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 1.466200999999998,
+        "spread": {
+          "min": 1.2625730000000033,
+          "max": 2.3818979999999996,
+          "range": 1.1193249999999964
+        }
+      },
+      "heapUsedBytes": 5936776
+    },
+    {
+      "runs": 10000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 11.085324999999997,
+        "spread": {
+          "min": 10.657347999999999,
+          "max": 11.875861,
+          "range": 1.2185130000000015
+        }
+      },
+      "heapUsedBytes": 13948352
+    },
+    {
+      "runs": 100000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 143.7952160000001,
+        "spread": {
+          "min": 128.25463200000002,
+          "max": 160.89096399999994,
+          "range": 32.636331999999925
+        }
+      },
+      "heapUsedBytes": 86321352
+    }
+  ],
+  "limitations": [
+    "Synthetic inputs isolate reducer cost and are not scenario-engine runtime.",
+    "Heap is sampled process heap after each workload, not a per-call allocation profile."
+  ]
+}

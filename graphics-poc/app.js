@@ -1,5 +1,6 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
+import {composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
+import {accountAnimalVisibility, assertVisibleAnimalMembership, clusterFarAnimals, selectionForVisualEntry, visualEntryContainsSelection} from './herd-visual-model.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 import {assertSceneCommandAllowed, sceneExecutionAvailability, unavailableExecutionState} from './execution-eligibility.js';
 
@@ -39,7 +40,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, selectedAnimalIds: [], tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -169,7 +170,6 @@ function isVisible(entry) {
 function refreshScene() {
   if (!state.scene) return;
   const started = performance.now(), terrain = [], objects = [], animals = [], visibleByLod = {near: 0, medium: 0, far: 0};
-  let culledAnimalCount = 0;
   if (state.activeLayers.terrain) {
     for (const cell of state.terrainCells) {
       const position = isoPosition(cell.column + .5, cell.row + .5);
@@ -177,9 +177,10 @@ function refreshScene() {
       if (isVisible(entry)) terrain.push(entry);
     }
   }
-  for (const entry of entityEntries()) {
+  const allEntries = entityEntries(), simulatedAnimalIds = allEntries.map(entry => entry.animalId).filter(Number.isSafeInteger);
+  for (const entry of allEntries) {
     if (!state.activeLayers[entry.kind]) continue;
-    if (!isVisible(entry)) { if (entry.animalId) culledAnimalCount++; continue; }
+    if (!isVisible(entry)) continue;
     if (entry.kind === 'livestock') {
       const point = screenPoint(entry.x, entry.y);
       if (entry.animalId) {
@@ -193,11 +194,13 @@ function refreshScene() {
     } else objects.push(entry);
   }
   const {individual, clusters} = clusterFarAnimals(animals);
+  assertVisibleAnimalMembership(animals, individual, clusters);
+  const accounting = accountAnimalVisibility(simulatedAnimalIds, individual, clusters);
   const ordered = [...objects, ...individual, ...clusters].sort((a, b) => a.depth - b.depth || a.x - b.x);
   state.visible = [...terrain, ...ordered];
   state.updateMs = performance.now() - started;
-  state.visibleAnimalCount = animals.length;
-  state.culledAnimalCount = culledAnimalCount;
+  state.visibleAnimalCount = accounting.visibleAnimalIds.length;
+  state.culledAnimalCount = accounting.culledAnimalIds.length;
   state.visibleByLod = visibleByLod;
   state.herdClusterCount = clusters.length;
   state.animalRenderUnits = individual.length + clusters.length;
@@ -226,7 +229,7 @@ function drawCanvasEntry(ctx, entry, time) {
     ctx.fillStyle = 'rgba(23, 62, 50, .94)'; ctx.beginPath(); ctx.roundRect(badgeX, badgeY, badgeWidth, 14, 6); ctx.fill();
     ctx.fillStyle = '#f7f4dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, badgeY + 7);
   }
-  if (state.selection === entry.id && state.activeLayers.overlays) {
+  if ((state.selection === entry.id || visualEntryContainsSelection(entry, state.selectedAnimalIds)) && state.activeLayers.overlays) {
     const bounds = screenBounds(entry);
     ctx.strokeStyle = '#fff0a6'; ctx.lineWidth = 2; ctx.strokeRect(bounds.left - 4, bounds.top - 4, bounds.right - bounds.left + 8, bounds.bottom - bounds.top + 8);
   }
@@ -388,9 +391,10 @@ function syncPixiScene() {
       badge.position.set(entry.x, entry.y - spriteHeight - 15 / state.camera.zoom); badge.scale.set(1 / state.camera.zoom); layers.overlays.addChild(badge);
     }
   }
-  if (state.activeLayers.overlays && state.selection) {
-    const selected = state.visible.find(item => item.id === state.selection);
-    if (selected) {
+  if (state.activeLayers.overlays && (state.selection || state.selectedAnimalIds.length)) {
+    const selected = state.visible.filter(item => item.id === state.selection || visualEntryContainsSelection(item, state.selectedAnimalIds));
+    for (const entry of selected) {
+      const selected = entry;
       const meta = frameBox(selected.assetId), outline = new (awaitGraphics())();
       const w = meta.w * meta.scale, h = meta.h * meta.scale;
       outline.rect(selected.x - w * meta.anchor.x - 4, selected.y - h * meta.anchor.y - 4, w + 8, h + 8).stroke({color: 0xffeaa0, width: 2});
@@ -483,12 +487,12 @@ async function endPointer(event) {
     if (meta.kind === 'livestock') {
       const id = `${meta.assetId}-${Date.now()}`;
       state.scene.entities.push({entityId: id, kind: 'animal', position: {x: cell.x + .5, y: cell.y + .5, unit: 'grid-cell'}, asset: sceneAssetReference(meta.assetId, state.renderManifest, state.assetSourceManifest), state: {stateId: 'idle'}, representationMode: 'sampled-miniature'});
-      state.selection = id; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
+      state.selection = id; state.selectedAnimalIds = []; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
     }
     const prefab = {prefabId: `${meta.assetId}-${Date.now()}`, assetId: meta.assetId, position: {x: cell.x, y: cell.y, unit: 'grid-cell'}, footprint: meta.footprint, layer: 'infrastructure', state: {stateId: 'default'}, blocking: meta.blocking};
     const validation = placementValidation(prefab, prefab.position, state.scene.projection.columns, state.scene.projection.rows, state.scene.prefabs, state.scene.zones);
     if (!validation.valid) { $('scene-status').textContent = placementMessage(validation.reason); return; }
-    state.scene.prefabs.push(prefab); state.selection = prefab.prefabId; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
+    state.scene.prefabs.push(prefab); state.selection = prefab.prefabId; state.selectedAnimalIds = []; state.tool = null; persistScene(); refreshScene(); updateHud(); return;
   }
   if (state.tool?.compositionId === 'dairy-service') {
     const recipe = [
@@ -512,14 +516,19 @@ function selectAt(world) {
     const d = Math.hypot(entry.x - world.x, entry.y - world.y);
     if (d < min && d < (entry.kind === 'livestock' ? 26 : 45)) { min = d; nearest = entry; }
   }
-  const animalId = nearest?.kind === 'herd-cluster' ? nearest.animalIds[0] : nearest?.animalId;
-  state.selection = animalId ? `animal-${animalId}` : nearest?.id ?? null;
+  const visualSelection = selectionForVisualEntry(nearest);
+  const animalId = visualSelection.kind === 'animal' ? visualSelection.animalIds[0] : null;
+  state.selectedAnimalIds = visualSelection.animalIds;
+  state.selection = nearest?.kind === 'herd-cluster' ? nearest.id : animalId ? `animal-${animalId}` : nearest?.id ?? null;
   updateSelectionActions();
+  $('selected-members').textContent = state.selectedAnimalIds.length
+    ? state.selectedAnimalIds.join(', ')
+    : 'Nenhum animal selecionado.';
   if (nearest?.kind === 'herd-cluster') {
     state.camera.zoom = Math.min(4, Math.max(state.camera.zoom + .4, state.camera.zoom * 1.25));
     state.camera.x = state.canvasSizing.width / 2 - nearest.x * state.camera.zoom;
     state.camera.y = state.canvasSizing.height / 2 - nearest.y * state.camera.zoom;
-    $('selected-label').textContent = `Lote com ${nearest.count.toLocaleString('pt-BR')} animais · aproximando do #${animalId}`;
+    $('selected-label').textContent = `Lote com ${nearest.count.toLocaleString('pt-BR')} animais · IDs preservados ao aproximar`;
   } else $('selected-label').textContent = nearest ? (nearest.animalId ? `Animal #${nearest.animalId} · ${nearest.weight.toFixed(1)} kg · estado ${nearest.actionCode}` : `Objeto ${nearest.id} · ${nearest.assetId}`) : 'Nenhum objeto nesta posição';
   refreshScene();
   if (animalId) state.worker?.postMessage({type: 'select', animalId});
@@ -535,6 +544,8 @@ function placementMessage(reason) {
 
 function updateSelectionActions() {
   $('rotate-selection').disabled = !state.scene?.prefabs.some(item => item.prefabId === state.selection);
+  const members = $('selected-members');
+  if (members) members.textContent = state.selectedAnimalIds.length ? state.selectedAnimalIds.join(', ') : 'Nenhum animal selecionado.';
 }
 
 function rotateSelection() {
@@ -576,7 +587,7 @@ async function selectScene(domain) {
   const sameGrid = savedScene?.projection?.columns === base.projection.columns && savedScene?.projection?.rows === base.projection.rows;
   state.scene = savedScene?.schemaVersion === base.schemaVersion && sameGrid ? savedScene : structuredClone(base);
   normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest);
-  state.selectedDomain = domain; state.selection = null; state.tool = null; state.view = null;
+  state.selectedDomain = domain; state.selection = null; state.selectedAnimalIds = []; state.tool = null; state.view = null;
   $('domain-module').value = domain;
   $('scene-picker').value = domain;
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, domain));

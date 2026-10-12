@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
+
+test('scenario directory runner resumes verified records and reruns a corrupt per-scenario result', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'riose-scenario-resume-'));
+  t.after(() => rm(root, {recursive: true, force: true}));
+  const scenarios = join(root, 'scenarios'), results = join(root, 'results');
+  const {mkdir} = await import('node:fs/promises');
+  await mkdir(scenarios, {recursive: true});
+  const fixture = await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8');
+  await writeFile(join(scenarios, 'baseline.json'), fixture);
+
+  const first = await runScenarioDirectoryResumable(scenarios, results);
+  assert.equal(first.length, 1);
+  assert.equal(first[0].passed, true);
+  const resultPath = join(results, 'baseline.result.json');
+  const firstResult = JSON.parse(await readFile(resultPath, 'utf8'));
+  assert.equal(firstResult.passed, true);
+
+  const manifestPath = join(results, 'batch-manifest.json');
+  const resultJournalPath = join(results, 'batch-results.jsonl');
+  const manifestBefore = JSON.parse(await readFile(manifestPath, 'utf8'));
+  await runScenarioDirectoryResumable(scenarios, results);
+  assert.equal((await readFile(resultJournalPath, 'utf8')).trim().split('\n').length, 1);
+
+  await writeFile(resultPath, '{corrupted');
+  const repaired = await runScenarioDirectoryResumable(scenarios, results);
+  assert.equal(repaired[0].passed, true);
+  assert.deepEqual(JSON.parse(await readFile(resultPath, 'utf8')), firstResult);
+  const manifestAfter = JSON.parse(await readFile(manifestPath, 'utf8'));
+  assert.equal(manifestAfter.runs[0].status, 'completed');
+  assert.equal(manifestBefore.runs[0].outputDigest, manifestAfter.runs[0].outputDigest);
+});

@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "resumable-scenario-journal",
+    "source": {
+      "revision": "20725589ae7b085d7d32845a2af6e8cb4f97dc9c",
+      "dirty": true
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": null,
+    "populations": [],
+    "runCounts": [
+      25
+    ],
+    "resultBytesPerRun": 64,
+    "scenariosAreSynthetic": true
+  },
+  "configuration": {
+    "warmupRuns": 0,
+    "repetitions": 5,
+    "atomicMode": "same-filesystem temp write and rename"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "journal_batch_time",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 2,
+            "median": 66.28364450000002,
+            "spread": {
+              "min": 40.625213,
+              "max": 91.94207600000004,
+              "range": 51.31686300000004
+            }
+          },
+          "details": [
+            {
+              "runCount": 25,
+              "simulatedRunMs": 0,
+              "journalBatchMs": {
+                "sampleCount": 5,
+                "median": 40.625213,
+                "spread": {
+                  "min": 37.81926199999998,
+                  "max": 49.98998999999999,
+                  "range": 12.170728000000011
+                }
+              },
+              "executionBudgetMs": 0,
+              "approximateJournalOverheadMs": 40.625213,
+              "heapUsedBytes": 6382008
+            },
+            {
+              "runCount": 25,
+              "simulatedRunMs": 2,
+              "journalBatchMs": {
+                "sampleCount": 5,
+                "median": 91.94207600000004,
+                "spread": {
+                  "min": 91.88962799999996,
+                  "max": 97.220889,
+                  "range": 5.33126100000004
+                }
+              },
+              "executionBudgetMs": 50,
+              "approximateJournalOverheadMs": 41.94207600000004,
+              "heapUsedBytes": 6577208
+            }
+          ]
+        },
+        {
+          "phase": "layout",
+          "metric": "heap_used_after_batch",
+          "unit": "byte",
+          "statistics": {
+            "sampleCount": 2,
+            "maximum": 6577208
+          }
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "results": [
+    {
+      "runCount": 25,
+      "simulatedRunMs": 0,
+      "journalBatchMs": {
+        "sampleCount": 5,
+        "median": 40.625213,
+        "spread": {
+          "min": 37.81926199999998,
+          "max": 49.98998999999999,
+          "range": 12.170728000000011
+        }
+      },
+      "executionBudgetMs": 0,
+      "approximateJournalOverheadMs": 40.625213,
+      "heapUsedBytes": 6382008
+    },
+    {
+      "runCount": 25,
+      "simulatedRunMs": 2,
+      "journalBatchMs": {
+        "sampleCount": 5,
+        "median": 91.94207600000004,
+        "spread": {
+          "min": 91.88962799999996,
+          "max": 97.220889,
+          "range": 5.33126100000004
+        }
+      },
+      "executionBudgetMs": 50,
+      "approximateJournalOverheadMs": 41.94207600000004,
+      "heapUsedBytes": 6577208
+    }
+  ],
+  "limitations": [
+    "Synthetic runs isolate journal overhead; scenario engine execution time and result size vary.",
+    "Heap is process heap after a batch with forced GC where available, not peak RSS or per-run allocation.",
+    "Approximate overhead subtracts only the configured synthetic execution delay."
+  ]
+}

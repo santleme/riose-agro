@@ -60,20 +60,7 @@ export function toolAvailableInSystem(toolSystem, domain) {
   return toolSystem === domain || toolSystem === 'both';
 }
 
-export function clusterFarAnimals(entries, cellWidth = 48, cellHeight = 36) {
-  const individual = [], groups = new Map();
-  for (const entry of entries) {
-    if (entry.lod !== 'far') { individual.push(entry); continue; }
-    const column = Math.floor(entry.screenX / cellWidth), row = Math.floor(entry.screenY / cellHeight), key = `${column}:${row}`;
-    let group = groups.get(key);
-    if (!group) { group = {id: `herd:${key}`, kind: 'herd-cluster', assetId: 'nelore-adult-low', lod: 'far', count: 0, animalIds: [], x: 0, y: 0, screenX: 0, screenY: 0, depth: 0}; groups.set(key, group); }
-    group.count++; group.animalIds.push(entry.animalId); group.x += entry.x; group.y += entry.y; group.screenX += entry.screenX; group.screenY += entry.screenY; group.depth += entry.depth;
-  }
-  for (const group of groups.values()) {
-    group.x /= group.count; group.y /= group.count; group.screenX /= group.count; group.screenY /= group.count; group.depth /= group.count;
-  }
-  return {individual, clusters: [...groups.values()]};
-}
+export {clusterFarAnimals} from './herd-visual-model.js';
 
 export function placementFits(prefab, position, columns, rows, others = []) {
   return placementValidation(prefab, position, columns, rows, others).valid;
