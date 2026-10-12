@@ -31,6 +31,17 @@ function assertDataMatchesShape(value, shape, name) {
   }
 }
 
+function cloneAndFreeze(value, ancestors = new Set()) {
+  if (!value || typeof value !== 'object') return value;
+  if (ancestors.has(value)) throw new TypeError('Scientific model evidence cannot contain circular references');
+  ancestors.add(value);
+  const clone = Array.isArray(value)
+    ? value.map(item => cloneAndFreeze(item, ancestors))
+    : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, cloneAndFreeze(item, ancestors)]));
+  ancestors.delete(value);
+  return Object.freeze(clone);
+}
+
 export function defineScientificModel({id, version, inputs, outputs, evidence, run} = {}) {
   if (typeof id !== 'string' || !id.trim()) throw new TypeError('Scientific model id must be a non-empty string');
   if (typeof version !== 'string' || !version.trim()) throw new TypeError(`Scientific model "${id}" version must be a non-empty string`);
@@ -47,7 +58,7 @@ export function defineScientificModel({id, version, inputs, outputs, evidence, r
     version,
     inputs: Object.freeze({...inputs}),
     outputs: Object.freeze({...outputs}),
-    evidence: Object.freeze({...evidence}),
+    evidence: cloneAndFreeze(evidence),
     run
   });
 }

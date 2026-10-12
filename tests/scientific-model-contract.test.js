@@ -26,6 +26,21 @@ test('scientific model accepts valid inputs and returns contract-shaped outputs'
   assert.equal(result.evidence.evidenceType, 'published-equation-with-independent-validation-ranges');
 });
 
+test('nested evidence metadata cannot mutate model configuration between runs', () => {
+  const result = runScientificModel(BR_CORTE_PASTURE_DMI_MODEL, {
+    bodyWeightKg: 330,
+    adgKgPerDay: 0.5,
+    supplementKgDMPerDay: 1.6
+  });
+
+  assert.throws(() => { result.evidence.validationRanges.bodyWeightKg[0] = 400; }, TypeError);
+  assert.equal(runScientificModel(BR_CORTE_PASTURE_DMI_MODEL, {
+    bodyWeightKg: 330,
+    adgKgPerDay: 0.5,
+    supplementKgDMPerDay: 1.6
+  }).outputs.inValidatedDomain, true);
+});
+
 test('scientific model reports missing and invalid inputs clearly', () => {
   assert.throws(
     () => runScientificModel(BR_CORTE_PASTURE_DMI_MODEL, {bodyWeightKg: 330}),
