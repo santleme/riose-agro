@@ -28,8 +28,13 @@ export function resolveLotSelection(snapshot, domainZoneId) {
         if (pathParts[0] === 'animal' && animalIdsInLot.has(pathParts[1]) && pathParts.length > 2) fields.push(field);
         if (pathParts[0] === 'lot' && pathParts[1] === lot.id && pathParts.length > 2) fields.push(field);
       }
-      const areaPaths = [`paddock.${paddock.id}.area_ha`, `paddock.${paddock.id}.area_m2`, `paddock.${paddock.id}.area_acres`, `paddock.${paddock.id}.lot_area`, `lot.${lot.id}.area_ha`, `lot.${lot.id}.area_m2`, `lot.${lot.id}.area_acres`, `lot.${lot.id}.lot_area`];
-      const area = fields.find(field => areaPaths.includes(field.path) && field.status !== 'missing' && field.status !== 'not-applicable' && field.value != null) ?? fields.find(field => areaPaths.includes(field.path));
+      const lotAreaPaths = [`lot.${lot.id}.area_ha`, `lot.${lot.id}.area_m2`, `lot.${lot.id}.area_acres`, `lot.${lot.id}.lot_area`];
+      const paddockAreaPaths = [`paddock.${paddock.id}.area_ha`, `paddock.${paddock.id}.area_m2`, `paddock.${paddock.id}.area_acres`, `paddock.${paddock.id}.lot_area`];
+      const areaPaths = [...lotAreaPaths, ...paddockAreaPaths];
+      const availableArea = field => field.status !== 'missing' && field.status !== 'not-applicable' && field.value != null;
+      const area = fields.find(field => lotAreaPaths.includes(field.path) && availableArea(field))
+        ?? fields.find(field => paddockAreaPaths.includes(field.path) && availableArea(field))
+        ?? fields.find(field => areaPaths.includes(field.path));
       return {lot, paddock, animals: lotAnimals, fields, area: area ?? null};
     });
   return {paddock, lots};

@@ -41,3 +41,13 @@ test('area resolves from a linked lot or paddock observation and can use square 
   assert.equal(selection.lots[0].area.value,24000);
   assert.equal(selection.lots[0].area.unit,'m²');
 });
+
+test('a valid lot-specific area takes priority over the containing paddock area',()=>{
+  const snapshot=structuredClone(example);snapshot.paddocks[0].domainZoneId='paddock-1';snapshot.lots[0].paddockId='19N';
+  snapshot.observations.push({path:`paddock.19N.area_ha`,value:10,unit:'ha',status:'observed',sourceId:snapshot.sourceCatalog[0].id,sourceLocator:'paddock survey',populationValidity:'paddock area',measurementId:'paddock-area-fixture',observedAt:'2019-01-01T00:00:00Z'});
+  snapshot.observations.push({path:`lot.${snapshot.lots[0].id}.area_m2`,value:24000,unit:'m²',status:'observed',sourceId:snapshot.sourceCatalog[0].id,sourceLocator:'lot survey',populationValidity:'lot area',measurementId:'lot-area-preferred-fixture',observedAt:'2019-01-01T00:00:00Z'});
+  const selection=resolveLotSelection(snapshot,'paddock-1');
+  assert.equal(selection.lots[0].area.value,24000);
+  assert.equal(selection.lots[0].area.unit,'m²');
+  assert.equal(selection.lots[0].area.sourceLocator,'lot survey');
+});

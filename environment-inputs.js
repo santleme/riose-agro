@@ -27,7 +27,7 @@ export function environmentBaseline(snapshot) {
 
 export function initialEnvironmentState(snapshot, saved = null) {
   const baseline = environmentBaseline(snapshot);
-  if (saved && saved.snapshotId === snapshot?.snapshotId && saved.current) return structuredClone(saved);
+  if (saved && saved.snapshotId === (snapshot?.snapshotId ?? null) && saved.current) return structuredClone(saved);
   const valueOrEmpty = input => input.value == null ? '' : String(input.value);
   return {
     snapshotId: snapshot?.snapshotId ?? null,

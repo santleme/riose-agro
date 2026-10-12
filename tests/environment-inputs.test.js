@@ -9,6 +9,14 @@ test('legacy snapshots without numeric environment stay explicitly missing',()=>
   assert.equal(environmentDiffRows(state,{dietLabel:'Pasto'})[0].baseline,'Não informado');
 });
 
+test('scenario environment edits persist and restore when no farm snapshot is connected',()=>{
+  const initial=initialEnvironmentState(null);
+  const edited=updateEnvironmentInput(updateEnvironmentInput(initial,'temperatureC','24'),'relativeHumidityPct','60');
+  const restored=initialEnvironmentState(null,structuredClone(edited));
+  assert.equal(restored.snapshotId,null);
+  assert.deepEqual(restored.current,{temperatureC:'24',relativeHumidityPct:'60'});
+});
+
 test('reported environment inputs validate and retain original observed provenance for comparison',()=>{
   const snapshot={snapshotId:'field-1',farm:{environment:{temperature_c:{path:'farm.environment.temperature_c',value:24,unit:'°C',status:'observed',sourceLocator:'termômetro'} ,relative_humidity_pct:{path:'farm.environment.relative_humidity_pct',value:65,unit:'%',status:'observed',sourceLocator:'higrômetro'}}}};
   let state=initialEnvironmentState(snapshot);
