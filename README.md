@@ -97,6 +97,7 @@ The command validates the manifest with the engine's existing rules, records the
 - `data/observed-calves-zenodo-7251167.json` — normalized observations from the CC0 Zenodo record; not model output
 - `tests/observed-data.test.js` — source snapshot, missingness, and animal-level summary checks
 - `docs/engenharia-reversa.md` — source evidence and REA availability notes
+- `docs/modelos/interface-modelos-cientificos.md` — opt-in interface and adapter for scientific models
 - `docs/proximo-mvp.md` — increment scope, assumptions, and next steps
 - `docs/caso-zootecnico-demonstrativo.md` — current software case and expert decisions still needed
 - `docs/parametros-e-fontes.md` — parameter assumptions, contextual references, and data/license status
