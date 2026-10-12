@@ -14,7 +14,10 @@ const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
-  'index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'favicon.svg',
+  'index.html', 'home.html', 'home.css', 'home.js', 'simulator.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'favicon.svg', 'riose-mark.svg', 'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png',
+  'assets/research-pages/generative-agents-1.webp', 'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
+  'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
+  'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
   'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',
@@ -51,6 +54,7 @@ const PUBLIC_FILES = new Set([
 ]);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
+  '.png': 'image/png',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
@@ -255,7 +259,7 @@ function sendJson(response, status, value) {
 async function serveStatic(pathname, response) {
   let decoded;
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
-  const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
+  const relative = decoded === '/' ? 'home.html' : decoded.replace(/^\/+/, '');
   if (!PUBLIC_FILES.has(relative)) return sendJson(response, 404, {error: 'not_found'});
   const path = resolve(ROOT, relative);
   if (path !== ROOT && !path.startsWith(ROOT + sep)) return sendJson(response, 404, {error: 'not_found'});
