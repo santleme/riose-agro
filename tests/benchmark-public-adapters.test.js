@@ -31,16 +31,21 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   t.after(() => rm(temp, {recursive: true, force: true}));
 
   const animalPath = join(temp, 'animal.json');
-  const animalOutput = JSON.parse(run('scripts/benchmark-animal-layout.mjs', [], {
+  const animalSummary = JSON.parse(run('scripts/benchmark-animal-layout.mjs', [], {
     ANIMAL_LAYOUT_REPETITIONS: '5',
     ANIMAL_LAYOUT_OUTPUT: animalPath,
   }));
-  const animal = animalOutput.report;
+  const animal = JSON.parse(await readFile(animalPath, 'utf8'));
+  assert.equal(animalSummary.resultPath, animalPath);
   assertMeasurements(animal);
-  assert.equal(animal.workload.seed, 20261012);
-  assert.deepEqual(animal.results.map(row => row.animals), [100, 1000, 10000]);
-  assert.ok(animal.results[0].measurements.aosEndToEnd.observations.length >= 5);
-  assert.ok(animal.phases.engine.measurements[0].observations.length >= 5);
+  assert.equal(animal.workload.seed, 417);
+  assert.deepEqual([...new Set(animal.results.rows.map(row => row.animals))], [100, 1000, 10000]);
+  assert.deepEqual([...new Set(animal.results.rows.map(row => row.hour))], [7, 22]);
+  assert.ok(animal.results.rows.every(row => row.complexity.productionCodeChanged === false));
+  assert.equal(animal.results.rows.length, 6);
+  assert.ok(animal.results.rows[0].measurements.aosEndToEnd.observations.length >= 5);
+  assert.ok(animal.phases.engine.measurements[0].statistics.sampleCount >= 5);
+  assert.ok(animal.phases.worker.measurements.length > 0);
 
   const scene = JSON.parse(run('scripts/measure-scene-adapter-v1.mjs'));
   assertMeasurements(scene);

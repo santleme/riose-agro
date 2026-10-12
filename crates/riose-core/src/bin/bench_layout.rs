@@ -6,6 +6,7 @@ use std::time::Instant;
 #[derive(Deserialize)]
 struct Fixture {
     input: Vec<f64>,
+    warmups: usize,
     repetitions: usize,
 }
 
@@ -16,6 +17,9 @@ fn main() {
     assert_eq!(fixture.input.len() % 4, 0);
     let count = fixture.input.len() / 4;
     let mut output = vec![0.0; count * 2];
+    for _ in 0..fixture.warmups {
+        update_metabolism(&fixture.input, &mut output).unwrap();
+    }
     let mut samples = Vec::with_capacity(fixture.repetitions);
     for _ in 0..fixture.repetitions {
         let start = Instant::now();

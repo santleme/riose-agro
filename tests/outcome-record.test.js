@@ -85,6 +85,7 @@ test('comparison archive compatibility table keeps archive v1 and source manifes
   const {manifestBytes, engineBytes, snapshotBytes, record, archive} = fixture(2);
   for (const [label, mutate] of [
     ['unknown archive version', candidate => {candidate.version = 2;}],
+    ['missing archive version', candidate => {delete candidate.version;}],
     ['unknown archive type', candidate => {candidate.type = 'future-comparison-result';}],
   ]) {
     const candidateArchive = structuredClone(archive);

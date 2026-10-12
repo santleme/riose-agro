@@ -105,7 +105,7 @@ async function measureHerd(count) {
   const wasm = await loadBenchmarkWasm();
   const wasmBytes = () => wasm.memoryBytes();
   const phases = {};
-  let engine, snapshot, encoded, view;
+  let engine, snapshot, encoded, storageEnvelope, view;
   try {
     const startup = await observe(() => {
       engine = new FarmEngine(seed, count);
@@ -120,7 +120,18 @@ async function measureHerd(count) {
     const jsonUtf8Bytes = Buffer.byteLength(JSON.stringify(snapshot));
     phases.snapshot = {...snap, payloadBytes: {jsonUtf8Bytes}, method: 'Full engine snapshot clone; JSON byte count is payload size, not retained heap.'};
 
-    const compressed = await observe(async () => { encoded = await encodeScenarioSnapshot(snapshot); return encoded; }, wasmBytes);
+    const compressed = await observe(async () => {
+      encoded = await encodeScenarioSnapshot(snapshot);
+      storageEnvelope = JSON.stringify({
+        type: 'agroville-scenarios-gzip-v1',
+        scenarios: [{
+          id: 'memory-benchmark',
+          name: 'Memory benchmark',
+          summary: {hour: snapshot.hour, config: snapshot.config, eventCount: snapshot.events?.length ?? 0},
+          snapshotData: encoded,
+        }],
+      });
+    }, wasmBytes);
     const encodedBytes = Buffer.byteLength(encoded);
     phases.serialization = {
       ...compressed,
@@ -128,9 +139,15 @@ async function measureHerd(count) {
         jsonUtf8Bytes,
         gzipBytes: Math.floor(encodedBytes * 3 / 4) - (encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0),
         base64Utf8Bytes: encodedBytes,
+        storageEnvelopeJsonUtf8Bytes: Buffer.byteLength(storageEnvelope),
       },
-      method: 'Existing gzip-plus-base64 snapshot encoder; output retained to measure post-GC storage representation.',
+      method: 'Existing gzip-plus-base64 snapshot encoder plus a representative single-scenario localStorage JSON envelope; both outputs retained for post-GC memory sampling.',
     };
+
+    // End the serialization phase's object lifetimes before measuring the Worker view.
+    snapshot = null;
+    encoded = null;
+    storageEnvelope = null;
 
     const workerView = await observe(() => { view = makeWorkerView(engine); return view; }, wasmBytes);
     phases.worker = {
@@ -215,9 +232,10 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
     const metricPopulation = populationKind === 'process'
       ? {count: 1, unit: 'process', scope: 'whole Node.js benchmark process; value is not attributed to a herd'}
       : measurementPopulation;
+    const metricScope = populationKind === 'process' ? 'whole-process' : scope;
     measurements[phase].push(measurement(phase, metric, unit, summarizeSamples(values), {
-      population: metricPopulation, scope, source: metricSource(source, rows.at(-1)), ...(implementation ? {implementation} : {}),
-      observations: values, memorySamples: rows.map(row => row.memory),
+      population: metricPopulation, scope: metricScope, source: metricSource(source, rows.at(-1)), ...(implementation ? {implementation} : {}),
+      observations: values,
       payloadBytes: rows.at(-1).payloadBytes, method: rows.at(-1).method,
     }));
     if (normalizePerAnimal) measurements[phase].push(measurement(phase, `${metric}PerAnimal`, 'bytes/animal', summarizeSamples(values.map(value => value / population)), {
@@ -271,7 +289,7 @@ console.log(JSON.stringify(benchmarkReport({
     {phase:'startup',timed:['FarmEngine construction.'],notTimed:['Worker/browser startup.']},
     {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['Full snapshot and renderer.']},
     {phase:'snapshot',timed:['Full FarmEngine snapshot clone.'],notTimed:['JSON serialization and compression.']},
-    {phase:'serialization',timed:['Existing gzip-plus-base64 snapshot encoder.'],notTimed:['Browser storage writes and quota measurement.']},
+    {phase:'serialization',timed:['Existing gzip-plus-base64 encoder and a representative single-scenario localStorage JSON envelope serialization.'],notTimed:['Actual browser localStorage writes and quota measurement.']},
     {phase:'worker',timed:['Node-side construction of the packed Worker view projection.'],notTimed:['Actual browser Worker transport, renderer and GPU work.']},
   ],
   results: {samples: allResults, memoryFields: ['jsHeapUsedBytes', 'externalBytes', 'arrayBuffersBytes', 'rssProcessBytes', 'rssProcessHighWaterBytes', 'wasmLinearMemoryBytes', 'gpuMemoryBytes']},
@@ -283,6 +301,6 @@ console.log(JSON.stringify(benchmarkReport({
     'Worker view reports the current packed projection and transferable payload sizes in Node; it does not measure browser Worker transport, renderer, or GPU allocations.',
     'This Node.js harness creates no Browser Page; browser page creation and cleanup are unavailable and are not measured.',
     '100000 animals measures only preallocated numeric-kernel input/output and JS/WASM kernel behavior; FarmEngine, snapshots, compressed storage and Worker view are unsupported at that size.',
-    'Compression payload bytes are JSON UTF-8, gzip bytes and base64 UTF-8; localStorage quota and browser-specific behavior are not measured.',
+    'Compression payload bytes are JSON UTF-8, gzip bytes, base64 UTF-8 and a representative scenario-envelope JSON string; actual localStorage writes, quota and browser-specific behavior are not measured.',
   ],
 }), null, 2));

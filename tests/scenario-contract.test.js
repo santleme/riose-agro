@@ -52,6 +52,7 @@ test('legacy v1 manifests stay readable and adapt with an explicit unknown engin
   assert.equal(upgraded.version, 2);
   assert.equal(upgraded.engine_version, 'legacy-unspecified');
   assert.deepEqual(upgraded.baseline, roundTrip.initialSnapshot);
+  assert.equal(validateScenarioContract(upgraded), true);
   assert.deepEqual(replayScenarioContract(upgraded), replayComparisonManifest(roundTrip));
 });
 
@@ -76,6 +77,15 @@ test('comparison manifest compatibility table dispatches v1 and v2 and rejects u
   assert.equal(adapted.version, 2);
   assert.equal(adapted.engine_version, 'legacy-unspecified');
   assert.equal(validateScenarioContract(adapted), true, 'adapted v1 is a valid in-memory v2 contract');
+
+  const forgedNativeV2 = structuredClone(v2);
+  forgedNativeV2.engine_version = 'legacy-unspecified';
+  assert.throws(() => validateScenarioContract(forgedNativeV2), /legacy-unspecified só é aceito no objeto adaptado/);
+  assert.throws(() => validateReproducibilityManifest(forgedNativeV2), /legacy-unspecified só é aceito no objeto adaptado/);
+  assert.throws(() => replayScenarioContract(forgedNativeV2), /legacy-unspecified só é aceito no objeto adaptado/);
+
+  const serializedAdapter = JSON.parse(JSON.stringify(adapted));
+  assert.throws(() => validateReproducibilityManifest(serializedAdapter), /legacy-unspecified só é aceito no objeto adaptado/);
 });
 
 test('optional scenario identity uses a deterministic default or the requested ID', () => {

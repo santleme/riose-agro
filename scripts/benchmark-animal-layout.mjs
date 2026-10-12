@@ -1,143 +1,228 @@
 import {execFileSync} from 'node:child_process';
-import {FarmEngine} from '../src/client/engine.js';
-import {calculateFeeding} from '../src/client/feeding-model.js';
-import {writeFile} from 'node:fs/promises';
-import {tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {readFile,writeFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {FarmEngine,ASSUMPTIONS} from '../src/client/engine.js';
+import {calculateFeeding} from '../src/client/feeding-model.js';
+import {getWeatherRules} from '../src/client/environment-model.js';
+import {assertBenchmarkReport,benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
-const seed=20261012;
-const repetitions=process.env.ANIMAL_LAYOUT_REPETITIONS?Number(process.env.ANIMAL_LAYOUT_REPETITIONS):31;
+const scenarioPath=new URL('../tests/scenarios/baseline-pasture.json',import.meta.url);
+const scenario=JSON.parse(await readFile(scenarioPath,'utf8'));
+const repetitions=Number(process.env.ANIMAL_LAYOUT_REPETITIONS??31);
 const warmups=8;
+if(!Number.isInteger(repetitions)||repetitions<3)throw new Error('ANIMAL_LAYOUT_REPETITIONS must be an integer of at least 3');
 const resultPath=process.env.ANIMAL_LAYOUT_OUTPUT??'docs/evidence/animal-layout-study-2026-10.json';
-const maintenance=5.3;
-const gainFactor=0.22;
+const maintenance=ASSUMPTIONS.maintenanceKgDM;
+const gainFactor=ASSUMPTIONS.gainFactor;
 
 function summarize(values){
-  const sorted=[...values].sort((a,b)=>a-b);
-  return {sampleCount:sorted.length,medianMs:sorted[Math.floor(sorted.length/2)],minMs:sorted[0],maxMs:sorted.at(-1),observations:[...values]};
+  const stats=summarizeSamples(values);
+  return {...stats,observations:[...values]};
 }
-function update(weight,energy,intake,resting){
+function nextWeight(weight,intake){
   const gain=(intake-maintenance*(weight/360)/24)*gainFactor;
-  return [Math.max(200,weight+gain),Math.max(0,Math.min(100,energy+(resting?5:intake*4-1.5)))];
+  return Math.max(200,weight+gain);
 }
-function inputsFromEngine(count){
-  const engine=new FarmEngine(seed,count);
-  const c=engine.state.config;
-  return engine.state.animals.map((animal,index)=>{
-    const hour=index%24;
-    const resting=hour<6||hour>=21;
-    const feeding=calculateFeeding({weight:animal.weight,housing:c.housing,heatFactor:1,pastureAvailableKgDM:engine.state.pastures[animal.patch],diet:c.diet,supplementKgDMPerDay:c.supplement,assumptions:{baseDemandKgDM:8,maintenanceKgDM:maintenance,gainFactor}});
-    return {id:animal.id,weight:animal.weight,energy:animal.energy,intake:feeding.energyIntakeKgDM,resting};
+function nextEnergy(energy,intake,resting){
+  return Math.max(0,Math.min(100,energy+(resting?5:intake*4-1.5)));
+}
+function fixtureEngine(count,hour){
+  const engine=new FarmEngine(scenario.engine.seed,count);
+  engine.configure(scenario.configuration);
+  engine.state.hour=hour-1;
+  return engine;
+}
+function inputsForActualTransition(engine){
+  const state=engine.state;
+  const config=state.config;
+  const targetHour=state.hour+1;
+  const time=targetHour%24;
+  const environment=getWeatherRules(config.weather);
+  const pastures=state.pastures.map(value=>Math.min(2400,value+ASSUMPTIONS.dailyPastureGrowthKgDM*environment.pastureGrowthMultiplier/24));
+  return state.animals.map(animal=>{
+    const observedThirst=Math.max(0,Math.min(100,animal.thirst+environment.thirstPerHour));
+    const reason=time<6||time>=21?'rest_window':observedThirst>65?'thirst_threshold':config.housing==='pasture'?'pasture_housing':'barn_housing';
+    const action=reason==='rest_window'?'resting':reason==='thirst_threshold'?'drinking':reason==='pasture_housing'?'grazing':'feeding';
+    const feeding=calculateFeeding({weight:animal.weight,housing:config.housing,heatFactor:environment.heatMultiplier,pastureAvailableKgDM:pastures[animal.patch],diet:config.diet,supplementKgDMPerDay:config.supplement,assumptions:ASSUMPTIONS});
+    if(config.housing==='pasture')pastures[animal.patch]=feeding.pastureAfterFeedingKgDM;
+    return {id:animal.id,weight:animal.weight,energy:animal.energy,intake:feeding.energyIntakeKgDM,resting:action==='resting'};
   });
 }
-function runAos(rows){
-  const output=new Float64Array(rows.length*2);
+function runAos(rows,output){
   for(let index=0;index<rows.length;index++){
-    const animal=rows[index];const [weight,energy]=update(animal.weight,animal.energy,animal.intake,animal.resting);
-    output[index*2]=weight;output[index*2+1]=energy;
+    const animal=rows[index];
+    output[index*2]=nextWeight(animal.weight,animal.intake);
+    output[index*2+1]=nextEnergy(animal.energy,animal.intake,animal.resting);
   }
-  return output;
 }
 function runAosInPlace(rows){
   for(let index=0;index<rows.length;index++){
     const animal=rows[index];
-    [animal.weight,animal.energy]=update(animal.weight,animal.energy,animal.intake,animal.resting);
+    animal.weight=nextWeight(animal.weight,animal.intake);
+    animal.energy=nextEnergy(animal.energy,animal.intake,animal.resting);
   }
 }
-function runColumns(weights,energies,intakes,resting,output){
+function runColumns(weights,energies,intakes,resting,outputWeights,outputEnergies){
   for(let index=0;index<weights.length;index++){
-    const [weight,energy]=update(weights[index],energies[index],intakes[index],resting[index]!==0);
-    output[index*2]=weight;output[index*2+1]=energy;
+    outputWeights[index]=nextWeight(weights[index],intakes[index]);
+    outputEnergies[index]=nextEnergy(energies[index],intakes[index],resting[index]!==0);
   }
 }
 function materializeAos(rows,values){
   return rows.map((animal,index)=>({id:animal.id,weight:values[index*2],energy:values[index*2+1]}));
 }
-function materializeColumns(rows,values){
-  const snapshot=new Array(rows.length);
-  for(let index=0;index<rows.length;index++)snapshot[index]={id:rows[index].id,weight:values[index*2],energy:values[index*2+1]};
+function materializeColumns(ids,weights,energies){
+  const snapshot=new Array(ids.length);
+  for(let index=0;index<ids.length;index++)snapshot[index]={id:ids[index],weight:weights[index],energy:energies[index]};
   return snapshot;
+}
+function interleaveColumns(weights,energies){
+  const values=new Float64Array(weights.length*2);
+  for(let index=0;index<weights.length;index++){values[index*2]=weights[index];values[index*2+1]=energies[index];}
+  return values;
 }
 function memorySnapshot(){
   globalThis.gc?.();
-  return {heapUsedBytes:process.memoryUsage().heapUsed,arrayBuffersBytes:process.memoryUsage().arrayBuffers};
+  const memory=process.memoryUsage();
+  return {heapUsedBytes:memory.heapUsed,arrayBuffersBytes:memory.arrayBuffers};
 }
-function collect(fn){
-  for(let i=0;i<warmups;i++)fn();
+function collect(fn,iterationsPerSample=1){
+  for(let index=0;index<warmups;index++)for(let run=0;run<iterationsPerSample;run++)fn();
   const samples=[];
-  for(let i=0;i<repetitions;i++){const start=performance.now();fn();samples.push(performance.now()-start);}
+  for(let index=0;index<repetitions;index++){
+    const start=performance.now();
+    for(let run=0;run<iterationsPerSample;run++)fn();
+    samples.push((performance.now()-start)/iterationsPerSample);
+  }
   return summarize(samples);
+}
+function expectedAfterRepeatedTransitions(rows,count){
+  const expected=rows.map(row=>({...row}));
+  for(let iteration=0;iteration<count;iteration++)for(const animal of expected){animal.weight=nextWeight(animal.weight,animal.intake);animal.energy=nextEnergy(animal.energy,animal.intake,animal.resting);}
+  return expected.flatMap(animal=>[animal.weight,animal.energy]);
+}
+function collectTransfer(packetFactory){
+  const samples=[];
+  let verification=null;
+  for(let index=0;index<warmups+repetitions;index++){
+    const packet=packetFactory();
+    const transferList=Object.values(packet).map(view=>view.buffer);
+    const start=performance.now();
+    const moved=structuredClone(packet,{transfer:transferList});
+    const elapsed=performance.now()-start;
+    if(index<warmups)continue;
+    samples.push(elapsed);
+    if(!verification)verification=moved;
+  }
+  return {statistics:summarize(samples),verification};
 }
 function assertClose(actual,expected,label){
   if(actual.length!==expected.length)throw new Error(`${label}: output length differs`);
-  for(let i=0;i<actual.length;i++)if(Math.abs(actual[i]-expected[i])>1e-10)throw new Error(`${label}: output differs at ${i}: ${actual[i]} vs ${expected[i]}`);
+  for(let index=0;index<actual.length;index++)if(Math.abs(actual[index]-expected[index])>1e-10)throw new Error(`${label}: output differs at ${index}: ${actual[index]} vs ${expected[index]}`);
+}
+function assertSnapshotsEqual(actual,expected,label){
+  if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}: snapshot output differs`);
 }
 
 const rows=[];
 for(const count of [100,1_000,10_000]){
-  const animals=inputsFromEngine(count);
-  const expected=runAos(animals);
-  const aosState=animals.map(animal=>({...animal}));
-  const columnsState=animals.map(animal=>({...animal}));
-  const memoryWithObjects=memorySnapshot();
-  const weights=new Float64Array(count),energies=new Float64Array(count),intakes=new Float64Array(count),resting=new Uint8Array(count),columnsOut=new Float64Array(count*2);
-  const scatteredWeights=new Float64Array(count),scatteredEnergies=new Float64Array(count);
-  const memoryWithColumns=memorySnapshot();
-  const packed=new Float64Array(count*4),packedOut=new Float64Array(count*2);
-  for(let i=0;i<count;i++){
-    const animal=animals[i];weights[i]=animal.weight;energies[i]=animal.energy;intakes[i]=animal.intake;resting[i]=animal.resting?1:0;
-    packed.set([animal.weight,animal.energy,animal.intake,animal.resting?1:0],i*4);
+  for(const hour of [7,22]){
+    const inputEngine=fixtureEngine(count,hour);
+    const inputs=inputsForActualTransition(inputEngine);
+    const expectedEngine=FarmEngine.from(inputEngine.snapshot());
+    expectedEngine.tick(1,undefined,false);
+    const expected=expectedEngine.state.animals.flatMap(animal=>[animal.weight,animal.energy]);
+    const aosOutput=new Float64Array(count*2);
+    runAos(inputs,aosOutput);
+    assertClose(aosOutput,expected,`AoS against FarmEngine tick (${hour})`);
+
+    const memoryWithObjects=memorySnapshot();
+    const ids=Int32Array.from(inputs,animal=>animal.id);
+    const weights=new Float64Array(count),energies=new Float64Array(count),intakes=new Float64Array(count),resting=new Uint8Array(count);
+    const outputWeights=new Float64Array(count),outputEnergies=new Float64Array(count);
+    for(let index=0;index<count;index++){
+      const animal=inputs[index];weights[index]=animal.weight;energies[index]=animal.energy;intakes[index]=animal.intake;resting[index]=animal.resting?1:0;
+    }
+    const memoryWithColumns=memorySnapshot();
+    runColumns(weights,energies,intakes,resting,outputWeights,outputEnergies);
+    assertClose(interleaveColumns(outputWeights,outputEnergies),expected,'typed columns against FarmEngine tick');
+    const nativeInput=new Float64Array(count*4);
+    for(let index=0;index<count;index++)nativeInput.set([weights[index],energies[index],intakes[index],resting[index]],index*4);
+    const native=JSON.parse(execFileSync('cargo',['run','--quiet','--release','-p','riose-core','--bin','bench-layout'],{input:JSON.stringify({input:Array.from(nativeInput),warmups,repetitions}),encoding:'utf8',maxBuffer:16*1024*1024}));
+    assertClose(native.output,expected,'native Rust against FarmEngine tick');
+
+    const aosState=inputs.map(animal=>({...animal}));
+    const columnsState=inputs.map(animal=>({...animal}));
+    const scatterState=inputs.map(animal=>({...animal}));
+    const iterationsPerSample=count<=100?512:count<=1_000?64:8;
+    const columnSnapshot=materializeColumns(ids,outputWeights,outputEnergies);
+    const aosSnapshot=materializeAos(inputs,aosOutput);
+    assertSnapshotsEqual(columnSnapshot,aosSnapshot,'snapshot materialization');
+    const aos=collect(()=>runAosInPlace(aosState),iterationsPerSample);
+    const columnsKernel=collect(()=>runColumns(weights,energies,intakes,resting,outputWeights,outputEnergies),iterationsPerSample);
+    const gather=collect(()=>{for(let index=0;index<count;index++){const animal=inputs[index];weights[index]=animal.weight;energies[index]=animal.energy;intakes[index]=animal.intake;resting[index]=animal.resting?1:0;}},iterationsPerSample);
+    const scatter=collect(()=>{for(let index=0;index<count;index++){const animal=scatterState[index];animal.weight=outputWeights[index];animal.energy=outputEnergies[index];}},iterationsPerSample);
+    const endToEndColumns=collect(()=>{
+      for(let index=0;index<count;index++){const animal=columnsState[index];weights[index]=animal.weight;energies[index]=animal.energy;intakes[index]=animal.intake;resting[index]=animal.resting?1:0;}
+      runColumns(weights,energies,intakes,resting,outputWeights,outputEnergies);
+      for(let index=0;index<count;index++){const animal=columnsState[index];animal.weight=outputWeights[index];animal.energy=outputEnergies[index];}
+    },iterationsPerSample);
+    const timedTransitions=(warmups+repetitions)*iterationsPerSample;
+    const expectedRepeated=expectedAfterRepeatedTransitions(inputs,timedTransitions);
+    assertClose(aosState.flatMap(animal=>[animal.weight,animal.energy]),expectedRepeated,'AoS benchmark result sink');
+    assertClose(columnsState.flatMap(animal=>[animal.weight,animal.energy]),expectedRepeated,'SoA benchmark result sink');
+    const snapshotAos=collect(()=>materializeAos(inputs,aosOutput),iterationsPerSample);
+    const snapshotColumns=collect(()=>materializeColumns(ids,outputWeights,outputEnergies),iterationsPerSample);
+
+    const objectSnapshot=materializeAos(inputs,aosOutput);
+    const objectTransfer=collect(()=>structuredClone(objectSnapshot));
+    const inputTransfer=collectTransfer(()=>({ids:ids.slice(),weights:weights.slice(),energies:energies.slice(),intakes:intakes.slice(),resting:resting.slice()}));
+    const outputTransfer=collectTransfer(()=>({weights:outputWeights.slice(),energies:outputEnergies.slice()}));
+    if(inputTransfer.verification.ids[0]!==inputs[0].id||outputTransfer.verification.weights.length!==count)throw new Error('typed transfer did not preserve stable IDs/output length');
+    const serializedSnapshot=JSON.stringify(objectSnapshot);
+    const jsonSerialization=collect(()=>JSON.stringify(objectSnapshot));
+    const typedBufferBytes=ids.byteLength+weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength+outputWeights.byteLength+outputEnergies.byteLength;
+    const memoryDelta={heapUsedBytes:memoryWithColumns.heapUsedBytes-memoryWithObjects.heapUsedBytes,arrayBuffersBytes:memoryWithColumns.arrayBuffersBytes-memoryWithObjects.arrayBuffersBytes};
+    const restingCount=inputs.reduce((total,animal)=>total+(animal.resting?1:0),0);
+    rows.push({animals:count,hour,iterationsPerSample,fixture:{path:'tests/scenarios/baseline-pasture.json',scenarioId:scenario.scenarioId,seed:scenario.engine.seed,scaledFromAnimals:scenario.engine.animalCount,branchMix:{resting:restingCount,active:count-restingCount}},outputsIdentical:true,memory:{aosAfterGc:memoryWithObjects,afterAddingColumnBuffersAfterGc:memoryWithColumns,processDeltaAfterGc:memoryDelta,typedBufferBytesExact:typedBufferBytes},allocationNotes:{transitionTemporaryObjects:0,snapshotObjectsPerMaterialization:count,typedArrayBuffers:7,peakAllocationsInstrumented:false},measurements:{aosEndToEnd:aos,typedColumnsKernel:columnsKernel,typedColumnsGather:gather,typedColumnsScatter:scatter,typedColumnsEndToEnd:endToEndColumns,nativeRustKernel:summarize(native.samplesMs),snapshotMaterializationAos:snapshotAos,snapshotMaterializationColumns:snapshotColumns,objectSnapshotStructuredClone:objectTransfer,jsonSerialization},transfer:{inputStructuredCloneTransfer:inputTransfer.statistics,outputStructuredCloneTransfer:outputTransfer.statistics,inputBytes:ids.byteLength+weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength,outputBytes:outputWeights.byteLength+outputEnergies.byteLength,jsonSnapshotBytes:Buffer.byteLength(serializedSnapshot)},complexity:{productionCodeChanged:false,alignedColumns:6,stableIdColumn:1,requiredPasses:['gather object fields','update numeric columns','scatter results to objects'],separateSnapshotMaterializer:true,peakAllocationsInstrumented:false}});
   }
-  runColumns(weights,energies,intakes,resting,columnsOut);assertClose(columnsOut,expected,'typed columns');
-  const aosSnapshot=materializeAos(animals,expected);
-  const columnsSnapshot=materializeColumns(animals,columnsOut);
-  if(JSON.stringify(aosSnapshot)!==JSON.stringify(columnsSnapshot))throw new Error('snapshot materialization differs');
-  runAosInPlace(aosState);
-  for(let i=0;i<count;i++){const a=columnsState[i];weights[i]=a.weight;energies[i]=a.energy;intakes[i]=a.intake;resting[i]=a.resting?1:0;}
-  runColumns(weights,energies,intakes,resting,columnsOut);
-  for(let i=0;i<count;i++){columnsState[i].weight=columnsOut[i*2];columnsState[i].energy=columnsOut[i*2+1];}
-  assertClose(aosState.flatMap(a=>[a.weight,a.energy]),columnsState.flatMap(a=>[a.weight,a.energy]),'in-place AoS and columns');
-  const native=JSON.parse(execFileSync('cargo',['run','--quiet','--release','-p','riose-core','--bin','bench-layout'],{input:JSON.stringify({input:Array.from(packed),repetitions}),encoding:'utf8',maxBuffer:16*1024*1024}));
-  assertClose(native.output,expected,'native Rust');
-  const aos=collect(()=>runAosInPlace(aosState));
-  const columnsKernel=collect(()=>runColumns(weights,energies,intakes,resting,columnsOut));
-  const gather=collect(()=>{for(let i=0;i<count;i++){const a=animals[i];weights[i]=a.weight;energies[i]=a.energy;intakes[i]=a.intake;resting[i]=a.resting?1:0;}});
-  const scatter=collect(()=>{for(let i=0;i<count;i++){scatteredWeights[i]=columnsOut[i*2];scatteredEnergies[i]=columnsOut[i*2+1];}});
-  const endToEndColumns=collect(()=>{
-    for(let i=0;i<count;i++){const a=columnsState[i];weights[i]=a.weight;energies[i]=a.energy;intakes[i]=a.intake;resting[i]=a.resting?1:0;}
-    runColumns(weights,energies,intakes,resting,columnsOut);
-    for(let i=0;i<count;i++){const a=columnsState[i];a.weight=columnsOut[i*2];a.energy=columnsOut[i*2+1];scatteredWeights[i]=a.weight;scatteredEnergies[i]=a.energy;}
-  });
-  const snapshotAos=collect(()=>materializeAos(animals,expected));
-  const snapshotColumns=collect(()=>materializeColumns(animals,columnsOut));
-  rows.push({animals:count,fixture:{seed,source:'FarmEngine initialization plus current feeding model',inputValues:4,branchMix:{restingAnimals:animals.filter(a=>a.resting).length}},outputsIdentical:true,memory:{heapUsedWithObjectsBytes:memoryWithObjects.heapUsedBytes,heapUsedWithColumnsBytes:memoryWithColumns.heapUsedBytes,heapDeltaAfterPreallocatedColumnsBytes:memoryWithColumns.heapUsedBytes-memoryWithObjects.heapUsedBytes,typedBuffersExactBytes:weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength+columnsOut.byteLength},measurements:{aosEndToEnd:aos,typedColumnsKernel:columnsKernel,typedColumnsGather:gather,typedColumnsScatter:scatter,typedColumnsEndToEnd:endToEndColumns,snapshotMaterializationAos:snapshotAos,snapshotMaterializationColumns:snapshotColumns,nativeRustKernel:summarize(native.samplesMs)},allocationNotes:{perSnapshotVariantObjects:count,typedBufferAllocations:5,peakAllocationCounts:'not instrumented'}});
 }
-const limitations=['This isolates one-hour weight/energy transition after feeding; it does not benchmark a full 24-hour engine tick or renderer.','Native Rust measures the same packed numeric kernel and fixture but excludes JSON serialization, FFI and process startup.','Heap snapshots are process-level readings after GC and include engine/test harness memory; they are directional. Typed-buffer bytes are exact. Peak allocation counts are not instrumented; per-snapshot output object counts are known.','Feed intake is calculated once from the deterministic initial scenario state and reused to isolate transition layout.'];
-const metricRows=(phase,key)=>rows.map(row=>measurement(phase,key,'ms',summarizeSamples(row.measurements[key].observations),{
-  population:row.animals,scope:'FarmEngine one-hour transition fixture',implementation:key,source:'scripts/benchmark-animal-layout.mjs',
-  observations:row.measurements[key].observations,memory:row.memory,
-}));
+const limitations=['The checked-in baseline-pasture fixture provides the seed/configuration; its three-animal count is scaled to the supported benchmark populations. The one-hour transition input and expected output are generated from FarmEngine itself at active hour 7 and rest hour 22.','Native Rust measures the identical packed input in a pure kernel; it excludes JSON serialization, FFI, Worker queueing and process startup.','Heap/ArrayBuffer readings are process snapshots after GC; exact typed-buffer byte counts are the attributable memory result. JavaScript peak allocation counts are not instrumented.','Snapshot materialization projects stable ID, weight and energy, not every public FarmEngine snapshot field. JSON serialization separately measures this output projection.'];
+const phaseMeasurements=[];
+for(const row of rows){
+  const details={population:{animals:row.animals,hour:row.hour},source:'scripts/benchmark-animal-layout.mjs'};
+  for(const [key,value] of Object.entries(row.measurements)){
+    const phase=key.startsWith('snapshot')||key==='objectSnapshotStructuredClone'?'snapshot':key==='jsonSerialization'?'serialization':'engine';
+    const iterationsPerSample=['aosEndToEnd','typedColumnsKernel','typedColumnsGather','typedColumnsScatter','typedColumnsEndToEnd','snapshotMaterializationAos','snapshotMaterializationColumns'].includes(key)?row.iterationsPerSample:1;
+    phaseMeasurements.push(measurement(phase,key,'ms',summarizeSamples(value.observations),{...details,implementation:key,iterationsPerSample}));
+  }
+  phaseMeasurements.push(measurement('worker','inputStructuredCloneTransfer','ms',summarizeSamples(row.transfer.inputStructuredCloneTransfer.observations),{...details,bytes:row.transfer.inputBytes,implementation:'typed-column buffers transferred with structuredClone transfer list'}));
+  phaseMeasurements.push(measurement('worker','outputStructuredCloneTransfer','ms',summarizeSamples(row.transfer.outputStructuredCloneTransfer.observations),{...details,bytes:row.transfer.outputBytes,implementation:'typed-column buffers transferred with structuredClone transfer list'}));
+}
 const report=benchmarkReport({
   name:'animal-layout-aos-vs-aligned-columns',
   runtime:{rustc:execFileSync('rustc',['--version'],{encoding:'utf8'}).trim(),optimization:'Rust --release'},
-  workload:{seed,populations:rows.map(row=>({animals:row.animals,scope:'FarmEngine one-hour transition fixture',limit:'FarmEngine maximum 10000'})),repetitions,warmups,hoursPerBenchmarkIteration:1,source:'deterministic FarmEngine fixture; actual calculateFeeding output; fixed scenario branch order'},
+  workload:{seed:scenario.engine.seed,populations:rows.map(row=>({animals:row.animals,scope:'FarmEngine one-hour transition fixture',limit:'FarmEngine maximum 10000',hour:row.hour,iterationsPerSample:row.iterationsPerSample})),repetitions,warmups,fixture:scenario.scenarioId},
   configuration:{warmupRuns:warmups,repetitions},
   phases:{
-    engine:{status:'measured',measurements:['aosEndToEnd','typedColumnsKernel','typedColumnsGather','typedColumnsScatter','typedColumnsEndToEnd','nativeRustKernel'].flatMap(key=>metricRows('engine',key))},
-    snapshot:{status:'measured',measurements:['snapshotMaterializationAos','snapshotMaterializationColumns'].flatMap(key=>metricRows('snapshot',key))},
+    engine:{status:'measured',measurements:phaseMeasurements.filter(item=>item.phase==='engine')},
+    snapshot:{status:'measured',measurements:phaseMeasurements.filter(item=>item.phase==='snapshot')},
+    serialization:{status:'measured',measurements:phaseMeasurements.filter(item=>item.phase==='serialization')},
+    worker:{status:'measured',measurements:phaseMeasurements.filter(item=>item.phase==='worker')},
   },
   timingBoundaries:[
-    {phase:'engine',timed:['One-hour weight/energy transition using precomputed intake; typed-column end-to-end includes gather and scatter.','Native Rust loop over preallocated packed vectors.'],notTimed:['FarmEngine construction, feeding calculation, full 24-hour tick, renderer, JSON serialization, FFI, and process startup.']},
-    {phase:'snapshot',timed:['Materialization of one output object per animal from AoS or typed-column results.'],notTimed:['Transition kernel execution.']},
+    {phase:'engine',timed:['One-hour transition update; AoS writes object state, SoA end-to-end includes gather, aligned numeric update, and scatter.','Native Rust loop over preallocated packed buffers.'],notTimed:['FarmEngine construction, input derivation/feeding, full 24-hour tick, renderer, FFI and process startup.']},
+    {phase:'snapshot',timed:['Projection of ID, weight and energy into one output object per animal; structuredClone of the AoS projection.'],notTimed:['Transition kernel execution.']},
+    {phase:'worker',timed:['Node structuredClone transfer-list ownership handoff of preallocated numeric input and output buffers.'],notTimed:['Worker scheduling, message queue latency, browser postMessage and computation.']},
+    {phase:'serialization',timed:['JSON.stringify of the same AoS output projection.'],notTimed:['Disk I/O and parsing.']},
   ],
-  results:rows,
+  results:{rows,codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
   limitations,
 });
 report.study='animal-layout-aos-vs-aligned-columns';
 report.date=new Date().toISOString().slice(0,10);
-report.decision='Keep object-per-animal state. The isolated typed-column kernel excludes gather/scatter and is not a production end-to-end win unless typedColumnsEndToEnd repeatedly beats AoS with identical outputs.';
+report.decision='Keep object-per-animal state. The isolated typed-column kernel is faster, but gathering and scattering into the engine state prevents a repeatable end-to-end benefit.';
 report.runtime={...report.runtime,node:process.version};
+assertBenchmarkReport(report);
 await writeFile(resultPath,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({resultPath,report},null,2));
+console.log(JSON.stringify({resultPath,decision:report.decision,summary:rows.map(row=>({animals:row.animals,hour:row.hour,measurements:Object.fromEntries(Object.entries(row.measurements).map(([key,value])=>[key,value.median])),transfer:{inputMs:row.transfer.inputStructuredCloneTransfer.median,outputMs:row.transfer.outputStructuredCloneTransfer.median},memory:row.memory,typedBufferBytes:row.memory.typedBufferBytesExact}))},null,2));

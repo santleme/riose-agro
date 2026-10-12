@@ -5,6 +5,9 @@ export const SCENARIO_CONTRACT_VERSION = 2;
 export const SCENARIO_ENGINE_VERSION = 'agroville-engine/1';
 
 const OUTPUTS = ['weight', 'cost', 'pasture', 'intake'];
+// Legacy engine provenance is valid only for the in-memory object returned by
+// the v1 adapter. It must not become a forgeable persisted v2 identifier.
+const legacyAdaptedContracts = new WeakSet();
 
 function fail(message) {
   throw new Error(`Contrato de cenário inválido: ${message}`);
@@ -59,8 +62,9 @@ export function validateScenarioContract(contract) {
     fail(`type/version suportado: ${SCENARIO_CONTRACT_TYPE}/2.`);
   }
   if (typeof contract.scenario_id !== 'string' || !contract.scenario_id.trim()) fail('scenario_id precisa ser texto não vazio.');
-  if (![SCENARIO_ENGINE_VERSION, 'legacy-unspecified'].includes(contract.engine_version)) {
-    fail(`engine_version deve ser ${SCENARIO_ENGINE_VERSION} ou legacy-unspecified para um manifesto legado adaptado.`);
+  if (contract.engine_version !== SCENARIO_ENGINE_VERSION &&
+      !(contract.engine_version === 'legacy-unspecified' && legacyAdaptedContracts.has(contract))) {
+    fail(`engine_version deve ser ${SCENARIO_ENGINE_VERSION}; legacy-unspecified só é aceito no objeto adaptado de um manifesto v1.`);
   }
   if (contract.validated !== false) fail('validated deve permanecer false; o motor não foi validado cientificamente.');
   if (!Number.isInteger(contract.seed) || contract.seed < 0 || contract.seed > 0xffffffff) fail('seed precisa ser um inteiro sem sinal de 32 bits.');
@@ -144,6 +148,7 @@ export function upgradeComparisonManifestToScenarioContract(manifest, {scenarioI
     scenario_config: structuredClone(manifest.scenarios.scenario),
   };
   contract.engine_version = 'legacy-unspecified';
+  legacyAdaptedContracts.add(contract);
   validateScenarioContract(contract);
   return contract;
 }
