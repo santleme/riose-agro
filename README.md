@@ -84,7 +84,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 
 ## Project files
 
-- `index.html`, `style.css` — interactive cattle-farm simulator and Scenario Studio
+- `index.html`, `src/client/style.css` — interactive cattle-farm simulator and Scenario Studio
 - `home.html`, `src/client/home.css`, `src/client/home.js` — optional responsive project landing page
 - `simulator.html` — direct link to the farm experience
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
