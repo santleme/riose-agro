@@ -1,0 +1,85 @@
+const unavailable = 'não informado';
+
+function valueText(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? String(value) : unavailable;
+  if (typeof value === 'string' && value.trim()) return value;
+  return unavailable;
+}
+
+function configText(config) {
+  if (!config || typeof config !== 'object') return unavailable;
+  return [
+    `- Dieta: ${valueText(config.diet)}`,
+    `- Alojamento: ${valueText(config.housing)}`,
+    `- Clima: ${valueText(config.weather)}`,
+    `- Suplemento (kg MS/animal/dia): ${valueText(config.supplement)}`
+  ].join('\n');
+}
+
+function metricRow(label, key, row) {
+  return `- ${label}: base ${valueText(row?.[`baseline${key}`])}; intervenção ${valueText(row?.[`scenario${key}`])}`;
+}
+
+export function renderSimulationReport(result, manifest) {
+  if (!result || typeof result !== 'object' || !Array.isArray(result.rows)) {
+    throw new Error('Resultado inválido: informe um resultado de comparação do motor com uma série de linhas.');
+  }
+  if (!Number.isInteger(result.days) || result.days < 1 || result.days > 365) {
+    throw new Error('Resultado inválido: o horizonte deve ser um número inteiro de dias entre 1 e 365.');
+  }
+
+  const lastRow = result.rows.find(row => row && row.day === result.days);
+  const assumptions = result.assumptions && typeof result.assumptions === 'object'
+    ? Object.entries(result.assumptions).map(([key, value]) => `- ${key}: ${valueText(value)}`).join('\n')
+    : unavailable;
+  const manifestDetails = manifest && typeof manifest === 'object'
+    ? [
+      `- Tipo/versão: ${valueText(manifest.type)} / ${valueText(manifest.version)}`,
+      `- Semente: ${valueText(manifest.seed)}`,
+      `- Fator comparado: ${valueText(manifest.factor)}`,
+      `- Horizonte (dias): ${valueText(manifest.periodDays)}`
+    ].join('\n')
+    : unavailable;
+  const validation = result.validated === false ? 'demonstrativo; não validado' : 'não informado';
+  const differenceRows = [
+    metricRow('Peso médio no último dia (kg/animal)', 'Weight', lastRow),
+    metricRow('Consumo estimado no período (kg MS/lote)', 'ConsumptionKgDM', lastRow),
+    metricRow('Estoque de forragem no último dia (kg MS)', 'PastureKgDM', lastRow),
+    metricRow('Custo acumulado no período (R$/lote)', 'Cost', lastRow)
+  ].join('\n');
+
+  return [
+    '# Relatório da simulação',
+    '',
+    '## Cenário',
+    `- Classificação do resultado: ${validation}`,
+    `- Horizonte (dias): ${valueText(result.days)}`,
+    `- Rebanho (animais): ${valueText(result.herdSize)}`,
+    `- Peso médio inicial (kg/animal): ${valueText(result.startWeight)}`,
+    '',
+    '## Entradas registradas',
+    '### Base',
+    configText(manifest?.scenarios?.reference ?? result.baselineConfig),
+    '',
+    '### Intervenção',
+    configText(manifest?.scenarios?.scenario ?? result.scenarioConfig),
+    '',
+    '## Principais resultados e diferenças',
+    'Valores apresentados lado a lado diretamente da linha final do resultado do motor; não são recalculados pelo relatório.',
+    differenceRows,
+    '',
+    '## Hipóteses do motor',
+    assumptions,
+    '',
+    '## Limitações',
+    '- Os resultados são simulados e não representam observações de animais reais.',
+    '- Resultado demonstrativo e não validado; não constitui recomendação, prescrição ou previsão validada.',
+    '- Campos ausentes ou não finitos são apresentados como “não informado”.',
+    '',
+    '## Fontes e proveniência disponíveis',
+    `- Resultado: saída do motor de simulação (engine.js); estado: ${validation}.`,
+    `- Manifesto de reprodução:\n${manifestDetails}`,
+    '- Fontes empíricas vinculadas a esta execução: não informado.',
+    ''
+  ].join('\n');
+}

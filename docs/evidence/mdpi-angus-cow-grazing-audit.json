@@ -1,0 +1,184 @@
+{
+  "source": {
+    "articleDoi": "10.3390/ani11061518",
+    "license": "CC-BY-4.0",
+    "archiveSha256Verified": true,
+    "archiveMd5Verified": true,
+    "archiveBytes": 5772397
+  },
+  "coverage": {
+    "s1CowSeasonRows": 408,
+    "s1UniqueCowIdsAcrossYears": 241,
+    "s1IdsPresentInBothYears": 167,
+    "s1RowsByYear": {
+      "Y1": 205,
+      "Y2": 203
+    },
+    "s1AgeClassSummary": {
+      "1": {
+        "cowSeasonRows": 70,
+        "uniqueCowIds": 70,
+        "weightChangeKg": {
+          "n": 69,
+          "mean": -4.049459,
+          "median": -2.26796,
+          "min": -56.245408,
+          "max": 43.09124
+        },
+        "bcsChange": {
+          "n": 70,
+          "mean": -0.096429,
+          "median": 0.0,
+          "min": -0.75,
+          "max": 0.5
+        }
+      },
+      "2": {
+        "cowSeasonRows": 62,
+        "uniqueCowIds": 62,
+        "weightChangeKg": {
+          "n": 60,
+          "mean": 7.166754,
+          "median": 20.41164,
+          "min": -95.25432,
+          "max": 65.77084
+        },
+        "bcsChange": {
+          "n": 61,
+          "mean": -0.061475,
+          "median": 0.0,
+          "min": -2.5,
+          "max": 0.75
+        }
+      },
+      "3": {
+        "cowSeasonRows": 58,
+        "uniqueCowIds": 58,
+        "weightChangeKg": {
+          "n": 58,
+          "mean": 8.094271,
+          "median": 13.60776,
+          "min": -88.45044,
+          "max": 72.57472
+        },
+        "bcsChange": {
+          "n": 58,
+          "mean": 0.068966,
+          "median": 0.0,
+          "min": -1.0,
+          "max": 3.25
+        }
+      },
+      "4": {
+        "cowSeasonRows": 54,
+        "uniqueCowIds": 54,
+        "weightChangeKg": {
+          "n": 54,
+          "mean": 6.21589,
+          "median": 13.60776,
+          "min": -151.95332,
+          "max": 165.56108
+        },
+        "bcsChange": {
+          "n": 54,
+          "mean": 0.115741,
+          "median": 0.125,
+          "min": -1.0,
+          "max": 1.0
+        }
+      },
+      "5-7": {
+        "cowSeasonRows": 93,
+        "uniqueCowIds": 75,
+        "weightChangeKg": {
+          "n": 92,
+          "mean": -2.465174,
+          "median": 2.26796,
+          "min": -149.68536,
+          "max": 108.86208
+        },
+        "bcsChange": {
+          "n": 92,
+          "mean": 0.092391,
+          "median": 0.0,
+          "min": -0.75,
+          "max": 1.0
+        }
+      },
+      "8+": {
+        "cowSeasonRows": 71,
+        "uniqueCowIds": 50,
+        "weightChangeKg": {
+          "n": 70,
+          "mean": 4.309124,
+          "median": -2.26796,
+          "min": -65.77084,
+          "max": 70.30676
+        },
+        "bcsChange": {
+          "n": 70,
+          "mean": 0.028571,
+          "median": 0.0,
+          "min": -0.75,
+          "max": 1.25
+        }
+      }
+    },
+    "ageFourPlusSubset": {
+      "ageClasses": [
+        "4",
+        "5-7",
+        "8+"
+      ],
+      "cowSeasonRows": 218,
+      "uniqueCowIds": 132,
+      "idsRepeatedAcrossIncludedSeasons": 86,
+      "missingWeightChange": 2,
+      "missingBcsChange": 2,
+      "gpsCowSeasonRows": 37,
+      "gpsUniqueCowIds": 37,
+      "gpsCowDayRows": 1657,
+      "gpsCoverageNote": "Table S3 GPS measurements cover the final 45 days of the grazing period; these do not span the full 84-day derived ADG horizon."
+    },
+    "s1MissingWeightChange": 5,
+    "s1MissingWeightChangeByYear": {
+      "Y1": 5
+    },
+    "s1MissingBcsChange": 3,
+    "s1MissingBcsChangeByYear": {
+      "Y1": 3
+    },
+    "s2SupplementCowDayRows": 19691,
+    "s2UniqueCowIds": 240,
+    "s2ContainsForageDmiField": false,
+    "s3GpsCowDayRowsWithIdAndDate": 2475,
+    "s3UniqueCowIds": 56,
+    "s4SpatialUseRows": 294234,
+    "s5CoreAreaRows": 56
+  },
+  "interpretation": {
+    "use": "Separate descriptive reference for pregnant Angus cows in dormant-season grazing, with period body-weight and BCS change and a GPS subset.",
+    "adgDerived": true,
+    "adgDerivation": {
+      "formula": "Tot_Wt_Ch_kg / 84",
+      "periodDays": 84,
+      "periodEvidence": "The article reports body-weight change over the 84-day grazing period (Parsons et al., 2021, Results).",
+      "interpretation": "Descriptive average daily weight change derived using the study-level period duration; not a per-animal verified interval, daily time series, or engine prediction.",
+      "durationLimitation": "Table S1 has no per-animal start/end dates or observed day counts; 84 days is the period duration reported by the article."
+    },
+    "individualForageDmiObserved": false,
+    "causalInference": false,
+    "validatesEngine": false,
+    "limitations": [
+      "Cow-season rows repeat some animals across two years and are not 408 independent cows.",
+      "167 published IDs occur in both years; keep both year and ID together when making any split or grouped summary.",
+      "Table S1 has five missing weight-change values (all in Y1) and three missing BCS-change values; the article does not explain these missing records.",
+      "Supplement intake is distinct from total forage DMI.",
+      "Table S3 grazing measurements cover only a GPS subset and the last 45 days of grazing.",
+      "The cohort is from Montana and is distinct from USDA/CPER and USDA/CGREC.",
+      "The source covers ages 1-10 years, including a one-year age class; do not describe every animal as a mature cow.",
+      "Derived ADG is period body-weight change divided by the article-reported 84-day grazing period; Table S1 has no per-animal dates or day counts to verify the interval individually.",
+      "The dataset lacks matched costs, pasture-stock balance, and a controlled pasture-versus-confinement comparison."
+    ]
+  }
+}

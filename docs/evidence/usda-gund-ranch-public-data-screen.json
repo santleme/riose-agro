@@ -1,0 +1,97 @@
+{
+  "source": {
+    "title": "Data on Pregnancy rates, calf weaning weights, and sale prices on the University of Nevada Agricultural Experiment Station’s Gund Ranch from 2008-2020",
+    "publisher": "USDA Ag Data Commons / University of Nevada, Reno",
+    "doi": "10.15482/USDA.ADC/1528484",
+    "catalogUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Data_on_Pregnancy_rates_calf_weaning_weights_and_sale_prices_on_the_University_of_Nevada_Agricultural_Experiment_Station_s_Gund_Ranch_from_2008-2020/24856392",
+    "license": "U.S. Public Domain",
+    "licenseUrl": "https://www.usa.gov/publicdomain/label/1.0/",
+    "temporalExtent": "2008–2020",
+    "retrieved": "2026-10-12"
+  },
+  "integrity": {
+    "status": "verified",
+    "files": [
+      {
+        "path": "Gund_Ranch_Data.csv",
+        "bytes": 2162,
+        "md5": "1aa78d76661f91dc645fac891ee382ec",
+        "sha256": "b5d399bc188a49d16a4079f24e891af2728880dffc9129d7a989b9ebbee6b6a4"
+      },
+      {
+        "path": "Gund_Ranch_DataDictionary.csv",
+        "bytes": 1448,
+        "md5": "d90302f3df1a35b4fea92cb7a747039a",
+        "sha256": "c72b80ec034c03dd7c578d5a6f888d21dece964a3252fbb29e10435bbc7f886b"
+      }
+    ]
+  },
+  "shape": {
+    "annual_rows": 13,
+    "columns": 21,
+    "dictionary_rows": 21,
+    "years": [
+      "2008",
+      "2009",
+      "2010",
+      "2011",
+      "2012",
+      "2013",
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020"
+    ]
+  },
+  "available_content": {
+    "annual_herd_fields": [
+      "Number Total cows",
+      "Bred",
+      "Open "
+    ],
+    "calf_summary_fields": [
+      "Big Str Ave lbs_DateOfSale",
+      "Number Of big str calves",
+      "Big Str Price",
+      "Little Str Ave lbs_DateOfSale",
+      "Number Of little str Calves",
+      "Little Str Price",
+      "Hfrs Ave lbs_DateOFSale",
+      "Number Of hfr  calves",
+      "Hfrs Price"
+    ],
+    "adult_individual_id_fields": [],
+    "adult_individual_weight_or_adg_fields": [],
+    "dry_matter_intake_fields": []
+  },
+  "source_issues": [
+    {
+      "year": 2010,
+      "field": "Wean Start Date",
+      "value": "9/15/2011",
+      "note": "Value falls outside the row year and conflicts with the declared 2008–2020 annual series; retained as published."
+    },
+    {
+      "year": 2017,
+      "field": "Bred / Open",
+      "value": [
+        "*305",
+        "*60"
+      ],
+      "note": "Asterisked values are accompanied by a source note about bull issues; not normalized."
+    }
+  ],
+  "decision": {
+    "usable_for_approved_adult_adg_grazing_case": false,
+    "reason": "This public-domain package is a single-ranch annual rollup. It has herd reproductive counts and group-average calf sale weights/prices, but no individual adult-cow weights/ADG, animal IDs, or DMI. It cannot supply an animal-level split or validate the approved adult ADG/pasture case.",
+    "possible_future_use": "A separate descriptive ranch-economics or cow-calf production prototype, subject to explicit scope; do not mix these annual calf outcomes into the current adult ADG dataset."
+  },
+  "limitations": [
+    "One ranch; yearly summaries are not independent animal observations.",
+    "The source contains a visibly inconsistent 2010 weaning-start date and asterisked 2017 counts; these values were preserved and flagged.",
+    "The source metadata says no use limitations and identifies the package as U.S. Public Domain; attribution and version provenance are still retained."
+  ]
+}

@@ -1,0 +1,12 @@
+Column Heading,Type of Data,Units,Description
+Year,date,YYYY,Year of study
+on date,date,MM/DD/YYYY,Calendar date animals put on study pastures
+off date,date,MM/DD/YYYY,Calendar date animals removed from study pastures
+days,numeric,days,number of days on study pastures
+tag ,string,,Animal identification ear tags numbers
+gender,string,,gender (steer or heifer) of study animals
+treatment,string,,"Continuous Heavy as CH, Continuous Light as CL and Continuous Moderate as CM  grazing treatments."
+SR_AUDperHa,numeric,Animal Unit Days per hectare,"Stocking Rate calculated from: Number of animals per pasture, mean mid-season weight of animal, days on study and size of pasture"
+on kg,numeric,kg,Animal weight when put on study
+off kg,numeric,kg,Animal weight when removed from study
+gain kg,numeric,kg,Change in animal weight

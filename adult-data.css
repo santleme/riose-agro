@@ -4,7 +4,21 @@
 .adult-explorer h2,.data-table-card h2{margin:4px 0 0;font-size:1.5rem;color:#203c2d}
 .measure-control{display:grid;gap:7px;color:#718070;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
 .measure-control select{min-width:230px;padding:11px 38px 11px 13px;border:1px solid #d7dfd2;border-radius:8px;background:#fff;color:#263b2c;font:inherit;text-transform:none;letter-spacing:normal}
-.adult-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.adult-chart-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(100%,690px)}
+.adult-chart-controls .measure-control select{width:100%;min-width:0}
+.filter-summary{margin:10px 0 0;color:#637263;font-size:.82rem;font-variant-numeric:tabular-nums}
+.adult-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.association-report{margin-top:18px;padding:18px;border:1px solid #dfe7dc;border-radius:10px;background:#f8faf6}
+.domain-review-note{margin:12px 0;padding:11px 13px;border-left:3px solid #b48b51;border-radius:4px;background:#faf5e9;color:#62533c;font-size:.85rem;line-height:1.55}
+.association-report h3{margin:4px 0 0;color:#203c2d;font-size:1.1rem}
+.association-scope{color:#738171;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em}
+.association-table-wrap{overflow:auto;margin-top:12px}
+.association-table-wrap table{width:100%;min-width:690px;border-collapse:collapse;font-size:.83rem}
+.association-table-wrap th,.association-table-wrap td{padding:10px 12px;border-bottom:1px solid #e4eae1;text-align:right;vertical-align:middle}
+.association-table-wrap thead th{color:#718070;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+.association-table-wrap tbody th{color:#304a37;text-align:left;font-weight:600}
+.association-table-wrap tbody td{font-variant-numeric:tabular-nums}
+.association-takeaway{margin:14px 0 0;padding:13px 15px;border-left:3px solid #66876a;border-radius:4px;background:#edf3eb;color:#344b38;font-size:.88rem;line-height:1.65}
 .daily-explorer{margin-top:20px}
 .daily-controls{display:flex;gap:14px;align-items:end}
 .daily-controls .measure-control select{min-width:205px}
@@ -26,4 +40,4 @@
 .table-scroll th:nth-child(-n+4),.table-scroll td:nth-child(-n+4){text-align:left}
 .table-scroll tbody tr:hover{background:#f7f9f5}
 .table-note{margin:13px 0 0;color:#7b8678;font-size:.8rem;line-height:1.6}
-@media(max-width:700px){.adult-summary{grid-template-columns:1fr}.data-table-card{padding:18px 14px}.measure-control select{min-width:0;width:100%}.explorer-head{align-items:flex-start;flex-direction:column}.daily-controls{width:100%;align-items:stretch;flex-direction:column}.study-facts{gap:8px}.header-links{gap:10px}.header-links .back-link{font-size:9px}}
+@media(max-width:700px){.adult-summary{grid-template-columns:1fr}.data-table-card{padding:18px 14px}.measure-control select{min-width:0;width:100%}.explorer-head{align-items:flex-start;flex-direction:column}.adult-chart-controls{grid-template-columns:1fr;width:100%}.daily-controls{width:100%;align-items:stretch;flex-direction:column}.study-facts{gap:8px}.header-links{gap:10px}.header-links .back-link{font-size:9px}}

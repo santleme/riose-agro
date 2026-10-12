@@ -1,0 +1,29 @@
+{
+  "title": "Data from USDA ARS Central Plains Experimental Range (CPER) near Nunn, CO: Cattle weight gains managed with light, moderate and heavy grazing intensities",
+  "doi": "10.15482/USDA.ADC/1528520",
+  "version": 1,
+  "license": "U.S. Public Domain",
+  "license_url": "https://www.usa.gov/publicdomain/label/1.0/",
+  "source_url": "https://agdatacommons.nal.usda.gov/articles/dataset/Data_from_USDA_ARS_Central_Plains_Experimental_Range_CPER_near_Nunn_CO_Cattle_weight_gains_managed_with_light_moderate_and_heavy_grazing_intensities/25217282",
+  "api_url": "https://api.figshare.com/v2/articles/25217282",
+  "published_date": "2024-02-20T21:25:46Z",
+  "publisher": "USDA Ag Data Commons / Figshare",
+  "files": [
+    {
+      "name": "LTGI_2000-2019_all_weights_published.csv",
+      "file_id": 44540186,
+      "bytes": 168901,
+      "md5": "feede0fed0736b18698557e3e856da06",
+      "sha256": "533929668b59bc9b6f67bf202c87a746634871419972db126e6c94b2f83eac14",
+      "repository_md5": "feede0fed0736b18698557e3e856da06"
+    },
+    {
+      "name": "LTGI_2000-2019_data_dictionary.csv",
+      "file_id": 44540189,
+      "bytes": 3395,
+      "md5": "115b72db78b313bf90fcd5a00e982aff",
+      "sha256": "2d62865a3a6a2537325fc4fe042188d4053d9a67a48a3a2dd24ec329c6e1fbba",
+      "repository_md5": "115b72db78b313bf90fcd5a00e982aff"
+    }
+  ]
+}

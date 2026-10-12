@@ -1,0 +1,53 @@
+{
+  "retrieved": "2026-10-12",
+  "rechecked": "2026-10-12",
+  "source": {
+    "title": "Evaluation of models of enteric methane emissions in finishing steers",
+    "doi": "10.5061/dryad.qnk98sfsn",
+    "publisher": "Dryad",
+    "datasetPage": "https://datadryad.org/dataset/doi%3A10.5061%2Fdryad.qnk98sfsn",
+    "metadataApi": "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.qnk98sfsn",
+    "license": "CC0-1.0",
+    "version": 11,
+    "versionDate": "2026-02-27",
+    "metadataApiStatus": 200
+  },
+  "candidateFile": {
+    "name": "Database_09-11-2025.csv",
+    "sizeBytes": 64512,
+    "mimeType": "text/csv",
+    "sha256PublishedByDryad": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f",
+    "fileListingApiStatus": 200,
+    "downloadApiStatus": 401,
+    "downloadApiResponse": "Unauthorized, must have current bearer token",
+    "publicFileStreamStatus": 403,
+    "publicVersionZipEndpoint": "https://datadryad.org/api/v2/versions/428156/download",
+    "publicVersionZipStatus": 200,
+    "publicVersionZipBytes": 1062402,
+    "recheck": {
+      "publicDatasetPageReadable": true,
+      "publicFileStreamStatus": 403,
+      "publicVersionZipEndpointStatus": 200,
+      "downloadRoute": "Unauthenticated version ZIP endpoint returned a temporary signed download and all selected files matched Dryad API SHA-256 digests.",
+      "apiDocumentationUrl": "https://github.com/datadryad/dryad-app/blob/main/documentation/apis/README.md",
+      "apiDownloadDocumentation": "Dryad documents dataset download endpoints and notes that some download calls require a bearer token.",
+      "downloaded": true
+    },
+    "downloaded": true,
+    "sha256LocallyVerified": true,
+    "downloadedFiles": {
+      "Database_09-11-2025.csv": {"sizeBytes": 64512, "sha256": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f"},
+      "README.md": {"sizeBytes": 2849, "sha256": "43a3495f4f387de705e9c70c0aa9f52a90b4491a630cef3b129ef49361469ff1"},
+      "Model_evaluation_syntaxis_animal.txt": {"sizeBytes": 2089, "sha256": "092401c9eff319c52fd76e2110a582c09681f17064ef81adbfeb73fd58b7392e"}
+    },
+    "localAudit": "docs/evidence/dryad-finishing-steers-audit.json",
+    "frozenEngineCheck": "docs/evidence/engine-dmi-dryad-finishing-check.json"
+  },
+  "coverageClaimFromDryadRecord": "446 Bos taurus finishing steers across five independent experiments; the file README describes project, animal, breed, ADG, shrunk mid-body weight, DMI, nutrient intake, diet composition, and gas measurements.",
+  "decision": "Public bytes are now retrieved and checksum-verified through the unauthenticated version ZIP endpoint. A local source audit and fixed-default engine DMI component check are archived. Keep the result restricted to finishing/feedlot DMI; it does not validate the approved pasture case or full engine.",
+  "limits": [
+    "The source is a feedlot finishing dataset and cannot validate the approved USDA/CPER pasture case.",
+    "The record describes an independent evaluation of enteric methane equations, not validation of Agroville.",
+    "The direct API file-download endpoint requires bearer auth and the direct file stream returned 403; the public version ZIP endpoint worked and the downloaded bytes match the Dryad file digests."
+  ]
+}

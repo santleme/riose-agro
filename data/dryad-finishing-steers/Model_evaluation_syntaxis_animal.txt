@@ -1,0 +1,74 @@
+Evaluation of models of enteric methane emissions in finishing steers. R-syntaxis.
+
+library(ggthemes)
+library(car)
+library(MASS)
+library(readxl)
+library(lme4)
+library(lmerTest)
+library(arm)
+library(psych)
+library(dplyr)
+library(agricolae)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(tidyverse)
+library(olsrr)
+library(GGally)
+library(plotly)
+library(performance)
+library(see)
+library(buildmer)
+library(FME)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(deSolve)
+library(naniar)
+library(MuMIn)
+library(epiR)
+###########################################Import Dataset
+setwd("C:Methane prediction/Data/Integration")
+Database <- read_excel("Database1.xlsx")
+View(Database)
+head(Database)
+str(Database)
+##########################################Mod Fit
+options(scipen = 999)
+mod_fit_M<- lmer(M69~ (1|Project), data = Database)
+summary(mod_fit_M)
+Database$CH4_Pred_M <- predict(mod_fit_M)
+anova (mod_fit_M, test="F", type=2)
+summary(Database$CH4_Pred_M)
+########################################Mod Evaluation 
+RMSE <- function(o,p){
+  o <- Database$CH4_MJ_Fin
+  p <- Database$CH4_Pred_M
+  meano <- mean(o, na.rm=TRUE)
+  meanp <- mean(p, na.rm=TRUE)
+  res <- o - p
+  res2 <- res^2
+  rm <- sqrt(mean(res2, na.rm = TRUE))
+  uss <- sum(res2, na.rm = TRUE)
+  lo <- ifelse(is.na(o) == FALSE, 1, 0)
+  n <- sum(lo)
+  mb <- sum(res, na.rm = TRUE) / n
+  sse <- anova(lm(res ~ p))[2, 2]
+  msb <- mb^2
+  mspe <- rm^2
+  msre <- sse / n
+  msslope <- mspe - msre - msb
+  mean_val <- msb / mspe * 100
+  slope <- msslope / mspe * 100
+  residual <- msre / mspe * 100
+  rsr <- rm / sd(o, na.rm = TRUE)
+  ccc <- epi.ccc(o, p)$rho.c[1]
+  rmp <- rm / meano * 100
+  output <- format(c(meano, meanp, rmp, rm, mean_val, slope, residual, mb, msslope, ccc))
+  labels <- c("Observed Mean", "Predicted Mean", "RMSE, % Mean", "RMSE, MJ/d", "Mean Bias, % MSE", "Slope Bias, % MSE", "Residual Error, % MSE", "Mean Bias", "Slope Bias", "CCC")
+  out <- data.frame(labels, output)
+  return(out)
+}
+mod_eval <-RMSE(mod_fit_M)
+mod_eval

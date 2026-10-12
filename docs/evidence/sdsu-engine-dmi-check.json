@@ -1,0 +1,132 @@
+{
+  "classification": "fixed_default_dmi_component_diagnostic_out_of_approved_cper_domain_not_full_engine_validation",
+  "source": {
+    "articleDoi": "10.3389/fvets.2025.1625448",
+    "pmcid": "PMC12411203",
+    "license": "CC BY",
+    "file": "data/sdsu-individual-dmi/individual-dmi-derived.csv",
+    "selectedCompleteCaseTags": [
+      "167",
+      "224",
+      "235",
+      "263",
+      "313",
+      "336",
+      "387"
+    ],
+    "sourceRowsForSelectedCohortWithDerivedDmiAndWeight": 571,
+    "selectedRowsPassingPublishedDmiPercentBodyweightScreen": 197,
+    "dmiDerivation": "As-fed intake (lb/day) × period mean forage DM (%) × 0.45359237; period labels are trimmed for this derivation.",
+    "populationAndSetting": "Seven non-lactating Angus cows in a South Dakota hay-feeding study; this is not the USDA/CPER grazing cohort.",
+    "measurementCaveat": "Observed DMI is locally derived from the supplement spreadsheet and a period-average DM sample, not an independently curated individual DMI table."
+  },
+  "model": {
+    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "configuration": "One engine animal, same-day observed weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
+    "calibrationOrParameterFitting": false,
+    "targetOutput": "Total modeled dry matter intake over 24 hours (kg MS/animal/day)."
+  },
+  "overallUnfiltered": {
+    "nAnimalDays": 571,
+    "animals": 7,
+    "dates": 84,
+    "meanLiveweightKg": 632.5197844517214,
+    "meanObservedDmiKgPerDay": 13.381077385113846,
+    "meanPredictedDmiKgPerDay": 14.067113836088875,
+    "maeKgPerDay": 4.130869455762411,
+    "rmseKgPerDay": 5.199875137280268,
+    "biasPredictedMinusObservedKgPerDay": 0.6860364509750425
+  },
+  "byPeriodUnfiltered": {
+    "1_low_adapt": {
+      "nAnimalDays": 74,
+      "animals": 7,
+      "dates": 13,
+      "meanLiveweightKg": 620.0393160968242,
+      "meanObservedDmiKgPerDay": 11.59079441202702,
+      "meanPredictedDmiKgPerDay": 13.789550709382535,
+      "maeKgPerDay": 4.484733884948187,
+      "rmseKgPerDay": 6.149316641981595,
+      "biasPredictedMinusObservedKgPerDay": 2.198756297355504
+    },
+    "1_low_collect": {
+      "nAnimalDays": 98,
+      "animals": 7,
+      "dates": 14,
+      "meanLiveweightKg": 636.3428844755715,
+      "meanObservedDmiKgPerDay": 13.047300210102039,
+      "meanPredictedDmiKgPerDay": 14.152138818017107,
+      "maeKgPerDay": 3.3687045211149673,
+      "rmseKgPerDay": 4.395690188714596,
+      "biasPredictedMinusObservedKgPerDay": 1.104838607915058
+    },
+    "2_low_adapt": {
+      "nAnimalDays": 112,
+      "animals": 7,
+      "dates": 28,
+      "meanLiveweightKg": 632.1340217025626,
+      "meanObservedDmiKgPerDay": 16.97981457830357,
+      "meanPredictedDmiKgPerDay": 14.05853454949652,
+      "maeKgPerDay": 4.129390517386221,
+      "rmseKgPerDay": 5.031789604524156,
+      "biasPredictedMinusObservedKgPerDay": -2.9212800288070446
+    },
+    "2_low_collect": {
+      "nAnimalDays": 84,
+      "animals": 6,
+      "dates": 14,
+      "meanLiveweightKg": 660.9186425086668,
+      "meanObservedDmiKgPerDay": 16.17336309142857,
+      "meanPredictedDmiKgPerDay": 14.698698774492444,
+      "maeKgPerDay": 3.4712365848194584,
+      "rmseKgPerDay": 4.304672139742843,
+      "biasPredictedMinusObservedKgPerDay": -1.4746643169361289
+    },
+    "high_adapt": {
+      "nAnimalDays": 98,
+      "animals": 7,
+      "dates": 14,
+      "meanLiveweightKg": 623.0915073805713,
+      "meanObservedDmiKgPerDay": 9.292571171530613,
+      "meanPredictedDmiKgPerDay": 13.857430834705738,
+      "maeKgPerDay": 5.266136224768416,
+      "rmseKgPerDay": 6.1140477278462635,
+      "biasPredictedMinusObservedKgPerDay": 4.564859663175123
+    },
+    "high_collect": {
+      "nAnimalDays": 105,
+      "animals": 7,
+      "dates": 15,
+      "meanLiveweightKg": 624.2394354995333,
+      "meanObservedDmiKgPerDay": 12.69778354819048,
+      "meanPredictedDmiKgPerDay": 13.882960527091702,
+      "maeKgPerDay": 4.062534738909586,
+      "rmseKgPerDay": 5.063069943089793,
+      "biasPredictedMinusObservedKgPerDay": 1.1851769789012159
+    }
+  },
+  "authorScreenedSubset": {
+    "nAnimalDays": 197,
+    "animals": 7,
+    "dates": 74,
+    "meanLiveweightKg": 635.547610601457,
+    "meanObservedDmiKgPerDay": 13.741087791776645,
+    "meanPredictedDmiKgPerDay": 14.134452085691825,
+    "maeKgPerDay": 1.1501100753470395,
+    "rmseKgPerDay": 1.3392449844567786,
+    "biasPredictedMinusObservedKgPerDay": 0.3933642939151761
+  },
+  "dataChecks": {
+    "duplicateAnimalDatePairs": 0,
+    "screenedObservationFilterUsesObservedDmiPctBodyweight": true,
+    "screenedSubsetIsSecondaryAndNotAnIndependentSelection": true,
+    "dmiLabelWhitespaceDiscrepancyAffectsPublishedRmdReproduction": true
+  },
+  "limitations": [
+    "This diagnostic assesses only the fixed default DMI component in a hay-feeding study; it is not validation of the approved USDA/CPER grazing case, ADG, costs, pasture stock, housing effects, or the full engine.",
+    "The seven cows are repeated across study dates. Metrics are descriptive; no inferential interval is reported for this small cohort.",
+    "The unfiltered subset contains zero and atypical DMI values. The author-screened metrics are secondary because the screen uses observed DMI as a percentage of body weight and selects on the outcome.",
+    "The DMI target is derived using period-average forage dry matter. Trailing whitespace in published period labels creates different counts under literal versus trimmed matching; the full author pipeline is not reproduced.",
+    "No parameters were fitted or selected on these data, and no confidence or prediction intervals are implied."
+  ]
+}

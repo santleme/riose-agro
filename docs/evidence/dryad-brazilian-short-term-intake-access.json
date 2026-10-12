@@ -1,0 +1,59 @@
+{
+  "retrieved": "2026-10-11",
+  "classification": "public_dataset_metadata_verified_file_bytes_inaccessible_not_used",
+  "source": {
+    "title": "Data from: Mechanisms and implications of a type IV functional response for short-term intake rate of dry matter in large mammalian herbivores",
+    "doi": "10.5061/dryad.9ds7r",
+    "articleDoi": "10.1111/1365-2656.12698",
+    "datasetPage": "https://datadryad.org/dataset/doi%3A10.5061%2Fdryad.9ds7r",
+    "metadataApi": "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.9ds7r",
+    "fileListingApi": "https://datadryad.org/api/v2/versions/17248/files",
+    "publisher": "Dryad",
+    "license": "CC0-1.0",
+    "version": 1,
+    "versionId": 17248,
+    "metadataApiStatus": 200
+  },
+  "coverageFromPublishedRecord": {
+    "location": "Brazil (two experimental sites described in the article)",
+    "population": "Heifers grazing Cynodon sp. and Avena strigosa monocultures",
+    "target": "Short-term dry matter intake rate while grazing",
+    "design": "Two experiments with sward-height treatments and repeated blocks; approximately 45-minute grazing sessions",
+    "notMeasuredForApprovedCase": [
+      "CPER adult-steer ADG/pasteure-behavior cohort identity",
+      "daily total DMI",
+      "full engine trajectory inputs and outputs",
+      "pasto-versus-confinement comparison"
+    ]
+  },
+  "files": [
+    {
+      "name": "Mezalira_et_al_JAE_2017.csv",
+      "sizeBytes": 14858,
+      "mimeType": "text/csv",
+      "publishedDigestType": "MD5",
+      "publishedDigest": "5f7d36fec579ce350dd66129cddc4fc9",
+      "downloadApiStatus": 401,
+      "publicFileStreamStatus": 403,
+      "downloaded": false,
+      "sha256LocallyVerified": false
+    },
+    {
+      "name": "README_for_Mezalira_et_al_JAE_2017.txt",
+      "sizeBytes": 1029,
+      "mimeType": "text/plain",
+      "publishedDigestType": "MD5",
+      "publishedDigest": "a4dfc411c9cdc8a99b06c54e9c22482c",
+      "downloadApiStatus": 401,
+      "publicFileStreamStatus": 403,
+      "downloaded": false,
+      "sha256LocallyVerified": false
+    }
+  ],
+  "decision": "Do not import data or compute metrics: the record confirms CC0 metadata and a relevant short-term intake-rate study, but this environment could not retrieve the CSV bytes. Even if retrieved, it is a separate heifer cohort and a short-term intake-rate outcome, not daily DMI or validation of the approved CPER adult-steer case.",
+  "limits": [
+    "The metadata and file listing were publicly accessible, but both the documented API download and Dryad file-stream route denied the file request in this session.",
+    "The source is not the 2019-2020 USDA/CPER cohort and must not be pooled with its adult-steer ADG or behavior records.",
+    "Short-term intake rate in g DM/min is not interchangeable with daily DMI in kg/day."
+  ]
+}

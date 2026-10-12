@@ -1,0 +1,23 @@
+{
+  "source": {
+    "title": "Data on anatomy, movement, and foraging behaviour of three cattle breeds of different productivity",
+    "doi": "10.5281/zenodo.3707638",
+    "recordUrl": "https://zenodo.org/records/3707638",
+    "articleDoi": "10.3389/fvets.2020.00494",
+    "license": "CC-BY-4.0",
+    "licenseEvidence": "zenodo-record-api-metadata.json",
+    "metadataApiUrl": "https://zenodo.org/api/records/3707638",
+    "published": "2020-03-12",
+    "capturedAt": "2026-10-12",
+    "datasetUrl": "https://zenodo.org/api/records/3707638/files/Zenodo%20Data%20Allometry.txt/content"
+  },
+  "files": [
+    {
+      "path": "Zenodo_Data_Allometry.txt",
+      "bytes": 6370,
+      "sha256": "71c71623bf56124ea2593e0e0576cd6d085f060d26d733c473822d5e320eccb0",
+      "md5": "2fb19085ccc3426fd263da77e96c73f6",
+      "officialMd5": "2fb19085ccc3426fd263da77e96c73f6"
+    }
+  ]
+}

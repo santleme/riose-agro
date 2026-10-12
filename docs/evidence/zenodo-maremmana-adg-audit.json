@@ -1,0 +1,191 @@
+{
+  "classification": "public_external_year_holdout_adg_component_diagnostic_not_full_validation",
+  "source": {
+    "title": "Dataset for: Long-term assessment of beef cattle performance and hair cortisol accumulation in a silvopastoral system",
+    "recordUrl": "https://zenodo.org/records/12568499",
+    "doi": "10.5281/zenodo.12568499",
+    "articleDoi": "10.1016/j.animal.2025.101425",
+    "license": "CC BY 4.0",
+    "retrievedAt": "2026-10-12",
+    "population": {
+      "classification": "growing Maremmana heifers and steers; not mature cows",
+      "initialMeanAgeDaysByYearAndSystem": {
+        "2021": {
+          "PA": {
+            "mean": 314,
+            "sd": 46
+          },
+          "SP": {
+            "mean": 331,
+            "sd": 66
+          }
+        },
+        "2022": {
+          "PA": {
+            "mean": 331,
+            "sd": 34
+          },
+          "SP": {
+            "mean": 330,
+            "sd": 38
+          }
+        }
+      },
+      "evidence": "Ripamonti et al. (2025), Table 1; DOI 10.1016/j.animal.2025.101425"
+    },
+    "archiveFiles": [
+      {
+        "path": "BGHI.csv",
+        "bytes": 16303,
+        "sha256": "5b95ebe51e1f0ca97e334715c8957ef2712e6543dcc8886643d14e120e9d633d"
+      },
+      {
+        "path": "BGHI_classification.csv",
+        "bytes": 689,
+        "sha256": "50b14a82f674dc6ac36d8358278570f7725a909ab604baaf652b900685d095b9"
+      },
+      {
+        "path": "average_daily_gain.csv",
+        "bytes": 23002,
+        "sha256": "00c19a79c74f56decae06b57bd80745ebff0caee0037f572de2ea6b85e427d74"
+      },
+      {
+        "path": "cortisol.csv",
+        "bytes": 14582,
+        "sha256": "d2d2651be02b87a7d231176304328660633a487672ec727666a9c51b5a38e588"
+      },
+      {
+        "path": "glucose.csv",
+        "bytes": 15182,
+        "sha256": "f12113036b760d67657865e0e06820486f38c674a1b909be14951b7748671009"
+      }
+    ],
+    "attribution": "Ripamonti, A. et al. (2025). Beef cattle performance and hair cortisol accumulation in silvopastoral and pastoral systems: a 2-year assessment. Animal 19(3), 101425. https://doi.org/10.1016/j.animal.2025.101425. Dataset DOI: 10.5281/zenodo.12568499."
+  },
+  "integrity": {
+    "filesVerified": 5,
+    "rawRows": 542,
+    "animalYears": 90
+  },
+  "coverage": {
+    "years": [
+      2021,
+      2022
+    ],
+    "animalsByYear": {
+      "2021": 50,
+      "2022": 40
+    },
+    "animalsSharedBetweenYears": 0,
+    "intervalsCrossingSystemChangeExcluded": 1,
+    "derivedIntervalsByYear": {
+      "2021": 215,
+      "2022": 236
+    },
+    "reportedAdgReconciliation": {
+      "roundingToleranceKgPerAnimalDay": 0.011,
+      "checked": 446,
+      "matchesWithinRoundingTolerance": 404,
+      "mismatches": 42,
+      "reportedAdgWithoutPriorEndpoint": 27,
+      "interpretation": "Evaluation target is recomputed from consecutive observed weights and actual elapsed dates. Reported ADG is retained in the source archive but not substituted for inconsistent endpoints."
+    }
+  },
+  "evaluation": {
+    "trainingYear": 2021,
+    "heldOutYear": 2022,
+    "trainingRows": 215,
+    "trainingAnimals": 50,
+    "baseline": {
+      "method": "2021 cohort mean of endpoint-derived ADG",
+      "valueKgPerAnimalDay": 1.02771650055371
+    },
+    "engineInputs": "Observed start weight and interval duration only; default pasture state/configuration. Observed supplementation, forage quality, pasture mass, weather and system are not supplied to the engine.",
+    "engine": {
+      "nAnimalIntervals": 236,
+      "nAnimals": 40,
+      "meanObservedKgPerAnimalDay": 0.8017246705523241,
+      "meanPredictedKgPerAnimalDay": 0.5845444676957281,
+      "maeKgPerAnimalDay": 0.42231360472329027,
+      "rmseKgPerAnimalDay": 0.5499290408588746,
+      "biasPredictedMinusObservedKgPerAnimalDay": -0.21718020285659614,
+      "bySystem": {
+        "PA": {
+          "nAnimalIntervals": 118,
+          "nAnimals": 20,
+          "meanObservedKgPerAnimalDay": 0.8022817725879886,
+          "maeKgPerAnimalDay": 0.4216024223626597
+        },
+        "SP": {
+          "nAnimalIntervals": 118,
+          "nAnimals": 20,
+          "meanObservedKgPerAnimalDay": 0.8011675685166599,
+          "maeKgPerAnimalDay": 0.4230247870839207
+        }
+      }
+    },
+    "baselineEvaluation": {
+      "nAnimalIntervals": 236,
+      "nAnimals": 40,
+      "meanObservedKgPerAnimalDay": 0.8017246705523241,
+      "meanPredictedKgPerAnimalDay": 1.0277165005537088,
+      "maeKgPerAnimalDay": 0.419338891755818,
+      "rmseKgPerAnimalDay": 0.5117330721085818,
+      "biasPredictedMinusObservedKgPerAnimalDay": 0.22599183000138573,
+      "bySystem": {
+        "PA": {
+          "nAnimalIntervals": 118,
+          "nAnimals": 20,
+          "meanObservedKgPerAnimalDay": 0.8022817725879886,
+          "maeKgPerAnimalDay": 0.4334455590082828
+        },
+        "SP": {
+          "nAnimalIntervals": 118,
+          "nAnimals": 20,
+          "meanObservedKgPerAnimalDay": 0.8011675685166599,
+          "maeKgPerAnimalDay": 0.4052322245033539
+        }
+      }
+    },
+    "metricSamplingUncertainty": {
+      "method": "Paired percentile cluster bootstrap; resample unique animals with replacement and retain every observed interval and grazing system recorded for each selected animal.",
+      "replicates": 10000,
+      "seed": 20261012,
+      "animals": 40,
+      "unit": "animal; intervals remain grouped within the animal",
+      "pairedComparison": "Engine and baseline errors are computed on the same resampled animal intervals in each replicate.",
+      "interpretation": "These intervals quantify sampling uncertainty of error metrics for this 2022 cohort conditional on this one study/site. They are not prediction intervals, do not estimate year/site transport uncertainty, and do not calibrate the product.",
+      "percentileIntervals": {
+        "engineMaeKgPerAnimalDay": {
+          "lower95": 0.39470546339751156,
+          "upper95": 0.44969652468940247
+        },
+        "baselineMaeKgPerAnimalDay": {
+          "lower95": 0.3895803894148319,
+          "upper95": 0.4492148511170466
+        },
+        "engineMinusBaselineMaeKgPerAnimalDay": {
+          "lower95": -0.03568913866057147,
+          "upper95": 0.04051071321916812
+        },
+        "engineBiasKgPerAnimalDay": {
+          "lower95": -0.2636390136702852,
+          "upper95": -0.16937881299488555
+        },
+        "baselineBiasKgPerAnimalDay": {
+          "lower95": 0.1823468317480642,
+          "upper95": 0.2696719658398003
+        }
+      }
+    },
+    "interpretation": "Repeated intervals are clustered within animal; the paired animal-cluster bootstrap quantifies local sampling uncertainty for error metrics, not prediction-interval coverage. This tests one ADG component and is not calibration, causal inference, full engine validation, or validation of DMI, forage stock, cost, or the pasture-versus-confinement comparison."
+  },
+  "limits": [
+    "One Italian Maremmana farm and two annual cohorts do not represent Brazilian Bos indicus farms or all grazing systems.",
+    "The paper reports initial group mean ages of 314–331 days; the cohort is growing heifers and steers, not mature cows.",
+    "The 2022 cohort is a year holdout with no animal identities shared with 2021, but the cohorts come from the same study and site.",
+    "The paper reports supplements and group-level forage/intake context, but this engine diagnostic does not map those observations to inputs.",
+    "The article does not define this dataset as the approved primary USDA/CPER case; keep it as an independent exploratory ADG check.",
+    "A reported ADG value is not used when it disagrees with its adjacent measured weight endpoints and elapsed dates."
+  ]
+}

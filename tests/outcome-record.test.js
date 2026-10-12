@@ -74,6 +74,20 @@ test('tampered archived result is blocked when the stored sidecar hash no longer
   assert.equal(report.comparisons[0].status, 'not-comparable');
 });
 
+test('outcome validation rejects an archive that upgrades the projection to validated even with a refreshed sidecar hash', () => {
+  const {manifestBytes, snapshotBytes, archiveBytes, record} = fixture();
+  const upgraded = JSON.parse(archiveBytes.toString('utf8'));
+  upgraded.comparison.validated = true;
+  const upgradedBytes = Buffer.from(JSON.stringify(upgraded));
+  const upgradedRecord = structuredClone(record);
+  upgradedRecord.projection.archiveSha256 = sha256Bytes(upgradedBytes);
+
+  const report = validateOutcomeRecord(upgradedRecord, upgradedBytes, manifestBytes, snapshotBytes);
+  assert.equal(report.valid, false);
+  assert.ok(report.errors.some(message => message.includes('estado demonstrativo não validado')));
+  assert.equal(report.comparisons[0].status, 'not-comparable');
+});
+
 test('manifest byte changes are rejected even if the parsed JSON still describes the same comparison', () => {
   const {manifestBytes, snapshotBytes, archiveBytes, record} = fixture();
   const changedBytes = Buffer.concat([manifestBytes, Buffer.from(' ')]);

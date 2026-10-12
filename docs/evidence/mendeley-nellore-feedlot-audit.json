@@ -1,0 +1,41 @@
+{
+  "source": {
+    "doi": "10.17632/cctgpznjrc.1",
+    "articleDoi": "10.1371/journal.pone.0331238",
+    "license": "CC BY 4.0",
+    "sha256Verified": true
+  },
+  "coverage": {
+    "animals": 47,
+    "dmiAnimalDayPairs": 3854,
+    "dmiObservedValues": 3757,
+    "dmiMissingValuesAmongAnimalDayPairs": 97,
+    "dmiBlankTrailingRows": 1222,
+    "dmiDays": 82,
+    "duplicateDmiAnimalDays": 0,
+    "liveweightRows": 282,
+    "liveweightDates": 6,
+    "duplicateAnimalDateWeights": 0,
+    "drinkingEvents": 19388,
+    "groupAnimals": {
+      "No shade": 23,
+      "Shade": 24
+    },
+    "treatmentLabelsNormalizedByTrim": true,
+    "weatherRows": 7968,
+    "weatherUniqueTimestamps": 7967,
+    "duplicateWeatherTimestamps": 1,
+    "weatherObservedValues": {
+      "Air temperature (°C)": 7968,
+      "Relative humidity (%)": 7968,
+      "Solar radiation (w/m2)": 7968,
+      "THI": 7968,
+      "Wind speed (m/s)": 7968
+    }
+  },
+  "interpretation": {
+    "engineValidation": false,
+    "primaryUse": "separate descriptive exploration of an adult Nellore feedlot study",
+    "limitation": "This cohort is a controlled feedlot study, not the approved USDA/CPER observational grazing case; it cannot validate the current engine or a pasture-versus-confinement comparison."
+  }
+}

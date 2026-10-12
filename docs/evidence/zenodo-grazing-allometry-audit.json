@@ -1,0 +1,79 @@
+{
+  "classification": "public_adult_cow_grazing_observations_derived_adg_exploratory_not_engine_validation",
+  "source": {
+    "datasetDoi": "10.5281/zenodo.3707638",
+    "articleDoi": "10.3389/fvets.2020.00494",
+    "license": "CC-BY-4.0",
+    "licenseSourceField": "metadata.license.id",
+    "licenseAssessment": "record_metadata_declares_cc_by_4_0; rendered_record_license_field_is_empty; no_independent_legal_review",
+    "licenseEvidence": "zenodo-record-api-metadata.json",
+    "metadataApiUrl": "https://zenodo.org/api/records/3707638",
+    "recordPageLicenseDisplay": "empty",
+    "file": "Zenodo_Data_Allometry.txt",
+    "sha256": "71c71623bf56124ea2593e0e0576cd6d085f060d26d733c473822d5e320eccb0",
+    "officialMd5": "2fb19085ccc3426fd263da77e96c73f6"
+  },
+  "data": {
+    "rows": 27,
+    "columns": 45,
+    "breeds": {
+      "AH": {
+        "nCows": 9,
+        "ageMonths": {
+          "minimum": 60,
+          "maximum": 110
+        },
+        "meanAdgKgPerCowDayDerived": -0.5619047619047619,
+        "minAdgKgPerCowDayDerived": -1.2,
+        "maxAdgKgPerCowDayDerived": -0.11428571428571428,
+        "weightLossCows": 9,
+        "weightGainCows": 0,
+        "publishedArticleMeanAdgKgPerDayRounded": -0.6,
+        "absoluteDifferenceFromPublishedRoundedMean": 0.03809523809523807
+      },
+      "HC": {
+        "nCows": 9,
+        "ageMonths": {
+          "minimum": 53,
+          "maximum": 124
+        },
+        "meanAdgKgPerCowDayDerived": 0.07777777777777778,
+        "minAdgKgPerCowDayDerived": -0.05714285714285714,
+        "maxAdgKgPerCowDayDerived": 0.38571428571428573,
+        "weightLossCows": 2,
+        "weightGainCows": 7,
+        "publishedArticleMeanAdgKgPerDayRounded": 0.08,
+        "absoluteDifferenceFromPublishedRoundedMean": 0.0022222222222222227
+      },
+      "OB": {
+        "nCows": 9,
+        "ageMonths": {
+          "minimum": 34,
+          "maximum": 75
+        },
+        "meanAdgKgPerCowDayDerived": -0.30634920634920637,
+        "minAdgKgPerCowDayDerived": -0.6,
+        "maxAdgKgPerCowDayDerived": 0.07142857142857142,
+        "weightLossCows": 8,
+        "weightGainCows": 1,
+        "publishedArticleMeanAdgKgPerDayRounded": -0.3,
+        "absoluteDifferenceFromPublishedRoundedMean": 0.006349206349206382
+      }
+    },
+    "ageMonths": {
+      "minimum": 34,
+      "maximum": 124
+    },
+    "horizonDaysAssumedFromArticle": 70,
+    "adgFormula": "(Weight_2 - Weight_1) / 70; endpoint weights are in kg; period is the 10-week grazing experiment",
+    "individualIdentifierAvailable": false
+  },
+  "limitations": [
+    "The file has no stable individual ID; rows are treated as one row per cow based on the 27-cow study design.",
+    "The 70-day denominator is derived from the article's 10-week period; exact per-animal weighing dates are not in the file.",
+    "The article does not provide sufficient detail to decompose short-period scale change into tissue gain, gut fill, and hydration.",
+    "One alpine Swiss research setting, three breeds, and nine cows per breed do not represent the USDA/CPER cohort or Brazilian production systems.",
+    "No individual DMI, cost, or fully aligned engine inputs are provided; this dataset does not validate or calibrate the engine and does not support causal transport."
+  ],
+  "interpretation": "Adult-cow observations with individual start/end weight and grazing behavior provide a better public adult-domain reference than yearling-only datasets. Keep this cohort separate from the approved USDA/CPER observational case and use only as exploratory domain evidence."
+}

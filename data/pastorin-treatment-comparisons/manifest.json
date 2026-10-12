@@ -1,0 +1,54 @@
+{
+  "title": "PASTorIN",
+  "source": "Recherche Data Gouv / Entrepôt de données",
+  "persistentId": "doi:10.57745/R7IYDP",
+  "datasetPage": "https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/R7IYDP",
+  "apiUrl": "https://entrepot.recherche.data.gouv.fr/api/datasets/:persistentId/?persistentId=doi:10.57745/R7IYDP",
+  "apiVersion": 3,
+  "releaseDate": "2026-04-23",
+  "repositoryLicense": {
+    "name": "Etalab Open License 2.0",
+    "spdx": "etalab-2.0",
+    "url": "https://spdx.org/licenses/etalab-2.0.html"
+  },
+  "dataPaper": {
+    "citation": "Boval M, Shaqura I, Berthelot V. Comparison of the Performance of Pasture-Fed and Indoor-Fed Ruminants: A Literature Dataset on Weight Gain and Carcass Characteristics. Data. 2026;11(7):170.",
+    "doi": "10.3390/data11070170",
+    "url": "https://www.mdpi.com/2306-5729/11/7/170",
+    "publicationDate": "2026-07-09",
+    "articleLicense": {
+      "name": "Creative Commons Attribution 4.0 International",
+      "spdx": "CC-BY-4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "datasetLicenseAsReportedInDataPaper": {
+      "name": "Creative Commons Attribution 2.0",
+      "spdx": "CC-BY-2.0",
+      "url": "https://creativecommons.org/licenses/by/2.0/"
+    }
+  },
+  "licenseNote": "These are separate declarations: the repository API declares Etalab Open License 2.0 for the archived dataset; the data paper describes its dataset as CC-BY 2.0; the paper itself is CC-BY 4.0. Do not confuse the article license with the dataset license; retain both dataset declarations pending clarification and use the repository's current item-level license for the archived files.",
+  "files": [
+    {
+      "name": "PASTorIN_1_VARIABLES.xlsx",
+      "dataverseFileId": 667931,
+      "apiDeclaredBytes": 5992,
+      "archivedBytes": 15634,
+      "md5": "ccfef702e885f0963f52e4ad6d638318",
+      "sha256": "b8e2e8e62f7427e1f78e0081d0e0e3e7b87e581e5c292b3c9c04b85886b4d55a",
+      "downloadFormat": "original",
+      "role": "variable dictionary"
+    },
+    {
+      "name": "PASTorIN_2_DATA.xls",
+      "dataverseFileId": 667932,
+      "apiDeclaredBytes": 221696,
+      "archivedBytes": 221696,
+      "md5": "12418d72843fc1411c47e1f189928724",
+      "sha256": "ff77be0e83916adf0f8745b5f7eaefe27e291471fcd1b8cd3597056ec9fb9437",
+      "role": "treatment-level data"
+    }
+  ],
+  "intendedUse": "Separate read-only exploratory reference for published treatment means across pasture and indoor studies; not individual-level engine validation or calibration.",
+  "sourceVersionNote": "Dataset API version 3 was released 2026-04-23; this archived version is distinct from the later July 2026 data paper. The API reports 5,992 bytes for file 667931, but its original-format download is 15,634 bytes; the downloaded bytes match the API MD5. This metadata-size mismatch is retained as a source caveat."
+}

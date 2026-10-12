@@ -28,6 +28,17 @@
     "dlwgReconcilesWithWeightEndpointsAndDays": true,
     "herbageMassRowCount": 1210
   },
+  "population": {
+    "classification": "young growing dairy-cross-beef cattle; not a mature-cow cohort",
+    "ageAtFirstObservedIntervalDays": {
+      "animalCount": 248,
+      "minimumDays": 173,
+      "medianDays": 231,
+      "meanDays": 311.2782258064516,
+      "maximumDays": 747,
+      "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB."
+    }
+  },
   "cohorts": {
     "1": {
       "rowCount": 523,
@@ -35,7 +46,15 @@
       "years": [
         2018,
         2019
-      ]
+      ],
+      "ageAtFirstObservedIntervalDays": {
+        "animalCount": 42,
+        "minimumDays": 173,
+        "medianDays": 231,
+        "meanDays": 213.26190476190476,
+        "maximumDays": 268,
+        "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB."
+      }
     },
     "2": {
       "rowCount": 507,
@@ -43,7 +62,15 @@
       "years": [
         2020,
         2021
-      ]
+      ],
+      "ageAtFirstObservedIntervalDays": {
+        "animalCount": 53,
+        "minimumDays": 186,
+        "medianDays": 231,
+        "meanDays": 249.1509433962264,
+        "maximumDays": 504,
+        "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB."
+      }
     },
     "3": {
       "rowCount": 834,
@@ -51,7 +78,15 @@
       "years": [
         2022,
         2023
-      ]
+      ],
+      "ageAtFirstObservedIntervalDays": {
+        "animalCount": 95,
+        "minimumDays": 216,
+        "medianDays": 240,
+        "meanDays": 399.93684210526317,
+        "maximumDays": 623,
+        "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB."
+      }
     },
     "4": {
       "rowCount": 498,
@@ -59,7 +94,15 @@
       "years": [
         2024,
         2025
-      ]
+      ],
+      "ageAtFirstObservedIntervalDays": {
+        "animalCount": 58,
+        "minimumDays": 190,
+        "medianDays": 214.5,
+        "meanDays": 293.8103448275862,
+        "maximumDays": 747,
+        "method": "For each official tag, age at its earliest Date_From, computed as Date_From minus DOB."
+      }
     }
   },
   "heldOutBaseline": {
@@ -92,8 +135,12 @@
       "warning": "descriptive only; treatment is replicated at three plots per arm, so animal-period rows are not independent treatment replicates"
     }
   },
-  "engineValidation": {
+  "fullEngineValidation": {
     "evaluated": false,
-    "reason": "The study contains ADG and plot-level herbage mass, but lacks the approved USDA CPER bout-duration/velocity predictors, individual dry-matter intake, feed costs, and a confinement arm. Its pasture treatment comparison cannot validate engine.js outputs or a pasture-versus-confinement counterfactual."
+    "reason": "This dataset audit does not establish end-to-end validation of engine.js: it lacks the approved USDA CPER bout-duration/velocity predictors, individual dry-matter intake, feed costs, and a confinement arm, and its pasture treatment comparison cannot validate a pasture-versus-confinement counterfactual."
+  },
+  "separateFrozenComponentDiagnostic": {
+    "reportPath": "docs/evidence/engine-adg-rothamsted-check.json",
+    "scope": "ADG component only; not full-engine validation, calibration, or product prediction interval"
   }
 }

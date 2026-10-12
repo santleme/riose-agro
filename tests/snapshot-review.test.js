@@ -122,6 +122,8 @@ test('outcome record page is served as a local-only flow from the map', async t 
   assert.equal(page.status, 200);
   const pageText = await page.text();
   assert.match(pageText, /Vincule uma medição posterior/);
+  assert.match(pageText, /Sem calibração suficiente/);
+  assert.match(pageText, /não valida nem recalibra o motor/);
   assert.match(pageText, /id="snapshot-file"/);
   assert.match(pageText, /Lote do snapshot/);
   assert.match(pageText, /Adicionar outra métrica/);
@@ -136,6 +138,7 @@ test('outcome record page is served as a local-only flow from the map', async t 
   const scriptText = await script.text();
   assert.doesNotMatch(scriptText, /\/api\//);
   assert.doesNotMatch(scriptText, /localStorage|sessionStorage/);
+  assert.match(scriptText, /archive\.comparison\?\.validated !== false/);
   assert.equal((await fetch(`${root}/outcome-review.css`)).status, 200);
   assert.equal((await fetch(`${root}/snapshot-validator.js`)).status, 200);
   assert.equal((await fetch(`${root}/schemas/outcome-record.schema.json`)).status, 200);

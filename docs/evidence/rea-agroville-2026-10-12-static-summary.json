@@ -1,0 +1,35 @@
+{
+  "captureType": "rea-evidence-summary",
+  "capturedAt": "2026-10-12",
+  "evidenceId": "ev_718a2c470e27d367923195bb1027d58d52c83e6b4aa71c6680fd1cd2e26bd5bc",
+  "summaryViewEvidenceId": "ev_027398e59f0aa1455d9018ea70b27a20dd1c3722e84eb4fe480152d5896694a8",
+  "operation": "analyze_javascript_application",
+  "authority": "shipped-artifact",
+  "confidence": "derived",
+  "provider": "REA JavaScript application analyzer",
+  "subject": {
+    "path": "/home/lucas_coimbra/projects/hackhatons/riose-agro",
+    "sha256": "3f140aa7d0c785b70e40897fd8eed22561bed40a9e2e5f5c96487f2ef667e29a",
+    "format": "directory"
+  },
+  "statistics": {
+    "relevantFiles": 671,
+    "textBytesRead": 5613468,
+    "parsedJavaScriptFiles": 438,
+    "visitedAstNodes": 217583,
+    "parseFailures": 0
+  },
+  "coverage": {
+    "applicationGraph": "complete",
+    "semanticGraph": "partial",
+    "semanticGraphTruncated": true,
+    "semanticGraphNodeCeiling": 100000,
+    "semanticUnknowns": 29215
+  },
+  "limitations": [
+    "JavaScript and HTML were parsed as inert text; code was not executed.",
+    "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+    "Dynamic paths and relationships can remain unresolved; the semantic graph was truncated at its node ceiling.",
+    "The full analysis response exceeded the MCP transport budget; the retained Evidence summary view was consumed instead."
+  ]
+}

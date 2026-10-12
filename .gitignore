@@ -2,6 +2,10 @@
 Thumbs.db
 node_modules/
 coverage/
+.codex/
+__pycache__/
+*.py[cod]
 .env
 .env.*
 !.env.example
+.test-results/scenarios/

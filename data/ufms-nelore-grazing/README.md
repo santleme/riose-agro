@@ -1,0 +1,11 @@
+# Nelore UFMS em pastejo e suplementação — arquivo da versão 1
+
+Fonte: Defalque et al., *Data in Brief* 54 (2024), 110520, [DOI 10.1016/j.dib.2024.110520](https://doi.org/10.1016/j.dib.2024.110520). Arquivo original: [Mendeley Data, versão 1](https://data.mendeley.com/datasets/3wdjvxmvsp/1), DOI [10.17632/3wdjvxmvsp.1](https://doi.org/10.17632/3wdjvxmvsp.1). Licença publicada: CC BY 4.0; atribuição aos autores e à UFMS deve acompanhar qualquer reutilização.
+
+`Complete_Dataset.csv` foi baixado do endpoint público de arquivos Mendeley em 11/10/2026. O SHA-256 local confere com o digest fornecido pela API para a versão 1. A versão 1 contém 390 linhas (26 animais × 15 períodos) e 71 colunas. O registro Mendeley atualizado mostra a versão 7, mas a API de arquivos não listou arquivos nas versões 2–7 durante a auditoria; este snapshot não deve ser apresentado como cópia da versão 7.
+
+O artigo descreve machos Nelore em um piquete de 16 ha com *Brachiaria decumbens*, pesados a cada 13–28 dias, com suplementação registrada no cocho automático e variáveis climáticas/índices espectrais associadas ao período. É uma observação de uma propriedade/pasto e um grupo suplementado; não há braço sem suplemento nem consumo individual de forragem.
+
+Antes de usar ADG, é necessário resolver uma divergência interna: em 154/390 linhas, `GMD` difere em mais de 0,002 kg/dia de `(FINAL_WEIGHT - START_WEIGHT) / AMOUNT_DAYS`; o maior desvio absoluto é 0,286 kg/dia. `GMD` aparece com decimal vírgula e a tabela do artigo descreve ADG em g/dia, embora os valores numéricos e pesos em kg sejam compatíveis com kg/dia em parte das linhas. O índice `GEMI` também contém somente valores negativos muito extremos (de cerca de -2,45 milhões a -79.936), então não deve ser interpretado como indicador válido de pastagem sem esclarecimento metodológico.
+
+Os dados ficam preservados sem corrigir, remover ou interpolar registros. Use `npm run audit:ufms-nelore-grazing` para reproduzir a checagem. O artigo descreve machos com cerca de 20 meses; trate-os como animais em crescimento, não como vacas adultas. O conjunto é uma fonte descritiva independente de pastejo no Brasil, não validação do motor nem evidência causal de efeito da suplementação.

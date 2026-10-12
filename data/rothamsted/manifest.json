@@ -28,6 +28,7 @@
   ],
   "limits": [
     "The repository page currently supersedes an older dataset version and reports minor corrections plus additional data through 2025.",
+    "DOB and Date_From in the animal-period CSV yield 173–747 days of age at first observed interval for the 248 official tags (median 231 days); this is a young dairy-cross-beef cohort, not a mature-cow cohort.",
     "The collated CSV contains cohort numbers 1–4 grouped into two-year cohorts; preserve each cohort intact for evaluation.",
     "The dataset describes the same six North Wyke plots across cohorts. Holding out cohort 4 tests later cohorts on those plots, not new-farm generalization.",
     "DLWG is computed from start/end liveweight and elapsed days; it is not an independent measurement from those endpoints.",

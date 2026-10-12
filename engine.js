@@ -7,9 +7,11 @@
 
 
 
+import {DEFAULT_WEATHER, WEATHER_VALUES, getEnvironmentalStress, getWeatherRules, isWeather} from './environment-model.js';
+
 // All constants are illustrative assumptions, not fitted animal nutrition equations.
 export const ASSUMPTIONS = {baseDemandKgDM:8,dailyPastureGrowthKgDM:35,initialPastureKgDM:1800,supplementPrice:1.8,balancedPrice:1.6,concentratePrice:2.1,maintenanceKgDM:5.3,gainFactor:0.22};
-export const DEFAULT_CONFIG        = {diet:'pasture',housing:'pasture',weather:'normal',supplement:0};
+export const DEFAULT_CONFIG        = {diet:'pasture',housing:'pasture',weather:DEFAULT_WEATHER,supplement:0};
 const names=['Aurora','Bento','Cacau','Dália','Estrela','Figo','Gaia','Hugo','Íris','Joca','Kiara','Luna','Milo','Nina','Oliva','Pingo','Quinoa','Rubi','Sol','Teca','Uva','Vento','Wally','Zara'];
 const clamp=(v       ,min       ,max       )=>Math.max(min,Math.min(max,v));
 const patchBounds = [{x:35,y:45,w:135,h:100},{x:200,y:45,w:135,h:100},{x:35,y:180,w:135,h:100},{x:200,y:180,w:135,h:100}];
@@ -37,23 +39,24 @@ export class FarmEngine {
   configure(patch                ){
     const previous=this.state.config;
     const c={...previous,...patch};
-    if(!['pasture','balanced','concentrate'].includes(c.diet)||!['pasture','barn'].includes(c.housing)||!['normal','hot','rain'].includes(c.weather)||!Number.isFinite(c.supplement)||c.supplement<0||c.supplement>4)throw new Error('Invalid configuration');
+    if(!['pasture','balanced','concentrate'].includes(c.diet)||!['pasture','barn'].includes(c.housing)||!isWeather(c.weather)||!Number.isFinite(c.supplement)||c.supplement<0||c.supplement>4)throw new Error('Invalid configuration');
     this.state.config=c;
     if(c.housing!==previous.housing){for(const a of this.state.animals){this.place(a);}this.log(c.housing==='barn'?'Rebanho transferido para o confinamento.':'Rebanho voltou ao pasto.');}
     if(c.diet!==previous.diet)this.log('Dieta alterada: '+({pasture:'volumoso / pasto',balanced:'balanceada',concentrate:'concentrado'}[c.diet])+'.');
     if(c.supplement!==previous.supplement)this.log('Suplementação: '+c.supplement+' kg de MS/animal/dia.');
-    if(c.weather!==previous.weather)this.log('Clima alterado: '+({normal:'ameno',hot:'calor',rain:'chuva'}[c.weather])+'.');
+    if(c.weather!==previous.weather)this.log('Clima alterado: '+getWeatherRules(c.weather).label+'.');
   }
   place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];a.x=b.x+10+this.randomLocomotion()*(b.w-20);a.y=b.y+10+this.randomLocomotion()*(b.h-20);a.targetX=a.x;a.targetY=a.y;}
   tick(hours=1){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
     for(let step=0;step<hours;step++){
       const s=this.state,c=s.config;s.hour++;
-      const time=s.hour%24;const heat=c.weather==='hot'?0.8:1;
-      for(let p=0;p<4;p++)s.pastures[p]=Math.min(2400,s.pastures[p]+ASSUMPTIONS.dailyPastureGrowthKgDM*(c.weather==='rain'?1.3:c.weather==='hot'?0.65:1)/24);
+      const time=s.hour%24;const environment=getWeatherRules(c.weather);
+      const heat=environment.heatMultiplier;
+      for(let p=0;p<4;p++)s.pastures[p]=Math.min(2400,s.pastures[p]+ASSUMPTIONS.dailyPastureGrowthKgDM*environment.pastureGrowthMultiplier/24);
       for(const a of s.animals){
         const previous=a.action;
-        a.thirst=clamp(a.thirst+(c.weather==='hot'?9:5),0,100);
+        a.thirst=clamp(a.thirst+environment.thirstPerHour,0,100);
         const observedThirst=a.thirst;
         const reason=time<6||time>=21?'rest_window':observedThirst>65?'thirst_threshold':c.housing==='pasture'?'pasture_housing':'barn_housing';
         a.action=reason==='rest_window'?'resting':reason==='thirst_threshold'?'drinking':reason==='pasture_housing'?'grazing':'feeding';
@@ -84,7 +87,7 @@ export class FarmEngine {
   metrics()         {return metrics(this.state);}
   static from(snapshot         ){const engine=new FarmEngine(1,1);engine.state=structuredClone(snapshot);if(!Number.isInteger(engine.state.initialSeed))engine.state.initialSeed=engine.state.seed>>>0;else engine.state.initialSeed>>>=0;if(!Number.isInteger(engine.state.locomotionSeed))engine.state.locomotionSeed=deriveLocomotionSeed(engine.state.seed);else engine.state.locomotionSeed>>>=0;return engine;}
 }
-export function metrics(s         )        {const n=s.animals.length,intake=s.intake??{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),pastureByPaddock:[...s.pastures],intake:{...intake,totalKgDM:intake.pastureKgDM+intake.barnBaseKgDM+intake.supplementKgDM+intake.dietExtraKgDM},stress:s.config.weather==='hot'?28:s.config.housing==='barn'?12:5};}
+export function metrics(s         )        {const n=s.animals.length,intake=s.intake??{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),pastureByPaddock:[...s.pastures],intake:{...intake,totalKgDM:intake.pastureKgDM+intake.barnBaseKgDM+intake.supplementKgDM+intake.dietExtraKgDM},stress:getEnvironmentalStress(s.config.weather,s.config.housing)};}
 export function compare(snapshot         ,days=30){
   if(!Number.isInteger(days)||days<1||days>365)throw new Error('Forecast days must be 1–365');
   // Both futures share the exact same state, seed, diet, supplement and weather.
@@ -111,7 +114,7 @@ export function compare(snapshot         ,days=30){
 }
 
 const MANIFEST_TYPE='agroville-comparison';
-const CONFIG_VALUES={diet:['pasture','balanced','concentrate'],housing:['pasture','barn'],weather:['normal','hot','rain']};
+const CONFIG_VALUES={diet:['pasture','balanced','concentrate'],housing:['pasture','barn'],weather:WEATHER_VALUES};
 function assertSnapshot(snapshot){
   if(!snapshot||typeof snapshot!=='object'||!Number.isInteger(snapshot.hour)||!Number.isInteger(snapshot.seed)||!Array.isArray(snapshot.animals)||snapshot.animals.length<1||!Array.isArray(snapshot.pastures)||snapshot.pastures.length!==4||!Number.isFinite(snapshot.cost)||!snapshot.config)throw new Error('Snapshot inicial inválido');
   for(const [key,values] of Object.entries(CONFIG_VALUES))if(!values.includes(snapshot.config[key]))throw new Error('Configuração inválida no snapshot: '+key);
@@ -132,6 +135,7 @@ export function createComparisonManifest(snapshot,days=30){
 }
 export function validateComparisonManifest(manifest){
   if(!manifest||manifest.type!==MANIFEST_TYPE||manifest.version!==1)throw new Error('Tipo ou versão de manifesto não suportado');
+  if(manifest.validated!==false)throw new Error('Manifesto deve preservar o estado demonstrativo não validado do motor');
   assertSnapshot(manifest.initialSnapshot);
   const expectedSeed=Number.isInteger(manifest.initialSnapshot.initialSeed)?manifest.initialSnapshot.initialSeed:manifest.initialSnapshot.seed;
   if(!Number.isInteger(manifest.seed)||manifest.seed!==expectedSeed)throw new Error('Semente do manifesto não corresponde ao snapshot inicial');

@@ -1,0 +1,77 @@
+{
+  "captureType": "rea-evidence-summary",
+  "capturedAt": "2026-10-12",
+  "evidenceId": "ev_20575c7c634459e7d1cdbe6c60e3793d8c4d145983c559b37e12989c21ec9b37",
+  "operation": "capture_browser_scenario",
+  "authority": "controlled-replay",
+  "confidence": "observed",
+  "browser": {
+    "mode": "launch",
+    "processOwnership": "provider-owned",
+    "cleanup": "terminated-owned-process",
+    "product": "Chromium",
+    "version": "156.0.8078.4"
+  },
+  "environment": {
+    "viewport": "1365x900",
+    "locale": "pt-BR",
+    "timezone": "America/Sao_Paulo",
+    "storage": "temporary provider-owned profile"
+  },
+  "scenario": {
+    "url": "http://127.0.0.1:8003/adult-cow-data.html",
+    "actions": ["Load page, wait 1,000 ms, capture DOM and accessibility; no clicks or form changes."],
+    "completeness": {
+      "status": "complete",
+      "equalityEligible": true,
+      "missingSections": [],
+      "truncatedSections": []
+    }
+  },
+  "observed": {
+    "title": "Agroville — Coorte de vacas adultas",
+    "dom": {
+      "sha256": "30adc03793816460ea0c318b6dcde244b8b178beaefcdbc2aa9d8d0922f3abf7",
+      "bytes": 26525
+    },
+    "accessibility": {
+      "sha256": "cabced276d51afc504cb984e60d66e90fdcec26bcfde25e841cb38d0f4643438",
+      "bytes": 14551
+    },
+    "dataRendered": {
+      "rows": 27,
+      "breeds": ["Angus × Holstein", "Original Braunvieh", "Highland"],
+      "ageMonths": [34, 124],
+      "derivedAdgHorizonDays": 70,
+      "filterOptions": ["Todas as raças", "Angus × Holstein", "Original Braunvieh", "Highland"],
+      "breedMeans": [
+        {"breed": "Angus × Holstein", "derivedKgPerCowDay": -0.562, "articleRoundedKgPerDay": -0.6, "absoluteDifferenceKgPerDay": 0.038},
+        {"breed": "Original Braunvieh", "derivedKgPerCowDay": -0.306, "articleRoundedKgPerDay": -0.3, "absoluteDifferenceKgPerDay": 0.006},
+        {"breed": "Highland", "derivedKgPerCowDay": 0.078, "articleRoundedKgPerDay": 0.08, "absoluteDifferenceKgPerDay": 0.002}
+      ],
+      "associationMetric": "Speed_mean",
+      "associationCompleteRows": 24,
+      "associationMissingRows": 3,
+      "pooledSpearman": -0.4865100548,
+      "withinBreedCenteredRankCorrelation": 0.1868144401
+    },
+    "accessibilityHeadings": [
+      "Pastejo e mudança de peso",
+      "Três raças em pastejo alpino",
+      "Pastejo e ADG derivado",
+      "Mudança de peso por idade",
+      "Uma linha por vaca",
+      "Limites e fontes"
+    ],
+    "licenseDisclosure": "Zenodo API metadata.license.id declares cc-by-4.0; rendered record page has an empty License field; UI states both and says no independent legal review was performed.",
+    "eventsCaptured": false,
+    "consoleAndPageErrors": "not assessed; capture.events was empty"
+  },
+  "limitations": [
+    "This is a controlled page-load scenario, not passive attachment to the user's browser.",
+    "No filters were changed and no other interaction path was exercised.",
+    "Console and page-error events were not selected, so their absence was not assessed.",
+    "No screenshot was requested in this capture.",
+    "The capture verifies rendering and local data loading, not the scientific validity of the derived ADG, the observed associations, or the simulation engine."
+  ]
+}

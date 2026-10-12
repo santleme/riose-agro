@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Agroville — Coorte de vacas adultas</title>
+  <link rel="stylesheet" href="adult-cow-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ coorte independente de vacas</span></a>
+    <a class="back-link" href="adult-data.html">← Voltar ao USDA / CPER</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · VACAS ADULTAS</div>
+        <h1>Pastejo e mudança de peso</h1>
+        <p>Coorte independente de 27 vacas em pastagens alpinas suíças. Explore pesos inicial/final e comportamento publicados por vaca; a tabela não fornece identificador estável.</p>
+      </div>
+      <div class="data-badge"><span></span> ZENODO · API DECLARA CC BY 4.0<br><a href="adult-data.html">Trilha principal: USDA / CPER ↗</a><br><a href="usda-cgrec-cow-calf.html">Coorte Angus USDA vacas-bezerros ↗</a><br><a href="montana-cow-data.html">Angus em pastejo dormente · Montana ↗</a></div>
+    </section>
+
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">ESTUDO OBSERVACIONAL · TRILHA SEPARADA</div><h2>Três raças em pastejo alpino</h2></div><a href="https://zenodo.org/records/3707638" target="_blank" rel="noopener">Dataset no Zenodo ↗</a></div>
+      <p>Angus × Holstein, Original Braunvieh e Highland · experimento de dez semanas · peso medido no início e no fim. O intervalo individual exato não acompanha as linhas; abaixo, ADG é calculado com a suposição de 70 dias.</p>
+      <p class="notice" role="note"><strong>Leitura correta:</strong> estes dados ajudam a inspecionar uma população de vacas adultas. São de um estudo suíço pequeno e não substituem o caso USDA/CPER, não se misturam a ele e não avaliam o motor do Agroville. A API do registro declara CC BY 4.0 em <code>metadata.license.id</code>; a página renderizada deixa a licença vazia. Registramos a declaração do repositório, sem análise jurídica independente.</p>
+      <div class="study-facts" id="facts" aria-live="polite"><span>Carregando o arquivo e conferindo as linhas…</span></div>
+    </section>
+
+    <section class="explorer" aria-labelledby="chart-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">DESCRIÇÃO · ADG DERIVADO</div><h2 id="chart-title">Mudança de peso por idade</h2></div>
+        <label class="measure-control" for="breed-filter">Raça<select id="breed-filter"><option value="all">Todas as raças</option></select></label>
+      </div>
+      <p class="measure-note">Cada ponto é uma linha do arquivo, considerada uma vaca conforme o desenho do estudo. Sem ID estável, não é possível rastrear a vaca entre arquivos. ADG = (peso final − peso inicial) / 70 dias; idade em meses. O resumo abaixo mostra a reconciliação da média calculada com a média do artigo, publicada arredondada.</p>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 900 360" role="img" aria-label="ADG derivado por idade das vacas selecionadas"></svg></div>
+      <div class="cow-summary" id="summary" aria-live="polite"></div>
+    </section>
+
+    <section class="explorer association-explorer" aria-labelledby="association-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">DESCRIÇÃO · AMOSTRA PEQUENA</div><h2 id="association-title">Pastejo e ADG derivado</h2></div>
+        <label class="measure-control" for="behavior-filter">Indicador<select id="behavior-filter">
+          <option value="speedMetersPerHour">Distância média por hora (m/h)</option>
+          <option value="stepsPerHour">Passos por hora</option>
+          <option value="lyingRatio">Proporção do tempo deitada</option>
+          <option value="spaceUseEvenness">Uniformidade do uso do espaço</option>
+          <option value="forageSelectionEvenness">Uniformidade da seleção de forragem</option>
+          <option value="selectedForageQuality">Qualidade indicadora da forragem selecionada</option>
+        </select></label>
+      </div>
+      <p class="measure-note">Um ponto por linha do arquivo. A associação agrupada mistura três raças com níveis diferentes de produtividade; use o filtro de raça acima para inspecionar cada grupo. Não é uma estimativa causal nem uma previsão.</p>
+      <div class="chart-wrap"><svg id="association-chart" viewBox="0 0 900 360" role="img" aria-label="Indicador de pastejo versus ADG derivado por vaca"></svg></div>
+      <div class="association-summary" id="association-summary" aria-live="polite"></div>
+      <p class="table-note">O ADG deriva de pesos separados por dez semanas assumidas; comportamento cobre 9–10 dias, e as medidas de passos e tempo deitada têm dados para apenas parte das vacas. Veja o <a href="docs/evidence/zenodo-grazing-allometry-association.json">método e as correlações estratificadas por raça</a>.</p>
+    </section>
+
+    <section class="data-table-card">
+      <div class="study-heading"><div><div class="eyebrow">VALORES PUBLICADOS E DERIVAÇÃO</div><h2>Uma linha por vaca</h2></div><span id="row-count"></span></div>
+      <div class="table-scroll"><table><thead><tr><th>Raça</th><th>Idade (meses)</th><th>Peso inicial (kg)</th><th>Peso final (kg)</th><th>ADG derivado (kg/d)</th><th>Passos (média/h)</th><th>Velocidade (m/h)</th><th>Qualidade selecionada</th></tr></thead><tbody id="records"></tbody></table></div>
+      <p class="table-note">Valores ausentes permanecem como “—”. O estudo informa médias de mudança diária de peso para dez semanas; o valor individual calculado pela divisão por 70 dias é uma derivação do arquivo, sem datas individuais.</p>
+    </section>
+
+    <section class="limits">
+      <h2>Limites e fontes</h2>
+      <ul>
+        <li>27 vacas, nove por raça, em um contexto de pastagem alpina na Suíça; não representa a população do Colorado nem sistemas brasileiros.</li>
+        <li>O período de dez semanas é comum ao experimento; datas exatas de pesagem por animal e ID estável não constam do arquivo.</li>
+        <li>Variação de peso em dez semanas não separa ganho de tecido, conteúdo gastrointestinal e hidratação.</li>
+        <li>Não há DMI individual, custo, dados completos de ambiente ou intervenção randomizada para validar o motor ou inferir causalidade.</li>
+      </ul>
+      <p class="citation">Pauler et al. (2020), <a href="https://doi.org/10.3389/fvets.2020.00494" target="_blank" rel="noopener">artigo científico ↗</a>. Dados e arquivo: <a href="https://zenodo.org/records/3707638" target="_blank" rel="noopener">Zenodo ↗</a> · licença no <a href="https://zenodo.org/api/records/3707638" target="_blank" rel="noopener">metadado da API ↗</a>.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Coorte separada · ADG derivado · sem validação do motor</span></footer>
+  </main>
+  <script type="module" src="adult-cow-data.js"></script>
+</body>
+</html>

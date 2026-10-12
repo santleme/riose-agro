@@ -1,0 +1,97 @@
+{
+  "captureType": "rea-evidence-summary",
+  "capturedAt": "2026-10-12",
+  "evidenceId": "ev_5206cf53d2da5ef6e06a1841ea644cf3a0154456b3c6b80b61bd28aeea52a9bb",
+  "operation": "capture_browser_scenario",
+  "authority": "controlled-replay",
+  "confidence": "observed",
+  "browser": {
+    "mode": "launch",
+    "process_ownership": "provider-owned",
+    "cleanup": "terminated-owned-process",
+    "product": "Chromium",
+    "version": "156.0.8078.4"
+  },
+  "environment": {
+    "viewport": "1365x900",
+    "locale": "pt-BR",
+    "timezone": "America/Sao_Paulo",
+    "storage": "new empty profile"
+  },
+  "scenario": {
+    "url": "http://127.0.0.1:8001/adult-data.html",
+    "actions": [
+      "Load page, then wait 700 ms; no clicks, form changes, or user data."
+    ],
+    "completeness": {
+      "status": "complete",
+      "equalityEligible": true,
+      "missingSections": [],
+      "truncatedSections": []
+    }
+  },
+  "observed": {
+    "title": "Agroville — ADG e pastejo observados",
+    "responseStatuses": [
+      {
+        "url": "http://127.0.0.1:8001/adult-data.html",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/adult-data.css",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/adult-data.js",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/observed-data.css",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/adult-data-model.js",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/docs/evidence/usda-cper-association.json",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/data/usda-cper/period.csv",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/data/usda-cper/daily.csv",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:8001/favicon.svg",
+        "status": 200
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "accessibilityHeadings": [
+      "    - heading \"ADG e indicadores de pastejo\" [level=1]",
+      "    - heading \"Novilhos em shortgrass steppe\" [level=2]",
+      "      - heading \"ADG observado e pastejo\" [level=2]",
+      "        - heading \"Associação observada neste estudo\" [level=3]",
+      "    - heading \"Animal por período\" [level=2]",
+      "      - heading \"Sinais observados no piquete\" [level=2]",
+      "    - heading \"Limites de interpretação\" [level=2]"
+    ]
+  },
+  "fix": {
+    "files": [
+      "server.js",
+      "tests/adult-data.test.js",
+      "favicon.svg",
+      "adult-data.html"
+    ],
+    "change": "Allowlist observed-data.css so the adult explorer base stylesheet resolves; add an explicit own SVG favicon and serve it from the local app server.",
+    "verification": "Final REA capture returned HTTP 200 for page, CSS, favicon, JS, association JSON and both USDA/CPER CSVs; no console or page errors. Full npm test and git diff --check run after this change.",
+    "remaining": "None observed in this bounded page-load capture; no interaction path or scientific model validity is implied."
+  },
+  "visualCaptureEvidenceId": "ev_5206cf53d2da5ef6e06a1841ea644cf3a0154456b3c6b80b61bd28aeea52a9bb"
+}

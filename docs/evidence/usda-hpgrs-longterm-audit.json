@@ -1,0 +1,100 @@
+{
+  "dataset": {
+    "title": "Data from USDA ARS High Plains Grasslands Research Station (East Unit) near Cheyenne, WY: Yearling cattle weight gains managed in light, moderate and heavily stocked pastures (1982-2022)",
+    "doi": "10.15482/USDA.ADC/1528521",
+    "license": {
+      "name": "U.S. Public Domain",
+      "url": "https://www.usa.gov/publicdomain/label/1.0/"
+    },
+    "sourceFile": "EastUnit_LTGI.csv",
+    "sha256Verified": true,
+    "figshareMd5Verified": true
+  },
+  "coverage": {
+    "rows": 1018,
+    "yearsPresent": [
+      1982,
+      1983,
+      1984,
+      1985,
+      1986,
+      1987,
+      1988,
+      1990,
+      1991,
+      1992,
+      1993,
+      1994,
+      1995,
+      1996,
+      1997,
+      1998,
+      1999,
+      2001,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022
+    ],
+    "yearCount": 38,
+    "yearsWithoutGrazingPerCatalog": [
+      1989,
+      2000,
+      2002
+    ],
+    "treatmentCounts": {
+      "CH": 322,
+      "CL": 376,
+      "CM": 320
+    },
+    "genderRawCounts": {
+      "Steer": 635,
+      "heifer": 205,
+      "steer": 178
+    }
+  },
+  "identity": {
+    "nonEmptyTagRows": 523,
+    "missingTagRows": 495,
+    "uniqueNonEmptyTags": 443,
+    "duplicateYearTagGroups": []
+  },
+  "adgKgPerAnimalDay": {
+    "rows": 1018,
+    "simpleRowMean": 0.9289364241057484,
+    "median": 0.925980198019802,
+    "min": 0.3945981308411215,
+    "max": 1.862326530612245,
+    "calculation": "published gain kg / published days; recomputed here for display/audit only"
+  },
+  "weightGainConsistency": {
+    "rowsCompared": 1018,
+    "exactMatches": 251,
+    "differencesWithinOrEqualTo0_1kg": 1018,
+    "maximumDifferenceKg": 0.10000000000005116,
+    "note": "Source weights have more decimal places than rounded gain; do not treat 0.1 kg differences as unexplained model error."
+  },
+  "sourceLimitations": [
+    "USDA catalog says weight-gain outliers beyond ±2 SD of the treatment mean were removed before publication.",
+    "No grazing was conducted in 1989, 2000, or 2002 because of drought, according to catalog metadata.",
+    "The Tag field is empty in many rows and no pasture/plot identifier is included in the CSV; row-level independent-animal or pasture splits cannot be reconstructed for the full dataset.",
+    "The dataset provides entry/exit weight and stocking rate but no individual DMI, forage biomass, current feed cost, or confinement comparator.",
+    "This report describes a dataset; it does not estimate a causal stocking-rate effect or validate engine.js."
+  ]
+}

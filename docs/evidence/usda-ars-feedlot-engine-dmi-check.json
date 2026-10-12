@@ -1,0 +1,152 @@
+{
+  "classification": "fixed_default_dmi_component_check_feedlot_adults_not_full_engine_validation_or_pasture_case",
+  "source": {
+    "doi": "10.17632/wcc46fhff8.1",
+    "articleDoi": "10.15232/aas.2024-02583",
+    "license": "CC BY 4.0",
+    "sha256": "bc1d6178c6af20ac97361e6745475b76df75c82f49490623f8e7b17a9c177249",
+    "nAnimalExperimentRows": 150,
+    "nUniqueAnimalIds": 149,
+    "nExperiments": 3
+  },
+  "model": {
+    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "configuration": "One animal, observed average BW as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
+    "calibrationOrParameterFitting": false,
+    "treatmentInputsRepresented": false
+  },
+  "overall": {
+    "nAnimalExperimentRows": 150,
+    "nUniqueAnimalExperimentKeys": 150,
+    "nUniqueAnimalIdsAcrossExperiments": 149,
+    "meanObservedDmiKgPerDay": 11.348482442046945,
+    "meanPredictedDmiKgPerDay": 13.034781592239721,
+    "maeKgPerDay": 1.8767958374121496,
+    "rmseKgPerDay": 2.190123575376098,
+    "biasPredictedMinusObservedKgPerDay": 1.6862991501927787
+  },
+  "byExperiment": {
+    "Beck et al. (2023)": {
+      "nAnimalExperimentRows": 42,
+      "nUniqueAnimalExperimentKeys": 42,
+      "nUniqueAnimalIdsAcrossExperiments": 42,
+      "meanObservedDmiKgPerDay": 10.958547086167654,
+      "meanPredictedDmiKgPerDay": 13.157528030642213,
+      "maeKgPerDay": 2.198980944474556,
+      "rmseKgPerDay": 2.438786416508888,
+      "biasPredictedMinusObservedKgPerDay": 2.198980944474556
+    },
+    "Foote et al. (2024)": {
+      "nAnimalExperimentRows": 55,
+      "nUniqueAnimalExperimentKeys": 55,
+      "nUniqueAnimalIdsAcrossExperiments": 55,
+      "meanObservedDmiKgPerDay": 12.215531434472725,
+      "meanPredictedDmiKgPerDay": 12.581454679330859,
+      "maeKgPerDay": 0.8854596645473309,
+      "rmseKgPerDay": 1.1043402124671928,
+      "biasPredictedMinusObservedKgPerDay": 0.36592324485813804
+    },
+    "Proctor et al. (2024)": {
+      "nAnimalExperimentRows": 53,
+      "nUniqueAnimalExperimentKeys": 53,
+      "nUniqueAnimalIdsAcrossExperiments": 53,
+      "meanObservedDmiKgPerDay": 10.75771999607547,
+      "meanPredictedDmiKgPerDay": 13.407944418599774,
+      "maeKgPerDay": 2.650224422524303,
+      "rmseKgPerDay": 2.756185030073735,
+      "biasPredictedMinusObservedKgPerDay": 2.650224422524303
+    }
+  },
+  "leaveOneExperimentOutBaseline": {
+    "method": "For each held-out experiment, predict its rows with the row-weighted mean observed DMI from the other experiments; remove training rows whose TAG appears in the held-out experiment; concatenate each row’s one out-of-fold prediction for aggregate metrics.",
+    "splitUnit": "Entire experiment, with animal TAGs shared across experiments excluded from that fold training set.",
+    "fittedOnHeldOutRows": false,
+    "animalTagsDisjointWithinEachFold": true,
+    "overall": {
+      "nAnimalExperimentRows": 150,
+      "nUniqueAnimalExperimentKeys": 150,
+      "nUniqueAnimalIdsAcrossExperiments": 149,
+      "meanObservedDmiKgPerDay": 11.348482442046945,
+      "meanPredictedDmiKgPerDay": 11.315081027090963,
+      "maeKgPerDay": 1.1441382201829282,
+      "rmseKgPerDay": 1.511089920101293,
+      "biasPredictedMinusObservedKgPerDay": -0.03340141495598076
+    },
+    "byHeldOutExperiment": {
+      "Beck et al. (2023)": {
+        "trainingExperiments": [
+          "Foote et al. (2024)",
+          "Proctor et al. (2024)"
+        ],
+        "trainingRows": 107,
+        "heldOutExperiment": "Beck et al. (2023)",
+        "excludedOverlappingAnimalIds": [
+          "13"
+        ],
+        "nAnimalExperimentRows": 42,
+        "nUniqueAnimalExperimentKeys": 42,
+        "nUniqueAnimalIdsAcrossExperiments": 42,
+        "meanObservedDmiKgPerDay": 10.958547086167654,
+        "meanPredictedDmiKgPerDay": 11.491159597551404,
+        "maeKgPerDay": 0.9073094277799026,
+        "rmseKgPerDay": 1.353626356293447,
+        "biasPredictedMinusObservedKgPerDay": 0.5326125113837412,
+        "trainingMeanDmiKgPerDay": 11.491159597551398
+      },
+      "Foote et al. (2024)": {
+        "trainingExperiments": [
+          "Beck et al. (2023)",
+          "Proctor et al. (2024)"
+        ],
+        "trainingRows": 94,
+        "heldOutExperiment": "Foote et al. (2024)",
+        "excludedOverlappingAnimalIds": [
+          "13"
+        ],
+        "nAnimalExperimentRows": 55,
+        "nUniqueAnimalExperimentKeys": 55,
+        "nUniqueAnimalIdsAcrossExperiments": 55,
+        "meanObservedDmiKgPerDay": 12.215531434472725,
+        "meanPredictedDmiKgPerDay": 10.83738421714189,
+        "maeKgPerDay": 1.4587960762293692,
+        "rmseKgPerDay": 1.8377741669477456,
+        "biasPredictedMinusObservedKgPerDay": -1.3781472173308458,
+        "trainingMeanDmiKgPerDay": 10.837384217141881
+      },
+      "Proctor et al. (2024)": {
+        "trainingExperiments": [
+          "Beck et al. (2023)",
+          "Foote et al. (2024)"
+        ],
+        "trainingRows": 97,
+        "heldOutExperiment": "Proctor et al. (2024)",
+        "excludedOverlappingAnimalIds": [],
+        "nAnimalExperimentRows": 53,
+        "nUniqueAnimalExperimentKeys": 53,
+        "nUniqueAnimalIdsAcrossExperiments": 53,
+        "meanObservedDmiKgPerDay": 10.75771999607547,
+        "meanPredictedDmiKgPerDay": 11.671270170258149,
+        "maeKgPerDay": 1.0052821295861898,
+        "rmseKgPerDay": 1.227010225797663,
+        "biasPredictedMinusObservedKgPerDay": 0.9135501741826839,
+        "trainingMeanDmiKgPerDay": 11.671270170258156
+      }
+    }
+  },
+  "sameRowsComparison": {
+    "nAnimalExperimentRows": 150,
+    "engineMaeKgPerDay": 1.8767958374121496,
+    "baselineMaeKgPerDay": 1.1441382201829282,
+    "engineMaeMinusBaselineMaeKgPerDay": 0.7326576172292214,
+    "engineToBaselineMaeRatio": 1.640357610911802,
+    "engineBeatsBaselineOnMae": false
+  },
+  "limitations": [
+    "This checks only the fixed default DMI component against animal-level summaries from three finishing/feedlot experiments; it is not the approved adult USDA/CPER grazing case and does not validate ADG, costs, pasture stock, or a full engine trajectory.",
+    "The source workbook has one row per animal per experiment, not daily DMI/weight pairs. Its compiled DMI and average BW do not document exact within-period alignment in the workbook.",
+    "The model receives no treatment, diet composition, climate, or experiment-specific inputs. Experiment-level differences are descriptive, not treatment effects.",
+    "The engine errors use fixed defaults without fitting. The baseline mean is computed only from each fold training data; neither analysis reports a confidence interval, prediction interval, calibration claim, or coverage claim.",
+    "The leave-one-experiment-out mean is a simple reference benchmark, not a published biological equation; with only three experiments, the fold count is small and the source measurement protocols may differ.",
+    "One TAG appears in more than one experiment; the source key is Experiment plus TAG. Experiment-level metrics are kept separate."
+  ]
+}

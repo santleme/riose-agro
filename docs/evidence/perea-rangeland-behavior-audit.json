@@ -1,0 +1,348 @@
+{
+  "source": {
+    "title": "Labeled sensor dataset of beef cattle behavior grazing desert rangelands",
+    "version": 2,
+    "doi": "10.6084/m9.figshare.28801181.v2",
+    "url": "https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "article": "https://doi.org/10.1016/j.atech.2025.101002",
+    "file": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "bytes": 307862,
+    "md5": "7cd143e8cccc79a5e159eaa83428529f",
+    "readme": "data/perea-rangeland-behavior/README_V2.txt"
+  },
+  "audit": {
+    "records": 9222,
+    "animals": 24,
+    "daysWithObservations": 40,
+    "firstTimestampMountainTime": "2022-06-30T19:45",
+    "lastTimestampMountainTime": "2022-11-27T12:06",
+    "motionIndexRange": [
+      0.0,
+      30.0
+    ],
+    "behaviorCounts": {
+      "GR": 3928,
+      "RU": 976,
+      "WA": 2286,
+      "RE": 2032
+    },
+    "stateCounts": {
+      "AC": 6214,
+      "ST": 3008
+    },
+    "duplicateAnimalTimestampKeys": 290,
+    "recordsAtRepeatedAnimalTimestamps": 304,
+    "invalidRows": [],
+    "observationsByBreed": {
+      "BR": 2154,
+      "BH": 2114,
+      "RC": 2671,
+      "AH": 2283
+    },
+    "animalsByBreed": {
+      "AH": 6,
+      "BH": 6,
+      "BR": 6,
+      "RC": 6
+    },
+    "perAnimal": [
+      {
+        "breed": "AH",
+        "id": "2003",
+        "observations": 446,
+        "days": 4,
+        "behaviors": {
+          "RE": 135,
+          "GR": 194,
+          "WA": 69,
+          "RU": 48
+        }
+      },
+      {
+        "breed": "AH",
+        "id": "2004",
+        "observations": 385,
+        "days": 3,
+        "behaviors": {
+          "GR": 192,
+          "WA": 79,
+          "RE": 98,
+          "RU": 16
+        }
+      },
+      {
+        "breed": "AH",
+        "id": "2008",
+        "observations": 313,
+        "days": 3,
+        "behaviors": {
+          "GR": 150,
+          "WA": 69,
+          "RE": 77,
+          "RU": 17
+        }
+      },
+      {
+        "breed": "AH",
+        "id": "2009",
+        "observations": 408,
+        "days": 5,
+        "behaviors": {
+          "RE": 132,
+          "GR": 145,
+          "RU": 51,
+          "WA": 80
+        }
+      },
+      {
+        "breed": "AH",
+        "id": "2013",
+        "observations": 349,
+        "days": 2,
+        "behaviors": {
+          "GR": 147,
+          "WA": 79,
+          "RE": 79,
+          "RU": 44
+        }
+      },
+      {
+        "breed": "AH",
+        "id": "2019",
+        "observations": 382,
+        "days": 4,
+        "behaviors": {
+          "WA": 144,
+          "GR": 123,
+          "RE": 68,
+          "RU": 47
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "4071",
+        "observations": 358,
+        "days": 5,
+        "behaviors": {
+          "RU": 33,
+          "GR": 159,
+          "RE": 73,
+          "WA": 93
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "4085",
+        "observations": 388,
+        "days": 4,
+        "behaviors": {
+          "GR": 198,
+          "RE": 53,
+          "RU": 43,
+          "WA": 94
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "4511",
+        "observations": 359,
+        "days": 5,
+        "behaviors": {
+          "RU": 47,
+          "RE": 86,
+          "GR": 130,
+          "WA": 96
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "4589",
+        "observations": 316,
+        "days": 7,
+        "behaviors": {
+          "RU": 52,
+          "RE": 66,
+          "GR": 105,
+          "WA": 93
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "5111",
+        "observations": 398,
+        "days": 7,
+        "behaviors": {
+          "RU": 19,
+          "GR": 185,
+          "RE": 98,
+          "WA": 96
+        }
+      },
+      {
+        "breed": "BH",
+        "id": "6495",
+        "observations": 295,
+        "days": 7,
+        "behaviors": {
+          "RU": 32,
+          "RE": 46,
+          "GR": 116,
+          "WA": 101
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "7001",
+        "observations": 318,
+        "days": 7,
+        "behaviors": {
+          "GR": 120,
+          "RU": 59,
+          "WA": 62,
+          "RE": 77
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "8063",
+        "observations": 413,
+        "days": 8,
+        "behaviors": {
+          "WA": 85,
+          "GR": 208,
+          "RU": 51,
+          "RE": 69
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "8065",
+        "observations": 317,
+        "days": 7,
+        "behaviors": {
+          "GR": 105,
+          "RE": 95,
+          "RU": 36,
+          "WA": 81
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "8071",
+        "observations": 286,
+        "days": 8,
+        "behaviors": {
+          "RE": 90,
+          "RU": 42,
+          "GR": 101,
+          "WA": 53
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "8073",
+        "observations": 401,
+        "days": 10,
+        "behaviors": {
+          "GR": 192,
+          "WA": 96,
+          "RU": 60,
+          "RE": 53
+        }
+      },
+      {
+        "breed": "BR",
+        "id": "8089",
+        "observations": 419,
+        "days": 8,
+        "behaviors": {
+          "GR": 182,
+          "WA": 90,
+          "RE": 110,
+          "RU": 37
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "1067",
+        "observations": 430,
+        "days": 6,
+        "behaviors": {
+          "WA": 92,
+          "RE": 62,
+          "GR": 231,
+          "RU": 45
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "2024",
+        "observations": 528,
+        "days": 8,
+        "behaviors": {
+          "WA": 163,
+          "GR": 213,
+          "RE": 81,
+          "RU": 71
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "2061",
+        "observations": 407,
+        "days": 5,
+        "behaviors": {
+          "GR": 155,
+          "WA": 119,
+          "RE": 109,
+          "RU": 24
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "35",
+        "observations": 376,
+        "days": 9,
+        "behaviors": {
+          "RE": 91,
+          "WA": 136,
+          "GR": 132,
+          "RU": 17
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "6",
+        "observations": 523,
+        "days": 8,
+        "behaviors": {
+          "RE": 96,
+          "GR": 247,
+          "RU": 61,
+          "WA": 119
+        }
+      },
+      {
+        "breed": "RC",
+        "id": "9012",
+        "observations": 407,
+        "days": 8,
+        "behaviors": {
+          "GR": 198,
+          "WA": 97,
+          "RE": 88,
+          "RU": 24
+        }
+      }
+    ]
+  },
+  "interpretation": [
+    "This is a small annotated sensor sample for behavior exploration, not an ADG, DMI, or weight dataset.",
+    "Each row is a one-minute behavior label synchronized with a one-dimensional motion index; labels were reviewed from video. The public file has repeated animal/timestamp keys, which are preserved as published.",
+    "Observations cover sampled daylight video sessions, not full 24-hour activity budgets or whole grazing seasons.",
+    "The source study reports classification results; this audit does not retrain or validate those models.",
+    "Keep this source separate from the adult ADG and grazing analysis using USDA/CPER."
+  ]
+}

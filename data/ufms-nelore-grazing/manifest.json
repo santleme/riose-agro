@@ -1,0 +1,16 @@
+{
+  "title": "A Dataset for Integrated Analysis of Satellite Remote Sensing, Environmental Variables and Cattle Supplementation Data",
+  "doi": "10.17632/3wdjvxmvsp.1",
+  "article_doi": "10.1016/j.dib.2024.110520",
+  "version": 1,
+  "license": "CC BY 4.0",
+  "license_url": "http://creativecommons.org/licenses/by/4.0",
+  "source_url": "https://data.mendeley.com/datasets/3wdjvxmvsp/1",
+  "metadata_api": "https://data.mendeley.com/public-api/datasets/3wdjvxmvsp?version=1",
+  "files_api": "https://data.mendeley.com/public-api/datasets/3wdjvxmvsp/files?folder_id=root&version=1&$start=0&$limit=1000",
+  "file": "Complete_Dataset.csv",
+  "bytes": 251857,
+  "sha256": "81efd9e84fb30b3ddf2ed3732d5420f25942772483917411be83aea8ecd473ca",
+  "repository_sha256": "81efd9e84fb30b3ddf2ed3732d5420f25942772483917411be83aea8ecd473ca",
+  "downloaded_at_utc": "2026-10-11"
+}

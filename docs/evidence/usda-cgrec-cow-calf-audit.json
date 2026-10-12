@@ -1,0 +1,273 @@
+{
+  "auditedAt": "2026-10-12",
+  "classification": "public_usda_cgrec_mature_and_young_cow_grazing_observations_exploratory_not_engine_validation",
+  "source": {
+    "title": "Central Grasslands Research Extension Center (North Dakota) patch-burning and grazing management",
+    "doi": "10.15482/USDA.ADC/25464097",
+    "landingPage": "https://agdatacommons.nal.usda.gov/articles/dataset/Central_Grasslands_Research_Extension_Center_North_Dakota_patch-burning_and_grazing_management/25464097",
+    "relatedArticle": {
+      "citation": "McGranahan, D.A., Wanchuk, M.R., Sedivec, K.K., Berti, M., Swanson, K.C., Hovick, T.J. (2025). Variability in weight gains of cows and their calves across grazing management and dam age class: Implications for maternal productivity. Rangeland Ecology & Management, 100, 121\u2013125.",
+      "doi": "10.1016/j.rama.2025.03.001",
+      "url": "https://doi.org/10.1016/j.rama.2025.03.001",
+      "officialPublicationRecord": "https://www.ars.usda.gov/research/publications/publication/?seqNo115=414810"
+    },
+    "citation": "McGranahan, Devan; Sedivec, Kevin (2024). Central Grasslands Research Extension Center (North Dakota) patch-burning and grazing management. USDA Ag Data Commons. https://doi.org/10.15482/USDA.ADC/25464097",
+    "license": {
+      "declared": "CC BY-SA 4.0",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "Ag Data Commons dataset page"
+    },
+    "intendedUse": "Non-commercial research (as separately stated in the dataset record)"
+  },
+  "files": {
+    "workbook": "data/usda-cgrec-cow-calf/CentralGrasslandsFireForageNAL.xlsx",
+    "md5": "ce0e381084f5c93f82c5200f069f139b",
+    "sha256": "f0c317adb513984ecb73499383a7d306805700cbaa4418bf8357490645f33750",
+    "normalizedObservations": "data/usda-cgrec-cow-calf/cow-calf-observations.json"
+  },
+  "workbook": {
+    "sheets": [
+      "METADATA",
+      "ForageQualitySamplePointData",
+      "CowGains17-20",
+      "CowCalfGains18-20",
+      "MineralData"
+    ],
+    "cowCalfSheet": "CowCalfGains18-20",
+    "metadataRows": 74
+  },
+  "data": {
+    "records": 859,
+    "years": {
+      "2018": 240,
+      "2019": 296,
+      "2020": 323
+    },
+    "ageClassRows": {
+      "Old": 471,
+      "Young": 388
+    },
+    "treatmentRows": {
+      "Continuous": 246,
+      "Patch-burn": 319,
+      "Rotational": 294
+    },
+    "uniqueCows": 471,
+    "cowsRepeatedAcrossYears": 275,
+    "uniqueCalves": 859,
+    "pasturesByTreatment": {
+      "Continuous": 4,
+      "Patch-burn": 4,
+      "Rotational": 4
+    },
+    "missingValues": 0,
+    "duplicateCowYearRows": 0,
+    "cowAdgKgPerDay": [
+      {
+        "year": 2018,
+        "treatment": "Continuous",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 36,
+        "nUniqueCows": 36,
+        "nUniqueCalves": 36,
+        "meanCowAdgKgPerDay": 0.1044261104192611,
+        "meanCalfAdgKgPerDay": 1.266085512660855
+      },
+      {
+        "year": 2018,
+        "treatment": "Continuous",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 38,
+        "nUniqueCows": 38,
+        "nUniqueCalves": 38,
+        "meanCowAdgKgPerDay": 0.014378645867470669,
+        "meanCalfAdgKgPerDay": 1.118257193419414
+      },
+      {
+        "year": 2018,
+        "treatment": "Patch-burn",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 31,
+        "nUniqueCows": 31,
+        "nUniqueCalves": 31,
+        "meanCowAdgKgPerDay": 0.195084963644398,
+        "meanCalfAdgKgPerDay": 1.2762624030852046
+      },
+      {
+        "year": 2018,
+        "treatment": "Patch-burn",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 41,
+        "nUniqueCows": 41,
+        "nUniqueCalves": 41,
+        "meanCowAdgKgPerDay": 0.15623576223308933,
+        "meanCalfAdgKgPerDay": 1.1581189442031405
+      },
+      {
+        "year": 2018,
+        "treatment": "Rotational",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 47,
+        "nUniqueCows": 47,
+        "nUniqueCalves": 47,
+        "meanCowAdgKgPerDay": 0.06147160912535438,
+        "meanCalfAdgKgPerDay": 1.1691529106276992
+      },
+      {
+        "year": 2018,
+        "treatment": "Rotational",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 47,
+        "nUniqueCows": 47,
+        "nUniqueCalves": 47,
+        "meanCowAdgKgPerDay": -0.08515275164939985,
+        "meanCalfAdgKgPerDay": 1.0359423438700617
+      },
+      {
+        "year": 2019,
+        "treatment": "Continuous",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 39,
+        "nUniqueCows": 39,
+        "nUniqueCalves": 39,
+        "meanCowAdgKgPerDay": 0.1710163474869357,
+        "meanCalfAdgKgPerDay": 1.2327269680210855
+      },
+      {
+        "year": 2019,
+        "treatment": "Continuous",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 40,
+        "nUniqueCows": 40,
+        "nUniqueCalves": 40,
+        "meanCowAdgKgPerDay": 0.14223113487819367,
+        "meanCalfAdgKgPerDay": 1.1504753416518123
+      },
+      {
+        "year": 2019,
+        "treatment": "Patch-burn",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 82,
+        "nUniqueCows": 82,
+        "nUniqueCalves": 82,
+        "meanCowAdgKgPerDay": 0.21883106531600072,
+        "meanCalfAdgKgPerDay": 1.256195382809443
+      },
+      {
+        "year": 2019,
+        "treatment": "Patch-burn",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 38,
+        "nUniqueCows": 38,
+        "nUniqueCalves": 38,
+        "meanCowAdgKgPerDay": 0.15167151390061606,
+        "meanCalfAdgKgPerDay": 1.1357772774181443
+      },
+      {
+        "year": 2019,
+        "treatment": "Rotational",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 48,
+        "nUniqueCows": 48,
+        "nUniqueCalves": 48,
+        "meanCowAdgKgPerDay": 0.08603188750247572,
+        "meanCalfAdgKgPerDay": 1.1665366904337493
+      },
+      {
+        "year": 2019,
+        "treatment": "Rotational",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 49,
+        "nUniqueCows": 49,
+        "nUniqueCalves": 49,
+        "meanCowAdgKgPerDay": 0.044047922199182694,
+        "meanCalfAdgKgPerDay": 1.0273806492293887
+      },
+      {
+        "year": 2020,
+        "treatment": "Continuous",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 43,
+        "nUniqueCows": 43,
+        "nUniqueCalves": 43,
+        "meanCowAdgKgPerDay": 0.18310178193899124,
+        "meanCalfAdgKgPerDay": 1.34098459679855
+      },
+      {
+        "year": 2020,
+        "treatment": "Continuous",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 50,
+        "nUniqueCows": 50,
+        "nUniqueCalves": 50,
+        "meanCowAdgKgPerDay": 0.37225501770956315,
+        "meanCalfAdgKgPerDay": 1.1291617473435656
+      },
+      {
+        "year": 2020,
+        "treatment": "Patch-burn",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 86,
+        "nUniqueCows": 86,
+        "nUniqueCalves": 86,
+        "meanCowAdgKgPerDay": 0.21733683863705003,
+        "meanCalfAdgKgPerDay": 1.3843146810905795
+      },
+      {
+        "year": 2020,
+        "treatment": "Patch-burn",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 41,
+        "nUniqueCows": 41,
+        "nUniqueCalves": 41,
+        "meanCowAdgKgPerDay": 0.2408788550695424,
+        "meanCalfAdgKgPerDay": 1.2904584329196302
+      },
+      {
+        "year": 2020,
+        "treatment": "Rotational",
+        "ageClass": "Old",
+        "nCowCalfYearRows": 59,
+        "nUniqueCows": 59,
+        "nUniqueCalves": 59,
+        "meanCowAdgKgPerDay": 0.06966261781361935,
+        "meanCalfAdgKgPerDay": 1.218583034838813
+      },
+      {
+        "year": 2020,
+        "treatment": "Rotational",
+        "ageClass": "Young",
+        "nCowCalfYearRows": 44,
+        "nUniqueCows": 44,
+        "nUniqueCalves": 44,
+        "meanCowAdgKgPerDay": 0.1198749597509928,
+        "meanCalfAdgKgPerDay": 1.09470591392079
+      }
+    ]
+  },
+  "ageClassDefinition": {
+    "Young": "one to three previous calf crops",
+    "Old": "four or more previous calf crops; mature in the related peer-reviewed article",
+    "source": "related article methods; labels in source workbook are Young/Old"
+  },
+  "observedTreatmentLabels": {
+    "Continuous": 246,
+    "Patch-burn": 319,
+    "Rotational": 294
+  },
+  "method": {
+    "unitOfObservation": "cow-calf pair by study year",
+    "summary": "arithmetic descriptive means only; no p-values, confidence intervals, causal estimate, or engine fit",
+    "cowsRepeatAcrossYears": true,
+    "treatmentExperimentalUnit": "pasture; treatment comparisons are shown descriptively and not treated as independently replicated animal-level effects"
+  },
+  "limitations": [
+    "This North Dakota Angus cow-calf research herd is an independent exploratory cohort, not the approved primary USDA/CPER case.",
+    "The workbook has 859 cow-calf-year rows from 471 unique cow IDs; rows are repeated across years for some cows and are not independent animals.",
+    "Grazing treatment is applied at pasture level; animal rows are not independent treatment replicates.",
+    "Cow ADG and calf ADG are observed outcomes; this explorer does not estimate intervention effects or attribute differences to treatment.",
+    "No individual dry-matter intake or compatible cost and pasture-stock data are present for validating the engine or calibrating prediction intervals.",
+    "The dataset page declares CC BY-SA 4.0 and separately states non-commercial research as intended use; keep both metadata statements and the attribution with derivatives.",
+    "The workbook metadata dictionary says one of four experimental treatments, while the analyzed cow/calf sheet and related article contain three grazing management labels; this mismatch is retained here rather than silently repaired."
+  ]
+}

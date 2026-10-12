@@ -1,0 +1,147 @@
+{
+  "source": {
+    "article_doi": "10.3389/fvets.2025.1625448",
+    "pmcid": "PMC12411203",
+    "supplement": "Data_Sheet_1.ZIP",
+    "supplement_url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC12411203.1/Data_Sheet_1.ZIP?md5=3df4dd63d52f7df82fdb904d823328bb",
+    "license": "CC BY",
+    "supplement_md5": "3df4dd63d52f7df82fdb904d823328bb",
+    "supplement_sha256": "655c37fa00030b55cc80029349f2cbf6594eb341ad3b495c24dc0dfbdb70977c",
+    "downloaded_components_sha256": {
+      "Forage_Data.xlsx": "83c96a5a1f059406c30a0c3e65eaf144456db84b69d9e286ced5115378433cbc",
+      "ScaleWeights.xlsx": "e4b828960143e007ab221b92ad69557f1eb63ec418c394540bd3c55613e42e79",
+      "intake.final.xlsx": "ffb6870b6c2caa2a15e938020e715ec33356b02295105cdc3e7ce633323093e7"
+    }
+  },
+  "coverage": {
+    "intake_rows": 1480,
+    "forage_dm_samples": 18,
+    "scale_weight_rows": 1105,
+    "animals_in_intake_with_tag": 14,
+    "animals_with_weight": 13,
+    "article_complete_case_tags_from_published_rmd": [
+      "167",
+      "224",
+      "235",
+      "263",
+      "313",
+      "336",
+      "387"
+    ],
+    "article_complete_case_tags_found": [
+      "167",
+      "224",
+      "235",
+      "263",
+      "313",
+      "336",
+      "387"
+    ],
+    "selected_complete_case_intake_rows": 742,
+    "rows_by_record_class": {
+      "aggregate_total": 106,
+      "aggregate_unknown": 106,
+      "other_individual_not_in_article_complete_case_cohort": 526,
+      "selected_article_complete_case_animal": 742
+    },
+    "intake_dates": [
+      "2022-02-01",
+      "2022-05-17"
+    ],
+    "feed_period_counts_raw": {
+      "1_low_adapt": 202,
+      "1_low_collect": 210,
+      "2_low_adapt ": 204,
+      "2_low_collect": 154,
+      "high_adapt": 206,
+      "high_collect": 210,
+      "pre trail ": 294
+    },
+    "forage_dm_mean_pct_by_normalized_period": {
+      "1_low_adapt": 95.133333,
+      "1_low_collect": 96.933333,
+      "2_low_adapt": 93.333333,
+      "2_low_collect": 93.433333,
+      "high_adapt": 93.566667,
+      "high_collect": 93.3
+    },
+    "dmi_derived_rows": 595,
+    "dmi_derived_kg_day_range": [
+      0.0,
+      36.730773
+    ],
+    "selected_complete_case_rows_after_normalized_1_8_to_2_5_pct_bw_screen": 197,
+    "selected_complete_case_dmi_kg_day_range_after_normalized_screen": [
+      9.420028,
+      19.728244
+    ],
+    "selected_complete_case_dmi_mean_kg_day_by_period_after_normalized_screen": {
+      "1_low_adapt": 13.048095,
+      "1_low_collect": 13.18323,
+      "2_low_adapt": 15.055,
+      "2_low_collect": 14.79235,
+      "high_adapt": 13.162479,
+      "high_collect": 13.031468
+    },
+    "dmi_mean_kg_day_by_period": {
+      "1_low_adapt": 10.448229,
+      "1_low_collect": 13.0473,
+      "2_low_adapt": 16.979815,
+      "2_low_collect": 16.173363,
+      "high_adapt": 9.292571,
+      "high_collect": 12.697784
+    },
+    "identified_animal_rows_passing_1_8_to_2_5_pct_bw_screen_after_trimming_period_labels": 308,
+    "selected_complete_case_rows_passing_1_8_to_2_5_pct_bw_screen_after_trimming_period_labels": 197,
+    "identified_animal_rows_passing_1_8_to_2_5_pct_bw_screen_with_literal_period_labels": 259,
+    "selected_complete_case_rows_passing_1_8_to_2_5_pct_bw_screen_with_literal_period_labels": 160
+  },
+  "qualityChecks": {
+    "intake_rows_missing_animal_tag_including_group_aggregates": 212,
+    "selected_complete_case_intake_rows_without_matching_forage_period": 147,
+    "intake_rows_with_zero_as_fed_intake": 101,
+    "duplicate_animal_date_weight_keys_in_source": 0,
+    "selected_complete_case_rows_without_unique_same_day_weight": 147,
+    "selected_complete_case_rows_with_tag_and_date_for_weight_lookup": 742,
+    "selected_complete_case_rows_with_unique_same_day_weight": 595,
+    "feed_period_whitespace_variants": {
+      "2_low_adapt": {
+        "2_low_adapt ": 204
+      },
+      "pre trail": {
+        "pre trail ": 294
+      }
+    },
+    "weight_rows_with_zero_weight": 242,
+    "dmi_derived_zero_intake_rows": 16,
+    "dmi_rows_over_60_kg_day_in_selected_article_cohort": 0,
+    "source_rmd_note": "The authors' R Markdown says its 1.8–2.5% BW filter retains 308 records, then selects tags 167, 224, 235, 263, 313, 336, and 387 and later aggregates to herd level. The local screen reaches 308 identified-animal rows only after trimming trailing whitespace from period labels (197 selected tags); literal period matching yields 259 rows (160 selected tags), and the published R Markdown does not explicitly trim whitespace. This discrepancy is unresolved, so the local DMI derivation does not claim to reproduce the full published pipeline.",
+    "animal_name_counts": {
+      "167": 106,
+      "195": 30,
+      "215": 106,
+      "224": 106,
+      "225": 89,
+      "235": 106,
+      "241": 106,
+      "261": 89,
+      "263": 106,
+      "3": 77,
+      "310": 29,
+      "313": 106,
+      "336": 106,
+      "387": 106,
+      "Total": 106,
+      "Unknown": 106
+    }
+  },
+  "scope": {
+    "use": "Exploratory DMI component audit only for the seven tags selected by the authors' published complete-case R Markdown; DMI is derived from as-fed intake and period-mean forage dry matter.",
+    "not_valid_for": [
+      "validation of the USDA/CPER grazing ADG case",
+      "causal effects of pasture, forage or supplementation",
+      "individual prediction validation without a predeclared independent split"
+    ],
+    "population_and_setting": "Seven non-lactating Angus beef cows in a South Dakota hay-feeding experiment. The derivative is restricted to the seven tags selected in the public R Markdown; group-level Total/Unknown rows and other tagged animals are retained in the CSV as excluded records with blank DMI."
+  }
+}

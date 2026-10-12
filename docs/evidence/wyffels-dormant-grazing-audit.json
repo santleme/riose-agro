@@ -1,0 +1,68 @@
+{
+  "source": {
+    "citation": "Wyffels SA et al. (2020). PLOS ONE 15(10): e0240629.",
+    "doi": "10.1371/journal.pone.0240629",
+    "articleUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0240629",
+    "dataAvailability": "All relevant data are within the manuscript and Supporting Information files.",
+    "license": "Creative Commons Attribution (CC BY), as stated on the PLOS article page.",
+    "capturedAt": "2026-10-12"
+  },
+  "audit": {
+    "studyPopulation": "Commercial herd of Angus and Angus x Simmental bred cows, ages 1-12, grazing one 329-ha Montana pasture in two dormant seasons; the study reports 272 cows in year 1 and 302 in year 2.",
+    "collaredSample": "The methods report five GPS-collared animals in each of six age classes. The selected S1/S2 files contain 29 distinct CowID values per year (58 across the two years).",
+    "S1": {
+      "file": "data/plos-wyffels-dormant-grazing/S1-Appendix-grazing-minutes.csv",
+      "rows": 3061,
+      "columns": ["Year", "CowID", "Date_Time", "Time_min", "Age_Class", "PreBCS", "PreWt", "SuppInt"],
+      "byYear": {
+        "Y1": {"rows": 1303, "cows": 29, "dates": 45, "dateRange": ["2016-12-02", "2017-01-15"]},
+        "Y2": {"rows": 1758, "cows": 29, "dates": 61, "dateRange": ["2017-11-01", "2017-12-31"]}
+      },
+      "missingCells": 0,
+      "duplicateYearCowDateKeys": 0,
+      "sha256": "6a977a1fb12ab90bdf97ce6dcb9125c978d04d9f3f9ec586866638ec3149f7a8"
+    },
+    "S2": {
+      "file": "data/plos-wyffels-dormant-grazing/S2-Appendix-distance-traveled.csv",
+      "rows": 3074,
+      "columns": ["Year", "CowID", "Date_Time", "Dist_m", "Age_Class", "PreBCS", "PreWt", "SuppInt"],
+      "byYear": {
+        "Y1": {"rows": 1305, "cows": 29, "dates": 45, "dateRange": ["2016-12-02", "2017-01-15"]},
+        "Y2": {"rows": 1769, "cows": 29, "dates": 61, "dateRange": ["2017-11-01", "2017-12-31"]}
+      },
+      "missingCells": 0,
+      "duplicateYearCowDateKeys": 0,
+      "sha256": "6bcfe49077d320bc02e2a48abf96ce602578c0abd6b93147e0410fab9deb2632"
+    },
+    "S3": {
+      "file": "data/plos-wyffels-dormant-grazing/S3-Table-weight-bcs.pdf",
+      "description": "Cow unshrunk weight and body condition by age class for each grazing year; not repeated individual-level weight series.",
+      "bytes": 67837,
+      "sha256": "1aed19545d6ade03cc652bf73f9f8c962b8c94bfbd808551fcef687dea5cb102"
+    },
+    "preWtUnitReconciliation": {
+      "csvUnitLabel": "Not declared in S1/S2 headers.",
+      "method": "Deduplicate by Year and CowID, average the 58 distinct cow-year PreWt values in S1, then compare conversions with the article's stated 627 kg average weight across both years.",
+      "distinctCowYearRecords": 58,
+      "meanRawPreWt": 1381.9828,
+      "conversionTest": {
+        "candidateUnit": "lb",
+        "conversionFactorKgPerLb": 0.45359237,
+        "convertedMeanKg": 626.8568,
+        "publishedArticleMeanKg": 627,
+        "matchesAfterRounding": true
+      },
+      "conclusion": "Strongly consistent with PreWt being pounds, based on reconciliation to the published 627 kg article mean; the unit is inferred, not explicitly labeled in the CSV.",
+      "confidence": "High for unit reconciliation; the source metadata itself remains unlabeled.",
+      "handling": "Preserve original CSV values and do not convert them in source files. Any derived use must record the inferred-pound conversion and its provenance."
+    },
+    "limitations": [
+      "No individual ADG or repeated individual weights in the selected daily CSVs; S3 reports class-level summaries.",
+      "PreWt unit is not declared in the CSV header; its pound interpretation is inferred from agreement with the published mean weight, not directly labeled by the source.",
+      "SuppInt is supplement intake, not total dry matter intake or forage intake.",
+      "Observational associations do not identify causal effects of supplementation or grazing management.",
+      "One pasture and two winters in Montana do not establish transportability to the USDA/CPER cohort or Brazilian systems."
+    ],
+    "intendedUse": "Separate read-only exploratory source for observed adult-cow grazing behavior; not engine validation, calibration, or the principal ADG/pasture case."
+  }
+}

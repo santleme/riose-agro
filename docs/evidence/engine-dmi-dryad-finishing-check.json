@@ -1,0 +1,255 @@
+{
+  "classification": "fixed_default_dmi_component_diagnostic_in_independent_feedlot_finishing_data_not_pasture_validation_or_full_engine_validation",
+  "source": {
+    "datasetDoi": "10.5061/dryad.qnk98sfsn",
+    "articleDoi": "10.1016/j.animal.2025.101536",
+    "license": "CC0-1.0",
+    "sha256": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f",
+    "nRows": 446,
+    "nExperiments": 5,
+    "experimentIds": [
+      "2023B",
+      "2023F",
+      "2023G",
+      "2023H",
+      "2024A"
+    ],
+    "animalIdKey": "Project + Animal",
+    "dmiUnit": "kg/head/day"
+  },
+  "model": {
+    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "configuration": "One animal, observed shrunk mid-body weight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
+    "calibrationOrParameterFitting": false,
+    "dietCompositionUsed": false,
+    "comparisonTarget": "reported finishing-phase daily DMI summary"
+  },
+  "fixedEngineOverall": {
+    "nAnimalExperimentRows": 446,
+    "meanObservedDmiKgPerDay": 11.275291479820629,
+    "meanPredictedDmiKgPerDay": 12.267020698066027,
+    "maeKgPerDay": 1.1194410200943257,
+    "rmseKgPerDay": 1.4604314090204171,
+    "biasPredictedMinusObservedKgPerDay": 0.9917292182453924
+  },
+  "byExperiment": {
+    "2023B": {
+      "nAnimalExperimentRows": 166,
+      "meanObservedDmiKgPerDay": 11.936385542168674,
+      "meanPredictedDmiKgPerDay": 12.70231834082377,
+      "maeKgPerDay": 0.8908630330009929,
+      "rmseKgPerDay": 1.1064983812332614,
+      "biasPredictedMinusObservedKgPerDay": 0.7659327986550958
+    },
+    "2023F": {
+      "nAnimalExperimentRows": 170,
+      "meanObservedDmiKgPerDay": 10.569000000000006,
+      "meanPredictedDmiKgPerDay": 11.042811882372899,
+      "maeKgPerDay": 0.6401578549008421,
+      "rmseKgPerDay": 0.8254574132902602,
+      "biasPredictedMinusObservedKgPerDay": 0.4738118823729006
+    },
+    "2023G": {
+      "nAnimalExperimentRows": 51,
+      "meanObservedDmiKgPerDay": 10.558039215686275,
+      "meanPredictedDmiKgPerDay": 13.157388687387217,
+      "maeKgPerDay": 2.599349471700944,
+      "rmseKgPerDay": 2.695867478516436,
+      "biasPredictedMinusObservedKgPerDay": 2.599349471700944
+    },
+    "2023H": {
+      "nAnimalExperimentRows": 36,
+      "meanObservedDmiKgPerDay": 11.087499999999999,
+      "meanPredictedDmiKgPerDay": 13.205659956395532,
+      "maeKgPerDay": 2.1181599563955342,
+      "rmseKgPerDay": 2.2098919303601687,
+      "biasPredictedMinusObservedKgPerDay": 2.1181599563955342
+    },
+    "2024A": {
+      "nAnimalExperimentRows": 23,
+      "meanObservedDmiKgPerDay": 13.608695652173912,
+      "meanPredictedDmiKgPerDay": 14.730338490013853,
+      "maeKgPerDay": 1.4669571592945088,
+      "rmseKgPerDay": 1.930504865763886,
+      "biasPredictedMinusObservedKgPerDay": 1.121642837839938
+    }
+  },
+  "leaveOneExperimentOutBaseline": {
+    "method": "For each held-out project, use the row-weighted mean DMI from the other four independent projects; no rows from the held-out experiment enter the baseline.",
+    "splitUnit": "Entire independent experiment/project; source key is Project + Animal.",
+    "nFolds": 5,
+    "fittedOnHeldOutRows": false,
+    "overall": {
+      "nAnimalExperimentRows": 446,
+      "meanObservedDmiKgPerDay": 11.275291479820629,
+      "meanPredictedDmiKgPerDay": 11.300612608163455,
+      "maeKgPerDay": 1.199739757271417,
+      "rmseKgPerDay": 1.457122329538583,
+      "biasPredictedMinusObservedKgPerDay": 0.025321128342740595
+    },
+    "byHeldOutProject": {
+      "2023B": {
+        "trainingProjects": [
+          "2023F",
+          "2023G",
+          "2023H",
+          "2024A"
+        ],
+        "nTrainingRows": 280,
+        "heldOutProject": "2023B",
+        "nHoldoutRows": 166,
+        "trainingMeanDmiKgPerDay": 10.88335714285715,
+        "fixedEngine": {
+          "nAnimalExperimentRows": 166,
+          "meanObservedDmiKgPerDay": 11.936385542168674,
+          "meanPredictedDmiKgPerDay": 12.70231834082377,
+          "maeKgPerDay": 0.8908630330009929,
+          "rmseKgPerDay": 1.1064983812332614,
+          "biasPredictedMinusObservedKgPerDay": 0.7659327986550958
+        },
+        "trainingMeanBaseline": {
+          "nAnimalExperimentRows": 166,
+          "meanObservedDmiKgPerDay": 11.936385542168674,
+          "meanPredictedDmiKgPerDay": 10.883357142857172,
+          "maeKgPerDay": 1.2457659208261571,
+          "rmseKgPerDay": 1.4966630628716768,
+          "biasPredictedMinusObservedKgPerDay": -1.0530283993115248
+        }
+      },
+      "2023F": {
+        "trainingProjects": [
+          "2023B",
+          "2023G",
+          "2023H",
+          "2024A"
+        ],
+        "nTrainingRows": 276,
+        "heldOutProject": "2023F",
+        "nHoldoutRows": 170,
+        "trainingMeanDmiKgPerDay": 11.710326086956526,
+        "fixedEngine": {
+          "nAnimalExperimentRows": 170,
+          "meanObservedDmiKgPerDay": 10.569000000000006,
+          "meanPredictedDmiKgPerDay": 11.042811882372899,
+          "maeKgPerDay": 0.6401578549008421,
+          "rmseKgPerDay": 0.8254574132902602,
+          "biasPredictedMinusObservedKgPerDay": 0.4738118823729006
+        },
+        "trainingMeanBaseline": {
+          "nAnimalExperimentRows": 170,
+          "meanObservedDmiKgPerDay": 10.569000000000006,
+          "meanPredictedDmiKgPerDay": 11.710326086956503,
+          "maeKgPerDay": 1.1657736572890056,
+          "rmseKgPerDay": 1.3329454784544643,
+          "biasPredictedMinusObservedKgPerDay": 1.1413260869565247
+        }
+      },
+      "2023G": {
+        "trainingProjects": [
+          "2023B",
+          "2023F",
+          "2023H",
+          "2024A"
+        ],
+        "nTrainingRows": 395,
+        "heldOutProject": "2023G",
+        "nHoldoutRows": 51,
+        "trainingMeanDmiKgPerDay": 11.367898734177217,
+        "fixedEngine": {
+          "nAnimalExperimentRows": 51,
+          "meanObservedDmiKgPerDay": 10.558039215686275,
+          "meanPredictedDmiKgPerDay": 13.157388687387217,
+          "maeKgPerDay": 2.599349471700944,
+          "rmseKgPerDay": 2.695867478516436,
+          "biasPredictedMinusObservedKgPerDay": 2.599349471700944
+        },
+        "trainingMeanBaseline": {
+          "nAnimalExperimentRows": 51,
+          "meanObservedDmiKgPerDay": 10.558039215686275,
+          "meanPredictedDmiKgPerDay": 11.36789873417722,
+          "maeKgPerDay": 0.8966284437825778,
+          "rmseKgPerDay": 1.073819446116708,
+          "biasPredictedMinusObservedKgPerDay": 0.8098595184909428
+        }
+      },
+      "2023H": {
+        "trainingProjects": [
+          "2023B",
+          "2023F",
+          "2023G",
+          "2024A"
+        ],
+        "nTrainingRows": 410,
+        "heldOutProject": "2023H",
+        "nHoldoutRows": 36,
+        "trainingMeanDmiKgPerDay": 11.291780487804873,
+        "fixedEngine": {
+          "nAnimalExperimentRows": 36,
+          "meanObservedDmiKgPerDay": 11.087499999999999,
+          "meanPredictedDmiKgPerDay": 13.205659956395532,
+          "maeKgPerDay": 2.1181599563955342,
+          "rmseKgPerDay": 2.2098919303601687,
+          "biasPredictedMinusObservedKgPerDay": 2.1181599563955342
+        },
+        "trainingMeanBaseline": {
+          "nAnimalExperimentRows": 36,
+          "meanObservedDmiKgPerDay": 11.087499999999999,
+          "meanPredictedDmiKgPerDay": 11.29178048780488,
+          "maeKgPerDay": 0.6921422764227636,
+          "rmseKgPerDay": 0.8886096136524602,
+          "biasPredictedMinusObservedKgPerDay": 0.20428048780487298
+        }
+      },
+      "2024A": {
+        "trainingProjects": [
+          "2023B",
+          "2023F",
+          "2023G",
+          "2023H"
+        ],
+        "nTrainingRows": 423,
+        "heldOutProject": "2024A",
+        "nHoldoutRows": 23,
+        "trainingMeanDmiKgPerDay": 11.148416075650115,
+        "fixedEngine": {
+          "nAnimalExperimentRows": 23,
+          "meanObservedDmiKgPerDay": 13.608695652173912,
+          "meanPredictedDmiKgPerDay": 14.730338490013853,
+          "maeKgPerDay": 1.4669571592945088,
+          "rmseKgPerDay": 1.930504865763886,
+          "biasPredictedMinusObservedKgPerDay": 1.121642837839938
+        },
+        "trainingMeanBaseline": {
+          "nAnimalExperimentRows": 23,
+          "meanObservedDmiKgPerDay": 13.608695652173912,
+          "meanPredictedDmiKgPerDay": 11.148416075650116,
+          "maeKgPerDay": 2.5852215027238183,
+          "rmseKgPerDay": 2.842450715008074,
+          "biasPredictedMinusObservedKgPerDay": -2.4602795765237984
+        }
+      }
+    }
+  },
+  "sameRowsComparison": {
+    "nAnimalExperimentRows": 446,
+    "engineMaeKgPerDay": 1.1194410200943257,
+    "baselineMaeKgPerDay": 1.199739757271417,
+    "engineMaeMinusBaselineMaeKgPerDay": -0.08029873717709135,
+    "engineToBaselineMaeRatio": 0.9330698706195119,
+    "engineBeatsBaselineOnMae": true
+  },
+  "interpretation": {
+    "transferToPastureCase": false,
+    "fullEngineValidated": false,
+    "probabilityIntervalsCalibrated": false,
+    "parametersChanged": false
+  },
+  "limitations": [
+    "This is a feedlot finishing cohort, not the approved USDA/CPER pasture case. Results cannot validate grazing intake, ADG/pasture associations, pasture balance, costs, or the housing counterfactual.",
+    "The fixed engine check receives observed weight only; diet composition and treatment in the source are not mapped to model inputs.",
+    "DMI is an animal-by-experiment finishing-period summary, not a daily time series aligned to the engine trajectory.",
+    "The reported default-engine errors are fixed predictions without calibration. The five-project cross-validation applies only to the simple training-mean baseline.",
+    "Five experiment folds are too few to establish uncertainty coverage or calibrate a prediction interval; no confidence/prediction interval is reported.",
+    "The source was assembled to evaluate methane equations. This audit makes no claim about methane model performance."
+  ]
+}

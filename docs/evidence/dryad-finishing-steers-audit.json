@@ -1,0 +1,175 @@
+{
+  "source": {
+    "datasetDoi": "10.5061/dryad.qnk98sfsn",
+    "articleDoi": "10.1016/j.animal.2025.101536",
+    "license": "CC0-1.0",
+    "version": 11,
+    "file": "data/dryad-finishing-steers/Database_09-11-2025.csv",
+    "sha256": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f",
+    "sha256VerifiedAgainstDryad": true
+  },
+  "schema": [
+    "Project",
+    "Animal",
+    "Breed",
+    "ADG_Fin",
+    "SMBW_Fin",
+    "DMI_Fin",
+    "CO2_Fin",
+    "CH4_g_Fin",
+    "CH4_MJ_Fin",
+    "O2_Fin",
+    "CP_%",
+    "NDF_%",
+    "Hem_%",
+    "ADF_%",
+    "Lig_%",
+    "Cel_%",
+    "NFC_%",
+    "Sta_%",
+    "EE_%",
+    "Ash_%",
+    "Forage_%",
+    "TDN_%",
+    "NEm_Mcalkg",
+    "NEg_Mcalkg",
+    "GE_Mcalkg"
+  ],
+  "coverage": {
+    "nRows": 446,
+    "nExperiments": 5,
+    "nUniqueProjectAnimalKeys": 446,
+    "projectCounts": {
+      "2023B": 166,
+      "2023F": 170,
+      "2023G": 51,
+      "2023H": 36,
+      "2024A": 23
+    },
+    "missingByColumn": {
+      "Project": 0,
+      "Animal": 0,
+      "Breed": 0,
+      "ADG_Fin": 0,
+      "SMBW_Fin": 0,
+      "DMI_Fin": 0,
+      "CO2_Fin": 0,
+      "CH4_g_Fin": 0,
+      "CH4_MJ_Fin": 0,
+      "O2_Fin": 0,
+      "CP_%": 0,
+      "NDF_%": 0,
+      "Hem_%": 0,
+      "ADF_%": 0,
+      "Lig_%": 0,
+      "Cel_%": 0,
+      "NFC_%": 0,
+      "Sta_%": 0,
+      "EE_%": 0,
+      "Ash_%": 0,
+      "Forage_%": 0,
+      "TDN_%": 0,
+      "NEm_Mcalkg": 0,
+      "NEg_Mcalkg": 0,
+      "GE_Mcalkg": 0
+    },
+    "rawAnimalIdsRepeatedAcrossProjects": true,
+    "animalIdScope": "README describes Project as the experiment code and Animal as its animal ID; raw Animal numbers repeat across projects, so use Project+Animal as the key and do not merge animals across projects."
+  },
+  "DMI_kg_per_day": {
+    "n": 446,
+    "mean": 11.275291479820627,
+    "median": 11.09,
+    "sampleSD": 1.2337491159635035,
+    "min": 7.86,
+    "max": 15.89
+  },
+  "ADG_kg_per_day": {
+    "n": 446,
+    "mean": 1.9735650224215247,
+    "median": 1.98,
+    "sampleSD": 0.33622902712872976,
+    "min": 0.88,
+    "max": 2.95
+  },
+  "shrunkMidBodyWeight_kg": {
+    "n": 446,
+    "mean": 551.5796188340807,
+    "median": 551.615,
+    "sampleSD": 59.92114417824202,
+    "min": 396.25,
+    "max": 782.19
+  },
+  "byExperiment": {
+    "2023B": {
+      "nAnimalRows": 166,
+      "uniqueProjectAnimalKeys": 166,
+      "DMI_kg_per_day": {
+        "mean": 11.936385542168674,
+        "min": 7.86,
+        "max": 14.47
+      }
+    },
+    "2023F": {
+      "nAnimalRows": 170,
+      "uniqueProjectAnimalKeys": 170,
+      "DMI_kg_per_day": {
+        "mean": 10.569,
+        "min": 8.36,
+        "max": 12.5
+      }
+    },
+    "2023G": {
+      "nAnimalRows": 51,
+      "uniqueProjectAnimalKeys": 51,
+      "DMI_kg_per_day": {
+        "mean": 10.558039215686275,
+        "min": 8.86,
+        "max": 12.29
+      }
+    },
+    "2023H": {
+      "nAnimalRows": 36,
+      "uniqueProjectAnimalKeys": 36,
+      "DMI_kg_per_day": {
+        "mean": 11.0875,
+        "min": 9.17,
+        "max": 12.85
+      }
+    },
+    "2024A": {
+      "nAnimalRows": 23,
+      "uniqueProjectAnimalKeys": 23,
+      "DMI_kg_per_day": {
+        "mean": 13.608695652173914,
+        "min": 9.72,
+        "max": 15.89
+      }
+    }
+  },
+  "interpretation": {
+    "primaryUse": "independent fixed-default component diagnostic for daily DMI in finishing/feedlot steers",
+    "notApprovedPastureCase": true,
+    "dmiMeasurement": "The associated peer-reviewed paper reports DMI in kg/day; the Dryad README says feed intake was collected with SmartFeed. The CSV is one animal-by-experiment summary row, not a daily time series.",
+    "engineInputsAvailable": [
+      "observed shrunk mid-body weight"
+    ],
+    "engineInputsNotRepresented": [
+      "diet composition and treatment",
+      "weather",
+      "days/within-experiment intake variation"
+    ],
+    "causalEffectEstimated": false,
+    "uncertaintyIntervalEstimated": false,
+    "calibrationPerformed": false,
+    "fullEngineValidation": false
+  },
+  "limitations": [
+    "This is a finishing/feedlot cohort, not pasture; it cannot validate the approved USDA/CPER observational pasture case or grazing behavior.",
+    "DMI is reported as a finishing-phase daily summary, not as paired daily DMI and weight trajectories.",
+    "The source uses Project-local Animal IDs; the composite key is Project+Animal. Do not merge equal Animal numbers across projects.",
+    "Five projects provide only five experiment-level groups; group-held-out results are exploratory and do not support calibrated uncertainty intervals.",
+    "The dataset was assembled for methane-model evaluation. This audit evaluates only a fixed Agroville DMI component and makes no methane-model claim.",
+    "No parameters were fit and no values were changed or removed."
+  ]
+}

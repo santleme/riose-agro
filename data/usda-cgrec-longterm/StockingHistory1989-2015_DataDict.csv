@@ -1,0 +1,7 @@
+COLUMN_NAME,UNITS,DESCRIPTION,DATA_TYPE,NOTES
+Year,YYYY,Year animal was grazed and data collected,Date,
+Class of Animal,NA,Description of class of animal grazed,String,
+Stocking Date,Month/Day,Month and day animals were removed from pasture,Date,
+Removal Date,Month/Day,Month and day animals arrived on pasture to graze,Date,
+Length of  Grazing Season (days),Number of Days,Number of days animals grazed on pasture,Date,
+Notes,NA,Comments about grazing season conditions and operations,String,

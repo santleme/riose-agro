@@ -1,0 +1,76 @@
+{
+  "classification": "fixed_default_dmi_component_check_out_of_approved_cper_domain_not_full_engine_validation",
+  "source": {
+    "doi": "10.17632/cctgpznjrc.1",
+    "articleDoi": "10.1371/journal.pone.0331238",
+    "license": "CC BY 4.0",
+    "sha256": "c1aaf5cb4eb5076d809d5756bb211b1f5733b850fea9aa5c5233fd579d144c23",
+    "candidateWeightRows": 282,
+    "exactSameAnimalDateObservedDmiPairs": 219
+  },
+  "model": {
+    "engineSha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "configuration": "One animal, observed same-date liveweight as starting weight, default feed assumptions, barn housing, normal weather, 24-hour run.",
+    "calibrationOrParameterFitting": false,
+    "treatmentAndWeatherInputsRepresented": false
+  },
+  "overall": {
+    "nAnimalDays": 219,
+    "animals": 47,
+    "dates": 5,
+    "meanObservedDmiKgPerDay": 11.116596296188149,
+    "meanPredictedDmiKgPerDay": 12.392951128811593,
+    "maeKgPerDay": 2.339599670981843,
+    "rmseKgPerDay": 2.8428696864674343,
+    "biasPredictedMinusObservedKgPerDay": 1.276354832623449,
+    "animalClusterBootstrap": {
+      "unit": "animalId; every date row for a sampled animal is retained together",
+      "replicates": 5000,
+      "seed": 20261011,
+      "interval": "95% percentile interval for fixed-default error metrics",
+      "percentileIntervals": {
+        "maeKgPerDay": [
+          2.0967866357770433,
+          2.60198421444449
+        ],
+        "rmseKgPerDay": [
+          2.561830136231389,
+          3.1260449374097057
+        ],
+        "biasPredictedMinusObservedKgPerDay": [
+          0.9010173672159761,
+          1.6733765669312461
+        ]
+      }
+    }
+  },
+  "byTreatment": {
+    "No shade": {
+      "nAnimalDays": 107,
+      "animals": 23,
+      "dates": 5,
+      "meanObservedDmiKgPerDay": 11.363606310499163,
+      "meanPredictedDmiKgPerDay": 12.29071144495309,
+      "maeKgPerDay": 2.115730797225619,
+      "rmseKgPerDay": 2.641152245967853,
+      "biasPredictedMinusObservedKgPerDay": 0.9271051344539265
+    },
+    "Shade": {
+      "nAnimalDays": 112,
+      "animals": 24,
+      "dates": 5,
+      "meanObservedDmiKgPerDay": 10.880613514658881,
+      "meanPredictedDmiKgPerDay": 12.490626541069275,
+      "maeKgPerDay": 2.5534743985882367,
+      "rmseKgPerDay": 3.0230358867588842,
+      "biasPredictedMinusObservedKgPerDay": 1.610013026410403
+    }
+  },
+  "limitations": [
+    "This is a single-output DMI check on adult Nellore cattle in a feedlot; it is not the approved USDA/CPER grazing case and does not validate ADG, costs, pasture stock, shade effects, or the full engine.",
+    "Only exact same-animal, same-calendar-date liveweight/DMI pairs were used. The relative time of weighing and the daily intake window is not documented in this alignment.",
+    "The fixed model receives no shade, ration composition, or daily weather input in this check. Treatment-specific summaries are descriptive and are not estimates of shade effects.",
+    "Rows repeat within animal. The animal-cluster bootstrap intervals quantify resampling uncertainty in the fixed-model error metrics for this dataset; they are not prediction intervals, engine-output uncertainty, or evidence of calibration/coverage.",
+    "No parameters were fitted or selected on this dataset."
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Data from USDA ARS High Plains Grasslands Research Station (East Unit) near Cheyenne, WY: Yearling cattle weight gains managed in light, moderate and heavily stocked pastures (1982-2022)",
+  "doi": "10.15482/USDA.ADC/1528521",
+  "repositoryUrl": "https://catalog.data.gov/dataset/data-from-usda-ars-high-plains-grasslands-research-station-east-unit-near-cheyen-1982-2022",
+  "figshareUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/Data_from_USDA_ARS_High_Plains_Grasslands_Research_Station_East_Unit_near_Cheyenne_WY_Yearling_cattle_weight_gains_managed_in_light_moderate_and_heavily_stocked_pastures_1982-2022_/25217243",
+  "license": {
+    "name": "U.S. Public Domain",
+    "url": "https://www.usa.gov/publicdomain/label/1.0/"
+  },
+  "publishedDate": "2024-02-20T21:53:13Z",
+  "authors": [
+    {
+      "id": 17484528,
+      "full_name": "Justin D Derner",
+      "first_name": "Justin D",
+      "last_name": "Derner",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0001-8076-0736"
+    },
+    {
+      "id": 17484531,
+      "full_name": "Stanley Clapp",
+      "first_name": "Stanley",
+      "last_name": "Clapp",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17484534,
+      "full_name": "Pam Freeman",
+      "first_name": "Pam",
+      "last_name": "Freeman",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17484537,
+      "full_name": "Richard H. Hart",
+      "first_name": "Richard H.",
+      "last_name": "Hart",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17484540,
+      "full_name": "Matt Mortenson",
+      "first_name": "Matt",
+      "last_name": "Mortenson",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    }
+  ],
+  "catalogDescription": "USDA ARS High Plains Grasslands Research Station (East Unit), Cheyenne, Wyoming; yearlings on light/moderate/heavy stocking, 1982–2022. Catalog reports weight gain outliers ±2 SD of treatment mean removed.",
+  "files": [
+    {
+      "name": "EastUnit_LTGI.csv",
+      "url": "https://ndownloader.figshare.com/files/44540063",
+      "size": 69607,
+      "sha256": "c091893cc1043dfb500be663d2522ae85573e43994b8707d1b3bf7523fce47f2",
+      "md5": "bae90606453cbeab8e66d7e715efb0bc",
+      "upstreamMd5": "bae90606453cbeab8e66d7e715efb0bc",
+      "upstreamMd5Verified": true
+    },
+    {
+      "name": "EastUnit_LTGI_DataDictionary.csv",
+      "url": "https://ndownloader.figshare.com/files/44540066",
+      "size": 837,
+      "sha256": "f1b6c539e44e7f6d9111a49fd54977af272cf2a8e742e5d60e0ba0535ce8490e",
+      "md5": "e470cc6d680d163ef7d5bbf6443539c1",
+      "upstreamMd5": "e470cc6d680d163ef7d5bbf6443539c1",
+      "upstreamMd5Verified": true
+    }
+  ]
+}

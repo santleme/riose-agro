@@ -1,8 +1,13 @@
-import {parseAdultCperCsv, parseDailyCperCsv} from './adult-data-model.js';
+import {filterAdultCperRows, parseAdultCperCsv, parseDailyCperCsv, summarizeAdultCperRows} from './adult-data-model.js';
 
 const SVG = document.querySelector('#chart');
 const predictor = document.querySelector('#predictor');
+const periodFilter = document.querySelector('#period-filter');
+const paddockFilter = document.querySelector('#paddock-filter');
+const filterSummary = document.querySelector('#filter-summary');
 const summary = document.querySelector('#summary');
+const associationResults = document.querySelector('#association-results');
+const associationTakeaway = document.querySelector('#association-takeaway');
 const recordsBody = document.querySelector('#records');
 const dailySVG = document.querySelector('#daily-chart');
 const animalSelect = document.querySelector('#animal-select');
@@ -13,15 +18,16 @@ const fmt = (value, digits = 2) => new Intl.NumberFormat('pt-BR', {maximumFracti
 const fmtObserved = value => Number.isFinite(value) ? fmt(value) : '—';
 const safe = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const labels = {
-  GBD_5min: {title: 'Duração média do bout de pastejo', unit: 'min/dia'},
-  MeanVelo: {title: 'Velocidade média ao pastejar', unit: 'm/min'},
-  GrazeHrs_5min: {title: 'Horas de pastejo', unit: 'h/dia'},
+  GBD_5min: {title: 'Duração média do bout de pastejo', unit: 'min/dia', field: 'bout'},
+  MeanVelo: {title: 'Velocidade média ao pastejar', unit: 'm/min', field: 'velocity'},
+  GrazeHrs_5min: {title: 'Horas de pastejo', unit: 'h/dia', field: 'hours'},
+  MeanTA: {title: 'Ângulo médio de giro durante pastejo', unit: 'graus', field: 'turnAngle'},
 };
 
 function renderChart(rows) {
   const key = predictor.value;
   const label = labels[key];
-  const points = rows.map(row => ({x: key === 'GBD_5min' ? row.bout : key === 'MeanVelo' ? row.velocity : row.hours, y: row.adg, row})).filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
+  const points = rows.map(row => ({x: row[label.field], y: row.adg, row})).filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
   if (!points.length) { SVG.innerHTML = '<text x="25" y="50">Sem dados para esta medida.</text>'; return; }
   const left = 82, right = 865, top = 32, bottom = 320;
   const minX = Math.min(...points.map(p => p.x)), maxX = Math.max(...points.map(p => p.x));
@@ -47,30 +53,95 @@ function renderChart(rows) {
 }
 
 function render(rows) {
+  if (!rows.length) {
+    document.querySelector('#study-facts').textContent = 'Nenhum registro animal-período corresponde ao recorte selecionado.';
+    summary.innerHTML = '';
+    recordsBody.innerHTML = '<tr><td colspan="9">Não há registros para essa combinação de período e piquete.</td></tr>';
+    document.querySelector('#row-count').textContent = '0 LINHAS';
+    filterSummary.textContent = 'Recorte vazio. Selecione outro período ou piquete.';
+    renderChart(rows);
+    return;
+  }
   const avg = key => rows.reduce((total,row)=>total+row[key],0)/rows.length;
-  const animals = new Set(rows.map(row=>row.eartag));
-  const paddocks = new Set(rows.map(row=>row.paddock));
-  document.querySelector('#study-facts').innerHTML = `<span><strong>${rows.length}</strong> registros animal-período</span><span><strong>${animals.size}</strong> brincos únicos</span><span><strong>${paddocks.size}</strong> piquetes</span><span><strong>2019–2020</strong> períodos</span>`;
+  const coverage = summarizeAdultCperRows(rows);
+  const yearLabel = coverage.years.length > 1 ? `${coverage.years[0]}–${coverage.years.at(-1)}` : String(coverage.years[0]);
+  document.querySelector('#study-facts').innerHTML = `<span><strong>${coverage.records}</strong> registros animal-período</span><span><strong>${coverage.uniqueAnimals}</strong> brincos únicos</span><span><strong>${coverage.uniquePaddocks.length}</strong> piquetes</span><span><strong>${yearLabel}</strong> · ${coverage.periods.length} períodos representados</span>`;
   summary.innerHTML = [
     ['ADG médio', `${fmt(avg('adg'))} kg/novilho/dia`, 'Média simples dos registros animal-período'],
     ['Bout médio', `${fmt(avg('bout'))} min/dia`, 'Média dos registros; resolução do sensor: 5 min'],
     ['Velocidade média', `${fmt(avg('velocity'))} m/min`, 'Média dos registros animal-período'],
+    ['Ângulo médio de giro', `${fmt(avg('turnAngle'))}°`, 'Média dos registros; medida de movimento durante pastejo'],
   ].map(([title,value,detail])=>`<article class="adult-metric"><span>${title}</span><strong>${value}</strong><small>${detail}</small></article>`).join('');
-  recordsBody.innerHTML = rows.map(row=>`<tr><td>${row.year}</td><td>${row.period}</td><td>${row.paddock}</td><td>${row.eartag}</td><td>${fmt(row.adg,3)}</td><td>${fmt(row.bout,2)}</td><td>${fmt(row.hours,2)}</td><td>${fmt(row.velocity,2)}</td></tr>`).join('');
+  recordsBody.innerHTML = rows.map(row=>`<tr><td>${row.year}</td><td>${row.period}</td><td>${row.paddock}</td><td>${row.eartag}</td><td>${fmt(row.adg,3)}</td><td>${fmt(row.bout,2)}</td><td>${fmt(row.hours,2)}</td><td>${fmt(row.velocity,2)}</td><td>${fmtObserved(row.turnAngle)}</td></tr>`).join('');
   document.querySelector('#row-count').textContent = `${rows.length} LINHAS`;
+  const periodLabel = periodFilter.value === 'all' ? 'todos os períodos' : `período ${periodFilter.value}`;
+  const paddockLabel = paddockFilter.value === 'all' ? 'todos os piquetes' : `piquete ${paddockFilter.value}`;
+  filterSummary.textContent = `Recorte do gráfico, resumo e tabela: ${periodLabel}; ${paddockLabel}. ${coverage.records} registros animal-período, ${coverage.uniqueAnimals} brincos únicos.`;
   renderChart(rows);
 }
 
-predictor.addEventListener('change', () => render(rowsCache));
+function filteredRows(rows) {
+  return filterAdultCperRows(rows, {period: periodFilter.value, paddock: paddockFilter.value});
+}
+
+function populateFilterOptions(rows) {
+  const periods = [...new Set(rows.map(row => row.period))].sort((a, b) => Number(a) - Number(b));
+  const paddocks = [...new Set(rows.map(row => row.paddock))].sort();
+  periodFilter.innerHTML = '<option value="all">Todos os períodos</option>'
+    + periods.map(period => `<option value="${safe(period)}">Período ${safe(period)}</option>`).join('');
+  paddockFilter.innerHTML = '<option value="all">Todos os piquetes</option>'
+    + paddocks.map(paddock => `<option value="${safe(paddock)}">Piquete ${safe(paddock)}</option>`).join('');
+}
+
+function renderAssociation(report) {
+  const definitions = [
+    ['GBD_5min', 'Duração média do bout (min/dia)'],
+    ['MeanVelo', 'Velocidade média ao pastejar (m/min)'],
+  ];
+  const signed = value => `${value > 0 ? '+' : ''}${fmt(value, 3)}`;
+  const groupedEstimate = estimate => `${signed(estimate.spearmanRho)} (${estimate.nAnimalPeriods} linhas / ${estimate.nUniqueAnimals} animais)`;
+  associationResults.innerHTML = definitions.map(([key, title]) => {
+    const feature = report.features[key];
+    const [low, high] = feature.animalClusterBootstrap95PercentileInterval;
+    const adjusted = feature.adjustedFixedEffectsRankSensitivity;
+    const [adjustedLow, adjustedHigh] = adjusted.animalClusterBootstrap95PercentileInterval;
+    const periodRhos = ['1', '2', '3'].map(period => groupedEstimate(feature.withinPeriodDescriptiveAssociations[period])).join(' · ');
+    const pastureRhos = ['15E', '19N', '22W', '23E'].map(pasture => groupedEstimate(feature.withinPastureDescriptiveAssociations[pasture])).join(' · ');
+    const leaveOnePeriodOutRhos = ['1', '2', '3'].map(period => groupedEstimate(feature.leaveOnePeriodOutSensitivity[period])).join(' · ');
+    return `<tr><th scope="row">${title}</th><td>${signed(feature.spearmanRho)}</td><td>[${signed(low)}; ${signed(high)}]</td><td>${signed(adjusted.partialSpearmanRho)}</td><td>[${signed(adjustedLow)}; ${signed(adjustedHigh)}]</td><td>${periodRhos}</td><td>${pastureRhos}</td><td>${leaveOnePeriodOutRhos}</td></tr>`;
+  }).join('');
+  const bout = report.features.GBD_5min;
+  const velocity = report.features.MeanVelo;
+  const boutAdjusted = bout.adjustedFixedEffectsRankSensitivity;
+  const velocityAdjusted = velocity.adjustedFixedEffectsRankSensitivity;
+  const [boutLow, boutHigh] = boutAdjusted.animalClusterBootstrap95PercentileInterval;
+  const [velocityLow, velocityHigh] = velocityAdjusted.animalClusterBootstrap95PercentileInterval;
+  const intervalsIncludeZero = boutLow <= 0 && boutHigh >= 0 && velocityLow <= 0 && velocityHigh >= 0;
+  const precisionNote = intervalsIncludeZero
+    ? 'Os dois intervalos percentis incluem zero; os padrões agrupados são sensíveis ao contexto e a associação residual não é estimada com precisão neste conjunto.'
+    : 'Os intervalos percentis variam com os dados; esta sensibilidade continua descritiva e não confirma causalidade.';
+  associationTakeaway.textContent = `Leitura deste recorte: as associações agrupadas são ρ=${signed(bout.spearmanRho)} para duração do bout e ρ=${signed(velocity.spearmanRho)} para velocidade. Na sensibilidade que remove efeitos aditivos de período e piquete dos postos, passam a ρ=${signed(boutAdjusted.partialSpearmanRho)} [${signed(boutLow)}; ${signed(boutHigh)}] e ρ=${signed(velocityAdjusted.partialSpearmanRho)} [${signed(velocityLow)}; ${signed(velocityHigh)}]. ${precisionNote} Isto descreve esta amostra, não um efeito causal nem uma faixa de previsão do motor.`;
+}
+
+fetch('./docs/evidence/usda-cper-association.json').then(response=>{if(!response.ok) throw new Error(`HTTP ${response.status}`); return response.json();}).then(renderAssociation).catch(error=>{
+  associationResults.innerHTML = `<tr><td colspan="8">Análise agrupada indisponível (${safe(error.message)}).</td></tr>`;
+  associationTakeaway.textContent = 'A síntese interpretativa não está disponível sem o relatório de análise.';
+});
+
+predictor.addEventListener('change', () => render(filteredRows(rowsCache)));
+periodFilter.addEventListener('change', () => render(filteredRows(rowsCache)));
+paddockFilter.addEventListener('change', () => render(filteredRows(rowsCache)));
 let rowsCache = [];
-fetch('./data/usda-cper/period.csv').then(response=>{if(!response.ok) throw new Error(`HTTP ${response.status}`); return response.text();}).then(text=>{rowsCache=parseAdultCperCsv(text);render(rowsCache);}).catch(error=>{
+fetch('./data/usda-cper/period.csv').then(response=>{if(!response.ok) throw new Error(`HTTP ${response.status}`); return response.text();}).then(text=>{rowsCache=parseAdultCperCsv(text);populateFilterOptions(rowsCache);render(filteredRows(rowsCache));}).catch(error=>{
   document.querySelector('#study-facts').textContent = `Não foi possível carregar a tabela USDA (${error.message}).`;
+  filterSummary.textContent = 'Filtros indisponíveis enquanto os registros USDA não forem carregados.';
   SVG.innerHTML = '<text x="20" y="50" fill="#8b463c">Dados não carregados. Sirva o projeto por HTTP.</text>';
 });
 
 const dailyLabels = {
   grazingHours: {title:'Horas de pastejo por dia', unit:'h/dia', field:'grazingHours'},
   bout: {title:'Duração média do bout', unit:'min/dia', field:'bout'},
+  turnAngle: {title:'Ângulo médio de giro durante pastejo', unit:'graus', field:'turnAngle'},
   velocity: {title:'Velocidade média ao pastejar', unit:'m/min', field:'velocity'},
   biomass: {title:'Biomassa estimada no piquete', unit:'kg MS/ha', field:'biomass'},
 };
@@ -106,7 +177,7 @@ function renderDaily(rows) {
   const complete=animalRows.filter(row=>row.complete).length;
   const first=animalRows[0]?.date, last=animalRows.at(-1)?.date;
   dailyFacts.innerHTML=`<span><strong>${animalRows.length}</strong> dias-animal no arquivo</span><span><strong>${complete}</strong> com cobertura de 24 h ±5%</span><span><strong>${paddocks.size}</strong> piquete(s)</span><span><strong>${first||'—'} → ${last||'—'}</strong> período observado</span>`;
-  dailyRecordsBody.innerHTML=animalRows.map(row=>`<tr><td>${safe(row.date)}</td><td>${safe(row.paddock)}</td><td>${fmtObserved(row.bout)}</td><td>${fmtObserved(row.grazingHours)}</td><td>${fmtObserved(row.velocity)}</td><td>${fmtObserved(row.biomass)}</td><td>${row.complete?'Sim':'Não'}</td></tr>`).join('');
+  dailyRecordsBody.innerHTML=animalRows.map(row=>`<tr><td>${safe(row.date)}</td><td>${safe(row.paddock)}</td><td>${fmtObserved(row.bout)}</td><td>${fmtObserved(row.grazingHours)}</td><td>${fmtObserved(row.turnAngle)}</td><td>${fmtObserved(row.velocity)}</td><td>${fmtObserved(row.biomass)}</td><td>${row.complete?'Sim':'Não'}</td></tr>`).join('');
   renderDailyChart(animalRows);
 }
 

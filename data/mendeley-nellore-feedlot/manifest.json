@@ -1,0 +1,23 @@
+{
+  "title": "Data on: Shade provision and its influence on water consumption and drinking behaviour of Nellore cattle in feedlot in a tropical environment",
+  "doi": "10.17632/cctgpznjrc.1",
+  "version": 1,
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://data.mendeley.com/datasets/cctgpznjrc/1",
+  "public_files_api": "https://data.mendeley.com/public-api/datasets/cctgpznjrc/files?folder_id=root&version=1&$start=0&$limit=1000",
+  "article_doi": "10.1371/journal.pone.0331238",
+  "authors": [
+    "Rivero",
+    "Palhares",
+    "Novelli",
+    "Martello",
+    "P\u00e9rez-M\u00e1rquez",
+    "Cooke"
+  ],
+  "file": "Data file.xlsx",
+  "file_id": "c2d75c1e-4b51-4476-b53a-f6ab8091f1e1",
+  "bytes": 1830754,
+  "sha256": "c1aaf5cb4eb5076d809d5756bb211b1f5733b850fea9aa5c5233fd579d144c23",
+  "repository_sha256": "c1aaf5cb4eb5076d809d5756bb211b1f5733b850fea9aa5c5233fd579d144c23"
+}

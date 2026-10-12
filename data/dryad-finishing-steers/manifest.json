@@ -1,0 +1,28 @@
+{
+  "title": "Evaluation of models of enteric methane emissions in finishing steers",
+  "datasetDoi": "10.5061/dryad.qnk98sfsn",
+  "articleDoi": "10.1016/j.animal.2025.101536",
+  "source": "https://datadryad.org/dataset/doi:10.5061/dryad.qnk98sfsn",
+  "metadataApiVersion": "https://datadryad.org/api/v2/versions/428156",
+  "license": "CC0-1.0",
+  "version": 11,
+  "publicationDate": "2026-02-27",
+  "retrieved": "2026-10-12",
+  "files": {
+    "Database_09-11-2025.csv": {
+      "bytes": 64512,
+      "sha256": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f",
+      "dryadSha256": "39637c15b7350a516b8cba61c330c508c0f9230fa9d80f001038b30041595c9f"
+    },
+    "README.md": {
+      "bytes": 2849,
+      "sha256": "43a3495f4f387de705e9c70c0aa9f52a90b4491a630cef3b129ef49361469ff1",
+      "dryadSha256": "43a3495f4f387de705e9c70c0aa9f52a90b4491a630cef3b129ef49361469ff1"
+    },
+    "Model_evaluation_syntaxis_animal.txt": {
+      "bytes": 2089,
+      "sha256": "092401c9eff319c52fd76e2110a582c09681f17064ef81adbfeb73fd58b7392e",
+      "dryadSha256": "092401c9eff319c52fd76e2110a582c09681f17064ef81adbfeb73fd58b7392e"
+    }
+  }
+}

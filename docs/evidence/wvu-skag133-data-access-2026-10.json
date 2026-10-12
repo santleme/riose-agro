@@ -1,0 +1,34 @@
+{
+  "source": {
+    "title": "Generalizable long short-term memory models for beef cattle DMI under grazing",
+    "authors": ["Blake et al."],
+    "journal": "Journal of Animal Science",
+    "doi": "10.1093/jas/skag133",
+    "articleUrl": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag133/8675989",
+    "published": "2026-05-11",
+    "dataAvailabilitySection": "https://academic.oup.com/jas/article/doi/10.1093/jas/skag133/8675989#data-availability"
+  },
+  "checkedAt": "2026-10-12",
+  "observedDataAvailabilityStatement": "Data may be available by contacting the corresponding author.",
+  "accessAssessment": {
+    "publicRecordLevelDataDownloadFound": false,
+    "openDataLicenseFound": false,
+    "availableWithoutAuthorContact": false,
+    "status": "article is public to read; underlying individual records are not an open downloadable dataset based on the publisher's current data availability statement"
+  },
+  "relevance": {
+    "outcome": "individual dry matter intake (DMI)",
+    "populationAndSystem": "beef cattle in drylot and grazing cohorts; the paper's cattle are Bos taurus or Bos taurus-derived crossbreds in finishing-stage systems",
+    "validationNote": "The article describes held-out validation including grazing, but its records are not openly downloadable and its reported model performance is not validation of Agroville.",
+    "limitsForAgroville": [
+      "Does not provide an openly licensed microdata file for independent reproduction.",
+      "DMI alone cannot calibrate ADG, costs, pasture stock, or the full pasture-versus-confinement engine outputs.",
+      "The described finishing-stage population is not a mature cow-calf population or the approved USDA/CPER cohort."
+    ]
+  },
+  "action": "Do not download or reconstruct individual observations from the article. Prioritize audited public datasets; reconsider only if a data deposit with compatible terms becomes available.",
+  "limitations": [
+    "This audit records the publisher's data statement and a bounded search for a linked public repository; it does not prove that no separate repository exists anywhere.",
+    "The data availability statement permits asking the corresponding author, but does not itself grant access or a reuse license."
+  ]
+}

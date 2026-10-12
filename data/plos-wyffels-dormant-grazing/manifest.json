@@ -1,0 +1,119 @@
+{
+  "source": "Wyffels et al. (2020), PLOS ONE, DOI 10.1371/journal.pone.0240629",
+  "captured_at": "2026-10-12",
+  "license": "Creative Commons Attribution (CC BY)",
+  "assets": [
+    {
+      "file": "S1-Appendix-grazing-minutes.csv",
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0240629.s005&type=supplementary",
+      "bytes": 133186,
+      "sha256": "6a977a1fb12ab90bdf97ce6dcb9125c978d04d9f3f9ec586866638ec3149f7a8",
+      "rows": 3061,
+      "columns": [
+        "Year",
+        "CowID",
+        "Date_Time",
+        "Time_min",
+        "Age_Class",
+        "PreBCS",
+        "PreWt",
+        "SuppInt"
+      ],
+      "missing_counts": {
+        "Year": 0,
+        "CowID": 0,
+        "Date_Time": 0,
+        "Time_min": 0,
+        "Age_Class": 0,
+        "PreBCS": 0,
+        "PreWt": 0,
+        "SuppInt": 0
+      },
+      "dateRangeOverall": [
+        "2016-12-02",
+        "2017-12-31"
+      ],
+      "byYear": {
+        "Y1": {
+          "rows": 1303,
+          "uniqueCows": 29,
+          "uniqueDates": 45,
+          "dateRange": [
+            "2016-12-02",
+            "2017-01-15"
+          ],
+          "duplicateYearCowDateKeys": 0
+        },
+        "Y2": {
+          "rows": 1758,
+          "uniqueCows": 29,
+          "uniqueDates": 61,
+          "dateRange": [
+            "2017-11-01",
+            "2017-12-31"
+          ],
+          "duplicateYearCowDateKeys": 0
+        }
+      }
+    },
+    {
+      "file": "S2-Appendix-distance-traveled.csv",
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0240629.s006&type=supplementary",
+      "bytes": 158118,
+      "sha256": "6bcfe49077d320bc02e2a48abf96ce602578c0abd6b93147e0410fab9deb2632",
+      "rows": 3074,
+      "columns": [
+        "Year",
+        "CowID",
+        "Date_Time",
+        "Dist_m",
+        "Age_Class",
+        "PreBCS",
+        "PreWt",
+        "SuppInt"
+      ],
+      "missing_counts": {
+        "Year": 0,
+        "CowID": 0,
+        "Date_Time": 0,
+        "Dist_m": 0,
+        "Age_Class": 0,
+        "PreBCS": 0,
+        "PreWt": 0,
+        "SuppInt": 0
+      },
+      "dateRangeOverall": [
+        "2016-12-02",
+        "2017-12-31"
+      ],
+      "byYear": {
+        "Y1": {
+          "rows": 1305,
+          "uniqueCows": 29,
+          "uniqueDates": 45,
+          "dateRange": [
+            "2016-12-02",
+            "2017-01-15"
+          ],
+          "duplicateYearCowDateKeys": 0
+        },
+        "Y2": {
+          "rows": 1769,
+          "uniqueCows": 29,
+          "uniqueDates": 61,
+          "dateRange": [
+            "2017-11-01",
+            "2017-12-31"
+          ],
+          "duplicateYearCowDateKeys": 0
+        }
+      }
+    },
+    {
+      "file": "S3-Table-weight-bcs.pdf",
+      "url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0240629.s003&type=supplementary",
+      "bytes": 67837,
+      "sha256": "1aed19545d6ade03cc652bf73f9f8c962b8c94bfbd808551fcef687dea5cb102"
+    }
+  ]
+}

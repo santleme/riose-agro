@@ -1,0 +1,35 @@
+{
+  "source": {
+    "articleTitle": "The Influence of Residual Feed Intake and Cow Age on Beef Cattle Performance, Supplement Intake, Resource Use, and Grazing Behavior on Winter Mixed-Grass Rangelands",
+    "authors": "Parsons et al.",
+    "articleDoi": "10.3390/ani11061518",
+    "articleUrl": "https://www.mdpi.com/2076-2615/11/6/1518",
+    "supplementUrl": "https://mdpi-res.com/d_attachment/animals/animals-11-01518/article_deploy/animals-11-01518-s001.zip",
+    "supplementName": "animals-11-01518-s001.zip",
+    "license": "CC-BY-4.0",
+    "licenseEvidence": "The article states that it and its materials are distributed under the Creative Commons Attribution (CC BY) license; the data are the article's Supplementary Tables S1-S5.",
+    "population": "Non-lactating, pregnant commercial Angus cows, ages 1-10 years, on dormant mixed-grass rangeland in Montana across two grazing years.",
+    "publicationDate": "2021-05-23",
+    "retrievedAt": "2026-10-12"
+  },
+  "archive": {
+    "path": "supplement.zip",
+    "bytes": 5772397,
+    "md5": "ec495b7a136c98a829e15e374b95c5de",
+    "sha256": "f63a323691cb1f647b11b744ef2b5e3c5cc7b0242508e09f59e817d7aa30b2c0"
+  },
+  "tables": {
+    "Table S1.csv": {"purpose": "Cow-season body-weight and body-condition change", "rows": 408},
+    "Table S2.csv": {"purpose": "Individual daily supplement intake and feeder behavior", "rows": 19691},
+    "Table S3.csv": {"purpose": "GPS subset daily grazing time and distance", "rows": 2477},
+    "Table S4.csv": {"purpose": "Spatial-use records and terrain covariates", "rows": 294234},
+    "Table S5.csv": {"purpose": "Grazing core-area metrics", "rows": 56}
+  },
+  "caveats": [
+    "Table S1 rows are cow-season records, not 408 unique cows.",
+    "ADG is derived as period body-weight change divided by the article-reported 84-day grazing period; it is not a daily time series.",
+    "Supplement intake is not total forage dry-matter intake.",
+    "The cohort is a separate U.S. pregnant Angus population and is not the USDA/CPER observational cohort.",
+    "The article describes observational associations with age and RFI; this dataset does not identify causal effects of grazing or supplementation."
+  ]
+}

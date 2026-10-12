@@ -1,0 +1,27 @@
+{
+  "title": "Gas flux determination and prediction of methane emissions in yearling steers under grazing conditions",
+  "doi": "10.5061/dryad.dbrv15fg8",
+  "articleDoi": "10.1071/AN26172",
+  "version": 1,
+  "publicationDate": "2026-08-31",
+  "license": "CC0-1.0",
+  "source": "https://datadryad.org/dataset/doi:10.5061/dryad.dbrv15fg8",
+  "sourceApiVersion": "https://datadryad.org/api/v2/versions/412967",
+  "files": {
+    "Database_Model.csv": {
+      "sha256": "24aadb52a80d9bc5d848b1bcf12d63681fdb0808d1cc99c4b275f5b9da18a64d",
+      "sourceDigest": "24aadb52a80d9bc5d848b1bcf12d63681fdb0808d1cc99c4b275f5b9da18a64d",
+      "rows": 154
+    },
+    "Database_visits.csv": {
+      "sha256": "aced3a41f9db73548d00940158645e3fafcb651ce2893d0314e34f08e8e80bdf",
+      "sourceDigest": "aced3a41f9db73548d00940158645e3fafcb651ce2893d0314e34f08e8e80bdf",
+      "rows": 2820
+    },
+    "README.md": {
+      "sha256": "2d9c7e002685e1d5bfc3d48704c757fc2eca5dbccda9fe71596510450968ac3b",
+      "sourceDigest": "2d9c7e002685e1d5bfc3d48704c757fc2eca5dbccda9fe71596510450968ac3b"
+    }
+  },
+  "downloadedOn": "2026-10-11"
+}

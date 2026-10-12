@@ -1,0 +1,168 @@
+{
+  "classification": "public_literature_compilation_treatment_level_context_not_engine_validation",
+  "source": {
+    "persistentId": "doi:10.57745/R7IYDP",
+    "version": 3,
+    "releaseDate": "2026-04-23",
+    "repositoryLicense": {
+      "name": "Etalab Open License 2.0",
+      "spdx": "etalab-2.0",
+      "url": "https://spdx.org/licenses/etalab-2.0.html"
+    },
+    "dataPaper": {
+      "doi": "10.3390/data11070170",
+      "articleLicense": {
+        "name": "Creative Commons Attribution 4.0 International",
+        "spdx": "CC-BY-4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "datasetLicenseAsReportedInDataPaper": {
+        "name": "Creative Commons Attribution 2.0",
+        "spdx": "CC-BY-2.0",
+        "url": "https://creativecommons.org/licenses/by/2.0/"
+      }
+    },
+    "licenseNote": "These are separate declarations: the repository API declares Etalab Open License 2.0 for the archived dataset; the data paper describes its dataset as CC-BY 2.0; the paper itself is CC-BY 4.0. Do not confuse the article license with the dataset license; retain both dataset declarations pending clarification and use the repository's current item-level license for the archived files.",
+    "files": [
+      {
+        "name": "PASTorIN_1_VARIABLES.xlsx",
+        "bytes": 15634,
+        "archivedBytes": 15634,
+        "apiDeclaredBytes": 5992,
+        "apiDeclaredSizeMatchesDownload": false,
+        "md5": "ccfef702e885f0963f52e4ad6d638318",
+        "expectedMd5": "ccfef702e885f0963f52e4ad6d638318",
+        "sha256": "b8e2e8e62f7427e1f78e0081d0e0e3e7b87e581e5c292b3c9c04b85886b4d55a",
+        "expectedSha256": "b8e2e8e62f7427e1f78e0081d0e0e3e7b87e581e5c292b3c9c04b85886b4d55a",
+        "verified": true
+      },
+      {
+        "name": "PASTorIN_2_DATA.xls",
+        "bytes": 221696,
+        "archivedBytes": 221696,
+        "apiDeclaredBytes": 221696,
+        "apiDeclaredSizeMatchesDownload": true,
+        "md5": "12418d72843fc1411c47e1f189928724",
+        "expectedMd5": "12418d72843fc1411c47e1f189928724",
+        "sha256": "ff77be0e83916adf0f8745b5f7eaefe27e291471fcd1b8cd3597056ec9fb9437",
+        "expectedSha256": "ff77be0e83916adf0f8745b5f7eaefe27e291471fcd1b8cd3597056ec9fb9437",
+        "verified": true
+      }
+    ],
+    "apiDeclaredSizeMismatch": true
+  },
+  "workbook": {
+    "sheetCount": 1,
+    "sheetName": "Feuille 1",
+    "rawRowsIncludingTwoHeaderRows": 250,
+    "rawColumns": 50,
+    "meaningfulVariableCount": 39,
+    "dictionaryMatchesWorkbook": true,
+    "treatmentRows": 248,
+    "unitOfRow": "treatment/group mean, not one animal",
+    "individualAnimalIdentifierAvailable": false
+  },
+  "coverage": {
+    "species": {
+      "cattle": 123,
+      "goat": 20,
+      "sheep": 105
+    },
+    "feedingEnvironment": {
+      "indoor": 112,
+      "pasture": 136
+    },
+    "cattleTreatmentRows": 123,
+    "cattleEnvironment": {
+      "indoor": 54,
+      "pasture": 69
+    },
+    "cattlePhysiologicalStage": {
+      "*": 17,
+      "fattening, finishing": 3,
+      "finishing": 78,
+      "growing": 25
+    },
+    "cattleExperimentsWithBothPastureAndIndoorRows": 1,
+    "cattleExperimentsKeyedByPublicationAndExperiment": 121,
+    "cattleRowsWithBothAdgAndDmi": 11,
+    "selectedFieldPresence": {
+      "2_animals_number": {
+        "rows": 248,
+        "present": 216,
+        "missing": 32
+      },
+      "2_animal_age": {
+        "rows": 248,
+        "present": 109,
+        "missing": 139
+      },
+      "2_animal_initial_liveweight": {
+        "rows": 248,
+        "present": 183,
+        "missing": 65
+      },
+      "2_animal_final_liveweight": {
+        "rows": 248,
+        "present": 178,
+        "missing": 70
+      },
+      "2_animal_average_daily_gain": {
+        "rows": 248,
+        "present": 203,
+        "missing": 45
+      },
+      "4_diet_dry_matter_intake": {
+        "rows": 248,
+        "present": 23,
+        "missing": 225
+      },
+      "4_duration_of_daily_grazing": {
+        "rows": 248,
+        "present": 132,
+        "missing": 116
+      }
+    },
+    "cattleFieldPresence": {
+      "2_animal_age": {
+        "rows": 123,
+        "present": 58,
+        "missing": 65
+      },
+      "2_animal_initial_liveweight": {
+        "rows": 123,
+        "present": 96,
+        "missing": 27
+      },
+      "2_animal_final_liveweight": {
+        "rows": 123,
+        "present": 91,
+        "missing": 32
+      },
+      "2_animal_average_daily_gain": {
+        "rows": 123,
+        "present": 105,
+        "missing": 18
+      },
+      "4_diet_dry_matter_intake": {
+        "rows": 123,
+        "present": 11,
+        "missing": 112
+      },
+      "4_duration_of_daily_grazing": {
+        "rows": 123,
+        "present": 68,
+        "missing": 55
+      }
+    }
+  },
+  "limitations": [
+    "The 248 rows are group treatment means assembled from published papers; the workbook does not provide individual-animal observations or IDs for leakage-safe model evaluation.",
+    "Only 11 cattle treatment rows contain both ADG and a DMI value; intake/digestibility measures are sparse and were reported under heterogeneous study methods and bases.",
+    "The article describes a non-orthogonal, unbalanced multi-study compilation; pasture and indoor categories are not a globally randomized or paired counterfactual.",
+    "The dataset has no aligned initial pasture stock, costs, or simulation state needed to evaluate the Agroville scenario end to end.",
+    "The dataset paper reports 248 treatment rows from 93 annotated publications; this audit does not reconstruct or independently verify all source-paper extraction decisions.",
+    "For the dictionary file, the repository API byte-size field disagrees with the original-format download even though the downloaded file matches the API MD5; both values are recorded for traceability."
+  ],
+  "intendedUse": "Separate read-only exploratory reference for published treatment means across pasture and indoor studies; not individual-level engine validation or calibration."
+}

@@ -1,0 +1,59 @@
+{
+  "classification": "face_validity_range_check_only_not_validation_or_calibration",
+  "engine": {
+    "sha256": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
+    "seed": 1,
+    "assumptions": "engine.js defaults; no values fitted to CPER"
+  },
+  "source": {
+    "doi": "10.15482/USDA.ADC/1524788",
+    "file": "period.csv",
+    "sha256": "1128d3e644a57a138ca8e1d8c3af1d8afc19f5b3b05bd513363e82fbeda0fb3a",
+    "license": "U.S. Public Domain",
+    "rowCount": 36,
+    "eartagCount": 33
+  },
+  "observedAdgKgPerAnimalDay": {
+    "nAnimalPeriodRows": 36,
+    "simpleRowMean": 1.5121548737777775,
+    "minimum": -0.528433333,
+    "maximum": 3.033220339,
+    "note": "Same-study repeated animal-period rows; simple row summary is not an independent-sample interval."
+  },
+  "defaultEngineRuns": [
+    {
+      "housing": "pasture",
+      "horizonDays": 30,
+      "herdSize": 24,
+      "initialWeightKgPerAnimal": 361.0616407438647,
+      "finalWeightKgPerAnimal": 379.383282014139,
+      "gainKgPerAnimal": 18.321641270274313,
+      "derivedAdgKgPerAnimalDay": 0.6107213756758104,
+      "costValue": 0,
+      "intakeKgDMPerLot": 5922.1466732200115,
+      "pastureStockKgDM": 5477.853326779737,
+      "insideObservedMinMax": true,
+      "differenceFromObservedRowMeanKgPerDay": -0.901433498101967
+    },
+    {
+      "housing": "barn",
+      "horizonDays": 30,
+      "herdSize": 24,
+      "initialWeightKgPerAnimal": 361.0616407438647,
+      "finalWeightKgPerAnimal": 379.383282014139,
+      "gainKgPerAnimal": 18.321641270274313,
+      "derivedAdgKgPerAnimalDay": 0.6107213756758104,
+      "costValue": 3849.395337593011,
+      "intakeKgDMPerLot": 5922.1466732200115,
+      "pastureStockKgDM": 9600,
+      "insideObservedMinMax": true,
+      "differenceFromObservedRowMeanKgPerDay": -0.901433498101967
+    }
+  ],
+  "interpretation": [
+    "The simulator run has no matched animal, paddock, sensor inputs, or observation window; this comparison cannot estimate prediction error.",
+    "The observed ADG rows are repeated and clustered within the CPER study; min/max is only a descriptive envelope, not a confidence interval or validation threshold.",
+    "The engine’s current pasture and barn runs have the same gain because its illustrative feed-energy rules supply equal modeled intake; housing changes feed source, cost, and pasture stock.",
+    "Do not fit assumptions to these rows or promote the engine output from demonstrative status on this check."
+  ]
+}

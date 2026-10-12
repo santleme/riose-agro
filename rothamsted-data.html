@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c2f">
+  <title>Agroville — observações Rothamsted</title>
+  <link rel="stylesheet" href="rothamsted-data.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="./"><span class="brand-mark">▦</span> agroville<span class="version">/ coorte jovem observada</span></a>
+    <nav class="header-links" aria-label="Conjuntos de dados"><a class="back-link" href="adult-data.html">USDA / CPER</a><a class="back-link" href="cgrec-data.html">USDA CGREC</a><a class="back-link" href="hpgrs-data.html">USDA HPGRS</a><a class="back-link" href="index.html">← Voltar à fazenda</a></nav>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">EXPLORADOR DE DADOS OBSERVADOS · COORTE SEPARADA</div>
+        <h1>Peso, ganho e forragem</h1>
+        <p>Inspecione uma série pública de bovinos jovens cruzados leite × corte em pastejo. As idades são calculáveis pelas datas de nascimento e pesagem; a coorte não representa vacas adultas maduras. Peso animal e massa de forragem permanecem observações distintas e desconectadas do motor numérico.</p>
+      </div>
+      <div class="data-badge"><span></span> ROTHAMSTED · CC BY 4.0</div>
+    </section>
+
+    <section class="study-card">
+      <div class="study-heading"><div><div class="eyebrow">ESTUDO DE CAMPO · NORTH WYKE, REINO UNIDO</div><h2>Pastejo em pastagem temperada</h2></div><a href="https://doi.org/10.23637/rothamsted.00033688" target="_blank" rel="noopener">Fonte, arquivos e licença ↗</a></div>
+      <p>2018–2025 · seis piquetes e dois manejos: set-stocked (C1–C3) e cell-grazed (T1–T3). O arquivo inclui DOB; na primeira janela observada, a idade por animal varia de cerca de 6 a 25 meses. Há medidas repetidas e quatro coortes; os mesmos piquetes aparecem ao longo do tempo.</p>
+      <div class="study-facts" id="study-facts" aria-live="polite"><span>Carregando arquivos publicados…</span></div>
+    </section>
+
+    <section class="explorer" aria-labelledby="animal-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">PESAGEM POR INTERVALO</div><h2 id="animal-title">Trajetória observada do animal</h2></div>
+        <label class="measure-control" for="animal-select">Brinco<select id="animal-select"></select></label>
+      </div>
+      <p class="measure-note">Cada ponto é um peso final medido em <code>Date_To</code>. Não ligamos os pontos nem interpolamos períodos sem pesagem.</p>
+      <div class="chart-wrap"><svg id="weight-chart" viewBox="0 0 900 340" role="img" aria-label="Pesagens observadas do animal selecionado"></svg></div>
+      <div class="study-facts daily-facts" id="animal-facts" aria-live="polite"></div>
+      <div class="table-scroll"><table><thead><tr><th>Período</th><th>Piquete</th><th>Raça</th><th>Idade ao início (dias)</th><th>Peso inicial (kg)</th><th>Peso final (kg)</th><th>Dias</th><th>ADG (kg/d)</th></tr></thead><tbody id="animal-records"></tbody></table></div>
+      <p class="table-note">ADG/DLWG é derivado das pesagens de início e fim pelo estudo; não é uma medida independente. As mesmas identificações podem aparecer em vários períodos e coortes.</p>
+    </section>
+
+    <section class="explorer daily-explorer" aria-labelledby="forage-title">
+      <div class="explorer-head">
+        <div><div class="eyebrow">FORRAGEM NO PIQUETE</div><h2 id="forage-title">Massa estimada de matéria seca</h2></div>
+        <label class="measure-control" for="plot-select">Piquete<select id="plot-select"></select></label>
+      </div>
+      <p class="measure-note">Massa de forragem (kg MS/ha) estimada com rising plate meter. As observações permanecem no nível de piquete e data; não são unidas automaticamente às janelas dos animais.</p>
+      <div class="chart-wrap daily-chart-wrap"><svg id="forage-chart" viewBox="0 0 900 320" role="img" aria-label="Massa de forragem observada no piquete selecionado"></svg></div>
+      <div class="study-facts daily-facts" id="forage-facts" aria-live="polite"></div>
+      <div class="table-scroll daily-table-scroll"><table><thead><tr><th>Data</th><th>Piquete</th><th>Massa de forragem (kg MS/ha)</th><th>Manejo informado</th></tr></thead><tbody id="forage-records"></tbody></table></div>
+    </section>
+
+    <section class="limits">
+      <h2>Como interpretar este conjunto</h2>
+      <ul>
+        <li>É uma coorte independente do USDA/CPER: pastagem temperada no Reino Unido, com animais jovens cruzados de raças leiteiras e de corte. As idades na primeira janela vão de 173 a 747 dias; não classificar como vacas adultas maduras nem usar como validação da população-alvo até revisão zootécnica.</li>
+        <li>Há três piquetes por manejo e medidas repetidas por animal. Tratar as milhares de linhas animal-período como réplicas independentes inflaria a evidência sobre manejo.</li>
+        <li>A massa é estimada por altura comprimida do pasto; não é consumo nem massa diretamente pesada. O arquivo não informa CMS individual, custo de fazenda ou confinamento.</li>
+        <li>Esta visualização é descritiva. Não estima efeito causal, não valida <code>engine.js</code> e não substitui revisão zootécnica.</li>
+      </ul>
+      <p class="citation">Conjunto: <a href="https://doi.org/10.23637/rothamsted.00033688" target="_blank" rel="noopener">Rothamsted Research, 2018–2025 ↗</a>. Licença: CC BY 4.0; citação e atribuição constam no manifesto local.</p>
+    </section>
+    <footer><span>AGROVILLE / LABORATÓRIO DE DADOS</span><span>Medidas observadas · sem previsão ou recomendação</span></footer>
+  </main>
+  <script type="module" src="rothamsted-data.js"></script>
+</body>
+</html>
