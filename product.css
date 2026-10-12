@@ -9,7 +9,7 @@
 .product-body .header-product[aria-current=page]:hover,.product-body .header-product[aria-current=page]:focus-visible{color:var(--product-paper)}
 .product-page{position:relative;width:100%;max-width:none;min-height:100svh;margin:0;padding:0;background:var(--product-paper)}
 .product-stage{position:relative;isolation:isolate;display:grid;min-height:700px;height:100svh;place-items:center;overflow:hidden;padding:64px 0 0;background:var(--product-paper)}
-.world-stage-surface{position:relative;width:min(96vw,1370px);aspect-ratio:576/336;max-height:calc(100svh - 124px);}
+.world-stage-surface{position:relative;width:min(98vw,1540px);aspect-ratio:800/416;max-height:calc(100svh - 124px);}
 .product-body #map{position:absolute;inset:0;display:block;width:100%;height:100%;background:transparent;image-rendering:auto;touch-action:none;cursor:grab}
 .product-body #map:active{cursor:grabbing}
 .chat-dock{position:absolute;z-index:4;left:clamp(20px,4.5vw,68px);bottom:clamp(24px,4.5vh,48px);pointer-events:auto}
@@ -71,4 +71,4 @@
 @media(prefers-reduced-motion:reduce){.product-body *, .product-body *::before,.product-body *::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 .timeline-play .pause-icon{display:none;align-items:center;gap:3px}.timeline-play .pause-icon i{display:block;width:2px;height:11px;border-radius:2px;background:#4e5047}.timeline-play .play-icon{display:block;width:0;height:0;margin-left:2px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #4e5047}.timeline-play[data-running="true"] .pause-icon{display:flex}.timeline-play[data-running="true"] .play-icon{display:none}
 .command-form button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:520px){.world-stage-surface{width:100vw;max-width:100vw;transform:translateY(-8px)}}
+@media(max-width:520px){.world-stage-surface{width:94vw;max-width:94vw;transform:translateY(-8px)}}

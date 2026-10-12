@@ -1,11 +1,12 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../../scientific/br_corte_pasture_dmi.js';
-import {drawProductFarm,productFarmEntityAt,productFarmHoverEntityAt,projectFarm} from './product-scene.js';
+import {drawProductFarm,productFarmEntityAt,productFarmHoverEntityAt,projectFarm,PRODUCT_SCENE_SIZE} from './product-scene.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
 const manifestoWorldOnly=typeof location!=='undefined'&&location.search.includes('manifesto-world=1');
 const manifestoMotionPreference=typeof window.matchMedia==='function'?window.matchMedia('(prefers-reduced-motion: reduce)'):{matches:false,addEventListener(){}};
 const productExperience=typeof document!=='undefined'&&Boolean(document.body?.classList?.contains('product-body'));
+const sceneWidth=productExperience?PRODUCT_SCENE_SIZE.width:576,sceneHeight=productExperience?PRODUCT_SCENE_SIZE.height:336;
 const worker=new Worker(new URL('./worker.js?product=1',import.meta.url),{type:'module'});
 let state                   ,selected=1,running=!manifestoWorldOnly&&!(productExperience&&manifestoMotionPreference.matches),speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false,manifestoWorldReadySent=false,manifestoWorldVisible=false;
 const stateRequests=[];
@@ -28,7 +29,7 @@ function saveScenarioData(){try{localStorage.setItem(scenarioStorageKey,JSON.str
 function renderScenarios(){const select=$('scenario-select'),active=activeScenario();select.replaceChildren(new Option(productExperience?'Current world · not saved':'Fazenda atual · não salva',''));for(const scenario of scenarios){const config=scenario.snapshot.config;select.add(new Option(scenario.name+' · D'+(Math.floor(scenario.snapshot.hour/24)+1)+' · '+scenarioNames[config.housing]+' · '+scenarioNames[config.diet],scenario.id));}select.value=activeScenarioId??'';$('scenario-rename').disabled=!active;$('scenario-delete').disabled=!active;$('event-scope').textContent=active?active.name.toLocaleUpperCase('en-US'):(productExperience?'LIVE':'AO VIVO');if(active){const snapshot=active.snapshot,c=snapshot.config;$('scenario-status').textContent=productExperience?'Day '+String(Math.floor(snapshot.hour/24)+1).padStart(2,'0')+' · '+scenarioNames[c.housing]+' · '+scenarioNames[c.diet]+' · '+number(c.supplement)+' kg DM/day · '+scenarioNames[c.weather]+' · '+snapshot.events.length+' events':'D'+String(Math.floor(snapshot.hour/24)+1).padStart(2,'0')+' · '+scenarioNames[c.housing]+' · dieta '+scenarioNames[c.diet]+' · '+number(c.supplement)+' kg MS/animal/dia · '+scenarioNames[c.weather]+' · '+snapshot.events.length+' eventos';}else $('scenario-status').textContent=productExperience?'Current world · unsaved':'Cenário atual ainda não salvo.';}
 const cowSvg='<svg viewBox="0 0 18 14" aria-hidden="true"><path fill="#45613e" d="M3 3h10v7H3zM12 2h4v6h-4zM3 9h2v4H3zM10 9h2v4h-2zM1 4h2v4H1z"/><path fill="#edf1e1" d="M4 3h5v3H4zM8 7h5v3H8zM13 2h2v3h-2z"/><path fill="#293b23" d="M15 4h1v1h-1z"/></svg>';
 const canvas=$                   ('map'),ctx=canvas.getContext('2d') ;
-// Keep the 576 × 336 scene coordinates, but rasterize at the display DPR so
+// Keep the logical scene coordinates, but rasterize at display DPR so
 // the browser never has to enlarge a low-resolution bitmap of the whole farm.
 ctx.imageSmoothingEnabled=true;
 ctx.imageSmoothingQuality='high';
@@ -38,8 +39,8 @@ function resizeProductCanvas(){
   const scale=window.devicePixelRatio||1;
   if(!bounds.width||!bounds.height)return;
   const width=Math.round(bounds.width*scale),height=Math.round(bounds.height*scale);
-  if(canvas.width===width&&canvas.height===height&&canvasScaleX===width/576&&canvasScaleY===height/336)return;
-  canvas.width=width;canvas.height=height;canvasScaleX=width/576;canvasScaleY=height/336;
+  if(canvas.width===width&&canvas.height===height&&canvasScaleX===width/sceneWidth&&canvasScaleY===height/sceneHeight)return;
+  canvas.width=width;canvas.height=height;canvasScaleX=width/sceneWidth;canvasScaleY=height/sceneHeight;
   ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
 }
 new ResizeObserver(resizeProductCanvas).observe(canvas);
@@ -144,7 +145,7 @@ function drawManifestoCow(a,x,y,time){
   rect(ctx,x+7,y-5,1,4,'#34382f');rect(ctx,x+8,y-6,1,2,'#34382f');
 }
 function draw(time       ){
-  ctx.setTransform(canvasScaleX,0,0,canvasScaleY,0,0);ctx.clearRect(0,0,576,336);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  ctx.setTransform(canvasScaleX,0,0,canvasScaleY,0,0);ctx.clearRect(0,0,sceneWidth,sceneHeight);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,sceneWidth,sceneHeight);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
   if(productExperience){
     drawProductScene(time);
   }else ctx.drawImage(terrain,0,0);
@@ -152,9 +153,9 @@ function draw(time       ){
     if(!manifestoWorldOnly&&!productExperience)for(let i=0;i<4;i++){const x=i%2===0?28:195,y=i<2?38:178;const fraction=state.pastures[i]/(scientificResult?Math.max(1,scientificResult.assumptions.initialPastureKgDMByPaddock[i]):2400);rect(ctx,x+8,y+23,30,2,'#5c7748');rect(ctx,x+8,y+23,Math.round(30*fraction),2,'#dde6a0');}
     const animals=[...state.animals].sort((a,b)=>manifestoWorldOnly?a.x+a.y-(b.x+b.y):productExperience?(a.x+a.y)-(b.x+b.y):a.y-b.y);
     for(const a of animals){if(productExperience)continue;let pos=positions.get(a.id);if(!pos||Math.hypot(pos.x-a.x,pos.y-a.y)>180){pos={x:a.x,y:a.y};positions.set(a.id,pos);}const movementFactor=manifestoWorldOnly&&manifestoMotionPreference.matches?1:.07;pos.x+=(a.x-pos.x)*movementFactor;pos.y+=(a.y-pos.y)*movementFactor;const frameTime=(manifestoWorldOnly&&manifestoMotionPreference.matches)?0:time;if(manifestoWorldOnly){const x=288+(pos.x-288)*.68-(pos.y-168)*.68,y=168+(pos.x-288)*.31+(pos.y-168)*.31;drawManifestoCow(a,x,y,frameTime);}else drawCow(a,pos.x,pos.y,frameTime);}
-    if(state.config.weather==='rain'){ctx.strokeStyle='#c0d6c355';ctx.lineWidth=1;for(let i=0;i<60;i++){const x=(i*77+(time*.045))%576,y=(i*59+time*.095)%336;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-2,y+5);ctx.stroke();}}
-    if(state.config.weather==='hot'){rect(ctx,0,0,576,336,'#efb65715');}
-    const hour=state.hour%24;if(hour>=20||hour<6)rect(ctx,0,0,576,336,'#183c4c70');
+    if(state.config.weather==='rain'){ctx.strokeStyle='#c0d6c355';ctx.lineWidth=1;for(let i=0;i<60;i++){const x=(i*77+(time*.045))%sceneWidth,y=(i*59+time*.095)%sceneHeight;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-2,y+5);ctx.stroke();}}
+    if(state.config.weather==='hot'){rect(ctx,0,0,sceneWidth,sceneHeight,'#efb65715');}
+    const hour=state.hour%24;if(hour>=20||hour<6)rect(ctx,0,0,sceneWidth,sceneHeight,'#183c4c70');
   }
   ctx.restore();
   const miniCanvas=$('agent-mini-map');
@@ -167,7 +168,7 @@ function draw(time       ){
     const point=agent?positions.get(agent.id):null;
     if(point){
       const projected=productExperience?projectFarm(point.x,point.y):point;
-      const mx=(projected.x*zoom+panX)/576*miniCanvas.width,my=(projected.y*zoom+panY)/336*miniCanvas.height;
+      const mx=(projected.x*zoom+panX)/sceneWidth*miniCanvas.width,my=(projected.y*zoom+panY)/sceneHeight*miniCanvas.height;
       mini.beginPath();mini.arc(mx,my,4,0,Math.PI*2);mini.fillStyle='#f6e9ad';mini.fill();
       mini.beginPath();mini.arc(mx,my,2,0,Math.PI*2);mini.fillStyle='#26352b';mini.fill();
     }
@@ -175,9 +176,9 @@ function draw(time       ){
   if(running&&!pending&&!loadingScenario&&time-lastTick>1000/speed){requestState({type:'tick',hours:1});pending=true;lastTick=time;}
   requestAnimationFrame(draw);
 }
-function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=288-(288-panX)*next/zoom;panY=168-(168-panY)*next/zoom;zoom=next;limitPan();}
-function limitPan(){panX=Math.max(576-576*zoom,Math.min(0,panX));panY=Math.max(336-336*zoom,Math.min(0,panY));}
-function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.left)*576/b.width,y:(e.clientY-b.top)*336/b.height};}
+function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=sceneWidth/2-(sceneWidth/2-panX)*next/zoom;panY=sceneHeight/2-(sceneHeight/2-panY)*next/zoom;zoom=next;limitPan();}
+function limitPan(){panX=Math.max(sceneWidth-sceneWidth*zoom,Math.min(0,panX));panY=Math.max(sceneHeight-sceneHeight*zoom,Math.min(0,panY));}
+function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.left)*sceneWidth/b.width,y:(e.clientY-b.top)*sceneHeight/b.height};}
 canvas.addEventListener('pointerdown',e=>{const p=mapPoint(e);drag={...p,px:panX,py:panY,moved:false};canvas.setPointerCapture(e.pointerId);});
 canvas.addEventListener('pointermove',e=>{if(!drag){if(productExperience){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const animalHit=state?.animals.map(animal=>{const point=positions.get(animal.id)??animal,screen=projectFarm(point.x,point.y);return {animal,distance:Math.hypot(screen.x-x,screen.y-y)};}).sort((a,b)=>a.distance-b.distance)[0];hoverAnimalId=animalHit&&animalHit.distance<18?animalHit.animal.id:null;hoverSceneEntity=hoverAnimalId?null:productFarmHoverEntityAt(x,y);canvas.style.cursor=hoverAnimalId||hoverSceneEntity?'pointer':'grab';}return;}const p=mapPoint(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>3)drag.moved=true;panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;limitPan();});
 canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const nearest=state.animals.map(a=>{const point=positions.get(a.id)??a,q=productExperience?projectFarm(point.x,point.y):point;return {a,d:Math.hypot(q.x-x,q.y-y)};}).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<(productExperience?18:15)){selected=nearest.a.id;activeSceneEntity=null;updateUI();if(productExperience)document.dispatchEvent(new CustomEvent('riose:agent-selected',{detail:{animal:nearest.a}}));}else if(productExperience){const entity=productFarmEntityAt(x,y);if(entity){activeSceneEntity=entity;document.dispatchEvent(new CustomEvent('riose:entity-selected',{detail:{entity,pastures:state.pastures,config:state.config}}));}}}drag=null;});
