@@ -38,6 +38,23 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
   assert.equal(validateFarmSnapshot(missingOperations).semanticValid, true);
 });
 
+test('optional visual paddock and lot links are schema-checked and must resolve to real entities', () => {
+  const linked = structuredClone(example);
+  linked.paddocks[0].domainZoneId = 'paddock-1';
+  linked.lots[0].paddockId = linked.paddocks[0].id;
+  assert.equal(validateSchema(linked), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(linked).semanticValid, true);
+
+  const unknownPaddock = structuredClone(linked);
+  unknownPaddock.lots[0].paddockId = 'missing-paddock';
+  assert.equal(validateSchema(unknownPaddock), true);
+  assert.ok(validateFarmSnapshot(unknownPaddock).errors.some(message => message.includes("piquete 'missing-paddock' não existe")));
+
+  const duplicateZone = structuredClone(linked);
+  duplicateZone.paddocks.push({...structuredClone(duplicateZone.paddocks[0]), id: 'other-paddock'});
+  assert.ok(validateFarmSnapshot(duplicateZone).errors.some(message => message.includes("domainZoneId duplicado 'paddock-1'")));
+});
+
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
   const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);

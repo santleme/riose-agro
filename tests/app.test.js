@@ -4,17 +4,19 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
+import {resolveLotSelection,formatLotArea} from '../lot-selection.js';
+import {validateFarmSnapshot} from '../snapshot-validator.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null){
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const elements=new Map(),messages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId]]);
   const drawing=new Proxy({}, {get:()=>()=>{}});
-  function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},classList:{toggle(){}},addEventListener(){},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
+  function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,resolveLotSelection,formatLotArea,validateFarmSnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
@@ -62,6 +64,41 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
   assert.equal(ui.fetches(),0);
+});
+
+test('connected snapshot selection persists real lot IDs through the existing comparison and return to farm',async()=>{
+  const ui=await openFarm(),engine=new FarmEngine(702,8),snapshot=engine.snapshot();
+  ui.deliver('state',snapshot);
+  const farmSnapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
+  farmSnapshot.paddocks[0].domainZoneId='paddock-1';farmSnapshot.lots[0].paddockId='19N';
+  await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify(farmSnapshot)}]}});
+  assert.equal(ui.elements.get('lot-compare').disabled,true,'selection waits for a spatial link from map zone to snapshot paddock');
+  const patch={x:28,y:38,w:148,h:104};let point;
+  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2){if(snapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}}
+  assert.ok(point,'fixture leaves a tappable area in the paddock');
+  const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
+  assert.equal(ui.elements.get('lot-compare').disabled,false);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/Não informada/);
+  assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:farmSnapshot.lots[0].id});
+  ui.elements.get('lot-compare').onclick();
+  assert.equal(ui.messages.at(-1).type,'compare');
+  assert.deepEqual(ui.messages.at(-1).snapshot,snapshot,'existing comparator receives its frozen simulator snapshot unchanged');
+  ui.deliver('comparison',compare(snapshot,30));
+  assert.match(ui.elements.get('lot-comparison-context').textContent,/Lote real associado/);
+  const association=JSON.parse(ui.storage.get('agroville-last-lot-comparison-v1'));
+  assert.deepEqual(association.context.animalIds,['eartag-242']);
+  ui.elements.get('comparison').close();
+  assert.equal(JSON.parse(ui.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id,'closing results returns to the same farm and lot');
+  assert.equal(ui.elements.get('lot-selection-details').innerHTML.includes('eartag-242'),true);
+});
+
+test('snapshot integration refuses incomplete contracts without replacing the active lot snapshot',async()=>{
+  const ui=await openFarm();
+  await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify({schemaVersion:'0.1.0',snapshotId:'partial'})}]}});
+  assert.match(ui.elements.get('notice').textContent,/operations/);
+  assert.equal(ui.storage.has('agroville-farm-snapshot-v1'),false);
+  assert.match(ui.elements.get('lot-selection-status').textContent,/Conecte um snapshot/);
 });
 
 test('manifest can be reopened from the map and uses its herd, conditions and horizon in UI and CSV',async()=>{

@@ -115,6 +115,9 @@ function checkEntityReferences(snapshot, lotsById, animalsById, paddockIds, erro
       errors.push(`lote ${lot.id}: animalIds precisa ser uma lista.`);
       continue;
     }
+    if (lot.paddockId !== undefined && !paddockIds.has(lot.paddockId)) {
+      errors.push(`lote ${lot.id}: piquete '${lot.paddockId}' não existe.`);
+    }
     const seenInLot = new Set();
     for (const animalId of lot.animalIds) {
       if (typeof animalId !== 'string' || !animalId.trim()) {
@@ -210,6 +213,17 @@ export function validateFarmSnapshot(snapshot) {
   const animalList = Array.isArray(snapshot.animals) ? snapshot.animals : [];
   const lotList = Array.isArray(snapshot.lots) ? snapshot.lots : [];
   const paddockList = Array.isArray(snapshot.paddocks) ? snapshot.paddocks : [];
+  const domainZoneIds = new Set();
+  for (const paddock of paddockList) {
+    if (paddock?.domainZoneId === undefined) continue;
+    if (typeof paddock.domainZoneId !== 'string' || !paddock.domainZoneId.trim()) {
+      errors.push(`piquete ${paddock.id}: domainZoneId precisa ser texto não vazio.`);
+    } else if (domainZoneIds.has(paddock.domainZoneId)) {
+      errors.push(`paddocks: domainZoneId duplicado '${paddock.domainZoneId}'.`);
+    } else {
+      domainZoneIds.add(paddock.domainZoneId);
+    }
+  }
 
   if (typeof snapshot.snapshotId !== 'string' || !snapshot.snapshotId.trim()) errors.push('snapshotId precisa ser não vazio.');
   if (!isRecord(snapshot.farm?.location)) errors.push('farm.location precisa ser um objeto.');
