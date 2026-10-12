@@ -1,0 +1,171 @@
+{
+  "assetSources": [
+    {
+      "assetId": "nelore-adult",
+      "file": "assets/nelore-adult-idle-v1.png",
+      "sourceFile": "assets/approved/livestock/nelore-adult-idle-v1.png",
+      "status": "APPROVED",
+      "sha256": "975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43",
+      "sourceApproval": "2026-10-12 user-approved animal asset; generation provenance and approval history are retained in assets/manifests/manifest.json at sourceRevision.commit.",
+      "sourceManifest": "assets/manifests/manifest.json"
+    },
+    {
+      "assetId": "farm-starter-atlas",
+      "file": "assets/farm-starter-atlas.png",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "status": "RUNTIME_ATLAS_REVIEW_STATE_UNRESOLVED",
+      "sha256": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
+      "sourceManifest": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "handling-review-atlas-v1",
+      "file": "assets/handling-review-atlas-v1.png",
+      "sourceFile": "public/assets/atlas/handling-review-atlas-v1.png",
+      "status": "REVIEW",
+      "sha256": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
+      "sourceManifest": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-holstein-cow",
+      "file": "assets/dairy/dairy-holstein-cow.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-holstein-cow.png",
+      "status": "REVIEW",
+      "sha256": "c6b68cadb145d87fb4f9cbe4ed5b41d19f466e83019ee00fee946743ca0277dc",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-girolando-cow",
+      "file": "assets/dairy/dairy-girolando-cow.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-girolando-cow.png",
+      "status": "REVIEW",
+      "sha256": "98b859a1dcbbb097f411ba86b03d149910e903ea79a4120a92abf94c1c3929b4",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-heifer",
+      "file": "assets/dairy/dairy-heifer.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer.png",
+      "status": "REVIEW",
+      "sha256": "0b1b99678bc6203f414610e984a7fe2957c23fef1836bb7b4804684ac44d6eb5",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.heifer.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-heifer-calf",
+      "file": "assets/dairy/dairy-heifer-calf.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer-calf.png",
+      "status": "REVIEW",
+      "sha256": "d96eacd68a8ad98c7af07985ea40592b1811b3ae4c048ea058546fc776e2b98b",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-barn",
+      "file": "assets/dairy/dairy-barn.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-barn.png",
+      "status": "REVIEW",
+      "sha256": "aa3d6f232b2e6a2a679f201622f086f71b91b135a746b8b9996d59146855eb1e",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.barn.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-milking-parlor",
+      "file": "assets/dairy/dairy-milking-parlor.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milking-parlor.png",
+      "status": "REVIEW",
+      "sha256": "4dbf86990f5a729c8c45605244308336101c48c51e19515ec3522d1c916b984d",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.milking.parlor.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-milk-chilling-tank",
+      "file": "assets/dairy/dairy-milk-chilling-tank.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milk-chilling-tank.png",
+      "status": "REVIEW",
+      "sha256": "74505610a27ce2d3cffaba2eb5f4d937af7fa83396937647842b3cf1855849ba",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.milk.chilling.tank.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-waiting-pen",
+      "file": "assets/dairy/dairy-waiting-pen.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-waiting-pen.png",
+      "status": "REVIEW",
+      "sha256": "4a8aa84934ed0098aeea4ee9836958555daf875dcede0c76a5b99c039cbd95a7",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.waiting.pen.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    },
+    {
+      "assetId": "dairy-activity-collar",
+      "file": "assets/dairy/dairy-activity-collar.png",
+      "sourceFile": "assets/modules/livestock-dairy/assets/technology/dairy-activity-collar.png",
+      "status": "REVIEW",
+      "sha256": "ad877413e359e28621da50b5d112a510a2065dc9fc39c17ad1c459911402cbe9",
+      "sourceManifest": "public/assets/modules/livestock-dairy/manifest.json",
+      "sourceSemanticId": "dairy.activity.collar.imagegen.v1",
+      "sourceManifestStatus": "candidate-integration",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      }
+    }
+  ],
+  "policy": "Only the Nelore adult sprite is individually approved. The nine dairy sprites are REVIEW candidates with technical checks passed and art approval pending. The handling atlas remains REVIEW and farm/environment atlas approval is unresolved; preview use never changes these statuses.",
+  "sourceRevision": {
+    "branch": "main",
+    "commit": "2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7",
+    "sourceRepository": "Riose",
+    "verification": "All referenced source files and local preview copies matched their recorded SHA-256 at this revision."
+  }
+}

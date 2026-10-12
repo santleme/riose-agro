@@ -143,6 +143,18 @@
         {"if": {"properties": {"status": {"const": "linked"}}, "required": ["status"]}, "then": {"required": ["type", "version", "sha256"]}},
         {"if": {"properties": {"status": {"const": "not-linked"}}, "required": ["status"]}, "then": {"required": ["reason"]}}
       ]
+    },
+    "variableClassification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["version", "variables"],
+      "properties": {
+        "version": {"const": "1.0.0"},
+        "variables": {
+          "type": "object", "minProperties": 1,
+          "propertyNames": {"pattern": "^[a-z][a-z0-9_.-]*$"},
+          "additionalProperties": {"enum": ["farm", "lot", "animal"]}
+        }
+      }
     }
   },
   "$defs": {
@@ -158,6 +170,7 @@
         "sourceLocator": {"type": "string", "minLength": 1},
         "populationValidity": {"type": "string", "minLength": 1},
         "period": {"type": "string"},
+        "variableId": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]*$"},
         "missingReason": {"type": "string"},
         "measurementId": {"type": "string", "minLength": 1},
         "observedAt": {"type": ["string", "null"], "format": "date-time"},

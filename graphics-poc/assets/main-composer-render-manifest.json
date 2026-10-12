@@ -1,0 +1,1198 @@
+{
+  "sourceRevision": {
+    "branch": "main",
+    "commit": "e714ef0b4cb2800dc041d507d8f26d101d299c63",
+    "assetManifestCommit": "2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7",
+    "verification": "Copied atlas SHA-256 values match the source files. Asset review joins the semantic manifest by ID; unlinked runtime tiles remain UNRESOLVED."
+  },
+  "atlases": {
+    "farm": "/graphics-poc/assets/farm-starter-atlas.png",
+    "handling-review": "/graphics-poc/assets/handling-review-atlas-v1.png",
+    "environment-review": "/graphics-poc/assets/main-composer/environment-review-atlas-v1.png",
+    "infrastructure-review": "/graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png",
+    "technology-review": "/graphics-poc/assets/main-composer/technology-review-atlas-v1.png",
+    "animals-review": "/graphics-poc/assets/main-composer/animals-review-atlas-v1.png",
+    "dairy": "/graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png"
+  },
+  "atlasSha256": {
+    "farm": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
+    "handling-review": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
+    "environment-review": "cedc123183a779addaf68ecd939a6ae8c818c69c58b8e1fa789baf0c15b264ec",
+    "infrastructure-review": "f5aa03d2fe2e936a9e320a8b5426f3189017f70636c6bdaf77557393c7f9d98d",
+    "technology-review": "e14fccdabb06c35d201ab094fc1a50a4e5d371cbf127b446c97ba8387e260963",
+    "animals-review": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
+    "dairy": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca"
+  },
+  "unresolvedAssetIds": ["fruit-tree", "grain-silo"],
+  "assets": [
+    {
+      "assetId": "building-farmhouse-imagegen-v1",
+      "category": "building",
+      "atlasKey": "infrastructure-review",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 547,
+        "h": 414
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        172,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.30917874396135264,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "building.farmhouse.imagegen.v1",
+      "sourceFile": "assets/candidates/infrastructure/building-farmhouse-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "building-shed-imagegen-v1",
+      "category": "building",
+      "atlasKey": "infrastructure-review",
+      "frame": {
+        "x": 563,
+        "y": 8,
+        "w": 505,
+        "h": 407
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        172,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.3144963144963145,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "building.shed.imagegen.v1",
+      "sourceFile": "assets/candidates/infrastructure/building-shed-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "building-workshop-imagegen-v1",
+      "category": "building",
+      "atlasKey": "infrastructure-review",
+      "frame": {
+        "x": 8,
+        "y": 430,
+        "w": 485,
+        "h": 392
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        172,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.32653061224489793,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "building.workshop.imagegen.v1",
+      "sourceFile": "assets/candidates/infrastructure/building-workshop-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "corral-wood-standard-imagegen-v1",
+      "category": "corral",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 580,
+        "h": 371
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        130,
+        92
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.24797843665768193,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "corral.wood.standard.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/corral-wood-standard-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-barn",
+      "category": "building",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 8,
+        "y": 3087,
+        "w": 843,
+        "h": 514
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        188,
+        136
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "scale": 0.26459143968871596,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.barn.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-barn.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-girolando-cow",
+      "category": "livestock",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 1164,
+        "h": 831
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        60,
+        46
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.05535499398315283,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-girolando-cow.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-heifer-calf",
+      "category": "livestock",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 1103,
+        "y": 1637,
+        "w": 909,
+        "h": 750
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        76,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.07733333333333334,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer-calf.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-holstein-cow",
+      "category": "livestock",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 8,
+        "y": 1637,
+        "w": 1087,
+        "h": 771
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        60,
+        46
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.05966277561608301,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-holstein-cow.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-milk-chilling-tank",
+      "category": "building",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 859,
+        "y": 3087,
+        "w": 580,
+        "h": 439
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        108,
+        82
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "scale": 0.1867881548974943,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.milk.chilling.tank.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milk-chilling-tank.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-milking-parlor",
+      "category": "building",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 1136,
+        "y": 2416,
+        "w": 894,
+        "h": 559
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        188,
+        136
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "scale": 0.24329159212880144,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.milking.parlor.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milking-parlor.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "dairy-waiting-pen",
+      "category": "building",
+      "atlasKey": "dairy",
+      "frame": {
+        "x": 8,
+        "y": 3609,
+        "w": 688,
+        "h": 424
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "displaySize": [
+        164,
+        100
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "scale": 0.2358490566037736,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "dairy.waiting.pen.imagegen.v1",
+      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-waiting-pen.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "feed-salt-roofed-imagegen-v1",
+      "category": "feed",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 8,
+        "y": 387,
+        "w": 279,
+        "h": 314
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        130,
+        92
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2929936305732484,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "feed.salt.roofed.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/feed-salt-roofed-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "feed-trough-hay-imagegen-v1",
+      "category": "feed",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 1106,
+        "y": 387,
+        "w": 423,
+        "h": 261
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        130,
+        92
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.3524904214559387,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "feed.trough.hay.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/feed-trough-hay-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "fence-gate-wood-imagegen-v1",
+      "category": "fence",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 295,
+        "y": 387,
+        "w": 379,
+        "h": 303
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        92,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.19141914191419143,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "fence.gate.wood.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/fence-gate-wood-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "category": "fence",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 682,
+        "y": 387,
+        "w": 416,
+        "h": 299
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        92,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.1939799331103679,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "fence.wire.wood-post.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/fence-wire-wood-post-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "grass-light",
+      "category": "terrain",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "displaySize": [
+        98,
+        66
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2578125,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "grass-mid",
+      "category": "terrain",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "displaySize": [
+        98,
+        66
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2578125,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "handling-chute-cattle-imagegen-v1",
+      "category": "corral",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 1045,
+        "y": 8,
+        "w": 369,
+        "h": 349
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        130,
+        92
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2636103151862464,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "handling.chute.cattle.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/handling-chute-cattle-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "livestock-nelore-calf-idle-imagegen-v1",
+      "category": "livestock",
+      "atlasKey": "animals-review",
+      "frame": {
+        "x": 1117,
+        "y": 1834,
+        "w": 981,
+        "h": 751
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        76,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.07723035952063914,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "livestock.nelore.calf.idle.imagegen.v1",
+      "sourceFile": "assets/candidates/livestock/livestock-nelore-calf-idle-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "livestock-nelore-cow-idle-imagegen-v1",
+      "category": "livestock",
+      "atlasKey": "animals-review",
+      "frame": {
+        "x": 8,
+        "y": 942,
+        "w": 1219,
+        "h": 884
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        76,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.06561085972850679,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "livestock.nelore.cow.idle.imagegen.v1",
+      "sourceFile": "assets/candidates/livestock/livestock-nelore-cow-idle-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "livestock-nelore-heifer-idle-imagegen-v1",
+      "category": "livestock",
+      "atlasKey": "animals-review",
+      "frame": {
+        "x": 8,
+        "y": 1834,
+        "w": 1101,
+        "h": 809
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        76,
+        58
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.07169344870210136,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "livestock.nelore.heifer.idle.imagegen.v1",
+      "sourceFile": "assets/candidates/livestock/livestock-nelore-heifer-idle-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "road-straight",
+      "category": "infrastructure",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 0,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "displaySize": [
+        96,
+        62
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "scale": 0.2421875,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "road-turn",
+      "category": "infrastructure",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 384,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.8
+      },
+      "displaySize": [
+        96,
+        62
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "scale": 0.2421875,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "shade-tree",
+      "category": "vegetation",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 0,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.96
+      },
+      "displaySize": [
+        112,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.5,
+      "blocking": true,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "shrub",
+      "category": "vegetation",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 768,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "displaySize": [
+        112,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.5,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "soil-dry",
+      "category": "terrain",
+      "atlasKey": "farm",
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.82
+      },
+      "displaySize": [
+        98,
+        66
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2578125,
+      "blocking": false,
+      "reviewStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceReview": null,
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "technology-gateway-antenna-imagegen-v1",
+      "category": "technology",
+      "atlasKey": "technology-review",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 320,
+        "h": 507
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        78,
+        86
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.16962524654832348,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "technology.gateway.antenna.imagegen.v1",
+      "sourceFile": "assets/candidates/technology/technology-gateway-antenna-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "technology-monitor-station-imagegen-v1",
+      "category": "technology",
+      "atlasKey": "technology-review",
+      "frame": {
+        "x": 834,
+        "y": 8,
+        "w": 318,
+        "h": 502
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        78,
+        86
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.17131474103585656,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "technology.monitor.station.imagegen.v1",
+      "sourceFile": "assets/candidates/technology/technology-monitor-station-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "technology-scale-electronic-full-imagegen-v1",
+      "category": "technology",
+      "atlasKey": "technology-review",
+      "frame": {
+        "x": 1473,
+        "y": 8,
+        "w": 485,
+        "h": 392
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        78,
+        86
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2193877551020408,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "technology.scale.electronic.full.imagegen.v1",
+      "sourceFile": "assets/candidates/technology/technology-scale-electronic-full-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "technology-traceability-system-imagegen-v1",
+      "category": "technology",
+      "atlasKey": "technology-review",
+      "frame": {
+        "x": 336,
+        "y": 8,
+        "w": 490,
+        "h": 504
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        78,
+        86
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.17063492063492064,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "technology.traceability.system.imagegen.v1",
+      "sourceFile": "assets/candidates/technology/technology-traceability-system-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "vegetation-tree-shade-imagegen-v1",
+      "category": "vegetation",
+      "atlasKey": "environment-review",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 492,
+        "h": 432
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        112,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2962962962962963,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "vegetation.tree.shade.imagegen.v1",
+      "sourceFile": "assets/candidates/environment/vegetation-tree-shade-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "vehicle-pickup-rural-imagegen-v1",
+      "category": "vehicle",
+      "atlasKey": "infrastructure-review",
+      "frame": {
+        "x": 902,
+        "y": 430,
+        "w": 497,
+        "h": 287
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        172,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.445993031358885,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "vehicle.pickup.rural.imagegen.v1",
+      "sourceFile": "assets/candidates/infrastructure/vehicle-pickup-rural-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "vehicle-tractor-imagegen-v1",
+      "category": "vehicle",
+      "atlasKey": "infrastructure-review",
+      "frame": {
+        "x": 501,
+        "y": 430,
+        "w": 393,
+        "h": 318
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        172,
+        128
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.4025157232704403,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "vehicle.tractor.imagegen.v1",
+      "sourceFile": "assets/candidates/infrastructure/vehicle-tractor-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "water-pond-imagegen-v1",
+      "category": "water",
+      "atlasKey": "environment-review",
+      "frame": {
+        "x": 1500,
+        "y": 8,
+        "w": 444,
+        "h": 320
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        130,
+        92
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.2875,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "water.pond.imagegen.v1",
+      "sourceFile": "assets/candidates/environment/water-pond-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    },
+    {
+      "assetId": "water-trough-round-imagegen-v1",
+      "category": "water",
+      "atlasKey": "handling-review",
+      "frame": {
+        "x": 1537,
+        "y": 387,
+        "w": 462,
+        "h": 237
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 1
+      },
+      "displaySize": [
+        108,
+        82
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "scale": 0.3459915611814346,
+      "blocking": false,
+      "reviewStatus": "REVIEW",
+      "sourceSemanticId": "water.trough.round.imagegen.v1",
+      "sourceFile": "assets/candidates/handling/water-trough-round-imagegen-v1.png",
+      "sourceReview": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+      },
+      "manifestSource": "public/assets/manifest.json"
+    }
+  ]
+}

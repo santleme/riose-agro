@@ -2,6 +2,8 @@
 
 Agroville is a small browser-based cattle-farm simulator with an institutional landing page. The home page introduces the project; **Explorar a fazenda** opens the pixel-art simulator, where you can select animals, explore the map, and set diet, supplement, housing, and weather. The current comparison runs two illustrative 30-day scenarios from the same farm snapshot and seed; its only intervention is housing, from pasture to confinement. Diet, supplement, and weather remain the same in both scenarios. It reports modeled dry-matter intake and per-paddock forage stock alongside weight and feed cost.
 
+Completed and failed comparisons can be listed and replayed from the browser's local history. See [the local execution history guide](docs/historico-execucoes.md) for its storage, retention, and compatibility behavior.
+
 ## Run locally
 
 Requires Node.js 20 or newer for the local server. From this directory:
@@ -11,6 +13,8 @@ python3 -m http.server 8000
 ```
 
 Open http://localhost:8000 for the farm map and Scenario Studio. The optional project landing page is `home.html`; `simulator.html` remains a direct link to the same farm experience. Web Workers and JavaScript modules require HTTP; opening files via `file://` will not work. To use the local explanation endpoint and the **Revisar snapshot** panel, start the bundled server with `npm start`; the snapshot file is validated locally and is never applied to the current simulation. A static server can run the simulator but uses only deterministic explanations and does not provide the snapshot review API. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
+
+The optional Rust/WASM metabolism prototype runs with `?engine=wasm` (for example `http://localhost:8000/?engine=wasm`). The default remains the existing JavaScript path because current browser-side measurements do not show a consistent end-to-end WASM gain. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
 
 ### Optional scenario explanations
 
@@ -86,6 +90,8 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
 - `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `worker.js` — simulation worker, isolated from rendering
+- `crates/riose-core/`, `metabolism-wasm.js`, `wasm/riose_core.wasm` — opt-in Rust/WASM batch kernel and JavaScript fallback; rebuild with `npm run build:wasm`
+- `docs/architecture/` — repository/system audits, V2 boundaries, data contracts, decisions and measured migration plan
 - `server.js` — local static server and optional explanation endpoint
 - `snapshot-review.js`, `snapshot-review.css` — read-only snapshot review panel; the local endpoint validates schema, provenance, readiness, and exact manifest linkage
 - `tests/engine.test.js`, `tests/app.test.js`, `tests/comparison-presentation.test.js` — deterministic replay, Scenario Studio flow, and evidence presentation checks

@@ -5,8 +5,14 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test --test-concurrency=1",
-    "example:scenario-contract": "node examples/scenario-contract-v2.js",
-    "test:scenarios": "node scripts/run-scenarios.js",
+    "build:wasm": "sh scripts/build-wasm.sh",
+    "bench:simulation": "node scripts/benchmark-simulation.mjs",
+    "bench:history": "node scripts/benchmark-history.mjs",
+    "bench:history-storage": "node --expose-gc scripts/benchmark-history-storage.mjs",
+    "bench:browser": "node scripts/benchmark-browser.mjs",
+    "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
+    "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
+    "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "archive:comparison": "node scripts/archive-comparison.js",
     "validate:outcome": "node scripts/validate-outcome-record.js",
     "link:snapshot": "node scripts/link-farm-snapshot.js",
@@ -15,6 +21,9 @@
     "audit:usda-cper": "python3 scripts/audit_usda_cper_validation.py",
     "audit:usda-cper-daily": "python3 scripts/audit_usda_cper_daily.py",
     "audit:rothamsted-adg": "python3 scripts/audit_rothamsted_adg.py",
+    "example:scenario-contract": "node examples/scenario-contract-v2.js",
+    "example:sensitivity-analysis": "node examples/sensitivity-analysis.js",
+    "test:scenarios": "node scripts/run-scenarios.js",
     "audit:mendeley-nellore": "python3 scripts/audit_mendeley_nellore_feedlot.py",
     "audit:usda-cgrec-longterm": "python3 scripts/audit_usda_cgrec_longterm.py",
     "audit:usda-cgrec-cow-calf": "python3 scripts/audit_usda_cgrec_cow_calf.py",
@@ -51,6 +60,10 @@
   },
   "devDependencies": {
     "ajv": "^8.20.0",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "pixi.js": "^8.22.0"
   }
 }

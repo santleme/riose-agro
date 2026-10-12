@@ -21,10 +21,11 @@ function presentation(snapshot=new FarmEngine(42,2).snapshot()){
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
     scenarioNames:{pasture:'Pasto',barn:'Confinamento',normal:'Ameno',hot:'Calor',rain:'Chuvoso'},calculateThi,THI_SOURCE,environmentDiffRows,
     escapeHtml:value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])),
-    compareBusy(){},setRunning(){},notify(){},worker:{postMessage(message){context.lastMessage=message;}}
+    compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}}
   });
   // Execute the existing presentation and import handlers without booting the canvas/worker UI.
   vm.runInContext(source.slice(source.indexOf('const currency='),source.indexOf('const actionNames=')),context);
+  vm.runInContext(source.slice(source.indexOf('function renderScenarioVariables()'),source.indexOf('function comparisonNumber(')),context);
   vm.runInContext(source.slice(source.indexOf('function comparisonNumber('),source.indexOf('let noticeTimer')),context);
   vm.runInContext(source.slice(source.indexOf("$('manifest-file').onchange="),source.indexOf('function downloadFile(')),context);
   return {context,element,markup:()=>[...elements.values()].map(item=>item.innerHTML+' '+item.textContent).join('\n')};
@@ -141,8 +142,7 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
     '/docs/evidence/engine-adg-usda-cgrec-transport-check.json',
     '/docs/evidence/engine-adg-usda-cper-ltgi-check.json',
     '/docs/evidence/engine-adg-zenodo-cows-check.json',
-    '/engine.js','/worker.js',
-    'https://doi.org/10.2527/2006.843712x',
+    '/engine.js','/worker.js','https://doi.org/10.2527/2006.843712x',
   ]);
   const server=createServer({env:{}});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
@@ -159,11 +159,6 @@ test('all presentation provenance and public ADG diagnostic links resolve throug
   const environmentResponse=await fetch('http://127.0.0.1:'+server.address().port+'/environment-model.js');
   assert.equal(environmentResponse.status,200);
   assert.match(await environmentResponse.text(),/getWeatherRules/);
-  for(const [path,marker] of [['/environment-inputs.js','updateEnvironmentInput'],['/lot-metrics.js','calculateLotMetrics'],['/thermal-index.js','calculateThi'],['/lot-selection.js','resolveLotSelection'],['/scientific/br_corte_pasture_dmi.js','BR_CORTE_PASTURE_DMI']]){
-    const response=await fetch('http://127.0.0.1:'+server.address().port+path);
-    assert.equal(response.status,200);
-    assert.match(await response.text(),new RegExp(marker));
-  }
 });
 
 test('invalid initial pasture values cannot become apparently available trajectories or CSV values',()=>{

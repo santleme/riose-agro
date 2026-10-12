@@ -1,0 +1,16 @@
+[package]
+name = "riose-core"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[[bin]]
+name = "bench-metabolism"
+path = "src/bin/bench_metabolism.rs"

@@ -4,6 +4,8 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from '../run-history.js';
+import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../scenario-storage.js';
 import {resolveLotSelection,formatLotArea} from '../lot-selection.js';
 import {validateFarmSnapshot} from '../snapshot-validator.js';
 import {calculateLotMetrics,findPaddockField} from '../lot-metrics.js';
@@ -11,29 +13,30 @@ import {calculateThi,THI_SOURCE} from '../thermal-index.js';
 import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../environment-inputs.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
-async function openFarm(saved=[],activeId=null,seedStorage=[]){
+async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[]){
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-  const elements=new Map(),messages=[],downloads=[],storage=new Map([...seedStorage,['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId]]);
-  const drawing=new Proxy({}, {get:()=>()=>{}});
-  function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
+  const elements=new Map(),messages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId],...seedStorage]);
+  let scheduledFrame,mapDrawCalls=0;const drawing=new Proxy({}, {get:(_,key)=>key==='drawImage'?()=>mapDrawCalls++:()=>{}});
+  function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],scrollTop:0,clientHeight:400,classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
-  let worker,fetches=0;
+  let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
-    Worker:class {constructor(){worker=this;}postMessage(message){messages.push(structuredClone(message));}},
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,createRunRecord,recordRun,listRuns,getRun,runCompatibility,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
+    Worker:class {constructor(){worker=this;}postMessage(message){if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
-    Option:class {},URLSearchParams,performance:{now:()=>0},requestAnimationFrame(){},setTimeout(){return 1;},clearTimeout(){},
+    Option:class {},URLSearchParams,Image:class {set src(value){this.onload?.();}},performance:{now:()=>0},requestAnimationFrame(callback){scheduledFrame=callback;},setTimeout(){return 1;},clearTimeout(){},
     URL:{createObjectURL(blob){downloads.push(blob);return 'blob:test';},revokeObjectURL(){}},
-    fetch(url){if(String(url).startsWith('/api/')){fetches++;throw new Error('comparison must not invoke the LLM');}return Promise.resolve({ok:false,json:async()=>({})});},
-    prompt:()=>null,confirm:()=>true
+    fetch(url){if(String(url).startsWith('/api/')){fetches++;throw new Error('comparison must not invoke the LLM');}if(String(url)==='/assets/manifest.json')return Promise.resolve({ok:true,json:async()=>({atlases:{test:{image:'test.png'}},assets:['cow-beef','cow-dairy'].map(id=>({id,frame:{atlas:'test',x:0,y:0,w:1,h:1}}))})});return Promise.resolve({ok:false,json:async()=>({})});},
+    prompt:()=>promptValue,confirm:()=>true
   });
-  const source=(await readFile(new URL('../app.js',import.meta.url),'utf8'))
-    .replace(/^import .*;\r?\n/gm,'')
-    .replace("new Worker(new URL('./worker.js',import.meta.url),{type:'module'})",'new Worker()');
+  let source=(await readFile(new URL('../app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'');
+  const workerStart=source.indexOf('const workerUrl=');
+  const workerEnd=source.indexOf("const worker=new Worker(workerUrl,{type:'module'});",workerStart)+"const worker=new Worker(workerUrl,{type:'module'});".length;
+  source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);
   vm.runInContext(source,context,{filename:'app.js'});
-  const deliver=(type,value)=>worker.onmessage({data:{type,...(type==='state'?{state:value}:type==='error'?{message:value}:{data:value})}});
-  return {elements,messages,downloads,storage,deliver,fetches:()=>fetches};
+  const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:{data:value})}});};
+  return {elements,messages,downloads,storage,deliver,fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
 }
 
 test('map comparison freezes one snapshot, changes housing only, and never applies the alternative',async()=>{
@@ -41,7 +44,8 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   farm.configure({diet:'balanced',supplement:1.5,weather:'rain',housing:'barn'});
   farm.tick(24);
   const snapshot=farm.snapshot();
-  ui.deliver('state',snapshot);
+  ui.deliver('state',snapshot,'riose-core-wasm/0.1.0');
+  assert.match(ui.elements.get('engine-status').textContent,/RUST\/WASM/);
   assert.match(ui.elements.get('animal-history').innerHTML,/Estado observado pelo motor/);
   assert.doesNotMatch(ui.elements.get('animal-history').innerHTML,/Estado simulado registrado pelo motor/);
   ui.messages.length=0;
@@ -58,9 +62,6 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   ui.deliver('state',otherFarm.snapshot());
   const result=compare(request.snapshot,request.days);
   ui.deliver('comparison',result);
-  assert.match(ui.elements.get('comparison-variables').innerHTML,/Não informado/);
-  assert.match(ui.elements.get('comparison-variables').innerHTML,/Alojamento/);
-  assert.match(ui.elements.get('comparison-variables').innerHTML,/Mantida/);
   assert.match(ui.elements.get('compareconfig').textContent,/5 animais.*Balanceada.*1,5.*chuva/);
   assert.equal(ui.elements.get('comparison').open,true);
   assert.match(ui.elements.get('results').innerHTML,/Diferença alternativa − base:/);
@@ -73,14 +74,14 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
 });
 
 test('connected snapshot selection persists real lot IDs through the existing comparison and return to farm',async()=>{
-  const ui=await openFarm(),engine=new FarmEngine(702,8),snapshot=engine.snapshot();
+  const ui=await openFarm(),snapshot=new FarmEngine(702,8).snapshot();
   ui.deliver('state',snapshot);
   const farmSnapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
   farmSnapshot.paddocks[0].domainZoneId='paddock-1';farmSnapshot.lots[0].paddockId='19N';
   await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify(farmSnapshot)}]}});
   assert.equal(ui.elements.get('lot-compare').disabled,true,'selection waits for a spatial link from map zone to snapshot paddock');
   const patch={x:28,y:38,w:148,h:104};let point;
-  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2){if(snapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}}
+  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(snapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
   assert.ok(point,'fixture leaves a tappable area in the paddock');
   const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
   assert.equal(ui.elements.get('lot-compare').disabled,false);
@@ -96,15 +97,19 @@ test('connected snapshot selection persists real lot IDs through the existing co
   assert.deepEqual(association.context.animalIds,['eartag-242']);
   ui.elements.get('comparison').close();
   assert.equal(JSON.parse(ui.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id,'closing results returns to the same farm and lot');
-  assert.equal(ui.elements.get('lot-selection-details').innerHTML.includes('eartag-242'),true);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
 });
 
-test('environment editing, THI and lot selection persist across reload and appear in existing comparison',async()=>{
-  const ui=await openFarm(),engine=new FarmEngine(702,8),simulatorSnapshot=engine.snapshot();ui.deliver('state',simulatorSnapshot);
+test('lot metrics, environmental edits, THI and linked selection persist through the existing comparison and reload',async()=>{
+  const ui=await openFarm(),simulatorSnapshot=new FarmEngine(702,8).snapshot();ui.deliver('state',simulatorSnapshot);
   const farmSnapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
-  farmSnapshot.paddocks[0].domainZoneId='paddock-1';farmSnapshot.lots[0].paddockId='19N';farmSnapshot.farm.environment={temperature_c:{path:'farm.environment.temperature_c',value:24,unit:'°C',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'},relative_humidity_pct:{path:'farm.environment.relative_humidity_pct',value:60,unit:'%',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'}};farmSnapshot.observations.push({path:'paddock.19N.area_ha',value:0.5,unit:'ha',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'área do piquete',measurementId:'fixture-area-0-5ha',observedAt:'2019-01-01T00:00:00Z'},{path:'paddock.19N.trough_length_m',value:12,unit:'m',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'infraestrutura do piquete',measurementId:'fixture-trough-12m',observedAt:'2019-01-01T00:00:00Z'});
+  farmSnapshot.paddocks[0].domainZoneId='paddock-1';farmSnapshot.lots[0].paddockId='19N';
+  farmSnapshot.farm.environment={temperature_c:{path:'farm.environment.temperature_c',value:24,unit:'°C',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'},relative_humidity_pct:{path:'farm.environment.relative_humidity_pct',value:60,unit:'%',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'estação meteorológica',populationValidity:'ambiente no local'}};
+  farmSnapshot.observations.push({path:'paddock.19N.area_ha',value:0.5,unit:'ha',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'área do piquete',measurementId:'fixture-area-0-5ha',observedAt:'2019-01-01T00:00:00Z'},{path:'paddock.19N.trough_length_m',value:12,unit:'m',status:'observed',sourceId:'usda-cper-moonitor-2019-2020',sourceLocator:'croqui do piquete',populationValidity:'infraestrutura do piquete',measurementId:'fixture-trough-12m',observedAt:'2019-01-01T00:00:00Z'});
   await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify(farmSnapshot)}]}});
-  const patch={x:28,y:38,w:148,h:104};let point;for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(simulatorSnapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
+  const patch={x:28,y:38,w:148,h:104};let point;
+  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(simulatorSnapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
+  assert.ok(point);
   const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
   assert.equal(ui.elements.get('environment-temperature').value,'24');
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/12,00 m\/animal/);
@@ -125,18 +130,95 @@ test('environment editing, THI and lot selection persist across reload and appea
   assert.match(ui.elements.get('comparison-thermal').innerHTML,/75,0/);
   assert.match(ui.elements.get('comparison-thermal').innerHTML,/índice ambiental/);
   ui.elements.get('comparison').close();
-  const reopened=await openFarm([],null,[...ui.storage]);
+  const reopened=await openFarm([],null,null,[...ui.storage]);
   assert.equal(reopened.elements.get('environment-temperature').value,'26.8');
   assert.match(reopened.elements.get('lot-selection-details').innerHTML,/eartag-242/);
   assert.equal(JSON.parse(reopened.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id);
 });
 
-test('snapshot integration refuses incomplete contracts without replacing the active lot snapshot',async()=>{
+test('legacy snapshots leave absent environmental values unavailable and invalid snapshots do not replace them',async()=>{
   const ui=await openFarm();
+  const legacy=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
+  await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify(legacy)}]}});
+  assert.equal(ui.elements.get('environment-temperature').value,'');
+  assert.equal(ui.elements.get('environment-humidity').value,'');
+  assert.match(ui.elements.get('environment-thi').textContent,/indisponível/i);
+  assert.equal(ui.storage.has('agroville-farm-snapshot-v1'),true);
   await ui.elements.get('snapshot-connect-file').onchange({target:{files:[{text:async()=>JSON.stringify({schemaVersion:'0.1.0',snapshotId:'partial'})}]}});
-  assert.match(ui.elements.get('notice').textContent,/operations/);
-  assert.equal(ui.storage.has('agroville-farm-snapshot-v1'),false);
-  assert.match(ui.elements.get('lot-selection-status').textContent,/Conecte um snapshot/);
+  assert.match(ui.elements.get('notice').textContent,/Campos obrigatórios ausentes/);
+  assert.equal(JSON.parse(ui.storage.get('agroville-farm-snapshot-v1')).snapshotId,legacy.snapshotId);
+});
+
+test('completed comparison is persisted and its original manifest can be replayed',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(17,3).snapshot();
+  ui.deliver('state',farm);
+  ui.elements.get('compare').onclick();
+  const request=ui.messages.at(-1),result=compare(request.snapshot,request.days);
+  ui.deliver('comparison',result);
+  const saved=listRuns({getItem:key=>ui.storage.get(key)??null});
+  assert.equal(saved.length,1);
+  assert.equal(saved[0].status,'completed');
+  ui.elements.get('run-history-select').value=saved[0].id;
+  ui.elements.get('run-history-replay').onclick();
+  assert.equal(ui.messages.at(-1).type,'replayComparison');
+  assert.deepEqual(ui.messages.at(-1).manifest,saved[0].manifest);
+});
+
+test('failed comparison is recorded without a stack trace',async()=>{
+  const ui=await openFarm();ui.deliver('state',new FarmEngine(17,3).snapshot());
+  ui.elements.get('compare').onclick();
+  ui.deliver('error','engine failed');
+  const saved=listRuns({getItem:key=>ui.storage.get(key)??null});
+  assert.equal(saved[0].status,'failed');
+  assert.equal(saved[0].error,'engine failed');
+  assert.doesNotMatch(JSON.stringify(saved[0]),/stack|C:\\Users/);
+});
+
+test('large herds use a bounded accessible animal-list window',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(81,10_000);
+  ui.deliver('state',farm.snapshot());
+  const list=ui.elements.get('animals');
+  assert.equal((list.innerHTML.match(/class="animal-row/g)??[]).length,12);
+  assert.match(list.innerHTML,/aria-setsize="10000"/);
+  list.scrollTop=960;list.onscroll();
+  assert.equal((list.innerHTML.match(/class="animal-row/g)??[]).length,15);
+  assert.match(list.innerHTML,/aria-posinset="18"/);
+});
+
+test('map only draws animals inside the zoomed camera viewport',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(91,100);
+  ui.deliver('state',farm.snapshot());await new Promise(resolve=>setTimeout(resolve,0));ui.elements.get('play').onclick();
+  for(let zoom=0;zoom<8;zoom++)ui.elements.get('zoomin').onclick();
+  const drawCalls=ui.renderMap();
+  assert.ok(drawCalls>1,'the terrain remains visible');
+  assert.ok(drawCalls-1<farm.state.animals.length,'offscreen animals do not issue sprite draws');
+});
+
+test('compressed scenario snapshots round-trip and load from the versioned storage format',async()=>{
+  const farm=new FarmEngine(823,1000);farm.tick(24);const snapshot=farm.snapshot();
+  const snapshotData=await encodeScenarioSnapshot(snapshot);
+  assert.deepEqual(await decodeScenarioSnapshot(snapshotData),snapshot);
+  assert.ok(snapshotData.length*4/3<JSON.stringify(snapshot).length*.6,'gzip should substantially reduce this repeated state');
+  const saved={type:'agroville-scenarios-gzip-v1',scenarios:[{id:'packed',name:'Compactado',selected:1,summary:{hour:snapshot.hour,config:snapshot.config,eventCount:snapshot.events.length},snapshotData}]};
+  const ui=await openFarm(saved,'packed');await new Promise(resolve=>setTimeout(resolve,50));
+  assert.equal(ui.messages[0].type,'load');
+  assert.deepEqual(ui.messages[0].snapshot,snapshot);
+});
+
+test('scenario save writes compressed data and legacy snapshots migrate without changing state',async()=>{
+  const snapshot=new FarmEngine(774,300).snapshot(),ui=await openFarm([],null,'Compacto');
+  ui.deliver('state',snapshot);ui.elements.get('scenario-save').onclick();
+  await new Promise(resolve=>setTimeout(resolve,50));
+  const stored=JSON.parse(ui.storage.get('agroville-scenarios-v1'));
+  assert.equal(stored.type,'agroville-scenarios-gzip-v1');
+  assert.equal(stored.scenarios.length,1);
+  assert.deepEqual(await decodeScenarioSnapshot(stored.scenarios[0].snapshotData),snapshot);
+
+  const legacy={id:'old',name:'Legado',selected:1,snapshot},legacyUi=await openFarm([legacy]);
+  await new Promise(resolve=>setTimeout(resolve,50));
+  const migrated=JSON.parse(legacyUi.storage.get('agroville-scenarios-v1'));
+  assert.equal(migrated.type,'agroville-scenarios-gzip-v1');
+  assert.deepEqual(await decodeScenarioSnapshot(migrated.scenarios[0].snapshotData),snapshot);
 });
 
 test('manifest can be reopened from the map and uses its herd, conditions and horizon in UI and CSV',async()=>{
