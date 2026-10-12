@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -105,6 +105,15 @@ test('distance LOD reduces far draw units while preserving every stable animal I
   assert.deepEqual(result.clusters[0].animalIds, [3, 4]);
   assert.deepEqual([...result.individual.map(item => item.animalId), ...result.clusters.flatMap(item => item.animalIds)].sort((a, b) => a - b), [1, 2, 3, 4]);
   assert.equal(visualLod(100), 'near'); assert.equal(visualLod(101), 'medium'); assert.equal(visualLod(221), 'far');
+});
+
+test('visual update cadence slows smoothly with distance and caps at the far LOD boundary', () => {
+  const samples = [0, 50, 100, 130, 160, 190, 220].map(distance => visualUpdateInterval(distance));
+  assert.equal(samples[0], 1000 / 60);
+  assert.ok(samples.every((value, index) => index === 0 || value >= samples[index - 1]));
+  assert.ok(samples[3] > samples[2] && samples[3] < samples.at(-1));
+  assert.equal(samples.at(-1), 120);
+  assert.equal(visualUpdateInterval(Number.NaN), 120);
 });
 
 test('prefab snapping rejects out-of-bounds and overlapping blocking footprints', () => {

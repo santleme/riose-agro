@@ -1,5 +1,5 @@
 import {Application, Assets, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -37,7 +37,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -143,7 +143,8 @@ function isVisible(entry) {
 
 function refreshScene() {
   if (!state.scene) return;
-  const started = performance.now(), terrain = [], objects = [], animals = [];
+  const started = performance.now(), terrain = [], objects = [], animals = [], visibleByLod = {near: 0, medium: 0, far: 0};
+  let culledAnimalCount = 0;
   if (state.activeLayers.terrain) {
     for (const cell of state.terrainCells) {
       const position = isoPosition(cell.column + .5, cell.row + .5);
@@ -152,7 +153,8 @@ function refreshScene() {
     }
   }
   for (const entry of entityEntries()) {
-    if (!state.activeLayers[entry.kind] || !isVisible(entry)) continue;
+    if (!state.activeLayers[entry.kind]) continue;
+    if (!isVisible(entry)) { if (entry.animalId) culledAnimalCount++; continue; }
     if (entry.kind === 'livestock') {
       const point = screenPoint(entry.x, entry.y);
       if (entry.animalId) {
@@ -160,6 +162,7 @@ function refreshScene() {
         entry.screenX = point.x; entry.screenY = point.y; entry.lod = visualLod(distance);
         entry.assetId = entry.lod === 'near' ? 'nelore-adult' : 'nelore-adult-low';
       } else entry.lod = 'near';
+      visibleByLod[entry.lod]++;
       animals.push(entry);
     } else objects.push(entry);
   }
@@ -168,6 +171,8 @@ function refreshScene() {
   state.visible = [...terrain, ...ordered];
   state.updateMs = performance.now() - started;
   state.visibleAnimalCount = animals.length;
+  state.culledAnimalCount = culledAnimalCount;
+  state.visibleByLod = visibleByLod;
   state.herdClusterCount = clusters.length;
   state.animalRenderUnits = individual.length + clusters.length;
   state.accountedAnimalCount = individual.filter(entry => entry.animalId).length + clusters.reduce((sum, entry) => sum + entry.count, 0);
@@ -204,7 +209,7 @@ function updateVisualMotion(time) {
   const started = performance.now(); let updates = 0;
   for (const entry of state.visible) {
     if (entry.kind !== 'livestock' || !entry.animalId) continue;
-    const interval = entry.lod === 'near' ? 0 : 110, motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
+    const interval = visualUpdateInterval(Math.hypot(entry.screenX - state.camera.x, entry.screenY - state.camera.y)), motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
     if (time - motion.updatedAt >= interval) { motion.updatedAt = time; motion.offset = Math.sin(time * .002 + entry.animalId * .71) * .55; state.motionById.set(entry.id, motion); updates++; }
     entry.animationOffset = motion.offset;
     if (state.renderer === 'pixi') { const sprite = state.pixiPrefabs.get(entry.id); if (sprite) sprite.y = entry.y + motion.offset; }
@@ -528,7 +533,7 @@ function switchRenderer(renderer) {
 
 function frameStats() {
   const framesMs = state.frameTimes.slice(-600), paintMs = state.paintTimes.slice(-600), updateMs = state.updateTimes.slice(-600), motionMs = state.motionUpdateTimes.slice(-600), lodUpdates = state.lodUpdateTimes.slice(-600);
-  return {meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: state.selectedDomain === 'dairy' ? 0 : state.view?.animalActions.length ?? 0, visibleAnimals: state.visibleAnimalCount, accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, cameraZoom: state.camera.zoom, renderer: state.renderer};
+  return {meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: state.selectedDomain === 'dairy' ? 0 : state.view?.animalActions.length ?? 0, visibleAnimals: state.visibleAnimalCount, culledAnimals: state.culledAnimalCount, visibleByLod: {...state.visibleByLod}, accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, cameraZoom: state.camera.zoom, renderer: state.renderer};
 }
 
 function pixiFrame(time) {

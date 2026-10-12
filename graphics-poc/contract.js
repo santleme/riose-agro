@@ -19,6 +19,13 @@ export function visualLod(distance, nearDistance = 100, mediumDistance = 220) {
   return distance <= nearDistance ? 'near' : distance <= mediumDistance ? 'medium' : 'far';
 }
 
+export function visualUpdateInterval(distance, nearDistance = 100, mediumDistance = 220) {
+  if (!Number.isFinite(distance) || distance < 0) return 120;
+  if (distance <= nearDistance) return 1000 / 60;
+  const progress = Math.max(0, Math.min(1, (distance - nearDistance) / (mediumDistance - nearDistance)));
+  return 33 + 87 * progress ** 2;
+}
+
 export function clusterFarAnimals(entries, cellWidth = 48, cellHeight = 36) {
   const individual = [], groups = new Map();
   for (const entry of entries) {
