@@ -36,6 +36,44 @@ test('public USDA snapshot matches the complete JSON Schema', () => {
   assert.equal(validateFarmSnapshot(missingOperations).semanticValid, true);
 });
 
+test('snapshot accepts optional versioned variable domain classification', () => {
+  const legacy = structuredClone(example);
+  assert.equal(Object.hasOwn(legacy, 'variableClassification'), false);
+  assert.equal(validateSchema(legacy), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(legacy).semanticValid, true);
+
+  const classified = structuredClone(legacy);
+  classified.variableClassification = {
+    version: '1.0.0',
+    variables: {
+      climate: 'farm',
+      diet: 'lot',
+      feed_bunk: 'lot',
+      stocking_density: 'lot',
+      weight_kg: 'animal',
+      age_days: 'animal',
+      category: 'animal',
+    },
+  };
+  assert.equal(validateSchema(classified), true, JSON.stringify(validateSchema.errors));
+  assert.equal(validateFarmSnapshot(classified).semanticValid, true);
+
+  const invalidLevel = structuredClone(classified);
+  invalidLevel.variableClassification.variables.diet = 'farm-wide';
+  assert.equal(validateSchema(invalidLevel), false);
+  assert.ok(validateFarmSnapshot(invalidLevel).errors.some(message => message.includes('deve ser farm, lot ou animal')));
+
+  const unsupportedVersion = structuredClone(classified);
+  unsupportedVersion.variableClassification.version = '2.0.0';
+  assert.equal(validateSchema(unsupportedVersion), false);
+  assert.ok(validateFarmSnapshot(unsupportedVersion).errors.some(message => message.includes("version deve ser '1.0.0'")));
+
+  const invalidId = structuredClone(classified);
+  invalidId.variableClassification.variables['1-invalid'] = 'animal';
+  assert.equal(validateSchema(invalidId), false);
+  assert.ok(validateFarmSnapshot(invalidId).errors.some(message => message.includes('id de variável inválido')));
+});
+
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
   const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);

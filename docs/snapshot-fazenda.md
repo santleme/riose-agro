@@ -18,6 +18,29 @@ As classificações permitidas são:
 
 `missing` e `not-applicable` exigem `value: null` e uma justificativa. Um número de demonstração não pode substituir esse `null`; para incluí-lo, ele deve ser rotulado `hypothesis`, apontar para sua origem e continuar claramente fora das medições observadas.
 
+## Escopo de domínio das variáveis
+
+O snapshot pode incluir `variableClassification`, um catálogo opcional e versionado separado do status de evidência (`observed`, `derived` etc.). Na versão `1.0.0`, `variables` associa IDs estáveis de variáveis a `farm`, `lot` ou `animal`; por exemplo, clima é da fazenda, dieta/cocho/densidade são do lote, e peso/idade/categoria são do animal. O schema e o validador semântico rejeitam versões, IDs e níveis inválidos. Essa metadata descreve o domínio do dado e não altera fórmulas ou o engine.
+
+Campos sem uma entrada no catálogo permanecem **não classificados**. Não se deve inferir o nível pelo nome do campo, por sua posição no JSON ou pela entidade que o contém; classifique-o somente quando houver uma decisão explícita. Como o catálogo é opcional, snapshots anteriores continuam válidos sem migração. Um snapshot novo pode declarar, por exemplo:
+
+```json
+{
+  "variableClassification": {
+    "version": "1.0.0",
+    "variables": {
+      "climate": "farm",
+      "diet": "lot",
+      "feed_bunk": "lot",
+      "stocking_density": "lot",
+      "weight_kg": "animal",
+      "age_days": "animal",
+      "category": "animal"
+    }
+  }
+}
+```
+
 ## Operações e histórico
 
 Eventos agora usam um envelope com ID estável, tipo, instante, classificação de evidência, fonte, localizador, população de validade e campos medidos/derivados/hipotéticos. Cada campo do evento reutiliza o mesmo contrato de proveniência (`unit`, status, fonte, localizador e população válida) e um caminho no formato `operations.<eventId>.<field>` ou `history.<eventId>.<field>`. O validador rejeita fonte inexistente, caminho fora do evento, campos sem procedência e IDs repetidos no mesmo registro. Isso cobre eventos novos no rascunho 0.1.0; os logs vazios do exemplo USDA continuam indicando cobertura ausente/parcial, não ausência de eventos na fazenda real.

@@ -1,5 +1,31 @@
 const ALLOWED_STATUSES = new Set(['observed', 'derived', 'hypothesis', 'missing', 'not-applicable']);
+const ALLOWED_DOMAIN_LEVELS = new Set(['farm', 'lot', 'animal']);
 const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+function validateVariableClassification(snapshot, errors) {
+  if (snapshot.variableClassification === undefined) return;
+
+  const classification = snapshot.variableClassification;
+  if (!isRecord(classification)) {
+    errors.push('variableClassification precisa ser um objeto.');
+    return;
+  }
+  if (classification.version !== '1.0.0') errors.push("variableClassification.version deve ser '1.0.0'.");
+
+  const variables = classification.variables;
+  if (!isRecord(variables) || Object.keys(variables).length === 0) {
+    errors.push('variableClassification.variables precisa ser um objeto não vazio.');
+    return;
+  }
+  for (const [variableId, level] of Object.entries(variables)) {
+    if (!/^[a-z][a-z0-9_.-]*$/.test(variableId)) {
+      errors.push(`variableClassification: id de variável inválido '${variableId}'.`);
+    }
+    if (!ALLOWED_DOMAIN_LEVELS.has(level)) {
+      errors.push(`variableClassification.${variableId} deve ser farm, lot ou animal.`);
+    }
+  }
+}
 
 function uniqueIds(items, label, errors) {
   if (!Array.isArray(items)) {
@@ -200,6 +226,7 @@ export function validateFarmSnapshot(snapshot) {
   if (!isRecord(snapshot)) {
     return {semanticValid: false, simulationEligible: false, errors: ['snapshot precisa ser um objeto.'], blockers: [], missingRequiredFields: []};
   }
+  validateVariableClassification(snapshot, errors);
 
   const sourceCatalog = Array.isArray(snapshot.sourceCatalog) ? snapshot.sourceCatalog : [];
   if (!Array.isArray(snapshot.sourceCatalog)) errors.push('sourceCatalog precisa ser uma lista.');
