@@ -92,6 +92,18 @@ test('missing, unsupported, and contradictory v2 data fail with understandable m
   assert.throws(() => validateScenarioContract(badTarget), /target_scope.animal_ids deve corresponder/);
 });
 
+test('baseline animal IDs must be real nonempty strings or finite numbers', () => {
+  for (const invalidId of [undefined, null, {}, []]) {
+    const snapshot = fixture();
+    snapshot.animals[0].id = invalidId;
+    assert.throws(() => createScenarioContract(snapshot, 2), /baseline.animals\[0\].id precisa ser/);
+  }
+
+  const contract = createScenarioContract(fixture(), 2);
+  contract.baseline.animals[0].id = null;
+  assert.throws(() => validateScenarioContract(contract), /baseline.animals\[0\].id precisa ser/);
+});
+
 test('checked-in example runs twice with identical outputs', async () => {
   const {spawnSync} = await import('node:child_process');
   const script = fileURLToPath(new URL('../examples/scenario-contract-v2.js', import.meta.url));

@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {replayComparisonManifest, validateComparisonManifest} from './engine.js';
+import {replayScenarioContract, validateReproducibilityManifest} from './scenario-contract.js';
 
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
@@ -7,7 +7,7 @@ export function createComparisonArchive(manifestBytes, engineSourceBytes, captur
   const exactManifestBytes = Buffer.isBuffer(manifestBytes) ? manifestBytes : Buffer.from(manifestBytes);
   const exactEngineBytes = Buffer.isBuffer(engineSourceBytes) ? engineSourceBytes : Buffer.from(engineSourceBytes);
   const manifest = JSON.parse(exactManifestBytes.toString('utf8'));
-  validateComparisonManifest(manifest);
+  validateReproducibilityManifest(manifest);
   if (!Number.isFinite(Date.parse(capturedAt))) throw new Error('capturedAt precisa ser uma data ISO válida.');
 
   return {
@@ -20,7 +20,7 @@ export function createComparisonArchive(manifestBytes, engineSourceBytes, captur
       sha256: sha256(exactManifestBytes),
     },
     engineSourceSha256: sha256(exactEngineBytes),
-    comparison: replayComparisonManifest(manifest),
+    comparison: replayScenarioContract(manifest),
   };
 }
 

@@ -39,7 +39,12 @@ function legacyView(contract) {
 }
 
 function animalIds(snapshot) {
-  return snapshot.animals.map(animal => String(animal.id));
+  return snapshot.animals.map((animal, index) => {
+    const id = animal?.id;
+    if (typeof id === 'string' && id.trim()) return id;
+    if (typeof id === 'number' && Number.isFinite(id)) return String(id);
+    fail(`baseline.animals[${index}].id precisa ser texto não vazio ou número finito.`);
+  });
 }
 
 export function validateScenarioContract(contract) {

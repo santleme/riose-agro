@@ -15,7 +15,7 @@ The integer `version` identifies the serialized contract. Version 1 keeps its ex
 - `scenario_id`: caller-provided stable label; the builder's default (`scenario-<seed>-<days>`) is deterministic but is not guaranteed unique.
 - `baseline`: full initial `FarmEngine` snapshot, preserving the exact existing replay input and both random streams when present.
 - `intervention`: the supported demonstrative change, housing to `barn`.
-- `target_scope`: `whole-herd` plus the ordered animal IDs from `baseline`; validation rejects omitted, added, reordered, or duplicated IDs.
+- `target_scope`: `whole-herd` plus the ordered animal IDs from `baseline`; only nonempty string IDs and finite numeric IDs can be serialized. Validation rejects missing/unsupported source IDs and omitted, added, reordered, or duplicated scope IDs.
 - `duration`: an integer from 1 to 365 with unit `day`.
 - `seed`: the unsigned 32-bit original seed in the baseline snapshot.
 - `inputs`: baseline and scenario configurations. The validator requires the configs to differ only in the declared factor and to preserve the baseline's other settings.
@@ -30,4 +30,4 @@ Run `npm run example:scenario-contract` (or `node examples/scenario-contract-v2.
 
 ## Compatibility boundary
 
-Farm snapshots and existing v1 comparison manifests retain their current bytes and schemas. V2 is an additive contract version using the same manifest type, not a replacement farm snapshot format. The adapter can only preserve facts recorded in v1; `legacy-unspecified` makes the missing engine version visible. No scientific input, source, or model assumption is fabricated to fill absent v1 fields.
+Farm snapshots and existing v1 comparison manifests retain their current bytes and schemas. V2 is an additive contract version using the same manifest type, not a replacement farm snapshot format. Snapshot linking, archive creation, and outcome validation dispatch across both supported manifest versions. The adapter can only preserve facts recorded in v1; `legacy-unspecified` makes the missing engine version visible. No scientific input, source, or model assumption is fabricated to fill absent v1 fields.
