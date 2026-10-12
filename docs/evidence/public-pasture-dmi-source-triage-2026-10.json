@@ -34,6 +34,41 @@
       "decision": "Retain as a relevant peer-reviewed methodological and population reference only. Do not reconstruct individual observations from tables/figures or score engine accuracy: no reusable individual file was located, intake is estimated by a tracer method, and calf ADG is not the approved adult-cattle ADG target."
     },
     {
+      "title": "Herbage selection, intake and digestibility in grazing beef cattle",
+      "doi": "10.1016/j.livsci.2015.01.020",
+      "url": "https://doi.org/10.1016/j.livsci.2015.01.020",
+      "fullTextCopyUrl": "https://locus.ufv.br/bitstreams/8b0eb748-a289-4d8a-a689-7b9a58d02616/download",
+      "publicationLicense": "The full-text copy states © 2015 Elsevier B.V. All rights reserved; no separate license for underlying data found.",
+      "reportedPopulation": "Twenty nonlactating Angus cows averaging 50 ± 12 months and 525 ± 55 kg grazed mixed pasture for a 28-day study; individual forage intake was estimated with n-alkanes.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The accessible article reports a group mean and standard deviation for grazing forage intake and describes per-cow estimates, but no downloadable per-cow data, data repository record, or data-specific reuse license was located.",
+      "decision": "Retain as a strong population and measurement-method reference, but exclude from supervised target data: the accessible result is aggregate, the measured grazing outcome is herbage intake rather than documented total DMI including supplement, and no reusable individual records were located. Do not reconstruct rows from the reported mean or figures."
+    },
+    {
+      "title": "Forage intake and digesta kinetics of lactating beef cattle differing in feed efficiency while grazing Idaho rangelands",
+      "doi": "10.1093/jas/skaf429",
+      "url": "https://doi.org/10.1093/jas/skaf429",
+      "openArticleUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12863948/",
+      "osfExamplesUrl": "https://osf.io/rfzv5/?view_only=89684cf6453245e4990859adf6745325",
+      "publicationLicense": "No separate data-specific reuse license for cow-level records identified; the article's shared example data/code are not the study observations.",
+      "reportedPopulation": "Twenty-four 2-year-old lactating Angus × Hereford cows, split into efficient and inefficient groups, grazed Idaho rangeland in spring and summer periods; forage intake was estimated individually using a dosed-alkane method.",
+      "dataAvailabilityStatement": "The article shares example datasets and corrected SAS code for the nonlinear procedure on OSF; these are not the animal records from the grazing experiment.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "No cow-level grazing DMI file, animal-period rows, data repository deposit, or data-specific reuse terms were found. The open OSF material is explicitly described as example datasets and analysis code.",
+      "decision": "Retain as a recent population and measurement-method reference, but exclude from reusable supervised data: the accessible OSF files are examples/code, not grazing-cohort records, and no row-level animal data or reuse terms were located. Do not treat example inputs or article summaries as field observations."
+    },
+    {
+      "title": "Developing and validating a model to predict the dry matter intake of grazing lactating beef cows",
+      "doi": "10.1017/S1751731119001241",
+      "url": "https://doi.org/10.1017/S1751731119001241",
+      "openArticleUrl": "https://t-stor.teagasc.ie/server/api/core/bitstreams/e4d35fbb-0eac-43e8-b22a-0d8f2832ec08/content",
+      "publicationLicense": "The article is open access; no separate license or public deposit for the underlying individual DMI records was identified.",
+      "reportedPopulation": "The calibration study reports 94 DMI measurements on 106 beef or beef-dairy crossbred cows; its model was also applied to a separate herd of 60 lactating beef cows two years later.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The accessible article and institutional full-text copy report model results but no downloadable animal-period microdata, repository DOI, or data-specific reuse license for the cow-level DMI records.",
+      "decision": "Retain as a highly relevant mature beef-cow pasture methods reference, but exclude from supervised data until individual records, animal/trial keys, and reuse terms are published or authorized. Published model metrics cannot substitute for the source rows."
+    },
+    {
       "title": "Characterization of individual beef cattle water intake",
       "doi": "10.1093/jas/skag054",
       "url": "https://doi.org/10.1093/jas/skag054",

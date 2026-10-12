@@ -262,7 +262,7 @@
         "manifest": null,
         "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
         "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
-        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/5"
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/8"
       },
       "sourceIdentity": {
         "doi": "10.3389/fanim.2026.1770302",
@@ -436,6 +436,66 @@
       "permissibleUse": "Literature context only; do not score as independent pasture DMI validation."
     },
     {
+      "id": "pasture-dmi-triage-livsci-2015",
+      "name": "Herbage Selection, Intake, and Digestibility in Grazing Beef Cattle",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/3"
+      },
+      "sourceIdentity": {
+        "doi": "10.1016/j.livsci.2015.01.020",
+        "license": "2015 Elsevier article copyright; no separate data-specific reuse license identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "20 nonlactating Angus cows averaging 50 months of age grazing mixed pasture.",
+      "units": "Article reports aggregate grazing herbage intake; no reusable per-cow total-DMI records retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article describes individual herbage-intake estimates but no downloadable row-level file or data-specific reuse terms were located; herbage intake also does not document the specified total-DMI outcome including supplement. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records or paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Strong adult-cow population and method reference only; do not reconstruct microdata from reported aggregates."
+    },
+    {
       "id": "pasture-dmi-triage-skab279",
       "name": "Herbage mass, genotype, and intake of beef cows on native grassland",
       "references": {
@@ -496,13 +556,73 @@
       "permissibleUse": "Peer-reviewed methods and population reference only."
     },
     {
+      "id": "pasture-dmi-triage-skaf429",
+      "name": "Forage Intake and Digesta Kinetics of Lactating Beef Cattle on Idaho Rangelands",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/4"
+      },
+      "sourceIdentity": {
+        "doi": "10.1093/jas/skaf429",
+        "license": "No data-specific reuse license for cow-level records identified; OSF example datasets/code are not study observations."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "24 2-year-old lactating Angus × Hereford cows grazing Idaho rangeland in spring and summer periods.",
+      "units": "Individual forage-intake estimates are described, but no public animal-period outcome file was retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article links example datasets and SAS code, not the grazing-cohort records; no individual data file or reuse terms were identified. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG outcome file and paired predictors were located. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Recent population/method reference only; exclude example model inputs from observed-outcome validation."
+    },
+    {
       "id": "pasture-dmi-triage-skag054",
       "name": "Characterization of Individual Beef Cattle Water Intake",
       "references": {
         "manifest": null,
         "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
         "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
-        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/3"
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/6"
       },
       "sourceIdentity": {
         "doi": "10.1093/jas/skag054",
@@ -562,7 +682,7 @@
         "manifest": null,
         "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
         "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
-        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/4"
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/7"
       },
       "sourceIdentity": {
         "doi": "10.1093/jas/skag133",
@@ -614,6 +734,66 @@
         }
       },
       "permissibleUse": "Methods/benchmark context only; do not reproduce results from aggregate metrics as external validation."
+    },
+    {
+      "id": "pasture-dmi-triage-teagasc-2019",
+      "name": "Developing and Validating a Model for DMI of Grazing Lactating Beef Cows",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/5"
+      },
+      "sourceIdentity": {
+        "doi": "10.1017/S1751731119001241",
+        "license": "Open-access article; no separate data license or public deposit for underlying cow-level records identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "94 DMI measurements on 106 beef/beef-dairy crossbred cows, with model results also reported on a separate 60-cow lactating herd.",
+      "units": "Published model results only; no downloadable individual DMI rows or animal/trial keys retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The institutional full-text and publisher abstract contain cohort metrics but no public microdata, row-level IDs, or data-specific reuse terms. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired outcome inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Highly relevant methods/population reference only; published regression metrics cannot substitute for cow-level records."
     },
     {
       "id": "rothamsted-dairy-beef-grazing",
@@ -919,9 +1099,9 @@
     }
   ],
   "processing": {
-    "sourceCount": 15,
+    "sourceCount": 18,
     "inputFileCount": 25,
-    "elapsedSeconds": 0.014374,
+    "elapsedSeconds": 0.017646,
     "elapsedTimeKind": "observed_wall_clock_seconds"
   }
 }

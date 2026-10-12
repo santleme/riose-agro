@@ -30,10 +30,10 @@
   "reviewedMatrix": {
     "path": "docs/evidence/dmi-adg-readiness-v1.json",
     "schemaVersion": "riose.dmi-adg-readiness/v1",
-    "reviewedSourceCount": 15,
+    "reviewedSourceCount": 18,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
-    "ineligibleOrUnavailableSourcesForTarget": 15
+    "ineligibleOrUnavailableSourcesForTarget": 18
   },
   "candidateEvidence": [
     {
@@ -47,6 +47,9 @@
       "missingnessAndIdentity": "Individual records unavailable; animal/trial keys and row-level missingness cannot be audited.",
       "references": [
         "https://doi.org/10.1093/jas/skab279",
+        "https://doi.org/10.1016/j.livsci.2015.01.020",
+        "https://doi.org/10.1093/jas/skaf429",
+        "https://doi.org/10.1017/S1751731119001241",
         "https://doi.org/10.33915/etd.13250",
         "https://doi.org/10.1093/jas/skag054",
         "https://doi.org/10.1093/jas/skag133",
@@ -68,9 +71,52 @@
       ]
     },
     {
+      "id": "livsci-2015-mature-angus-grazing",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "Twenty mature nonlactating Angus cows grazed mixed pasture and individual forage-intake estimates were described, but the accessible source contains only aggregate outcomes, no reusable row-level data or data-specific reuse terms, and no documented total-DMI label including supplement.",
+      "access": "unavailable_or_not_reusable",
+      "license": "The article copy retains 2015 Elsevier copyright; reuse rights for underlying observations were not established.",
+      "populationFit": "Strong match for the adult beef-cow pasture population described in this gate.",
+      "outcomeFit": "Ineligible: only aggregate herbage-intake results were retrieved; the required individual total DMI in kg DM/animal/day is unavailable.",
+      "missingnessAndIdentity": "Per-cow records and animal/trial keys were not available, so row-level missingness and identity continuity cannot be assessed.",
+      "references": [
+        "https://doi.org/10.1016/j.livsci.2015.01.020",
+        "https://locus.ufv.br/bitstreams/8b0eb748-a289-4d8a-a689-7b9a58d02616/download"
+      ]
+    },
+    {
+      "id": "skaf429-idaho-lactating-cows",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "The 2026 Idaho study estimated forage intake for 24 lactating 2-year-old cows, but its OSF link contains example inputs and corrected analysis code rather than animal records; no row-level DMI file or data-specific reuse terms were found.",
+      "access": "unavailable_or_not_reusable",
+      "license": "No data-specific reuse terms for study observations identified; open article and example/code files do not establish rights for missing cow-level data.",
+      "populationFit": "Pasture beef-cow context is close, but animals were specified as 2-year-old cows and maturity still requires domain assessment.",
+      "outcomeFit": "Ineligible: the accessible source does not provide reusable individual total-DMI records; article summaries and OSF example data are not study labels.",
+      "missingnessAndIdentity": "No per-cow dataset was available to audit animal/trial IDs or missingness.",
+      "references": [
+        "https://doi.org/10.1093/jas/skaf429",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12863948/",
+        "https://osf.io/rfzv5/?view_only=89684cf6453245e4990859adf6745325"
+      ]
+    },
+    {
+      "id": "teagasc-2019-grazing-cow-dmi",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "The Teagasc paper reports 94 DMI measurements on 106 grazing beef/beef-dairy cross cows and a later 60-cow herd, but no individual data package or data-specific reuse rights were located in the paper or institutional copy.",
+      "access": "unavailable_or_not_reusable",
+      "license": "The article is open access; reuse rights for the underlying individual DMI records were not separately established.",
+      "populationFit": "Strong lactating beef-cow pasture population match, with beef-dairy crosses explicitly identified.",
+      "outcomeFit": "Ineligible: published model metrics do not supply individual total-DMI outcome rows and predictors.",
+      "missingnessAndIdentity": "Animal IDs, trial grouping, and row-level missingness cannot be assessed without the source records.",
+      "references": [
+        "https://doi.org/10.1017/S1751731119001241",
+        "https://t-stor.teagasc.ie/server/api/core/bitstreams/e4d35fbb-0eac-43e8-b22a-0d8f2832ec08/content"
+      ]
+    },
+    {
       "id": "dmi-adg-readiness-matrix",
       "source": "docs/evidence/dmi-adg-readiness-v1.json",
-      "decision": "The 15-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
+      "decision": "The 18-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
       "access": "mixed; assessed per source in the linked matrix",
       "license": "Assessed per source in the linked matrix and source manifests.",
       "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome. The SDSU beef-cow source is a hay-feeding experiment, not pasture DMI.",
