@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "sceneId": "riose-beef-rotational-paddocks-poc",
+  "name": "Piquetes rotacionados · prova gráfica",
+  "domainModule": {
+    "moduleId": "beef-demo",
+    "version": "engine-farm-v1",
+    "status": "demonstrative-unvalidated",
+    "modelIds": ["beef-demo-weight-intake-v1"]
+  },
+  "simulation": {
+    "scenarioId": "beef-rotation-demo-20261012",
+    "seed": 20261012,
+    "populationCount": 100,
+    "productionSystem": "beef",
+    "initialConditions": {"housing": "pasture", "weather": "normal", "diet": "pasture", "supplement": 0}
+  },
+  "projection": {"type": "isometric-2to1", "cellWidth": 64, "cellHeight": 32, "columns": 14, "rows": 10},
+  "assets": [
+    {"assetId": "grass-light", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "grass-mid", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "soil-dry", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "farmhouse", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "shade-tree", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "pond", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "fence-straight", "manifestUri": "parallel:d99d/public/assets/manifest.json", "manifestVersion": "runtime-atlas-v1"},
+    {"assetId": "nelore-adult", "manifestUri": "parallel:d99d/assets/manifests/manifest.json", "manifestVersion": "semantic-47-v1"}
+  ],
+  "zones": [
+    {"zoneId": "north-paddock", "kind": "pasture", "origin": {"x": 1, "y": 1, "unit": "grid-cell"}, "footprint": {"columns": 5, "rows": 4}, "groundAssetId": "grass-light", "transitionAssetIds": {"edge": "grass-mid"}, "domainZoneId": "paddock-1"},
+    {"zoneId": "east-paddock", "kind": "pasture", "origin": {"x": 7, "y": 1, "unit": "grid-cell"}, "footprint": {"columns": 5, "rows": 4}, "groundAssetId": "grass-mid", "transitionAssetIds": {"edge": "grass-light"}, "domainZoneId": "paddock-2"},
+    {"zoneId": "handling-yard", "kind": "handling", "origin": {"x": 5, "y": 6, "unit": "grid-cell"}, "footprint": {"columns": 3, "rows": 2}, "groundAssetId": "soil-dry", "domainZoneId": "handling"}
+  ],
+  "prefabs": [
+    {"prefabId": "home-01", "assetId": "farmhouse", "position": {"x": 0, "y": 0, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
+    {"prefabId": "pond-01", "assetId": "pond", "position": {"x": 1, "y": 6, "unit": "grid-cell"}, "footprint": {"columns": 2, "rows": 2}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
+    {"prefabId": "shade-01", "assetId": "shade-tree", "position": {"x": 11, "y": 5, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "default"}, "blocking": true},
+    {"prefabId": "fence-north-01", "assetId": "fence-straight", "position": {"x": 3, "y": 4, "unit": "grid-cell"}, "footprint": {"columns": 1, "rows": 1}, "layer": "infrastructure", "state": {"stateId": "straight"}, "blocking": false}
+  ],
+  "layerOrder": ["terrain", "infrastructure", "livestock", "overlays"]
+}

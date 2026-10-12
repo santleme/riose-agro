@@ -1,0 +1,22 @@
+{
+  "assetSources": [
+    {
+      "assetId": "nelore-adult",
+      "file": "assets/nelore-adult-idle-v1.png",
+      "sourceWorktree": "d99d",
+      "sourceFile": "assets/approved/livestock/nelore-adult-idle-v1.png",
+      "status": "APPROVED",
+      "sha256": "975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43",
+      "sourceApproval": "2026-10-12 user-approved animal asset; generation provenance retained in the d99d semantic manifest"
+    },
+    {
+      "assetId": "farm-starter-atlas",
+      "file": "assets/farm-starter-atlas.png",
+      "sourceWorktree": "d99d",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "status": "RUNTIME_ATLAS_REVIEW_STATE_UNRESOLVED",
+      "sha256": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14"
+    }
+  ],
+  "policy": "The PoC uses the explicitly approved Nelore sprite. Farm environment atlas entries are used only to measure atlas/runtime integration; the parallel semantic manifest does not mark these individual environment entries APPROVED or RELEASED."
+}

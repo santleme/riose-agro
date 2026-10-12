@@ -13,7 +13,7 @@ const MAX_BODY_BYTES = 16 * 1024;
 const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
-const PUBLIC_FILES = new Set(['index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js', 'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json']);
+const PUBLIC_FILES = new Set(['index.html', 'style.css', 'app.js', 'engine.js', 'worker.js', 'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js', 'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json', 'schemas/visual-scene.schema.json', 'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/scene.json', 'graphics-poc/asset-sources.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png', 'graphics-poc/dist/app.js']);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -21,6 +21,7 @@ const MIME_TYPES = {
   '.json': 'application/json; charset=utf-8',
   '.wasm': 'application/wasm',
   '.svg': 'image/svg+xml',
+  '.png': 'image/png',
 };
 
 const enumValue = (value, options) => options.includes(value);
