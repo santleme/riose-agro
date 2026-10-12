@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/build_dmi_adg_readiness.py"
 FIXTURE = ROOT / "tests/fixtures/dmi-readiness/mixed-sources.json"
+REPORT = ROOT / "docs/evidence/dmi-adg-readiness-v1.json"
 SPEC = importlib.util.spec_from_file_location("dmi_adg_readiness", SCRIPT)
 READINESS = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(READINESS)
@@ -71,6 +72,36 @@ class ReadinessFixtureTests(unittest.TestCase):
         self.assertEqual([source["id"] for source in first["sources"]], sorted(source["id"] for source in sources))
         self.assertIn("Desenho documentado", READINESS.render_markdown(first))
         self.assertIn("Trials documentados", READINESS.render_markdown(first))
+
+    def test_published_contract_rejects_missing_decisions_and_expert_attribution(self):
+        report = self.build()
+        READINESS.validate_readiness_report(report)
+
+        checked_in_report = json.loads(REPORT.read_text(encoding="utf-8"))
+        READINESS.validate_readiness_report(checked_in_report)
+
+        missing_reason = json.loads(json.dumps(report))
+        missing_reason["sources"][0]["outcomes"]["dmi"]["reason"] = "  "
+        with self.assertRaisesRegex(ValueError, "decision reason"):
+            READINESS.validate_readiness_report(missing_reason)
+
+        missing_attribution = json.loads(json.dumps(report))
+        missing_attribution["domainExpertReview"]["attributionNote"] = ""
+        with self.assertRaisesRegex(ValueError, "attribution"):
+            READINESS.validate_readiness_report(missing_attribution)
+
+    def test_published_contract_rejects_duplicate_ids_and_trainable_private_sources(self):
+        report = self.build()
+        duplicate_id = json.loads(json.dumps(report))
+        duplicate_id["sources"][1]["id"] = duplicate_id["sources"][0]["id"]
+        with self.assertRaisesRegex(ValueError, "uniquely sorted"):
+            READINESS.validate_readiness_report(duplicate_id)
+
+        private = next(source for source in report["sources"] if source["access"] != "available_local")
+        private["outcomes"]["dmi"]["status"] = "conditional"
+        private["outcomes"]["dmi"]["trainable"] = True
+        with self.assertRaisesRegex(ValueError, "Unavailable source"):
+            READINESS.validate_readiness_report(report)
 
 
 if __name__ == "__main__":

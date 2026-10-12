@@ -427,7 +427,7 @@ def build_readiness_report(
     for record in records:
         fact_refs = [record["studyDesign"], *record["counts"].values(), record["missingness"]["documentedMetrics"]]
         input_paths.update(fact["reference"].split("#", 1)[0] for fact in fact_refs if fact.get("reference"))
-    return {
+    document = {
         "schemaVersion": "riose.dmi-adg-readiness/v1",
         "version": version,
         "generator": "scripts/build_dmi_adg_readiness.py",
@@ -441,6 +441,77 @@ def build_readiness_report(
             "elapsedTimeKind": "observed_wall_clock_seconds",
         },
     }
+    validate_readiness_report(document)
+    return document
+
+
+def validate_readiness_report(document: dict[str, Any]) -> None:
+    """Reject incomplete or internally contradictory readiness reports.
+
+    The matrix is used as a gate for selecting model data, so validate the
+    published contract after aggregation as well as validating each source
+    while it is built. This intentionally checks structure and eligibility
+    invariants without pretending to independently verify scientific claims.
+    """
+    if document.get("schemaVersion") != "riose.dmi-adg-readiness/v1":
+        raise ValueError("Unsupported DMI/ADG readiness schema")
+    sources = document.get("sources")
+    if not isinstance(sources, list):
+        raise ValueError("Readiness sources must be a list")
+    identifiers = [source.get("id") for source in sources if isinstance(source, dict)]
+    if len(identifiers) != len(sources) or any(not isinstance(value, str) or not value.strip() for value in identifiers):
+        raise ValueError("Every readiness source must have a non-empty ID")
+    if identifiers != sorted(identifiers) or len(set(identifiers)) != len(identifiers):
+        raise ValueError("Readiness sources must be uniquely sorted by ID")
+
+    for source in sources:
+        source_id = source["id"]
+        for field in ("name", "population", "units", "permissibleUse"):
+            if not isinstance(source.get(field), str) or not source[field].strip():
+                raise ValueError(f"Missing {field} for {source_id}")
+        if source.get("access") not in {"available_local", "unavailable_or_not_reusable"}:
+            raise ValueError(f"Unknown access status for {source_id}")
+        source_identity = source.get("sourceIdentity")
+        if not isinstance(source_identity, dict):
+            raise ValueError(f"Missing source identity for {source_id}")
+        license_text = source_identity.get("license")
+        has_license = isinstance(license_text, str) and bool(license_text.strip())
+        outcomes = source.get("outcomes")
+        if not isinstance(outcomes, dict):
+            raise ValueError(f"Missing outcomes for {source_id}")
+        for dimension in ("dmi", "adg"):
+            outcome = outcomes.get(dimension)
+            if not isinstance(outcome, dict):
+                raise ValueError(f"Missing {dimension} outcome for {source_id}")
+            status = outcome.get("status")
+            if status not in {"eligible", "conditional", "ineligible"}:
+                raise ValueError(f"Unknown {dimension} status for {source_id}")
+            if not isinstance(outcome.get("trainable"), bool):
+                raise ValueError(f"Missing {dimension} trainable decision for {source_id}")
+            if not isinstance(outcome.get("reason"), str) or not outcome["reason"].strip():
+                raise ValueError(f"Missing {dimension} decision reason for {source_id}")
+            if status == "ineligible" and outcome["trainable"]:
+                raise ValueError(f"Ineligible outcome cannot be trainable: {source_id}.{dimension}")
+            if outcome["trainable"] and source["access"] != "available_local":
+                raise ValueError(f"Unavailable source cannot be trainable: {source_id}.{dimension}")
+            if outcome["trainable"] and not has_license:
+                raise ValueError(f"Unlicensed source cannot be trainable: {source_id}.{dimension}")
+
+    processing = document.get("processing")
+    if not isinstance(processing, dict) or processing.get("sourceCount") != len(sources):
+        raise ValueError("Processing sourceCount does not match the readiness matrix")
+    if type(processing.get("inputFileCount")) is not int or processing["inputFileCount"] < 0:
+        raise ValueError("Invalid processing inputFileCount")
+    elapsed = processing.get("elapsedSeconds")
+    if type(elapsed) not in {int, float} or elapsed < 0:
+        raise ValueError("Invalid processing elapsedSeconds")
+
+    review = document.get("domainExpertReview")
+    if not isinstance(review, dict) or any(
+        not isinstance(review.get(field), str) or not review[field].strip()
+        for field in ("status", "statement", "reference", "attributionNote")
+    ):
+        raise ValueError("Domain expert review must retain status, evidence, and attribution")
 
 
 def find_doi(value: Any) -> str | None:
