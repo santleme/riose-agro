@@ -84,7 +84,7 @@
     "exclusions": "E1 supplement arms (4/8 kg DM/day) and all E2 arms (5 kg DM/day) are outside the engine configuration/input match and are not included in the score."
   },
   "model": {
-    "engineSha256": "84c315182693555a0a5784cb218748f08f7148c29efe6cdffd951e0d01c1e50b",
+    "engineSha256": "5a94a0634a0ccd26786f3ae00e3f9b4b87139639e9d43f6c70b836bb4a0e91f4",
     "seed": 20261012,
     "configuration": {
       "housing": "pasture",

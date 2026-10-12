@@ -11,6 +11,9 @@ test('USDA CPER feasibility audit groups periods by animal and does not claim en
   assert.equal(report.coverage.animalCount, 33);
   assert.equal(report.source.sha256Verified, true);
   assert.equal(report.source.verifiedSnapshotFiles.length, 4);
+  assert.deepEqual(report.source.verifiedSnapshotFiles, ['period.csv', 'period_dict.csv', 'daily.csv', 'daily_dict.csv']);
+  assert.equal(report.source.verifiedDataFiles.length, 2);
+  assert.equal(report.source.verifiedDictionaryFiles.length, 2);
   assert.deepEqual(report.coverage.rowsByGainPeriod, {'1': 9, '2': 14, '3': 13});
   assert.equal(report.groupedBaseline.foldCount, 33);
   assert.equal(report.groupedBaseline.testRowCount, 36);

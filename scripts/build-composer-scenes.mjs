@@ -1,0 +1,19 @@
+import {readFile, writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const readJson = file => readFile(path.join(root, file), 'utf8').then(JSON.parse);
+const sourceDir = 'graphics-poc/source/main-composer-v1';
+const [manifest, beefSource, dairySource] = await Promise.all([
+  readJson('graphics-poc/assets/main-composer-render-manifest.json'),
+  readJson(`${sourceDir}/beef.json`),
+  readJson(`${sourceDir}/dairy.json`),
+]);
+const outputs = [
+  ['graphics-poc/scene.json', adaptMainComposerScene(beefSource, manifest)],
+  ['graphics-poc/scenes/dairy.json', adaptMainComposerScene(dairySource, manifest)],
+];
+for (const [file, scene] of outputs) await writeFile(path.join(root, file), `${JSON.stringify(scene, null, 2)}\n`);
+process.stdout.write(`Adapted ${outputs.map(([file, scene]) => `${scene.sceneId} (${scene.terrainTiles.length} terrain tiles, ${scene.prefabs.length} infrastructure placements, ${scene.entities.length} visual entities)`).join('; ')}\n`);

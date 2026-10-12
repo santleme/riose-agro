@@ -49,11 +49,26 @@ const PUBLIC_FILES = new Set([
   'data/rothamsted/Cattle_LWt_collated_2018-2025.csv', 'data/rothamsted/2018-2025_Pasture_DM_herbage_mass.csv',
   'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json',
 ]);
+
+for (const file of [
+  'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
+  'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json',
+  'graphics-poc/asset-sources.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
+  'graphics-poc/assets/handling-review-atlas-v1.png', 'graphics-poc/assets/dairy/dairy-holstein-cow.png',
+  'graphics-poc/assets/dairy/dairy-girolando-cow.png', 'graphics-poc/assets/dairy/dairy-heifer.png',
+  'graphics-poc/assets/dairy/dairy-heifer-calf.png', 'graphics-poc/assets/dairy/dairy-barn.png',
+  'graphics-poc/assets/dairy/dairy-milking-parlor.png', 'graphics-poc/assets/dairy/dairy-milk-chilling-tank.png',
+  'graphics-poc/assets/dairy/dairy-waiting-pen.png', 'graphics-poc/assets/dairy/dairy-activity-collar.png',
+  'graphics-poc/assets/main-composer-render-manifest.json', 'graphics-poc/assets/main-composer/environment-review-atlas-v1.png',
+  'graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png', 'graphics-poc/assets/main-composer/technology-review-atlas-v1.png',
+  'graphics-poc/assets/main-composer/animals-review-atlas-v1.png', 'graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png',
+]) PUBLIC_FILES.add(file);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.wasm': 'application/wasm',
   '.csv': 'text/csv; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',

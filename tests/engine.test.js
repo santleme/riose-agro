@@ -12,6 +12,15 @@ test('same seed and actions reproduce the same farm state', () => {
   assert.deepEqual(first.snapshot(), second.snapshot());
 });
 
+test('tick can skip its deep snapshot copy when the caller only needs current state', () => {
+  const direct = new FarmEngine(81, 20);
+  const noSnapshot = new FarmEngine(81, 20);
+  const returnedSnapshot = direct.tick(24);
+
+  assert.equal(noSnapshot.tick(24, undefined, false), undefined);
+  assert.deepEqual(noSnapshot.snapshot(), returnedSnapshot);
+});
+
 test('housing changes consume locomotion randomness without advancing the model seed', () => {
   const changed = new FarmEngine(417, 8);
   const unchanged = new FarmEngine(417, 8);
@@ -254,6 +263,23 @@ test('activity histories replay deterministically with the same seed', () => {
     engine.tick(30);
   }
   assert.deepEqual(first.snapshot().animals.map(animal => animal.history), second.snapshot().animals.map(animal => animal.history));
+});
+
+test('activity history ring retains the latest 40 entries in snapshot order',()=>{
+  const engine=new FarmEngine(45,1),animal=engine.state.animals[0],expected=engine.snapshot().animals[0].history;
+  const actions=['grazing','feeding','drinking','resting'];
+  for(let hour=1;hour<=100;hour++){
+    engine.state.hour=hour;animal.action=actions[hour%actions.length];
+    const reason='history_test_'+hour,observedThirst=hour%101;
+    expected.push({hour,action:animal.action,reason,observed:{hour:hour%24,thirst:observedThirst,housing:engine.state.config.housing}});
+    if(expected.length>40)expected.shift();
+    engine.recordActivity(animal,reason,observedThirst,false);
+  }
+  const snapshot=engine.snapshot();
+  assert.deepEqual(snapshot.animals[0].history,expected);
+  assert.equal(Object.hasOwn(snapshot.animals[0],'historyNext'),false);
+  assert.deepEqual(engine.historyFor(animal),expected);
+  assert.deepEqual(FarmEngine.from(snapshot).snapshot(),snapshot);
 });
 
 test('comparison reports simulated intake and pasture stock by paddock', () => {

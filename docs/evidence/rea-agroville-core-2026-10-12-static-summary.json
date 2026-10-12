@@ -15,8 +15,8 @@
     "snapshotFiles": ["engine.js", "worker.js"],
     "snapshotSha256": "3f592776fda1931de13f75e6d94c582c89a85239d04be53932669e0f4c793100",
     "fileSha256": {
-      "engine.js": "55ca8c11d848c40b8f30e082924722d662fda6163d4c5252b36b55d236c8b672",
-      "worker.js": "41a8a3646597dbc58b9065759b5e685ff3a9368a456a77d6845b9d7fd374bc67"
+      "engine.js": "5a94a0634a0ccd26786f3ae00e3f9b4b87139639e9d43f6c70b836bb4a0e91f4",
+      "worker.js": "6b694ee3b8ced27ac3bb21512c457ada8758b41cc371dddf17be505039c6ebcf"
     }
   },
   "statistics": {

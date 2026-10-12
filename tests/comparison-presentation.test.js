@@ -17,7 +17,7 @@ function presentation(snapshot=new FarmEngine(42,2).snapshot()){
     $:element,comparisonSnapshot:snapshot,comparisonManifest:undefined,comparison:undefined,requestCompare:false,loadingScenario:false,pendingComparison:undefined,
     state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
-    compareBusy(){},setRunning(){},notify(){},worker:{postMessage(message){context.lastMessage=message;}}
+    compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}}
   });
   // Execute the existing presentation and import handlers without booting the canvas/worker UI.
   vm.runInContext(source.slice(source.indexOf('const currency='),source.indexOf('const actionNames=')),context);

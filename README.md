@@ -14,6 +14,8 @@ python3 -m http.server 8000
 
 Open http://localhost:8000 for the farm map and Scenario Studio. The optional project landing page is `home.html`; `simulator.html` remains a direct link to the same farm experience. Web Workers and JavaScript modules require HTTP; opening files via `file://` will not work. To use the local explanation endpoint and the **Revisar snapshot** panel, start the bundled server with `npm start`; the snapshot file is validated locally and is never applied to the current simulation. A static server can run the simulator but uses only deterministic explanations and does not provide the snapshot review API. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
 
+The optional Rust/WASM metabolism prototype runs with `?engine=wasm` (for example `http://localhost:8000/?engine=wasm`). The default remains the existing JavaScript path because current browser-side measurements do not show a consistent end-to-end WASM gain. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
+
 ### Optional scenario explanations
 
 The farm engine stays local and deterministic. `/api/explain` receives validated scenario settings and aggregate metrics; its fallback requires no provider or API key. To enable an optional language-provider adapter, set `LLM_PROVIDER=openai|groq|huggingface` and its matching server-side key (`OPENAI_API_KEY`, `GROQ_API_KEY`, or `HF_TOKEN`) before `npm start`; select a model with `LLM_MODEL` or the provider-specific `OPENAI_MODEL`, `GROQ_MODEL`, or `HF_MODEL`. Keys stay on the server. With no provider/key, or if a provider fails, the deterministic explanation is used. Explanations cannot modify simulation results or apply actions and are labeled as not measured.
@@ -88,6 +90,8 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `engine.js` — deterministic farm simulation, per-animal activity history, and one-factor scenario comparison
 - `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `worker.js` — simulation worker, isolated from rendering
+- `crates/riose-core/`, `metabolism-wasm.js`, `wasm/riose_core.wasm` — opt-in Rust/WASM batch kernel and JavaScript fallback; rebuild with `npm run build:wasm`
+- `docs/architecture/` — repository/system audits, V2 boundaries, data contracts, decisions and measured migration plan
 - `server.js` — local static server and optional explanation endpoint
 - `snapshot-review.js`, `snapshot-review.css` — read-only snapshot review panel; the local endpoint validates schema, provenance, readiness, and exact manifest linkage
 - `tests/engine.test.js`, `tests/app.test.js`, `tests/comparison-presentation.test.js` — deterministic replay, Scenario Studio flow, and evidence presentation checks
