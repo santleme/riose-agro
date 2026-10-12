@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, terrainCells, unprojectIso, visualLod} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -122,6 +122,8 @@ test('quarter-turn rotation swaps prefab footprint for bounds, collision, zones 
   assert.deepEqual(placementValidation(rotated, {x: 4, y: 5}, 14, 10, [neighbor], [handling]), {valid: true, reason: null});
   assert.deepEqual(placementValidation({...rotated, placementRules: {}}, {x: 13, y: 7}, 14, 10), {valid: true, reason: null}, 'the rotated 1×3 footprint fits the map edge');
   assert.equal(placementValidation({...rotated, rotationSteps: 0}, {x: 13, y: 7}, 14, 10).reason, 'out-of-bounds');
+  assert.equal(rotatePrefab(rotated).rotationSteps, 2);
+  assert.equal(rotatePrefab({...rotated, rotationDegrees: 270}).rotationDegrees, 0);
 });
 
 test('placement rules enforce allowed zones, adjacency and alignment; composition stamps an atomic aligned service line', () => {
@@ -173,6 +175,7 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
   for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
+  assert.match(await (await fetch(origin + '/graphics-poc/index.html')).text(), /id="rotate-selection"/, 'the composer exposes a selected-prefab rotation action');
   const image = await fetch(origin + '/graphics-poc/assets/nelore-adult-idle-v1.png');
   assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');
   const digest = createHash('sha256').update(Buffer.from(await image.arrayBuffer())).digest('hex');

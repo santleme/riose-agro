@@ -29,6 +29,7 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 - Terrain fills are resolved from zone footprints; edge cells use declared transition assets.
 - Zone edges add a one-cell terrain transition fringe, and seeded prefab distribution places shade trees with irregular spacing while checking blocking footprints.
 - Fence runs use the source atlas orientation on one iso axis and horizontal mirroring on the other; segment spacing is bounded so each pasture reads as a connected enclosure with an explicit gate.
+- Selected prefabs can rotate by 90° in the inspector; bounds, blocking collisions, zone containment and adjacency use the rotated grid footprint.
 - Prefab placement snaps to cells and checks bounds, blocking collisions, allowed zone kinds, adjacency and row/column alignment when those rules are declared.
 - The `Núcleo de ordenha` composition places an aligned dairy barn, parlor, tank and waiting pen as one validated group.
 - The beef and dairy scenes use the same `visual-scene` JSON schema. Both remain editable, persist separately in browser storage and export as renderer-independent JSON.

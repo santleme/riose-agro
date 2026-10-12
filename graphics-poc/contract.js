@@ -38,6 +38,12 @@ export function placementFits(prefab, position, columns, rows, others = []) {
   return placementValidation(prefab, position, columns, rows, others).valid;
 }
 
+export function rotatePrefab(prefab) {
+  return Number.isFinite(prefab.rotationDegrees)
+    ? {...prefab, rotationDegrees: ((prefab.rotationDegrees + 90) % 360 + 360) % 360}
+    : {...prefab, rotationSteps: ((prefab.rotationSteps ?? 0) + 1) % 4};
+}
+
 function orientedFootprint(prefab) {
   const degreeTurns = prefab.rotationDegrees / 90;
   const quarterTurns = Number.isInteger(degreeTurns)

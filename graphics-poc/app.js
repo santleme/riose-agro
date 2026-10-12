@@ -1,5 +1,5 @@
 import {Application, Assets, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementValidation, projectIso, terrainCells, unprojectIso, visualLod} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod} from './contract.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -425,6 +425,7 @@ function selectAt(world) {
   }
   const animalId = nearest?.kind === 'herd-cluster' ? nearest.animalIds[0] : nearest?.animalId;
   state.selection = animalId ? `animal-${animalId}` : nearest?.id ?? null;
+  updateSelectionActions();
   if (nearest?.kind === 'herd-cluster') {
     state.camera.zoom = Math.min(4, Math.max(state.camera.zoom + .4, state.camera.zoom * 1.25));
     state.camera.x = state.canvasSizing.width / 2 - nearest.x * state.camera.zoom;
@@ -443,8 +444,23 @@ function placementMessage(reason) {
   return ({'out-of-bounds': 'O objeto ultrapassa os limites do mapa.', collision: 'Esse objeto sobrepõe uma estrutura bloqueante.', zone: 'Esse objeto precisa ficar dentro de uma zona compatível.', adjacency: 'Esse objeto precisa tocar a estrutura indicada.', alignment: 'Esse objeto precisa seguir a linha de alinhamento configurada.'})[reason] ?? 'Posição inválida para esse objeto.';
 }
 
+function updateSelectionActions() {
+  $('rotate-selection').disabled = !state.scene?.prefabs.some(item => item.prefabId === state.selection);
+}
+
+function rotateSelection() {
+  const selected = state.scene?.prefabs.find(item => item.prefabId === state.selection);
+  if (!selected) return;
+  const candidate = rotatePrefab(selected);
+  const validation = placementValidation(candidate, candidate.position, state.scene.projection.columns, state.scene.projection.rows, state.scene.prefabs, state.scene.zones);
+  if (!validation.valid) { $('scene-status').textContent = placementMessage(validation.reason); return; }
+  Object.assign(selected, candidate); persistScene(); refreshScene(); updateHud();
+  $('scene-status').textContent = 'Prefab girado em 90°; footprint, colisões e regras de zona continuam válidos.';
+}
+
 function updateHud() {
   if (!state.scene) return;
+  updateSelectionActions();
   state.lastHud = performance.now();
   $('scene-name').textContent = state.scene.name;
   $('seed-label').textContent = `${state.scene.simulation.seed} · ${state.scene.simulation.scenarioId}`;
@@ -607,6 +623,7 @@ async function initialize() {
     state.tool = {assetId, footprint, blocking: meta.kind !== 'livestock', kind: meta.kind, ...(adjacentTo ? {placementRules: {adjacentTo}} : {})}; $('scene-status').textContent = `Clique no mapa para colocar ${assetId}; snapping de 1 célula.`;
   });
   $('compose-dairy-core').addEventListener('click', () => { state.tool = {compositionId: 'dairy-service'}; $('scene-status').textContent = 'Clique na célula superior esquerda. O núcleo precisa de 10 colunas livres e coloca estruturas adjacentes e alinhadas.'; });
+  $('rotate-selection').addEventListener('click', rotateSelection);
   $('draw-zone').addEventListener('click', () => { state.tool = 'zone'; state.zoneStart = null; $('scene-status').textContent = 'Clique no primeiro canto e arraste para criar um piquete.'; });
   $('distribute-shade').addEventListener('click', distributeShade);
   $('save-scene').addEventListener('click', () => { persistScene(); $('scene-status').textContent = 'Layout salvo no navegador; snapshot de simulação continua separado.'; });
