@@ -63,3 +63,50 @@ document.addEventListener('riose:world-state',event=>{
 });
 timeline.addEventListener('input',()=>{timelineStart.textContent='Day '+String(timeline.value).padStart(2,'0');timeline.style.setProperty('--time-progress',((Number(timeline.value)-1)/29*100)+'%');});
 timeline.addEventListener('change',()=>{const day=Math.max(Math.ceil((currentHour-6)/24)+1,Number(timeline.value));timeline.value=String(Math.min(30,day));document.dispatchEvent(new CustomEvent('riose:seek-day',{detail:{day}}));});
+
+const chatToggle=document.getElementById('chat-toggle');
+const chatPanel=document.getElementById('world-chat');
+const chatClose=document.getElementById('chat-close');
+const agentContext=document.getElementById('agent-context');
+const contextClose=document.getElementById('context-close');
+const contextKicker=document.getElementById('context-kicker');
+const animalDetail=document.getElementById('animal-detail');
+const entityDetail=document.getElementById('entity-detail');
+const entityName=document.getElementById('context-entity-name');
+const entitySummary=document.getElementById('context-entity-summary');
+const entityValueRow=document.getElementById('context-entity-value-row');
+const entityValueLabel=document.getElementById('context-entity-value-label');
+const entityValue=document.getElementById('context-entity-value');
+const entityAction=document.getElementById('context-entity-action');
+let selectedEntity=null;
+function renderEntity(detail={}){
+  const entity=detail.entity;if(!entity)return;
+  selectedEntity=entity;agentContext.hidden=false;animalDetail.hidden=true;entityDetail.hidden=false;
+  contextKicker.textContent=entity.type==='paddock'?'Pasture':entity.type==='tree'?'Orchard / tree':entity.type==='water'?'Water':entity.type==='path'?'Farm path':entity.type==='fence'?'Fence':entity.type==='structure'?'Farm structure':entity.type==='crop'?'Crop beds':'Farm element';
+  entityName.textContent=entity.name;
+  entityValueRow.hidden=true;entityAction.hidden=true;
+  const config=detail.config??{};
+  if(entity.type==='paddock'){
+    entitySummary.textContent='Modelled pasture stock. The world updates the herd and pasture state over time.';
+    entityValueRow.hidden=false;entityValueLabel.textContent='Available dry matter';
+    const amount=detail.pastures?.[entity.index];entityValue.textContent=Number.isFinite(amount)?Math.round(amount).toLocaleString('en-US')+' kg DM':'—';
+  }else if(entity.type==='structure'&&entity.id==='cattle-shed'){
+    entitySummary.textContent=config.housing==='barn'?'The herd is currently configured for confinement.':'This structure is part of the farm. The herd is currently configured for pasture.';
+    entityAction.hidden=false;entityAction.textContent=config.housing==='barn'?'Set herd to pasture':'Set herd to confinement';entityAction.dataset.housing=config.housing==='barn'?'pasture':'barn';
+  }else if(entity.type==='water')entitySummary.textContent='Water source in the scene. Individual water volume and depletion are not modelled yet.';
+  else if(entity.type==='tree')entitySummary.textContent='Tree in the farm scene. Canopy growth and shade are not modelled yet.';
+  else if(entity.type==='fence')entitySummary.textContent='Fence boundary in the farm scene. It does not currently constrain animal movement.';
+  else if(entity.type==='path')entitySummary.textContent='Farm route connecting the pastures and structures.';
+  else if(entity.type==='crop')entitySummary.textContent='Crop beds in the farm scene. Crop growth is not part of the current model.';
+  else if(entity.type==='vehicle')entitySummary.textContent='Farm vehicle in the scene. Machinery deployment is not modelled yet.';
+  else entitySummary.textContent='Structure in the farm scene.';
+}
+entityAction.addEventListener('click',()=>{if(!selectedEntity||entityAction.hidden)return;const target=entityAction.dataset.housing;document.getElementById(target==='barn'?'barnbtn':'pasturebtn').click();renderEntity({entity:selectedEntity,config:{housing:target}});});
+function setChatOpen(open){chatPanel.hidden=!open;chatToggle.hidden=open;chatToggle.setAttribute('aria-expanded',String(open));if(open)input.focus();else chatToggle.focus();}
+chatToggle.addEventListener('click',()=>setChatOpen(true));
+chatClose.addEventListener('click',()=>setChatOpen(false));
+contextClose.addEventListener('click',()=>{agentContext.hidden=true;selectedEntity=null;});
+document.addEventListener('riose:agent-selected',()=>{selectedEntity=null;agentContext.hidden=false;animalDetail.hidden=false;entityDetail.hidden=true;contextKicker.textContent='Selected animal';});
+document.addEventListener('riose:entity-selected',event=>renderEntity(event.detail));
+document.addEventListener('riose:world-state',event=>{if(selectedEntity?.type==='paddock'){const amount=event.detail.pastures?.[selectedEntity.index];entityValue.textContent=Number.isFinite(amount)?Math.round(amount).toLocaleString('en-US')+' kg DM':'—';}if(selectedEntity?.type==='structure'&&selectedEntity.id==='cattle-shed')renderEntity({...event.detail,entity:selectedEntity});});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!chatPanel.hidden)setChatOpen(false);});

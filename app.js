@@ -41,6 +41,11 @@ function buildTerrain(){
     farm.src='assets/agroville-manifesto-farm.png';
     return;
   }
+  if(productExperience){
+    rect(t,0,0,576,336,'#85a96d');
+    for(let y=0;y<336;y+=8)for(let x=0;x<576;x+=8){const n=rand();if(n<.28)rect(t,x,y,8,8,n<.12?'#8bb173':'#7fa365');if(n>.84){rect(t,x+2,y+5,1,2,'#62884e');rect(t,x+5,y+3,1,3,'#6e9455');}}
+    return;
+  }
   rect(t,0,0,576,336,'#7ea466');
   for(let y=0;y<336;y+=8)for(let x=0;x<576;x+=8){const n=rand();if(n<.42)rect(t,x,y,8,8,n<.2?'#82a86a':'#7b9f60');if(n>.8){rect(t,x+2,y+5,1,2,'#5e874e');rect(t,x+4,y+4,1,3,'#689251');}}
   // Crossroads and paths connect the four fields with a small farm village.
@@ -64,9 +69,71 @@ function buildTerrain(){
   if(!manifestoWorldOnly&&!productExperience){t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>t.fillText('PIQUETE '+String.fromCharCode(65+i),p.x+8,p.y+14));t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);}
 }
 buildTerrain();
-let zoom=1,panX=0,panY=0,drag                                                           =null;
+let zoom=1,panX=0,panY=0,drag                                                           =null,activeSceneEntity=null;
 const positions=new Map                            ();
 function projectFarm(x,y){return {x:216+(x-y)*.6,y:31.2+(x+y)*.3};}
+const paddockRegions=[{id:'paddock-a',type:'paddock',name:'Pasture A',index:0,x:28,y:38,w:148,h:104},{id:'paddock-b',type:'paddock',name:'Pasture B',index:1,x:195,y:38,w:147,h:104},{id:'paddock-c',type:'paddock',name:'Pasture C',index:2,x:28,y:178,w:148,h:105},{id:'paddock-d',type:'paddock',name:'Pasture D',index:3,x:195,y:178,w:147,h:105}];
+const sceneRegions=[
+  {id:'water',type:'water',name:'Water pond',x:451,y:44,w:95,h:54},
+  {id:'farmhouse',type:'structure',name:'Farmhouse',x:388,y:31,w:54,h:72},
+  {id:'cattle-shed',type:'structure',name:'Cattle shed',x:389,y:168,w:140,h:118},
+  {id:'silo',type:'structure',name:'Feed silo',x:542,y:188,w:23,h:61},
+  {id:'vegetable-beds',type:'crop',name:'Crop beds',x:389,y:309,w:137,h:27},
+  {id:'tractor',type:'vehicle',name:'Tractor',x:350,y:210,w:24,h:18}
+];
+const fenceRegions=paddockRegions.concat([{id:'shed-fence',type:'fence',name:'Cattle shed fence',x:389,y:188,w:140,h:97}]);
+const pathRegions=[{x:0,y:151,w:576,h:20},{x:179,y:0,w:13,h:336},{x:353,y:0,w:17,h:336},{x:375,y:151,w:12,h:150},{x:352,y:294,w:224,h:14}];
+const treeLocations=[[16,82],[18,129],[15,216],[15,268],[23,315],[66,309],[120,317],[164,313],[225,313],[286,315],[330,318],[379,26],[439,20],[551,34],[555,107],[540,137],[564,277],[65,20],[112,24],[430,316],[515,16]];
+function unprojectFarm(x,y){const sum=(y-31.2)/.3,difference=(x-216)/.6;return {x:(sum+difference)/2,y:(sum-difference)/2};}
+function insideRegion(x,y,region){return x>=region.x&&x<=region.x+region.w&&y>=region.y&&y<=region.y+region.h;}
+function sceneEntityAt(x,y){
+  for(const region of sceneRegions)if(insideRegion(x,y,region))return region;
+  for(const fence of fenceRegions){const nearX=x>=fence.x-2&&x<=fence.x+fence.w+2,nearY=y>=fence.y-2&&y<=fence.y+fence.h+2;const onEdge=nearX&&nearY&&(Math.abs(x-fence.x)<3||Math.abs(x-fence.x-fence.w)<3||Math.abs(y-fence.y)<3||Math.abs(y-fence.y-fence.h)<3);if(onEdge)return fence;}
+  const paddock=paddockRegions.find(region=>insideRegion(x,y,region));if(paddock)return paddock;
+  if(pathRegions.some(region=>insideRegion(x,y,region)))return {id:'farm-path',type:'path',name:'Farm path'};
+  for(let i=0;i<treeLocations.length;i++){const [tx,ty]=treeLocations[i];if(Math.hypot(x-tx,y-ty)<12)return {id:'tree-'+i,type:'tree',name:'Tree'};}
+  return null;
+}
+function isoPoly(points,color,stroke){ctx.beginPath();points.map(([x,y])=>projectFarm(x,y)).forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
+function drawIsoFence(x,y,w,h){const corners=[[x,y],[x+w,y],[x+w,y+h],[x,y+h]];ctx.strokeStyle='#866846';ctx.lineWidth=2;for(let i=0;i<4;i++){const a=projectFarm(...corners[i]),b=projectFarm(...corners[(i+1)%4]);ctx.beginPath();ctx.moveTo(a.x,a.y-2);ctx.lineTo(b.x,b.y-2);ctx.moveTo(a.x,a.y+2);ctx.lineTo(b.x,b.y+2);ctx.stroke();const steps=Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/20);for(let j=0;j<=steps;j++){const q=j/steps,px=a.x+(b.x-a.x)*q,py=a.y+(b.y-a.y)*q;rect(ctx,px-1,py-5,3,10,'#94764f');rect(ctx,px-1,py-5,2,2,'#c4a77b');}}}
+function drawIsoTree(x,y,size=1){const p=projectFarm(x,y),s=size;rect(ctx,p.x-1*s,p.y-2*s,3*s,9*s,'#695342');rect(ctx,p.x-7*s,p.y-12*s,13*s,11*s,'#376244');rect(ctx,p.x-10*s,p.y-7*s,18*s,8*s,'#47764a');rect(ctx,p.x-5*s,p.y-17*s,11*s,7*s,'#5a874c');rect(ctx,p.x-2*s,p.y-14*s,5*s,4*s,'#7d9b58');rect(ctx,p.x-8*s,p.y-8*s,5*s,4*s,'#57804b');rect(ctx,p.x+4*s,p.y-3*s,4*s,3*s,'#315a3e');}
+function drawIsoBuilding(x,y,w,h,roof,wall='#ded0ae'){
+  const p=projectFarm(x+w*.5,y+h*.72),wide=Math.max(24,Math.min(84,w*.6)),bodyH=Math.max(11,Math.min(19,h*.34));
+  rect(ctx,p.x-wide*.48,p.y-bodyH,wide*.88,bodyH,wall);
+  ctx.beginPath();ctx.moveTo(p.x+wide*.4,p.y-bodyH);ctx.lineTo(p.x+wide*.52,p.y-bodyH-3);ctx.lineTo(p.x+wide*.52,p.y-3);ctx.lineTo(p.x+wide*.4,p.y);ctx.closePath();ctx.fillStyle='#ad9b77';ctx.fill();
+  ctx.beginPath();ctx.moveTo(p.x-wide*.58,p.y-bodyH);ctx.lineTo(p.x,p.y-bodyH-11);ctx.lineTo(p.x+wide*.58,p.y-bodyH);ctx.lineTo(p.x,p.y-bodyH+5);ctx.closePath();ctx.fillStyle=roof;ctx.fill();ctx.strokeStyle='rgba(57,49,39,.26)';ctx.lineWidth=.8;ctx.stroke();
+  rect(ctx,p.x-2,p.y-9,4,9,'#6f5842');rect(ctx,p.x-wide*.33,p.y-bodyH+3,5,4,'#91a5a1');
+}
+function drawProductScene(time){
+  // The atlas is a visual reference; the live scene is composed from selectable canvas entities.
+  isoPoly([[0,0],[576,0],[576,336],[0,336]],'#87a96e');
+  // Four pasture parcels and their paths are independent world regions.
+  const patches=paddockRegions;
+  for(let i=0;i<patches.length;i++){
+    const p=patches[i];isoPoly([[p.x,p.y],[p.x+p.w,p.y],[p.x+p.w,p.y+p.h],[p.x,p.y+p.h]],['#91b477','#98b87c','#88aa6e','#93b375'][i],'rgba(73,99,57,.18)');
+    for(let k=0;k<76;k++){const gx=p.x+7+(k*37%Math.max(1,p.w-14)),gy=p.y+8+(k*53%Math.max(1,p.h-16)),q=projectFarm(gx,gy);rect(ctx,q.x,q.y,1,k%4===0?3:2,k%3?'#789958':'#ced58d');if(k%9===0)rect(ctx,q.x+2,q.y-1,1,2,'#a9bc71');}
+    const trough=projectFarm(p.x+p.w-20,p.y+p.h-18);rect(ctx,trough.x-5,trough.y-2,11,4,'#698c85');rect(ctx,trough.x-3,trough.y-3,7,2,'#98c1b4');
+  }
+  [[0,151,576,20],[179,0,13,336],[353,0,17,336],[375,151,12,150],[352,294,224,14]].forEach(([x,y,w,h],i)=>isoPoly([[x,y],[x+w,y],[x+w,y+h],[x,y+h]],i===0?'#c6b78c':'#c9bb92'));
+  for(const p of patches)drawIsoFence(p.x,p.y,p.w,p.h);
+  drawIsoFence(389,188,140,97);
+  // Water is a rendered scene element. Pond volume remains outside the current model.
+  const pond=[];for(let i=0;i<20;i++){const a=i/20*Math.PI*2;pond.push([491+44*Math.cos(a),70+16*Math.sin(a)]);}isoPoly(pond,'#6fa5a2','#547e7d');
+  isoPoly([[471,67],[485,64],[498,66],[505,69],[492,72],[479,71]],'rgba(213,230,206,.45)');
+  drawIsoBuilding(393,57,44,45,'#a87350','#d9c79f');drawIsoBuilding(468,115,44,21,'#8c7061','#c9b894');
+  // Open-sided cattle shed and feed silo.
+  isoPoly([[389,188],[529,188],[529,285],[389,285]],'rgba(165,140,95,.36)');
+  const shed=projectFarm(457,224);ctx.beginPath();ctx.moveTo(shed.x-42,shed.y-14);ctx.lineTo(shed.x,shed.y-26);ctx.lineTo(shed.x+42,shed.y-14);ctx.lineTo(shed.x,shed.y-3);ctx.closePath();ctx.fillStyle='#a96f50';ctx.fill();ctx.strokeStyle='#81583f';ctx.lineWidth=1;ctx.stroke();
+  for(const dx of [-35,-12,12,35]){rect(ctx,shed.x+dx,shed.y-13,3,20,'#806247');rect(ctx,shed.x+dx,shed.y+5,3,2,'#c0a77d');}
+  rect(ctx,shed.x-22,shed.y+1,42,4,'#81764e');rect(ctx,shed.x-20,shed.y,38,2,'#c9b16b');
+  const silo=projectFarm(553,213);ctx.fillStyle='#aeb7a6';ctx.beginPath();ctx.ellipse(silo.x,silo.y-3,7,11,0,Math.PI,Math.PI*2);ctx.fill();ctx.fillRect(silo.x-7,silo.y-3,14,19);ctx.fillStyle='#c0c6b7';ctx.fillRect(silo.x-5,silo.y,2,14);ctx.fillStyle='#8d9b90';ctx.fillRect(silo.x-7,silo.y+15,14,3);
+  // Crop rows and an independently selectable tractor.
+  for(let r=0;r<5;r++){const a=projectFarm(395,313+r*3),b=projectFarm(520,313+r*3);ctx.strokeStyle=r%2?'#697b45':'#82944f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();for(let j=0;j<12;j++){const x=a.x+(b.x-a.x)*j/11,y=a.y+(b.y-a.y)*j/11;rect(ctx,x,y-2,2,3,'#66844b');}}
+  const tractor=projectFarm(360,219);rect(ctx,tractor.x-7,tractor.y-5,14,7,'#4d7255');rect(ctx,tractor.x-4,tractor.y-9,7,5,'#6d8f6b');rect(ctx,tractor.x-2,tractor.y-8,4,3,'#c3d0b7');ctx.fillStyle='#343b32';ctx.beginPath();ctx.arc(tractor.x-4,tractor.y+2,3,0,Math.PI*2);ctx.arc(tractor.x+5,tractor.y+2,2.5,0,Math.PI*2);ctx.fill();
+  treeLocations.forEach(([x,y],i)=>drawIsoTree(x,y,i%5===0?1.25:1));
+  // A small windmill marks the water tower without adding dashboard-like labels.
+  const mill=projectFarm(556,144);rect(ctx,mill.x-1,mill.y-25,3,27,'#80694c');for(let i=0;i<4;i++){const a=time*.00025+i*Math.PI/2;ctx.beginPath();ctx.moveTo(mill.x,mill.y-25);ctx.lineTo(mill.x+Math.cos(a)*9,mill.y-25+Math.sin(a)*9);ctx.strokeStyle='#736752';ctx.lineWidth=2;ctx.stroke();}
+}
 function drawCow(a       ,x       ,y       ,time       ){
   const sel=!manifestoWorldOnly&&a.id===selected;const resting=a.action==='resting';const dx=resting?0:Math.sin(time*.003+a.id)*.5;
   x=Math.round(x);y=Math.round(y+dx);rect(ctx,x-6,y+4,15,3,'#40583a55');
@@ -81,28 +148,35 @@ function drawManifestoCow(a,x,y,time){
   x=Math.round(x);y=Math.round(y+(a.action==='resting'?0:Math.sin(time*.003+a.id)*.35));
   const walking=a.action!=='resting',step=walking?Math.sin(time*.012+a.id)*1.2:0;
   rect(ctx,x-9,y+8,20,2,'#30362b35');
+  if(productExperience&&a.id===selected){ctx.strokeStyle='#e4d394';ctx.lineWidth=1.2;ctx.strokeRect(x-15,y-10,31,23);}
   // A compact, left-facing pixel silhouette keeps the live herd legible over the isometric farm.
   rect(ctx,x-7,y-5,15,9,'#34382f');rect(ctx,x-10,y-6,6,8,'#34382f');rect(ctx,x-13,y-4,5,5,'#34382f');
   rect(ctx,x-6,y-4,13,7,'#f1ead9');rect(ctx,x-9,y-5,4,6,'#f1ead9');rect(ctx,x-12,y-3,4,3,'#dbc9aa');
   rect(ctx,x-5,y-4,4,3,a.id%3===0?'#8a6548':'#4b4b40');rect(ctx,x+2,y-1,4,3,a.id%3===0?'#8a6548':'#4b4b40');
   rect(ctx,x-10,y-7,2,2,'#e4d2ad');rect(ctx,x-8,y-7,2,1,'#34382f');rect(ctx,x-10,y-1,1,1,'#282c27');
+  if(productExperience){rect(ctx,x-8,y-2,2,3,'#e6c64d');rect(ctx,x-8,y-2,1,1,'#403c2c');}
   rect(ctx,x-5,y+3,3,5+Math.max(0,Math.round(step)),'#3f4038');rect(ctx,x+3,y+3,3,5+Math.max(0,Math.round(-step)),'#3f4038');
   if(walking){rect(ctx,x-5,y+7,3,1,'#e2dbc7');rect(ctx,x+3,y+7,3,1,'#e2dbc7');}
   rect(ctx,x+7,y-5,1,4,'#34382f');rect(ctx,x+8,y-6,1,2,'#34382f');
 }
 function draw(time       ){
-  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=manifestoWorldOnly?'#f7f7f4':productExperience?'#eeece3':'#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,576,336);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,576,336);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
   if(productExperience){
-    const north=projectFarm(0,0),east=projectFarm(576,0),south=projectFarm(576,336),west=projectFarm(0,336),depth=15;
-    ctx.shadowColor='rgba(69,54,34,.2)';ctx.shadowBlur=12;ctx.shadowOffsetY=8;
-    ctx.beginPath();ctx.moveTo(west.x,west.y);ctx.lineTo(south.x,south.y);ctx.lineTo(south.x,south.y+depth);ctx.lineTo(west.x,west.y+depth);ctx.closePath();ctx.fillStyle='#8a6546';ctx.fill();
-    ctx.beginPath();ctx.moveTo(south.x,south.y);ctx.lineTo(east.x,east.y);ctx.lineTo(east.x,east.y+depth);ctx.lineTo(south.x,south.y+depth);ctx.closePath();ctx.fillStyle='#79563e';ctx.fill();ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
-    ctx.save();ctx.transform(.6,.3,-.6,.3,216,31.2);ctx.drawImage(terrain,0,0);ctx.restore();
+    const corners=[[0,0],[576,0],[576,336],[0,336]].map(([x,y])=>projectFarm(x,y));
+    ctx.save();ctx.shadowColor='rgba(45,40,31,.15)';ctx.shadowBlur=15;ctx.shadowOffsetY=12;
+    ctx.beginPath();ctx.moveTo(corners[0].x,corners[0].y);for(let i=1;i<corners.length;i++)ctx.lineTo(corners[i].x,corners[i].y);ctx.closePath();ctx.fillStyle='#81945e';ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.moveTo(corners[1].x,corners[1].y);ctx.lineTo(corners[2].x,corners[2].y);ctx.lineTo(corners[2].x,corners[2].y+18);ctx.lineTo(corners[1].x,corners[1].y+18);ctx.closePath();ctx.fillStyle='#80613f';ctx.fill();
+    ctx.beginPath();ctx.moveTo(corners[2].x,corners[2].y);ctx.lineTo(corners[3].x,corners[3].y);ctx.lineTo(corners[3].x,corners[3].y+18);ctx.lineTo(corners[2].x,corners[2].y+18);ctx.closePath();ctx.fillStyle='#72563b';ctx.fill();
+    ctx.save();ctx.transform(.6,.3,-.6,.3,216,31.2);ctx.drawImage(terrain,0,0);ctx.restore();drawProductScene(time);
+    if(activeSceneEntity?.type==='paddock'){
+      const region=paddockRegions.find(item=>item.id===activeSceneEntity.id);
+      if(region){const points=[[region.x,region.y],[region.x+region.w,region.y],[region.x+region.w,region.y+region.h],[region.x,region.y+region.h]].map(([x,y])=>projectFarm(x,y));ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();ctx.fillStyle='rgba(241,222,154,.1)';ctx.fill();ctx.strokeStyle='rgba(176,151,81,.75)';ctx.lineWidth=1.4;ctx.stroke();}
+    }
   }else ctx.drawImage(terrain,0,0);
   if(state){
     if(!manifestoWorldOnly&&!productExperience)for(let i=0;i<4;i++){const x=i%2===0?28:195,y=i<2?38:178;const fraction=state.pastures[i]/(scientificResult?Math.max(1,scientificResult.assumptions.initialPastureKgDMByPaddock[i]):2400);rect(ctx,x+8,y+23,30,2,'#5c7748');rect(ctx,x+8,y+23,Math.round(30*fraction),2,'#dde6a0');}
     const animals=[...state.animals].sort((a,b)=>manifestoWorldOnly?a.x+a.y-(b.x+b.y):productExperience?(a.x+a.y)-(b.x+b.y):a.y-b.y);
-    for(const a of animals){let pos=positions.get(a.id);if(!pos||Math.hypot(pos.x-a.x,pos.y-a.y)>180){pos={x:a.x,y:a.y};positions.set(a.id,pos);}const movementFactor=(manifestoWorldOnly||productExperience)&&manifestoMotionPreference.matches?1:.07;pos.x+=(a.x-pos.x)*movementFactor;pos.y+=(a.y-pos.y)*movementFactor;const frameTime=(manifestoMotionPreference.matches&&(manifestoWorldOnly||productExperience))?0:time;if(manifestoWorldOnly){const x=288+(pos.x-288)*.68-(pos.y-168)*.68,y=168+(pos.x-288)*.31+(pos.y-168)*.31;drawManifestoCow(a,x,y,frameTime);}else if(productExperience){const point=projectFarm(pos.x,pos.y);ctx.save();ctx.translate(point.x,point.y);ctx.scale(1.45,1.45);drawCow(a,0,0,frameTime);ctx.restore();}else drawCow(a,pos.x,pos.y,frameTime);}
+    for(const a of animals){let pos=positions.get(a.id);if(!pos||Math.hypot(pos.x-a.x,pos.y-a.y)>180){pos={x:a.x,y:a.y};positions.set(a.id,pos);}const movementFactor=(manifestoWorldOnly||productExperience)&&manifestoMotionPreference.matches?1:.07;pos.x+=(a.x-pos.x)*movementFactor;pos.y+=(a.y-pos.y)*movementFactor;const frameTime=(manifestoMotionPreference.matches&&(manifestoWorldOnly||productExperience))?0:time;if(manifestoWorldOnly){const x=288+(pos.x-288)*.68-(pos.y-168)*.68,y=168+(pos.x-288)*.31+(pos.y-168)*.31;drawManifestoCow(a,x,y,frameTime);}else if(productExperience){const point=projectFarm(pos.x,pos.y);ctx.save();ctx.translate(point.x,point.y);drawManifestoCow(a,0,0,frameTime);ctx.restore();}else drawCow(a,pos.x,pos.y,frameTime);}
     if(state.config.weather==='rain'){ctx.strokeStyle='#c0d6c355';ctx.lineWidth=1;for(let i=0;i<60;i++){const x=(i*77+(time*.045))%576,y=(i*59+time*.095)%336;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-2,y+5);ctx.stroke();}}
     if(state.config.weather==='hot'){rect(ctx,0,0,576,336,'#efb65715');}
     const hour=state.hour%24;if(hour>=20||hour<6)rect(ctx,0,0,576,336,'#183c4c70');
@@ -128,10 +202,10 @@ function draw(time       ){
 }
 function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=288-(288-panX)*next/zoom;panY=168-(168-panY)*next/zoom;zoom=next;limitPan();}
 function limitPan(){panX=Math.max(576-576*zoom,Math.min(0,panX));panY=Math.max(336-336*zoom,Math.min(0,panY));}
-function mapPoint(e                        ){const b=canvas.getBoundingClientRect();if(productExperience){const scale=Math.min(b.width/576,b.height/336),width=576*scale,height=336*scale,offsetX=(b.width-width)/2,offsetY=(b.height-height)/2;return {x:(e.clientX-b.left-offsetX)/scale,y:(e.clientY-b.top-offsetY)/scale};}return {x:(e.clientX-b.left)*576/b.width,y:(e.clientY-b.top)*336/b.height};}
+function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.left)*576/b.width,y:(e.clientY-b.top)*336/b.height};}
 canvas.addEventListener('pointerdown',e=>{const p=mapPoint(e);drag={...p,px:panX,py:panY,moved:false};canvas.setPointerCapture(e.pointerId);});
-canvas.addEventListener('pointermove',e=>{if(!drag)return;const p=mapPoint(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>3)drag.moved=true;panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;limitPan();});
-canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const nearest=state.animals.map(a=>{const point=positions.get(a.id)??a,q=productExperience?projectFarm(point.x,point.y):point;return {a,d:Math.hypot(q.x-x,q.y-y)};}).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<(productExperience?18:15)){selected=nearest.a.id;updateUI();}}drag=null;});
+canvas.addEventListener('pointermove',e=>{if(!drag){if(productExperience){const p=mapPoint(e),entity=sceneEntityAt(...Object.values(unprojectFarm((p.x-panX)/zoom,(p.y-panY)/zoom)));canvas.style.cursor=entity?'pointer':'grab';}return;}const p=mapPoint(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>3)drag.moved=true;panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;limitPan();});
+canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const nearest=state.animals.map(a=>{const point=positions.get(a.id)??a,q=productExperience?projectFarm(point.x,point.y):point;return {a,d:Math.hypot(q.x-x,q.y-y)};}).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<(productExperience?18:15)){selected=nearest.a.id;activeSceneEntity=null;updateUI();if(productExperience)document.dispatchEvent(new CustomEvent('riose:agent-selected',{detail:{animal:nearest.a}}));}else if(productExperience){const entity=sceneEntityAt(...Object.values(unprojectFarm(x,y)));if(entity){activeSceneEntity=entity;document.dispatchEvent(new CustomEvent('riose:entity-selected',{detail:{entity,pastures:state.pastures,config:state.config}}));}}}drag=null;});
 canvas.addEventListener('pointercancel',()=>drag=null);
 canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom+(e.deltaY<0?.15:-.15));},{passive:false});
 canvas.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(zoom+.25);}if(e.key==='-'){e.preventDefault();setZoom(zoom-.25);}if(e.key==='ArrowLeft'){e.preventDefault();panX+=12;}if(e.key==='ArrowRight'){e.preventDefault();panX-=12;}if(e.key==='ArrowUp'){e.preventDefault();panY+=12;}if(e.key==='ArrowDown'){e.preventDefault();panY-=12;}limitPan();});
@@ -141,7 +215,7 @@ $('animals').onclick=e=>{const btn=(e.target               ).closest            
 $('search').oninput=()=>listAnimals();
 const reasonNames={rest_window:'horário de descanso (21:00–05:59)',thirst_threshold:'sede simulada acima de 65/100',pasture_housing:'alojamento configurado como pasto',barn_housing:'alojamento configurado como confinamento'};
 function renderAnimalHistory(animal){const records=(animal.history??[]).slice(-6).reverse();$('animal-history').innerHTML=records.map(record=>{const hour=String(record.hour%24).padStart(2,'0');const day=String(Math.floor(record.hour/24)+1).padStart(2,'0');const observed=record.observed;if(productExperience)return '<article class="memory-record"><strong>Day '+day+' · '+hour+':00 — '+actionNames[record.action]+'</strong><span>Rule: '+(record.reason==='rest_window'?'rest schedule':record.reason==='thirst_threshold'?'simulated thirst threshold':record.reason==='barn_housing'?'confinement configured':'pasture configured')+'.</span><small>Model state: thirst '+number(observed.thirst,0)+'/100 · '+(observed.housing==='barn'?'confinement':'pasture')+'.</small></article>';return '<article class="memory-record"><strong>D'+day+' · '+hour+':00 — '+actionNames[record.action]+'</strong><span>Regra: '+(reasonNames[record.reason]??record.reason)+'.</span><small>Estado observado pelo motor: sede '+number(observed.thirst,0)+'/100 · alojamento '+(observed.housing==='barn'?'confinamento':'pasto')+'.</small></article>';}).join('')||(productExperience?'<p class="memory-empty">No recent state changes for this animal.</p>':'<p class="memory-empty">Sem transições registradas para este animal.</p>');}
-function updateUI(){if(!state)return;if(manifestoWorldOnly&&!manifestoWorldReadySent){parent.postMessage({type:'manifesto-world-ready'},location.origin);manifestoWorldReadySent=true;}const m=metrics(state),a=state.animals.find(a=>a.id===selected)??state.animals[0];$('clock').textContent=(productExperience?'Day ':'Dia ')+String(Math.floor(state.hour/24)+1).padStart(2,'0')+' · '+String(state.hour%24).padStart(2,'0')+':00';$('count').textContent=String(state.animals.length);$('weight').textContent=number(m.weight)+' kg';$('gain').textContent=(m.gain>=0?'+':'')+number(m.gain,2)+(productExperience?' kg/animal since start':' kg/animal desde o início');$('pasture').textContent=number(m.pasture,0);$('cost').textContent=currency(m.cost);$('animalname').innerHTML=a.name+' <span>#'+String(a.id).padStart(3,'0')+'</span>';$('animalweight').textContent=number(a.weight)+' kg';if(productExperience)document.querySelector('.map-location').textContent='HORIZONTE / '+state.animals.length+' ANIMALS';$('activity').textContent=actionNames[a.action];$('thought').textContent='“'+thoughts[a.action]+'”';renderAnimalHistory(a);if(productExperience){const energy=$('energy-meter'),thirst=$('thirst-meter');if(energy)energy.style.width=Math.max(0,Math.min(100,a.energy))+'%';if(thirst)thirst.style.width=Math.max(0,Math.min(100,a.thirst))+'%';}$                   ('diet').value=state.config.diet;$                   ('weather').value=state.config.weather;$                  ('supplement').value=String(state.config.supplement);$('supplementvalue').textContent=number(state.config.supplement)+(productExperience?' kg DM/day':' kg MS/dia');for(const [id,condition] of [['pasturebtn',state.config.housing==='pasture'],['barnbtn',state.config.housing==='barn']]                      ){$(id).classList.toggle('active',condition);$(id).setAttribute('aria-pressed',String(condition));}listAnimals();$('events').innerHTML=state.events.slice(0,20).map(event=>{let text=event.text;if(productExperience){text=text.replace('Fazenda iniciada. Os animais estão no pasto.','Farm initialized. Animals begin in pasture.').replace('no cocho.','at the feeder.').replace('Bebendo água.','drinking water.').replace('está pastando.','is grazing.').replace('está descansando.','is resting.');}return '<div class="event"><time>'+(productExperience?'Day ':'D')+String(Math.floor(event.hour/24)+1).padStart(2,'0')+' '+String(event.hour%24).padStart(2,'0')+':00</time><span>'+text+'</span></div>';}).join('');if(productExperience)document.dispatchEvent(new CustomEvent('riose:world-state',{detail:{hour:state.hour,animal:a,config:state.config,metrics:m}}));}
+function updateUI(){if(!state)return;if(manifestoWorldOnly&&!manifestoWorldReadySent){parent.postMessage({type:'manifesto-world-ready'},location.origin);manifestoWorldReadySent=true;}const m=metrics(state),a=state.animals.find(a=>a.id===selected)??state.animals[0];$('clock').textContent=(productExperience?'Day ':'Dia ')+String(Math.floor(state.hour/24)+1).padStart(2,'0')+' · '+String(state.hour%24).padStart(2,'0')+':00';$('count').textContent=String(state.animals.length);$('weight').textContent=number(m.weight)+' kg';$('gain').textContent=(m.gain>=0?'+':'')+number(m.gain,2)+(productExperience?' kg/animal since start':' kg/animal desde o início');$('pasture').textContent=number(m.pasture,0);$('cost').textContent=currency(m.cost);$('animalname').innerHTML=a.name+' <span>#'+String(a.id).padStart(3,'0')+'</span>';$('animalweight').textContent=number(a.weight)+' kg';if(productExperience)document.querySelector('.map-location').textContent='HORIZONTE / '+state.animals.length+' ANIMALS';$('activity').textContent=actionNames[a.action];$('thought').textContent='“'+thoughts[a.action]+'”';renderAnimalHistory(a);if(productExperience){const energy=$('energy-meter'),thirst=$('thirst-meter');if(energy)energy.style.width=Math.max(0,Math.min(100,a.energy))+'%';if(thirst)thirst.style.width=Math.max(0,Math.min(100,a.thirst))+'%';}$                   ('diet').value=state.config.diet;$                   ('weather').value=state.config.weather;$                  ('supplement').value=String(state.config.supplement);$('supplementvalue').textContent=number(state.config.supplement)+(productExperience?' kg DM/day':' kg MS/dia');for(const [id,condition] of [['pasturebtn',state.config.housing==='pasture'],['barnbtn',state.config.housing==='barn']]                      ){$(id).classList.toggle('active',condition);$(id).setAttribute('aria-pressed',String(condition));}listAnimals();$('events').innerHTML=state.events.slice(0,20).map(event=>{let text=event.text;if(productExperience){text=text.replace('Fazenda iniciada. Os animais estão no pasto.','Farm initialized. Animals begin in pasture.').replace('no cocho.','at the feeder.').replace('Bebendo água.','drinking water.').replace('está pastando.','is grazing.').replace('está descansando.','is resting.');}return '<div class="event"><time>'+(productExperience?'Day ':'D')+String(Math.floor(event.hour/24)+1).padStart(2,'0')+' '+String(event.hour%24).padStart(2,'0')+':00</time><span>'+text+'</span></div>';}).join('');if(productExperience)document.dispatchEvent(new CustomEvent('riose:world-state',{detail:{hour:state.hour,animal:a,config:state.config,metrics:m,pastures:state.pastures}}));}
 function renderScientificSensitivity(){const host=$('scientific-result'),sensitivity=analyzePastureDmiSensitivity({bodyWeightKg:Number($('science-weight').value),adgKgPerDay:Number($('science-adg').value),supplementKgDMPerDay:Number($('science-supplement').value)}),rows=sensitivity.effects.map(effect=>'<tr><th>'+effect.label+'</th><td>'+number(effect.testedInputRange[0],2)+'–'+number(effect.testedInputRange[1],2)+'</td><td>'+number(effect.deltaFromBaselineKgDMPerDay[0],2)+'–'+number(effect.deltaFromBaselineKgDMPerDay[1],2)+' kg MS/dia</td></tr>').join('');host.insertAdjacentHTML('beforeend','<h4>Sensibilidade local da equação</h4><table><thead><tr><th>Entrada variada isoladamente</th><th>Faixa testada</th><th>Variação de CMS vs. base</th></tr></thead><tbody>'+rows+'</tbody></table><small>Variações determinísticas (±10 kg de peso, ±0,1 kg/d de GMD informado, ±0,5 kg MS/d de suplemento), limitadas ao domínio de validação. Não são intervalos de previsão nem calibração empírica do Riose.</small>');}
 function renderScientificPanel(){let panel=document.getElementById('scientific-active-panel');if(!scientificResult){panel?.remove();return;}if(!panel){panel=document.createElement('section');panel.id='scientific-active-panel';panel.className='scientific-active-panel';document.querySelector('.metrics').after(panel);}const final=scientificResult.final,perHead=final.totalDmiKgDM/scientificResult.animalCount;panel.innerHTML='<strong>BR-CORTE 2023 · Eq. 2.6 · cenário '+scientificResult.days+' dias</strong><div>CMS total condicional: '+number(perHead,2)+' kg MS/cabeça/dia no último dia · forragem retirada: '+number(final.forageConsumedKgDM,0)+' kg MS no lote/dia · estoque final: '+number(final.pastureKgDMByPaddock.reduce((sum,value)=>sum+value,0),0)+' kg MS.</div><small>GMD assumido: '+number(scientificResult.assumptions.assumedAdgKgPerDay,2)+' kg/dia; '+(final.forageShortfallKgDM>0?'há déficit de forragem no último dia. ':'sem déficit de forragem no último dia. ')+'Água por piquete: '+scientificResult.assumptions.waterAvailableByPaddock.map((available,index)=>String.fromCharCode(65+index)+': '+(available?'disponível':'indisponível')).join(' · ')+'.</small><a href="'+BR_CORTE_PASTURE_DMI.source+'" target="_blank" rel="noopener">Fonte e equação ↗</a>';$('map').setAttribute('aria-label','Mapa da fazenda com resultado científico BR-CORTE. '+scientificResult.animalCount+' animais, dia '+scientificResult.days+'.');document.querySelector('.map-location').textContent='BR-CORTE / '+scientificResult.animalCount+' NELORE';}
 function configure(patch                ){if(!loadingScenario&&!scientificPreviewActive)requestState({type:'configure',patch});}
@@ -150,7 +224,7 @@ $                   ('weather').onchange=e=>configure({weather:(e.target        
 $                  ('supplement').oninput=e=>$('supplementvalue').textContent=number(Number((e.target                    ).value))+' kg MS/dia';
 $                  ('supplement').onchange=e=>configure({supplement:Number((e.target                    ).value)});
 $('pasturebtn').onclick=()=>configure({housing:'pasture'});$('barnbtn').onclick=()=>configure({housing:'barn'});
-function setRunning(value        ){running=value;$('play').textContent=productExperience?(value?'||':'▶'):(value?'Ⅱ':'▶');$('play').setAttribute('aria-label',productExperience?(value?'Pause simulation':'Continue simulation'):(value?'Pausar simulação':'Continuar simulação'));lastTick=performance.now();}
+function setRunning(value        ){running=value;if(productExperience)$('play').dataset.running=String(value);else $('play').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',productExperience?(value?'Pause simulation':'Continue simulation'):(value?'Pausar simulação':'Continuar simulação'));lastTick=performance.now();}
 if(manifestoWorldOnly){
   window.addEventListener('message',(event)=>{
     if(event.origin!==location.origin||event.source!==parent||event.data?.type!=='manifesto-world')return;
