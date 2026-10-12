@@ -61,6 +61,116 @@ test('comparison keeps the initial snapshot and changes housing only', () => {
   assert.equal(result.herdSize, start.animals.length);
 });
 
+test('frozen 30-day housing comparison preserves the main scenario outputs', () => {
+  // Baseline captured from main@764ead1f4cdc8c011adcc22d16b92f4681c15c92.
+  const engine = new FarmEngine(2026, 12);
+  engine.configure({diet: 'balanced', supplement: 1.5, weather: 'rain'});
+  engine.tick(24);
+  const start = engine.snapshot();
+  const result = compare(start, 30);
+
+  assert.deepEqual({
+    hour: start.hour,
+    seed: start.initialSeed,
+    snapshotSeed: start.seed,
+    herdSize: start.animals.length,
+    config: start.config,
+    days: result.days,
+    comparisonFactor: result.comparisonFactor,
+    baselineConfig: result.baselineConfig,
+    scenarioConfig: result.scenarioConfig,
+    startWeight: result.startWeight,
+    day0: {
+      baselineWeight: result.rows[0].baselineWeight,
+      scenarioWeight: result.rows[0].scenarioWeight,
+      baselinePastureByPaddock: result.rows[0].baselinePastureByPaddock,
+    },
+    day30: {
+      baselineWeight: result.rows[30].baselineWeight,
+      scenarioWeight: result.rows[30].scenarioWeight,
+      baselineCost: result.rows[30].baselineCost,
+      scenarioCost: result.rows[30].scenarioCost,
+      baselineConsumptionKgDM: result.rows[30].baselineConsumptionKgDM,
+      scenarioConsumptionKgDM: result.rows[30].scenarioConsumptionKgDM,
+      baselineIntakeBySourceKgDM: result.rows[30].baselineIntakeBySourceKgDM,
+      scenarioIntakeBySourceKgDM: result.rows[30].scenarioIntakeBySourceKgDM,
+      baselinePastureByPaddock: result.rows[30].baselinePastureByPaddock,
+      scenarioPastureByPaddock: result.rows[30].scenarioPastureByPaddock,
+    },
+  }, {
+    hour: 30,
+    seed: 2026,
+    snapshotSeed: 717351974,
+    herdSize: 12,
+    config: {diet: 'balanced', housing: 'pasture', weather: 'rain', supplement: 1.5},
+    days: 30,
+    comparisonFactor: 'housing',
+    baselineConfig: {diet: 'balanced', housing: 'pasture', weather: 'rain', supplement: 1.5},
+    scenarioConfig: {diet: 'balanced', housing: 'barn', weather: 'rain', supplement: 1.5},
+    startWeight: 358.56183703193625,
+    day0: {
+      baselineWeight: 358.56183703193625,
+      scenarioWeight: 358.56183703193625,
+      baselinePastureByPaddock: [1822.1597835193509, 1821.1163296029742, 1822.3504389228774, 1820.9682525876965],
+    },
+    day30: {
+      baselineWeight: 405.3761344270324,
+      scenarioWeight: 405.3761344270324,
+      baselineCost: 2008.80000000025,
+      scenarioCost: 3993.8655849398147,
+      baselineConsumptionKgDM: 4241.947053752924,
+      scenarioConsumptionKgDM: 4241.9470537529305,
+      baselineIntakeBySourceKgDM: {
+        pastureKgDM: 3053.947053752883,
+        barnBaseKgDM: 0,
+        supplementKgDM: 540,
+        dietExtraKgDM: 648.0000000000409,
+        totalKgDM: 4241.947053752924,
+      },
+      scenarioIntakeBySourceKgDM: {
+        pastureKgDM: 0,
+        barnBaseKgDM: 3053.9470537528896,
+        supplementKgDM: 540,
+        dietExtraKgDM: 648.0000000000409,
+        totalKgDM: 4241.9470537529305,
+      },
+      baselinePastureByPaddock: [2398.896533680655, 2398.850814106909, 2398.904887364172, 2398.844326021605],
+      scenarioPastureByPaddock: [2400, 2400, 2400, 2400],
+    },
+  });
+
+  const assertFinite = (value, path = 'result') => {
+    if (typeof value === 'number') {
+      assert.ok(Number.isFinite(value), `${path} must be finite; got ${value}`);
+    } else if (Array.isArray(value)) {
+      value.forEach((item, index) => assertFinite(item, `${path}[${index}]`));
+    } else if (value && typeof value === 'object') {
+      for (const [key, item] of Object.entries(value)) assertFinite(item, `${path}.${key}`);
+    }
+  };
+  assert.ok(Array.isArray(result.rows), 'comparison rows must be an array');
+  assert.equal(result.rows.length, 31, '30-day comparison includes day 0 and day 30');
+  assertFinite(result);
+
+  const assertLedger = (ledger, day, label) => {
+    const sources = ledger.pastureKgDM + ledger.barnBaseKgDM + ledger.supplementKgDM + ledger.dietExtraKgDM;
+    assert.ok(Math.abs(sources - ledger.totalKgDM) < 1e-8, `day ${day} ${label} intake ledger must balance`);
+  };
+  for (const [index, row] of result.rows.entries()) {
+    assert.equal(row.day, index, `comparison row ${index} must identify its day`);
+    assert.equal(row.baselinePastureByPaddock.length, 4, `day ${row.day} baseline must have four paddocks`);
+    assert.equal(row.scenarioPastureByPaddock.length, 4, `day ${row.day} scenario must have four paddocks`);
+    assert.ok(row.baselineWeight >= 200, `day ${row.day} baseline weight must respect the engine floor`);
+    assert.ok(row.scenarioWeight >= 200, `day ${row.day} scenario weight must respect the engine floor`);
+    for (const stock of [...row.baselinePastureByPaddock, ...row.scenarioPastureByPaddock]) {
+      assert.ok(stock >= 0 && stock <= 2400, `day ${row.day} paddock stock must remain within 0–2400 kg DM`);
+    }
+    assertLedger(row.baselineIntakeBySourceKgDM, row.day, 'baseline');
+    assertLedger(row.scenarioIntakeBySourceKgDM, row.day, 'scenario');
+  }
+  assert.deepEqual(engine.snapshot(), start, 'comparison must not mutate its frozen starting input');
+});
+
 test('scenario comparison repeats with the same input and period', () => {
   const engine = new FarmEngine(903, 6);
   engine.configure({housing: 'barn', diet: 'concentrate', supplement: 2, weather: 'hot'});
