@@ -8,15 +8,15 @@ Essas medidas descrevem a variação entre replicatas. Os quantis não são inte
 
 ## Desempenho
 
-`node scripts/benchmark-replicate-summary.mjs` mediu sete agregações por carga, após um aquecimento, com dois outputs numéricos e dois grupos sintéticos:
+`node scripts/benchmark-replicate-summary.mjs` mediu sete agregações por carga, após um aquecimento, com dois outputs numéricos e dois grupos sintéticos. Esta captura limpa usa revisão `8f8656c`, `dirty: false`; o relatório completo e as amostras estão em [`replicate-summary-benchmark-2026-10.json`](./replicate-summary-benchmark-2026-10.json):
 
-| Registros | Mediana por agregação (captura anterior à inclusão de proveniência por ID) | Heap observado após agregação |
+| Registros | Mediana por agregação | Heap observado após agregação |
 | ---: | ---: | ---: |
-| 1.000 | 1,47 ms | 5,9 MB |
-| 10.000 | 11,09 ms | 13,9 MB |
-| 100.000 | 143,80 ms | 86,3 MB |
+| 1.000 | 1,81 ms | 16,7 MB |
+| 10.000 | 14,23 ms | 20,8 MB |
+| 100.000 | 208,53 ms | 183,6 MB |
 
-O heap inclui as entradas sintéticas mantidas pelo benchmark; não representa alocação incremental do agregador. A API recebe uma lista completa, então a agregação não é streaming. Mesmo na carga de 100 mil registros, o tempo mediano foi cerca de 144 ms, mas a retenção total de dados fica visível no relatório JSON.
+O heap inclui as entradas sintéticas mantidas pelo benchmark; não representa alocação incremental do agregador. A API recebe uma lista completa, então a agregação não é streaming. Na carga de 100 mil registros, o tempo mediano foi cerca de 209 ms; a retenção total de dados fica visível no relatório JSON. As entradas são sintéticas e o teste mede o agregador sobre uma lista completa, não o runner nem o motor da fazenda.
 
 ## Limites
 

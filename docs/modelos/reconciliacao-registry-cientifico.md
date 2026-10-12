@@ -1,13 +1,13 @@
 # Reconciliação do registry científico da branch local
 
-Revisão da branch local `codex/issue-38-54-lot-comparison` (commits `e54ce90` e `7492f24`) contra `main` em `7885ba0` (após o PR #68, head `0d7c9c5`, e o PR #70). A branch não foi mesclada integralmente. O mapa abaixo registra a seleção feita para a issue #92 e deixa explícito o que não passou a ser autoridade duplicada. O adaptador marcado como **LANÇADO** nesta reconciliação está no branch de trabalho do PR #116; o `main` consultado não contém ainda esse arquivo.
+Revisão da branch local `codex/issue-38-54-lot-comparison` (commits `e54ce90` e `7492f24`) contra `main` em `7885ba0` (após o PR #68, head `0d7c9c5`, e o PR #70). A branch não foi mesclada integralmente. O mapa abaixo registra a seleção feita para a issue #92 e deixa explícito o que não passou a ser autoridade duplicada. A adaptação selecionada está implementada no branch de trabalho do PR #116; o `main` consultado ainda não contém esse arquivo.
 
 ## Sobreposição explícita com #50–#53
 
 | Issue | Artefatos da branch que se sobrepõem | Seleção | Autoridade no `main` revisado / destino selecionado |
 | --- | --- | --- | --- |
 | #50 — Knowledge Base | `scientific/registry/knowledge-base.json` | **OMITIDO**; sem consumidor ou fluxo de atualização próprio | `data/*/manifest.json`, `docs/evidence/` e busca lexical determinística em `scripts/scientific-retrieval.js` |
-| #51 — Evidence Registry | `scientific/registry/evidence-registry.js` | **LANÇADO, adaptado** como consulta read-only; sem novo armazenamento ou schema | `scientific/evidence-resolver.js` (destino do PR #116), usando `observations` e `sourceCatalog`; `snapshot-validator.js` continua autoridade de validação |
+| #51 — Evidence Registry | `scientific/registry/evidence-registry.js` | **IMPLEMENTADO neste branch, adaptado** como consulta read-only; sem novo armazenamento ou schema | `scientific/evidence-resolver.js` (destino do PR #116), usando `observations` e `sourceCatalog`; `snapshot-validator.js` continua autoridade de validação |
 | #52 — Parameter Registry | `scientific/registry/parameters.json` | **OMITIDO**; duplicaria coeficientes, unidades e faixa já publicadas | `scientific/br_corte_pasture_dmi.js` e `docs/modelos/br-corte-2023-cms-pasto.md` |
 | #53 — Model Registry | `scientific/registry/models.json` e `schemas/scientific-registry.schema.json` | **OMITIDOS**; seriam um catálogo paralelo e conteriam uma lista de inputs demonstrativos não consumidos | `scientific/model-contract.js` + `scientific/br_corte_dmi_adapter.js` resolvem ID/versão do modelo executável |
 
@@ -17,7 +17,7 @@ O arquivo `schemas/lot-inputs.schema.json` não foi atribuído a #50–#53: fico
 
 | Mudança na branch | Seleção | Estado atual / motivo |
 | --- | --- | --- |
-| `scientific/registry/evidence-registry.js` | **LANÇADO, adaptado** | `scientific/evidence-resolver.js` consulta uma observação por caminho e normaliza `observed`, `derived`, `hypothesis` e ausência. Status desconhecido, inclusive `verified`, resulta em `MISSING`; a validação permanece em `snapshot-validator.js`. Teste de regressão cobre mapa, fonte, população, período e ausência de promoção. |
+| `scientific/registry/evidence-registry.js` | **IMPLEMENTADO neste branch, adaptado** | `scientific/evidence-resolver.js` consulta uma observação por caminho e normaliza `observed`, `derived`, `hypothesis` e ausência. Status desconhecido, inclusive `verified`, resulta em `MISSING`; a validação permanece em `snapshot-validator.js`. Teste de regressão cobre mapa, fonte, população, período e ausência de promoção. |
 | `scientific/registry/models.json` | **OMITIDO** | O adaptador executável `scientific/br_corte_dmi_adapter.js` declara ID, versão, inputs, outputs, evidência e função via `scientific/model-contract.js`; essa interface já resolve versões exatas. O JSON antigo duplicava os metadados e listava o motor demonstrativo como registro executável, embora as entradas declaradas não fossem consumidas pelo engine. |
 | `scientific/registry/parameters.json` | **OMITIDO / TRABALHO SOLTO** | O ID `br-corte-2023-eq-2.6-supplement-coefficient` fica preservado na nota acima; equação, coeficiente, unidades, faixa publicada e origem já estão em `scientific/br_corte_pasture_dmi.js` e `docs/modelos/br-corte-2023-cms-pasto.md`. Um JSON paralelo criaria outra cópia manual do mesmo parâmetro. |
 | `scientific/registry/knowledge-base.json` | **OMITIDO / TRABALHO SOLTO** | As fontes e os quatro IDs ficam preservados na nota acima. Manifests de dados e `docs/evidence/` são fontes canônicas; `scripts/scientific-retrieval.js` já indexa esses documentos sem uma segunda cópia estática. |
