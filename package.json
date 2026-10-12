@@ -6,6 +6,7 @@
     "start": "node server.js",
     "test": "node --test",
     "example:scenario-contract": "node examples/scenario-contract-v2.js",
+    "example:sensitivity-analysis": "node examples/sensitivity-analysis.js",
     "test:scenarios": "node scripts/run-scenarios.js",
     "archive:comparison": "node scripts/archive-comparison.js",
     "validate:outcome": "node scripts/validate-outcome-record.js",
