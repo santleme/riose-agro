@@ -22,7 +22,11 @@ export function validateScenario(scenario) {
 
 function readPointer(value, pointer) {
   return pointer.slice(1).split('/').map(part => part.replaceAll('~1', '/').replaceAll('~0', '~'))
-    .reduce((current, key) => current == null ? undefined : current[key], value);
+    .reduce((current, key) => {
+      if (current === null || typeof current !== 'object' || !Object.hasOwn(current, key)) return undefined;
+      if (Array.isArray(current) && !/^(0|[1-9]\d*)$/.test(key)) return undefined;
+      return current[key];
+    }, value);
 }
 
 function checkAssertion(actual, assertion) {
@@ -89,6 +93,7 @@ export function executeScenario(scenario) {
 export async function runScenarioDirectory(scenarioDirectory, resultDirectory) {
   const scenarioFiles = (await readdir(scenarioDirectory, {withFileTypes: true}))
     .filter(entry => entry.isFile() && entry.name.endsWith('.json'))
+    .filter(entry => !entry.name.endsWith('.result.json'))
     .map(entry => entry.name)
     .sort();
   if (scenarioFiles.length === 0) throw new Error(`No scenario JSON files found in ${scenarioDirectory}`);

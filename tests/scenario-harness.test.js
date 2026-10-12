@@ -39,6 +39,15 @@ test('failed assertions are captured in the result without throwing', () => {
   assert.ok(result.result.state);
 });
 
+test('JSON Pointer assertions cannot read inherited properties', () => {
+  const result = executeScenario({...fixture, assertions: [
+    {path: '/state/config/constructor/name', operator: 'equals', value: 'Object'},
+  ]});
+
+  assert.equal(result.passed, false);
+  assert.equal(result.assertions[0].actual, null);
+});
+
 test('the same scenario produces an identical result on every run', () => {
   assert.deepEqual(executeScenario(fixture), executeScenario(JSON.parse(JSON.stringify(fixture))));
 });
@@ -60,4 +69,18 @@ test('malformed scenarios fail in isolation and each case writes a result file',
   assert.match(results[0].errors[0], /a-malformed\.json/);
   assert.equal(JSON.parse(await readFile(join(resultDirectory, 'a-malformed.result.json'), 'utf8')).passed, false);
   assert.equal(JSON.parse(await readFile(join(resultDirectory, 'b-valid.result.json'), 'utf8')).passed, true);
+});
+
+test('result files are ignored when fixture and result directories are the same', async t => {
+  const directory = await mkdtemp(join(tmpdir(), 'riose-scenarios-in-place-'));
+  await writeFile(join(directory, 'baseline.json'), JSON.stringify(fixture));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+
+  const first = await runScenarioDirectory(directory, directory);
+  const second = await runScenarioDirectory(directory, directory);
+
+  assert.deepEqual(first.map(result => [result.file, result.passed]), [['baseline.json', true]]);
+  assert.deepEqual(second.map(result => [result.file, result.passed]), [['baseline.json', true]]);
+  assert.equal(JSON.parse(await readFile(join(directory, 'baseline.result.json'), 'utf8')).passed, true);
+  await assert.rejects(readFile(join(directory, 'baseline.result.result.json')));
 });
