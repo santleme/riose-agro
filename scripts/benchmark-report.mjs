@@ -116,6 +116,12 @@ export function assertBenchmarkReport(report) {
     const details = validateReport.errors.map(error => `${error.instancePath || '/'} ${error.message}`).join('; ');
     throw new TypeError(`Invalid benchmark report: ${details}`);
   }
+  const declaredBoundaries = new Set(report.timingBoundaries.map(boundary => boundary.phase));
+  for (const [phase, phaseReport] of Object.entries(report.phases)) {
+    if (phaseReport.status === 'measured' && !declaredBoundaries.has(phase)) {
+      throw new TypeError(`Invalid benchmark report: measured phase "${phase}" has no timing boundary.`);
+    }
+  }
   return report;
 }
 

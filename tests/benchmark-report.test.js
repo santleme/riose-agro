@@ -57,3 +57,9 @@ test('benchmark adapter refuses implicit seed/population defaults and conflated 
   assert.throws(() => benchmarkReport({...common, workload: {seed: 1, populations: [{animals: 100_000, scope: 'FarmEngine'}]}}), /numeric-kernel-only/);
   assert.throws(() => assertBenchmarkReport({...sampleReport(), workload: {seed: 1, populations: []}}), /Invalid benchmark report/);
 });
+
+test('benchmark adapter requires a timing boundary for every measured phase', () => {
+  const report = sampleReport();
+  report.timingBoundaries = [{phase: 'render', timed: ['Canvas submission.'], notTimed: []}];
+  assert.throws(() => assertBenchmarkReport(report), /measured phase "engine" has no timing boundary/);
+});
