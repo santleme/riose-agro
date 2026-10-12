@@ -1,6 +1,7 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../../scientific/br_corte_pasture_dmi.js';
 import {drawProductFarm,productFarmEntityAt,productFarmHoverEntityAt,projectFarm,PRODUCT_SCENE_SIZE} from './product-scene.js';
+import {displayToScenePoint} from './product-spatial.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
 const manifestoWorldOnly=typeof location!=='undefined'&&location.search.includes('manifesto-world=1');
@@ -50,13 +51,13 @@ const terrain=document.createElement('canvas');terrain.width=576;terrain.height=
 t.imageSmoothingEnabled=true;t.imageSmoothingQuality='high';
 function rect(g                         ,x       ,y       ,w       ,h       ,color       ){g.fillStyle=color;g.fillRect(Math.round(x),Math.round(y),w,h);}
 let terrainSeed=9;function rand(){terrainSeed=(Math.imul(1664525,terrainSeed)+1013904223)>>>0;return terrainSeed/4294967296;}
-const assetFrames={},assetAtlases={};let assetReady=false;
-function drawAssetOn(g,id,x,y,w,h,anchor='center',rotation=0){const frame=assetFrames[id],atlas=frame&&assetAtlases[frame.atlas];if(!atlas?.complete||!atlas.naturalWidth)return;g.save();g.translate(x,y);g.rotate(rotation);g.drawImage(atlas,frame.x,frame.y,frame.w,frame.h,-w/2,anchor==='bottom'?-h:-h/2,w,h);g.restore();}
+const assetFrames={},assetAtlases={};
+function drawAssetOn(g,id,x,y,w,h,anchor='center',rotation=0){const frame=assetFrames[id],atlas=frame&&assetAtlases[frame.atlas];if(!atlas?.complete||!atlas.naturalWidth)return;const ax=typeof anchor==='object'?anchor.x:.5,ay=typeof anchor==='object'?anchor.y:anchor==='bottom'?1:.5;g.save();g.translate(x,y);g.rotate(rotation);g.drawImage(atlas,frame.x,frame.y,frame.w,frame.h,-w*ax,-h*ay,w,h);g.restore();}
 function loadProductAssets(){fetch('/assets/manifest.json').then(response=>{if(!response.ok)throw new Error('manifest');return response.json();}).then(manifest=>{
   for(const asset of manifest.assets)assetFrames[asset.id]=asset.frame;
-  const required=new Set(['farm','livestock-approved','animals-review','handling-review','environment-review','infrastructure-review','agriculture','technology-review']);
-  const atlases=Object.entries(manifest.atlases).filter(([id])=>required.has(id));let loaded=0;
-  for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length){assetReady=true;buildTerrain();}};atlas.onerror=()=>{assetFrames[id]=null;};atlas.src=definition.image;}
+  const atlases=Object.entries(manifest.atlases).filter(([id])=>id==='livestock-approved');let loaded=0;
+  window.productAssetManifest=manifest;
+  for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length)buildTerrain();};atlas.onerror=()=>{assetFrames[id]=null;};atlas.src=definition.image;}
 }).catch(()=>{});}
 function tree(x       ,y       ,size=1){rect(t,x-8*size,y+6*size,23*size,8*size,'#48674355');rect(t,x+2*size,y+7*size,4*size,10*size,'#755642');rect(t,x-5*size,y-9*size,16*size,21*size,'#345e3e');rect(t,x-9*size,y-3*size,24*size,10*size,'#3f7147');rect(t,x-2*size,y-13*size,10*size,7*size,'#558149');rect(t,x-5*size,y-6*size,8*size,8*size,'#5e8a4c');rect(t,x+5*size,y+3*size,7*size,6*size,'#2b593a');}
 function fence(x       ,y       ,w       ,h       ){rect(t,x,y,w,2,'#d0b785');rect(t,x,y+5,w,1,'#baa26c');rect(t,x,y+h,w,2,'#d0b785');rect(t,x,y+h+5,w,1,'#a88c5c');for(let a=x;a<=x+w;a+=12){rect(t,a,y-2,2,10,'#e0c796');rect(t,a,y+h-2,2,10,'#dac08b');}rect(t,x,y,2,h,'#baa06c');rect(t,x+w,y,2,h,'#b79b64');for(let a=y;a<y+h;a+=12){rect(t,x-1,a,4,3,'#e0c796');rect(t,x+w-1,a,4,3,'#e0c796');}}
@@ -68,11 +69,7 @@ function buildTerrain(){
     farm.src='assets/agroville-manifesto-farm.png';
     return;
   }
-  if(productExperience){
-    rect(t,0,0,576,336,'#71905d');
-    if(assetReady)for(let row=-1;row<8;row++)for(let col=-1;col<10;col++)drawAssetOn(t,(row+col)%5===0?'grass-mid':'grass-light',col*92-row*46,row*34,104,70);
-    return;
-  }
+  if(productExperience){rect(t,0,0,576,336,'#71905d');return;}
   rect(t,0,0,576,336,'#7ea466');
   for(let y=0;y<336;y+=8)for(let x=0;x<576;x+=8){const n=rand();if(n<.42)rect(t,x,y,8,8,n<.2?'#82a86a':'#7b9f60');if(n>.8){rect(t,x+2,y+5,1,2,'#5e874e');rect(t,x+4,y+4,1,3,'#689251');}}
   // Crossroads and paths connect the four fields with a small farm village.
@@ -99,15 +96,16 @@ buildTerrain();
 if(productExperience)loadProductAssets();
 let zoom=1,panX=0,panY=0,drag=null,activeSceneEntity=null,hoverSceneEntity=null,hoverAnimalId=null;
 const positions=new Map();
+const visualAnimalPositions=new Map();
 function drawProductScene(time){
   const animals=state?state.animals.map(animal=>{
     let point=positions.get(animal.id);
-    if(!point||Math.hypot(point.x-animal.x,point.y-animal.y)>180){point={x:animal.x,y:animal.y};positions.set(animal.id,point);}
+    if(!point||point.patch!==animal.patch||Math.hypot(point.x-animal.x,point.y-animal.y)>180){point={x:animal.x,y:animal.y,patch:animal.patch};positions.set(animal.id,point);}
     const movementFactor=manifestoMotionPreference.matches?1:.07;
     point.x+=(animal.x-point.x)*movementFactor;point.y+=(animal.y-point.y)*movementFactor;
     return {animal,x:point.x,y:point.y};
   }):[];
-  drawProductFarm(ctx,{drawAsset:(...args)=>drawAssetOn(ctx,...args),assetsReady:assetReady,time,animals,drawAnimal:drawManifestoCow,selectedEntityId:activeSceneEntity?.id??null,hoverEntityId:hoverSceneEntity?.id??null});
+  drawProductFarm(ctx,{time,animals,housing:state?.config.housing??'pasture',drawAnimal:drawManifestoCow,onAnimalPosition:(animal,point)=>visualAnimalPositions.set(animal.id,point),selectedEntityId:activeSceneEntity?.id??null,hoverEntityId:hoverSceneEntity?.id??null});
 }
 
 function drawCow(a       ,x       ,y       ,time       ){
@@ -120,12 +118,12 @@ function drawCow(a       ,x       ,y       ,time       ){
   if(a.action==='drinking')rect(ctx,x+9,y+2,2,2,'#83c4cb');
   if(sel&&!productExperience){ctx.fillStyle='#f5f3dd';ctx.fillRect(x-18,y-18,39,9);ctx.fillStyle='#3d5635';ctx.font='6px monospace';ctx.fillText(a.name,x-15,y-12);}
 }
-function drawManifestoCow(a,x,y,time){
+function drawManifestoCow(a,x,y,time,scale=1){
   if(productExperience){
     const bob=a.action==='resting'?0:Math.sin(time*.003+a.id)*1.1;
-    const width=a.action==='resting'?27:30,height=a.action==='resting'?21:24;
-    if(a.id===selected||a.id===hoverAnimalId){ctx.save();ctx.beginPath();ctx.ellipse(x,y+4,15,4.5,0,0,Math.PI*2);ctx.strokeStyle=a.id===selected?'#e4d394':'rgba(250,244,212,.94)';ctx.lineWidth=a.id===selected?1.5:1.1;ctx.stroke();ctx.restore();}
-    drawAssetOn(ctx,a.id%7===0?'livestock-crossbred-cow-idle-imagegen-v1':'nelore-adult',x,y+bob,width,height,'bottom');
+    const width=(a.action==='resting'?21:23)*scale,height=(a.action==='resting'?16:18)*scale;
+    if(a.id===selected||a.id===hoverAnimalId){ctx.save();ctx.beginPath();ctx.ellipse(x,y+3*scale,12*scale,3.8*scale,0,0,Math.PI*2);ctx.strokeStyle=a.id===selected?'#e4d394':'rgba(250,244,212,.94)';ctx.lineWidth=a.id===selected?1.5:1.1;ctx.stroke();ctx.restore();}
+    drawAssetOn(ctx,'nelore-adult',x,y+bob,width,height,'bottom');
     if(a.action==='drinking'){ctx.fillStyle='#78aaa6';ctx.beginPath();ctx.arc(x+11,y-17+bob,2.3,0,Math.PI*2);ctx.fill();}
     if(a.action==='feeding'){ctx.fillStyle='#d0a955';ctx.fillRect(x-1,y-23+bob,9,2);}
     return;
@@ -167,7 +165,7 @@ function draw(time       ){
     const agent=state.animals.find(item=>item.id===selected);
     const point=agent?positions.get(agent.id):null;
     if(point){
-      const projected=productExperience?projectFarm(point.x,point.y):point;
+      const projected=productExperience?(visualAnimalPositions.get(agent.id)??projectFarm(point.x,point.y,agent.patch,state.config.housing)):point;
       const mx=(projected.x*zoom+panX)/sceneWidth*miniCanvas.width,my=(projected.y*zoom+panY)/sceneHeight*miniCanvas.height;
       mini.beginPath();mini.arc(mx,my,4,0,Math.PI*2);mini.fillStyle='#f6e9ad';mini.fill();
       mini.beginPath();mini.arc(mx,my,2,0,Math.PI*2);mini.fillStyle='#26352b';mini.fill();
@@ -178,10 +176,10 @@ function draw(time       ){
 }
 function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=sceneWidth/2-(sceneWidth/2-panX)*next/zoom;panY=sceneHeight/2-(sceneHeight/2-panY)*next/zoom;zoom=next;limitPan();}
 function limitPan(){panX=Math.max(sceneWidth-sceneWidth*zoom,Math.min(0,panX));panY=Math.max(sceneHeight-sceneHeight*zoom,Math.min(0,panY));}
-function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.left)*sceneWidth/b.width,y:(e.clientY-b.top)*sceneHeight/b.height};}
+function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return displayToScenePoint(e.clientX,e.clientY,b,{width:sceneWidth,height:sceneHeight});}
 canvas.addEventListener('pointerdown',e=>{const p=mapPoint(e);drag={...p,px:panX,py:panY,moved:false};canvas.setPointerCapture(e.pointerId);});
-canvas.addEventListener('pointermove',e=>{if(!drag){if(productExperience){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const animalHit=state?.animals.map(animal=>{const point=positions.get(animal.id)??animal,screen=projectFarm(point.x,point.y);return {animal,distance:Math.hypot(screen.x-x,screen.y-y)};}).sort((a,b)=>a.distance-b.distance)[0];hoverAnimalId=animalHit&&animalHit.distance<18?animalHit.animal.id:null;hoverSceneEntity=hoverAnimalId?null:productFarmHoverEntityAt(x,y);canvas.style.cursor=hoverAnimalId||hoverSceneEntity?'pointer':'grab';}return;}const p=mapPoint(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>3)drag.moved=true;panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;limitPan();});
-canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const nearest=state.animals.map(a=>{const point=positions.get(a.id)??a,q=productExperience?projectFarm(point.x,point.y):point;return {a,d:Math.hypot(q.x-x,q.y-y)};}).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<(productExperience?18:15)){selected=nearest.a.id;activeSceneEntity=null;updateUI();if(productExperience)document.dispatchEvent(new CustomEvent('riose:agent-selected',{detail:{animal:nearest.a}}));}else if(productExperience){const entity=productFarmEntityAt(x,y);if(entity){activeSceneEntity=entity;document.dispatchEvent(new CustomEvent('riose:entity-selected',{detail:{entity,pastures:state.pastures,config:state.config}}));}}}drag=null;});
+canvas.addEventListener('pointermove',e=>{if(!drag){if(productExperience){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const animalHit=state?.animals.map(animal=>{const point=visualAnimalPositions.get(animal.id)??projectFarm((positions.get(animal.id)??animal).x,(positions.get(animal.id)??animal).y,animal.patch,state.config.housing);return {animal,distance:Math.hypot(point.x-x,point.y-y)};}).sort((a,b)=>a.distance-b.distance)[0];hoverAnimalId=animalHit&&animalHit.distance<18?animalHit.animal.id:null;hoverSceneEntity=hoverAnimalId?null:productFarmHoverEntityAt(x,y);canvas.style.cursor=hoverAnimalId||hoverSceneEntity?'pointer':'grab';}return;}const p=mapPoint(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>3)drag.moved=true;panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;limitPan();});
+canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=mapPoint(e),x=(p.x-panX)/zoom,y=(p.y-panY)/zoom;const nearest=state.animals.map(a=>{const model=positions.get(a.id)??a,q=productExperience?(visualAnimalPositions.get(a.id)??projectFarm(model.x,model.y,a.patch,state.config.housing)):model;return {a,d:Math.hypot(q.x-x,q.y-y)};}).sort((a,b)=>a.d-b.d)[0];if(nearest&&nearest.d<(productExperience?18:15)){selected=nearest.a.id;activeSceneEntity=null;updateUI();if(productExperience)document.dispatchEvent(new CustomEvent('riose:agent-selected',{detail:{animal:nearest.a}}));}else if(productExperience){const entity=productFarmEntityAt(x,y);if(entity){activeSceneEntity=entity;document.dispatchEvent(new CustomEvent('riose:entity-selected',{detail:{entity,pastures:state.pastures,config:state.config}}));}}}drag=null;});
 canvas.addEventListener('pointercancel',()=>drag=null);
 canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom+(e.deltaY<0?.15:-.15));},{passive:false});
 canvas.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(zoom+.25);}if(e.key==='-'){e.preventDefault();setZoom(zoom-.25);}if(e.key==='ArrowLeft'){e.preventDefault();panX+=12;}if(e.key==='ArrowRight'){e.preventDefault();panX-=12;}if(e.key==='ArrowUp'){e.preventDefault();panY+=12;}if(e.key==='ArrowDown'){e.preventDefault();panY-=12;}limitPan();});

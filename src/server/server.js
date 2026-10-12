@@ -14,6 +14,7 @@ const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
+  'tools/product-composer.html', 'tools/product-composer.css', 'tools/product-composer.js',
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
   'product.html', 'product.css', 'product-interaction.js', 'simulator.html', 'riose-mark.svg',
   'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png', 'assets/agroville-manifesto-farm.png',
@@ -277,10 +278,11 @@ function sendJson(response, status, value) {
   response.end(JSON.stringify(value));
 }
 
-async function serveStatic(pathname, response) {
+async function serveStatic(pathname, response, env = process.env) {
   let decoded;
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
   const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
+  if (relative.startsWith('tools/') && env.NODE_ENV === 'production') return sendJson(response, 404, {error: 'not_found'});
   const isProjectAsset = relative.startsWith('assets/') && !PUBLIC_FILES.has(relative) && !relative.split('/').some(part => part === '.' || part === '..');
   const isClientFile = relative.startsWith('src/client/') && CLIENT_FILES.has(relative.slice('src/client/'.length));
   const isLegacyClientFile = CLIENT_FILES.has(relative) && PUBLIC_FILES.has(relative);
@@ -338,7 +340,7 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
         return sendJson(response, error.status ?? 400, {error: error.status === 413 ? 'request_too_large' : 'invalid_request'});
       }
     }
-    if (request.method === 'GET' || request.method === 'HEAD') return serveStatic(url.pathname, response);
+    if (request.method === 'GET' || request.method === 'HEAD') return serveStatic(url.pathname, response, env);
     sendJson(response, 405, {error: 'method_not_allowed'});
   });
 }
