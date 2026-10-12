@@ -110,6 +110,9 @@ test('environment editing, THI and lot selection persist across reload and appea
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/12,00 m\/animal/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/2,00 animais\/ha/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/5.000,00 m²\/animal/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/animais ÷ área em hectares/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/área convertida para m² ÷ animais/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/comprimento de cocho ÷ animais do lote/);
   ui.elements.get('environment-temperature').value='26.8';ui.elements.get('environment-temperature').onchange({target:ui.elements.get('environment-temperature')});
   ui.elements.get('environment-humidity').value='57.5';ui.elements.get('environment-humidity').onchange({target:ui.elements.get('environment-humidity')});
   assert.match(ui.elements.get('environment-thi').textContent,/75,0/);
