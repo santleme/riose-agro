@@ -86,6 +86,9 @@ function collectFields(snapshot, sourcesById, errors) {
   for (const key of ['country', 'region']) {
     add(snapshot.farm?.location?.[key], `farm.location.${key}`, `farm.location.${key}`);
   }
+  for (const [key, path] of [['temperature_c', 'farm.environment.temperature_c'], ['relative_humidity_pct', 'farm.environment.relative_humidity_pct']]) {
+    if (snapshot.farm?.environment?.[key] !== undefined) add(snapshot.farm.environment[key], path, path);
+  }
   add(snapshot.population?.species, 'population.species', 'population.species');
   add(snapshot.population?.productionClass, 'population.production_class', 'population.productionClass');
   for (const animal of snapshot.animals) {
@@ -165,6 +168,9 @@ function checkEntityReferences(snapshot, lotsById, animalsById, paddockIds, erro
     if (!Array.isArray(lot.animalIds)) {
       errors.push(`lote ${lot.id}: animalIds precisa ser uma lista.`);
       continue;
+    }
+    if (lot.paddockId !== undefined && !paddockIds.has(lot.paddockId)) {
+      errors.push(`lote ${lot.id}: piquete '${lot.paddockId}' não existe.`);
     }
     const seenInLot = new Set();
     for (const animalId of lot.animalIds) {
@@ -262,6 +268,17 @@ export function validateFarmSnapshot(snapshot) {
   const animalList = Array.isArray(snapshot.animals) ? snapshot.animals : [];
   const lotList = Array.isArray(snapshot.lots) ? snapshot.lots : [];
   const paddockList = Array.isArray(snapshot.paddocks) ? snapshot.paddocks : [];
+  const domainZoneIds = new Set();
+  for (const paddock of paddockList) {
+    if (paddock?.domainZoneId === undefined) continue;
+    if (typeof paddock.domainZoneId !== 'string' || !paddock.domainZoneId.trim()) {
+      errors.push(`piquete ${paddock.id}: domainZoneId precisa ser texto não vazio.`);
+    } else if (domainZoneIds.has(paddock.domainZoneId)) {
+      errors.push(`paddocks: domainZoneId duplicado '${paddock.domainZoneId}'.`);
+    } else {
+      domainZoneIds.add(paddock.domainZoneId);
+    }
+  }
 
   if (typeof snapshot.snapshotId !== 'string' || !snapshot.snapshotId.trim()) errors.push('snapshotId precisa ser não vazio.');
   if (!isRecord(snapshot.farm?.location)) errors.push('farm.location precisa ser um objeto.');
