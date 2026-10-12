@@ -33,12 +33,12 @@ The budget controls semantic variety, not pixel quality. Prefer a smaller number
 
 - The simulation advances every modeled animal and owns authoritative state, time, deterministic rules and events.
 - The view packet contains the fields needed to display and select entities. The current Worker transfers packed position, weight and action buffers; it does not send a full snapshot on every tick.
-- The renderer resolves semantic visual IDs to asset sets, interpolates movement, applies camera transforms and draws only entities in the visible area. The canvas now culls entities outside the camera bounds before interpolation and sprite draw; it still scans the ordered herd to test bounds, and the default full-map view may contain every animal.
+- The renderer resolves semantic visual IDs to asset sets, interpolates movement, applies camera transforms and draws only entities in the visible area. Canvas culls entities outside camera bounds before interpolation and sprite draw; it still scans the herd to test bounds. At map-fit, all 10,000 animals may be visible, so zoom-aware LOD and far-herd clusters reduce individual draw units while retaining every stable simulation ID.
 - Camera position, zoom, frame rate, asset availability and animation timing must not change simulation results or random streams.
 - Input resolves a rendered hit to a stable entity ID and sends a command to the simulation. Rendering never writes model state directly.
 - Asset manifests, atlases, style tokens and approval metadata stay in the Asset System. Neither the simulation engine nor scientific models import browser graphics libraries.
 
-This boundary allows the model to process 10,000 animals while the view renders only those on screen, and allows different renderers or low-detail modes without changing scientific calculations. The existing `app.js` canvas and parallel asset pipeline remain the current presentation; this policy does not migrate or rewrite either one.
+This boundary allows the model to process 10,000 animals while the view draws only visible sprites or aggregated visual representatives, and allows different renderers or low-detail modes without changing scientific calculations. A one-repeat headless map-fit sample at 10,000 animals produced 325 animal draw units and 40 far-herd clusters; it is exploratory and not a production performance guarantee. The existing `app.js` canvas and parallel asset pipeline remain the current presentation; this policy does not migrate or rewrite either one.
 
 ## Acceptance checks for a new set
 

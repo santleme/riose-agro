@@ -11,6 +11,22 @@ export function farmPositionToGrid(x, y, columns = 14, rows = 10) {
   return {column: Math.max(0, Math.min(columns - 1, x / 576 * columns)), row: Math.max(0, Math.min(rows - 1, y / 336 * rows))};
 }
 
+export function simulationPositionToScene(x, y, scene, housing = 'pasture') {
+  const clamp01 = value => Math.max(0, Math.min(1, value));
+  const zones = scene.zones ?? [];
+  const pastureZones = zones.filter(zone => zone.kind === 'pasture').sort((a, b) => a.origin.y - b.origin.y);
+  const serviceZone = zones.find(zone => zone.kind === 'service' || zone.kind === 'farmstead');
+  const cell = (zone, horizontal, vertical) => ({
+    column: zone.origin.x + clamp01(horizontal) * Math.max(0, zone.footprint.columns - 1),
+    row: zone.origin.y + clamp01(vertical) * Math.max(0, zone.footprint.rows - 1),
+  });
+  if (housing === 'barn' && serviceZone) return cell(serviceZone, (x - 392) / 132, (y - 186) / 98);
+  const north = y < 160;
+  const pasture = pastureZones[north ? 0 : 1] ?? pastureZones[0];
+  if (pasture) return cell(pasture, (x - 35) / 300, (y - (north ? 45 : 180)) / 100);
+  return {column: clamp01(x / 576) * Math.max(0, scene.projection.columns - 1), row: clamp01(y / 336) * Math.max(0, scene.projection.rows - 1)};
+}
+
 export function intersectsViewport(bounds, width, height) {
   return bounds.left < width && bounds.right > 0 && bounds.top < height && bounds.bottom > 0;
 }
@@ -137,6 +153,15 @@ export function distributePrefab(prefabTemplate, zone, columns, rows, others = [
 
 export function terrainCells(scene) {
   const {columns, rows} = scene.projection, cells = [];
+  if (Array.isArray(scene.terrainTiles) && scene.terrainTiles.length) {
+    return scene.terrainTiles.map(tile => ({
+      column: tile.position.x,
+      row: tile.position.y,
+      assetId: tile.assetId,
+      zoneId: tile.zoneId ?? null,
+      transitionZoneId: null,
+    }));
+  }
   for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
     const zone = scene.zones.find(item => column >= item.origin.x && row >= item.origin.y && column < item.origin.x + item.footprint.columns && row < item.origin.y + item.footprint.rows);
     let assetId = zone?.groundAssetId ?? 'grass-light';

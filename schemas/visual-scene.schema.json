@@ -12,6 +12,7 @@
     "domainModule": {"$ref": "#/$defs/scienceModuleRef"},
     "simulation": {"$ref": "#/$defs/scenarioRun"},
     "snapshot": {"$ref": "#/$defs/snapshotRef"},
+    "provenance": {"$ref": "#/$defs/provenance"},
     "projection": {
       "type": "object", "additionalProperties": false,
       "required": ["type", "cellWidth", "cellHeight", "columns", "rows"],
@@ -27,6 +28,8 @@
     "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}, "uniqueItems": true},
     "zones": {"type": "array", "items": {"$ref": "#/$defs/zone"}},
     "prefabs": {"type": "array", "items": {"$ref": "#/$defs/prefab"}},
+    "terrainTiles": {"type": "array", "items": {"$ref": "#/$defs/terrainTile"}},
+    "visualGroups": {"type": "array", "items": {"$ref": "#/$defs/visualGroup"}},
     "layerOrder": {"type": "array", "items": {"enum": ["terrain", "infrastructure", "livestock", "overlays"]}, "uniqueItems": true},
     "events": {"type": "array", "items": {"$ref": "#/$defs/eventEnvelope"}}
   },
@@ -58,7 +61,8 @@
         "assetId": {"$ref": "#/$defs/id"},
         "manifestUri": {"type": "string", "minLength": 1},
         "manifestVersion": {"type": "string", "minLength": 1},
-        "variantId": {"$ref": "#/$defs/id"}
+        "variantId": {"$ref": "#/$defs/id"},
+        "reviewStatus": {"enum": ["APPROVED", "REVIEW", "UNRESOLVED"]}
       }
     },
     "entity": {
@@ -70,7 +74,11 @@
         "position": {"$ref": "#/$defs/position"},
         "asset": {"$ref": "#/$defs/assetRef"},
         "state": {"$ref": "#/$defs/visualState"},
-        "domainEntityId": {"$ref": "#/$defs/id"}
+        "domainEntityId": {"$ref": "#/$defs/id"},
+        "groupId": {"$ref": "#/$defs/id"},
+        "visualId": {"$ref": "#/$defs/id"},
+        "representationMode": {"enum": ["sampled-miniature", "operational"]},
+        "visualScale": {"type": "number", "exclusiveMinimum": 0, "maximum": 4}
       }
     },
     "zone": {
@@ -78,12 +86,14 @@
       "required": ["zoneId", "kind", "origin", "footprint", "groundAssetId"],
       "properties": {
         "zoneId": {"$ref": "#/$defs/id"},
-        "kind": {"enum": ["pasture", "handling", "water", "farmstead", "crop"]},
+        "kind": {"enum": ["pasture", "handling", "water", "farmstead", "crop", "dairy", "service", "tech", "support"]},
         "origin": {"$ref": "#/$defs/position"},
         "footprint": {"$ref": "#/$defs/footprint"},
         "groundAssetId": {"$ref": "#/$defs/id"},
         "transitionAssetIds": {"type": "object", "additionalProperties": {"$ref": "#/$defs/id"}},
-        "domainZoneId": {"$ref": "#/$defs/id"}
+        "domainZoneId": {"$ref": "#/$defs/id"},
+        "name": {"type": "string", "minLength": 1},
+        "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
       }
     },
     "prefab": {
@@ -97,17 +107,42 @@
         "layer": {"enum": ["infrastructure", "livestock", "overlays"]},
         "state": {"$ref": "#/$defs/visualState"},
         "blocking": {"type": "boolean", "default": true},
+        "compositionId": {"$ref": "#/$defs/id"},
+        "sourcePrefabId": {"$ref": "#/$defs/id"},
         "rotationSteps": {"type": "integer", "minimum": 0, "maximum": 3, "default": 0},
         "rotationDegrees": {"type": "number", "minimum": -360, "maximum": 360, "default": 0},
         "flipX": {"type": "boolean", "default": false},
         "placementRules": {
           "type": "object", "additionalProperties": false,
           "properties": {
-            "allowedZoneKinds": {"type": "array", "items": {"enum": ["pasture", "handling", "water", "farmstead", "crop"]}, "uniqueItems": true},
+            "allowedZoneKinds": {"type": "array", "items": {"enum": ["pasture", "handling", "water", "farmstead", "crop", "dairy", "service", "tech", "support"]}, "uniqueItems": true},
             "adjacentTo": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true},
             "alignment": {"type": "object", "additionalProperties": false, "required": ["axis", "value"], "properties": {"axis": {"enum": ["row", "column"]}, "value": {"type": "number"}}}
           }
         }
+      }
+    },
+    "terrainTile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tileId", "position", "assetId"],
+      "properties": {
+        "tileId": {"$ref": "#/$defs/id"},
+        "position": {"$ref": "#/$defs/position"},
+        "assetId": {"$ref": "#/$defs/id"},
+        "zoneId": {"$ref": "#/$defs/id"}
+      }
+    },
+    "visualGroup": {
+      "type": "object", "additionalProperties": false,
+      "required": ["groupId", "population", "zoneId", "mode", "seed", "visualEntityIds"],
+      "properties": {
+        "groupId": {"$ref": "#/$defs/id"},
+        "population": {"type": "integer", "minimum": 1},
+        "zoneId": {"$ref": "#/$defs/id"},
+        "operationalState": {"$ref": "#/$defs/id"},
+        "mode": {"enum": ["sampled-miniature", "operational"]},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "visualEntityIds": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}
       }
     },
     "eventEnvelope": {
@@ -126,6 +161,15 @@
         "snapshotId": {"$ref": "#/$defs/id"}, "schemaVersion": {"type": "string", "minLength": 1},
         "digest": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
         "uri": {"type": "string"}
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sourceId", "sourceCommit", "sourceSceneId"],
+      "properties": {
+        "sourceId": {"$ref": "#/$defs/id"},
+        "sourceCommit": {"type": "string", "pattern": "^[a-fA-F0-9]{7,40}$"},
+        "sourceSceneId": {"$ref": "#/$defs/id"}
       }
     },
     "scienceModuleRef": {

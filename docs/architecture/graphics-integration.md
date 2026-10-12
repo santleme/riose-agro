@@ -26,9 +26,11 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 ## Composer behavior in the PoC
 
 - Isometric projection is 2:1 and exactly invertible for grid snapping.
-- Terrain fills are resolved from zone footprints; edge cells use declared transition assets.
-- Zone edges add a one-cell terrain transition fringe, and seeded prefab distribution places shade trees with irregular spacing while checking blocking footprints.
-- Fence runs use the source atlas orientation on one iso axis and horizontal mirroring on the other; segment spacing is bounded so each pasture reads as a connected enclosure with an explicit gate.
+- Beef and dairy layouts are reproducible adapters of the committed main Scenario Composer exports. The pinned source snapshots live under `graphics-poc/source/main-composer-v1/`; `scripts/build-composer-scenes.mjs` writes both scenes using `main-composer-adapter.js`.
+- Both layouts preserve their 36×24 grid, source zone geometry, 864 individually assigned terrain tiles and expanded prefab placements (219 beef, 227 dairy). Dairy keeps 14 editable visual representatives linked to groups totaling 200 animals; beef keeps its Worker population as the sole operational animal source.
+- Source terrain assignment is retained directly rather than reconstructed from zones. This preserves the Composer's detailed terrain distribution and prevents rebuilding transitions from erasing authored cells.
+- Worker coordinates are adapted into the Composer pasture and service zones for display. The renderer does not write these visual coordinates back to the simulation.
+- The import preserves prefab IDs, composition provenance, rotation, footprints, blocking policy, zone types and semantic asset IDs. A schema test checks the imported outputs against the pinned source snapshots.
 - Selected prefabs can rotate by 90° in the inspector; bounds, blocking collisions, zone containment and adjacency use the rotated grid footprint.
 - Prefab placement snaps to cells and checks bounds, blocking collisions, allowed zone kinds, adjacency and row/column alignment when those rules are declared.
 - The `Núcleo de ordenha` composition places an aligned dairy barn, parlor, tank and waiting pen as one validated group.
@@ -37,17 +39,17 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 - Renderer, camera, zoom and asset visibility never mutate the Worker snapshot.
 - Canvas and Pixi share the same scene, view data, camera, culling bounds, LOD policy and layer visibility.
 
-The source assets are pinned to committed main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; each copied file's SHA-256 matches that revision. The only individually approved cattle sprite is `livestock.nelore.adult.idle.imagegen.v1`, with its approval provenance retained in `graphics-poc/asset-sources.json`. Nine dairy sprites are mapped to semantic IDs in the committed module manifest; all are `REVIEW`, with technical checks passed and art review pending. Farm and handling atlas entries still lack a reliable per-entry approval status. Previewing these candidates does not promote them. The dairy catalog remains `in-progress`, and its scene is a visual layout with no dairy simulation results.
+The source assets are pinned to committed main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; each copied atlas's SHA-256 matches that revision. The renderer manifest joins source semantic records by ID and keeps each review status. In this snapshot, 28 entries are `REVIEW` and seven runtime terrain entries are `UNRESOLVED`; none is promoted by previewing. The separately used Nelore sprite keeps its existing approval provenance in `graphics-poc/asset-sources.json`. The dairy catalog remains `in-progress`, and its scene is a visual layout with no dairy simulation results.
 
 ## Measurement method
 
 Run `npm run bench:graphics-poc` with the local app server available at `http://127.0.0.1:8000/`. It builds the bundle, opens local Chromium with WebGL enabled, starts a fresh Worker and seed per page, and measures Canvas 2D and PixiJS at 100, 1,000 and 10,000 simulated animals. Each renderer uses the same zoom, scene, visible area, culling rule and atlas frames. The report records frame interval mean FPS/p95, scene update/culling/sort time, render submission time, simulated and bounds-visible animals, LOD draw units and clusters, post-GC JS heap, one-hour Worker round-trip, asset load time and Pixi initialization time. Browser GPU memory is not exposed by the harness and is not inferred from JS heap.
 
-The current two-repetition run is exploratory, not a performance sign-off. Repeat with 30+ samples and representative released assets on target devices before a production renderer decision. PixiJS batching and GPU rendering may help fill-bound scenes, while per-object culling, scene-graph mutation and depth sorting can increase CPU work.
+The current results are exploratory, not a performance sign-off. With the imported 36×24 scene at map-fit zoom 0.28 and 10,000 simulated animals, a one-repeat headless run accounted for all 10,000 as visible, reduced them to 325 animal draw units (40 far clusters), and measured 121.3 FPS Canvas / 60.0 FPS Pixi, with 2.6 MB / 7.1 MB post-GC JS heap and 54.0 ms / 57.7 ms Worker round-trip. This differs from a close-up camera workload: on the full-map view, all simulated animals are inside the viewport, but LOD limits individual draws. Repeat with 30+ samples and representative released assets on target devices before a production renderer decision. PixiJS batching and GPU rendering may help fill-bound scenes, while per-object culling, scene-graph mutation and depth sorting can increase CPU work.
 
 ## Integration sequence
 
-1. Reuse the committed asset pipeline from main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; verify hashes and source manifest status. Preserve the nine dairy art candidates as `REVIEW` until the visual review gate changes.
+1. Reuse the committed asset pipeline and Composer scenes from main revision `2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7`; verify atlas hashes and source manifest status. Preserve review candidates as `REVIEW` until the visual review gate changes.
 2. Choose one released visual manifest revision. Preserve semantic IDs and rights/review metadata; generate a renderer-specific graphics manifest at build time.
 3. Integrate `visual-scene` as layout data alongside (not inside) existing farm snapshot and comparison manifest JSON.
 4. Add a shared view adapter from Worker numeric arrays to stable entity IDs, domain visual state and world coordinates.
@@ -58,9 +60,8 @@ The current two-repetition run is exploratory, not a performance sign-off. Repea
 
 ## Known gaps
 
-- The V2 Graphics Lab is not integrated into the main product; main has a separate compact diorama Composer with a different scene contract.
-- Main now also has a separate compact diorama Composer at `public/assets/scenario-editor/`; its scene JSON and prefab contracts differ from this PoC's `visual-scene` schema. Consolidate behavior by adapting proven features, not by maintaining two unrelated product editors.
+- The V2 Graphics Lab remains a separate PoC rather than the main product editor. Its adapter now provides a reproducible bridge to main's compact diorama Composer at `public/assets/scenario-editor/`; the two runtime contracts still differ.
 - The current Canvas renderer uses a simple 2D world and the current engine positions are not native isometric world coordinates; the PoC adapts them for display only.
 - The farm atlas asset statuses are not consistently represented in its runtime manifest. Production integration needs a manifest-status join/gate, not an assumption from atlas presence.
 - `livestock-dairy` remains an unfinished visual/domain module and current FarmEngine is beef-oriented and demonstrative.
-- There is one approved static Nelore image and no approved animation set. Its subtle bob and medium/far LOD changes are presentation effects, not modeled animal behavior.
+- There is one approved static Nelore image and no approved animation set. Its subtle bob and zoom/distance LOD changes are presentation effects, not modeled animal behavior.

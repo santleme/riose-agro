@@ -4,11 +4,13 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
+import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema.json', import.meta.url), 'utf8'));
+const renderManifest = JSON.parse(await readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: true, strictRequired: false}).compile(schema);
 
 test('renderer-independent scene schema supports beef and in-progress dairy scenarios', () => {
@@ -19,12 +21,23 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
     for (const prefab of candidate.prefabs) assert.ok(declaredAssets.has(prefab.assetId), `${candidate.sceneId} missing ${prefab.assetId}`);
     for (const entity of candidate.entities) if (entity.asset) assert.ok(declaredAssets.has(entity.asset.assetId), `${candidate.sceneId} missing ${entity.asset.assetId}`);
   }
+  for (const candidate of [scene, dairyScene]) {
+    assert.equal(candidate.projection.columns, 36);
+    assert.equal(candidate.projection.rows, 24);
+    assert.equal(candidate.terrainTiles.length, 36 * 24);
+    assert.equal(candidate.provenance.sourceId, 'scenario-composer-v1');
+    assert.match(candidate.provenance.sourceCommit, /^[a-f0-9]{40}$/);
+    assert.equal(candidate.assets.every(asset => ['APPROVED', 'REVIEW', 'UNRESOLVED'].includes(asset.reviewStatus)), true);
+  }
+  assert.equal(scene.prefabs.length, 219);
+  assert.equal(scene.entities.filter(entity => entity.kind === 'animal').length, 0, 'the Worker provides operational beef animals without visual duplicates');
+  assert.equal(dairyScene.prefabs.length, 227);
   assert.equal(dairyScene.simulation.productionSystem, 'dairy');
   assert.equal(dairyScene.domainModule.status, 'in-progress');
-  assert.equal(dairyScene.entities.filter(entity => entity.kind === 'animal').length, 12);
-  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-milking-parlor'));
-  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-milk-chilling-tank'));
-  assert.ok(dairyScene.prefabs.some(prefab => prefab.assetId === 'dairy-waiting-pen'));
+  assert.equal(dairyScene.entities.filter(entity => entity.kind === 'animal').length, 14);
+  assert.equal(dairyScene.visualGroups.reduce((sum, group) => sum + group.population, 0), 200);
+  assert.ok(dairyScene.entities.some(entity => entity.representationMode === 'sampled-miniature'));
+  assert.ok(dairyScene.entities.some(entity => entity.representationMode === 'operational'));
   let placed = [];
   for (const prefab of dairyScene.prefabs) {
     const result = placementValidation(prefab, prefab.position, dairyScene.projection.columns, dairyScene.projection.rows, placed, dairyScene.zones);
@@ -42,26 +55,12 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
   assert.equal(validate(rendererCoupled), false, 'renderer implementation details must stay out of scenario JSON');
 });
 
-test('both farm layouts fence every pasture and keep blocking structures collision-free', () => {
+test('Composer farm layouts preserve zones and keep blocking structures collision-free', () => {
   for (const candidate of [scene, dairyScene]) {
     const pastureZones = candidate.zones.filter(zone => zone.kind === 'pasture');
     assert.ok(pastureZones.length >= 2);
     for (const zone of pastureZones) {
-      const local = candidate.prefabs.filter(prefab => prefab.position.x >= zone.origin.x - 0.01
-        && prefab.position.x <= zone.origin.x + zone.footprint.columns
-        && prefab.position.y >= zone.origin.y - 0.01
-        && prefab.position.y <= zone.origin.y + zone.footprint.rows);
-      assert.ok(local.some(prefab => prefab.assetId === 'fence-straight'), `${zone.zoneId} needs fence runs`);
-      assert.ok(local.some(prefab => prefab.assetId === 'fence-gate'), `${zone.zoneId} needs an access gate`);
-      for (const side of ['north', 'south', 'west', 'east']) {
-        const run = candidate.prefabs.filter(prefab => prefab.prefabId.startsWith(zone.zoneId + '-' + side + '-'))
-          .sort((a, b) => (side === 'north' || side === 'south' ? a.position.x - b.position.x : a.position.y - b.position.y));
-        assert.ok(run.length >= 2, `${zone.zoneId} ${side} fence needs connected segments`);
-        assert.ok(run.every((prefab, index) => index === 0
-          || (side === 'north' || side === 'south' ? prefab.position.x - run[index - 1].position.x : prefab.position.y - run[index - 1].position.y) <= 1.75), `${zone.zoneId} ${side} fence has a visual gap`);
-        assert.ok(run.every(prefab => prefab.rotationDegrees === 0), `${zone.zoneId} fence pieces follow the isometric source art orientation`);
-        assert.ok(run.every(prefab => Boolean(prefab.flipX) === (side === 'west' || side === 'east')), `${zone.zoneId} ${side} fence uses the matching isometric edge direction`);
-      }
+      assert.ok(candidate.terrainTiles.some(tile => tile.zoneId === zone.zoneId), `${zone.zoneId} retains source terrain assignment`);
     }
     const blocking = candidate.prefabs.filter(prefab => prefab.blocking !== false);
     for (let first = 0; first < blocking.length; first++) for (let second = first + 1; second < blocking.length; second++) {
@@ -83,6 +82,16 @@ test('isometric projection and inverse preserve editable grid positions', () => 
     assert.ok(Math.abs(restored.row - cell.y) < 1e-9);
   }
   assert.deepEqual(farmPositionToGrid(288, 168, 14, 10), {column: 7, row: 5});
+});
+
+test('simulation coordinates map into Composer pastures and the service zone without changing the engine model', () => {
+  const north = scene.zones.filter(zone => zone.kind === 'pasture').sort((a, b) => a.origin.y - b.origin.y)[0];
+  const south = scene.zones.filter(zone => zone.kind === 'pasture').sort((a, b) => a.origin.y - b.origin.y)[1];
+  const service = scene.zones.find(zone => zone.kind === 'service');
+  assert.deepEqual(simulationPositionToScene(35, 45, scene), {column: north.origin.x, row: north.origin.y});
+  assert.deepEqual(simulationPositionToScene(335, 180, scene), {column: south.origin.x + south.footprint.columns - 1, row: south.origin.y});
+  assert.deepEqual(simulationPositionToScene(392, 186, scene, 'barn'), {column: service.origin.x, row: service.origin.y});
+  assert.deepEqual(simulationPositionToScene(10000, 10000, scene), {column: north.origin.x + north.footprint.columns - 1, row: south.origin.y + south.footprint.rows - 1});
 });
 
 test('sprite culling keeps partial edge intersections and rejects off-screen bounds', () => {
@@ -114,12 +123,16 @@ test('visual update cadence slows smoothly with distance and caps at the far LOD
   assert.ok(samples[3] > samples[2] && samples[3] < samples.at(-1));
   assert.equal(samples.at(-1), 120);
   assert.equal(visualUpdateInterval(Number.NaN), 120);
+  assert.equal(visualLod(40, 28, 61.6), 'medium', 'map-fit zoom tightens the near-detail threshold');
+  assert.equal(visualLod(80, 28, 61.6), 'far', 'map-fit zoom groups animals outside the readable detail range');
+  assert.equal(visualUpdateInterval(80, 28, 61.6), 120, 'far visual motion uses the capped update cadence');
 });
 
 test('prefab snapping rejects out-of-bounds and overlapping blocking footprints', () => {
-  const home = scene.prefabs[0];
-  assert.equal(placementFits(home, {x: 0, y: 3}, 14, 10, scene.prefabs), true);
-  assert.equal(placementFits(home, {x: 1, y: 6}, 14, 10, scene.prefabs), false, 'pond overlaps the home');
+  const home = {prefabId: 'home', assetId: 'farmhouse', position: {x: 0, y: 0}, footprint: {columns: 2, rows: 2}, blocking: true};
+  const pond = {prefabId: 'pond', assetId: 'pond', position: {x: 4, y: 4}, footprint: {columns: 3, rows: 2}, blocking: true};
+  assert.equal(placementFits(home, {x: 0, y: 3}, 14, 10, [pond]), true);
+  assert.equal(placementFits(home, {x: 4, y: 4}, 14, 10, [pond]), false, 'placement overlaps existing footprint');
   assert.equal(placementFits(home, {x: 13, y: 9}, 14, 10, []), false);
 });
 
@@ -169,19 +182,23 @@ test('prefab distribution is deterministic, stays inside the pasture, and avoids
 });
 
 test('zone ground selection exposes terrain transition cells for auto-tiling', () => {
-  const cells = terrainCells(scene), north = cells.filter(cell => cell.zoneId === 'north-paddock');
+  const cells = terrainCells(scene);
   assert.equal(cells.length, scene.projection.columns * scene.projection.rows);
-  assert.ok(north.some(cell => cell.assetId === 'grass-mid'), 'edge mask resolves the declared transition asset');
-  assert.ok(north.some(cell => cell.assetId === 'grass-light'), 'interior keeps the zone ground asset');
-  assert.ok(cells.some(cell => cell.zoneId === null && cell.transitionZoneId === 'north-paddock' && cell.assetId === 'grass-mid'), 'terrain transition extends one cell beyond the zone boundary');
-  assert.ok(cells.some(cell => cell.zoneId === 'handling-yard' && cell.assetId === 'soil-dry'));
+  assert.deepEqual(cells.map(cell => cell.assetId), scene.terrainTiles.map(tile => tile.assetId), 'imported tile atlas IDs stay in source order');
+  assert.ok(cells.some(cell => cell.zoneId && cell.assetId !== 'grass-light'), 'Composer terrain preserves distinct ground surfaces');
+});
+
+test('checked-in beef and dairy scenes are reproducible adaptations of pinned Composer exports', async () => {
+  const [beefSource, dairySource] = await Promise.all(['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)));
+  assert.deepEqual(adaptMainComposerScene(beefSource, renderManifest), scene);
+  assert.deepEqual(adaptMainComposerScene(dairySource, renderManifest), dairyScene);
 });
 
 test('the Graphics Lab serves both editable schema-valid scenes and dairy source art with provenance', async t => {
   const server = createServer(); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
-  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/schemas/visual-scene.schema.json']) {
+  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/graphics-poc/assets/main-composer-render-manifest.json', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
   assert.match(await (await fetch(origin + '/graphics-poc/index.html')).text(), /id="rotate-selection"/, 'the composer exposes a selected-prefab rotation action');
@@ -192,6 +209,12 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
   for (const file of ['dairy/dairy-holstein-cow.png', 'dairy/dairy-girolando-cow.png', 'dairy/dairy-heifer.png', 'dairy/dairy-heifer-calf.png', 'dairy/dairy-barn.png', 'dairy/dairy-milking-parlor.png', 'dairy/dairy-milk-chilling-tank.png', 'dairy/dairy-waiting-pen.png', 'dairy/dairy-activity-collar.png', 'handling-review-atlas-v1.png']) {
     const response = await fetch(`${origin}/graphics-poc/assets/${file}`);
     assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
+  }
+  for (const [atlasKey, url] of Object.entries(renderManifest.atlases)) {
+    const file = url.replace('/graphics-poc/assets/', ''), response = await fetch(`${origin}${url}`);
+    assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
+    const digest = createHash('sha256').update(Buffer.from(await response.arrayBuffer())).digest('hex');
+    assert.equal(digest, renderManifest.atlasSha256[atlasKey], `${atlasKey} atlas matches its pinned SHA-256`);
   }
   const provenance = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
   assert.equal(provenance.sourceRevision.commit, '2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7');

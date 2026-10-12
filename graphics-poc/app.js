@@ -1,5 +1,5 @@
-import {Application, Assets, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distributePrefab, farmPositionToGrid, intersectsViewport, placementValidation, projectIso, rotatePrefab, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
+import {clusterFarAnimals, composePrefabs, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, terrainCells, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -37,7 +37,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true}, selection: null, tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -81,6 +81,14 @@ function sceneCenter() {
   return projectIso(columns / 2, rows / 2, cellWidth, cellHeight);
 }
 
+function fitSceneZoom() {
+  const {columns, rows, cellWidth, cellHeight} = state.scene.projection;
+  const width = (columns + rows) * cellWidth / 2;
+  const height = (columns + rows) * cellHeight / 2;
+  const stage = $('stage');
+  return Math.max(.15, Math.min(4, Math.min(stage.clientWidth * .88 / width, stage.clientHeight * .82 / height)));
+}
+
 function isoPosition(column, row) {
   const p = projectIso(column, row, state.scene.projection.cellWidth, state.scene.projection.cellHeight), center = sceneCenter();
   return {x: p.x - center.x, y: p.y - center.y};
@@ -91,7 +99,7 @@ function entityEntries() {
   if (state.view && state.selectedDomain === 'beef') {
     const count = state.view.animalActions.length;
     for (let index = 0; index < count; index++) {
-      const offset = index * 4, grid = farmPositionToGrid(state.view.animalValues[offset], state.view.animalValues[offset + 1], state.scene.projection.columns, state.scene.projection.rows);
+      const offset = index * 4, grid = simulationPositionToScene(state.view.animalValues[offset], state.view.animalValues[offset + 1], state.scene, state.view.config.housing);
       const position = isoPosition(grid.column + visualJitter(index, .28), grid.row + visualJitter(index + 901, .22)), id = state.view.animalIds[index];
       entries.push({id: `animal-${id}`, kind: 'livestock', assetId: 'nelore-adult', x: position.x, y: position.y, depth: position.y, animationOffset: state.motionById.get(`animal-${id}`)?.offset ?? 0, animalId: id, actionCode: state.view.animalActions[index], weight: state.view.animalValues[offset + 2]});
     }
@@ -123,7 +131,7 @@ function prefabFlipX(entry) { return Boolean(entry.prefab?.flipX); }
 
 function screenBounds(entry) {
   const meta = frameBox(entry.assetId), p = screenPoint(entry.x, entry.y);
-  const width = meta.w * meta.scale * state.camera.zoom, height = meta.h * meta.scale * state.camera.zoom;
+  const visualScale = entry.visualScale ?? 1, width = meta.w * meta.scale * visualScale * state.camera.zoom, height = meta.h * meta.scale * visualScale * state.camera.zoom;
   const rotation = prefabRotation(entry), flip = prefabFlipX(entry) ? -1 : 1;
   const motionEnvelope = entry.animalId ? .55 * state.camera.zoom : 0;
   if (rotation === 0 && flip === 1) {
@@ -159,7 +167,8 @@ function refreshScene() {
       const point = screenPoint(entry.x, entry.y);
       if (entry.animalId) {
         const distance = Math.hypot(point.x - state.camera.x, point.y - state.camera.y);
-        entry.screenX = point.x; entry.screenY = point.y; entry.lod = visualLod(distance);
+        const zoomScale = Math.min(1, state.camera.zoom);
+        entry.screenX = point.x; entry.screenY = point.y; entry.lod = visualLod(distance, 100 * zoomScale, 220 * zoomScale);
         entry.assetId = entry.lod === 'near' ? 'nelore-adult' : 'nelore-adult-low';
       } else entry.lod = 'near';
       visibleByLod[entry.lod]++;
@@ -180,11 +189,11 @@ function refreshScene() {
   if (state.renderer === 'pixi' && state.pixi) syncPixiScene();
 }
 
-function frameBox(assetId) { return frames[assetId] ?? frames['grass-light']; }
+function frameBox(assetId) { return state.assetFrames[assetId] ?? frames[assetId] ?? frames['grass-light']; }
 
 function drawCanvasEntry(ctx, entry, time) {
   const meta = frameBox(entry.assetId), atlas = meta.imageKey ? state.assetImages[meta.imageKey] : meta.atlasKey ? state.assetImages[meta.atlasKey] : meta.kind === 'livestock' ? (meta.lowResolution ? state.assetImages.neloreLow : state.assetImages.nelore) : state.assetImages.farm;
-  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), scale = meta.scale * state.camera.zoom, width = meta.w * scale, height = meta.h * scale;
+  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), scale = meta.scale * (entry.visualScale ?? 1) * state.camera.zoom, width = meta.w * scale, height = meta.h * scale;
   const x = -width * meta.anchor.x, y = -height * meta.anchor.y, rotation = prefabRotation(entry);
   const screenY = p.y + y;
   if (rotation !== 0 || prefabFlipX(entry)) {
@@ -209,7 +218,7 @@ function updateVisualMotion(time) {
   const started = performance.now(); let updates = 0;
   for (const entry of state.visible) {
     if (entry.kind !== 'livestock' || !entry.animalId) continue;
-    const interval = visualUpdateInterval(Math.hypot(entry.screenX - state.camera.x, entry.screenY - state.camera.y)), motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
+    const zoomScale = Math.min(1, state.camera.zoom), interval = visualUpdateInterval(Math.hypot(entry.screenX - state.camera.x, entry.screenY - state.camera.y), 100 * zoomScale, 220 * zoomScale), motion = state.motionById.get(entry.id) ?? {updatedAt: -Infinity, offset: 0};
     if (time - motion.updatedAt >= interval) { motion.updatedAt = time; motion.offset = Math.sin(time * .002 + entry.animalId * .71) * .55; state.motionById.set(entry.id, motion); updates++; }
     entry.animationOffset = motion.offset;
     if (state.renderer === 'pixi') { const sprite = state.pixiPrefabs.get(entry.id); if (sprite) sprite.y = entry.y + motion.offset; }
@@ -258,9 +267,14 @@ async function createPixi() {
   app.canvas.id = 'pixi-canvas'; app.canvas.setAttribute('aria-label', 'Mapa isométrico da fazenda em PixiJS'); $('stage').append(app.canvas); app.stop();
   state.pixi = app;
   const farmTexture = await Assets.load(farmAtlasUrl), cowTexture = await Assets.load(neloreUrl), handlingTexture = await Assets.load('/graphics-poc/assets/handling-review-atlas-v1.png');
+  const atlasTextures = Object.fromEntries(await Promise.all(Object.entries(state.assetAtlasUrls).map(async ([key, url]) => [key, await Assets.load(url)])));
   const makeFrame = meta => new Texture({source: (meta.atlasKey === 'handling' ? handlingTexture : meta.kind === 'livestock' ? cowTexture : farmTexture).source, frame: new Rectangle(meta.x, meta.y, meta.w, meta.h)});
-  for (const [id, meta] of Object.entries(frames)) if (!meta.lowResolution) state.pixiTextures.set(id, meta.imageKey ? Texture.from(state.assetImages[meta.imageKey]) : makeFrame(meta));
-  state.pixiTextures.set('nelore-adult-low', Texture.from(state.assetImages.neloreLow));
+  for (const [id, meta] of Object.entries(frames)) if (!meta.lowResolution && !state.assetFrames[id]) state.pixiTextures.set(id, meta.imageKey ? Texture.from(state.assetImages[meta.imageKey]) : makeFrame(meta));
+  state.pixiTextures.set('nelore-adult-low', new Texture({source: new CanvasSource({resource: state.assetImages.neloreLow})}));
+  for (const [id, meta] of Object.entries(state.assetFrames)) {
+    const atlas = atlasTextures[meta.atlasKey];
+    if (atlas) state.pixiTextures.set(id, new Texture({source: atlas.source, frame: new Rectangle(meta.x, meta.y, meta.w, meta.h)}));
+  }
   const terrainLayer = new Container(), depthLayer = new Container(), overlayLayer = new Container();
   terrainLayer.label = 'terrain'; depthLayer.label = 'depth-sorted-world'; overlayLayer.label = 'interaction-overlays'; depthLayer.sortableChildren = true;
   app.stage.addChild(terrainLayer, depthLayer, overlayLayer);
@@ -323,7 +337,7 @@ let PixiGraphics;
 function awaitGraphics() { return PixiGraphics; }
 
 function setSprite(sprite, entry, terrain) {
-  const meta = frameBox(entry.assetId); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(meta.scale * (prefabFlipX(entry) ? -1 : 1), meta.scale);
+  const meta = frameBox(entry.assetId), scale = meta.scale * (entry.visualScale ?? 1); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(scale * (prefabFlipX(entry) ? -1 : 1), scale);
   sprite.position.set(entry.x, entry.y + (entry.animationOffset ?? 0)); sprite.rotation = prefabRotation(entry); sprite.zIndex = entry.depth; sprite.visible = true; sprite.renderable = true;
   if (!terrain) sprite.eventMode = 'none';
 }
@@ -487,7 +501,9 @@ function persistScene() { try { localStorage.setItem(`riose-graphics-scene-v1:${
 async function selectScene(domain) {
   const base = state.scenes[domain];
   const stored = localStorage.getItem(`riose-graphics-scene-v1:${base.sceneId}`) ?? (domain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
-  state.scene = stored ? JSON.parse(stored) : structuredClone(base);
+  const savedScene = stored ? JSON.parse(stored) : null;
+  const sameGrid = savedScene?.projection?.columns === base.projection.columns && savedScene?.projection?.rows === base.projection.rows;
+  state.scene = savedScene?.schemaVersion === base.schemaVersion && sameGrid ? savedScene : structuredClone(base);
   state.selectedDomain = domain; state.selection = null; state.tool = null; state.view = null;
   $('domain-module').value = domain;
   $('scene-picker').value = domain;
@@ -590,21 +606,27 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
 }
 
 async function initialize() {
-  const dairyFiles = ['dairy-holstein-cow', 'dairy-girolando-cow', 'dairy-heifer', 'dairy-heifer-calf', 'dairy-barn', 'dairy-milking-parlor', 'dairy-milk-chilling-tank', 'dairy-waiting-pen', 'dairy-activity-collar'];
-  const [scene, dairyScene, farmImage, neloreImage, handlingImage, ...dairyImages] = await Promise.all([
+  const [scene, dairyScene, renderManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
+    fetch('/graphics-poc/assets/main-composer-render-manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de renderização do Composer ausente'); return response.json(); }),
     image(farmAtlasUrl), image(neloreUrl), image('/graphics-poc/assets/handling-review-atlas-v1.png'),
-    ...dairyFiles.map(name => image(`/graphics-poc/assets/dairy/${name}.png`))
+    image('/graphics-poc/assets/dairy/dairy-heifer.png'), image('/graphics-poc/assets/dairy/dairy-activity-collar.png')
   ]);
+  const dynamicAtlases = await Promise.all(Object.entries(renderManifest.atlases).map(async ([key, url]) => [key, await image(url)]));
   state.scenes = {beef: scene, dairy: dairyScene};
   const initialDomain = new URLSearchParams(location.search).get('scene') === 'dairy' ? 'dairy' : 'beef';
   const baseScene = state.scenes[initialDomain], stored = localStorage.getItem(`riose-graphics-scene-v1:${baseScene.sceneId}`) ?? (initialDomain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
-  state.scene = stored ? JSON.parse(stored) : structuredClone(baseScene);
+  const savedScene = stored ? JSON.parse(stored) : null;
+  const sameGrid = savedScene?.projection?.columns === baseScene.projection.columns && savedScene?.projection?.rows === baseScene.projection.rows;
+  state.scene = savedScene?.schemaVersion === baseScene.schemaVersion && sameGrid ? savedScene : structuredClone(baseScene);
   originalBeefModule = structuredClone(scene.domainModule); originalBeefScenario = scene.simulation.scenarioId;
   state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; $('domain-module').value = state.selectedDomain; $('scene-picker').value = state.selectedDomain;
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', item.dataset.system !== state.selectedDomain);
-  state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, ...Object.fromEntries(dairyFiles.map((name, index) => [name, dairyImages[index]]))}; state.imageLoadMs = performance.now() - startedAt;
+  state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, 'dairy-heifer': dairyHeiferImage, 'dairy-activity-collar': dairyCollarImage, ...Object.fromEntries(dynamicAtlases)};
+  state.assetAtlasUrls = renderManifest.atlases;
+  state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'animal' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus}]));
+  state.imageLoadMs = performance.now() - startedAt;
   state.terrainCells = terrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
   if (state.selectedDomain === 'beef') {
@@ -612,7 +634,7 @@ async function initialize() {
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
   }
   state.canvasSizing = {width: $('stage').clientWidth, height: $('stage').clientHeight, ratio: Math.min(devicePixelRatio || 1, 1.5)};
-  syncCanvasSize(); state.camera.zoom = 1.35; refreshScene(); requestAnimationFrame(drawCanvas); updateHud();
+  syncCanvasSize(); state.camera.zoom = fitSceneZoom(); refreshScene(); requestAnimationFrame(drawCanvas); updateHud();
   $('scene-status').textContent = state.selectedDomain === 'dairy'
     ? 'Fazenda leiteira · layout visual editável · assets candidatos em revisão · sem resultados de simulação leiteira.'
     : `Cena v${state.scene.schemaVersion} · seed fixo · ${state.view.animalActions.length} animais no Worker.`;
@@ -636,10 +658,10 @@ async function initialize() {
   $('run-benchmark').addEventListener('click', async () => { $('scene-status').textContent = 'Benchmark Chromium em andamento…'; const report = await runGraphicsBenchmark(); $('scene-status').textContent = `Benchmark concluído: ${report.results.length} cargas, ambos renderizadores.`; });
   for (const input of document.querySelectorAll('[data-layer]')) input.addEventListener('change', () => { state.activeLayers[input.dataset.layer] = input.checked; refreshScene(); });
   $('zoom-in').addEventListener('click', () => { state.camera.zoom = Math.min(4, state.camera.zoom * 1.2); refreshScene(); });
-  $('zoom-out').addEventListener('click', () => { state.camera.zoom = Math.max(.45, state.camera.zoom / 1.2); refreshScene(); });
-  $('zoom-home').addEventListener('click', () => { state.camera.zoom = 1.35; syncCanvasSize(); refreshScene(); });
+  $('zoom-out').addEventListener('click', () => { state.camera.zoom = Math.max(.15, state.camera.zoom / 1.2); refreshScene(); });
+  $('zoom-home').addEventListener('click', () => { state.camera.zoom = fitSceneZoom(); syncCanvasSize(); refreshScene(); });
   $('canvas-renderer').addEventListener('pointerdown', beginPointer); $('canvas-renderer').addEventListener('pointermove', movePointer); $('canvas-renderer').addEventListener('pointerup', endPointer); $('canvas-renderer').addEventListener('pointercancel', () => { state.drag = null; });
-  $('stage').addEventListener('wheel', event => { event.preventDefault(); state.camera.zoom = Math.min(4, Math.max(.45, state.camera.zoom * (event.deltaY < 0 ? 1.1 : .9))); refreshScene(); }, {passive: false});
+  $('stage').addEventListener('wheel', event => { event.preventDefault(); state.camera.zoom = Math.min(4, Math.max(.15, state.camera.zoom * (event.deltaY < 0 ? 1.1 : .9))); refreshScene(); }, {passive: false});
   window.addEventListener('resize', () => { syncCanvasSize(); refreshScene(); });
   window.__graphicsReady = true; window.__runGraphicsBenchmark = runGraphicsBenchmark; window.__graphicsStats = frameStats;
   window.__graphicsControl = {
