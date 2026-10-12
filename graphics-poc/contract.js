@@ -2,6 +2,16 @@ export function projectIso(column, row, cellWidth = 64, cellHeight = 32, origin 
   return {x: origin.x + (column - row) * cellWidth / 2, y: origin.y + (column + row) * cellHeight / 2};
 }
 
+export function zoneGridCorners(zone) {
+  const {x, y} = zone.origin, {columns, rows} = zone.footprint;
+  return [
+    {column: x, row: y},
+    {column: x + columns, row: y},
+    {column: x + columns, row: y + rows},
+    {column: x, row: y + rows},
+  ];
+}
+
 export function unprojectIso(x, y, cellWidth = 64, cellHeight = 32, origin = {x: 0, y: 0}) {
   const horizontal = (x - origin.x) / (cellWidth / 2), vertical = (y - origin.y) / (cellHeight / 2);
   return {column: (horizontal + vertical) / 2, row: (vertical - horizontal) / 2};
@@ -194,6 +204,22 @@ export function terrainCells(scene) {
     cells.push({column, row, assetId, zoneId: zone?.zoneId ?? null, transitionZoneId: !zone && assetId !== 'grass-light' ? scene.zones.find(item => item.transitionAssetIds?.edge === assetId && column >= item.origin.x - 1 && row >= item.origin.y - 1 && column <= item.origin.x + item.footprint.columns && row <= item.origin.y + item.footprint.rows)?.zoneId ?? null : null});
   }
   return cells;
+}
+
+export function paintZoneTerrainTiles(tiles, zone, columns, rows) {
+  if (!Array.isArray(tiles)) return tiles;
+  const {x, y} = zone.origin, {columns: width, rows: height} = zone.footprint;
+  const edgeAssetId = zone.transitionAssetIds?.edge;
+  return tiles.map(tile => {
+    const column = tile.position.x, row = tile.position.y;
+    const inside = column >= x && row >= y && column < x + width && row < y + height;
+    const boundary = inside && (column === x || row === y || column === x + width - 1 || row === y + height - 1);
+    const adjacent = !inside && edgeAssetId && column >= x - 1 && row >= y - 1
+      && column <= x + width && row <= y + height && column >= 0 && row >= 0 && column < columns && row < rows;
+    if (inside) return {...tile, assetId: boundary && edgeAssetId ? edgeAssetId : zone.groundAssetId, zoneId: zone.zoneId};
+    if (adjacent) return {...tile, assetId: edgeAssetId};
+    return tile;
+  });
 }
 
 export function sortTerrainCellsBackToFront(cells, cellWidth = 96, cellHeight = 48) {

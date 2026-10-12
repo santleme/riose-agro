@@ -1,5 +1,5 @@
 import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
-import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from './contract.js';
+import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
 
 const $ = id => document.getElementById(id);
@@ -230,6 +230,31 @@ function drawCanvasEntry(ctx, entry, time) {
   }
 }
 
+function drawCanvasZoneOverlays(ctx) {
+  if (!state.activeLayers.overlays) return;
+  for (const zone of state.scene.zones) {
+    const points = zoneGridCorners(zone).map(point => {
+      const world = isoPosition(point.column, point.row);
+      return screenPoint(world.x, world.y);
+    });
+    const color = /^#[\da-f]{6}$/i.test(zone.color ?? '') ? zone.color : '#83aa63';
+    ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+    for (const point of points.slice(1)) ctx.lineTo(point.x, point.y);
+    ctx.closePath(); ctx.fillStyle = color; ctx.globalAlpha = .045; ctx.fill();
+    ctx.globalAlpha = .72; ctx.lineWidth = 3; ctx.strokeStyle = '#173e32'; ctx.stroke();
+    ctx.globalAlpha = .95; ctx.lineWidth = 1.2; ctx.strokeStyle = color; ctx.stroke();
+    if (zone.kind === 'pasture' && zone.name) {
+      const center = isoPosition(zone.origin.x + zone.footprint.columns / 2, zone.origin.y + zone.footprint.rows / 2);
+      const labelPosition = screenPoint(center.x, center.y), label = zone.name;
+      ctx.font = '600 11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const width = ctx.measureText(label).width + 12;
+      ctx.fillStyle = 'rgba(23, 62, 50, .88)'; ctx.beginPath(); ctx.roundRect(labelPosition.x - width / 2, labelPosition.y - 8, width, 16, 7); ctx.fill();
+      ctx.fillStyle = '#f7f4dc'; ctx.fillText(label, labelPosition.x, labelPosition.y + .5);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
 function updateVisualMotion(time) {
   const started = performance.now(); let updates = 0;
   for (const entry of state.visible) {
@@ -252,6 +277,7 @@ function drawCanvas(time) {
   ctx.imageSmoothingQuality = 'high';
   ctx.clearRect(0, 0, size.width, size.height); ctx.fillStyle = '#7c9562'; ctx.fillRect(0, 0, size.width, size.height);
   for (const entry of state.visible) if (entry.kind !== 'livestock' || state.activeLayers.livestock) drawCanvasEntry(ctx, entry, time);
+  drawCanvasZoneOverlays(ctx);
   state.paintMs = performance.now() - start;
   recordFrame(time);
   requestAnimationFrame(drawCanvas);
@@ -332,6 +358,25 @@ function syncPixiScene() {
   layers.overlays.position.set(state.camera.x, state.camera.y); layers.overlays.scale.set(state.camera.zoom);
   layers.overlays.removeChildren();
   if (state.activeLayers.overlays) {
+    for (const zone of state.scene.zones) {
+      const points = zoneGridCorners(zone).flatMap(point => {
+        const world = isoPosition(point.column, point.row);
+        return [world.x, world.y];
+      });
+      const color = /^#[\da-f]{6}$/i.test(zone.color ?? '') ? Number.parseInt(zone.color.slice(1), 16) : 0x83aa63;
+      const outline = new PixiGraphicsClass();
+      outline.poly(points).fill({color, alpha: .045}).stroke({color: 0x173e32, alpha: .72, width: 3 / state.camera.zoom});
+      outline.poly(points).stroke({color, alpha: .95, width: 1.2 / state.camera.zoom});
+      layers.overlays.addChild(outline);
+      if (zone.kind === 'pasture' && zone.name) {
+        const label = new PixiText({text: zone.name, style: {fontFamily: 'Arial', fontSize: 11, fontWeight: '600', fill: '#f7f4dc'}});
+        label.anchor.set(.5);
+        const width = label.width + 12, badge = new Container(), background = new PixiGraphicsClass();
+        background.roundRect(-width / 2, -8, width, 16, 7).fill({color: 0x173e32, alpha: .88}); badge.addChild(background, label);
+        badge.position.set(...points.reduce((center, value, index) => { center[index % 2] += value / 4; return center; }, [0, 0]));
+        badge.scale.set(1 / state.camera.zoom); layers.overlays.addChild(badge);
+      }
+    }
     for (const entry of state.visible) {
       if (entry.kind !== 'herd-cluster' || entry.count < 2) continue;
       const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: entry.count.toLocaleString('pt-BR'), style: {fontFamily: 'Arial', fontSize: 9, fontWeight: 'bold', fill: '#f7f4dc'}});
@@ -415,7 +460,11 @@ function finishZone(start, end) {
   const x0 = Math.max(0, Math.min(maxX, start.x)), x1 = Math.max(0, Math.min(maxX, end.x));
   const y0 = Math.max(0, Math.min(maxY, start.y)), y1 = Math.max(0, Math.min(maxY, end.y));
   const x = Math.min(x0, x1), y = Math.min(y0, y1), columns = Math.abs(x1 - x0) + 1, rows = Math.abs(y1 - y0) + 1;
-  state.scene.zones.push({zoneId: `paddock-${Date.now()}`, kind: 'pasture', origin: {x, y, unit: 'grid-cell'}, footprint: {columns, rows}, groundAssetId: 'grass-mid', transitionAssetIds: {edge: 'grass-light'}});
+  const paddockNumber = state.scene.zones.filter(zone => zone.kind === 'pasture').length + 1;
+  const zone = {zoneId: `paddock-${Date.now()}`, kind: 'pasture', name: `Piquete ${paddockNumber}`, color: '#83aa63', origin: {x, y, unit: 'grid-cell'}, footprint: {columns, rows}, groundAssetId: 'grass-mid', transitionAssetIds: {edge: 'grass-light'}};
+  state.scene.zones.unshift(zone);
+  state.scene.terrainTiles = paintZoneTerrainTiles(state.scene.terrainTiles, zone, state.scene.projection.columns, state.scene.projection.rows);
+  normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest);
   state.terrainCells = sceneTerrainCells(state.scene); state.tool = null; $('scene-status').textContent = 'Piquete criado com snapping isométrico e borda de transição.'; persistScene(); refreshScene();
 }
 

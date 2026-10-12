@@ -62,3 +62,7 @@ This one-repetition run is exploratory, not a release benchmark. Its visibility 
 ## 100,000-animal boundary check
 
 The existing browser benchmark was also invoked with `BENCH_HERDS=100000`, one repeat, an 800 ms capture, and the 3.2× close-up camera. It stopped during Worker reset with `Animal count must be 1–10000`, before either renderer produced a sample. The application and simulation currently support up to 10,000 animals; this attempt gives no evidence about 100,000-animal rendering performance. Keep 100,000 out of renderer comparisons until the simulation's supported population limit is deliberately expanded and its memory and tick costs are measured separately.
+
+## Zone-overlay verification sample
+
+After adding labeled zone boundaries, the same harness ran at 10,000 animals, zoom 3.2×, 735×378 CSS pixels, one fresh page per renderer, 400 ms warm-up and 1,000 ms capture. It again accounted for all animals: 771 bounds-visible, 9,229 culled, and all 771 visible IDs represented by 435 draw units (111 clusters). Canvas measured 121.0 mean FPS, 16.7 ms frame p95, 6.8 ms scene update, 1.3 ms draw submission, 2.6 MB post-GC JS heap, and 20.7 ms Worker round-trip. Pixi measured 15.7 mean FPS, 83.3 ms frame p95, 4.1 ms scene update, 0.2 ms draw submission, 7.5 MB post-GC heap, and 77.7 ms Worker round-trip. This single repetition verifies the new overlay path and population accounting, not release performance.

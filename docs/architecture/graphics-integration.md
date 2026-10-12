@@ -41,6 +41,7 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 - Far-herd count badges are compact, float above their representative sprite and use the same screen-space dimensions in Canvas and PixiJS, so they remain readable without covering the animal or growing with camera zoom.
 - “Distribuir árvores” uses seeded loose clusters with a minimum separation rather than near-uniform blue-noise spacing. With the fixed scene seed, the two beef paddocks received 14 positions each; nearest-neighbor distance CVs were 0.33 and 0.24, versus 0.11–0.20 in the prior spacing rule. Placement remains deterministic and collision-checked.
 - The beef and dairy scenes use the same `visual-scene` JSON schema. Both remain editable, persist separately in browser storage and export as renderer-independent JSON.
+- The “Seleção e zonas” overlay draws grid-aligned, labeled pasture boundaries in Canvas and Pixi with screen-sized outlines and labels. Newly drawn paddocks paint their ground and transition ring into editable terrain tiles, leaving unrelated authored tiles unchanged.
 - Worker animal coordinates are adapted to scene coordinates and rendered as a separate layer.
 - Renderer, camera, zoom and asset visibility never mutate the Worker snapshot.
 - Canvas and Pixi share the same scene, view data, camera, culling bounds, LOD policy and layer visibility.

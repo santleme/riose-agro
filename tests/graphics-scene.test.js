@@ -6,7 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
-import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, paintZoneTerrainTiles, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
@@ -113,6 +113,42 @@ test('isometric projection and inverse preserve editable grid positions', () => 
     assert.ok(Math.abs(restored.row - cell.y) < 1e-9);
   }
   assert.deepEqual(farmPositionToGrid(288, 168, 14, 10), {column: 7, row: 5});
+});
+
+test('zone overlays use the full grid-cell boundary for rectangular paddocks', () => {
+  const west = dairyScene.zones.find(zone => zone.zoneId === 'zone-pasture-north-west');
+  assert.deepEqual(zoneGridCorners(west), [
+    {column: 1, row: 1}, {column: 10, row: 1},
+    {column: 10, row: 10}, {column: 1, row: 10},
+  ]);
+});
+
+test('paddock terrain editing paints its ground and transition ring without replacing unrelated tiles', () => {
+  const tiles = Array.from({length: 36}, (_, index) => ({
+    tileId: `tile-${index}`,
+    position: {x: index % 6, y: Math.floor(index / 6), unit: 'grid-cell'},
+    assetId: 'grass-light',
+  }));
+  const paddock = {zoneId: 'paddock-test', origin: {x: 1, y: 1}, footprint: {columns: 3, rows: 3}, groundAssetId: 'grass-mid', transitionAssetIds: {edge: 'soil-dry'}};
+  const painted = paintZoneTerrainTiles(tiles, paddock, 6, 6);
+  const tileAt = (column, row) => painted.find(tile => tile.position.x === column && tile.position.y === row);
+  assert.equal(tileAt(2, 2).assetId, 'grass-mid');
+  assert.equal(tileAt(2, 2).zoneId, paddock.zoneId);
+  assert.equal(tileAt(1, 2).assetId, 'soil-dry', 'paddock border cells use the transition asset');
+  assert.equal(tileAt(0, 2).assetId, 'soil-dry', 'outside transition ring follows the paddock boundary');
+  assert.equal(tileAt(5, 5).assetId, 'grass-light', 'unrelated authored terrain stays intact');
+  assert.equal(tiles.every(tile => tile.assetId === 'grass-light'), true, 'editing returns a copy and preserves the source snapshot');
+
+  const editedScene = structuredClone(scene), editableZone = {
+    zoneId: 'paddock-edit-test', kind: 'pasture', name: 'Piquete editável', color: '#83aa63',
+    origin: {x: 25, y: 15, unit: 'grid-cell'}, footprint: {columns: 4, rows: 4},
+    groundAssetId: 'grass-mid', transitionAssetIds: {edge: 'grass-light'},
+  };
+  editedScene.zones.unshift(editableZone);
+  editedScene.terrainTiles = paintZoneTerrainTiles(editedScene.terrainTiles, editableZone, editedScene.projection.columns, editedScene.projection.rows);
+  normalizeSceneAssetReferences(editedScene, renderManifest, assetSourceManifest);
+  assert.equal(validate(editedScene), true, JSON.stringify(validate.errors));
+  assert.ok(editedScene.assets.some(asset => asset.assetId === 'grass-mid'), 'new ground assets enter the same scene manifest');
 });
 
 test('simulation coordinates map into Composer pastures and the service zone without changing the engine model', () => {
