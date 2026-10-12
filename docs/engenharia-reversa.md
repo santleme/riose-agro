@@ -1,6 +1,6 @@
 # Engenharia reversa e evidências
 
-Pesquisa concluída em 11/10/2026. Este documento separa o que foi lido diretamente do que é interpretação. A análise de projetos públicos foi feita nos arquivos e páginas indicados; a demo pública do Agroville não pôde ser aberta pelo navegador de pesquisa.
+Pesquisa iniciada em 11/10/2026 e atualizada em 12/10/2026. Este documento separa o que foi lido diretamente do que é interpretação. A análise de projetos públicos foi feita nos arquivos e páginas indicados; a demo pública do Agroville não pôde ser aberta pelo navegador de pesquisa.
 
 | Fonte / arquivo ou página | Evidência observada | Conclusão | Confiança | Questões não respondidas |
 |---|---|---|---|---|
