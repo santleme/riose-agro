@@ -87,6 +87,10 @@ test('rejects invalid values, empty value lists, unsupported outputs, and invali
   assert.throws(() => analyzeSensitivity({...input, durationHours: 0}), /durationHours/);
   assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, config: {...input.snapshot.config, weather: 'humid'}}}), /Invalid configuration/);
   assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, initialSeed: -1}}), /initialSeed/);
+  assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, animals: []}}), /Invalid FarmEngine snapshot/);
+  assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, pastures: [1, 2, 3]}}), /Invalid FarmEngine snapshot/);
+  assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, cost: NaN}}), /Invalid FarmEngine snapshot/);
+  assert.throws(() => analyzeSensitivity({...input, snapshot: {...input.snapshot, animals: input.snapshot.animals.map((animal, index) => index ? animal : {...animal, thirst: NaN})}}), /invalid numeric state/);
 });
 
 test('returns unsupported for an input without a model instead of inventing a result', () => {

@@ -1,4 +1,4 @@
-import {FarmEngine} from './engine.js';
+import {FarmEngine, createComparisonManifest} from './engine.js';
 
 const TARGETS = Object.freeze({
   diet: Object.freeze({unit: 'category'}),
@@ -28,9 +28,46 @@ function validateSnapshot(snapshot) {
       || snapshot.initialSeed < 0 || snapshot.initialSeed > 0xffffffff)) {
     throw new Error('snapshot.initialSeed must be an unsigned 32-bit integer when present.');
   }
+  if (snapshot.locomotionSeed !== undefined && (!Number.isInteger(snapshot.locomotionSeed)
+      || snapshot.locomotionSeed < 0 || snapshot.locomotionSeed > 0xffffffff)) {
+    throw new Error('snapshot.locomotionSeed must be an unsigned 32-bit integer when present.');
+  }
 
   const engine = FarmEngine.from(snapshot);
   engine.configure({...snapshot.config});
+
+  try {
+    createComparisonManifest(snapshot, 1);
+  } catch (error) {
+    throw new Error(`Invalid FarmEngine snapshot: ${error.message}`);
+  }
+
+  if (!Array.isArray(snapshot.events)) throw new Error('Invalid FarmEngine snapshot: events must be an array.');
+  if (snapshot.pastures.some(value => !Number.isFinite(value))) {
+    throw new Error('Invalid FarmEngine snapshot: pasture values must be finite numbers.');
+  }
+  if (snapshot.intake !== undefined) {
+    const intakeFields = ['pastureKgDM', 'barnBaseKgDM', 'supplementKgDM', 'dietExtraKgDM'];
+    if (!isRecord(snapshot.intake) || intakeFields.some(field => !Number.isFinite(snapshot.intake[field]))) {
+      throw new Error('Invalid FarmEngine snapshot: intake values must be finite numbers.');
+    }
+  }
+  for (const [index, animal] of snapshot.animals.entries()) {
+    const numericFields = ['weight', 'initialWeight', 'energy', 'thirst', 'x', 'y', 'targetX', 'targetY'];
+    if (!isRecord(animal) || numericFields.some(field => !Number.isFinite(animal[field]))) {
+      throw new Error(`Invalid FarmEngine snapshot: animals[${index}] has invalid numeric state.`);
+    }
+    if (!Number.isInteger(animal.patch) || animal.patch < 0 || animal.patch > 3) {
+      throw new Error(`Invalid FarmEngine snapshot: animals[${index}].patch must be from 0 to 3.`);
+    }
+    if (!['grazing', 'feeding', 'drinking', 'resting'].includes(animal.action)) {
+      throw new Error(`Invalid FarmEngine snapshot: animals[${index}].action is unsupported.`);
+    }
+    if (animal.history !== undefined && !Array.isArray(animal.history)) {
+      throw new Error(`Invalid FarmEngine snapshot: animals[${index}].history must be an array.`);
+    }
+  }
+
 }
 
 function validateOptions({snapshot, targetVariable, values, outputs, durationHours}) {
@@ -68,9 +105,13 @@ function run(snapshot, targetVariable, inputValue, outputs, durationHours) {
   engine.configure(config);
   engine.tick(durationHours);
   const metrics = engine.metrics();
+  const selectedOutputs = Object.fromEntries(outputs.map(output => [output, metrics[output]]));
+  if (Object.values(selectedOutputs).some(value => !Number.isFinite(value))) {
+    throw new Error('FarmEngine produced a non-finite selected output for this analysis.');
+  }
   return {
     config: {...engine.state.config},
-    outputs: Object.fromEntries(outputs.map(output => [output, metrics[output]])),
+    outputs: selectedOutputs,
   };
 }
 
