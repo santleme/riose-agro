@@ -26,12 +26,12 @@ Activity history used `push()` followed by `shift()` after each animal reached 4
 
 | Animals | Storage | Tick median | Full snapshot median | Retained heap delta | Retained ArrayBuffer delta |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 1,000 | Object ring | 116.5 ms | 52.0 ms | 4.97 MB | 0 MB |
-| 1,000 | Typed columns | 267.2 ms | 4.9 ms | 1.08 MB | 0.64 MB |
-| 10,000 | Object ring | 1,228.3 ms | 629.8 ms | 48.83 MB | 0 MB |
-| 10,000 | Typed columns | 3,525.0 ms | 94.2 ms | 10.13 MB | 6.42 MB |
+| 1,000 | Object ring | 113.2 ms | 46.9 ms | 4.89 MB | 0 MB |
+| 1,000 | Typed columns | 255.1 ms | 3.0 ms | 1.02 MB | 0.64 MB |
+| 10,000 | Object ring | 1,211.6 ms | 669.7 ms | 48.46 MB | 0 MB |
+| 10,000 | Typed columns | 3,031.4 ms | 77.5 ms | 10.05 MB | 6.42 MB |
 
-All snapshots were identical, containing 40 entries per animal (400,000 entries at 10,000 animals). At that size, typed columns reduced retained JS heap by about 79% and combined retained heap plus ArrayBuffer memory by about 66%. They made full snapshot materialization about 6.7× faster, but made the measured tick about 2.9× slower. The typed version uses a benchmark-only direct recording path; this comparison does not isolate the representation from that implementation difference, so the tick regression is a reason to reject this prototype for production, not a general claim about typed arrays.
+This turn's `npm run bench:history-storage` rerun used five repetitions per variant, a 720-hour warm-up and 720-hour measured runs. All snapshots were identical, containing 40 entries per animal (400,000 entries at 10,000 animals). At that size, typed columns reduced retained JS heap by about 79% and combined retained heap plus ArrayBuffer memory by about 66%. They made full snapshot materialization about 8.6× faster, but made the measured tick about 2.5× slower. The typed version uses a benchmark-only direct recording path; this comparison does not isolate the representation from that implementation difference, so the tick regression is a reason to reject this prototype for production, not a general claim about typed arrays.
 
 The benchmark also reports RSS, but do not use it to compare these variants: the median post-warm-up RSS baselines differed by about 99 MB between the two 10,000-animal child processes, and the typed process's post-tick RSS fell below its own baseline after garbage collection. The heap and ArrayBuffer deltas are the interpretable retained-storage comparison here; peak RSS needs a more controlled harness.
 
