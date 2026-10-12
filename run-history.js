@@ -11,9 +11,21 @@ function sanitizedSnapshot(source){
     energy:animal.energy,thirst:animal.thirst,action:animal.action,patch:animal.patch,
     x:animal.x,y:animal.y,targetX:animal.targetX,targetY:animal.targetY,history:[]
   }));
+  const intake={
+    pastureKgDM:source.intake.pastureKgDM,
+    barnBaseKgDM:source.intake.barnBaseKgDM,
+    supplementKgDM:source.intake.supplementKgDM,
+    dietExtraKgDM:source.intake.dietExtraKgDM
+  };
+  const config={
+    diet:source.config.diet,
+    housing:source.config.housing,
+    weather:source.config.weather,
+    supplement:source.config.supplement
+  };
   return {
-    hour:source.hour,animals,pastures:[...source.pastures],intake:{...source.intake},
-    config:{...source.config},cost:source.cost,events:[],seed:source.seed,
+    hour:source.hour,animals,pastures:[...source.pastures],intake,
+    config,cost:source.cost,events:[],seed:source.seed,
     initialSeed:source.initialSeed,locomotionSeed:source.locomotionSeed
   };
 }

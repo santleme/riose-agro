@@ -76,6 +76,26 @@ test('does not persist arbitrary imported fields, credentials or local paths',()
   assert.doesNotMatch(saved,/shh-secret-value|shh-manifest-token|private\.json|apiKey|localPath/);
 });
 
+test('whitelists nested imported snapshot config and intake fields before persistence',()=>{
+  const storage=new MemoryStorage(),snapshot=new FarmEngine(9,2).snapshot();
+  const manifest=createComparisonManifest(snapshot,1);
+  manifest.initialSnapshot.config.apiKey='shh-config-secret';
+  manifest.initialSnapshot.config.extraConfig='unapproved';
+  manifest.initialSnapshot.intake.password='shh-intake-secret';
+  manifest.initialSnapshot.intake.extraIntake='unapproved';
+  const run=createRunRecord({manifest,result:compare(snapshot,1),id:'nested-safe'});
+
+  recordRun(run,storage);
+
+  const saved=storage.getItem(RUN_HISTORY_KEY);
+  const persisted=getRun(run.id,storage).manifest;
+  assert.doesNotMatch(saved,/shh-config-secret|shh-intake-secret|unapproved|apiKey|password|extraConfig|extraIntake/);
+  assert.deepEqual(Object.keys(persisted.initialSnapshot.config).sort(),['diet','housing','supplement','weather']);
+  assert.deepEqual(Object.keys(persisted.initialSnapshot.intake).sort(),['barnBaseKgDM','dietExtraKgDM','pastureKgDM','supplementKgDM']);
+  assert.deepEqual(Object.keys(persisted.scenarios.reference).sort(),['diet','housing','supplement','weather']);
+  assert.deepEqual(Object.keys(persisted.scenarios.scenario).sort(),['diet','housing','supplement','weather']);
+});
+
 test('stores and replays the canonical manifest snapshot used by the run',()=>{
   const snapshot=new FarmEngine(31,4).snapshot(),manifest=createComparisonManifest(snapshot,3);
   const run=createRunRecord({manifest,result:compare(snapshot,3),id:'canonical'});
