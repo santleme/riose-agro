@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import platform
+import re
 import time
 from pathlib import Path
 from typing import Iterable
@@ -60,12 +62,34 @@ def load_preregistration(path: Path = PREREG_PATH) -> dict:
     if model_ids != ["training_majority_baseline", "random_forest_fixed"]:
         raise ValueError("The registered fixed model set differs from this implementation")
     registered_rf = prereg["models"][1].get("model", "")
-    if any(fragment not in registered_rf for fragment in (
-        "n_estimators=200", "max_depth=12", "min_samples_leaf=10", "max_features='sqrt'",
-        "class_weight='balanced_subsample'", "n_jobs=1", "random_state=20261013",
-    )):
+    if parse_estimator_parameters(registered_rf) != RF_PARAMETERS:
         raise ValueError("Random Forest settings differ from the registered model")
     return prereg
+
+
+def parse_estimator_parameters(description: str) -> dict:
+    """Parse the preregistered sklearn constructor text into typed fields."""
+    match = re.fullmatch(r"RandomForestClassifier\((.*)\)\.?", description.strip())
+    if not match:
+        raise ValueError("Registered Random Forest description has an unexpected form")
+    parsed = {}
+    for token in match.group(1).split(","):
+        item = re.fullmatch(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*", token)
+        if not item:
+            raise ValueError(f"Cannot parse registered Random Forest parameter: {token!r}")
+        name, raw = item.groups()
+        if raw.startswith("'") and raw.endswith("'"):
+            value = raw[1:-1]
+        elif re.fullmatch(r"-?\d+", raw):
+            value = int(raw)
+        elif raw in {"True", "False"}:
+            value = raw == "True"
+        else:
+            raise ValueError(f"Unsupported registered parameter value: {raw!r}")
+        if name in parsed:
+            raise ValueError(f"Duplicate registered Random Forest parameter: {name}")
+        parsed[name] = value
+    return parsed
 
 
 def sha256_file(path: Path) -> str:
@@ -143,9 +167,9 @@ def validate_animal_frame(frame: pd.DataFrame, animal: int, expected_rows: int |
         raise ValueError(f"Rows in {context} do not match manifest animal id")
     expected_split = SPLIT_BY_ANIMAL[animal]
     expected_trial = TRIAL_BY_ANIMAL[animal]
-    if set(frame["source_split"].dropna()) != {expected_split}:
+    if frame["source_split"].isna().any() or set(frame["source_split"]) != {expected_split}:
         raise ValueError(f"Rows in {context} violate the frozen source split")
-    if set(frame["farm_trial_id"].dropna().astype(int)) != {expected_trial}:
+    if frame["farm_trial_id"].isna().any() or set(frame["farm_trial_id"].astype(int)) != {expected_trial}:
         raise ValueError(f"Rows in {context} violate source trial mapping")
     if frame.duplicated(["animal_id", "timestamp_second"]).any():
         raise ValueError(f"Duplicate animal-second records in {context}")
@@ -165,9 +189,9 @@ def eligible_seconds(frame: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     if not set(data["animal_id"]).issubset(EXPECTED_ANIMALS):
         raise ValueError("Unexpected animal ID in processed rows")
     for animal, group in data.groupby("animal_id"):
-        if group["source_split"].nunique() != 1 or group["source_split"].iloc[0] != SPLIT_BY_ANIMAL[int(animal)]:
+        if group["source_split"].isna().any() or group["source_split"].nunique(dropna=False) != 1 or group["source_split"].iloc[0] != SPLIT_BY_ANIMAL[int(animal)]:
             raise ValueError(f"Animal {animal:02d} crosses or violates the frozen source split")
-        if group["farm_trial_id"].nunique() != 1 or int(group["farm_trial_id"].iloc[0]) != TRIAL_BY_ANIMAL[int(animal)]:
+        if group["farm_trial_id"].isna().any() or group["farm_trial_id"].nunique(dropna=False) != 1 or int(group["farm_trial_id"].iloc[0]) != TRIAL_BY_ANIMAL[int(animal)]:
             raise ValueError(f"Animal {animal:02d} violates frozen source trial mapping")
     complete = (
         data["is_complete_10hz_second"].eq(True).fillna(False)
@@ -226,8 +250,19 @@ def training_majority(frame: pd.DataFrame) -> int:
     _assert_train_only(frame)
     labels = frame["reference_majority_class"].to_numpy(dtype=int)
     weights = equal_animal_weights(frame)
-    mass = np.array([weights[labels == label].sum() for label in LABELS], dtype=float)
-    return int(np.flatnonzero(mass == mass.max())[0])
+    mass = np.array([math.fsum(weights[labels == label].tolist()) for label in LABELS], dtype=float)
+    return choose_weighted_class(mass)
+
+
+def choose_weighted_class(mass: Iterable[float]) -> int:
+    mass = np.asarray(list(mass), dtype=float)
+    if mass.shape != (len(LABELS),) or not np.isfinite(mass).all() or np.any(mass < 0):
+        raise ValueError("Weighted class mass must contain three finite nonnegative values")
+    maximum = float(mass.max())
+    # Equal-animal mass is assembled from reciprocal counts; absorb floating-point
+    # summation noise only at a scale far below any practical class-mass difference.
+    tied = np.flatnonzero(np.abs(mass - maximum) <= 1e-12)
+    return int(tied[0])
 
 
 def _assert_train_only(frame: pd.DataFrame) -> None:
@@ -251,6 +286,14 @@ def fit_random_forest(frame: pd.DataFrame) -> tuple[RandomForestClassifier, floa
     start = time.process_time()
     model.fit(x, y, sample_weight=weights)
     return model, time.process_time() - start
+
+
+def predict_training_majority(class_code: int, row_count: int) -> tuple[np.ndarray, float]:
+    if class_code not in LABELS or row_count <= 0:
+        raise ValueError("Baseline prediction needs a fixed class and nonempty cohort")
+    start = time.process_time()
+    predictions = np.full(row_count, class_code, dtype=int)
+    return predictions, time.process_time() - start
 
 
 def classification_metrics(y_true: Iterable[int], y_pred: Iterable[int]) -> dict:
@@ -348,23 +391,23 @@ def evaluate(train: pd.DataFrame, test: pd.DataFrame) -> dict:
     dev = development_leave_one_animal_out(train)
     y_test = test["reference_majority_class"].to_numpy(dtype=int)
     training_class = training_majority(train)
-    baseline_pred = np.full(len(test), training_class, dtype=int)
+    baseline_pred, baseline_infer_cpu = predict_training_majority(training_class, len(test))
     baseline_metrics = classification_metrics(y_test, baseline_pred)
     baseline_animals = per_animal_metrics(test, baseline_pred)
     model, fit_cpu = fit_random_forest(train)
     x_test = test.loc[:, FEATURES].to_numpy(dtype=float)
-    start = time.process_time()
-    rf_pred = model.predict(x_test).astype(int)
-    infer_cpu = time.process_time() - start
-    rf_metrics = classification_metrics(y_test, rf_pred)
-    rf_animals = per_animal_metrics(test, rf_pred)
+    rf_pred = np.full(len(test), -1, dtype=int)
     per_animal_timing = {}
     for animal, positions in test.groupby("animal_id", sort=True).indices.items():
         ix = np.asarray(positions, dtype=int)
         start = time.process_time()
-        model.predict(test.iloc[ix].loc[:, FEATURES].to_numpy(dtype=float))
-        elapsed = time.process_time() - start
-        per_animal_timing[f"{int(animal):02d}"] = elapsed
+        rf_pred[ix] = model.predict(x_test[ix]).astype(int)
+        per_animal_timing[f"{int(animal):02d}"] = time.process_time() - start
+    if np.any(rf_pred < 0):
+        raise AssertionError("Source-test predictions are incomplete")
+    infer_cpu = float(sum(per_animal_timing.values()))
+    rf_metrics = classification_metrics(y_test, rf_pred)
+    rf_animals = per_animal_metrics(test, rf_pred)
     return {
         "developmentSourceTrainLeaveOneAnimalOut": {k: v for k, v in dev.items() if k != "predictions"},
         "finalSourceTest": {
@@ -374,7 +417,7 @@ def evaluate(train: pd.DataFrame, test: pd.DataFrame) -> dict:
             "trainingMajorityClass": training_class,
             "models": {
                 "training_majority_baseline": {**baseline_metrics, "perAnimal": baseline_animals,
-                                                "fitCpuSeconds": 0.0, "inferenceCpuSeconds": 0.0},
+                                                "fitCpuSeconds": 0.0, "inferenceCpuSeconds": baseline_infer_cpu},
                 "random_forest_fixed": {**rf_metrics, "perAnimal": rf_animals,
                                          "fitCpuSeconds": fit_cpu, "inferenceCpuSeconds": infer_cpu,
                                          "perAnimalInferenceCpuSeconds": per_animal_timing},

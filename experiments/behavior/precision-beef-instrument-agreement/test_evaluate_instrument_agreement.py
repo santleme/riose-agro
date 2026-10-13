@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -53,6 +54,14 @@ class PrecisionBeefInstrumentAgreementTests(unittest.TestCase):
             "n_estimators": 200, "max_depth": 12, "min_samples_leaf": 10, "max_features": "sqrt",
             "class_weight": "balanced_subsample", "n_jobs": 1, "random_state": 20261013,
         })
+        prereg["models"][1]["model"] = prereg["models"][1]["model"].replace("n_estimators=200", "n_estimators=2000")
+        import json
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "protocol.json"
+            path.write_text(json.dumps(prereg))
+            with self.assertRaisesRegex(ValueError, "Random Forest settings"):
+                AGREEMENT.load_preregistration(path)
 
     def test_source_split_and_manifest_animal_identity_are_enforced(self):
         valid = pd.DataFrame([row(animal=4, second="2022-01-01 00:00:00", label=1)])
@@ -65,6 +74,16 @@ class PrecisionBeefInstrumentAgreementTests(unittest.TestCase):
         wrong_animal.loc[:, "animal_id"] = 3
         with self.assertRaisesRegex(ValueError, "manifest animal id"):
             AGREEMENT.validate_animal_frame(wrong_animal, 4)
+
+    def test_null_source_split_or_trial_is_rejected_even_after_valid_rows(self):
+        base = row(animal=4, second="s0", label=1)
+        for column in ("source_split", "farm_trial_id"):
+            frame = pd.DataFrame([base, {**base, "timestamp_second": "s1", column: None}])
+            with self.subTest(column=column):
+                with self.assertRaisesRegex(ValueError, "frozen source split|source trial"):
+                    AGREEMENT.validate_animal_frame(frame, 4)
+                with self.assertRaisesRegex(ValueError, "frozen source split|source trial"):
+                    AGREEMENT.eligible_seconds(frame)
 
     def test_tied_labels_incomplete_seconds_and_missing_features_are_excluded(self):
         frame = pd.DataFrame([
@@ -99,6 +118,16 @@ class PrecisionBeefInstrumentAgreementTests(unittest.TestCase):
         self.assertAlmostEqual(metric["macroF1"], (2 / 3 + .5 + 2 / 3) / 3)
         self.assertEqual(metric["classSupport"], {"0": 2, "1": 2, "2": 1})
 
+    def test_weighted_majority_resolves_float_roundoff_ties_to_smallest_code(self):
+        self.assertEqual(AGREEMENT.choose_weighted_class([.5, .5000000000000001, 0]), 0)
+        self.assertEqual(AGREEMENT.choose_weighted_class([.5, .5000001, 0]), 1)
+
+    def test_training_majority_cpu_inference_time_is_measured(self):
+        with patch.object(AGREEMENT.time, "process_time", side_effect=[4.0, 4.25]):
+            predictions, elapsed = AGREEMENT.predict_training_majority(2, 3)
+        np.testing.assert_array_equal(predictions, [2, 2, 2])
+        self.assertEqual(elapsed, .25)
+
     def test_source_test_rows_are_rejected_from_any_fit_or_development(self):
         contaminated = pd.concat([model_frame(animals=(1,)), pd.DataFrame([row(animal=4, label=1)])], ignore_index=True)
         with self.assertRaisesRegex(ValueError, "Source-test animals"):
@@ -129,6 +158,31 @@ class PrecisionBeefInstrumentAgreementTests(unittest.TestCase):
             self.assertNotIn("10", fold["fitAnimals"])
             self.assertNotIn("11", fold["fitAnimals"])
         self.assertEqual(set(final["predictions"]), {"training_majority_baseline", "random_forest_fixed"})
+
+    def test_final_test_predicts_once_per_animal_for_timing_and_scoring(self):
+        train = model_frame(animals=(1, 2), rows_per_animal=9)
+        test = pd.DataFrame([row(animal=animal, second=f"test-{animal}-{i}", label=i % 3)
+                             for animal in (4, 10, 11) for i in range(3)])
+
+        class CountingModel:
+            def __init__(self):
+                self.calls = []
+
+            def predict(self, x):
+                self.calls.append(len(x))
+                return np.zeros(len(x), dtype=int)
+
+        fitted = []
+
+        def fit_stub(_frame):
+            model = CountingModel()
+            fitted.append(model)
+            return model, .01
+
+        with patch.object(AGREEMENT, "fit_random_forest", side_effect=fit_stub):
+            AGREEMENT.evaluate(train, test)
+        final_model = fitted[-1]
+        self.assertEqual(final_model.calls, [3, 3, 3])
 
     def test_fixed_random_forest_predictions_are_deterministic(self):
         train = model_frame(animals=(1, 2, 3), rows_per_animal=15)
