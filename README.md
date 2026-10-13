@@ -54,6 +54,8 @@ Run the deterministic engine and data-contract tests with Node.js:
 npm test
 ```
 
+The supported CI toolchains and checks are documented in [docs/ci.md](docs/ci.md).
+
 Run the preset scenario harness and write one `*.result.json` file per scenario:
 
 ```bash
