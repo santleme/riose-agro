@@ -3,7 +3,7 @@
   "decisionId": "adult-beef-pasture-dmi-2026-10",
   "preparedOn": "2026-10-13",
   "decision": "no_go",
-  "decisionScope": "Dataset readiness for supervised estimation of individual total dry matter intake (DMI), not validation of the simulation engine.",
+  "decisionScope": "Dataset readiness for supervised estimation of individual total dry matter intake (DMI), not validation of the simulation engine. Mechanistic scenario simulation remains useful, but individual intake predictions for this population are not empirically supported.",
   "estimand": {
     "population": "Biologically mature beef cows managed on pasture, with maturity and production class explicitly defined by source metadata; yearling steers and dairy cows are outside scope.",
     "outcome": "Individual total DMI, including forage and supplement, measured for a defined animal-period and expressed as kg dry matter per animal per day.",
@@ -221,21 +221,19 @@
   "blockers": [
     "No locally accessible, individually reusable source was found that satisfies both the mature pasture beef-cow population and total-DMI outcome criteria.",
     "The only locally available adult-cow candidate in the reviewed evidence lacks total forage DMI; age-derived period weight change is not a substitute label.",
-    "An independent zootechnical review tracked by issue #22 has not been obtained. The review brief now requests a separate assessment of this mature-cow total-DMI estimand as well as the USDA/CPER yearling ADG and grazing-behavior case; no expert decision or signoff is recorded.",
-    "No project-owner signoff or attribution is recorded; the prepared no-go remains unsigned."
+    "No independent zootechnical review was performed; issue #22 is closed as NOT_PLANNED. This is a limitation on external domain review, not a data-readiness dependency or scientific endorsement.",
+    "Individual prediction performance for the target population cannot be estimated without eligible observed outcomes."
   ],
   "nextEvidenceRequired": [
     "A public or authorized individual-level dataset with data-specific reuse terms, adult pasture beef-cow metadata, total DMI in kg DM/animal/day, documented measurement protocol, missingness, animal IDs, and study/trial IDs.",
-    "Independent zootechnical review, with reviewer identity/credentials, date, conflicts and rationale, recorded under issue #22; it must explicitly assess the adult-pasture-cow and total-DMI scope in this gate, not only the CPER yearling ADG case.",
-    "Project-owner signoff and attribution for this no-go decision, recorded after reviewing the source matrix and any applicable expert review.",
     "Rebuild this gate after new source evidence arrives; only then consider a pre-registered study/trial-held-out supervised evaluation."
   ],
   "signoff": {
-    "status": "pending",
-    "projectOwner": "not_recorded",
-    "domainExpertReview": "pending_not_obtained",
+    "status": "evidence_based_no_go",
+    "projectOwner": "user-directed product scope; no claim of scientific endorsement",
+    "domainExpertReview": "not_performed",
     "reference": "https://github.com/santleme/riose-agro/issues/22",
-    "note": "This artifact is an evidence-backed preparatory no-go, not a signed-off decision."
+    "note": "Issue #22 is closed as NOT_PLANNED. The no-go is based on zero eligible open target cohorts; it does not imply that mechanistic simulations are useless or that predictions are validated."
   },
   "performance": {
     "modelTrainingPerformed": false,

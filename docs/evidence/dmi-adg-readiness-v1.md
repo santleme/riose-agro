@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 28; `inputFileCount` = 48; `elapsedSeconds` = 0.023770 s (tempo observado).
+**Processamento:** `sourceCount` = 28; `inputFileCount` = 48; `elapsedSeconds` = 0.025229 s (tempo observado).
 
 ## Matriz
 
@@ -192,8 +192,8 @@ Estas decisões complementam a matriz DMI/ADG sem misturar populações ou desfe
 
 ## Parecer especializado
 
-**Estado:** pending_not_obtained. Nenhum parecer zootécnico independente foi realizado; a classificação de yearlings como adultos permanece pendente.
-**Atribuição/evidência:** `docs/caso-zootecnico-demonstrativo.md`. A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. A issue #22 acompanha a revisão independente.
+**Estado:** pending_not_obtained. Nenhum parecer zootécnico independente foi realizado; a fonte USDA/CPER continua identificada como yearling steers e não é evidência de vacas adultas.
+**Atribuição/evidência:** `docs/caso-zootecnico-demonstrativo.md`. A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. Nenhuma revisão independente foi realizada; a issue #22 foi encerrada como NOT_PLANNED e não é dependência para o uso exploratório.
 
 ## Escopo e cautelas
 
@@ -204,6 +204,6 @@ Estas decisões complementam a matriz DMI/ADG sem misturar populações ou desfe
 
 ## Processamento
 
-`sourceCount` = 28; `inputFileCount` = 48; `elapsedSeconds` = 0.023770 s.
+`sourceCount` = 28; `inputFileCount` = 48; `elapsedSeconds` = 0.025229 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.

@@ -27,7 +27,7 @@ def _fact(value: Any = None, *, definition: str | None = None, reference: str | 
 
 
 # Decisions are intentionally scoped to independent, observational component
-# assessment. They do not replace the #22 expert review or claim full-engine
+# assessment. They do not constitute an independent expert review or claim full-engine
 # validation. `trainable` means records can be used as a model-training source
 # within the stated component scope, not that any training has occurred.
 SOURCES: list[dict[str, Any]] = [
@@ -1142,9 +1142,9 @@ def render_markdown(document: dict[str, Any]) -> str:
 
 DOMAIN_EXPERT_REVIEW = {
             "status": "pending_not_obtained",
-            "statement": "Nenhum parecer zootécnico independente foi realizado; a classificação de yearlings como adultos permanece pendente.",
+            "statement": "Nenhum parecer zootécnico independente foi realizado; a fonte USDA/CPER continua identificada como yearling steers e não é evidência de vacas adultas.",
             "reference": "docs/caso-zootecnico-demonstrativo.md",
-            "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. A issue #22 acompanha a revisão independente.",
+            "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. Nenhuma revisão independente foi realizada; a issue #22 foi encerrada como NOT_PLANNED e não é dependência para o uso exploratório.",
 }
 
 

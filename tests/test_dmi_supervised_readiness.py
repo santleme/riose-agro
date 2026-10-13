@@ -106,9 +106,9 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing source evidence"):
             VALIDATOR.validate(self.report)
 
-    def test_no_go_must_keep_domain_review_and_owner_signoff_as_open_gates(self):
+    def test_no_go_reopens_when_target_matched_dataset_is_available(self):
         self.report["nextEvidenceRequired"] = ["A dataset was located."]
-        with self.assertRaisesRegex(ValueError, "independent domain review and owner signoff"):
+        with self.assertRaisesRegex(ValueError, "target-matched reusable dataset"):
             VALIDATOR.validate(self.report)
 
 

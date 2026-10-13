@@ -3,13 +3,13 @@
   "evaluationId": "adult-beef-pasture-dmi-baseline-2026-10",
   "preparedOn": "2026-10-12",
   "decision": "no_go",
-  "decisionStatus": "preparatory_unsigned",
+  "decisionStatus": "evidence_based_no_go",
   "decisionScope": "Whether a leakage-safe predictive DMI baseline can be evaluated against the mechanistic reference on the current adult beef-pasture cow evidence. This is not full-engine validation.",
   "sourceReadiness": {
     "path": "docs/evidence/dmi-supervised-readiness-2026-10.json",
     "schemaVersion": "riose.supervised-readiness/v1",
     "decision": "no_go",
-    "signoffStatus": "pending",
+    "signoffStatus": "not_required_for_evidence_based_no_go",
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0
   },
@@ -32,7 +32,7 @@
       "status": "not_fit",
       "algorithm": null,
       "artifact": null,
-      "reason": "Training is gated on an eligible, signed-off dataset readiness decision."
+      "reason": "Training is gated on an eligible target-matched dataset; none is currently available."
     }
   ],
   "leakageAudit": {
@@ -65,13 +65,13 @@
     "reason": "No model was fit or run."
   },
   "limitations": [
-    "This preparatory no-go follows the current unsigned #109 evidence gate and is not a final signed-off readiness decision.",
+    "This evidence-based no-go records that no target-matched individual DMI cohort is available. No independent expert review was obtained; this is not a scientific endorsement of model predictions.",
     "No training, held-out evaluation, predictive metric, or product integration was performed.",
     "The readiness matrix's dairy and feedlot component cohorts do not match the specified mature pasture beef-cow target.",
     "No result from this artifact establishes empirical validity of the mechanistic reference or full simulation engine."
   ],
   "nextEvidenceRequired": [
-    "Complete and sign off the #109 data-readiness decision, including independent domain review tracked by #22.",
+    "Reassess #109 if a public, reusable, target-matched individual DMI cohort becomes available.",
     "Provide a licensed individual-level total-DMI cohort for the target population with animal and study/trial identity.",
     "Pre-register grouped train/validation/test partitions and feature provenance before fitting any baseline.",
     "Only after the gate passes, evaluate baseline and mechanistic reference on identical held-out cases and report MAE, RMSE, bias, subgroup limits, CPU inference, training cost, and memory."

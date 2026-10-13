@@ -105,13 +105,11 @@ def validate(report: dict[str, Any]) -> None:
         "no_go must state the missing target-matched source and outcome",
     )
     require(
-        any("independent zootechnical review" in item.lower() for item in report["nextEvidenceRequired"])
-        and any("project-owner signoff" in item.lower() for item in report["nextEvidenceRequired"]),
-        "reopening criteria must require independent domain review and owner signoff",
+        any("public or authorized individual-level dataset" in item.lower() for item in report["nextEvidenceRequired"]),
+        "reopening criteria must require a target-matched reusable dataset",
     )
     signoff = report.get("signoff", {})
-    require(signoff.get("status") == "pending", "this unsigned report must remain pending")
-    require(signoff.get("domainExpertReview") == "pending_not_obtained", "do not imply expert signoff")
+    require(signoff.get("domainExpertReview") == "not_performed", "do not imply expert signoff")
     require(report.get("performance", {}).get("modelTrainingPerformed") is False, "no training should be claimed")
 
 

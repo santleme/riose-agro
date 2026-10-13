@@ -1,6 +1,6 @@
 # Gate de prontidão para estimação supervisionada de DMI — 2026-10-13
 
-**Decisão técnica preparatória: no-go.** A evidência local revisada não contém uma coorte elegível de vacas de corte maduras em pastagem com medições individuais reutilizáveis de DMI total. Este documento é um relatório de prontidão de dados, não validação do motor nem parecer zootécnico assinado. O estado de aprovação permanece pendente.
+**Decisão de prontidão de dados: no-go.** A evidência pública e reutilizável auditada não contém uma coorte elegível de vacas de corte maduras em pastagem com medições individuais de DMI total. Isso impede confiar em previsões individuais de consumo para essa população; não torna inútil a simulação mecanística, que continua podendo explorar cenários com as equações científicas existentes. Este documento não valida previsões nem representa parecer zootécnico independente, que não foi realizado.
 
 ## Estimando proposto
 
@@ -25,9 +25,8 @@ O conjunto local de vacas Angus [mdpi-angus-cow-grazing-audit.json](mdpi-angus-c
 
 1. Obter microdados individuais públicos ou autorizados, com termos de reutilização específicos.
 2. Confirmar vacas de corte maduras em pastagem, DMI total individual em kg MS/animal/dia, protocolo, missingness e IDs de animal e ensaio.
-3. Obter a revisão zootécnica independente acompanhada pela [issue #22](https://github.com/santleme/riose-agro/issues/22), incluindo identificação/credenciais e avaliação do enquadramento da população.
-4. Recalcular elegibilidade e aprovar previamente uma avaliação com holdout por estudo/ensaio antes de qualquer treino.
+3. Recalcular elegibilidade e pré-registrar uma avaliação com holdout por estudo/ensaio antes de qualquer treino.
 
 ## Assinatura e limite de atribuição
 
-O campo de aprovação está **pendente**: não há signoff ou atribuição do responsável do projeto e não existe parecer zootécnico independente registrado. O brief da issue #22 agora inclui um bloco separado para que o(a) especialista avalie explicitamente o estimando de vacas de corte maduras em pastagem com DMI total, além do caso USDA/CPER de ADG/pastejo. A definição acima é uma proposta operacional explícita para tornar o gate auditável, não uma decisão de especialista nem uma aprovação para expansão do produto. Consulte o JSON versionado para campos, estados e links validados por `scripts/validate_dmi_supervised_readiness.py`.
+Não houve signoff nem parecer zootécnico independente. A issue #22 foi encerrada como `NOT_PLANNED`; sua revisão não é dependência operacional. O no-go decorre especificamente da ausência de uma coorte aberta elegível, não da falta de parecer. Isso não aprova previsões individuais nem impede o uso da simulação como exploração mecanística claramente identificada. Consulte o JSON versionado e `scripts/validate_dmi_supervised_readiness.py` para os campos auditáveis do gate.

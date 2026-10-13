@@ -51,4 +51,4 @@ The explicit manifest and validator establish a reusable pattern for future sour
 - **#110:** the original target remains untrained. A separate exploratory finishing-steer experiment uses leave-one-experiment-out evaluation and does not satisfy or replace #110.
 - **#15:** these sources do not establish calibrated uncertainty intervals for DMI or the full simulator.
 - **#96:** source decisions are cohort-specific. The Mendeley dataset is eligible only for a separate forage-biomass module.
-- **#22:** remains open because its independent-review acceptance criteria have not been met.
+- **#22:** closed as `NOT_PLANNED`; no independent review was performed. It is not a prerequisite for product engineering. The #109 DMI gate remains NO-GO because no eligible open cohort for mature beef cows on pasture was found.

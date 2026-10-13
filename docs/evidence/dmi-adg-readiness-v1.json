@@ -5,9 +5,9 @@
   "purpose": "Reference-only readiness assessment for DMI/ADG datasets and separate scientific modules.",
   "domainExpertReview": {
     "status": "pending_not_obtained",
-    "statement": "Nenhum parecer zootécnico independente foi realizado; a classificação de yearlings como adultos permanece pendente.",
+    "statement": "Nenhum parecer zootécnico independente foi realizado; a fonte USDA/CPER continua identificada como yearling steers e não é evidência de vacas adultas.",
     "reference": "docs/caso-zootecnico-demonstrativo.md",
-    "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. A issue #22 acompanha a revisão independente."
+    "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. Nenhuma revisão independente foi realizada; a issue #22 foi encerrada como NOT_PLANNED e não é dependência para o uso exploratório."
   },
   "sources": [
     {
@@ -1701,7 +1701,7 @@
   "processing": {
     "sourceCount": 28,
     "inputFileCount": 48,
-    "elapsedSeconds": 0.02377,
+    "elapsedSeconds": 0.025229,
     "elapsedTimeKind": "observed_wall_clock_seconds",
     "componentAssessmentCount": 7
   },
