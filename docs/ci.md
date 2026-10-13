@@ -35,6 +35,9 @@ The native Rust job runs:
 ```sh
 cargo test --locked --workspace
 cargo build --locked --workspace --release
+npm run test:parity
 ```
+
+The trajectory parity command uses the released native CLI to compare every hourly engine snapshot and metric against the JavaScript engine for the supported baseline and housing scenarios. It does not apply a numeric tolerance.
 
 The WASM build uses the repository's existing shell script through `npm run build:wasm`; the subsequent Git diff check fails if the tracked module is stale. CI does not install PyTorch/ROCm, require AMD/GPU hardware, download datasets, or run performance benchmarks.

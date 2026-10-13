@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node src/server/server.js",
     "test": "node --test --test-concurrency=1",
+    "test:parity": "node scripts/run-trajectory-parity.js",
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
     "benchmark:amd": "python3 scripts/benchmark_amd.py",
@@ -13,6 +14,7 @@
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
+    "bench:farm-core": "cargo run --release -p riose-core --bin bench-farm-core",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "archive:comparison": "node scripts/archive-comparison.js",
     "validate:outcome": "node scripts/validate-outcome-record.js",

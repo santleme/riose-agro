@@ -8,7 +8,7 @@
     "license": "Etalab Open License 2.0",
     "version": "1.1",
     "retrieved": "2026-10-12",
-    "sourceManifestSha256": "8f579a8369439b347fe916dc7965b69516b447c38307e38d74cc2b21750c8989",
+    "sourceManifestSha256": "bbd78adad5df54dd67c9e226aa6e912d5fe558bae5bc4f31d5ccfa4bebe93987",
     "archivedSourceFiles": [
       {
         "path": "GrASTech_1_Periods.xlsx",
@@ -60,7 +60,7 @@
       }
     ],
     "normalizedFile": "data/grastech-dairy-grazing-dmi/individual-dmi-observations.tsv",
-    "normalizedFileSha256": "920f8254e2d61522ee1f6d1e708fba7bf0e459e39f7d131300042a5d0e6d9ab4",
+    "normalizedFileSha256": "25888154443e964b8d6065c1d89af1d291ae3cd907af9bec9d2801708c05648f",
     "population": "Lactating Holstein dairy cows at one INRAE farm in France; experiment E1, one observation per cow under zero maize-silage/soybean-meal supplementation.",
     "target": "Measured total dry matter intake (kg DM/cow/day), equal to n-alkane-derived herbage intake in this zero-supplement arm.",
     "sourceCoverage": {

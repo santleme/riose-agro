@@ -179,6 +179,18 @@ def main(argv: list[str] | None = None) -> int:
             print(f"SCHEMA assets[{index}] {list(error.path)}: {error.message}")
             errors += 1
         aid = asset.get("id", f"<assets[{index}]>")
+        scale_hints = asset.get("scaleHints")
+        footprint = asset.get("footprint")
+        if isinstance(scale_hints, dict) and isinstance(footprint, list) and len(footprint) == 2:
+            cell = scale_hints.get("logicalCellPx", {})
+            rendered = scale_hints.get("preferredRenderSizePx", {})
+            if all(isinstance(v, int) and v > 0 for v in [*footprint, cell.get("width"), cell.get("height"), rendered.get("width"), rendered.get("height")]):
+                span = footprint[0] + footprint[1]
+                expected = [cell["width"] * span, cell["height"] * span]
+                actual = [rendered["width"], rendered["height"]]
+                if actual != expected:
+                    print(f"SCALE HINT ERROR [{aid}]: preferredRenderSizePx={actual}, expected {expected} from footprint and logicalCellPx")
+                    errors += 1
         if isinstance(aid, str) and aid in ids:
             print(f"DUPLICATE ID: {aid}")
             errors += 1

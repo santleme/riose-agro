@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "family": "riose-terrain-family-v1",
+  "status": "candidate",
+  "palette": [
+    "muted olive",
+    "sage",
+    "forest green",
+    "umber",
+    "dusty sienna"
+  ],
+  "layers": [
+    {
+      "id": "base-ground",
+      "order": 0,
+      "assetIds": [
+        "pasture.grass.premium.imagegen.v1"
+      ],
+      "rule": "Continuous base; use large calm areas and avoid repeated visible motifs."
+    },
+    {
+      "id": "secondary-surface",
+      "order": 1,
+      "assetIds": [
+        "terrain.soil.worn.imagegen.v1",
+        "terrain.soil.cultivated.imagegen.v1"
+      ],
+      "rule": "Worn and cultivated variants are alternate full ground tiles; replace the base tile for those cells rather than stacking a full diamond on top."
+    },
+    {
+      "id": "transition",
+      "order": 2,
+      "assetIds": [
+        "terrain.road.dirt-overlay.imagegen.v1",
+        "terrain.soil.worn.imagegen.v1"
+      ],
+      "rule": "Path is a transparent ribbon overlay with broken grass/soil edges. Worn ground uses a full alternate tile with irregular mixed edges; never place an opaque full diamond over another tile."
+    },
+    {
+      "id": "asset-grounding",
+      "order": 3,
+      "assetIds": [
+        "terrain.road.dirt-overlay.imagegen.v1",
+        "terrain.soil.worn.imagegen.v1"
+      ],
+      "rule": "Place the road under moving animals/vehicles and worn-ground variant in high-traffic cells under their ground-contact anchors; house stone pad and tree roots provide their own grounding."
+    }
+  ],
+  "placementRules": {
+    "depth": "render ground layers first, then objects sorted by ground-contact anchor",
+    "scale": "all tile surfaces share 2:1 projection and logical footprint [2,2]",
+    "repetition": "alternate base and state tiles deterministically; do not repeat one pattern in a visible grid",
+    "approval": "all entries remain REVIEW until visual, alpha, color-profile, and 3x3 transition review pass"
+  }
+}

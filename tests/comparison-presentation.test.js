@@ -10,6 +10,7 @@ import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {environmentDiffRows,initialEnvironmentState} from '../src/client/environment-inputs.js';
 import {bundleEngineSources,ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
 import {engineSourceSha256} from '../scripts/engine-source-hash.js';
+import {WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 const source=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
@@ -25,7 +26,8 @@ function presentation(snapshot=new FarmEngine(42,2).snapshot()){
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
     scenarioNames:{pasture:'Pasto',barn:'Confinamento',normal:'Ameno',hot:'Calor',rain:'Chuvoso'},calculateThi,THI_SOURCE,environmentDiffRows,
     escapeHtml:value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])),
-    compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}}
+    compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}},
+    postWorkerMessage(message){context.worker.postMessage({...message,protocolVersion:WORKER_PROTOCOL_VERSION});}
   });
   // Execute the existing presentation and import handlers without booting the canvas/worker UI.
   vm.runInContext(source.slice(source.indexOf('const currency='),source.indexOf('const actionNames=')),context);
