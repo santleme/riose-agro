@@ -1,9 +1,9 @@
 {
   "report_version": "1.0",
-  "purpose": "Measured raster evidence for style calibration; not an approval or material-semantic palette.",
+  "purpose": "Descriptive raster measurements for assigned reference roles; not an approval, sprite-style authority, or material-semantic palette.",
   "images": [
     {
-      "role": "urban_style_master",
+      "role": "urban_composition_master",
       "source": "docs/assets/pixel-art-urban-reference.png",
       "sha256": "a979c019ef7aa5a744bfcd129640f8c7eb33bea01afec0085e6fda3d17aaa937",
       "width_px": 1257,
@@ -194,8 +194,8 @@
     }
   ],
   "cross_reference_notes": [
-    "The urban master is the visual-style authority. The V7 scene controls rural content and relative scale only.",
-    "Palette chips are representative median-cut bins from the urban source, not exact material labels or production swatches.",
+    "The urban master is used only for composition grammar; the V7 scene controls rural content and relative scale.",
+    "Palette chips are descriptive median-cut bins from the urban source, not Riose style tokens, exact material labels, or production swatches.",
     "Outline width, cluster-size limits, shadow direction, sprite scale, and transparent-edge behavior are not reliably inferred by these global raster statistics and remain a visual review task."
   ]
 }

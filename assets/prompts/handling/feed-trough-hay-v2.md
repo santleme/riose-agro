@@ -1,0 +1,3 @@
+# Cocho de madeira com feno V2
+
+Editar o asset de cocho de madeira mantendo o formato longo, quatro pés curtos e chapas metálicas discretas nos cantos. Reduzir o feno a poucos agrupamentos intencionais; evitar fios individuais ou textura ruidosa. Construir como pixel art isométrica nativa, com clusters definidos, contorno fino seletivo, tons de madeira controlados e 3–4 níveis chapados por material. Usar os sprites aprovados de casa/árvore/trator como âncoras locais de escala e acabamento; Fazenda V7 serve apenas para função e escala rural. Saída isolada com alpha transparente, sem glow, sombra, chão, texto, moldura ou props extras.

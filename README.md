@@ -54,6 +54,8 @@ Run the deterministic engine and data-contract tests with Node.js:
 npm test
 ```
 
+The supported CI toolchains and checks are documented in [docs/ci.md](docs/ci.md).
+
 Run the preset scenario harness and write one `*.result.json` file per scenario:
 
 ```bash
@@ -84,7 +86,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 
 ## Project files
 
-- `index.html`, `style.css` — interactive cattle-farm simulator and Scenario Studio
+- `index.html`, `src/client/style.css` — interactive cattle-farm simulator and Scenario Studio
 - `home.html`, `src/client/home.css`, `src/client/home.js` — optional responsive project landing page
 - `simulator.html` — direct link to the farm experience
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
@@ -158,3 +160,7 @@ Live demo: https://agro-smallville-mvp.qwdqwdwqdqdqwdwwqqw.chatgpt.site
 Os exploradores de dados observados estão em [`adult-data.html`](adult-data.html) (USDA/CPER), [`rothamsted-data.html`](rothamsted-data.html), [`cgrec-data.html`](cgrec-data.html) (USDA CGREC 1989–2015) e [`hpgrs-data.html`](hpgrs-data.html) (USDA/ARS HPGRS 1982–2022). CPER, Rothamsted e HPGRS são coortes de animais jovens/yearlings, não de vacas maduras; cada fonte permanece separada e seus limites etários estão documentados. Use `npm run audit:usda-hpgrs-longterm` para conferir integridade e cobertura, `npm run audit:engine-adg-range` para uma checagem descritiva de faixa de ADG e `npm run audit:engine-dmi-mendeley` para a checagem fixa do DMI em Nelore confinado. Esses checks não validam nem calibram o motor completo.
 
 The versioned scenario contract v2 extends the existing comparison manifest while preserving v1 replay. See [the contract and version policy](docs/scenario-contract-v2.md), [the JSON Schema](schemas/scenario-contract.schema.json), and run `npm run example:scenario-contract` for a deterministic round-trip and replay example.
+## Native scenario CLI
+
+The headless Rust runner accepts versioned baseline and housing-comparison
+requests. See [the CLI contract and exit codes](docs/native-scenario-cli.md).

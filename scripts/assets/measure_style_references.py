@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure non-semantic raster properties of the two approved RIOSE references.
+"""Measure non-semantic raster properties of the urban composition and rural content references.
 
 This report supports art-direction calibration; it does not approve an asset or
 infer material names, outline width, or a native sprite grid.
@@ -20,7 +20,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REFERENCES = {
-    "urban_style_master": ROOT / "docs/assets/pixel-art-urban-reference.png",
+    "urban_composition_master": ROOT / "docs/assets/pixel-art-urban-reference.png",
     "rural_content_scale_master": ROOT
     / "docs/assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png",
 }
@@ -154,11 +154,11 @@ def main() -> int:
 
     report = {
         "report_version": "1.0",
-        "purpose": "Measured raster evidence for style calibration; not an approval or material-semantic palette.",
+        "purpose": "Descriptive raster measurements for assigned reference roles; not an approval, sprite-style authority, or material-semantic palette.",
         "images": [measure_image(path, role) for role, path in DEFAULT_REFERENCES.items()],
         "cross_reference_notes": [
-            "The urban master is the visual-style authority. The V7 scene controls rural content and relative scale only.",
-            "Palette chips are representative median-cut bins from the urban source, not exact material labels or production swatches.",
+            "The urban master is used only for composition grammar; the V7 scene controls rural content and relative scale.",
+            "Palette chips are descriptive median-cut bins from the urban source, not Riose style tokens, exact material labels, or production swatches.",
             "Outline width, cluster-size limits, shadow direction, sprite scale, and transparent-edge behavior are not reliably inferred by these global raster statistics and remain a visual review task.",
         ],
     }

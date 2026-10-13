@@ -29,13 +29,14 @@ function submitCommand(raw){
   if(/drought|seca|water access|irrigat|dry spell/.test(text)){
     appendMessage('system','The current model does not simulate drought duration, irrigation, or soil-water balance. Its climate options are mild, hot, and rain, so I left this world unchanged.');return;
   }
-  if(/north pasture|east pasture|move (the )?(herd|cattle|animals)|move cattle|move the herd/.test(text)){
+  if(/(?:north|east|south|west|named)\s+(?:pasture|paddock)|(?:move|send|assign)\s+(?:the\s+)?(?:herd|cattle|animals)\s+to\s+(?:paddock|pasture\s+[a-d])/.test(text)){
     appendMessage('system','Animals move between areas under the model’s own behavior rules. Directly assigning a herd to a named paddock is not supported yet, so I left their positions unchanged.');return;
   }
-  const housing=/confinement|barn|feedlot/.test(text)?'barn':/pasture|grass|pasto/.test(text)?'pasture':null;
+  const feedPlanIntent=/(feed plan|feeding plan|diet|ration|plano alimentar|dieta)/.test(text);
+  const housing=/confinement|barn|feedlot/.test(text)?'barn':!feedPlanIntent&&/(?:herd|cattle|animals|move|send|return|rebanho|gado|mover).{0,32}(?:pasture|grass|pasto)|(?:pasture|grass|pasto).{0,32}(?:herd|cattle|animals|rebanho|gado)/.test(text)?'pasture':null;
   const weather=/hot|heat|calor/.test(text)?'hot':/rain|chuv|wet/.test(text)?'rain':/mild|normal|ameno/.test(text)?'normal':null;
   const supplementMatch=text.match(/(?:supplement|suplement\w*)\D{0,16}(\d+(?:[.,]\d+)?)/);
-  const diet=/concentrate|concentrado/.test(text)?'concentrate':/balanced|balancead/.test(text)?'balanced':null;
+  const diet=/concentrate|concentrado/.test(text)?'concentrate':/balanced|balancead/.test(text)?'balanced':feedPlanIntent&&/pasture|pasto/.test(text)?'pasture':null;
   const changes=[];
   if(housing){document.getElementById(housing==='barn'?'barnbtn':'pasturebtn').click();changes.push(housing==='barn'?'herd location set to confinement':'herd location set to pasture');}
   if(weather){setSelect('weather',weather);changes.push(({normal:'climate set to mild',hot:'climate set to hot',rain:'climate set to rain'})[weather]);}
@@ -52,6 +53,7 @@ document.addEventListener('riose:world-state',event=>{
   currentHour=event.detail.hour;
   const day=Math.floor(currentHour/24)+1;
   const safeDay=Math.min(30,day);
+  if(currentHour>=719)document.dispatchEvent(new CustomEvent('riose:timeline-horizon'));
   timeline.min=String(safeDay);
   if(Number(timeline.value)<safeDay)timeline.value=String(safeDay);
   timelineStart.textContent='Day '+String(safeDay).padStart(2,'0');

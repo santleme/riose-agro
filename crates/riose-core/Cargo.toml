@@ -14,3 +14,11 @@ crate-type = ["rlib", "cdylib"]
 [[bin]]
 name = "bench-metabolism"
 path = "src/bin/bench_metabolism.rs"
+
+[[bin]]
+name = "bench-farm-core"
+path = "src/bin/bench_farm_core.rs"
+
+[[bin]]
+name = "riose-run"
+path = "src/bin/riose_run.rs"

@@ -13,6 +13,7 @@
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
+    "bench:farm-core": "cargo run --release -p riose-core --bin bench-farm-core",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "archive:comparison": "node scripts/archive-comparison.js",
     "validate:outcome": "node scripts/validate-outcome-record.js",
