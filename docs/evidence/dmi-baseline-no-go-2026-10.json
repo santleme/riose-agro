@@ -9,7 +9,7 @@
     "path": "docs/evidence/dmi-supervised-readiness-2026-10.json",
     "schemaVersion": "riose.supervised-readiness/v1",
     "decision": "no_go",
-    "signoffStatus": "not_required_for_evidence_based_no_go",
+    "signoffStatus": "evidence_based_no_go",
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0
   },

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the preparatory no-go for the gated adult-cow DMI baseline."""
+"""Validate the evidence-based no-go for the gated adult-cow DMI baseline."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ def repo_file(relative_path: Any, message: str) -> Path:
 def validate(report: dict[str, Any], readiness_report: dict[str, Any] | None = None) -> None:
     require(report.get("schemaVersion") == "riose.dmi-baseline-evaluation/v1", "unsupported schemaVersion")
     require(report.get("decision") == "no_go", "current evidence requires no_go")
-    require(report.get("decisionStatus") == "preparatory_unsigned", "do not imply a signed-off final decision")
+    require(report.get("decisionStatus") == "evidence_based_no_go", "do not imply a scientific endorsement")
     estimand = report.get("estimand", {})
     require(estimand.get("unitOfAnalysis") == "animal-period", "unexpected analysis unit")
     require(estimand.get("targetPopulationAvailable") is False, "target population cannot be marked available")
@@ -52,7 +52,10 @@ def validate(report: dict[str, Any], readiness_report: dict[str, Any] | None = N
     validate_readiness(gate)
     require(gate.get("schemaVersion") == readiness.get("schemaVersion"), "readiness schema mismatch")
     require(gate.get("decision") == "no_go", "linked readiness gate is no longer no_go")
-    require(gate.get("signoff", {}).get("status") == readiness.get("signoffStatus") == "pending", "readiness signoff changed")
+    require(
+        gate.get("signoff", {}).get("status") == readiness.get("signoffStatus") == "evidence_based_no_go",
+        "readiness status mismatch",
+    )
     require(gate.get("reviewedMatrix", {}).get("eligibleSourcesForTarget") == readiness.get("eligibleSourcesForTarget") == 0,
             "eligible-source count mismatch")
     require(gate.get("reviewedMatrix", {}).get("conditionalSourcesForTarget") == readiness.get("conditionalSourcesForTarget") == 0,
@@ -100,7 +103,7 @@ def validate(report: dict[str, Any], readiness_report: dict[str, Any] | None = N
 def main() -> None:
     with REPORT.open(encoding="utf-8") as stream:
         validate(json.load(stream))
-    print(f"Validated preparatory baseline no-go report: {REPORT.relative_to(ROOT)}")
+    print(f"Validated evidence-based baseline no-go report: {REPORT.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

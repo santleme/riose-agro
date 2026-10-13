@@ -25,11 +25,12 @@ test('supervised DMI readiness report validates its target, evidence links, and 
     report.reviewedMatrix.eligibleSourcesForTarget + report.reviewedMatrix.conditionalSourcesForTarget + report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget,
     report.reviewedMatrix.reviewedSourceCount
   );
-  assert.equal(report.signoff.status, 'pending');
+  assert.equal(report.signoff.status, 'evidence_based_no_go');
   assert.equal(report.signoff.projectOwner, 'not_recorded');
-  assert.equal(report.signoff.domainExpertReview, 'pending_not_obtained');
-  assert.ok(report.blockers.some(reason => reason.includes('total-DMI estimand')));
-  assert.ok(report.nextEvidenceRequired.some(requirement => requirement.includes('Project-owner signoff')));
+  assert.equal(report.signoff.domainExpertReview, 'not_performed');
+  assert.ok(report.blockers.some(reason => reason.includes('No locally accessible')));
+  assert.ok(report.nextEvidenceRequired.some(requirement => requirement.includes('individual-level dataset')));
+  assert.ok(!report.nextEvidenceRequired.some(requirement => requirement.includes('independent zootechnical review')));
   assert.equal(report.performance.modelTrainingPerformed, false);
   const soares = report.candidateEvidence.find(candidate => candidate.id === 'soares-2026-holstein-gyr-pasture-dmi');
   assert.ok(soares);

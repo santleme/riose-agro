@@ -230,7 +230,7 @@
   ],
   "signoff": {
     "status": "evidence_based_no_go",
-    "projectOwner": "user-directed product scope; no claim of scientific endorsement",
+    "projectOwner": "not_recorded",
     "domainExpertReview": "not_performed",
     "reference": "https://github.com/santleme/riose-agro/issues/22",
     "note": "Issue #22 is closed as NOT_PLANNED. The no-go is based on zero eligible open target cohorts; it does not imply that mechanistic simulations are useless or that predictions are validated."

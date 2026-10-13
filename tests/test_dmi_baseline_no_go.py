@@ -17,7 +17,7 @@ with (ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.json").open(encodin
 
 
 class BaselineNoGoReportTest(unittest.TestCase):
-    def test_current_evidence_validates_as_unsigned_no_go(self):
+    def test_current_evidence_validates_as_evidence_based_no_go(self):
         validate(REPORT_DATA)
 
     def test_unmeasured_metrics_cannot_be_zero_error(self):
@@ -34,7 +34,7 @@ class BaselineNoGoReportTest(unittest.TestCase):
 
         report = copy.deepcopy(REPORT_DATA)
         report["decisionStatus"] = "final_signed_off"
-        with self.assertRaisesRegex(ValueError, "do not imply a signed-off"):
+        with self.assertRaisesRegex(ValueError, "do not imply a scientific endorsement"):
             validate(report)
 
     def test_no_go_cannot_claim_training_or_load_readiness_outside_repository(self):
