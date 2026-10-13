@@ -1,0 +1,628 @@
+{
+  "classification": "within_source_grouped_by_animal_behavior_classification_diagnostic",
+  "source": {
+    "title": "Labeled sensor dataset of beef cattle behavior grazing desert rangelands",
+    "doi": "10.6084/m9.figshare.28801181.v2",
+    "url": "https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181",
+    "license": "CC BY 4.0",
+    "article": "https://doi.org/10.1016/j.atech.2025.101002",
+    "input": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "inputMd5": "7cd143e8cccc79a5e159eaa83428529f"
+  },
+  "scope": {
+    "target": "human-reviewed categorical behavior (GR, RE, RU, WA)",
+    "predictor": "single 1-minute triaxial-accelerometer motion index (MI)",
+    "population": "24 beef cattle across four breeds at two New Mexico ranches; sampled sessions in summer/fall 2022",
+    "grain": "one unambiguous animal-minute; repeated same-label timestamps collapsed to one mean MI; conflicting-label timestamps excluded",
+    "not_valid_for": [
+      "DMI prediction or calibration",
+      "ADG prediction or validation",
+      "BR-CORTE evaluation",
+      "Riose engine validation",
+      "whole-day activity budgets"
+    ]
+  },
+  "preprocessingAudit": {
+    "publishedRows": 9222,
+    "animalTimestampKeys": 8918,
+    "repeatedAnimalTimestampKeys": 290,
+    "repeatedRowsBeyondOnePerKey": 304,
+    "exactDuplicateExtraRows": 34,
+    "conflictingLabelTimestampKeys": 54,
+    "rowsInConflictingLabelKeysExcluded": 121,
+    "sameLabelRepeatedKeysCollapsed": 236,
+    "analysisRows": 8864,
+    "animalGroups": 24,
+    "duplicateRowsPolicy": "Collapse rows sharing animal and minute to one row by averaging motion index when labels agree; exclude all rows for a minute when repeated labels conflict. Animal identity remains the CV group."
+  },
+  "candidateScreening": {
+    "selected": {
+      "source": "Perea et al., data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+      "labelsAndMethod": "Human annotations synchronized from video to 1-minute animal rows; four behavior classes GR/RE/RU/WA plus derived active/static state; one-dimensional MI summarized from tri-axial accelerometry.",
+      "identityAndGrain": "Breed and ear-tag ID support 24 animal groups; timestamps permit animal-minute duplicate audit.",
+      "existingEvaluation": "The local source audit records that the paper reports classification experiments, but no local reproducible grouped-by-animal evaluation existed; this artifact performs one."
+    },
+    "notPooled": [
+      {
+        "source": "Grazing ingestive behavior compilation (10.57745/RPDBI6)",
+        "localEvidence": "docs/evidence/grazing-ingestive-behavior-audit.json",
+        "populationAndGrain": "676 treatment/experimental-condition rows aggregated from 90 papers and 199 experiments across ruminants.",
+        "outcomesAndMethod": "Literature-coded intake rate (g DMI/min), DMI/BW, and rate/BW; no time-aligned sensor feature, individual animal identifier, or row-level behavior classification labels.",
+        "decision": "Not a behavior-classification cohort; keep as a separate literature summary and do not pool with Perea."
+      },
+      {
+        "source": "USDA/CPER 2019-2020 (10.15482/USDA.ADC/1524788)",
+        "localEvidence": "docs/evidence/usda-cper-association.json",
+        "populationAndGrain": "33 yearling steers, 36 animal-period rows, three 60-day intervals; Eartag identifies animals.",
+        "outcomesAndMethod": "Observed ADG_60d in kg/steer/day associated descriptively with grazing-bout duration (5-minute resolution) and mean grazing velocity (m/min); behavior variables are period summaries, not behavior-class labels aligned to a sensor feature.",
+        "existingEvaluation": "docs/evidence/usda-cper-association.json reports pooled and adjusted within-study observational rank associations with animal-cluster bootstrap; it is not a classifier or external validation.",
+        "decision": "Do not use as behavior-classification training/evaluation and do not merge with Perea; it remains a separate ADG-pastejo association cohort."
+      }
+    ]
+  },
+  "evaluation": {
+    "method": "six-fold grouped out-of-fold evaluation; each fold with one animal from each breed; all rows from each Breed:ID stay in one held-out fold",
+    "foldSeed": 20261013,
+    "noAnimalOverlap": true,
+    "model": "multinomial logistic regression using only MI; training-fold weighted centering/scaling; training-fold weights equalize animal contribution and then class mass; L2=0.01",
+    "baseline": "training-fold majority behavior class",
+    "metrics": {
+      "logistic_observation_weighted": {
+        "accuracy": 0.73860559566787,
+        "balancedAccuracy": 0.7196190996732101,
+        "macroF1": 0.6615890585427835,
+        "perClass": {
+          "GR": {
+            "precision": 0.9207317073170732,
+            "recall": 0.8283699059561128,
+            "f1": 0.8721122112211221,
+            "support": 3828.0
+          },
+          "RE": {
+            "precision": 0.506806282722513,
+            "recall": 0.25500526870389884,
+            "f1": 0.33929197336137396,
+            "support": 1898.0
+          },
+          "RU": {
+            "precision": 0.38022626660108216,
+            "recall": 0.8393051031487514,
+            "f1": 0.5233581584292485,
+            "support": 921.0
+          },
+          "WA": {
+            "precision": 0.8712993421052632,
+            "recall": 0.9557961208840776,
+            "f1": 0.9115938911593892,
+            "support": 2217.0
+          }
+        },
+        "confusionMatrixActualRowsPredictedColumns": [
+          [
+            3171.0,
+            347.0,
+            2.0,
+            308.0
+          ],
+          [
+            151.0,
+            484.0,
+            1258.0,
+            5.0
+          ],
+          [
+            24.0,
+            124.0,
+            773.0,
+            0.0
+          ],
+          [
+            98.0,
+            0.0,
+            0.0,
+            2119.0
+          ]
+        ]
+      },
+      "logistic_equal_animal_weighted": {
+        "accuracy": 0.741130619912341,
+        "balancedAccuracy": 0.7200270840148827,
+        "macroF1": 0.6642230410345241,
+        "perClass": {
+          "GR": {
+            "precision": 0.9182956219334034,
+            "recall": 0.8388706597769475,
+            "f1": 0.876788113065485,
+            "support": 10.257047604220991
+          },
+          "RE": {
+            "precision": 0.5004198873699331,
+            "recall": 0.25444948829835656,
+            "f1": 0.33736057755124427,
+            "support": 5.190539967068138
+          },
+          "RU": {
+            "precision": 0.3780130006940586,
+            "recall": 0.8306743752709987,
+            "f1": 0.5195813565027761,
+            "support": 2.5112621147451666
+          },
+          "WA": {
+            "precision": 0.892406057992954,
+            "recall": 0.9561138127132279,
+            "f1": 0.9231621170185907,
+            "support": 6.041150313965734
+          }
+        },
+        "confusionMatrixActualRowsPredictedColumns": [
+          [
+            8.604336291116422,
+            0.9628424725789463,
+            0.004452034798855608,
+            0.6854168057267678
+          ],
+          [
+            0.43088900179289713,
+            1.3207302386126563,
+            3.4279442969757206,
+            0.010976429686864587
+          ],
+          [
+            0.06954963093692931,
+            0.35567139550056887,
+            2.0860410883076685,
+            0.0
+          ],
+          [
+            0.2651230541062422,
+            0.0,
+            0.0,
+            5.776027259859492
+          ]
+        ]
+      },
+      "majority_observation_weighted": {
+        "accuracy": 0.43185920577617326,
+        "balancedAccuracy": 0.25,
+        "macroF1": 0.15080365584620234,
+        "perClass": {
+          "GR": {
+            "precision": 0.43185920577617326,
+            "recall": 1.0,
+            "f1": 0.6032146233848094,
+            "support": 3828.0
+          },
+          "RE": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 1898.0
+          },
+          "RU": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 921.0
+          },
+          "WA": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2217.0
+          }
+        },
+        "confusionMatrixActualRowsPredictedColumns": [
+          [
+            3828.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            1898.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            921.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2217.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "majority_equal_animal_weighted": {
+        "accuracy": 0.42737698350920883,
+        "balancedAccuracy": 0.25,
+        "macroF1": 0.1497071160761259,
+        "perClass": {
+          "GR": {
+            "precision": 0.4273769835092065,
+            "recall": 1.0,
+            "f1": 0.5988284643045036,
+            "support": 10.257047604220979
+          },
+          "RE": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 5.190539967068184
+          },
+          "RU": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2.511262114745156
+          },
+          "WA": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 6.0411503139657325
+          }
+        },
+        "confusionMatrixActualRowsPredictedColumns": [
+          [
+            10.257047604220979,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            5.190539967068184,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.511262114745156,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0411503139657325,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    "perAnimalAccuracy": {
+      "AH:2003": 0.7233560090702947,
+      "AH:2004": 0.6991643454038997,
+      "AH:2008": 0.707395498392283,
+      "AH:2009": 0.6989528795811518,
+      "AH:2013": 0.6636636636636637,
+      "AH:2019": 0.7789473684210526,
+      "BH:4071": 0.7621776504297995,
+      "BH:4085": 0.8356164383561644,
+      "BH:4511": 0.7818791946308725,
+      "BH:4589": 0.7824561403508772,
+      "BH:5111": 0.8158567774936062,
+      "BH:6495": 0.8356164383561644,
+      "BR:7001": 0.7662337662337663,
+      "BR:8063": 0.7585365853658537,
+      "BR:8065": 0.6797385620915033,
+      "BR:8071": 0.7243816254416962,
+      "BR:8073": 0.7171717171717171,
+      "BR:8089": 0.6506024096385542,
+      "RC:1067": 0.8243559718969555,
+      "RC:2024": 0.7733333333333333,
+      "RC:2061": 0.7640750670241286,
+      "RC:35": 0.718475073313783,
+      "RC:6": 0.5838150289017341,
+      "RC:9012": 0.7413333333333333
+    },
+    "folds": [
+      {
+        "fold": 0,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2004",
+          "AH:2008",
+          "AH:2009",
+          "AH:2013",
+          "AH:2019",
+          "BH:4071",
+          "BH:4511",
+          "BH:4589",
+          "BH:5111",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8065",
+          "BR:8071",
+          "BR:8089",
+          "RC:1067",
+          "RC:2061",
+          "RC:35",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2003",
+          "BH:4085",
+          "BR:8073",
+          "RC:2024"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3035,
+          "RE": 1590,
+          "RU": 717,
+          "WA": 1795
+        },
+        "testClassRows": {
+          "GR": 793,
+          "RE": 308,
+          "RU": 204,
+          "WA": 422
+        },
+        "logisticIterations": 925
+      },
+      {
+        "fold": 1,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2008",
+          "AH:2009",
+          "AH:2013",
+          "BH:4071",
+          "BH:4085",
+          "BH:4511",
+          "BH:4589",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8071",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:35",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2019",
+          "BH:5111",
+          "BR:8065",
+          "RC:2061"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3280,
+          "RE": 1550,
+          "RU": 802,
+          "WA": 1782
+        },
+        "testClassRows": {
+          "GR": 548,
+          "RE": 348,
+          "RU": 119,
+          "WA": 435
+        },
+        "logisticIterations": 925
+      },
+      {
+        "fold": 2,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2009",
+          "AH:2013",
+          "AH:2019",
+          "BH:4071",
+          "BH:4085",
+          "BH:4589",
+          "BH:5111",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8065",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:2061",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2008",
+          "BH:4511",
+          "BR:8071",
+          "RC:35"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3333,
+          "RE": 1598,
+          "RU": 806,
+          "WA": 1894
+        },
+        "testClassRows": {
+          "GR": 495,
+          "RE": 300,
+          "RU": 115,
+          "WA": 323
+        },
+        "logisticIterations": 925
+      },
+      {
+        "fold": 3,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2008",
+          "AH:2009",
+          "AH:2013",
+          "AH:2019",
+          "BH:4071",
+          "BH:4085",
+          "BH:4511",
+          "BH:4589",
+          "BH:5111",
+          "BR:8063",
+          "BR:8065",
+          "BR:8071",
+          "BR:8073",
+          "BR:8089",
+          "RC:2024",
+          "RC:2061",
+          "RC:35",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2004",
+          "BH:6495",
+          "BR:7001",
+          "RC:1067"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3173,
+          "RE": 1630,
+          "RU": 773,
+          "WA": 1902
+        },
+        "testClassRows": {
+          "GR": 655,
+          "RE": 268,
+          "RU": 148,
+          "WA": 315
+        },
+        "logisticIterations": 925
+      },
+      {
+        "fold": 4,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2008",
+          "AH:2013",
+          "AH:2019",
+          "BH:4085",
+          "BH:4511",
+          "BH:4589",
+          "BH:5111",
+          "BH:6495",
+          "BR:7001",
+          "BR:8065",
+          "BR:8071",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:2061",
+          "RC:35",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2009",
+          "BH:4071",
+          "BR:8063",
+          "RC:6"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3080,
+          "RE": 1544,
+          "RU": 731,
+          "WA": 1849
+        },
+        "testClassRows": {
+          "GR": 748,
+          "RE": 354,
+          "RU": 190,
+          "WA": 368
+        },
+        "logisticIterations": 925
+      },
+      {
+        "fold": 5,
+        "trainAnimalCount": 20,
+        "testAnimalCount": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2008",
+          "AH:2009",
+          "AH:2019",
+          "BH:4071",
+          "BH:4085",
+          "BH:4511",
+          "BH:5111",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8065",
+          "BR:8071",
+          "BR:8073",
+          "RC:1067",
+          "RC:2024",
+          "RC:2061",
+          "RC:35",
+          "RC:6"
+        ],
+        "testAnimals": [
+          "AH:2013",
+          "BH:4589",
+          "BR:8089",
+          "RC:9012"
+        ],
+        "animalOverlap": [],
+        "trainClassRows": {
+          "GR": 3239,
+          "RE": 1578,
+          "RU": 776,
+          "WA": 1863
+        },
+        "testClassRows": {
+          "GR": 589,
+          "RE": 320,
+          "RU": 145,
+          "WA": 354
+        },
+        "logisticIterations": 925
+      }
+    ]
+  },
+  "limitations": [
+    "This is internal held-out-animal evaluation within one source, not external validation on a second ranch, study, sensor, or season.",
+    "The predictor is only one scalar motion index; no raw three-axis signals, GPS, forage state, animal physiology, or individual intake is included.",
+    "The 24 animals form a small and geographically narrow sample; observations are repeated minutes, not independent animals.",
+    "The source reports 290 animal-timestamp keys with repeated rows; 54 keys have conflicting behavior labels. The analysis excludes all rows from those 54 keys and collapses other repeated keys to avoid duplicate weighting.",
+    "Labels are minute-level annotations from video, with the source protocol carrying a previous label forward for behaviors shorter than 30 seconds; class errors and temporal label autocorrelation remain possible.",
+    "Held-out animals can still share ranch, breed-specific management, season, and collection conditions with training animals; performance does not establish cross-site transfer."
+  ],
+  "reproducibility": {
+    "script": "scripts/evaluate_perea_behavior_grouped.py",
+    "predictions": "docs/evidence/perea-behavior-grouped-oof-predictions.csv",
+    "predictionSha256": "125608faddded2b7cf4c90411d3f1c009b1efe3a491b638ccd3984a14eb54c01",
+    "dependencies": [
+      "Python standard library",
+      "NumPy"
+    ],
+    "deterministic": true
+  }
+}
