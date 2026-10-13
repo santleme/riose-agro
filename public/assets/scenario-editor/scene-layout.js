@@ -3,8 +3,16 @@ export const DEFAULT_LAYERS = [
   'handling', 'technology', 'animals', 'overlays',
 ];
 
+// Keep the established mapping for ordinary 32-bit seeds while incorporating
+// higher safe-integer bits instead of silently aliasing seed N with N + 2^32.
+const seedWord = (seed) => {
+  const low = Number(seed) >>> 0;
+  const high = Math.floor(Number(seed) / 0x100000000) >>> 0;
+  return (low ^ Math.imul(high, 0x9e3779b1)) >>> 0;
+};
+
 const hash = (seed, x, y) => {
-  let value = Math.imul(seed ^ Math.imul(x + 31, 0x45d9f3b), 0x45d9f3b);
+  let value = Math.imul(seedWord(seed) ^ Math.imul(x + 31, 0x45d9f3b), 0x45d9f3b);
   value = Math.imul(value ^ Math.imul(y + 17, 0x119de1f3), 0x119de1f3);
   value ^= value >>> 16;
   return (value >>> 0) / 4294967296;
@@ -343,7 +351,7 @@ function varyWaterPointStructure(scene, {seed, prefabs, manifest}) {
 }
 
 function stableSeedUnit(seed, key) {
-  let value = (Number(seed) >>> 0) ^ 0x9e3779b9;
+  let value = seedWord(seed) ^ 0x9e3779b9;
   for (let index = 0; index < key.length; index++) {
     value = Math.imul(value ^ key.charCodeAt(index), 0x45d9f3b);
     value ^= value >>> 16;

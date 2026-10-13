@@ -83,6 +83,19 @@ test('seed sweep preserves deterministic, collision-free in-bounds layouts for b
   }
 });
 
+test('safe-integer seed high bits affect structural placement instead of aliasing at 32 bits', () => {
+  for (const scenarioType of ['beef', 'dairy']) {
+    const lowSeed = generateFarmLayout({scenarioType, seed: 0, prefabs, manifest});
+    const highSeed = generateFarmLayout({scenarioType, seed: 2 ** 32, prefabs, manifest});
+    const waterPositions = scene => scene.prefabInstances
+      .filter(item => item.prefabId === 'water-point')
+      .map(({id, col, row}) => ({id, col, row}));
+    assert.notDeepEqual(waterPositions(highSeed), waterPositions(lowSeed), `${scenarioType} must incorporate the high seed bits`);
+    assert.deepEqual(validateFarmLayout(highSeed, {prefabs, manifest}), []);
+    assert.deepEqual(highSeed, generateFarmLayout({scenarioType, seed: 2 ** 32, prefabs, manifest}));
+  }
+});
+
 test('impossible declared adjacency constraints fail clearly and missing assets stay visible', () => {
   assert.throws(() => generateFarmLayout({
     scenarioType: 'beef', seed: 417, prefabs, manifest,
