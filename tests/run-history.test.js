@@ -115,6 +115,17 @@ test('marks a run from an incompatible engine version before replay',()=>{
   assert.match(runCompatibility(run).reason,/motor incompatível/);
 });
 
+test('fails closed when a saved run has missing or future history provenance',()=>{
+  const run=completedRun();
+  for(const version of [undefined,2]){
+    const candidate=structuredClone(run);
+    if(version===undefined)delete candidate.provenance.historyVersion;
+    else candidate.provenance.historyVersion=version;
+    assert.equal(runCompatibility(candidate).supported,false);
+    assert.match(runCompatibility(candidate).reason,/registro de histórico incompatível/);
+  }
+});
+
 test('handles local storage quota errors without hiding the run result',()=>{
   const storage={getItem(){return null;},setItem(){throw new DOMException('quota exceeded','QuotaExceededError');}};
   assert.throws(()=>recordRun(completedRun(),storage),/continua disponível/);

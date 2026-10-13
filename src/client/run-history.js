@@ -85,6 +85,7 @@ export function recordRun(run,storage=globalThis.localStorage){
 
 export function runCompatibility(run){
   if(!run||run.status!=='completed')return {supported:false,reason:'Esta execução não foi concluída e não pode ser reproduzida.'};
+  if(run.provenance?.historyVersion!==RUN_HISTORY_VERSION)return {supported:false,reason:'Versão do registro de histórico incompatível com esta instalação.'};
   if(run.engineVersion!==COMPARISON_ENGINE_VERSION)return {supported:false,reason:'Versão do motor incompatível com esta execução.'};
   if(run.manifest?.type!=='agroville-comparison'||run.manifest.version!==1)return {supported:false,reason:'Versão do manifesto não suportada por esta instalação.'};
   try{validateComparisonManifest(run.manifest);return {supported:true,reason:''};}
