@@ -1,0 +1,57 @@
+{
+  "format": "riose-js-rust-trajectory-parity",
+  "formatVersion": 1,
+  "scenario": "housing-comparison",
+  "seed": 2026,
+  "jsEngine": {
+    "engineVersion": "agroville-engine/1",
+    "implementation": "src/client/engine.js",
+    "nodeVersion": "v24.14.1"
+  },
+  "rustEngine": {
+    "engineVersion": "0.1.0",
+    "buildId": "riose-core@0.1.0",
+    "modelStatus": "demonstrative_unvalidated",
+    "provenance": "native-rust-core",
+    "validated": false
+  },
+  "buildId": "riose-core@0.1.0",
+  "checkpointCount": 1472,
+  "comparedFieldCount": 10737689,
+  "parityResult": "PASS",
+  "baselineArmParity": "PASS",
+  "interventionArmParity": "PASS",
+  "checks": {
+    "rngParity": "PASS",
+    "animalOrdering": "PASS",
+    "eventOrdering": "PASS",
+    "snapshotShape": "PASS",
+    "metricsParity": "PASS",
+    "toleranceIntroduced": false,
+    "deterministicRerun": "PASS"
+  },
+  "firstDivergence": null,
+  "rowsParity": "PASS",
+  "nativeComparisonInputSha256": "sha256:c26144a2e612ee74e1aa5db4282f971ffc4aee241f48f937cc68e4a251e3fbd7",
+  "artifactHashes": [
+    {
+      "path": "artifacts/parity/housing-comparison-2026-baseline-js-trajectory.json.gz",
+      "sha256": "sha256:502bb72e528a9d7a100af47c0519827268da89bec2e00908214994021453dacf"
+    },
+    {
+      "path": "artifacts/parity/housing-comparison-2026-baseline-rust-trajectory.json.gz",
+      "sha256": "sha256:ca83ee315dd3aebc713d7ebfa8e153d047c3d98ae130bccf4e60f79f8976e95a"
+    },
+    {
+      "path": "artifacts/parity/housing-comparison-2026-intervention-js-trajectory.json.gz",
+      "sha256": "sha256:b30a6bad6e02c3656a4c560f529967f8ca0588e68dfd1a0b401ac2773f15a4de"
+    },
+    {
+      "path": "artifacts/parity/housing-comparison-2026-intervention-rust-trajectory.json.gz",
+      "sha256": "sha256:e715bd730dbe4c339ad89b2986630ad3d06c2c48374887ce4138b060351bb09b"
+    }
+  ],
+  "metadata": {
+    "generatedAt": "2026-10-13T13:59:45.246Z"
+  }
+}

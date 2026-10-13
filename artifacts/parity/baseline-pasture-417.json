@@ -1,0 +1,45 @@
+{
+  "format": "riose-js-rust-trajectory-parity",
+  "formatVersion": 1,
+  "scenario": "baseline-pasture",
+  "seed": 417,
+  "jsEngine": {
+    "engineVersion": "agroville-engine/1",
+    "implementation": "src/client/engine.js",
+    "nodeVersion": "v24.14.1"
+  },
+  "rustEngine": {
+    "engineVersion": "0.1.0",
+    "buildId": "riose-core@0.1.0",
+    "modelStatus": "demonstrative_unvalidated",
+    "provenance": "native-rust-core",
+    "validated": false
+  },
+  "buildId": "riose-core@0.1.0",
+  "checkpointCount": 24,
+  "comparedFieldCount": 4083,
+  "parityResult": "PASS",
+  "checks": {
+    "rngParity": "PASS",
+    "animalOrdering": "PASS",
+    "eventOrdering": "PASS",
+    "snapshotShape": "PASS",
+    "metricsParity": "PASS",
+    "toleranceIntroduced": false,
+    "deterministicRerun": "PASS"
+  },
+  "firstDivergence": null,
+  "artifactHashes": [
+    {
+      "path": "artifacts/parity/baseline-pasture-417-js-trajectory.json.gz",
+      "sha256": "sha256:9e35bd7676d6c607c4035559d07c403c53201ac66cb02f77ac64fd61eb086967"
+    },
+    {
+      "path": "artifacts/parity/baseline-pasture-417-rust-trajectory.json.gz",
+      "sha256": "sha256:1f7815008f67ff2efa78972160b45e7db33cb39bc3fafc3ece6271c03a7bc481"
+    }
+  ],
+  "metadata": {
+    "generatedAt": "2026-10-13T13:59:45.246Z"
+  }
+}
