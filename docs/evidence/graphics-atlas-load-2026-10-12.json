@@ -3,7 +3,7 @@
   "benchmark": {
     "name": "graphics-atlas-fetch-decode",
     "source": {
-      "revision": "311f91b6c1a27e56f196f74c057a7163b5abe1b2",
+      "revision": "fb2cb6e891eab672d513f742be6a9ae6dcac73af",
       "dirty": false
     }
   },
@@ -75,11 +75,11 @@
           "unit": "ms",
           "statistics": {
             "sampleCount": 21,
-            "median": 23,
+            "median": 22.399999998509884,
             "spread": {
-              "min": 17.299999997019768,
-              "max": 74.20000000298023,
-              "range": 56.900000005960464
+              "min": 16.19999999552965,
+              "max": 70.59999999403954,
+              "range": 54.399999998509884
             }
           },
           "population": {
@@ -133,34 +133,34 @@
             "byteSize": 2864960,
             "width": 1536,
             "height": 1024,
-            "fetchMs": 13.5,
-            "decodeMs": 16.200000002980232,
-            "totalMs": 29.700000002980232
+            "fetchMs": 11.899999998509884,
+            "decodeMs": 17,
+            "totalMs": 28.899999998509884
           },
           {
             "repeat": 2,
             "byteSize": 2864960,
             "width": 1536,
             "height": 1024,
-            "fetchMs": 15.199999995529652,
-            "decodeMs": 16.5,
-            "totalMs": 31.69999999552965
+            "fetchMs": 14.600000001490116,
+            "decodeMs": 16.299999997019768,
+            "totalMs": 30.899999998509884
           },
           {
             "repeat": 3,
             "byteSize": 2864960,
             "width": 1536,
             "height": 1024,
-            "fetchMs": 13.799999997019768,
-            "decodeMs": 17,
-            "totalMs": 30.799999997019768
+            "fetchMs": 13.300000004470348,
+            "decodeMs": 15.5,
+            "totalMs": 28.80000000447035
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 30.8,
-          "minTotalMs": 29.7,
-          "maxTotalMs": 31.7
+          "medianTotalMs": 28.9,
+          "minTotalMs": 28.8,
+          "maxTotalMs": 30.9
         }
       },
       {
@@ -179,34 +179,34 @@
             "byteSize": 1482069,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 5.100000001490116,
-            "decodeMs": 12.799999997019768,
-            "totalMs": 17.899999998509884
+            "fetchMs": 4.899999998509884,
+            "decodeMs": 13.300000004470348,
+            "totalMs": 18.200000002980232
           },
           {
             "repeat": 2,
             "byteSize": 1482069,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 9.100000001490116,
-            "decodeMs": 13.299999997019768,
-            "totalMs": 22.399999998509884
+            "fetchMs": 8,
+            "decodeMs": 12.899999998509884,
+            "totalMs": 20.899999998509884
           },
           {
             "repeat": 3,
             "byteSize": 1482069,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 8.300000004470348,
-            "decodeMs": 13.899999998509884,
-            "totalMs": 22.200000002980232
+            "fetchMs": 8.200000002980232,
+            "decodeMs": 12.5,
+            "totalMs": 20.700000002980232
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 22.2,
-          "minTotalMs": 17.9,
-          "maxTotalMs": 22.4
+          "medianTotalMs": 20.7,
+          "minTotalMs": 18.2,
+          "maxTotalMs": 20.9
         }
       },
       {
@@ -225,34 +225,34 @@
             "byteSize": 1334238,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 5.0999999940395355,
-            "decodeMs": 13,
-            "totalMs": 18.099999994039536
+            "fetchMs": 4.5,
+            "decodeMs": 12.699999995529652,
+            "totalMs": 17.19999999552965
           },
           {
             "repeat": 2,
             "byteSize": 1334238,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 7.799999997019768,
-            "decodeMs": 12.100000001490116,
-            "totalMs": 19.899999998509884
+            "fetchMs": 7.100000001490116,
+            "decodeMs": 14.5,
+            "totalMs": 21.600000001490116
           },
           {
             "repeat": 3,
             "byteSize": 1334238,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 7.899999998509884,
-            "decodeMs": 12.399999998509884,
-            "totalMs": 20.299999997019768
+            "fetchMs": 7.399999998509884,
+            "decodeMs": 12.5,
+            "totalMs": 19.899999998509884
           }
         ],
         "browserLoad": {
           "repeats": 3,
           "medianTotalMs": 19.9,
-          "minTotalMs": 18.1,
-          "maxTotalMs": 20.3
+          "minTotalMs": 17.2,
+          "maxTotalMs": 21.6
         }
       },
       {
@@ -271,34 +271,34 @@
             "byteSize": 1703390,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 5.5,
-            "decodeMs": 14.600000001490116,
-            "totalMs": 20.100000001490116
+            "fetchMs": 4.899999998509884,
+            "decodeMs": 13.700000002980232,
+            "totalMs": 18.600000001490116
           },
           {
             "repeat": 2,
             "byteSize": 1703390,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 9.5,
-            "decodeMs": 14.599999994039536,
-            "totalMs": 24.099999994039536
+            "fetchMs": 9.699999995529652,
+            "decodeMs": 14.5,
+            "totalMs": 24.19999999552965
           },
           {
             "repeat": 3,
             "byteSize": 1703390,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 9.199999995529652,
-            "decodeMs": 13.800000004470348,
-            "totalMs": 23
+            "fetchMs": 8.5,
+            "decodeMs": 13.899999998509884,
+            "totalMs": 22.399999998509884
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 23,
-          "minTotalMs": 20.1,
-          "maxTotalMs": 24.1
+          "medianTotalMs": 22.4,
+          "minTotalMs": 18.6,
+          "maxTotalMs": 24.2
         }
       },
       {
@@ -317,34 +317,34 @@
             "byteSize": 1098273,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 5.100000001490116,
-            "decodeMs": 12.199999995529652,
-            "totalMs": 17.299999997019768
+            "fetchMs": 4.299999997019768,
+            "decodeMs": 11.899999998509884,
+            "totalMs": 16.19999999552965
           },
           {
             "repeat": 2,
             "byteSize": 1098273,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 6.5,
-            "decodeMs": 12.200000002980232,
-            "totalMs": 18.700000002980232
+            "fetchMs": 6.200000002980232,
+            "decodeMs": 12.099999994039536,
+            "totalMs": 18.299999997019768
           },
           {
             "repeat": 3,
             "byteSize": 1098273,
             "width": 2048,
             "height": 1024,
-            "fetchMs": 6.5,
-            "decodeMs": 12.399999998509884,
-            "totalMs": 18.899999998509884
+            "fetchMs": 6.4000000059604645,
+            "decodeMs": 12.899999998509884,
+            "totalMs": 19.30000000447035
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 18.7,
-          "minTotalMs": 17.3,
-          "maxTotalMs": 18.9
+          "medianTotalMs": 18.3,
+          "minTotalMs": 16.2,
+          "maxTotalMs": 19.3
         }
       },
       {
@@ -363,34 +363,34 @@
             "byteSize": 3913717,
             "width": 3072,
             "height": 2688,
-            "fetchMs": 11.400000005960464,
-            "decodeMs": 57.79999999701977,
-            "totalMs": 69.20000000298023
+            "fetchMs": 9.700000002980232,
+            "decodeMs": 51.899999998509884,
+            "totalMs": 61.600000001490116
           },
           {
             "repeat": 2,
             "byteSize": 3913717,
             "width": 3072,
             "height": 2688,
-            "fetchMs": 22.899999998509884,
-            "decodeMs": 51.30000000447035,
-            "totalMs": 74.20000000298023
+            "fetchMs": 18.5,
+            "decodeMs": 48.79999999701977,
+            "totalMs": 67.29999999701977
           },
           {
             "repeat": 3,
             "byteSize": 3913717,
             "width": 3072,
             "height": 2688,
-            "fetchMs": 21.100000001490116,
-            "decodeMs": 48,
-            "totalMs": 69.10000000149012
+            "fetchMs": 19.399999998509884,
+            "decodeMs": 48.100000001490116,
+            "totalMs": 67.5
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 69.2,
-          "minTotalMs": 69.1,
-          "maxTotalMs": 74.2
+          "medianTotalMs": 67.3,
+          "minTotalMs": 61.6,
+          "maxTotalMs": 67.5
         }
       },
       {
@@ -409,34 +409,34 @@
             "byteSize": 4912544,
             "width": 2048,
             "height": 4096,
-            "fetchMs": 11.899999998509884,
-            "decodeMs": 50.600000001490116,
-            "totalMs": 62.5
+            "fetchMs": 11.200000002980232,
+            "decodeMs": 50.899999998509884,
+            "totalMs": 62.100000001490116
           },
           {
             "repeat": 2,
             "byteSize": 4912544,
             "width": 2048,
             "height": 4096,
-            "fetchMs": 21.69999999552965,
-            "decodeMs": 49.399999998509884,
-            "totalMs": 71.09999999403954
+            "fetchMs": 19.899999998509884,
+            "decodeMs": 47.600000001490116,
+            "totalMs": 67.5
           },
           {
             "repeat": 3,
             "byteSize": 4912544,
             "width": 2048,
             "height": 4096,
-            "fetchMs": 21.299999997019768,
-            "decodeMs": 50.100000001490116,
-            "totalMs": 71.39999999850988
+            "fetchMs": 19.69999999552965,
+            "decodeMs": 50.899999998509884,
+            "totalMs": 70.59999999403954
           }
         ],
         "browserLoad": {
           "repeats": 3,
-          "medianTotalMs": 71.1,
-          "minTotalMs": 62.5,
-          "maxTotalMs": 71.4
+          "medianTotalMs": 67.5,
+          "minTotalMs": 62.1,
+          "maxTotalMs": 70.6
         }
       }
     ]
@@ -446,7 +446,7 @@
     "Browser cache was disabled and each atlas was fetched and decoded sequentially; concurrency behavior was not measured.",
     "The measurements cover current REVIEW/UNRESOLVED atlas candidates only and do not imply visual, technical, rights, or release approval."
   ],
-  "measuredAt": "2026-10-12",
+  "measuredAt": "2026-10-13",
   "purpose": "Atlas byte size and local browser fetch/decode evidence for the current graphics PoC manifest.",
   "scope": "Only atlases listed by graphics-poc/assets/main-composer-render-manifest.json; review/unresolved candidates remain unapproved. No renderer comparison was performed.",
   "manifest": {
@@ -491,34 +491,34 @@
           "byteSize": 2864960,
           "width": 1536,
           "height": 1024,
-          "fetchMs": 13.5,
-          "decodeMs": 16.200000002980232,
-          "totalMs": 29.700000002980232
+          "fetchMs": 11.899999998509884,
+          "decodeMs": 17,
+          "totalMs": 28.899999998509884
         },
         {
           "repeat": 2,
           "byteSize": 2864960,
           "width": 1536,
           "height": 1024,
-          "fetchMs": 15.199999995529652,
-          "decodeMs": 16.5,
-          "totalMs": 31.69999999552965
+          "fetchMs": 14.600000001490116,
+          "decodeMs": 16.299999997019768,
+          "totalMs": 30.899999998509884
         },
         {
           "repeat": 3,
           "byteSize": 2864960,
           "width": 1536,
           "height": 1024,
-          "fetchMs": 13.799999997019768,
-          "decodeMs": 17,
-          "totalMs": 30.799999997019768
+          "fetchMs": 13.300000004470348,
+          "decodeMs": 15.5,
+          "totalMs": 28.80000000447035
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 30.8,
-        "minTotalMs": 29.7,
-        "maxTotalMs": 31.7
+        "medianTotalMs": 28.9,
+        "minTotalMs": 28.8,
+        "maxTotalMs": 30.9
       }
     },
     {
@@ -537,34 +537,34 @@
           "byteSize": 1482069,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 5.100000001490116,
-          "decodeMs": 12.799999997019768,
-          "totalMs": 17.899999998509884
+          "fetchMs": 4.899999998509884,
+          "decodeMs": 13.300000004470348,
+          "totalMs": 18.200000002980232
         },
         {
           "repeat": 2,
           "byteSize": 1482069,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 9.100000001490116,
-          "decodeMs": 13.299999997019768,
-          "totalMs": 22.399999998509884
+          "fetchMs": 8,
+          "decodeMs": 12.899999998509884,
+          "totalMs": 20.899999998509884
         },
         {
           "repeat": 3,
           "byteSize": 1482069,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 8.300000004470348,
-          "decodeMs": 13.899999998509884,
-          "totalMs": 22.200000002980232
+          "fetchMs": 8.200000002980232,
+          "decodeMs": 12.5,
+          "totalMs": 20.700000002980232
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 22.2,
-        "minTotalMs": 17.9,
-        "maxTotalMs": 22.4
+        "medianTotalMs": 20.7,
+        "minTotalMs": 18.2,
+        "maxTotalMs": 20.9
       }
     },
     {
@@ -583,34 +583,34 @@
           "byteSize": 1334238,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 5.0999999940395355,
-          "decodeMs": 13,
-          "totalMs": 18.099999994039536
+          "fetchMs": 4.5,
+          "decodeMs": 12.699999995529652,
+          "totalMs": 17.19999999552965
         },
         {
           "repeat": 2,
           "byteSize": 1334238,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 7.799999997019768,
-          "decodeMs": 12.100000001490116,
-          "totalMs": 19.899999998509884
+          "fetchMs": 7.100000001490116,
+          "decodeMs": 14.5,
+          "totalMs": 21.600000001490116
         },
         {
           "repeat": 3,
           "byteSize": 1334238,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 7.899999998509884,
-          "decodeMs": 12.399999998509884,
-          "totalMs": 20.299999997019768
+          "fetchMs": 7.399999998509884,
+          "decodeMs": 12.5,
+          "totalMs": 19.899999998509884
         }
       ],
       "browserLoad": {
         "repeats": 3,
         "medianTotalMs": 19.9,
-        "minTotalMs": 18.1,
-        "maxTotalMs": 20.3
+        "minTotalMs": 17.2,
+        "maxTotalMs": 21.6
       }
     },
     {
@@ -629,34 +629,34 @@
           "byteSize": 1703390,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 5.5,
-          "decodeMs": 14.600000001490116,
-          "totalMs": 20.100000001490116
+          "fetchMs": 4.899999998509884,
+          "decodeMs": 13.700000002980232,
+          "totalMs": 18.600000001490116
         },
         {
           "repeat": 2,
           "byteSize": 1703390,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 9.5,
-          "decodeMs": 14.599999994039536,
-          "totalMs": 24.099999994039536
+          "fetchMs": 9.699999995529652,
+          "decodeMs": 14.5,
+          "totalMs": 24.19999999552965
         },
         {
           "repeat": 3,
           "byteSize": 1703390,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 9.199999995529652,
-          "decodeMs": 13.800000004470348,
-          "totalMs": 23
+          "fetchMs": 8.5,
+          "decodeMs": 13.899999998509884,
+          "totalMs": 22.399999998509884
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 23,
-        "minTotalMs": 20.1,
-        "maxTotalMs": 24.1
+        "medianTotalMs": 22.4,
+        "minTotalMs": 18.6,
+        "maxTotalMs": 24.2
       }
     },
     {
@@ -675,34 +675,34 @@
           "byteSize": 1098273,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 5.100000001490116,
-          "decodeMs": 12.199999995529652,
-          "totalMs": 17.299999997019768
+          "fetchMs": 4.299999997019768,
+          "decodeMs": 11.899999998509884,
+          "totalMs": 16.19999999552965
         },
         {
           "repeat": 2,
           "byteSize": 1098273,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 6.5,
-          "decodeMs": 12.200000002980232,
-          "totalMs": 18.700000002980232
+          "fetchMs": 6.200000002980232,
+          "decodeMs": 12.099999994039536,
+          "totalMs": 18.299999997019768
         },
         {
           "repeat": 3,
           "byteSize": 1098273,
           "width": 2048,
           "height": 1024,
-          "fetchMs": 6.5,
-          "decodeMs": 12.399999998509884,
-          "totalMs": 18.899999998509884
+          "fetchMs": 6.4000000059604645,
+          "decodeMs": 12.899999998509884,
+          "totalMs": 19.30000000447035
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 18.7,
-        "minTotalMs": 17.3,
-        "maxTotalMs": 18.9
+        "medianTotalMs": 18.3,
+        "minTotalMs": 16.2,
+        "maxTotalMs": 19.3
       }
     },
     {
@@ -721,34 +721,34 @@
           "byteSize": 3913717,
           "width": 3072,
           "height": 2688,
-          "fetchMs": 11.400000005960464,
-          "decodeMs": 57.79999999701977,
-          "totalMs": 69.20000000298023
+          "fetchMs": 9.700000002980232,
+          "decodeMs": 51.899999998509884,
+          "totalMs": 61.600000001490116
         },
         {
           "repeat": 2,
           "byteSize": 3913717,
           "width": 3072,
           "height": 2688,
-          "fetchMs": 22.899999998509884,
-          "decodeMs": 51.30000000447035,
-          "totalMs": 74.20000000298023
+          "fetchMs": 18.5,
+          "decodeMs": 48.79999999701977,
+          "totalMs": 67.29999999701977
         },
         {
           "repeat": 3,
           "byteSize": 3913717,
           "width": 3072,
           "height": 2688,
-          "fetchMs": 21.100000001490116,
-          "decodeMs": 48,
-          "totalMs": 69.10000000149012
+          "fetchMs": 19.399999998509884,
+          "decodeMs": 48.100000001490116,
+          "totalMs": 67.5
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 69.2,
-        "minTotalMs": 69.1,
-        "maxTotalMs": 74.2
+        "medianTotalMs": 67.3,
+        "minTotalMs": 61.6,
+        "maxTotalMs": 67.5
       }
     },
     {
@@ -767,34 +767,34 @@
           "byteSize": 4912544,
           "width": 2048,
           "height": 4096,
-          "fetchMs": 11.899999998509884,
-          "decodeMs": 50.600000001490116,
-          "totalMs": 62.5
+          "fetchMs": 11.200000002980232,
+          "decodeMs": 50.899999998509884,
+          "totalMs": 62.100000001490116
         },
         {
           "repeat": 2,
           "byteSize": 4912544,
           "width": 2048,
           "height": 4096,
-          "fetchMs": 21.69999999552965,
-          "decodeMs": 49.399999998509884,
-          "totalMs": 71.09999999403954
+          "fetchMs": 19.899999998509884,
+          "decodeMs": 47.600000001490116,
+          "totalMs": 67.5
         },
         {
           "repeat": 3,
           "byteSize": 4912544,
           "width": 2048,
           "height": 4096,
-          "fetchMs": 21.299999997019768,
-          "decodeMs": 50.100000001490116,
-          "totalMs": 71.39999999850988
+          "fetchMs": 19.69999999552965,
+          "decodeMs": 50.899999998509884,
+          "totalMs": 70.59999999403954
         }
       ],
       "browserLoad": {
         "repeats": 3,
-        "medianTotalMs": 71.1,
-        "minTotalMs": 62.5,
-        "maxTotalMs": 71.4
+        "medianTotalMs": 67.5,
+        "minTotalMs": 62.1,
+        "maxTotalMs": 70.6
       }
     }
   ]
