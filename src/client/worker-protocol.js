@@ -222,6 +222,9 @@ function validateState(state) {
   if (!Array.isArray(state.pastures) || state.pastures.length !== 4 || state.pastures.some(value => !Number.isFinite(value))) {
     fail('INVALID_RESPONSE', 'state.state.pastures must contain four finite stocks.');
   }
+  if (owns(state, 'intake') && !isValidStateIntake(state.intake)) {
+    fail('INVALID_RESPONSE', 'state.state.intake must contain all four finite intake components.');
+  }
   if (!isValidConfig(state.config) || !Array.isArray(state.events)) fail('INVALID_RESPONSE', 'state.state is missing valid configuration or events.');
   const seen = new Set();
   for (const animal of state.animals) {
@@ -304,6 +307,11 @@ function validateComparison(data) {
 
 function isFinitePaddocks(values) {
   return Array.isArray(values) && values.length === 4 && values.every(Number.isFinite);
+}
+
+function isValidStateIntake(intake) {
+  return isRecord(intake) && ['pastureKgDM', 'barnBaseKgDM', 'supplementKgDM', 'dietExtraKgDM']
+    .every(key => owns(intake, key) && typeof intake[key] === 'number' && Number.isFinite(intake[key]));
 }
 
 function isValidIntake(intake) {

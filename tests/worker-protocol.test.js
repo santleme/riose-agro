@@ -9,6 +9,13 @@ import {
 } from '../src/client/worker-protocol.js';
 
 const protocolError = (run, code) => assert.throws(run, error => error instanceof WorkerProtocolError && error.code === code);
+const intakeKeys = ['pastureKgDM', 'barnBaseKgDM', 'supplementKgDM', 'dietExtraKgDM'];
+function protocolSnapshot(intake = {pastureKgDM: 10, barnBaseKgDM: 0, supplementKgDM: 2, dietExtraKgDM: 1}) {
+  return {hour: 6, animals: [{id: 1, name: 'Aurora', action: 'grazing', patch: 0, x: 10, y: 20, weight: 330,
+    initialWeight: 330, energy: 75, thirst: 20}], pastures: [1, 2, 3, 4], config: {
+    diet: 'pasture', housing: 'pasture', weather: 'normal', supplement: 0
+  }, cost: 0, events: [], ...(intake === undefined ? {} : {intake})};
+}
 
 test('Worker command decoder accepts v1 and only adapts known unversioned commands', () => {
   assert.deepEqual(decodeWorkerCommand({protocolVersion: 1, type: 'tick', hours: 24}), {
@@ -33,6 +40,31 @@ test('Worker command decoder rejects malformed versions, commands and payloads d
   protocolError(() => decodeWorkerCommand({type: 'load'}), 'INVALID_COMMAND_PAYLOAD');
   protocolError(() => decodeWorkerCommand({type: 'load', snapshot: {}}), 'INVALID_COMMAND_PAYLOAD');
   protocolError(() => decodeWorkerCommand({type: 'select'}), 'INVALID_COMMAND_PAYLOAD');
+});
+
+test('load accepts legacy snapshots without intake and complete finite intake ledgers', () => {
+  const legacySnapshot = protocolSnapshot();
+  delete legacySnapshot.intake;
+  assert.equal(decodeWorkerCommand({type: 'load', snapshot: legacySnapshot}).command.type, 'load');
+  assert.equal(decodeWorkerCommand({type: 'load', snapshot: protocolSnapshot()}).command.type, 'load');
+});
+
+test('load rejects intake ledgers missing any required component', () => {
+  for (const key of intakeKeys) {
+    const snapshot = protocolSnapshot();
+    delete snapshot.intake[key];
+    protocolError(() => decodeWorkerCommand({type: 'load', snapshot}), 'INVALID_COMMAND_PAYLOAD');
+  }
+});
+
+test('load rejects nonnumeric, null, undefined and nonfinite intake values', () => {
+  for (const key of intakeKeys) {
+    for (const value of [undefined, null, '10', NaN, Infinity, -Infinity]) {
+      const snapshot = protocolSnapshot();
+      snapshot.intake[key] = value;
+      protocolError(() => decodeWorkerCommand({type: 'load', snapshot}), 'INVALID_COMMAND_PAYLOAD');
+    }
+  }
 });
 
 test('Worker response decoder adapts a well-formed legacy view to the declared current layout', () => {
@@ -101,6 +133,14 @@ test('module Worker emits versioned responses and deterministic errors while ret
   assert.equal(loaded.type, 'state', 'load retains its full snapshot response');
   assert.deepEqual(loaded.state, reset.state);
 
+  const legacySnapshot = structuredClone(reset.state);
+  delete legacySnapshot.intake;
+  await worker.onmessage({data: {type: 'load', snapshot: legacySnapshot}});
+  assert.equal(worker.messages.at(-1).type, 'state', 'legacy snapshots without intake remain loadable');
+  await worker.onmessage({data: {type: 'tick', hours: 1}});
+  assert.ok(Object.values(worker.messages.at(-1).intake).every(Number.isFinite), 'the engine initializes the absent legacy ledger on tick');
+  await worker.onmessage({data: {protocolVersion: 1, type: 'load', snapshot: reset.state, selectedAnimalId: 2}});
+
   await worker.onmessage({data: {protocolVersion: 1, type: 'configure', patch: {housing: 'barn'}}});
   const view = normalizeWorkerResponse(worker.messages.at(-1));
   assert.equal(view.type, 'view');
@@ -127,12 +167,17 @@ test('module Worker emits versioned responses and deterministic errors while ret
   assert.equal(worker.messages.at(-1).error.code, 'UNKNOWN_COMMAND');
 
   const stateBeforeInvalidLoad = worker.messages.findLast(message => message.type === 'state').state;
-  await worker.onmessage({data: {protocolVersion: 1, type: 'load', snapshot: {}}});
+  const partialIntakeSnapshot = structuredClone(stateBeforeInvalidLoad);
+  delete partialIntakeSnapshot.intake.supplementKgDM;
+  await worker.onmessage({data: {protocolVersion: 1, type: 'load', snapshot: partialIntakeSnapshot}});
   assert.equal(worker.messages.at(-1).error.code, 'INVALID_COMMAND_PAYLOAD');
   await worker.onmessage({data: {protocolVersion: 1, type: 'snapshot'}});
-  assert.deepEqual(worker.messages.at(-1).state, stateBeforeInvalidLoad, 'invalid loads are rejected before replacing engine state');
+  assert.deepEqual(worker.messages.at(-1).state, stateBeforeInvalidLoad, 'invalid intake ledgers are rejected before replacing engine state');
+  await worker.onmessage({data: {protocolVersion: 1, type: 'tick', hours: 1}});
+  const afterRejectedLoadTick = normalizeWorkerResponse(worker.messages.at(-1));
+  assert.ok(Object.values(afterRejectedLoadTick.intake).every(Number.isFinite), 'the rejected partial ledger never reaches the engine tick');
 
-  const hourBeforeInvalidTick = worker.messages.findLast(message => message.type === 'state').state.hour;
+  const hourBeforeInvalidTick = afterRejectedLoadTick.hour;
   await worker.onmessage({data: {protocolVersion: 1, type: 'tick', hours: 1.5}});
   assert.equal(worker.messages.at(-1).error.code, 'INVALID_COMMAND_PAYLOAD');
   await worker.onmessage({data: {protocolVersion: 1, type: 'snapshot'}});
