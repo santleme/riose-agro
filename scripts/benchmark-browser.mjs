@@ -1,11 +1,12 @@
 import {spawn} from 'node:child_process';
-import {access,mkdtemp,readdir,readFile,rm} from 'node:fs/promises';
+import {access,mkdtemp,readdir,rm} from 'node:fs/promises';
 import {homedir,tmpdir} from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
 import {benchmarkReport,measurement} from './benchmark-report.mjs';
+import {waitForDevToolsActivePort} from './browser-startup.mjs';
 
 async function findChrome(){
   const candidates=[process.env.CHROME_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'];
@@ -17,7 +18,12 @@ const chrome=await findChrome();
 const origin=process.env.RIOSE_URL??'http://127.0.0.1:8000/';
 const repetitions=Number(process.env.BENCH_REPETITIONS??15);
 const userData=await mkdtemp(path.join(tmpdir(),'riose-browser-bench-'));
-const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:'ignore'});
+const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+let browserExit=null;
+let browserStderr='';
+browser.once('exit',(code,signal)=>{browserExit={code,signal};});
+browser.stderr.setEncoding('utf8');
+browser.stderr.on('data',chunk=>{browserStderr=(browserStderr+chunk).slice(-4000);});
 let socket;
 let cdp;
 
@@ -72,8 +78,11 @@ const p95=values=>[...values].sort((a,b)=>a-b)[Math.ceil(values.length*.95)-1];
 const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {sampleCount:sorted.length,medianMs:median(sorted),p95Ms:p95(sorted),spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]},observationsMs:values};};
 
 try{
-  let active='';for(let attempt=0;attempt<100;attempt++){try{active=await readFile(path.join(userData,'DevToolsActivePort'),'utf8');break;}catch{await delay(100);}}
-  if(!active)throw new Error('Chromium did not start a DevTools endpoint');
+  const active=await waitForDevToolsActivePort({
+    filePath:path.join(userData,'DevToolsActivePort'),
+    getExit:()=>browserExit,
+    getStderr:()=>browserStderr,
+  });
   const port=Number(active.split('\n')[0]);
   const target=await cdpRequest(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(origin)}`,'PUT');
   cdp=new Cdp(target.webSocketDebuggerUrl);await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Profiler.enable');await cdp.send('Performance.enable');
