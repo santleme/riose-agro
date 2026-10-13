@@ -58,7 +58,10 @@ async function scanAndRepairResults(path, manifestRuns, {maxRetainedResults, ver
     if (record.type !== 'riose-experiment-result' || record.version !== 1 || typeof record.runId !== 'string') return {valid: false, reason: 'unsupported result record'};
     const runIndex = indexById.get(record.runId);
     const run = manifestRuns[runIndex];
-    if (!run || !['completed', 'running'].includes(run.status)) return {valid: false, reason: `unlinked runId ${record.runId}`};
+    // The append-only result journal is the durable completion marker. A crash
+    // can leave a valid row ahead of the most recent manifest checkpoint, where
+    // the run still appears planned (or failed after a later retry attempt).
+    if (!run || !['completed', 'running', 'planned', 'failed'].includes(run.status)) return {valid: false, reason: `unlinked runId ${record.runId}`};
     if (sha256Digest(record.outputs) !== record.outputDigest) return {valid: false, reason: `outputDigest mismatch for ${record.runId}`};
     const expectedRef = `${basename(absolute)}#${run.runId}`;
     if (run.status === 'completed' && record.outputDigest !== run.outputDigest) return {valid: false, reason: `manifest outputDigest mismatch for ${record.runId}`};
@@ -135,11 +138,12 @@ function sameRunPlan(expected, actual) {
   });
 }
 
-/** Run or resume one local batch. The supplied manifest is written before execution begins. */
-export async function runResumableBatch({manifestPath, resultsPath, errorsPath = `${resultsPath}.errors.jsonl`, manifest: inputManifest, executeRun, onProgress, verifyCompletedRun, maxRetainedResults = 100, concurrency = 1, signal} = {}) {
+/** Run or resume one local batch. The manifest checkpoints completed runs in bounded groups; JSONL remains the per-run durable journal. */
+export async function runResumableBatch({manifestPath, resultsPath, errorsPath = `${resultsPath}.errors.jsonl`, manifest: inputManifest, executeRun, onProgress, verifyCompletedRun, maxRetainedResults = 100, manifestCheckpointInterval = 100, concurrency = 1, signal} = {}) {
   if (typeof manifestPath !== 'string' || !manifestPath || typeof resultsPath !== 'string' || !resultsPath) throw new TypeError('manifestPath and resultsPath are required');
   if (typeof executeRun !== 'function') throw new TypeError('executeRun must be a function');
   if (!Number.isInteger(maxRetainedResults) || maxRetainedResults < 0) throw new RangeError('maxRetainedResults must be a non-negative integer');
+  if (!Number.isInteger(manifestCheckpointInterval) || manifestCheckpointInterval < 1) throw new RangeError('manifestCheckpointInterval must be a positive integer');
   if (!Number.isInteger(concurrency) || concurrency < 1) throw new RangeError('concurrency must be a positive integer');
   validateBatchExperimentManifest(inputManifest);
   const saved = await readManifest(manifestPath);
@@ -164,6 +168,17 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
   manifest = seal(manifest, runs);
   await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
+  let pendingManifestUpdates = 0;
+  const persistManifest = async () => {
+    manifest = seal(manifest, runs);
+    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    pendingManifestUpdates = 0;
+  };
+  const checkpointManifest = async () => {
+    pendingManifestUpdates++;
+    if (pendingManifestUpdates >= manifestCheckpointInterval) await persistManifest();
+  };
+
   const completeRun = async (index, run, execution) => {
     if (execution.status === 'fulfilled') {
       const outputs = execution.value;
@@ -181,15 +196,13 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
         resultDigest,
         resultRef: `${basename(resultsPath)}#${run.runId}`,
       };
-      manifest = seal(manifest, runs);
-      await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+      await checkpointManifest();
       await onProgress?.({runId: run.runId, status: 'completed', index, total: runs.length});
       return;
     }
     const error = execution.reason;
     runs[index] = {...run, outputs: {}, status: 'failed', outputDigest: null, resultDigest: null, resultRef: null};
-    manifest = seal(manifest, runs);
-    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await checkpointManifest();
     await mkdir(dirname(resolve(errorsPath)), {recursive: true});
     await appendFile(errorsPath, `${JSON.stringify({runId: run.runId, occurredAt: new Date().toISOString(), message: String(error?.message ?? error)})}\n`);
     await onProgress?.({runId: run.runId, status: 'failed', index, total: runs.length});
@@ -209,13 +222,9 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
     const launch = async index => {
       const run = {...runs[index], status: 'running', outputs: {}, outputDigest: null, resultDigest: null, resultRef: null};
       runs[index] = run;
-      manifest = seal(manifest, runs);
-      await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
       await onProgress?.({runId: run.runId, status: 'running', index, total: runs.length});
       if (signal?.aborted) {
         runs[index] = {...run, status: 'planned', outputs: {}, outputDigest: null, resultDigest: null, resultRef: null};
-        manifest = seal(manifest, runs);
-        await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
         return;
       }
       slots.set(index, {run, promise: Promise.resolve().then(() => executeRun(run)).then(
@@ -236,8 +245,6 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
       if (!slot) {
         if (runs[index].status === 'running') {
           runs[index] = {...runs[index], status: 'planned', outputs: {}, outputDigest: null, resultDigest: null, resultRef: null};
-          manifest = seal(manifest, runs);
-          await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
         }
         continue;
       }
@@ -255,8 +262,6 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
     }
     run = {...run, status: 'running', outputs: {}, outputDigest: null, resultDigest: null, resultRef: null};
     runs[index] = run;
-    manifest = seal(manifest, runs);
-    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
     await onProgress?.({runId: run.runId, status: 'running', index, total: runs.length});
     const execution = await Promise.resolve().then(() => executeRun(run)).then(
       value => ({status: 'fulfilled', value}), reason => ({status: 'rejected', reason}),
@@ -264,6 +269,7 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
     await completeRun(index, run, execution);
   }
 
+  if (pendingManifestUpdates > 0) await persistManifest();
   manifest = validateBatchExperimentManifest(JSON.parse(await readFile(manifestPath, 'utf8')));
   const results = [...retained.entries()].filter(([runId]) => validCompleted.has(runId))
     .sort(([a], [b]) => runs.findIndex(run => run.runId === a) - runs.findIndex(run => run.runId === b))

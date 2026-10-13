@@ -16,12 +16,15 @@ const scenarioTemplate = JSON.parse(await readFile(new URL('../tests/scenarios/b
 const scenarioCount = Number(process.env.RIOSE_SCHEDULER_SCENARIO_COUNT ?? 6);
 const reportedAvailableParallelism = availableParallelism();
 const availableWorkers = Math.min(reportedAvailableParallelism, scenarioCount, 4);
-const concurrencyCases = [1, Math.min(2, availableWorkers), availableWorkers]
-  .filter((value, index, values) => values.indexOf(value) === index);
+const requestedConcurrencyCases = process.env.RIOSE_SCHEDULER_CONCURRENCIES?.split(',').map(Number);
+const concurrencyCases = requestedConcurrencyCases ?? [1, Math.min(2, availableWorkers), availableWorkers];
 if (!Number.isSafeInteger(scenarioCount) || scenarioCount < 1 || scenarioCount > 10_000
     || !Number.isSafeInteger(repetitions) || repetitions < 3
     || !Number.isSafeInteger(warmupRuns) || warmupRuns < 0
-    || !Number.isSafeInteger(memoryPerWorkerMb) || memoryPerWorkerMb < 16) {
+    || !Number.isSafeInteger(memoryPerWorkerMb) || memoryPerWorkerMb < 16
+    || !Array.isArray(concurrencyCases) || concurrencyCases.length === 0
+    || concurrencyCases.some(value => !Number.isSafeInteger(value) || value < 1 || value > availableWorkers)
+    || new Set(concurrencyCases).size !== concurrencyCases.length) {
   throw new RangeError('invalid scheduler benchmark count, warmup, repetition or memory setting');
 }
 

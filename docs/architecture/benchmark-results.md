@@ -1,5 +1,9 @@
 # Benchmark results
 
+## Resumable batch journal
+
+For resumable scenario batches, the local JSONL result file is the append-only completion journal. Each completed output is appended and flushed before progress is reported; the larger manifest is atomically checkpointed every 100 result updates by default, then once more when the batch exits. After interruption, a valid journal row can therefore restore a run whose manifest still says `planned`, `running`, or `failed`. The record digest detects accidental corruption and links the row to its output, but it is not an authenticity signature: the journal and manifest are trusted local files. Keep them together with the scenario artifacts when resuming.
+
 ## Versioned report format
 
 New outputs from the simulation, browser, graphics PoC, graphics atlas-load, herd visual-model, scenario scheduler, history, native-kernel, and AMD compute-service benchmark harnesses use the envelope in [`benchmark-report.schema.json`](benchmark-report.schema.json) (`schemaVersion: 2`). Historical v1 reports remain readable under this schema and are not retrofitted with observations or metadata they did not record. The shared Node adapter validates each envelope against this schema before a harness writes or prints it; `npm run test:benchmark-report` checks a generated report and verifies that missing timing boundaries, seed, or population fail validation. An adapter call also fails immediately if seed or population metadata is omitted, so those fields cannot silently become `null` or an empty list. Deterministic workloads that do not use a PRNG identify that fact with a descriptive seed label.

@@ -23,3 +23,13 @@ test('scenario scheduler benchmark honors scale, warmups, bounded concurrency an
     assert.equal(row.p95EndToEndMs,Math.max(...row.samples.map(sample=>sample.endToEndMs)));
   }
 });
+
+test('scenario scheduler can select sequential and parallel comparison cases',()=>{
+  const result=spawnSync(process.execPath,[script],{encoding:'utf8',maxBuffer:4*1024*1024,env:{...process.env,
+    RIOSE_SCHEDULER_SCENARIO_COUNT:'4',RIOSE_SCHEDULER_REPETITIONS:'3',RIOSE_SCHEDULER_WARMUPS:'0',
+    RIOSE_SCHEDULER_CONCURRENCIES:'1,4'}});
+  assert.equal(result.status,0,result.stderr);
+  const report=JSON.parse(result.stdout);
+  assert.deepEqual(report.configuration.concurrencyCases,[1,4]);
+  assert.deepEqual(report.rows.map(row=>row.concurrency),[1,4]);
+});
