@@ -206,6 +206,23 @@ export function assertBenchmarkReport(report) {
       if (!unavailable && !summarized) {
         throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} requires sampleCount, median, and min/max/range spread statistics.`);
       }
+      const observations = statistics.rawObservations
+        ?? statistics.observations
+        ?? statistics.observationsMs
+        ?? statistics.values
+        ?? item.observations;
+      if (observations !== undefined) {
+        if (Array.isArray(observations) && observations.length === 0 && unavailable) continue;
+        const observedSummary = summarizeNumericObservations(observations);
+        if (!observedSummary
+          || statistics.sampleCount !== observedSummary.sampleCount
+          || statistics.median !== observedSummary.median
+          || spread?.min !== observedSummary.spread.min
+          || spread?.max !== observedSummary.spread.max
+          || spread?.range !== observedSummary.spread.range) {
+          throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} statistics do not match its raw observations.`);
+        }
+      }
     }
   }
   return report;

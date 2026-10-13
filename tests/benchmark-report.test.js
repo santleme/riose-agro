@@ -110,6 +110,27 @@ test('measured phases require sample count, median, and spread statistics', () =
   assert.doesNotThrow(() => assertBenchmarkReport(notMeasured));
 });
 
+test('measured statistics must agree with retained raw observations', () => {
+  for (const [label, mutate] of [
+    ['sample count', report => {report.phases.engine.measurements[0].statistics.sampleCount++;}],
+    ['median', report => {report.phases.engine.measurements[0].statistics.median = 99;}],
+    ['spread', report => {report.phases.engine.measurements[0].statistics.spread.range = 0;}],
+  ]) {
+    const report = sampleReport();
+    mutate(report);
+    assert.throws(() => assertBenchmarkReport(report), /statistics do not match its raw observations/, label);
+  }
+
+  const nonNumericObservations = sampleReport();
+  nonNumericObservations.phases.engine.measurements[0].observations = ['fast'];
+  assert.throws(() => assertBenchmarkReport(nonNumericObservations), /statistics do not match its raw observations/);
+
+  const unavailable = sampleReport();
+  unavailable.phases.engine.measurements[0].statistics = {sampleCount: 0, median: null, spread: null};
+  unavailable.phases.engine.measurements[0].observations = [];
+  assert.doesNotThrow(() => assertBenchmarkReport(unavailable));
+});
+
 test('benchmark adapter refuses implicit seed/population defaults and conflated 100k animal scope', () => {
   const common = {
     name: 'invalid-test',
