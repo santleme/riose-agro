@@ -226,6 +226,20 @@ fn prepended_records(previous: &[Value], current: &[Value]) -> Vec<Value> {
 }
 
 #[test]
+fn native_gain_metric_preserves_javascript_left_to_right_accumulation_order() {
+    let mut engine = FarmEngine::new(2026, 24).expect("official housing seed must initialize");
+    engine.configure(FarmConfig::default()).unwrap();
+    engine.tick(219).unwrap();
+
+    let snapshot = engine.snapshot();
+    let js_ordered_gain = snapshot.animals.iter().fold(0.0, |sum, animal| {
+        sum + animal.weight - animal.initial_weight
+    }) / snapshot.animals.len() as f64;
+    assert_eq!(snapshot.hour, 225);
+    assert_eq!(engine.metrics().gain, js_ordered_gain);
+}
+
+#[test]
 fn native_api_rejects_unsupported_scenario_variants_explicitly() {
     let error =
         serde_json::from_str::<NativeScenarioRequest>(r#"{"type":"heat","version":1,"seed":2026}"#)

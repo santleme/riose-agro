@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node src/server/server.js",
     "test": "node --test --test-concurrency=1",
+    "test:parity": "node scripts/run-trajectory-parity.js",
     "build:wasm": "sh scripts/build-wasm.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",

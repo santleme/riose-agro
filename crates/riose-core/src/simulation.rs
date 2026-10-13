@@ -447,12 +447,11 @@ pub fn metrics(snapshot: &FarmSnapshot) -> FarmMetrics {
         .map(|animal| animal.weight)
         .sum::<f64>()
         / count;
-    let gain = snapshot
-        .animals
-        .iter()
-        .map(|animal| animal.weight - animal.initial_weight)
-        .sum::<f64>()
-        / count;
+    // Preserve the JavaScript engine's left-to-right accumulation order:
+    // `(sum + weight) - initialWeight` for each animal.
+    let gain = snapshot.animals.iter().fold(0.0, |sum, animal| {
+        sum + animal.weight - animal.initial_weight
+    }) / count;
     let pasture = snapshot.pastures.iter().sum();
     let intake = IntakeMetrics {
         pasture_kg_dm: snapshot.intake.pasture_kg_dm,
