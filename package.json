@@ -17,6 +17,7 @@
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "build:graphics-release": "node scripts/build-composer-scenes.mjs --release && node scripts/build-graphics-poc.mjs",
+    "bench:farm-layout": "node scripts/benchmark-farm-layout.mjs",
     "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
     "bench:farm-core": "cargo run --release -p riose-core --bin bench-farm-core",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",

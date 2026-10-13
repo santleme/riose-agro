@@ -217,8 +217,8 @@
       "title": "National Animal Nutrition Program (NANP) Modeling Animal Performance Information",
       "url": "https://agdatacommons.nal.usda.gov/articles/dataset/National_Animal_Nutrition_Program_NANP_Modeling_Animal_Performance_Information/24662358",
       "license": "Ag Data Commons metadata reports U.S. Public Domain for the deposit.",
-      "status": "Unverified collection-level lead: accessible metadata does not establish a mature beef-cow pasture-DMI subset, row-level granularity, or data-specific cohort identity. Additional inspection through the NANP query/export interface is required before adding any source rows to the target matrix.",
-      "decision": "Do not count as an eligible source or use collection-level license metadata as proof that a specific cohort is present or reusable."
+      "status": "Unverified collection-level lead: Ag Data Commons reports that the database can export CSV/SQL tables, but clicking the primary NANP database link redirects to a login form. The publicly accessible metadata does not establish a mature beef-cow pasture-DMI subset, row-level granularity, or data-specific cohort identity.",
+      "decision": "Do not count as an eligible source or use collection-level license metadata as proof that a specific cohort is present or reusable. Inspect the subset and its data-type/availability fields after access is available; no account credentials were provided for this review."
     }
   ],
   "limits": [

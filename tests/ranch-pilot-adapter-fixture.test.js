@@ -136,3 +136,12 @@ test('ranch source-scene v2 reports newly encountered source fields and still re
   assert.deepEqual(document.unknownSourceFields, [{path: 'futureReviewFlag'}]);
   assert.deepEqual(restoreRanchSourceSceneV2(document), extended);
 });
+
+test('ranch source-scene v2 refuses ambiguous duplicate canonical asset IDs', () => {
+  const duplicateManifest = structuredClone(semanticManifest);
+  duplicateManifest.assets.push(structuredClone(duplicateManifest.assets[0]));
+  assert.throws(
+    () => adaptRanchSourceSceneV2(sourceScene, duplicateManifest, pilot),
+    /Ranch source manifest contains duplicate asset IDs:/,
+  );
+});

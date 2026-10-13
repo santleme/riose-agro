@@ -69,7 +69,19 @@ export function adaptRanchSourceSceneV2(source, semanticManifest, pilot = {}) {
     || !Array.isArray(source.zones) || !Array.isArray(source.prefabs)) {
     throw new TypeError('Invalid ranch source scene: expected v4 pixel composition fields');
   }
-  const assetsById = new Map((semanticManifest?.assets ?? []).map(asset => [asset.id, asset]));
+  const manifestAssets = semanticManifest?.assets ?? [];
+  const seenManifestIds = new Set();
+  const duplicateManifestIds = new Set();
+  for (const asset of manifestAssets) {
+    const id = asset?.id;
+    if (seenManifestIds.has(id)) duplicateManifestIds.add(id);
+    seenManifestIds.add(id);
+  }
+  const sortedDuplicateManifestIds = [...duplicateManifestIds].sort();
+  if (sortedDuplicateManifestIds.length) {
+    throw new TypeError(`Ranch source manifest contains duplicate asset IDs: ${sortedDuplicateManifestIds.join(', ')}`);
+  }
+  const assetsById = new Map(manifestAssets.map(asset => [asset.id, asset]));
   const placementIds = source.placements.map(item => item.placementId);
   if (new Set(placementIds).size !== placementIds.length) throw new TypeError('Ranch source scene contains duplicate placement IDs');
   const sourceAssetIds = [...new Set([
