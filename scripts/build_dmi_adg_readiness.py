@@ -10,6 +10,7 @@ and Markdown artifacts.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from time import perf_counter
 from typing import Any
@@ -593,7 +594,7 @@ def validate_readiness_report(document: dict[str, Any]) -> None:
     if type(processing.get("inputFileCount")) is not int or processing["inputFileCount"] < 0:
         raise ValueError("Invalid processing inputFileCount")
     elapsed = processing.get("elapsedSeconds")
-    if type(elapsed) not in {int, float} or elapsed < 0:
+    if type(elapsed) not in {int, float} or not math.isfinite(elapsed) or elapsed < 0:
         raise ValueError("Invalid processing elapsedSeconds")
 
     review = document.get("domainExpertReview")

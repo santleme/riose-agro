@@ -117,6 +117,15 @@ class ReadinessFixtureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unavailable source"):
             READINESS.validate_readiness_report(report)
 
+    def test_published_contract_rejects_non_finite_processing_time(self):
+        report = self.build()
+        for elapsed in (float("nan"), float("inf"), float("-inf")):
+            invalid = json.loads(json.dumps(report))
+            invalid["processing"]["elapsedSeconds"] = elapsed
+            with self.subTest(elapsed=elapsed):
+                with self.assertRaisesRegex(ValueError, "elapsedSeconds"):
+                    READINESS.validate_readiness_report(invalid)
+
 
 if __name__ == "__main__":
     unittest.main()

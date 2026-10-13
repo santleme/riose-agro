@@ -8,7 +8,7 @@ Install no browser package. Run the dedicated regression command:
 npm run test:graphics-screenshots
 ```
 
-The command builds the checked-in Composer scenes before starting its isolated loopback server. Chromium is discovered from `CHROME_BIN`, common system paths, or the existing Playwright cache. The run records the browser build, CSS viewport, device-pixel ratio, canvas bounds, bitmap dimensions, and capture time for each fixture; it fails if the pinned 1280×900 CSS viewport or DPR 1 drifts.
+The command builds the checked-in Composer scenes before starting its isolated loopback server. Chromium is discovered from `CHROME_BIN`, common system paths, or the existing Playwright cache. The run records the browser build, CSS viewport, device-pixel ratio, canvas bounds, bitmap dimensions, and the CDP `Page.captureScreenshot` request time for each fixture; decoding, comparison, and fixture writes are excluded from `captureMs`. It fails if the pinned 1280×900 CSS viewport or DPR 1 drifts.
 
 Capture timing is printed separately and is not part of the FPS benchmark. Pixel comparison allows per-channel differences up to 18 and up to 3.5% of pixels above that channel tolerance. The captured area has no text to mask; the threshold absorbs small rasterization variation. A viewport or canvas size change always fails. A known art or layout change should update PNGs with `node scripts/graphics-screenshot-regression.mjs --update` only after reviewing the new captures in the PR.
 

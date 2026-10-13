@@ -16,6 +16,6 @@ export function decodePng(buffer) {
 export function comparePng(expected,actual,{channelTolerance=18,maxChangedRatio=.035}={}) {
   if(expected.width!==actual.width||expected.height!==actual.height) return {pass:false,reason:'dimensions',expected:{width:expected.width,height:expected.height},actual:{width:actual.width,height:actual.height},changedRatio:1,maxChannelDelta:255};
   let changed=0,maxChannelDelta=0;const total=expected.width*expected.height;
-  for(let i=0;i<total;i++){let pixelDelta=0;for(let channel=0;channel<3;channel++){const delta=Math.abs(expected.pixels[i*4+channel]-actual.pixels[i*4+channel]);pixelDelta=Math.max(pixelDelta,delta);}maxChannelDelta=Math.max(maxChannelDelta,pixelDelta);if(pixelDelta>channelTolerance)changed++;}
+  for(let i=0;i<total;i++){let pixelDelta=0;for(let channel=0;channel<4;channel++){const delta=Math.abs(expected.pixels[i*4+channel]-actual.pixels[i*4+channel]);pixelDelta=Math.max(pixelDelta,delta);}maxChannelDelta=Math.max(maxChannelDelta,pixelDelta);if(pixelDelta>channelTolerance)changed++;}
   const changedRatio=changed/total;return{pass:changedRatio<=maxChangedRatio,changedPixels:changed,totalPixels:total,changedRatio,maxChannelDelta,channelTolerance,maxChangedRatio};
 }

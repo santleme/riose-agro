@@ -62,12 +62,14 @@ try {
     const capture=await cdp.evaluate('(()=>{const r=document.querySelector("#canvas-renderer").getBoundingClientRect();return{devicePixelRatio,viewport:{width:innerWidth,height:innerHeight},canvas:{width:r.width,height:r.height},clip:{x:r.x,y:r.y,width:r.width,height:r.height,scale:1}}})()');
     if(capture.devicePixelRatio!==1||capture.viewport.width!==width||capture.viewport.height!==height)throw new Error(`Screenshot viewport drifted: ${JSON.stringify(capture)}`);
     const clip=capture.clip;
+    const captureStart=performance.now();
     const shot=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false,clip});
-    const png=Buffer.from(shot.data,'base64'), dimensions=decodePng(png), filename=path.join(fixtures,`${test.name}.png`), start=performance.now();
-    if(update){await writeFile(filename,png);results.push({name:test.name,status:'updated',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},captureMs:Math.round(performance.now()-start)});continue;}
+    const captureMs=Math.round(performance.now()-captureStart);
+    const png=Buffer.from(shot.data,'base64'), dimensions=decodePng(png), filename=path.join(fixtures,`${test.name}.png`);
+    if(update){await writeFile(filename,png);results.push({name:test.name,status:'updated',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},captureMs});continue;}
     let baseline;try{baseline=await readFile(filename);}catch{throw new Error(`Missing ${filename}; review the intended visual state, then run with --update to create baselines.`);}
     const diff=comparePng(decodePng(baseline),decodePng(png),{channelTolerance:18,maxChangedRatio:.035});
-    results.push({name:test.name,status:diff.pass?'pass':'fail',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},changedRatio:diff.changedRatio,maxChannelDelta:diff.maxChannelDelta,captureMs:Math.round(performance.now()-start)});
+    results.push({name:test.name,status:diff.pass?'pass':'fail',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},changedRatio:diff.changedRatio,maxChannelDelta:diff.maxChannelDelta,captureMs});
   }
   console.log(JSON.stringify({browser:(await cdp.send('Browser.getVersion')).product,viewport:{width,height,deviceScaleFactor:1},seed:20261012,renderer:'Canvas 2D',results},null,2));
   if(results.some(result=>result.status==='fail'))process.exitCode=1;

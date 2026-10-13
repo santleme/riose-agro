@@ -11,7 +11,7 @@ test('format study round-trips the batch manifest/result contract with units and
   const report = JSON.parse(execution.stdout);
 
   assert.equal(report.schemaVersion, 1);
-  assert.equal(report.benchmark.name, 'json-jsonl-experiment-output-format-study');
+  assert.equal(report.benchmark.name, 'json-jsonl-parquet-experiment-output-format-study');
   assert.match(report.benchmark.source.revision, /^[a-f0-9]{40}$/);
   assert.equal(typeof report.benchmark.source.dirty, 'boolean');
   assert.equal(report.workload.seed, '417-419 (per-record deterministic seed range)');
@@ -47,9 +47,21 @@ test('format study round-trips the batch manifest/result contract with units and
   const pythonFormatPackageNames = ['pyarrow', 'fastparquet', 'duckdb', 'polars'];
   const pythonPackages = pythonFormatPackageNames.map(name => report.results.toolchain[name === 'duckdb' ? 'pythonDuckdb' : name === 'polars' ? 'pythonPolars' : name]);
   const nodeFormatPackages = Object.values(report.results.toolchain.nodePackages);
-  const parquetAvailable = pythonPackages.some(pkg => pkg.available) || nodeFormatPackages.some(pkg => pkg.available);
-  assert.equal(report.results.toolchain.parquetEnginesAvailable, parquetAvailable);
-  assert.equal(report.results.toolchain.parquetMeasurement, parquetAvailable ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed');
+  const parquetAvailable = pythonPackages[0].available;
+  assert.equal(report.results.toolchain.parquetEnginesAvailable, parquetAvailable || nodeFormatPackages.some(pkg => pkg.available));
+  assert.equal(report.results.toolchain.parquetMeasurement, parquetAvailable ? 'pyarrow-measured' : 'skipped-no-pyarrow-installed');
+  if (parquetAvailable) {
+    const parquet = report.results.toolchain.parquetPrototype;
+    assert.equal(parquet.roundTrip.exactNormalized, true);
+    assert.equal(parquet.selectiveRead.exactProjection, true);
+    assert.ok(parquet.bytes > 0);
+    assert.ok(parquet.installedPackageBytes > parquet.bytes);
+    assert.equal(parquet.write.durationsMs.length, 3);
+    assert.equal(parquet.fullRead.durationsMs.length, 3);
+    assert.equal(parquet.selectiveMetricRead.durationsMs.length, 3);
+  } else {
+    assert.equal(report.results.toolchain.parquetPrototype, null);
+  }
   for (const packageInfo of pythonPackages) {
     assert.equal(packageInfo.available, Boolean(packageInfo.version));
     assert.equal(packageInfo.available, packageInfo.installedPackageBytes !== null);

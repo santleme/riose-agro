@@ -25,6 +25,7 @@ const nodeFormatToolchain = Object.fromEntries(nodeFormatPackages.map(name => {
 
 const repetitions = Number(process.env.FORMAT_STUDY_REPETITIONS ?? 9);
 const recordCount = Number(process.env.FORMAT_STUDY_RECORDS ?? 25);
+const pythonExecutable = process.env.FORMAT_STUDY_PYTHON ?? 'python3';
 const animalCount = 100;
 const hours = 24;
 const fixture = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
@@ -91,7 +92,7 @@ const manifest = createBatchExperimentManifest({
   runs: experimentRuns.map(({result, ...run}) => run),
 });
 const records = manifest.runs.map((run, index) => ({run, result: experimentRuns[index].result}));
-const pythonProbe = spawnSync('python3', ['-c', String.raw`
+const pythonProbe = spawnSync(pythonExecutable, ['-c', String.raw`
 import importlib.metadata as metadata, importlib.util, json, os, platform, sys
 packages = {}
 for name in ('pyarrow', 'fastparquet', 'duckdb', 'polars'):
@@ -148,6 +149,17 @@ async function timeOperation(operation, expected = expectedDigest) {
 }
 
 try {
+  const pythonFormatInputPath = path.join(tempDirectory, 'records.json');
+  await writeFile(pythonFormatInputPath, JSON.stringify(records));
+  const pythonParquet = pythonToolchain.packages.pyarrow.available
+    ? spawnSync(pythonExecutable, [
+      'scripts/research_experiment_format_parquet.py', pythonFormatInputPath, String(repetitions),
+    ], {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024})
+    : null;
+  if (pythonParquet && pythonParquet.status !== 0) {
+    throw new Error(`PyArrow benchmark failed: ${pythonParquet.stderr}`);
+  }
+  const parquetResults = pythonParquet ? JSON.parse(pythonParquet.stdout) : null;
   const jsonPath = path.join(tempDirectory, 'batch.json');
   const jsonlPath = path.join(tempDirectory, 'batch.jsonl');
   const workloads = {
@@ -219,7 +231,9 @@ for (const {run, result} of records) {
     generatedAt: new Date().toISOString(),
     decision: {
       default: 'JSON/JSONL',
-      parquet: 'no-go for adoption in this study: no Python Arrow/Parquet engine or Node Parquet/DuckDB package is installed in the existing toolchain; no dependency was added.',
+      parquet: parquetResults
+        ? 'measured with an opt-in PyArrow prototype; no-go for adoption at this workload because the dependency footprint and measured workload do not justify changing the default.'
+        : 'no-go for adoption in the existing toolchain; PyArrow is not installed, so no Parquet measurement was produced.',
       threshold: 'Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable.',
     },
     workload: {
@@ -247,17 +261,37 @@ for (const {run, result} of records) {
       pythonPolars: pythonToolchain.packages.polars,
       nodePackages: nodeFormatToolchain,
       parquetEnginesAvailable: Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available),
-      parquetMeasurement: Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available) ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed',
-      note: 'Installed package bytes are reported only for Python distributions that exist; Node packages are checked by resolution only. Transitive dependency footprint and portability across target environments require a separate packaging study.',
+      parquetMeasurement: parquetResults ? 'pyarrow-measured' : 'skipped-no-pyarrow-installed',
+      note: 'PyArrow package bytes include the installed Python distribution but exclude Python, pip, and system shared libraries. Node packages are checked by resolution only.',
+      parquetPrototype: parquetResults ? {
+        engine: parquetResults.engine,
+        bytes: parquetResults.bytes,
+        installedPackageBytes: parquetResults.installedPackageBytes,
+        compression: parquetResults.compression,
+        schema: parquetResults.schema,
+        roundTrip: parquetResults.roundTrip,
+        selectiveRead: parquetResults.selectiveRead,
+        memoryMethod: parquetResults.memoryMethod,
+        write: parquetResults.write,
+        fullRead: parquetResults.fullRead,
+        selectiveMetricRead: parquetResults.selectiveMetricRead,
+      } : null,
     },
     storage: {jsonBytes, jsonlBytes, jsonGzipLevel6Bytes: jsonGzipBytes, jsonlGzipLevel6Bytes: jsonlGzipBytes},
     measurements: results,
     memoryMethod: 'process.memoryUsage heapUsed/RSS/external/ArrayBuffers sampled before and after each operation; RSS is process-level. Output includes last sample and is not a peak-memory claim.',
-    selectiveReadMethod: 'JSON parses the full array before projecting fields. JSONL streams one line at a time and retains only the requested projection, but each selected row still requires parsing its complete JSON object; Parquet was unavailable.',
+    selectiveReadMethod: parquetResults
+      ? 'JSON parses the full array before projecting fields. JSONL streams one line at a time and parses each selected record. Parquet reads only nested scenarioId and totalDryMatterIntake.value columns from the nested Arrow schema.'
+      : 'JSON parses the full array before projecting fields. JSONL streams one line at a time and retains only the requested projection, but each selected row still requires parsing its complete JSON object; Parquet was unavailable.',
     limitations: [
       'One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.',
       'JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.',
-      `No Parquet results are reported because ${Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available) ? 'an installed library requires a separately validated Parquet adapter before comparison' : 'no Arrow/Parquet or DuckDB library is present in the current Python or Node toolchain'}; no network install or new dependency was introduced.`,
+      ...(parquetResults ? [
+        `Parquet was measured with opt-in PyArrow ${parquetResults.engine.version}; installed distribution footprint is ${parquetResults.installedPackageBytes} bytes, excluding the Python runtime and system libraries. The prototype dependency is isolated from application runtime dependencies.`,
+        'Parquet measurement used the same generated records and exact normalized round-trip contract; PyArrow package installation is a separate opt-in research environment and is not a runtime migration.',
+      ] : [
+        'Parquet was not measured because PyArrow is absent from the selected Python interpreter. To reproduce the optional measurement, install requirements-format-parquet.txt and set FORMAT_STUDY_PYTHON to that interpreter.',
+      ]),
       'Timing is specific to this host and includes local file IO; medians/spread are not cross-host product thresholds.',
     ],
   };
@@ -287,8 +321,21 @@ for (const {run, result} of records) {
     addMemorySamples(format, 'full-read', result.fullRead);
     addMemorySamples(format, 'selective-read', result.selectiveMetricRead);
   }
+  if (parquetResults) {
+    const parquet = parquetResults;
+    for (const [operation, detail] of [['write', parquet.write], ['full-read', parquet.fullRead], ['selective-read', parquet.selectiveMetricRead]]) {
+      addSamples(`parquet-${operation}-duration`, 'ms', detail.durationsMs, experimentPopulation,
+        `scripts/research_experiment_format_parquet.py using PyArrow ${parquet.engine.version}; local file IO included`);
+      addSamples(`parquet-${operation}-rss-process-peak`, 'bytes',
+        detail.processMemorySamples.map(sample => sample.peakBytes ?? 0), experimentPopulation,
+        'Python process cumulative peak RSS; not a per-operation allocation measure');
+    }
+    addSamples('parquet-uncompressed-size', 'bytes', [parquet.bytes]);
+    addSamples('parquet-installed-package-size', 'bytes', [parquet.installedPackageBytes], experimentPopulation,
+      'Installed PyArrow distribution file sizes; excludes Python runtime and OS shared libraries');
+  }
   const report = benchmarkReport({
-    name: 'json-jsonl-experiment-output-format-study',
+    name: 'json-jsonl-parquet-experiment-output-format-study',
     runtime: {
       python: pythonToolchain.version,
       pyarrowAvailable: pythonToolchain.packages.pyarrow.available,
