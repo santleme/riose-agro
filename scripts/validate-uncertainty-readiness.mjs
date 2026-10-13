@@ -33,7 +33,11 @@ for(const outcome of inventory.outcomes??[]){
   requireCondition(Array.isArray(outcome.evidence)&&outcome.evidence.length>0,`${outcome.id}: evidence references are required`);
   for(const ref of outcome.evidence??[]){
     const resolved=path.resolve(path.dirname(inventoryPath),ref);
-    requireCondition(resolved.startsWith(path.dirname(inventoryPath)+path.sep)||resolved===path.join(root,'docs/politica-incerteza.md'),`${outcome.id}: evidence path escapes docs: ${ref}`);
+    const isEvidenceFile=resolved.startsWith(path.join(root,'docs/evidence')+path.sep);
+    const isApprovedExperiment=resolved.startsWith(path.join(root,'experiments/diagnostics/adg')+path.sep)
+      || resolved.startsWith(path.join(root,'experiments/diagnostics/biomass')+path.sep)
+      || resolved.startsWith(path.join(root,'experiments/biomass')+path.sep);
+    requireCondition(isEvidenceFile||isApprovedExperiment||resolved===path.join(root,'docs/politica-incerteza.md'),`${outcome.id}: evidence path escapes approved evidence directories: ${ref}`);
     requireCondition(existsSync(resolved),`${outcome.id}: evidence file not found: ${ref}`);
   }
 }

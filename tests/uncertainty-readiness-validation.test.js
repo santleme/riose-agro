@@ -19,6 +19,17 @@ test('issue 15 fixture classifies every uncertainty source for every outcome', (
   assert.deepEqual(validateIssue15ReadinessContract(fixture), []);
 });
 
+test('issue 15 links source-specific ADG and biomass results without authorizing intervals', () => {
+  const adg = fixture.outcomes.find(outcome => outcome.id === 'weight-and-average-daily-gain');
+  const biomass = fixture.outcomes.find(outcome => outcome.id === 'pasture-stock');
+  assert.ok(adg.evidence.includes('../../experiments/diagnostics/adg/cper-internal-cv-2026-10.json'));
+  assert.match(adg.keyLimitations.join(' '), /five year blocks/);
+  assert.ok(biomass.evidence.includes('../../experiments/biomass/dryad-external/evaluation-report.json'));
+  assert.match(biomass.keyLimitations.join(' '), /confounded/);
+  assert.equal(adg.intervalAuthorized, false);
+  assert.equal(biomass.intervalAuthorized, false);
+});
+
 test('issue 15 gate rejects row splits, missing uncertainty classes, and weak interval promotion rules', () => {
   const invalid = structuredClone(fixture);
   invalid.evaluationGate.splitPolicy = 'Random row split across all records';

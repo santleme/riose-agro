@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "issue": 15,
-  "reviewedOn": "2026-10-12",
+  "reviewedOn": "2026-10-13",
   "decision": "insufficient-evidence",
   "productState": {
     "validated": false,
@@ -88,10 +88,11 @@
         "baselineWeight",
         "scenarioWeight"
       ],
-      "compatibleIndependentEvidence": "Partial component evidence: USDA/CPER temporal holdout and CPER-to-CGRE external transfer; separate Zenodo adult-cow and other cohort diagnostics.",
+      "compatibleIndependentEvidence": "Partial component evidence: USDA/CPER temporal holdout and CPER-to-CGRE external transfer; separate Zenodo adult-cow and other cohort diagnostics. New CPER 2009–2013 year-held-out comparison is internal development evidence only; no candidate passed its advancement rule and it is not independent transport validation.",
       "estimableNow": [
         "descriptive error and bias for the exact audited cohort and frozen component rule",
-        "cluster-bootstrap stability of selected error metrics where animal IDs support it"
+        "cluster-bootstrap stability of selected error metrics where animal IDs support it",
+        "Descriptive pooled and year-block error and bias for raw endpoint ADG in the exact CPER yearling-steer cohort under the frozen internal protocol; not a probabilistic prediction distribution."
       ],
       "notEstimableNow": [
         "full-engine predictive distribution",
@@ -101,14 +102,17 @@
       "keyLimitations": [
         "engine inputs and management are not jointly aligned with observations",
         "observational ADG is not the same estimand as all engine weight outputs",
-        "empirical coverage varied across held-out site/year subsets"
+        "empirical coverage varied across held-out site/year subsets",
+        "The frozen internal CPER year-held-out comparison did not advance a candidate and has only five year blocks; no nominal interval coverage is justified."
       ],
       "evidence": [
         "engine-adg-usda-cper-ltgi-check.json",
         "engine-adg-usda-cgrec-transport-check.json",
         "engine-adg-zenodo-cows-check.json",
         "engine-adg-ufms-check.json",
-        "issue-15-dryad-yearling-eligibility.json"
+        "issue-15-dryad-yearling-eligibility.json",
+        "../../experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+        "../../experiments/diagnostics/adg/cper-internal-cv-2026-10.md"
       ],
       "predictionInterval": null,
       "intervalAuthorized": false,
@@ -136,7 +140,7 @@
         {
           "source": "structural-model-error",
           "classification": "partially-estimable",
-          "reason": "ADG component diagnostics exist, but aligned inputs and full-engine outputs are absent."
+          "reason": "ADG component diagnostics exist, but aligned inputs and full-engine outputs are absent. The new five-year CPER internal CV permits only cohort-specific descriptive error; no candidate passed and no independent uncertainty calibration is available."
         },
         {
           "source": "extrapolation-and-missing-inputs",
@@ -216,9 +220,10 @@
         "baselinePastureKgDM",
         "scenarioPastureKgDM"
       ],
-      "compatibleIndependentEvidence": "Some public sources report pasture or vegetation indicators at group, paddock, or remote-sensing level; they are not aligned to the engine's initial stock, daily growth, intake, and paddock transitions.",
+      "compatibleIndependentEvidence": "Some public sources report pasture or vegetation indicators at group, paddock, or remote-sensing level; they are not aligned to the engine's initial stock, daily growth, intake, and paddock transitions. New adjacent forage-biomass evidence includes an external Dryad comparison for sampled pre-grazing forage mass; it does not measure initial pasture stock or validate the engine stock state.",
       "estimableNow": [
-        "source-specific descriptive summaries when the reported unit and period are retained"
+        "source-specific descriptive summaries when the reported unit and period are retained",
+        "Source-specific error and bias for harvested quadrat forage mass predicted from matched height in the exact Mendeley and Dryad cohorts; not pasture-stock uncertainty."
       ],
       "notEstimableNow": [
         "individual-farm stock error distribution",
@@ -228,13 +233,17 @@
       "keyLimitations": [
         "aggregation level and definitions differ",
         "complete aligned time series and management inputs are absent",
-        "remote-sensing indicators are not direct stock measurements"
+        "remote-sensing indicators are not direct stock measurements",
+        "The Dryad biomass comparison is related but not an identical sampling estimand; 24/64 predictions exceed the 2–56 cm Mendeley height support, all in MOB treatment, so support is confounded with management/year."
       ],
       "evidence": [
         "usda-cper-ltgi-audit.json",
         "usda-grasscast-audit.json",
         "usda-grasscast-cper-association.json",
-        "compatibilidade-validacao-engine.md"
+        "compatibilidade-validacao-engine.md",
+        "../../experiments/biomass/dryad-external/evaluation-report.json",
+        "../../experiments/biomass/dryad-external/evaluation-report.md",
+        "../../experiments/diagnostics/biomass/preregister-mendeley-to-dryad-biomass-2026-10.json"
       ],
       "predictionInterval": null,
       "intervalAuthorized": false,
@@ -262,7 +271,7 @@
         {
           "source": "structural-model-error",
           "classification": "not-estimable",
-          "reason": "Initial stock, growth, intake, and paddock transitions are not jointly observed against the engine."
+          "reason": "Initial stock, growth, intake, and paddock transitions are not jointly observed against the engine. Source-specific error is now described for clipped-quadrat biomass, but this is not the engine pasture-stock output and cannot establish its uncertainty."
         },
         {
           "source": "extrapolation-and-missing-inputs",
@@ -420,6 +429,8 @@
     "mendeley-nellore-engine-dmi-check.json",
     "usda-ars-feedlot-engine-dmi-check.json",
     "sdsu-engine-dmi-check.json",
-    "grastech-dairy-grazing-dmi-engine-check.json"
+    "grastech-dairy-grazing-dmi-engine-check.json",
+    "../../experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+    "../../experiments/biomass/dryad-external/evaluation-report.json"
   ]
 }
