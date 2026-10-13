@@ -18,6 +18,8 @@ CMS total (kg MS/dia) = −0,4684
 
 A Tabela 2.14 informa 7,58 kg MS/dia para zebuínos de 400 kg, GMD de 0,5 kg/dia e suplemento de 1,6 kg MS/dia. A implementação retorna 7,576844757 kg MS/dia, que arredonda para 7,58.
 
+O caso está transcrito como fixture congelada em [`tests/fixtures/scientific-numeric-reference-v1.json`](../../tests/fixtures/scientific-numeric-reference-v1.json), com localizador da tabela/página, população, unidades, termos intermediários, precisão publicada e limitações. O teste consome essa fixture para evitar repetir entradas e tolerâncias literais no código. É uma referência numérica independente para verificar implementação e transcrição; não é dado observacional e não integra os datasets observacionais do projeto.
+
 ### Domínio e evidência
 
 A tabela de validação independente contém 174 unidades experimentais zebuínas: PC 133–474 kg, GMD −0,18–1,34 kg/dia, CMS 1,98–12,3 kg/dia e suplemento 0–5,32 kg/dia. Estatísticas publicadas: intercepto 0,470 (p=0,170), inclinação 1,05 (p=0,376), R²=0,670, CCC=0,741 e quadrado médio do erro de predição 2,13. Os autores recomendam o modelo para recria e suplementação moderada em pastejo tropical. Grande parte dos dados de desenvolvimento foi obtida em períodos secos. Esses resultados são evidência de validação da regressão no conjunto descrito, não garantia para qualquer fazenda.

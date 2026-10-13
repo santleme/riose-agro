@@ -1,5 +1,6 @@
 //! Small deterministic numerical kernels shared by native and WebAssembly builds.
 
+mod br_corte;
 mod contract;
 mod environment;
 mod feeding;
@@ -7,15 +8,24 @@ mod runtime;
 mod simulation;
 mod snapshot;
 mod state;
+pub use br_corte::{
+    predict_pasture_dmi, BrCortePastureDmiDomain, BrCortePastureDmiInput,
+    BrCortePastureDmiMetadata, BrCortePastureDmiPrediction, BrCortePastureDmiUnits,
+    ADG_KG_PER_DAY_RANGE, BODY_WEIGHT_KG_RANGE, BR_CORTE_DMI_EQUATION, BR_CORTE_DMI_MODEL_ID,
+    BR_CORTE_DMI_MODEL_VERSION, BR_CORTE_DMI_PRODUCTION_SYSTEM, BR_CORTE_DMI_R_SQUARED,
+    BR_CORTE_DMI_SOURCE, BR_CORTE_DMI_VALIDATION_UNITS, SUPPLEMENT_KG_DM_PER_DAY_RANGE,
+};
 pub use contract::{
     run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
-    NativeScenarioResult, MODEL_STATUS, NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,
+    NativeScenarioResult, CONFIGURED_COMPARISON_REQUEST_VERSION, MODEL_STATUS,
+    NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,
 };
 pub use environment::{environmental_stress, weather_rules, Weather, WeatherRules};
 pub use feeding::{calculate_feeding, FeedingResult};
 pub use runtime::*;
 pub use simulation::{
-    compare_housing, metrics, ComparisonRow, FarmEngine, HousingComparison, ModelAssumptions,
+    compare_configured, compare_housing, metrics, ComparisonRow, ConfiguredComparison,
+    ConfiguredComparisonRow, FarmEngine, HousingComparison, ModelAssumptions,
 };
 pub use snapshot::{decode_farm_snapshot, encode_farm_snapshot, FarmSnapshotDecodeError};
 pub use state::{
@@ -71,10 +81,11 @@ pub extern "C" fn riose_alloc_f64(len: usize) -> *mut f64 {
     if len == 0 || len > MAX_BATCH * 4 {
         return core::ptr::null_mut();
     }
-    let mut buffer = Vec::<f64>::with_capacity(len);
-    let pointer = buffer.as_mut_ptr();
-    core::mem::forget(buffer);
-    pointer
+    // Return an exact-length boxed slice so `riose_free_f64` can reconstruct
+    // the same allocation layout from the caller-supplied element count.
+    // `Vec::with_capacity(len)` may reserve more than `len`, while the ABI
+    // only carries the requested length back to the free function.
+    Box::into_raw(vec![0.0_f64; len].into_boxed_slice()) as *mut f64
 }
 
 /// Releases a buffer returned by `riose_alloc_f64`.
@@ -86,7 +97,8 @@ pub extern "C" fn riose_alloc_f64(len: usize) -> *mut f64 {
 pub unsafe extern "C" fn riose_free_f64(pointer: *mut f64, len: usize) {
     if !pointer.is_null() && len > 0 && len <= MAX_BATCH * 4 {
         // SAFETY: upheld by this function's documented caller contract.
-        drop(Vec::from_raw_parts(pointer, 0, len));
+        let slice = core::ptr::slice_from_raw_parts_mut(pointer, len);
+        drop(Box::from_raw(slice));
     }
 }
 
@@ -150,5 +162,26 @@ mod tests {
     #[test]
     fn exports_the_documented_batch_abi_version() {
         assert_eq!(riose_abi_version(), 1);
+    }
+
+    #[test]
+    fn allocates_initialized_buffers_and_releases_the_exact_length() {
+        let length = 17;
+        let pointer = riose_alloc_f64(length);
+        assert!(!pointer.is_null());
+
+        // SAFETY: pointer was returned by riose_alloc_f64(length) and is live.
+        let buffer = unsafe { core::slice::from_raw_parts_mut(pointer, length) };
+        assert!(buffer.iter().all(|value| *value == 0.0));
+        buffer[0] = 3.5;
+        buffer[length - 1] = -2.0;
+
+        // SAFETY: pointer is the live allocation returned above, with matching length.
+        unsafe { riose_free_f64(pointer, length) };
+    }
+
+    #[test]
+    fn rejects_zero_length_buffer_allocations() {
+        assert!(riose_alloc_f64(0).is_null());
     }
 }

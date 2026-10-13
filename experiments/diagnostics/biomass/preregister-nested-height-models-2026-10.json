@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_before_candidate_model_fitting",
+  "registeredAt": "2026-10-13",
+  "analysis": "exploratory post-baseline nested spatial development comparison for single-height forage biomass prediction",
+  "epistemicStatus": {
+    "candidateFamilyChosenAfterBaselineReview": true,
+    "priorTargetOutcomeResultsRemainReviewed": true,
+    "independentValidation": false,
+    "externalCohortUsedForSelection": false,
+    "explanation": "The candidate family and this nested development analysis were specified after the existing Mendeley and Dryad baseline reports and target outcomes had already been reviewed. Nested selection prevents each outer held-out block from selecting its own model, but cannot make previously reviewed Mendeley outcomes pristine. Dryad outcomes have already been reported in a prior evaluation and are not used here for model choice, thresholds, or tuning. This is development evidence only, not a new independent validation."
+  },
+  "developmentCohort": {
+    "sourceDoi": "10.17632/nj72kmdj77.1",
+    "sourceLicense": "CC BY 4.0",
+    "parquet": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+    "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+    "rows": 234,
+    "farms": ["Poderosa", "Santa Clara"],
+    "target": {"column": "dry_matter_yield_kg_dm_ha", "unit": "kg DM/ha", "meaning": "measured dry forage yield from clipped quadrat"},
+    "feature": {"column": "sward_height_cm", "unit": "cm", "count": 234, "observedRange": [2.0, 56.0]},
+    "featureTimingLimit": "Height and biomass are reported at the same points in the November 2018 and March 2019 campaigns, but the source does not document measurement order relative to clipping. Treat this as a study-local association, not a proven pre-measurement operational predictor."
+  },
+  "design": {
+    "outer": {
+      "method": "Leave one connected farm/field spatial component out; exact-coordinate aliases stay together; remove every training coordinate within 100 m great-circle distance of any held-out coordinate.",
+      "expectedBlocks": 13,
+      "expectedScoredRows": 234,
+      "expectedCoverage": 1.0,
+      "minimumBlocks": 4,
+      "minimumScoredCoverage": 0.7,
+      "trainingRowsObservedInFeatureOnlyPreflight": [210, 216],
+      "preflightUsedOutcomeForSplit": false
+    },
+    "inner": {
+      "method": "Within each outer training set only, repeat leave-one-connected-component-out with exact-coordinate aliases joined and the same 100 m great-circle training buffer.",
+      "expectedNonemptyFoldsPerOuterTrainingSet": 12,
+      "observedPreflightCoveragePerOuterTrainingSet": 1.0,
+      "observedPreflightMinimumTrainingRows": 192,
+      "minimumNonemptyFolds": 8,
+      "minimumScoredCoverage": 0.7,
+      "preflightUsedOutcomeForSplit": false
+    },
+    "feasibilityStopRule": "Before fitting, stop if any outer fold has fewer than eight nonempty inner folds, inner scored coverage below 70%, an empty inner training set, or any model cannot be fit on an eligible inner training subset. Do not relax the buffer or alter component definitions in response to target errors."
+  },
+  "featureAndLeakageRules": {
+    "onlyPredictor": "sward_height_cm",
+    "neverPredictFrom": [
+      "dry_matter_weight_g",
+      "dry_matter_yield_tonnes_ha",
+      "other target aliases",
+      "fresh biomass weights",
+      "sample, plot, field, pixel, or point identifiers",
+      "coordinates",
+      "farm or campaign labels",
+      "future measurements",
+      "Dryad observations or outcomes"
+    ],
+    "preprocessing": "Fit each estimator only on its current training split; no global scaling, imputation, or target transformation."
+  },
+  "candidateSet": [
+    {"id": "M0_median", "role": "baseline", "estimator": "training-fold target median"},
+    {"id": "M1_ols", "role": "reference", "estimator": "LinearRegression with intercept"},
+    {"id": "M5_isotonic", "role": "new_exploratory", "estimator": "IsotonicRegression(increasing=true, out_of_bounds=clip)"},
+    {"id": "M6_rf_monotone", "role": "new_exploratory", "estimator": "RandomForestRegressor(n_estimators=100, max_depth=3, min_samples_leaf=10, max_features=1.0, bootstrap=true, monotonic_cst=[1], n_jobs=1, random_state=20261013)"},
+    {"id": "M7_hgb_monotone", "role": "new_exploratory", "estimator": "HistGradientBoostingRegressor(max_iter=50, learning_rate=0.05, max_leaf_nodes=3, min_samples_leaf=15, l2_regularization=1.0, monotonic_cst=[1], early_stopping=false, random_state=20261013)"}
+  ],
+  "nestedSelection": {
+    "innerPrimaryMetric": "equal-weight mean of per-inner-spatial-block MAE in kg DM/ha",
+    "innerSecondaryMetrics": ["pooled MAE", "pooled RMSE", "signed bias"],
+    "candidates": ["M0_median", "M1_ols", "M5_isotonic", "M6_rf_monotone", "M7_hgb_monotone"],
+    "sameRowsForEveryCandidate": true,
+    "selectionRule": "For each outer fold, select the candidate with lowest inner equal-block MAE; break exact ties in the simplicity order listed in candidates. Refit the selected estimator on the complete outer training subset and predict the outer test block. Also produce outer OOF predictions for the fixed median, OLS, isotonic, RF, and HGB candidates on exactly the same 234 rows; these fixed-candidate outer metrics are descriptive and cannot be used to choose a global winner.",
+    "noHyperparameterSearch": true
+  },
+  "advancementGate": {
+    "compareAgainst": "fixed M1_ols outer OOF predictions on the identical 234 rows",
+    "primary": "At least 10% lower equal-block outer OOF MAE for the nested-selected procedure.",
+    "secondary": "Pooled outer OOF RMSE no more than 5% worse than OLS.",
+    "bias": "Absolute pooled signed bias no greater than absolute OLS bias plus 100 kg DM/ha.",
+    "subgroups": "For each farm and campaign, outer OOF MAE must not worsen by more than 10% versus OLS. Report the subgroup sizes and number of held-out spatial blocks.",
+    "failureAction": "If any criterion fails, retain OLS as the development reference, report the trade-offs, and make no model promotion or generalizable-prediction claim."
+  },
+  "externalData": {
+    "dryadDoi": "10.5061/dryad.79cnp5ht4",
+    "usedForCandidateSelection": false,
+    "usedForThresholdSelection": false,
+    "usedForTuning": false,
+    "reason": "A prior one-time external evaluation has already been reported and is not a pristine holdout for this post-baseline candidate family. Do not refit or rescore against its outcomes as part of selection."
+  },
+  "reporting": {
+    "metrics": ["row-weighted MAE", "equal-block MAE", "RMSE", "signed bias", "coverage", "MAE/RMSE/bias by farm and campaign", "outer block errors", "nested selection frequency"],
+    "uncertainty": "Report all 13 outer block errors. Do not claim a population confidence interval or calibrated prediction interval from 13 blocks nested in only two farms.",
+    "runtime": ["fit wall time", "prediction wall time", "prediction microseconds per row on CPU"],
+    "provenance": ["data checksum", "protocol checksum", "code file checksum", "git HEAD", "working-tree status", "Python version", "NumPy version", "pandas version", "scikit-learn version", "fixed seed", "outer and inner group IDs"],
+    "outputs": [
+      "experiments/biomass/nested-development-2026-10/outer-oof-predictions.csv",
+      "experiments/biomass/nested-development-2026-10/evaluation-report.json",
+      "experiments/biomass/nested-development-2026-10/evaluation-report.md"
+    ]
+  }
+}

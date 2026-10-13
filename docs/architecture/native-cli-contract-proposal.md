@@ -1,17 +1,17 @@
 # Native scenario CLI contract proposal
 
-Status: reconciled against the stable #84 API merged by PR #122 at `8f7f304746098a8443d984abc6bb4be9ae5a1ed6`.
+Status: reconciled against the #84 API merged by PR #122 at `8f7f304746098a8443d984abc6bb4be9ae5a1ed6`; the runner now also has an additive v1 BR-CORTE scalar request described below.
 
 ## Contract deltas after #84 merge
 
 | Proposal field | Merged API behavior | Delta | Action |
 | --- | --- | --- | --- |
-| Request tagged by `type` and `version` | `NativeScenarioRequest` is a strict tagged enum with `baseline` and `housing-comparison`, version 1 | Names and fields are now frozen; unknown nested fields are rejected by Serde DTOs | Deserialize the request directly into the public enum after duplicate-key and version checks |
+| Request tagged by `type` and `version` | At #84 merge, `NativeScenarioRequest` was a strict tagged enum with `baseline` and `housing-comparison`, version 1 | Those requests retain their fields; an additive `br-corte-pasture-dmi` v1 variant is now supported | Deserialize the request directly into the public enum after duplicate-key and version checks |
 | Baseline seed and configuration | Baseline requires `seed: u32`, `animalCount`, `configuration`, and `hours`; configuration fields default in the core DTO | The CLI must not invent defaults for seed or required top-level request fields | Preserve input request bytes and let the core validate the typed request |
 | Housing snapshot | Snapshot DTO validates 1–10,000 animals, exactly four paddocks, finite model values, and supported configuration | Snapshot `initialSeed` and `locomotionSeed` may be omitted and derived by the core | Use the native DTO and core validation; report validation failure without rewriting snapshot state |
 | Result envelope | `NativeRunResult` carries `version`, `engine`, and tagged `result`; engine has `engineVersion`, `buildId`, `modelStatus`, `provenance`, `validated` | `buildId` is `RIOSE_BUILD_ID` or reproducible `riose-core@0.1.0`; fallback makes no commit provenance claim | Embed the typed native result once in the CLI record; do not duplicate engine metadata |
 | `--input` | Transport is independent of the scenario API | The proposal required a flag although the task requires stdin fallback | Omitted `--input` and `--input -` both read stdin |
-| Supported scenarios | Only baseline and pasture-versus-barn housing comparison are supported | Heat intervention, reduced feed, limited trough access, other paddock models, and observed-farm snapshots are unsupported | Reject unsupported scenario/type values; never translate them |
+| Supported scenarios at #84 merge | Baseline and pasture-versus-barn housing comparison were supported | Heat intervention, reduced feed, limited trough access, other paddock models, and observed-farm snapshots remain unsupported | Reject unsupported scenario/type values; never translate them |
 | Errors and exit codes | Core returns descriptive `String` errors for invalid versions, counts, hours, days, and configuration | Core messages are not a stable CLI contract | Map failures to fixed CLI codes/messages and stable exit codes |
 
 The main branch also merged #123 after #84. Its changes are confined to visual assets and the pilot page; they do not change the native request/result API or the #84 scenario goldens.
@@ -35,7 +35,7 @@ On success, machine output is compact UTF-8 JSON with exactly one trailing LF. A
 
 ## Request contract (stable binding to #84)
 
-The input serializes the public #84 `NativeScenarioRequest` directly, rather than inventing a second scenario schema. It is a tagged request with `type` variants `baseline` and `housing-comparison`, each carrying `version: 1`. Baseline carries its seed, animal count, configuration and hours; housing comparison carries a snapshot and days. The authoritative DTOs and supported values are documented in [`native-farm-core.md`](../native-farm-core.md).
+The input serializes the public `NativeScenarioRequest` directly, rather than inventing a second scenario schema. It is a tagged request with `type` variants `baseline`, `housing-comparison`, and `br-corte-pasture-dmi`, each carrying `version: 1`. Baseline carries its seed, animal count, configuration and hours; housing comparison carries a snapshot and days. The additive BR-CORTE request carries body weight, supplied ADG, and supplement within its published independent-validation ranges. Its equation domain is growing Zebu cattle grazing tropical pasture with supplementation; it is not an adult-cow model and does not validate Riose predictions. The authoritative DTOs and supported values are documented in [`native-farm-core.md`](../native-farm-core.md).
 
 Before typed deserialization, inspect the request discriminator and version so an unknown future version is reported as unsupported even if its payload no longer matches the current struct. Do not classify it as malformed JSON or silently try a different version.
 

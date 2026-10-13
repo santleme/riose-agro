@@ -74,10 +74,13 @@ class AmdBenchmarkTests(unittest.TestCase):
             amd_detector=self.unavailable_detector,
             executor=executor,
             timestamp_utc="2026-10-12T12:00:00Z",
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         serialized = json.dumps(report, allow_nan=False)
         self.assertIn('"schema_version": 1', serialized)
+        self.assertEqual(report["schemaVersion"], 2)
+        for phase in ("coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"):
+            self.assertEqual(report["phases"][phase]["status"], "not-measured")
         self.assertEqual(report["cpu"]["backend_used"], "cpu")
         self.assertEqual(report["cpu"]["statistics"]["runs"], 2)
         self.assertEqual(report["amd"]["status"], "unavailable")
@@ -86,6 +89,17 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertIsNone(report["speedup"])
         self.assertEqual(report["correctness_check"]["status"], "not_compared")
         self.assertEqual(calls, ["cpu"] * 4)
+        self.assertEqual(report["workload"]["seed"], "deterministic-vector-no-rng")
+        self.assertEqual(report["workload"]["populations"], [{
+            "count": 8,
+            "unit": "numeric-vector-elements",
+            "scope": "numeric-kernel-only",
+        }])
+        self.assertTrue(report["timingBoundaries"][0]["timed"])
+        measurement = report["phases"]["engine"]["measurements"][0]
+        self.assertEqual(measurement["population"]["count"], 8)
+        self.assertTrue(measurement["source"])
+        self.assertEqual(len(measurement["statistics"]["rawObservations"]), 2)
 
     def test_available_simulated_backend_uses_same_deterministic_payload(self):
         payloads = []
@@ -101,7 +115,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             amd_detector=self.available_detector,
             executor=executor,
             timestamp_utc="2026-10-12T12:00:00Z",
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertEqual(report["correctness_check"]["status"], "passed")
         self.assertTrue(report["correctness_check"]["equivalent"])
@@ -113,6 +127,12 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertEqual({item[0] for item in payloads}, {"scale_vector"})
         self.assertEqual({json.dumps(item[1], sort_keys=True) for item in payloads}, {json.dumps(payloads[0][1], sort_keys=True)})
         self.assertEqual({item[2] for item in payloads}, {"cpu", "amd"})
+        measurements = report["phases"]["engine"]["measurements"]
+        self.assertEqual({measurement["backend"] for measurement in measurements}, {"cpu", "amd_rocm"})
+        for measurement in measurements:
+            self.assertEqual(measurement["population"]["count"], 8)
+            self.assertTrue(measurement["source"])
+            self.assertEqual(len(measurement["statistics"]["rawObservations"]), 2)
 
     def test_correctness_mismatch_prevents_amd_timing_and_speedup(self):
         def mismatching_executor(request, *, amd_detector):
@@ -127,7 +147,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             vector_length=8,
             amd_detector=self.available_detector,
             executor=mismatching_executor,
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertFalse(report["correctness_check"]["equivalent"])
         self.assertEqual(report["correctness_check"]["status"], "failed")
@@ -151,7 +171,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             vector_length=8,
             amd_detector=self.available_detector,
             executor=fallback_executor,
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertTrue(report["environment"]["amd"]["available"])
         self.assertEqual(report["amd"]["status"], "unavailable")

@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "processed_candidate_external_biomass_cohort",
+  "sourceDoi": "10.5061/dryad.79cnp5ht4",
+  "sourceArchive": "data/raw/dryad-79cnp5ht4/version-6.zip",
+  "sourceBytes": 115041,
+  "sourceSha256": "45b972894f876a653b0205d01959861bdc4e4ff7c14eacc8b8fa4bc893c161d6",
+  "officialInternalFileSha256": {
+    "Mob_&_Rotational_Study_Data_Summary.xlsx": "47c2aaf50572c8a46b8ab5e3dccd532d36c67fe04fd0f942c5c4f818d281b03b",
+    "README_Mob_Rotational_Grazing.docx": "cf1215c422a74c17bfd48d0a26c46d6647964a44b50b253091edf618a7a0086e"
+  },
+  "rowLevelParquet": "data/dryad-mob-rotational-biomass/processed/dryad-per-harvest-biomass-samples-v1.parquet",
+  "rowLevelSha256": "39791095abb52e71a05f2474ffb0f5bac5651acd5050c6358da186a67e2d1d8a",
+  "rowLevelRows": 623,
+  "rowsWithMissingTargetNotExported": 17,
+  "missingTargetRows": [
+    {
+      "sourceRow": 79,
+      "julianDay": 239,
+      "plotId": 108,
+      "replicate": 1,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 81,
+      "julianDay": 239,
+      "plotId": 110,
+      "replicate": 1,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 154,
+      "julianDay": 239,
+      "plotId": 303,
+      "replicate": 2,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 161,
+      "julianDay": 239,
+      "plotId": 310,
+      "replicate": 2,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 234,
+      "julianDay": 239,
+      "plotId": 503,
+      "replicate": 3,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 241,
+      "julianDay": 239,
+      "plotId": 510,
+      "replicate": 3,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 316,
+      "julianDay": 239,
+      "plotId": 705,
+      "replicate": 4,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 321,
+      "julianDay": 239,
+      "plotId": 710,
+      "replicate": 4,
+      "studyYearCode": 4,
+      "treatment": "MOB",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 379,
+      "julianDay": 239,
+      "plotId": 208,
+      "replicate": 1,
+      "studyYearCode": 3,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 393,
+      "julianDay": 239,
+      "plotId": 202,
+      "replicate": 1,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 399,
+      "julianDay": 239,
+      "plotId": 208,
+      "replicate": 1,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 472,
+      "julianDay": 239,
+      "plotId": 401,
+      "replicate": 2,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 480,
+      "julianDay": 239,
+      "plotId": 409,
+      "replicate": 2,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 556,
+      "julianDay": 239,
+      "plotId": 605,
+      "replicate": 3,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 559,
+      "julianDay": 239,
+      "plotId": 608,
+      "replicate": 3,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 635,
+      "julianDay": 239,
+      "plotId": 804,
+      "replicate": 4,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    },
+    {
+      "sourceRow": 638,
+      "julianDay": 239,
+      "plotId": 807,
+      "replicate": 4,
+      "studyYearCode": 4,
+      "treatment": "ROT",
+      "sourceValue": "."
+    }
+  ],
+  "aggregatedParquet": "data/dryad-mob-rotational-biomass/processed/dryad-paddock-biomass-height-v1.parquet",
+  "aggregatedSha256": "d07291469e00136f54ed6f51d96afcee11ad0d5c27b665556f915afdb8de08d3",
+  "aggregatedRows": 64,
+  "groupCount": 8,
+  "grouping": [
+    "treatment",
+    "replicate"
+  ],
+  "repeatDimensions": [
+    "calendarYear",
+    "julianDay"
+  ],
+  "quadratCountPerPaddockTime": {
+    "minimum": 8,
+    "median": 10,
+    "maximum": 10
+  },
+  "units": {
+    "outcome": "kg/ha (source label PGFM; interpreted as pre-grazing forage mass)",
+    "predictor": "cm"
+  },
+  "featureOutcomeMatch": "Mean pre-grazing height at paddock/replicate level is matched to the arithmetic mean of available plot-level biomass quadrats within treatment, replicate, study year, and Julian day.",
+  "limitations": [
+    "17 of 640 source row slots contain missing PGFM and were not imputed.",
+    "Paddock-level height does not match every individual quadrat; external evaluation must use the documented aggregate target.",
+    "Only eight treatment x replicate paddocks recur over four years; repeated time points must remain grouped by paddock.",
+    "This cohort supports a separate forage biomass evaluation only, not animal DMI, ADG, or the full engine."
+  ]
+}

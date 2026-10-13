@@ -1,0 +1,248 @@
+{
+  "auditDate": "2026-10-13",
+  "scope": "source_readiness_only_no_model_fitting",
+  "candidates": [
+    {
+      "title": "Individual animal liveweight and daily liveweight gain, contrasting grazing methods (legacy version)",
+      "doi": "10.23637/rothamsted.991v9",
+      "sourceUrl": "https://doi.org/10.23637/rothamsted.991v9",
+      "legacyRecordUrl": "https://data.rothamsted.ac.uk/dataset/individual-animal-liveweight-and-daily-liveweight-gain-contrasting-grazing-methods",
+      "legacyAvailability": "CKAN resource links are listed, but the legacy record states the dataset is private and identifies a superseding version.",
+      "legacyLicense": "Legacy resource record includes CC BY 4.0 metadata, but public access for this version is ambiguous due to the private-status notice; do not rely on it.",
+      "supersededBy": {
+        "doi": "10.23637/rothamsted.00033688",
+        "url": "https://repository.rothamsted.ac.uk/id/eprint/33688/",
+        "license": "CC BY 4.0",
+        "localFilesAlreadyAudited": [
+          "data/rothamsted/Cattle_LWt_collated_2018-2025.csv",
+          "data/rothamsted/2018-2025_Pasture_DM_herbage_mass.csv",
+          "data/rothamsted/datapackage.json"
+        ]
+      },
+      "population": "Young dairy-cross-beef steers at North Wyke, not mature beef cows.",
+      "outcomes": [
+        {
+          "name": "DLWG",
+          "unit": "kg/day (computed from start and end liveweight divided by elapsed days; source datapackage unit field is inconsistent and says kg)",
+          "grain": "animal by weight interval",
+          "groupIds": [
+            "Tag_Official",
+            "Plot_ID",
+            "Year",
+            "Cohort_number",
+            "Grazing_number"
+          ],
+          "method": "derived from measured start/end liveweight"
+        },
+        {
+          "name": "DM_HM",
+          "unit": "kg DM/ha",
+          "grain": "plot by date; weekly herbage mass",
+          "groupIds": [
+            "Plot_ID",
+            "Date"
+          ],
+          "method": "estimated from rising-plate compressed sward height"
+        }
+      ],
+      "eligibility": {
+        "legacyVersion": "CONDITIONAL_SUPERSEDED_DO_NOT_COUNT_AS_NEW_SOURCE",
+        "currentVersion_ADG_or_herbage_module": "CONDITIONAL",
+        "mature_cow_DMI": "INELIGIBLE",
+        "full_engine_validation": "INELIGIBLE"
+      },
+      "limitations": [
+        "DLWG is computed from its weight endpoints, not an independent measurement.",
+        "The same six plots recur across cohorts and years; later cohorts are not a new-site test.",
+        "Young dairy-cross-beef cattle do not represent mature beef cows."
+      ]
+    },
+    {
+      "title": "AYAF PGSH Plot Trial",
+      "doi": "10.82253/85FG-J232",
+      "sourceUrl": "https://doi.org/10.82253/85FG-J232",
+      "officialRecordUrl": "https://opendata.teagasc.ie/en_GB/dataset/ayaf-pgsh-plot-trial",
+      "catalogUrl": "https://data.gov.ie/dataset/ayaf-pgsh-plot-trial",
+      "license": "CC BY-NC 4.0 (per official record/README)",
+      "download": {
+        "xlsxUrl": "https://opendata.teagasc.ie/dataset/35fbe4f2-0099-442d-884e-9e2b5fe7f4e5/resource/4fb26f99-9af4-430b-9f34-3e90de042c1a/download/ayaf-pgsh-plot-trial.xlsx",
+        "xlsxHttpStatus": 200,
+        "xlsxBytes": 444833,
+        "xlsxSha256": "fdad452c6499158cc8aeb3dac975ca5a119b21131c671ac7371fd73e22e1972b",
+        "readmeUrl": "https://opendata.teagasc.ie/dataset/35fbe4f2-0099-442d-884e-9e2b5fe7f4e5/resource/ed647439-fe6d-451d-82bd-6d1646e1b56f/download/readme_ayaf_pgsh_plot_trial.docx",
+        "readmeHttpStatus": 200,
+        "readmeBytes": 60292
+      },
+      "location": "Teagasc Athenry, Galway, Ireland",
+      "period": "2019-08-26 to 2022-12-01",
+      "design": "Five sward types by three post-grazing sward-height treatments, randomized/block field plot trial.",
+      "population": "Pasture plots; no individual animal records or animal performance outcomes.",
+      "sheets": [
+        {
+          "name": "Herbage Yield",
+          "rowsExcludingHeader": 972,
+          "keyFields": [
+            "Year",
+            "Season",
+            "Rotation",
+            "DateCut",
+            "Plot",
+            "Block",
+            "SampleNo",
+            "Treatment"
+          ],
+          "outcomes": [
+            {
+              "name": "Yield",
+              "unit": "kg DM/ha"
+            }
+          ]
+        },
+        {
+          "name": "Sward Composition",
+          "rowsExcludingHeader": 972,
+          "keyFields": [
+            "Year",
+            "Season",
+            "Rotation",
+            "DateCut",
+            "Plot",
+            "Block",
+            "Treatment"
+          ],
+          "outcomes": [
+            {
+              "name": "weights",
+              "unit": "kg"
+            },
+            {
+              "name": "content and DM",
+              "unit": "%"
+            },
+            {
+              "name": "ForageYield/TotalYield",
+              "unit": "kg DM/ha"
+            }
+          ]
+        },
+        {
+          "name": "Tiller density",
+          "rowsExcludingHeader": 216,
+          "keyFields": [
+            "Year",
+            "Season",
+            "Date",
+            "Plot",
+            "Block",
+            "Treatment"
+          ],
+          "outcomes": [
+            {
+              "name": "average tillers",
+              "unit": "count/m2"
+            }
+          ]
+        },
+        {
+          "name": "Sward Quality",
+          "rowsExcludingHeader": 324,
+          "keyFields": [
+            "AnalysisCode",
+            "AnalysisSampleNo",
+            "Treatment",
+            "Year",
+            "Rotation",
+            "AnalysisDate"
+          ],
+          "outcomes": [
+            {
+              "name": "BC",
+              "description": "buffering capacity",
+              "unit": "not specified"
+            },
+            {
+              "name": "CP",
+              "description": "crude protein",
+              "unit": "not specified in per-variable dictionary"
+            },
+            {
+              "name": "DMD",
+              "description": "dry matter digestibility",
+              "unit": "not specified in per-variable dictionary"
+            },
+            {
+              "name": "WSC",
+              "description": "water soluble carbohydrates",
+              "unit": "not specified in per-variable dictionary"
+            }
+          ],
+          "limitation": "No explicit Plot or Block column on this sheet; link to plot-level grouping requires verified crosswalk."
+        }
+      ],
+      "eligibility": {
+        "noncommercial_forage_exploration": "CONDITIONAL",
+        "commercial_training_without_additional_permission": "INELIGIBLE",
+        "ADG": "INELIGIBLE",
+        "DMI": "INELIGIBLE"
+      },
+      "limitations": [
+        "Do not treat plot-level forage yield as animal intake or performance.",
+        "Quality-variable units are incompletely documented.",
+        "Keep plot/block/treatment/year/rotation/date grouping to prevent leakage.",
+        "README states four-year study and date coverage 2019-2022; workbook records span those four calendar years."
+      ]
+    },
+    {
+      "title": "Data from: Mob and rotational grazing influence pasture biomass, nutritive value, and species composition",
+      "doi": "10.5061/dryad.79cnp5ht4",
+      "sourceUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.79cnp5ht4",
+      "downloadUrl": "https://datadryad.org/api/v2/versions/173784/download",
+      "access": "Public anonymous ZIP download; archive stored and internal file checksums verified.",
+      "license": "CC0 1.0 from the Dryad public API.",
+      "rawArchive": {
+        "path": "data/raw/dryad-79cnp5ht4/version-6.zip",
+        "bytes": 115041,
+        "sha256": "45b972894f876a653b0205d01959861bdc4e4ff7c14eacc8b8fa4bc893c161d6"
+      },
+      "population": "Managed cool-season grass-legume pastures in northeastern US, under mob and rotational grazing; 2015-2018. No animal-level observations; the study pasture was grazed by yearling beef cattle.",
+      "outcomes": [
+        {
+          "name": "PGFM",
+          "unit_source_label": "kg/ha",
+          "grain": "plot-level per-harvest observation; 623 nonmissing values from 640 source slots",
+          "method": "ten 0.1m2 pre-grazing quadrat clippings per paddock, clipped to 2.5cm and averaged to paddock mean according to the primary paper"
+        }
+      ],
+      "predictors": [
+        {
+          "name": "Mean height (cm)",
+          "grain": "paddock/replicate x year x Julian day; 64 pre-grazing entries",
+          "method": "pre-grazing mean sward height"
+        }
+      ],
+      "processed": {
+        "sampleRows": 623,
+        "missingTargets": 17,
+        "aggregatedPaddockTimeRows": 64,
+        "paddockGroups": 8,
+        "sampleParquet": "data/dryad-mob-rotational-biomass/processed/dryad-per-harvest-biomass-samples-v1.parquet",
+        "aggregatedParquet": "data/dryad-mob-rotational-biomass/processed/dryad-paddock-biomass-height-v1.parquet",
+        "qualityReport": "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json"
+      },
+      "eligibility": {
+        "biomassExternalEvaluation": "CONDITIONAL",
+        "commercialTraining": "ELIGIBLE_UNDER_CC0",
+        "DMI": "INELIGIBLE",
+        "ADG": "INELIGIBLE",
+        "fullEngine": "INELIGIBLE"
+      },
+      "reason": "Can support a separate external biomass evaluation after matching height and mass at paddock x treatment x year x harvest aggregation. Keep eight paddocks as groups and do not use these outcomes to choose a model. Not a tropical Brazilian pasture, animal intake or performance cohort.",
+      "evidence": [
+        "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.79cnp5ht4",
+        "https://datadryad.org/api/v2/versions/173784/files",
+        "https://doi.org/10.1002/agj2.20215",
+        "data/dryad-mob-rotational-biomass/manifest.json"
+      ]
+    }
+  ]
+}

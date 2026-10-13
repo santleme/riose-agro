@@ -1,0 +1,510 @@
+{
+  "created": "2021-06-09T21:36:38.867906+00:00",
+  "modified": "2021-06-10T01:48:35.197101+00:00",
+  "id": 4064802,
+  "conceptrecid": "4064801",
+  "doi": "10.5281/zenodo.4064802",
+  "conceptdoi": "10.5281/zenodo.4064801",
+  "doi_url": "https://doi.org/10.5281/zenodo.4064802",
+  "metadata": {
+    "title": "Precision Beef - Animal Behaviour Classification",
+    "doi": "10.5281/zenodo.4064802",
+    "publication_date": "2021-06-09",
+    "description": "<p>The data set contains sensor data for three cattle behaviours, (<code>Eating</code>, <code>Rumination</code> and <code>Other</code>). In particular, it contains 18 animals over three farm trials in the Easter Howgate Farm, Edinburgh, UK.</p>\n\n<p>Each animal is assigned a unique identifier <code>XX</code> in the range <code>01</code>-<code>18</code> and is equipped with 2 devices:</p>\n\n<ol>\n\t<li>Afimilk Silent Herdsman Collar that provides the raw acceleration traces from a 3-axis MEMs accelerometer at frequency of 10 Hz.</li>\n\t<li>Rumiwatch Halter device that measures the pressure created by the jaw movements and provides classifications at frequency of 10 Hz.</li>\n</ol>\n\n<p>A detailed description of the data is provided in the <code>Readme.md</code>.</p>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Pavlovic, Dejan",
+        "affiliation": "BioSense Institute",
+        "orcid": "0000-0002-9811-9485"
+      },
+      {
+        "name": "Christopher Davison",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0002-9450-1791"
+      },
+      {
+        "name": "Andrew Hamilton",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0002-8436-8325"
+      },
+      {
+        "name": "Oskar Marko",
+        "affiliation": "BioSense Institute",
+        "orcid": "0000-0001-6683-7178"
+      },
+      {
+        "name": "Robert Atkinson",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0002-6206-2229"
+      },
+      {
+        "name": "Craig Michie",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0001-5132-4572"
+      },
+      {
+        "name": "Vladimir Crnojevic",
+        "affiliation": "BioSense Institute"
+      },
+      {
+        "name": "Ivan Andonovic",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0001-9093-5245"
+      },
+      {
+        "name": "Xavier Bellekens",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0003-1849-5788"
+      },
+      {
+        "name": "Tachtatzis, Christos",
+        "affiliation": "University of Strathclyde",
+        "orcid": "0000-0001-9150-6805"
+      }
+    ],
+    "keywords": [
+      "animal behaviour",
+      "cattle",
+      "collar",
+      "halter",
+      "accelerometer"
+    ],
+    "language": "eng",
+    "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+    },
+    "license": {
+      "id": "cc-by-4.0"
+    },
+    "grants": [
+      {
+        "code": "BB/M027333/1",
+        "internal_id": "10.13039/100014013::BB/M027333/1",
+        "funder": {
+          "name": "UK Research and Innovation",
+          "doi": "10.13039/100014013",
+          "acronym": "UKRI"
+        },
+        "title": "PrecisionBeef",
+        "program": "BBSRC"
+      },
+      {
+        "code": "810775",
+        "internal_id": "10.13039/501100000780::810775",
+        "funder": {
+          "name": "European Commission",
+          "doi": "10.13039/501100000780",
+          "acronym": "EC"
+        },
+        "title": "Data Driven Precision Agriculture Services and Skill Acquisition",
+        "acronym": "DRAGON",
+        "program": "H2020-EU.4.b.",
+        "url": "https://cordis.europa.eu/projects/810775"
+      }
+    ],
+    "relations": {
+      "version": [
+        {
+          "index": 0,
+          "is_last": true,
+          "parent": {
+            "pid_type": "recid",
+            "pid_value": "4064801"
+          }
+        }
+      ]
+    }
+  },
+  "title": "Precision Beef - Animal Behaviour Classification",
+  "links": {
+    "self": "https://zenodo.org/api/records/4064802",
+    "self_html": "https://zenodo.org/records/4064802",
+    "preview_html": "https://zenodo.org/records/4064802?preview=1",
+    "doi": "https://doi.org/10.5281/zenodo.4064802",
+    "self_doi": "https://doi.org/10.5281/zenodo.4064802",
+    "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4064802",
+    "reserve_doi": "https://zenodo.org/api/records/4064802/draft/pids/doi",
+    "parent": "https://zenodo.org/api/records/4064801",
+    "parent_html": "https://zenodo.org/records/4064801",
+    "parent_doi": "https://doi.org/10.5281/zenodo.4064801",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4064801",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:4064802/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:4064802/sequence/default",
+    "files": "https://zenodo.org/api/records/4064802/files",
+    "media_files": "https://zenodo.org/api/records/4064802/media-files",
+    "latest": "https://zenodo.org/api/records/4064802/versions/latest",
+    "latest_html": "https://zenodo.org/records/4064802/latest",
+    "versions": "https://zenodo.org/api/records/4064802/versions",
+    "draft": "https://zenodo.org/api/records/4064802/draft",
+    "access_links": "https://zenodo.org/api/records/4064802/access/links",
+    "access_grants": "https://zenodo.org/api/records/4064802/access/grants",
+    "access_users": "https://zenodo.org/api/records/4064802/access/users",
+    "access_request": "https://zenodo.org/api/records/4064802/access/request",
+    "access": "https://zenodo.org/api/records/4064802/access",
+    "communities": "https://zenodo.org/api/records/4064802/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/4064802/communities-suggestions",
+    "request_deletion": "https://zenodo.org/api/records/4064802/request-deletion",
+    "file_modification": "https://zenodo.org/api/records/4064802/file-modification",
+    "quota_increase": "https://zenodo.org/api/records/4064802/quota-increase",
+    "requests": "https://zenodo.org/api/records/4064802/requests"
+  },
+  "updated": "2021-06-10T01:48:35.197101+00:00",
+  "recid": "4064802",
+  "revision": 2,
+  "files": [
+    {
+      "id": "56de8804-e527-4187-b91b-958cc1c30706",
+      "key": "halter-08.csv",
+      "size": 156311947,
+      "checksum": "md5:4ab6261f827fbb08334d34d3bab84218",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-08.csv/content"
+      }
+    },
+    {
+      "id": "5f587d36-ad75-440c-868a-41c5173a3515",
+      "key": "halter-09.csv",
+      "size": 155375947,
+      "checksum": "md5:41cd681b3441f67ceb257c1eceb10694",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-09.csv/content"
+      }
+    },
+    {
+      "id": "9002a362-217b-4896-b387-a2704de85377",
+      "key": "halter-10.csv",
+      "size": 155375947,
+      "checksum": "md5:d35d27cdab21d31d599942ccc403956c",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-10.csv/content"
+      }
+    },
+    {
+      "id": "4209cd88-a1b0-48a5-9cd4-cd7c7938ddff",
+      "key": "halter-15.csv",
+      "size": 156831973,
+      "checksum": "md5:bea6cb517f10d04ff277ef6b44ebad8d",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-15.csv/content"
+      }
+    },
+    {
+      "id": "b99ad9d0-c436-4ff0-8b43-687215ea9432",
+      "key": "halter-11.csv",
+      "size": 153919453,
+      "checksum": "md5:6784f1c5826dc95e7202ad0916a0d0f9",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-11.csv/content"
+      }
+    },
+    {
+      "id": "03225387-a7a0-4cc3-8f1d-d04a66110e5f",
+      "key": "Readme.md",
+      "size": 6620,
+      "checksum": "md5:e52efa933769610b68cf7872f65479e7",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/Readme.md/content"
+      }
+    },
+    {
+      "id": "7ece1167-59d2-4817-913d-d5d9f137baef",
+      "key": "halter-12.csv",
+      "size": 136268573,
+      "checksum": "md5:97d196dae05c368f4ed33bec2d525bbd",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-12.csv/content"
+      }
+    },
+    {
+      "id": "40a30e4f-48c5-4609-9b13-a4a774614fb3",
+      "key": "halter-05.csv",
+      "size": 119339947,
+      "checksum": "md5:f1dd057ca95923bd561f636c4319f158",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-05.csv/content"
+      }
+    },
+    {
+      "id": "92a880e0-a350-4f86-ab4c-94fecd2c6885",
+      "key": "halter-03.csv",
+      "size": 293435947,
+      "checksum": "md5:2430e583849d9a946c9c17a863b711bd",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-03.csv/content"
+      }
+    },
+    {
+      "id": "00b0e977-f35a-4f0d-b454-3de80eff340e",
+      "key": "accel-17.csv",
+      "size": 242603165,
+      "checksum": "md5:7bae6097192ab0e5b2192ce4d4fcb2b8",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-17.csv/content"
+      }
+    },
+    {
+      "id": "aa51a2ed-0bcd-419f-b316-544792e6523e",
+      "key": "halter-01.csv",
+      "size": 377207947,
+      "checksum": "md5:79ee4556e5d50d2a4f680ad0f65a28ee",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-01.csv/content"
+      }
+    },
+    {
+      "id": "e779a505-a0fd-4d41-94a3-c2cd2a6d6891",
+      "key": "halter-06.csv",
+      "size": 376271947,
+      "checksum": "md5:cefd8132f21f978d66f51c2a642f82d5",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-06.csv/content"
+      }
+    },
+    {
+      "id": "ff9f4115-41f6-4634-8abb-decad42a1ffe",
+      "key": "halter-07.csv",
+      "size": 155843947,
+      "checksum": "md5:68e19efe1e84619d2aaf9b1113bfcefa",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-07.csv/content"
+      }
+    },
+    {
+      "id": "1d92e940-9c7c-4b52-956f-a464856faf0d",
+      "key": "halter-18.csv",
+      "size": 152297573,
+      "checksum": "md5:8268412415e10a285cfb4a7662c6fb7c",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-18.csv/content"
+      }
+    },
+    {
+      "id": "5e332fc2-32dd-4745-b035-18b7f105165a",
+      "key": "halter-02.csv",
+      "size": 119807947,
+      "checksum": "md5:f933becfe7a5f9a51a0d7db7a1cd85bd",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-02.csv/content"
+      }
+    },
+    {
+      "id": "9ab37d82-23dd-420f-b748-9dd4722b1c1f",
+      "key": "halter-17.csv",
+      "size": 156422733,
+      "checksum": "md5:bb1df725fd74de938524c28602d0b88b",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-17.csv/content"
+      }
+    },
+    {
+      "id": "126ab7ac-9806-4085-a7e3-bb242cc8c17f",
+      "key": "accel-18.csv",
+      "size": 241809221,
+      "checksum": "md5:40e15b0ef918f6cf73a6e3cc158c38be",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-18.csv/content"
+      }
+    },
+    {
+      "id": "f39f8a22-fdd1-49b3-89c9-e5c8dc7c0598",
+      "key": "halter-04.csv",
+      "size": 133379947,
+      "checksum": "md5:be80be57b2e6033f7db4e225d2a3587d",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-04.csv/content"
+      }
+    },
+    {
+      "id": "1c8b0cef-8ef1-4230-a941-28def0856594",
+      "key": "halter-16.csv",
+      "size": 129551421,
+      "checksum": "md5:f3d9d3d7cd5104a73fdcb0491c1c2837",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-16.csv/content"
+      }
+    },
+    {
+      "id": "0c8d7038-b9e8-4890-aff1-7426e83c75f3",
+      "key": "halter-14.csv",
+      "size": 157560961,
+      "checksum": "md5:46028070ba943bdc488003cb3727efc4",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-14.csv/content"
+      }
+    },
+    {
+      "id": "1d28a486-d3bc-492a-a8d4-6196173c542c",
+      "key": "halter-13.csv",
+      "size": 154496393,
+      "checksum": "md5:58a897d103baca54f6940f5cfbe3144d",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/halter-13.csv/content"
+      }
+    },
+    {
+      "id": "10c170f2-b757-4b9b-860b-83b62296e760",
+      "key": "accel-06.csv",
+      "size": 574068682,
+      "checksum": "md5:bb1deaaeb3f4285ecd133efbc2174d90",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-06.csv/content"
+      }
+    },
+    {
+      "id": "d05ea98f-d265-4174-beca-cae4c15cb3c0",
+      "key": "accel-15.csv",
+      "size": 242156909,
+      "checksum": "md5:fb3a0b06fd55e8fdee0f130dbc79d5c5",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-15.csv/content"
+      }
+    },
+    {
+      "id": "81ce96dc-95ad-4ca3-92da-cba2fccc1329",
+      "key": "accel-05.csv",
+      "size": 178328086,
+      "checksum": "md5:e5dd19d7e863df0aff83c66a9369771d",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-05.csv/content"
+      }
+    },
+    {
+      "id": "346dc851-2865-4375-a43a-6abbe682fedb",
+      "key": "accel-01.csv",
+      "size": 577338664,
+      "checksum": "md5:ae6c00a0adf3e82155d70e264cb29f46",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-01.csv/content"
+      }
+    },
+    {
+      "id": "671d361c-e0d8-483a-b6f0-8ce35da40c0c",
+      "key": "accel-04.csv",
+      "size": 198249718,
+      "checksum": "md5:8487c47410fef2dbbc6cf921199112a9",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-04.csv/content"
+      }
+    },
+    {
+      "id": "d1524f71-06e0-48af-ba2f-67b69b0a70fd",
+      "key": "accel-07.csv",
+      "size": 243901845,
+      "checksum": "md5:4fc0e3ee0c193bd935fe2340b56c820c",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-07.csv/content"
+      }
+    },
+    {
+      "id": "295f0499-7c54-457a-84a8-762ace0703d3",
+      "key": "accel-10.csv",
+      "size": 233854528,
+      "checksum": "md5:f5e131d7790fe252726047226aad2c85",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-10.csv/content"
+      }
+    },
+    {
+      "id": "e84a9b39-bc70-4e4d-95ac-67cfda44f150",
+      "key": "accel-03.csv",
+      "size": 455176137,
+      "checksum": "md5:a190502f74f2fb1d9fdf6561cf29f8e4",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-03.csv/content"
+      }
+    },
+    {
+      "id": "57267500-1e76-402e-ac54-6ee46623d804",
+      "key": "accel-08.csv",
+      "size": 244239987,
+      "checksum": "md5:d354648b754d95cfec64d3e9656f8f9c",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-08.csv/content"
+      }
+    },
+    {
+      "id": "b08ae48c-4f26-41fd-93a8-df85b337dd2e",
+      "key": "accel-09.csv",
+      "size": 237512732,
+      "checksum": "md5:14c77e34a00c328e2a62bfdd5bcae311",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-09.csv/content"
+      }
+    },
+    {
+      "id": "ab1912a7-269c-4836-a85d-9ab7cd17fa35",
+      "key": "accel-11.csv",
+      "size": 240183480,
+      "checksum": "md5:3d7e080fbccd33cdf800667a6db042e0",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-11.csv/content"
+      }
+    },
+    {
+      "id": "a2ed5596-1579-4878-963a-7de9d3101f56",
+      "key": "accel-12.csv",
+      "size": 208713025,
+      "checksum": "md5:a3d5b3fed759a135e83d9fce1068e3e7",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-12.csv/content"
+      }
+    },
+    {
+      "id": "be4d1a2f-1a36-41b2-b459-f3b4f3f39ee6",
+      "key": "accel-14.csv",
+      "size": 240211125,
+      "checksum": "md5:ec0c356b59333fe81c0298f329e7e7dc",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-14.csv/content"
+      }
+    },
+    {
+      "id": "797e5b45-b834-4bdf-8b35-ac67695d9db0",
+      "key": "accel-13.csv",
+      "size": 242989935,
+      "checksum": "md5:7ba2259c875a646cba638890b812551b",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-13.csv/content"
+      }
+    },
+    {
+      "id": "2a94523a-27c0-436e-bed8-1a52a7dab431",
+      "key": "accel-02.csv",
+      "size": 181405945,
+      "checksum": "md5:75f692dbd5757183d4c025766ebae923",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-02.csv/content"
+      }
+    },
+    {
+      "id": "f50693bb-5267-4bd3-ad76-a6ce733f3ae9",
+      "key": "accel-16.csv",
+      "size": 202809769,
+      "checksum": "md5:96b8c15c04390d7a61d4b1b8ee79bda7",
+      "links": {
+        "self": "https://zenodo.org/api/records/4064802/files/accel-16.csv/content"
+      }
+    }
+  ],
+  "swh": {},
+  "owners": [
+    {
+      "id": "48280"
+    }
+  ],
+  "status": "published",
+  "stats": {
+    "downloads": 19741,
+    "unique_downloads": 13809,
+    "views": 3897,
+    "unique_views": 3429,
+    "version_downloads": 19729,
+    "version_unique_downloads": 13802,
+    "version_unique_views": 3416,
+    "version_views": 3883
+  },
+  "state": "done",
+  "submitted": true
+}

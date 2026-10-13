@@ -1,0 +1,27 @@
+{
+  "reportVersion": "1.0.0",
+  "sourceFormat": "riose-ranch-composition-v4",
+  "adapterFormat": "riose-composer-layout",
+  "status": "unsupported",
+  "reason": "Composer scene adapter v1 has no explicit mapping for the ranch composition's pixel-space terrain, placements, lots, composition blocks, and per-layer review decisions.",
+  "unsupportedFields": [
+    {"path": "footprintPx", "reason": "Canonical scene grid dimensions and tile size cannot be inferred from the rendered pixel footprint."},
+    {"path": "terrainPlate", "reason": "The adapter has no mapping for a full-scene terrain plate and its semantic asset reference."},
+    {"path": "terrainMode", "reason": "The plate rendering policy has no canonical v1 field."},
+    {"path": "visualAnimalBudget", "reason": "Pilot sprite budget semantics are not represented by Composer v1 population groups."},
+    {"path": "visualAnimalLots", "reason": "Lot membership, runtime population source, and placement links need an explicit mapping."},
+    {"path": "compositionBlocks", "reason": "Named composition regions and their block roles have no canonical v1 representation."},
+    {"path": "zones[].polygon", "reason": "The pilot uses pixel-coordinate diamond polygons; Composer v1 adapter only maps grid-cell axis-aligned rectangles."},
+    {"path": "groundingOverlays", "reason": "Overlay anchors and grounding decisions are not represented by the current adapter."},
+    {"path": "prefabs[].originPx", "reason": "Pixel-space prefab origins cannot be converted to Composer grid placements without a calibration rule."},
+    {"path": "prefabs[].placements[].offsetPx", "reason": "Pixel-space child offsets and z-order semantics need an explicit mapping."},
+    {"path": "placements[].anchorPx", "reason": "Pixel-space anchors have no declared grid-cell conversion in this source format."},
+    {"path": "placements[].requestedSizePx", "reason": "Per-placement raster sizing is not represented by Composer v1 placements."},
+    {"path": "placements[].transform", "reason": "Pilot transforms include nullable flip and degree rotation fields with no declared mapping policy."},
+    {"path": "placements[].depthKey", "reason": "Explicit renderer depth ordering is not represented by the current adapter."},
+    {"path": "renderSettings", "reason": "Source-specific camera and rendering options have no canonical v1 mapping."},
+    {"path": "compositionReview", "reason": "Composition art approval must remain separate from per-asset review state."},
+    {"path": "assetReview", "reason": "Pilot-scoped asset review must not override canonical per-ID status or rights metadata."},
+    {"path": "sceneArtReview", "reason": "Scene-level art approval has no per-asset or release-status mapping."}
+  ]
+}

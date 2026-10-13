@@ -9,7 +9,7 @@
     "sourceRows": 1283
   },
   "engine": {
-    "sha256": "cd864ab9718875056f203dcbc4b335e10235c82f3489c4789f31ef64dd6033ae",
+    "sha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
     "sourceFiles": [
       "engine.js",
       "animal-view-state.js",

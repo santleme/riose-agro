@@ -1,0 +1,56 @@
+{
+  "artifactFile": "precision-beef-90s-rf-v1.json.gz",
+  "artifactId": "precision-beef-90s-collar-rumiwatch-rf-v1",
+  "artifactSha256": "da68e972970f73c0674581308ca541d75a1d8082fd5d6651308d874e2a159fe9",
+  "format": "rfc_json_tree_arrays_v1",
+  "heldOutAnimalsExcluded": [
+    "04",
+    "10",
+    "11"
+  ],
+  "inputParquetSha256": {
+    "01": "5209ecfc01d065b13ebff57001d6478b6b71f0d9ebe654cb42bb17e464efebc2",
+    "02": "80a83c16c74474694a3f6e07ff26c9c1cb2f5cacdfa8edf93ceda2d1729e395e",
+    "03": "220b66ec3a9c186e6b2f0635d211a8c3434584a2eb8c6f817791583e8d3aedf5",
+    "05": "47745cf8522a9894939a12b20a6ea495d7c193100fc718998fb8f88526b6658e",
+    "06": "8610af038dbb3a67dff9e7e02537eb5e4c2fb94e55514811b04b7dd3abc6f314",
+    "07": "5d9a8f33e7d9dfd254a77f7578c7b4d542649622702dfadee9577e700036534a",
+    "08": "3b11aa0684fa86a76b08246f2b2d656850ff6b2a5c1df3efc4c9fab7196b4dcd",
+    "09": "6ea2664d204a4c45ce8a84d0f7e4b67347f533bf33d2c01a3fa19869430d45f7",
+    "12": "277b0e1d574b1f53536dd30534dbb2b1664d09dbd54089475c391d532df1b5e0",
+    "13": "905a216d8951560be4ef7478e70f79915361018ccbd649fc5e4cf19cfcb6631e",
+    "14": "ec8a3cc8161c3e43bfc9010167809bd61d579105ab6a189095aaf6939a95d5b5",
+    "15": "27dbc2a4dd579efac3676e830226a6ee68bb1f7414842cc74cdae96b5b0467c7",
+    "16": "24c361edd7bcc7a0ac9f2a11f74075ae5a59391f193562bf73b0b9241ba9cf60",
+    "17": "b31e7c40202a39115440dd3b653a4212854b3b935f8e45120b22dfb1921ca238",
+    "18": "570e2bee0c0f8e2d3245a6a04b878d075201b5ac2cf8458db4cd2a2ef248ed9d"
+  },
+  "license": "CC BY 4.0",
+  "manifestSchemaVersion": "1.0.0",
+  "runtime": {
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "python": "3.12.13",
+    "scikitLearn": "1.5.2"
+  },
+  "scope": "Experimental instrument-agreement classifier for housed finishing steers in the Precision Beef cohort; not pasture behavior, DMI, ADG, or Riose engine validation.",
+  "sourceDoi": "10.5281/zenodo.4064802",
+  "trainingAnimals": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18"
+  ],
+  "trainingRows": 119252
+}

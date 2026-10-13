@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://santleme.github.io/riose-agro/schemas/configured-comparison-request-v2.schema.json",
+  "title": "Riose native configured comparison request v2",
+  "description": "Runs two demonstrative FarmEngine configurations from the same complete snapshot. The configurations must differ in exactly one supported factor. This schema does not establish scientific validity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "snapshot", "days", "referenceConfig", "scenarioConfig"],
+  "properties": {
+    "type": {"const": "configured-comparison"},
+    "version": {"const": 2},
+    "snapshot": {
+      "type": "object",
+      "description": "Complete native FarmSnapshot; all nested fields and snapshot invariants are validated by riose-core.",
+      "required": ["hour", "animals", "pastures", "intake", "config", "cost", "events", "seed"]
+    },
+    "days": {"type": "integer", "minimum": 1, "maximum": 365},
+    "referenceConfig": {"$ref": "#/$defs/config"},
+    "scenarioConfig": {"$ref": "#/$defs/config"}
+  },
+  "$defs": {
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["diet", "housing", "weather", "supplement"],
+      "properties": {
+        "diet": {"enum": ["pasture", "balanced", "concentrate"]},
+        "housing": {"enum": ["pasture", "barn"]},
+        "weather": {"enum": ["normal", "hot", "rain"]},
+        "supplement": {"type": "number", "minimum": 0, "maximum": 4, "description": "kg DM per animal per day"}
+      }
+    }
+  }
+}

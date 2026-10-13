@@ -1,0 +1,560 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "generated-scene-adapter-v1",
+    "source": {
+      "revision": "4aa9919e5d8414c0ad556708b9e08ca3e9d50f56",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": "417 + deterministic iteration index",
+    "populations": [
+      {
+        "count": 2,
+        "unit": "scenario-types",
+        "scope": "generated beef and dairy Composer layouts"
+      }
+    ]
+  },
+  "configuration": {
+    "warmupRuns": 5,
+    "repetitions": 21,
+    "baseSeed": 417,
+    "timer": "performance.now"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "serialization",
+          "metric": "sourceBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 233281,
+            "spread": {
+              "min": 233281,
+              "max": 233281,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "beef",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            233281
+          ]
+        },
+        {
+          "phase": "serialization",
+          "metric": "canonicalSceneBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 184913,
+            "spread": {
+              "min": 184913,
+              "max": 184913,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "beef",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            184913
+          ]
+        },
+        {
+          "phase": "serialization",
+          "metric": "adapterDocumentBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 489853,
+            "spread": {
+              "min": 489853,
+              "max": 489853,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "beef",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            489853
+          ]
+        },
+        {
+          "phase": "serialization",
+          "metric": "sourceBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 234215,
+            "spread": {
+              "min": 234215,
+              "max": 234215,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "dairy",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            234215
+          ]
+        },
+        {
+          "phase": "serialization",
+          "metric": "canonicalSceneBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 192561,
+            "spread": {
+              "min": 192561,
+              "max": 192561,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "dairy",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            192561
+          ]
+        },
+        {
+          "phase": "serialization",
+          "metric": "adapterDocumentBytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 501400,
+            "spread": {
+              "min": 501400,
+              "max": 501400,
+              "range": 0
+            }
+          },
+          "population": 1,
+          "scope": "dairy",
+          "source": "JSON.stringify output byte count; duration not measured",
+          "observations": [
+            501400
+          ]
+        }
+      ]
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "layout-generation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 6.933991999999989,
+            "spread": {
+              "min": 5.887929999999983,
+              "max": 7.978548000000018,
+              "range": 2.0906180000000347
+            }
+          },
+          "population": 1,
+          "scope": "beef",
+          "source": "scripts/measure-generated-scene-adapter-v1.mjs",
+          "observations": [
+            7.978548000000018,
+            6.948284000000001,
+            6.516576999999984,
+            5.991667000000007,
+            5.901013000000006,
+            6.849772999999971,
+            5.8965670000000046,
+            7.9159029999999575,
+            5.900821000000008,
+            5.887929999999983,
+            6.136639000000002,
+            7.187332999999967,
+            6.933991999999989,
+            6.713213999999994,
+            6.9743310000000065,
+            6.973221000000024,
+            7.1356890000000135,
+            7.006740999999977,
+            6.615097999999989,
+            7.445157999999992,
+            7.691522999999961
+          ]
+        },
+        {
+          "phase": "layout",
+          "metric": "generated-scene-adaptation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 7.1045160000000465,
+            "spread": {
+              "min": 6.383217999999999,
+              "max": 8.743828000000008,
+              "range": 2.3606100000000083
+            }
+          },
+          "population": 1,
+          "scope": "beef",
+          "source": "scripts/measure-generated-scene-adapter-v1.mjs",
+          "observations": [
+            6.646314999999987,
+            7.616555000000005,
+            8.07457500000001,
+            7.980017000000004,
+            7.6350459999999885,
+            7.4061399999999935,
+            6.757450000000006,
+            7.148102000000051,
+            7.131802999999991,
+            7.102417000000003,
+            8.588294000000019,
+            7.1045160000000465,
+            7.432350000000042,
+            6.990384000000006,
+            6.548930999999982,
+            6.383217999999999,
+            6.591738000000021,
+            6.472651999999982,
+            6.468903000000012,
+            6.675127999999972,
+            8.743828000000008
+          ]
+        },
+        {
+          "phase": "layout",
+          "metric": "layout-generation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 6.503740999999991,
+            "spread": {
+              "min": 5.621781000000055,
+              "max": 7.525416000000064,
+              "range": 1.9036350000000084
+            }
+          },
+          "population": 1,
+          "scope": "dairy",
+          "source": "scripts/measure-generated-scene-adapter-v1.mjs",
+          "observations": [
+            6.677018999999973,
+            6.499697999999967,
+            7.272853999999938,
+            6.690359000000058,
+            6.758722999999918,
+            6.86256400000002,
+            6.818867000000068,
+            7.525416000000064,
+            6.414617999999905,
+            6.135073000000034,
+            6.143665000000055,
+            6.503740999999991,
+            6.51845800000001,
+            6.832316000000105,
+            6.62299100000007,
+            5.6565839999999525,
+            5.6623579999999265,
+            5.626621999999998,
+            6.107652999999914,
+            5.621781000000055,
+            5.973276999999939
+          ]
+        },
+        {
+          "phase": "layout",
+          "metric": "generated-scene-adaptation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 6.539241000000061,
+            "spread": {
+              "min": 6.002202000000011,
+              "max": 9.213572,
+              "range": 3.211369999999988
+            }
+          },
+          "population": 1,
+          "scope": "dairy",
+          "source": "scripts/measure-generated-scene-adapter-v1.mjs",
+          "observations": [
+            6.879185000000007,
+            6.539241000000061,
+            8.890607000000045,
+            6.3918089999999665,
+            6.0056299999999965,
+            6.144141999999988,
+            6.62713599999995,
+            6.002202000000011,
+            6.0457870000000185,
+            6.226114000000052,
+            6.52997199999993,
+            6.452666000000022,
+            6.274419999999964,
+            6.110659999999939,
+            6.85308299999997,
+            7.3243589999999585,
+            7.094920000000002,
+            7.172480999999948,
+            9.213572,
+            7.386831000000029,
+            7.451959000000102
+          ]
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "layout",
+      "timed": [
+        "generateFarmLayout() and adaptGeneratedFarmLayoutDocument() are measured separately for each generated layout."
+      ],
+      "notTimed": [
+        "Browser rendering, image loading, and filesystem reads."
+      ]
+    },
+    {
+      "phase": "serialization",
+      "timed": [
+        "UTF-8 byte counts for source, canonical scene, and adapter document JSON."
+      ],
+      "notTimed": [
+        "JSON serialization duration, storage, and browser rendering."
+      ]
+    }
+  ],
+  "results": {
+    "studySchemaVersion": "riose.generated-scene-adapter-measurement/v1",
+    "adapterVersion": "1.0.0",
+    "sourceFormat": "riose-generated-farm-layout-v1",
+    "source": {
+      "revision": "4aa9919e5d8414c0ad556708b9e08ca3e9d50f56",
+      "dirty": false
+    },
+    "fixtureScope": "generated beef and dairy Composer layouts using committed prefab and asset manifests",
+    "results": [
+      {
+        "scenarioType": "beef",
+        "seeds": {
+          "first": 422,
+          "last": 442,
+          "count": 21
+        },
+        "sourcePlacements": 1082,
+        "sourcePrefabInstances": 8,
+        "expandedPlacementCount": 1095,
+        "canonicalZones": 6,
+        "canonicalAssets": 28,
+        "unsupportedFieldCount": 140,
+        "sourceBytes": 233281,
+        "canonicalSceneBytes": 184913,
+        "adapterDocumentBytes": 489853,
+        "generation": {
+          "sampleCount": 21,
+          "medianMs": 6.933991999999989,
+          "p95Ms": 7.9159029999999575,
+          "minMs": 5.887929999999983,
+          "maxMs": 7.978548000000018
+        },
+        "adaptation": {
+          "sampleCount": 21,
+          "medianMs": 7.1045160000000465,
+          "p95Ms": 8.588294000000019,
+          "minMs": 6.383217999999999,
+          "maxMs": 8.743828000000008
+        },
+        "observations": {
+          "generationMs": [
+            7.978548000000018,
+            6.948284000000001,
+            6.516576999999984,
+            5.991667000000007,
+            5.901013000000006,
+            6.849772999999971,
+            5.8965670000000046,
+            7.9159029999999575,
+            5.900821000000008,
+            5.887929999999983,
+            6.136639000000002,
+            7.187332999999967,
+            6.933991999999989,
+            6.713213999999994,
+            6.9743310000000065,
+            6.973221000000024,
+            7.1356890000000135,
+            7.006740999999977,
+            6.615097999999989,
+            7.445157999999992,
+            7.691522999999961
+          ],
+          "adaptationMs": [
+            6.646314999999987,
+            7.616555000000005,
+            8.07457500000001,
+            7.980017000000004,
+            7.6350459999999885,
+            7.4061399999999935,
+            6.757450000000006,
+            7.148102000000051,
+            7.131802999999991,
+            7.102417000000003,
+            8.588294000000019,
+            7.1045160000000465,
+            7.432350000000042,
+            6.990384000000006,
+            6.548930999999982,
+            6.383217999999999,
+            6.591738000000021,
+            6.472651999999982,
+            6.468903000000012,
+            6.675127999999972,
+            8.743828000000008
+          ]
+        },
+        "rawByteObservations": {
+          "sourceBytes": 233281,
+          "canonicalSceneBytes": 184913,
+          "adapterDocumentBytes": 489853
+        }
+      },
+      {
+        "scenarioType": "dairy",
+        "seeds": {
+          "first": 422,
+          "last": 442,
+          "count": 21
+        },
+        "sourcePlacements": 1082,
+        "sourcePrefabInstances": 10,
+        "expandedPlacementCount": 1105,
+        "canonicalZones": 7,
+        "canonicalAssets": 32,
+        "unsupportedFieldCount": 152,
+        "sourceBytes": 234215,
+        "canonicalSceneBytes": 192561,
+        "adapterDocumentBytes": 501400,
+        "generation": {
+          "sampleCount": 21,
+          "medianMs": 6.503740999999991,
+          "p95Ms": 7.272853999999938,
+          "minMs": 5.621781000000055,
+          "maxMs": 7.525416000000064
+        },
+        "adaptation": {
+          "sampleCount": 21,
+          "medianMs": 6.539241000000061,
+          "p95Ms": 8.890607000000045,
+          "minMs": 6.002202000000011,
+          "maxMs": 9.213572
+        },
+        "observations": {
+          "generationMs": [
+            6.677018999999973,
+            6.499697999999967,
+            7.272853999999938,
+            6.690359000000058,
+            6.758722999999918,
+            6.86256400000002,
+            6.818867000000068,
+            7.525416000000064,
+            6.414617999999905,
+            6.135073000000034,
+            6.143665000000055,
+            6.503740999999991,
+            6.51845800000001,
+            6.832316000000105,
+            6.62299100000007,
+            5.6565839999999525,
+            5.6623579999999265,
+            5.626621999999998,
+            6.107652999999914,
+            5.621781000000055,
+            5.973276999999939
+          ],
+          "adaptationMs": [
+            6.879185000000007,
+            6.539241000000061,
+            8.890607000000045,
+            6.3918089999999665,
+            6.0056299999999965,
+            6.144141999999988,
+            6.62713599999995,
+            6.002202000000011,
+            6.0457870000000185,
+            6.226114000000052,
+            6.52997199999993,
+            6.452666000000022,
+            6.274419999999964,
+            6.110659999999939,
+            6.85308299999997,
+            7.3243589999999585,
+            7.094920000000002,
+            7.172480999999948,
+            9.213572,
+            7.386831000000029,
+            7.451959000000102
+          ]
+        },
+        "rawByteObservations": {
+          "sourceBytes": 234215,
+          "canonicalSceneBytes": 192561,
+          "adapterDocumentBytes": 501400
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Host-local Node measurements; excludes browser rendering and image loading."
+  ]
+}

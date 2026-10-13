@@ -1,0 +1,530 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceDoi": "10.17632/nj72kmdj77.1",
+  "sourceLicense": "CC BY 4.0",
+  "artifactType": "predictive_readiness_with_internal_grouped_oof_diagnostic",
+  "module": "forage_biomass_and_productivity",
+  "notDmiOrAdg": true,
+  "predictionReadiness": "NO_GO_FOR_GENERALIZABLE_PREDICTION",
+  "supportedUse": "DESCRIPTIVE_BIOMASS_OBSERVATIONS_AND_INTERNAL_GROUPED_OOF_DIAGNOSTIC_ONLY",
+  "inputs": [
+    {
+      "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+      "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+      "rows": 342
+    },
+    {
+      "path": "data/mendeley-pasture-biomass/processed/quality-report-v1.json",
+      "sha256": "6e47498c642fdac85dd7537f1a3198a6b1667c6214cc1bad206ccede29b87561"
+    },
+    {
+      "path": "data/mendeley-pasture-biomass/manifest.json",
+      "sha256": "9cd1c32b870bafaac6c5409652532409e8cd1841a0816bf8026e0b163d939be4"
+    }
+  ],
+  "target": {
+    "column": "dry_matter_yield_kg_dm_ha",
+    "meaning": "measured dry above-ground forage mass scaled to kg DM/ha from a 0.25 m2 sample",
+    "unit": "kg DM/ha",
+    "sourceMethod": "cut sample dry weight after oven drying; observed forage biomass, not animal intake",
+    "rows": 342,
+    "derivations": {
+      "dry_matter_weight_g_times_40": {
+        "maxAbsoluteDifferenceKgHa": 1.8189894035458565e-12,
+        "interpretation": "same target measurement expressed per 0.25 m2 sample; never a predictor"
+      },
+      "dry_matter_yield_tonnes_ha_times_1000": {
+        "maxAbsoluteDifferenceKgHa": 0.0,
+        "interpretation": "same target in source units; never a predictor"
+      }
+    }
+  },
+  "design": {
+    "rows": 342,
+    "farms": {
+      "Poderosa": 81,
+      "Santa Clara": 261
+    },
+    "farmCount": 2,
+    "fieldsByFarm": {
+      "Poderosa": 3,
+      "Santa Clara": 14
+    },
+    "campaignRows": {
+      "2018-06": 108,
+      "2018-11": 117,
+      "2019-03": 117
+    },
+    "farmCampaignRows": {
+      "Poderosa|2018-06": 27,
+      "Poderosa|2018-11": 27,
+      "Poderosa|2019-03": 27,
+      "Santa Clara|2018-06": 81,
+      "Santa Clara|2018-11": 90,
+      "Santa Clara|2019-03": 90
+    },
+    "managementLevelsByFarm": {
+      "Poderosa": [
+        "1",
+        "2"
+      ],
+      "Santa Clara": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "spatialGroupKey": [
+      "farm",
+      "field_code",
+      "pixel_id",
+      "sampling_point_id"
+    ],
+    "uniqueSpatialGroups": 162,
+    "spatialGroupsRepeatedAcrossCampaigns": 108,
+    "rowsBelongingToRepeatedSpatialGroups": 288,
+    "swardHeightObservedRows": 234,
+    "swardHeightMissingCampaigns": [
+      "2018-06"
+    ]
+  },
+  "featureAudit": {
+    "candidateOnlyAfterOperationalAvailabilityIsDocumented": [
+      {
+        "column": "management_type",
+        "reason": "management category is recorded, but class 3 occurs at only one farm and farm-level confounding is strong"
+      },
+      {
+        "column": "campaign",
+        "reason": "three collection campaigns could represent season; a campaign holdout must also group repeated spatial points"
+      },
+      {
+        "column": "sward_height_cm",
+        "reason": "measured forage height could be a field predictor, but is absent for all June 2018 rows and measurement timing must be available before biomass sampling"
+      },
+      {
+        "column": "cattle_present_source",
+        "reason": "source says animal presence during biomass collection; use only if known at the intended prediction time"
+      }
+    ],
+    "excludedFromPredictors": [
+      {
+        "column": "dry_matter_yield_kg_dm_ha",
+        "reason": "target"
+      },
+      {
+        "column": "dry_matter_weight_g",
+        "reason": "same harvested dry-mass target before area scaling"
+      },
+      {
+        "column": "dry_matter_yield_tonnes_ha",
+        "reason": "same target in source units; exact linear alias"
+      },
+      {
+        "column": "fresh_harvest_weight_g",
+        "reason": "mass of the same clipped sample; post-sampling proxy for target"
+      },
+      {
+        "column": "fresh_green_weight_g",
+        "reason": "component weight from the same clipped sample; post-sampling proxy"
+      },
+      {
+        "column": "fresh_other_weight_g",
+        "reason": "component weight from the same clipped sample; post-sampling proxy"
+      },
+      {
+        "column": "farm, field_code, field_name, pixel_id, sampling_point_id",
+        "reason": "IDs used for grouping/holdout only; not generalizable covariates"
+      },
+      {
+        "column": "latitude_deg, longitude_deg",
+        "reason": "spatial coordinates retained for provenance and grouping; including them risks site memorization in a two-farm sample"
+      },
+      {
+        "column": "observation_note_source",
+        "reason": "free-text note with 335/342 missing and not a stable predictive input"
+      },
+      {
+        "column": "soil workbooks",
+        "reason": "separate sampling tables not joined into this cohort; exact operational timing and one-to-one alignment are not established by this processing pipeline"
+      }
+    ],
+    "targetIdentityColumns": [
+      "dry_matter_weight_g",
+      "dry_matter_yield_tonnes_ha",
+      "dry_matter_yield_kg_dm_ha"
+    ]
+  },
+  "holdoutReadiness": {
+    "randomRowSplit": "PROHIBITED; repeats the same spatial points across campaigns and leaks site identity",
+    "requiredGrouping": [
+      "farm",
+      "field_code",
+      "pixel_id",
+      "sampling_point_id"
+    ],
+    "farmHoldoutFolds": [
+      {
+        "heldOutFarm": "Poderosa",
+        "trainRows": 261,
+        "testRows": 81,
+        "trainFarmCount": 1,
+        "testFarmCount": 1,
+        "testManagementLevelsAbsentFromTrain": [],
+        "status": "NO_FARM_HOLDOUT_MODEL_OR_METRICS"
+      },
+      {
+        "heldOutFarm": "Santa Clara",
+        "trainRows": 81,
+        "testRows": 261,
+        "trainFarmCount": 1,
+        "testFarmCount": 1,
+        "testManagementLevelsAbsentFromTrain": [
+          "3"
+        ],
+        "status": "NO_FARM_HOLDOUT_MODEL_OR_METRICS"
+      }
+    ],
+    "internalGroupedOof": {
+      "status": "INTERNAL_GROUPED_OOF_DIAGNOSTIC_ONLY_NOT_EXTERNAL_VALIDATION",
+      "eligibleRows": 234,
+      "eligibleSpatialGroups": 135,
+      "eligibleSpatialGroupsRepeatedAcrossCampaigns": 99,
+      "eligibleRowsInRepeatedSpatialGroups": 198,
+      "excludedRowsDueToMissingHeightOrTarget": 108,
+      "farmsCovered": [
+        "Poderosa",
+        "Santa Clara"
+      ],
+      "campaignsCovered": [
+        "2018-11",
+        "2019-03"
+      ],
+      "campaignsNotCovered": [
+        "2018-06"
+      ],
+      "heightFeature": "sward_height_cm",
+      "target": "dry_matter_yield_kg_dm_ha",
+      "groupKeys": [
+        "farm",
+        "field_code",
+        "pixel_id",
+        "sampling_point_id"
+      ],
+      "splitter": "sklearn.model_selection.GroupKFold(n_splits=5); fixed data row order; deterministic for this input and sklearn version",
+      "scikitLearnVersion": "1.5.2",
+      "models": {
+        "baseline": "median of training-fold observed dry biomass, repeated for every test row",
+        "simpleModel": "univariate ordinary least squares: training-fold sward_height_cm -> dry_matter_yield_kg_dm_ha",
+        "preprocessing": "none; one observed numeric predictor, no imputation or scaling"
+      },
+      "overallMetrics": {
+        "trainingMedian": {
+          "rows": 234,
+          "maeKgDmHa": 943.434188034188,
+          "rmseKgDmHa": 1268.2703146849692,
+          "biasPredictedMinusObservedKgDmHa": -311.50598290598293
+        },
+        "heightLinearRegression": {
+          "rows": 234,
+          "maeKgDmHa": 634.0053713374774,
+          "rmseKgDmHa": 871.1618696434309,
+          "biasPredictedMinusObservedKgDmHa": 1.0904642416579973
+        }
+      },
+      "metricsByFarmAndCampaign": [
+        {
+          "farm": "Poderosa",
+          "campaign": "2018-11",
+          "spatialGroups": 27,
+          "trainingMedian": {
+            "rows": 27,
+            "maeKgDmHa": 1543.0074074074073,
+            "rmseKgDmHa": 1854.3307324167354,
+            "biasPredictedMinusObservedKgDmHa": -1451.5703703703703
+          },
+          "heightLinearRegression": {
+            "rows": 27,
+            "maeKgDmHa": 867.1849461288107,
+            "rmseKgDmHa": 1040.9903316199507,
+            "biasPredictedMinusObservedKgDmHa": -167.3183690235479
+          }
+        },
+        {
+          "farm": "Poderosa",
+          "campaign": "2019-03",
+          "spatialGroups": 27,
+          "trainingMedian": {
+            "rows": 27,
+            "maeKgDmHa": 1575.481481481482,
+            "rmseKgDmHa": 2069.014275231351,
+            "biasPredictedMinusObservedKgDmHa": -1568.992592592593
+          },
+          "heightLinearRegression": {
+            "rows": 27,
+            "maeKgDmHa": 1023.8379895057952,
+            "rmseKgDmHa": 1403.332767644359,
+            "biasPredictedMinusObservedKgDmHa": -990.2265470060809
+          }
+        },
+        {
+          "farm": "Santa Clara",
+          "campaign": "2018-11",
+          "spatialGroups": 90,
+          "trainingMedian": {
+            "rows": 90,
+            "maeKgDmHa": 820.3688888888888,
+            "rmseKgDmHa": 1064.2811449779404,
+            "biasPredictedMinusObservedKgDmHa": -34.768888888888945
+          },
+          "heightLinearRegression": {
+            "rows": 90,
+            "maeKgDmHa": 460.28257587331416,
+            "rmseKgDmHa": 682.1451391396246,
+            "biasPredictedMinusObservedKgDmHa": -76.20251276779804
+          }
+        },
+        {
+          "farm": "Santa Clara",
+          "campaign": "2019-03",
+          "spatialGroups": 90,
+          "trainingMedian": {
+            "rows": 90,
+            "maeKgDmHa": 697.0133333333332,
+            "rmseKgDmHa": 856.5172621987512,
+            "biasPredictedMinusObservedKgDmHa": 131.02222222222218
+          },
+          "heightLinearRegression": {
+            "rows": 90,
+            "maeKgDmHa": 620.8245089137455,
+            "rmseKgDmHa": 769.4002203539224,
+            "biasPredictedMinusObservedKgDmHa": 426.3011946049975
+          }
+        }
+      ],
+      "folds": [
+        {
+          "fold": 1,
+          "trainRows": 187,
+          "testRows": 47,
+          "trainSpatialGroups": 108,
+          "testSpatialGroups": 27,
+          "trainFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testRowsByFarm": {
+            "Poderosa": 10,
+            "Santa Clara": 37
+          },
+          "testRowsByCampaign": {
+            "2018-11": 24,
+            "2019-03": 23
+          },
+          "spatialGroupOverlap": 0,
+          "trainingMedianKgDmHa": 1968.0,
+          "linearHeightIntercept": 855.3502560283737,
+          "linearHeightCoefficientKgDmHaPerCm": 84.7887571271566,
+          "medianBaseline": {
+            "rows": 47,
+            "maeKgDmHa": 862.7744680851063,
+            "rmseKgDmHa": 1170.9457519640068,
+            "biasPredictedMinusObservedKgDmHa": -243.14893617021272
+          },
+          "heightLinearRegression": {
+            "rows": 47,
+            "maeKgDmHa": 594.3967382651405,
+            "rmseKgDmHa": 855.0874313426109,
+            "biasPredictedMinusObservedKgDmHa": -73.14322657995945
+          }
+        },
+        {
+          "fold": 2,
+          "trainRows": 187,
+          "testRows": 47,
+          "trainSpatialGroups": 108,
+          "testSpatialGroups": 27,
+          "trainFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testRowsByFarm": {
+            "Poderosa": 12,
+            "Santa Clara": 35
+          },
+          "testRowsByCampaign": {
+            "2018-11": 23,
+            "2019-03": 24
+          },
+          "spatialGroupOverlap": 0,
+          "trainingMedianKgDmHa": 1916.8,
+          "linearHeightIntercept": 865.5201232321413,
+          "linearHeightCoefficientKgDmHaPerCm": 84.95729249617152,
+          "medianBaseline": {
+            "rows": 47,
+            "maeKgDmHa": 889.8808510638298,
+            "rmseKgDmHa": 1122.7289595426603,
+            "biasPredictedMinusObservedKgDmHa": -230.10212765957445
+          },
+          "heightLinearRegression": {
+            "rows": 47,
+            "maeKgDmHa": 635.729107831957,
+            "rmseKgDmHa": 772.367094064935,
+            "biasPredictedMinusObservedKgDmHa": -8.830218952864104
+          }
+        },
+        {
+          "fold": 3,
+          "trainRows": 187,
+          "testRows": 47,
+          "trainSpatialGroups": 108,
+          "testSpatialGroups": 27,
+          "trainFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testRowsByFarm": {
+            "Poderosa": 12,
+            "Santa Clara": 35
+          },
+          "testRowsByCampaign": {
+            "2018-11": 23,
+            "2019-03": 24
+          },
+          "spatialGroupOverlap": 0,
+          "trainingMedianKgDmHa": 1915.2,
+          "linearHeightIntercept": 876.7202667199392,
+          "linearHeightCoefficientKgDmHaPerCm": 83.01760477140922,
+          "medianBaseline": {
+            "rows": 47,
+            "maeKgDmHa": 1095.1999999999998,
+            "rmseKgDmHa": 1538.3431639958512,
+            "biasPredictedMinusObservedKgDmHa": -582.2468085106382
+          },
+          "heightLinearRegression": {
+            "rows": 47,
+            "maeKgDmHa": 624.1142381895573,
+            "rmseKgDmHa": 943.8621121345175,
+            "biasPredictedMinusObservedKgDmHa": -110.51266775761643
+          }
+        },
+        {
+          "fold": 4,
+          "trainRows": 187,
+          "testRows": 47,
+          "trainSpatialGroups": 108,
+          "testSpatialGroups": 27,
+          "trainFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testRowsByFarm": {
+            "Poderosa": 10,
+            "Santa Clara": 37
+          },
+          "testRowsByCampaign": {
+            "2018-11": 24,
+            "2019-03": 23
+          },
+          "spatialGroupOverlap": 0,
+          "trainingMedianKgDmHa": 1945.6,
+          "linearHeightIntercept": 899.1705891820288,
+          "linearHeightCoefficientKgDmHaPerCm": 82.53095465068772,
+          "medianBaseline": {
+            "rows": 47,
+            "maeKgDmHa": 1002.2297872340422,
+            "rmseKgDmHa": 1325.567723897311,
+            "biasPredictedMinusObservedKgDmHa": -301.77021276595764
+          },
+          "heightLinearRegression": {
+            "rows": 47,
+            "maeKgDmHa": 627.5208827681255,
+            "rmseKgDmHa": 857.0760992935407,
+            "biasPredictedMinusObservedKgDmHa": -38.240215724076705
+          }
+        },
+        {
+          "fold": 5,
+          "trainRows": 188,
+          "testRows": 46,
+          "trainSpatialGroups": 108,
+          "testSpatialGroups": 27,
+          "trainFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testFarms": [
+            "Poderosa",
+            "Santa Clara"
+          ],
+          "testRowsByFarm": {
+            "Poderosa": 10,
+            "Santa Clara": 36
+          },
+          "testRowsByCampaign": {
+            "2018-11": 23,
+            "2019-03": 23
+          },
+          "spatialGroupOverlap": 0,
+          "trainingMedianKgDmHa": 1959.1999999999998,
+          "linearHeightIntercept": 793.3874184183985,
+          "linearHeightCoefficientKgDmHaPerCm": 92.39985588108125,
+          "medianBaseline": {
+            "rows": 46,
+            "maeKgDmHa": 865.4260869565215,
+            "rmseKgDmHa": 1131.5038857548218,
+            "biasPredictedMinusObservedKgDmHa": -197.84347826086966
+          },
+          "heightLinearRegression": {
+            "rows": 46,
+            "maeKgDmHa": 689.4454661172841,
+            "rmseKgDmHa": 918.2745627955487,
+            "biasPredictedMinusObservedKgDmHa": 241.2892629615273
+          }
+        }
+      ],
+      "predictionsArtifact": {
+        "path": "docs/evidence/mendeley-pasture-biomass-grouped-oof-2026-10.csv",
+        "rows": 234,
+        "sha256": "925704dfee357e0d9d268301e63bd32c3c0a5096d85d25df2d096938219e6244",
+        "format": "csv"
+      },
+      "interpretationLimits": [
+        "All OOF rows are restricted to the two campaigns with measured sward height; June 2018 is excluded because height is missing for every row.",
+        "The split keeps every repeated farm/field/pixel/point location in one fold, but neighboring points within a pixel may remain spatially correlated.",
+        "Both farms and campaigns occur across train and test folds; this is an internal diagnostic, not a holdout for new farms, regions, seasons, or operating conditions.",
+        "Only two farms exist, and leave-one-farm-out remains a two-fold design with management class 3 unique to Santa Clara.",
+        "The exercise predicts harvested quadrat forage biomass from sward height only; it does not evaluate DMI, ADG, pasture inventory, or an operational farm decision."
+      ]
+    },
+    "independentFarmDomains": 2,
+    "assessment": "two leave-one-farm-out folds are descriptive only: each fold trains on one farm, tests on one farm, and farm/management support differs; two farms do not establish external transportability",
+    "recommendedNextEvaluation": "the internal 5-fold spatial GroupKFold diagnostic has been completed. Before making transportability claims, evaluate a pre-specified model on an independent third farm (ideally a different region or production setting), with sward height measured at prediction time, and report performance by farm and campaign; the current OOF scores are not external validation",
+    "modelTrainingPerformed": true,
+    "metricsReported": true
+  },
+  "limitations": [
+    "342 point-level observations represent only 162 spatial sampling groups, with 108 groups revisited across campaigns.",
+    "The dataset covers only two farms in one region; the leave-one-farm-out design has only two folds and cannot support broad transfer claims.",
+    "Management class 3 appears only at Santa Clara, entangling one management level with farm identity.",
+    "Only three campaigns exist, and sward height is missing for all June 2018 observations.",
+    "The target is harvested forage mass at a small quadrat, not standing inventory, animal intake, DMI, ADG, or whole-paddock carrying capacity.",
+    "The internal one-feature model is a grouped cross-validation diagnostic only; it is not external validation and supports no calibration or uncertainty claim."
+  ]
+}

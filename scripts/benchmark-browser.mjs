@@ -1,10 +1,12 @@
 import {spawn} from 'node:child_process';
-import {access,mkdtemp,readdir,readFile,rm} from 'node:fs/promises';
+import {access,mkdtemp,readdir,rm} from 'node:fs/promises';
 import {homedir,tmpdir} from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
+import {waitForDevToolsActivePort} from './browser-startup.mjs';
 
 async function findChrome(){
   const candidates=[process.env.CHROME_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'];
@@ -16,7 +18,12 @@ const chrome=await findChrome();
 const origin=process.env.RIOSE_URL??'http://127.0.0.1:8000/';
 const repetitions=Number(process.env.BENCH_REPETITIONS??15);
 const userData=await mkdtemp(path.join(tmpdir(),'riose-browser-bench-'));
-const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:'ignore'});
+const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+let browserExit=null;
+let browserStderr='';
+browser.once('exit',(code,signal)=>{browserExit={code,signal};});
+browser.stderr.setEncoding('utf8');
+browser.stderr.on('data',chunk=>{browserStderr=(browserStderr+chunk).slice(-4000);});
 let socket;
 let cdp;
 
@@ -68,11 +75,14 @@ const cdpRequest=async(url,method='GET')=>{const response=await fetch(url,{metho
 const metrics=async cdp=>Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(metric=>['JSHeapUsedSize','JSHeapTotalSize','TaskDuration','ScriptDuration','LayoutDuration','RecalcStyleDuration','Nodes','Documents','Frames'].includes(metric.name)).map(metric=>[metric.name,metric.value]));
 const median=values=>[...values].sort((a,b)=>a-b)[Math.floor(values.length/2)];
 const p95=values=>[...values].sort((a,b)=>a-b)[Math.ceil(values.length*.95)-1];
-const summary=values=>({medianMs:median(values),p95Ms:p95(values)});
+const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {sampleCount:sorted.length,medianMs:median(sorted),p95Ms:p95(sorted),spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]},observationsMs:values};};
 
 try{
-  let active='';for(let attempt=0;attempt<100;attempt++){try{active=await readFile(path.join(userData,'DevToolsActivePort'),'utf8');break;}catch{await delay(100);}}
-  if(!active)throw new Error('Chromium did not start a DevTools endpoint');
+  const active=await waitForDevToolsActivePort({
+    filePath:path.join(userData,'DevToolsActivePort'),
+    getExit:()=>browserExit,
+    getStderr:()=>browserStderr,
+  });
   const port=Number(active.split('\n')[0]);
   const target=await cdpRequest(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(origin)}`,'PUT');
   cdp=new Cdp(target.webSocketDebuggerUrl);await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Profiler.enable');await cdp.send('Performance.enable');
@@ -117,9 +127,36 @@ try{
   };
   const simulationProfile={withSnapshot:await profileEngine(true),withoutSnapshot:await profileEngine(false)};
 
-  const kernel=await cdp.evaluate(`(async()=>{const {FarmEngine}=await import('/src/client/engine.js');const {loadWasmMetabolism,updateMetabolismJS}=await import('/src/client/metabolism-wasm.js');const wasm=await loadWasmMetabolism();const out=[];const reps=${repetitions};const stats=a=>({medianMs:[...a].sort((x,y)=>x-y)[Math.floor(a.length/2)],p95Ms:[...a].sort((x,y)=>x-y)[Math.ceil(a.length*.95)-1]});for(const count of [100,1000,10000,100000]){const input=new Float64Array(count*4),output=new Float64Array(count*2),callsPerSample=Math.max(1,Math.ceil(50000/count));for(let i=0;i<count;i++){input[i*4]=330+(i%70);input[i*4+1]=75;input[i*4+2]=0.4;input[i*4+3]=0;}const row={animals:count,callsPerSample};for(const [name,fn] of [['javascript',updateMetabolismJS],['wasm',wasm]]){for(let i=0;i<50;i++)fn(input,count,output);const times=[];for(let i=0;i<reps;i++){const t=performance.now();for(let call=0;call<callsPerSample;call++)fn(input,count,output);times.push((performance.now()-t)/callsPerSample);}row[name]=stats(times);}out.push(row);}const simulation=[];for(const count of [100,1000,10000]){const row={animals:count};for(const [name,fn] of [['javascript',updateMetabolismJS],['wasm',wasm]]){for(const includeSnapshot of [true,false]){const key=includeSnapshot?name:name+'NoSnapshot';for(let i=0;i<3;i++)new FarmEngine(20261012,count).tick(24,fn,includeSnapshot);const times=[];for(let i=0;i<reps;i++){const engine=new FarmEngine(20261012,count);const t=performance.now();engine.tick(24,fn,includeSnapshot);times.push(performance.now()-t);}row[key]=stats(times);}}simulation.push(row);}const linearMemory=wasm.memoryBytes();wasm.dispose();return {simulation,kernel:out,wasmLinearMemoryBytes:linearMemory};})()`);
+const kernel=await cdp.evaluate(`(async()=>{const {FarmEngine}=await import('/src/client/engine.js');const {loadWasmMetabolism,updateMetabolismJS}=await import('/src/client/metabolism-wasm.js');const wasm=await loadWasmMetabolism();const out=[];const reps=${repetitions};const stats=a=>{const sorted=[...a].sort((x,y)=>x-y);return {sampleCount:a.length,medianMs:sorted.length%2?sorted[(sorted.length-1)/2]:(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2,p95Ms:sorted[Math.ceil(a.length*.95)-1],spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]},observationsMs:[...a]}};for(const count of [100,1000,10000,100000]){const input=new Float64Array(count*4),output=new Float64Array(count*2),callsPerSample=Math.max(1,Math.ceil(50000/count));for(let i=0;i<count;i++){input[i*4]=330+(i%70);input[i*4+1]=75;input[i*4+2]=0.4;input[i*4+3]=0;}const row={animals:count,callsPerSample};for(const [name,fn] of [['javascript',updateMetabolismJS],['wasm',wasm]]){for(let i=0;i<50;i++)fn(input,count,output);const times=[];for(let i=0;i<reps;i++){const t=performance.now();for(let call=0;call<callsPerSample;call++)fn(input,count,output);times.push((performance.now()-t)/callsPerSample);}row[name]=stats(times);}out.push(row);}const simulation=[];for(const count of [100,1000,10000]){const row={animals:count};for(const [name,fn] of [['javascript',updateMetabolismJS],['wasm',wasm]]){for(const includeSnapshot of [true,false]){const key=includeSnapshot?name:name+'NoSnapshot';for(let i=0;i<3;i++)new FarmEngine(20261012,count).tick(24,fn,includeSnapshot);const times=[];for(let i=0;i<reps;i++){const engine=new FarmEngine(20261012,count);const t=performance.now();engine.tick(24,fn,includeSnapshot);times.push(performance.now()-t);}row[key]=stats(times);}}simulation.push(row);}const linearMemory=wasm.memoryBytes();wasm.dispose();return {simulation,kernel:out,wasmLinearMemoryBytes:linearMemory};})()`);
   const persistence=await cdp.evaluate(`(async()=>{const {FarmEngine}=await import('/src/client/engine.js');const engine=new FarmEngine(20261012,10000);engine.tick(24,undefined,false);const json=JSON.stringify(engine.snapshot()),rawBytes=new TextEncoder().encode(json),compressed=await new Response(new Blob([rawBytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();const compressedBytes=new Uint8Array(compressed);let binary='';for(let offset=0;offset<compressedBytes.length;offset+=32768)binary+=String.fromCharCode(...compressedBytes.subarray(offset,offset+32768));const encoded=btoa(binary);let rawAccepted=true;try{localStorage.setItem('__riose_raw',json);}catch{rawAccepted=false;}localStorage.clear();let compressedCopies=0;for(let copies=1;copies<=10;copies++){try{localStorage.setItem('__riose_gzip',JSON.stringify(Array(copies).fill({encoding:'gzip+base64',data:encoded})));compressedCopies=copies;}catch{break;}}localStorage.clear();return {jsonBytes:rawBytes.byteLength,gzipBytes:compressed.byteLength,gzipBase64Bytes:Math.ceil(compressed.byteLength/3)*4,rawSnapshotFitsLocalStorage:rawAccepted,gzipSnapshotCopiesFitLocalStorage:compressedCopies,storageQuotaBytes:await navigator.storage.estimate().then(x=>x.quota)};})()`);
-  const output={browser:{product:'Chromium',url:origin},repetitions,worker,profile:{implementation:profileTick,sampledAppFunctions:sampledFunctions,metricsDelta:profileMetricsDelta,heapUsedBytes:profileMetrics.JSHeapUsedSize,domNodes:profileMetrics.Nodes},simulationProfile,browserEngine:kernel,persistence,limitations:['Function sampling profiles the same page module called by the Worker, on the browser main thread; the worker round-trip includes Worker execution, transfer, UI queue delay, and the reply.','Layout and style deltas are whole-page Performance API observations over each workload; the animated canvas contributes.','Kernel and FarmEngine results run in Chromium main-thread JavaScript/WASM and exclude UI rendering. Browser timing resolution and scheduler noise limit small-batch claims.']};
+  const limitations=['Function sampling profiles the same page module called by the Worker, on the browser main thread; the worker round-trip includes Worker execution, transfer, UI queue delay, and the reply.','Layout and style deltas are whole-page Performance API observations over each workload; the animated canvas contributes.','Kernel and FarmEngine results run in Chromium main-thread JavaScript/WASM and exclude UI rendering. Browser timing resolution and scheduler noise limit small-batch claims.'];
+  const phases={
+    engine:{status:'measured',measurements:kernel.simulation.flatMap(row=>
+      ['javascript','wasm','javascriptNoSnapshot','wasmNoSnapshot'].map(implementation=>
+        measurement('engine','tick24h','ms',row[implementation],{population:row.animals,scope:'FarmEngine',implementation,observations:row[implementation].observationsMs})))
+      .concat(kernel.kernel.flatMap(row=>
+        ['javascript','wasm'].map(implementation=>
+          measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals===100000?'numeric-kernel-only':null,observations:row[implementation].observationsMs}))))},
+    worker:{status:'measured',measurements:worker.map(row=>measurement('worker','roundTrip24h','ms',row.roundTrip24h,{population:row.animals,implementation:row.implementation,median:row.roundTrip24h.medianMs,spread:{p95:row.roundTrip24h.p95Ms},memory:{jsHeapUsedBytes:row.heapUsedBytes,jsHeapDeltaBytes:row.heapDeltaBytes}}))},
+    ui:{status:'measured',measurements:worker.map(row=>measurement('ui','scriptDurationPerTick','ms',{median:row.scriptDurationPerTickMs,spread:null},{population:row.animals,domNodes:row.domNodes,observations:[row.scriptDurationPerTickMs]}))},
+    layout:{status:'measured',measurements:worker.map(row=>measurement('layout','layoutPerTick','ms',{median:row.layoutPerTickMs,spread:null},{population:row.animals,observations:[row.layoutPerTickMs]}))},
+    serialization:{status:'measured',measurements:[measurement('serialization','snapshot-json','bytes',{median:persistence.jsonBytes,spread:null},{population:10000,gzipBytes:persistence.gzipBytes,gzipBase64Bytes:persistence.gzipBase64Bytes,observations:[persistence.jsonBytes]})]},
+    memory:{status:'measured',measurements:worker.map(row=>measurement('memory','jsHeapUsedAfterGc','bytes',summarizeSamples([row.heapUsedBytes]),{population:row.animals,implementation:row.implementation,observations:[row.heapUsedBytes],source:'Chrome Performance.getMetrics JSHeapUsedSize after HeapProfiler.collectGarbage'}))},
+  };
+  const output=benchmarkReport({
+    name:'browser-worker',runtime:{browser:browser.product,browserRevision:browser.revision,userAgent:browser.userAgent},
+    workload:{seed:20261012,populations:[...worker.map(row=>({animals:row.animals,scope:'FarmEngine and Worker',limit:'FarmEngine maximum 10000'})),{animals:100000,scope:'numeric-kernel-only',limit:'isolated numeric kernel; not FarmEngine or renderer'}]},
+    configuration:{warmupRuns:{worker:1,kernel:50,simulation:3},repetitions},phases,
+    timingBoundaries:[
+      {phase:'engine',timed:['FarmEngine 24-hour tick, with/without snapshot, and isolated JS/WASM numeric kernel calls.'],notTimed:['FarmEngine construction and UI rendering.']},
+      {phase:'worker',timed:['Worker tick request/reply round-trip including queueing, execution, transfer and response.'],notTimed:['Separate standalone engine profile and browser startup.']},
+      {phase:'ui',timed:['Whole-page script-duration delta across the measured Worker workload.'],notTimed:['Isolated allocation attribution to one UI function.']},
+      {phase:'layout',timed:['Whole-page layout-duration delta across the measured Worker workload.'],notTimed:['GPU rendering time.']},
+      {phase:'serialization',timed:['JSON byte counting and browser gzip snapshot encoding.'],notTimed:['Browser storage quota measurement.']},
+      {phase:'memory',timed:['Chrome JS heap after forced garbage collection.'],notTimed:['Process RSS, retained object attribution, WASM linear memory and GPU allocation.']},
+    ],
+    results:{browser:{product:'Chromium',url:origin},worker,profile:{implementation:profileTick,sampledAppFunctions:sampledFunctions,metricsDelta:profileMetricsDelta,heapUsedBytes:profileMetrics.JSHeapUsedSize,domNodes:profileMetrics.Nodes},simulationProfile,browserEngine:kernel,persistence},limitations,
+  });
   console.log(JSON.stringify(output,null,2));
 }finally{
   if(cdp){await cdp.send('Browser.close').catch(()=>{});cdp.close();}

@@ -1,0 +1,5 @@
+# Optional, research-only dependencies for the separated finishing-steer DMI experiment.
+# These are not application/runtime dependencies.
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2

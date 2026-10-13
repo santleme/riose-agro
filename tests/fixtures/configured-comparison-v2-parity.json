@@ -1,0 +1,1156 @@
+{
+  "format": "riose-configured-comparison-js-reference",
+  "version": 2,
+  "sourceImplementation": "src/client/engine.js#compareConfiguredScenarios",
+  "sourceSnapshot": "tests/scenario-goldens/baseline-pasture.json#/output/state",
+  "comparisonTolerance": 1e-10,
+  "snapshot": {
+    "hour": 30,
+    "animals": [
+      {
+        "id": 1,
+        "name": "Aurora",
+        "weight": 358.4283122246884,
+        "initialWeight": 357.83741344697773,
+        "energy": 99.8274210073046,
+        "thirst": 12,
+        "action": "drinking",
+        "patch": 0,
+        "x": 103.26467905452287,
+        "y": 103.50028644313294,
+        "targetX": 50.00012459931895,
+        "targetY": 110.33669443801045,
+        "history": [
+          {
+            "hour": 6,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 6,
+              "thirst": 20,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 16,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 16,
+              "thirst": 70,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 17,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 17,
+              "thirst": 17,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 21,
+            "action": "resting",
+            "reason": "rest_window",
+            "observed": {
+              "hour": 21,
+              "thirst": 37,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 30,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 6,
+              "thirst": 82,
+              "housing": "pasture"
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Bento",
+        "weight": 337.69931401897844,
+        "initialWeight": 337.1425887127407,
+        "energy": 99.75065221773032,
+        "thirst": 12,
+        "action": "drinking",
+        "patch": 1,
+        "x": 281.1796172785595,
+        "y": 100.57270843849435,
+        "targetX": 282.1551215695217,
+        "targetY": 125.17622610554099,
+        "history": [
+          {
+            "hour": 6,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 6,
+              "thirst": 20,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 16,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 16,
+              "thirst": 70,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 17,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 17,
+              "thirst": 17,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 21,
+            "action": "resting",
+            "reason": "rest_window",
+            "observed": {
+              "hour": 21,
+              "thirst": 37,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 30,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 6,
+              "thirst": 82,
+              "housing": "pasture"
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Cacau",
+        "weight": 354.5863978588066,
+        "initialWeight": 354.0018327953294,
+        "energy": 99.81319267303634,
+        "thirst": 12,
+        "action": "drinking",
+        "patch": 2,
+        "x": 93.7963941101205,
+        "y": 232.03238253998137,
+        "targetX": 76.11290995264426,
+        "targetY": 234.2342553474009,
+        "history": [
+          {
+            "hour": 6,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 6,
+              "thirst": 20,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 16,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 16,
+              "thirst": 70,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 17,
+            "action": "grazing",
+            "reason": "pasture_housing",
+            "observed": {
+              "hour": 17,
+              "thirst": 17,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 21,
+            "action": "resting",
+            "reason": "rest_window",
+            "observed": {
+              "hour": 21,
+              "thirst": 37,
+              "housing": "pasture"
+            }
+          },
+          {
+            "hour": 30,
+            "action": "drinking",
+            "reason": "thirst_threshold",
+            "observed": {
+              "hour": 6,
+              "thirst": 82,
+              "housing": "pasture"
+            }
+          }
+        ]
+      }
+    ],
+    "pastures": [
+      1827.0417673035558,
+      1827.5020160776035,
+      1827.1270698521566,
+      1834.9999999999982
+    ],
+    "intake": {
+      "pastureKgDM": 23.329146766678484,
+      "barnBaseKgDM": 0,
+      "supplementKgDM": 0,
+      "dietExtraKgDM": 0
+    },
+    "config": {
+      "diet": "pasture",
+      "housing": "pasture",
+      "weather": "normal",
+      "supplement": 0
+    },
+    "cost": 0,
+    "events": [
+      {
+        "hour": 30,
+        "text": "Novo dia: peso médio 350.2 kg."
+      },
+      {
+        "hour": 30,
+        "text": "Cacau: bebendo água.",
+        "animalId": 3
+      },
+      {
+        "hour": 30,
+        "text": "Bento: bebendo água.",
+        "animalId": 2
+      },
+      {
+        "hour": 30,
+        "text": "Aurora: bebendo água.",
+        "animalId": 1
+      },
+      {
+        "hour": 21,
+        "text": "Cacau: descansando.",
+        "animalId": 3
+      },
+      {
+        "hour": 21,
+        "text": "Bento: descansando.",
+        "animalId": 2
+      },
+      {
+        "hour": 21,
+        "text": "Aurora: descansando.",
+        "animalId": 1
+      },
+      {
+        "hour": 17,
+        "text": "Cacau: pastando.",
+        "animalId": 3
+      },
+      {
+        "hour": 17,
+        "text": "Bento: pastando.",
+        "animalId": 2
+      },
+      {
+        "hour": 17,
+        "text": "Aurora: pastando.",
+        "animalId": 1
+      },
+      {
+        "hour": 16,
+        "text": "Cacau: bebendo água.",
+        "animalId": 3
+      },
+      {
+        "hour": 16,
+        "text": "Bento: bebendo água.",
+        "animalId": 2
+      },
+      {
+        "hour": 16,
+        "text": "Aurora: bebendo água.",
+        "animalId": 1
+      },
+      {
+        "hour": 6,
+        "text": "Fazenda iniciada. Os animais estão no pasto."
+      }
+    ],
+    "seed": 1472672670,
+    "initialSeed": 417,
+    "locomotionSeed": 2374808501
+  },
+  "cases": [
+    {
+      "id": "diet-change",
+      "factor": "diet",
+      "days": 2,
+      "referenceConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "scenarioConfig": {
+        "diet": "balanced",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "expected": {
+        "engineVersion": "agroville-engine/1",
+        "days": 2,
+        "startWeight": 350.23800803415776,
+        "initialConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "herdSize": 3,
+        "initialPastureByPaddock": [
+          1827.0417673035558,
+          1827.5020160776035,
+          1827.1270698521566,
+          1834.9999999999982
+        ],
+        "comparisonFactor": "diet",
+        "seed": 417,
+        "referenceConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "scenarioConfig": {
+          "diet": "balanced",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "rows": [
+          {
+            "day": 0,
+            "referenceWeight": 350.23800803415776,
+            "scenarioWeight": 350.23800803415776,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 0,
+            "scenarioConsumptionKgDM": 0,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "referencePastureKgDM": 7316.670853233314,
+            "scenarioPastureKgDM": 7316.670853233314,
+            "referencePastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ],
+            "scenarioPastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ]
+          },
+          {
+            "day": 1,
+            "referenceWeight": 350.81635787427575,
+            "scenarioWeight": 351.35138075557285,
+            "referenceCost": 0,
+            "scenarioCost": 8.640000000000002,
+            "referenceConsumptionKgDM": 23.367670307793645,
+            "scenarioConsumptionKgDM": 28.784756420808364,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 23.367670307793645,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 23.367670307793645
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 23.38475642080836,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 5.4000000000000075,
+              "totalKgDM": 28.784756420808364
+            },
+            "referencePastureKgDM": 7433.303182925512,
+            "scenarioPastureKgDM": 7433.286096812499,
+            "referencePastureByPaddock": [
+              1854.070393136163,
+              1854.9916506954469,
+              1854.2411390939062,
+              1869.9999999999964
+            ],
+            "scenarioPastureByPaddock": [
+              1854.0646977651586,
+              1854.9859553244419,
+              1854.2354437229017,
+              1869.9999999999964
+            ]
+          },
+          {
+            "day": 2,
+            "referenceWeight": 351.3956627464858,
+            "scenarioWeight": 352.46659199514033,
+            "referenceCost": 0,
+            "scenarioCost": 17.279999999999966,
+            "referenceConsumptionKgDM": 46.7739277708258,
+            "scenarioConsumptionKgDM": 57.6437964033288,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 46.7739277708258,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 46.7739277708258
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 46.84379640332882,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 10.799999999999986,
+              "totalKgDM": 57.6437964033288
+            },
+            "referencePastureKgDM": 7549.8969254624735,
+            "scenarioPastureKgDM": 7549.827056829971,
+            "referencePastureByPaddock": [
+              1881.0858557972429,
+              1882.4688834079623,
+              1881.3421862572736,
+              1904.9999999999945
+            ],
+            "scenarioPastureByPaddock": [
+              1881.062566253076,
+              1882.445593863794,
+              1881.3188967131064,
+              1904.9999999999945
+            ]
+          }
+        ],
+        "reference": {
+          "weight": 351.3956627464858,
+          "gain": 1.7350510948031683,
+          "cost": 0,
+          "pasture": 7549.8969254624735,
+          "pastureByPaddock": [
+            1881.0858557972429,
+            1882.4688834079623,
+            1881.3421862572736,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.10307453750428,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 70.10307453750428
+          },
+          "stress": 5
+        },
+        "scenario": {
+          "weight": 352.46659199514033,
+          "gain": 2.8059803434577097,
+          "cost": 17.279999999999966,
+          "pasture": 7549.827056829971,
+          "pastureByPaddock": [
+            1881.062566253076,
+            1882.445593863794,
+            1881.3188967131064,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.1729431700073,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 10.799999999999986,
+            "totalKgDM": 80.97294317000728
+          },
+          "stress": 5
+        },
+        "assumptions": {
+          "baseDemandKgDM": 8,
+          "dailyPastureGrowthKgDM": 35,
+          "initialPastureKgDM": 1800,
+          "supplementPrice": 1.8,
+          "balancedPrice": 1.6,
+          "concentratePrice": 2.1,
+          "maintenanceKgDM": 5.3,
+          "gainFactor": 0.22
+        },
+        "validated": false
+      }
+    },
+    {
+      "id": "housing-change",
+      "factor": "housing",
+      "days": 2,
+      "referenceConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "scenarioConfig": {
+        "diet": "pasture",
+        "housing": "barn",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "expected": {
+        "engineVersion": "agroville-engine/1",
+        "days": 2,
+        "startWeight": 350.23800803415776,
+        "initialConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "herdSize": 3,
+        "initialPastureByPaddock": [
+          1827.0417673035558,
+          1827.5020160776035,
+          1827.1270698521566,
+          1834.9999999999982
+        ],
+        "comparisonFactor": "housing",
+        "seed": 417,
+        "referenceConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "scenarioConfig": {
+          "diet": "pasture",
+          "housing": "barn",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "rows": [
+          {
+            "day": 0,
+            "referenceWeight": 350.23800803415776,
+            "scenarioWeight": 350.23800803415776,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 0,
+            "scenarioConsumptionKgDM": 0,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "referencePastureKgDM": 7316.670853233314,
+            "scenarioPastureKgDM": 7316.670853233314,
+            "referencePastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ],
+            "scenarioPastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ]
+          },
+          {
+            "day": 1,
+            "referenceWeight": 350.81635787427575,
+            "scenarioWeight": 350.81635787427575,
+            "referenceCost": 0,
+            "scenarioCost": 15.188985700065867,
+            "referenceConsumptionKgDM": 23.367670307793645,
+            "scenarioConsumptionKgDM": 23.367670307793638,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 23.367670307793645,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 23.367670307793645
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 23.36767030779364,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 23.367670307793638
+            },
+            "referencePastureKgDM": 7433.303182925512,
+            "scenarioPastureKgDM": 7456.670853233307,
+            "referencePastureByPaddock": [
+              1854.070393136163,
+              1854.9916506954469,
+              1854.2411390939062,
+              1869.9999999999964
+            ],
+            "scenarioPastureByPaddock": [
+              1862.041767303554,
+              1862.5020160776016,
+              1862.1270698521548,
+              1869.9999999999964
+            ]
+          },
+          {
+            "day": 2,
+            "referenceWeight": 351.3956627464858,
+            "scenarioWeight": 351.3956627464858,
+            "referenceCost": 0,
+            "scenarioCost": 30.403053051036753,
+            "referenceConsumptionKgDM": 46.7739277708258,
+            "scenarioConsumptionKgDM": 46.77392777082577,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 46.7739277708258,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 46.7739277708258
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 46.773927770825765,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 46.77392777082577
+            },
+            "referencePastureKgDM": 7549.8969254624735,
+            "scenarioPastureKgDM": 7596.6708532333,
+            "referencePastureByPaddock": [
+              1881.0858557972429,
+              1882.4688834079623,
+              1881.3421862572736,
+              1904.9999999999945
+            ],
+            "scenarioPastureByPaddock": [
+              1897.0417673035522,
+              1897.5020160775998,
+              1897.127069852153,
+              1904.9999999999945
+            ]
+          }
+        ],
+        "reference": {
+          "weight": 351.3956627464858,
+          "gain": 1.7350510948031683,
+          "cost": 0,
+          "pasture": 7549.8969254624735,
+          "pastureByPaddock": [
+            1881.0858557972429,
+            1882.4688834079623,
+            1881.3421862572736,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.10307453750428,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 70.10307453750428
+          },
+          "stress": 5
+        },
+        "scenario": {
+          "weight": 351.3956627464858,
+          "gain": 1.7350510948031683,
+          "cost": 30.403053051036753,
+          "pasture": 7596.6708532333,
+          "pastureByPaddock": [
+            1897.0417673035522,
+            1897.5020160775998,
+            1897.127069852153,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 23.329146766678484,
+            "barnBaseKgDM": 46.773927770825765,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 70.10307453750426
+          },
+          "stress": 12
+        },
+        "assumptions": {
+          "baseDemandKgDM": 8,
+          "dailyPastureGrowthKgDM": 35,
+          "initialPastureKgDM": 1800,
+          "supplementPrice": 1.8,
+          "balancedPrice": 1.6,
+          "concentratePrice": 2.1,
+          "maintenanceKgDM": 5.3,
+          "gainFactor": 0.22
+        },
+        "validated": false
+      }
+    },
+    {
+      "id": "weather-change",
+      "factor": "weather",
+      "days": 2,
+      "referenceConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "scenarioConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "hot",
+        "supplement": 0
+      },
+      "expected": {
+        "engineVersion": "agroville-engine/1",
+        "days": 2,
+        "startWeight": 350.23800803415776,
+        "initialConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "herdSize": 3,
+        "initialPastureByPaddock": [
+          1827.0417673035558,
+          1827.5020160776035,
+          1827.1270698521566,
+          1834.9999999999982
+        ],
+        "comparisonFactor": "weather",
+        "seed": 417,
+        "referenceConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "scenarioConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "hot",
+          "supplement": 0
+        },
+        "rows": [
+          {
+            "day": 0,
+            "referenceWeight": 350.23800803415776,
+            "scenarioWeight": 350.23800803415776,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 0,
+            "scenarioConsumptionKgDM": 0,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "referencePastureKgDM": 7316.670853233314,
+            "scenarioPastureKgDM": 7316.670853233314,
+            "referencePastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ],
+            "scenarioPastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ]
+          },
+          {
+            "day": 1,
+            "referenceWeight": 350.81635787427575,
+            "scenarioWeight": 350.47352165783667,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 23.367670307793645,
+            "scenarioConsumptionKgDM": 18.68537840758058,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 23.367670307793645,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 23.367670307793645
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 18.68537840758058,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 18.68537840758058
+            },
+            "referencePastureKgDM": 7433.303182925512,
+            "scenarioPastureKgDM": 7388.98547482574,
+            "referencePastureByPaddock": [
+              1854.070393136163,
+              1854.9916506954469,
+              1854.2411390939062,
+              1869.9999999999964
+            ],
+            "scenarioPastureByPaddock": [
+              1843.4176555164518,
+              1844.2465385397802,
+              1843.5712807695086,
+              1857.75
+            ]
+          },
+          {
+            "day": 2,
+            "referenceWeight": 351.3956627464858,
+            "scenarioWeight": 350.7091936500126,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 46.7739277708258,
+            "scenarioConsumptionKgDM": 37.383321588479944,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 46.7739277708258,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 46.7739277708258
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 37.383321588479944,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 37.383321588479944
+            },
+            "referencePastureKgDM": 7549.8969254624735,
+            "scenarioPastureKgDM": 7461.287531644848,
+            "referencePastureByPaddock": [
+              1881.0858557972429,
+              1882.4688834079623,
+              1881.3421862572736,
+              1904.9999999999945
+            ],
+            "scenarioPastureByPaddock": [
+              1859.7892575293063,
+              1860.9870226858848,
+              1860.0112514296554,
+              1880.5000000000018
+            ]
+          }
+        ],
+        "reference": {
+          "weight": 351.3956627464858,
+          "gain": 1.7350510948031683,
+          "cost": 0,
+          "pasture": 7549.8969254624735,
+          "pastureByPaddock": [
+            1881.0858557972429,
+            1882.4688834079623,
+            1881.3421862572736,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.10307453750428,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 70.10307453750428
+          },
+          "stress": 5
+        },
+        "scenario": {
+          "weight": 350.7091936500126,
+          "gain": 1.0485819983299507,
+          "cost": 0,
+          "pasture": 7461.287531644848,
+          "pastureByPaddock": [
+            1859.7892575293063,
+            1860.9870226858848,
+            1860.0112514296554,
+            1880.5000000000018
+          ],
+          "intake": {
+            "pastureKgDM": 60.71246835515843,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 60.71246835515843
+          },
+          "stress": 28
+        },
+        "assumptions": {
+          "baseDemandKgDM": 8,
+          "dailyPastureGrowthKgDM": 35,
+          "initialPastureKgDM": 1800,
+          "supplementPrice": 1.8,
+          "balancedPrice": 1.6,
+          "concentratePrice": 2.1,
+          "maintenanceKgDM": 5.3,
+          "gainFactor": 0.22
+        },
+        "validated": false
+      }
+    },
+    {
+      "id": "supplement-change",
+      "factor": "supplement",
+      "days": 2,
+      "referenceConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "scenarioConfig": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 1.5
+      },
+      "expected": {
+        "engineVersion": "agroville-engine/1",
+        "days": 2,
+        "startWeight": 350.23800803415776,
+        "initialConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "herdSize": 3,
+        "initialPastureByPaddock": [
+          1827.0417673035558,
+          1827.5020160776035,
+          1827.1270698521566,
+          1834.9999999999982
+        ],
+        "comparisonFactor": "supplement",
+        "seed": 417,
+        "referenceConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 0
+        },
+        "scenarioConfig": {
+          "diet": "pasture",
+          "housing": "pasture",
+          "weather": "normal",
+          "supplement": 1.5
+        },
+        "rows": [
+          {
+            "day": 0,
+            "referenceWeight": 350.23800803415776,
+            "scenarioWeight": 350.23800803415776,
+            "referenceCost": 0,
+            "scenarioCost": 0,
+            "referenceConsumptionKgDM": 0,
+            "scenarioConsumptionKgDM": 0,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 0,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 0
+            },
+            "referencePastureKgDM": 7316.670853233314,
+            "scenarioPastureKgDM": 7316.670853233314,
+            "referencePastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ],
+            "scenarioPastureByPaddock": [
+              1827.0417673035558,
+              1827.5020160776035,
+              1827.1270698521566,
+              1834.9999999999982
+            ]
+          },
+          {
+            "day": 1,
+            "referenceWeight": 350.81635787427575,
+            "scenarioWeight": 351.21267111968103,
+            "referenceCost": 0,
+            "scenarioCost": 8.09999999999999,
+            "referenceConsumptionKgDM": 23.367670307793645,
+            "scenarioConsumptionKgDM": 27.880326687804555,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 23.367670307793645,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 23.367670307793645
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 23.380326687804555,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 4.5,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 27.880326687804555
+            },
+            "referencePastureKgDM": 7433.303182925512,
+            "scenarioPastureKgDM": 7433.290526545502,
+            "referencePastureByPaddock": [
+              1854.070393136163,
+              1854.9916506954469,
+              1854.2411390939062,
+              1869.9999999999964
+            ],
+            "scenarioPastureByPaddock": [
+              1854.066174342826,
+              1854.9874319021103,
+              1854.2369203005694,
+              1869.9999999999964
+            ]
+          },
+          {
+            "day": 2,
+            "referenceWeight": 351.3956627464858,
+            "scenarioWeight": 352.188943671415,
+            "referenceCost": 0,
+            "scenarioCost": 16.200000000000042,
+            "referenceConsumptionKgDM": 46.7739277708258,
+            "scenarioConsumptionKgDM": 55.82568231342062,
+            "referenceIntakeBySourceKgDM": {
+              "pastureKgDM": 46.7739277708258,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 0,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 46.7739277708258
+            },
+            "scenarioIntakeBySourceKgDM": {
+              "pastureKgDM": 46.82568231342062,
+              "barnBaseKgDM": 0,
+              "supplementKgDM": 9,
+              "dietExtraKgDM": 0,
+              "totalKgDM": 55.82568231342062
+            },
+            "referencePastureKgDM": 7549.8969254624735,
+            "scenarioPastureKgDM": 7549.845170919878,
+            "referencePastureByPaddock": [
+              1881.0858557972429,
+              1882.4688834079623,
+              1881.3421862572736,
+              1904.9999999999945
+            ],
+            "scenarioPastureByPaddock": [
+              1881.0686042830441,
+              1882.4516318937642,
+              1881.3249347430751,
+              1904.9999999999945
+            ]
+          }
+        ],
+        "reference": {
+          "weight": 351.3956627464858,
+          "gain": 1.7350510948031683,
+          "cost": 0,
+          "pasture": 7549.8969254624735,
+          "pastureByPaddock": [
+            1881.0858557972429,
+            1882.4688834079623,
+            1881.3421862572736,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.10307453750428,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 0,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 70.10307453750428
+          },
+          "stress": 5
+        },
+        "scenario": {
+          "weight": 352.188943671415,
+          "gain": 2.5283320197323937,
+          "cost": 16.200000000000042,
+          "pasture": 7549.845170919878,
+          "pastureByPaddock": [
+            1881.0686042830441,
+            1882.4516318937642,
+            1881.3249347430751,
+            1904.9999999999945
+          ],
+          "intake": {
+            "pastureKgDM": 70.1548290800991,
+            "barnBaseKgDM": 0,
+            "supplementKgDM": 9,
+            "dietExtraKgDM": 0,
+            "totalKgDM": 79.1548290800991
+          },
+          "stress": 5
+        },
+        "assumptions": {
+          "baseDemandKgDM": 8,
+          "dailyPastureGrowthKgDM": 35,
+          "initialPastureKgDM": 1800,
+          "supplementPrice": 1.8,
+          "balancedPrice": 1.6,
+          "concentratePrice": 2.1,
+          "maintenanceKgDM": 5.3,
+          "gainFactor": 0.22
+        },
+        "validated": false
+      }
+    }
+  ]
+}

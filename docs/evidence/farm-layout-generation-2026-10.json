@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "seeded-farm-layout-generation",
+  "methodology": {
+    "seed": 417,
+    "warmupRunsPerSystem": 2,
+    "repetitionsPerSystem": 15,
+    "timed": [
+      "generateFarmLayout including deterministic placement, constraints, and validation"
+    ],
+    "excluded": [
+      "browser rendering",
+      "asset loading",
+      "interactive editing"
+    ]
+  },
+  "results": [
+    {
+      "scenarioType": "beef",
+      "seed": 417,
+      "placementCount": 1082,
+      "prefabInstanceCount": 8,
+      "editableObjectCount": 1090,
+      "validationDiagnosticCount": 0,
+      "inputFingerprint": "fnv1a32-d31611d2",
+      "generationTimeMs": {
+        "median": 8.375216999999992,
+        "p95": 13.078368999999995,
+        "min": 6.683039000000008,
+        "max": 13.948892999999998,
+        "samples": [
+          13.078368999999995,
+          8.224639999999994,
+          7.45900300000001,
+          8.428443999999999,
+          10.709728999999996,
+          8.460684,
+          7.951047000000003,
+          7.336848000000003,
+          8.375216999999992,
+          7.9445770000000095,
+          8.619877000000002,
+          8.374436000000003,
+          9.76059699999999,
+          13.948892999999998,
+          6.683039000000008
+        ]
+      }
+    },
+    {
+      "scenarioType": "dairy",
+      "seed": 417,
+      "placementCount": 1082,
+      "prefabInstanceCount": 10,
+      "editableObjectCount": 1092,
+      "validationDiagnosticCount": 0,
+      "inputFingerprint": "fnv1a32-759657d9",
+      "generationTimeMs": {
+        "median": 8.460976000000016,
+        "p95": 11.402307999999977,
+        "min": 6.369716000000011,
+        "max": 11.631105999999988,
+        "samples": [
+          11.402307999999977,
+          11.631105999999988,
+          6.369716000000011,
+          10.879678999999982,
+          8.460976000000016,
+          6.5417810000000145,
+          9.826374999999985,
+          11.112353000000041,
+          9.915651000000025,
+          8.360051999999996,
+          7.567261999999971,
+          7.2382970000000455,
+          8.11787899999996,
+          9.56851499999999,
+          7.2696750000000065
+        ]
+      }
+    }
+  ],
+  "source": {
+    "revision": "7a73699c98d66739442505ef3e7831f535da90b0",
+    "dirty": false
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64"
+  }
+}

@@ -16,3 +16,5 @@ __pycache__/
 .test-results/scenarios/
 graphics-poc/dist/
 target/
+data/raw/zenodo-4064802/
+data/processed/zenodo-4064802/

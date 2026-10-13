@@ -1,5 +1,6 @@
 {
   "schemaVersion": "1.0.0",
+  "representationRole": "runtime-presentation",
   "sceneId": "riose-beef-boa-esperanca",
   "name": "Fazenda de Corte Boa Esperança",
   "domainModule": {
@@ -40,151 +41,351 @@
       "assetId": "building-farmhouse-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "building.farmhouse.imagegen.v1",
+      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "building-shed-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "building.shed.imagegen.v1",
+      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "building-workshop-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "building.workshop.imagegen.v1",
+      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "corral-wood-standard-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "APPROVED",
+      "sourceSemanticId": "corral.wood.standard.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "feed-salt-roofed-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "feed.salt.roofed.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "feed-trough-hay-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "feed.trough.hay.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "fence-gate-wood-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "fence.gate.wood.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "fence-wire-wood-post-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "APPROVED",
+      "sourceSemanticId": "fence.wire.wood-post.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "grass-light",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "grass-mid",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "handling-chute-cattle-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "handling.chute.cattle.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "road-straight",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "road-turn",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "shade-tree",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "shrub",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "soil-dry",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED"
+      "reviewStatus": "UNRESOLVED",
+      "sourceStatus": "UNRESOLVED",
+      "sourceSemanticId": null,
+      "sourceFile": null,
+      "sourceManifest": "public/assets/manifest.json",
+      "rights": {
+        "licenseState": "unknown",
+        "notes": "No source rights record resolves for this renderer asset."
+      }
     },
     {
       "assetId": "technology-gateway-antenna-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "technology.gateway.antenna.imagegen.v1",
+      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "technology-monitor-station-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "technology.monitor.station.imagegen.v1",
+      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "technology-scale-electronic-full-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "technology.scale.electronic.full.imagegen.v1",
+      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "technology-traceability-system-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "technology.traceability.system.imagegen.v1",
+      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "vegetation-tree-shade-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "vegetation.tree.shade.imagegen.v1",
+      "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "vehicle-pickup-rural-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "vehicle.pickup.rural.imagegen.v1",
+      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "vehicle-tractor-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "vehicle.tractor.imagegen.v1",
+      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "water-pond-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "water.pond.imagegen.v1",
+      "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     },
     {
       "assetId": "water-trough-round-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW"
+      "reviewStatus": "REVIEW",
+      "sourceStatus": "REVIEW",
+      "sourceSemanticId": "water.trough.round.imagegen.v1",
+      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
+      "sourceManifest": "/assets/manifests/manifest.json",
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+      }
     }
   ],
   "entities": [],

@@ -1,0 +1,31 @@
+{
+  "format": "riose-cross-engine-parity-tolerances",
+  "version": 1,
+  "purpose": "Numerical comparison policy for Rust versus the frozen JavaScript scenario trajectories.",
+  "default": "exact",
+  "objectFields": "exact-set",
+  "arrayOrder": "exact",
+  "floatingFields": {
+    "weight": {"absolute": 1e-10, "relative": 1e-12},
+    "initialWeight": {"absolute": 1e-10, "relative": 1e-12},
+    "energy": {"absolute": 1e-10, "relative": 1e-12},
+    "x": {"absolute": 1e-10, "relative": 1e-12},
+    "y": {"absolute": 1e-10, "relative": 1e-12},
+    "targetX": {"absolute": 1e-10, "relative": 1e-12},
+    "targetY": {"absolute": 1e-10, "relative": 1e-12},
+    "pastures/*": {"absolute": 1e-10, "relative": 1e-12},
+    "pastureKgDM": {"absolute": 1e-10, "relative": 1e-12},
+    "barnBaseKgDM": {"absolute": 1e-10, "relative": 1e-12},
+    "supplementKgDM": {"absolute": 1e-10, "relative": 1e-12},
+    "dietExtraKgDM": {"absolute": 1e-10, "relative": 1e-12},
+    "cost": {"absolute": 1e-10, "relative": 1e-12},
+    "gain": {"absolute": 1e-10, "relative": 1e-12},
+    "pasture": {"absolute": 1e-10, "relative": 1e-12},
+    "totalKgDM": {"absolute": 1e-10, "relative": 1e-12}
+  },
+  "exactFields": [
+    "day", "hour", "id", "name", "action", "reason", "observed", "thirst", "patch",
+    "seed", "initialSeed", "locomotionSeed", "animalId", "stress", "text", "config",
+    "engineVersion", "buildId", "modelStatus", "provenance", "validated", "version"
+  ]
+}

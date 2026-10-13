@@ -74,6 +74,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Install optional scientific data and evaluation dependencies
+        run: python -m pip install --requirement requirements-data-processing.txt
+
       - name: Run Python unit tests
         run: python -m unittest discover -s tests -p 'test_*.py' -v
 

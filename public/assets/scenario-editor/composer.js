@@ -1,7 +1,7 @@
 import {
   Application, Assets, Container, Graphics, Rectangle, Sprite, Texture,
 } from './vendor/pixi.min.mjs';
-import {DEFAULT_LAYERS, createBeefFarmScene, createDairyFarmScene, projectIso, unprojectIso} from './scene-layout.js';
+import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from './scene-layout.js';
 
 const URLS = {
   manifest: '/assets/manifest.json',
@@ -507,7 +507,8 @@ function makePalette() {
     const card = document.createElement('button');
     card.type = 'button';
     card.className = `asset-card${activeAssetId === asset.id ? ' active' : ''}`;
-    card.title = `${nameOfAsset(asset)} · footprint ${asset.footprint.join('×')}`;
+    const provenance = asset.provenance ?? {};
+    card.title = `${nameOfAsset(asset)} · footprint ${asset.footprint.join('×')} · status ${asset.reviewStatus ?? 'UNRESOLVED'} · source ${provenance.sourceFile ?? 'unresolved'} · rights ${provenance.rights?.licenseState ?? 'unknown'}`;
     const thumb = document.createElement('span');
     thumb.className = 'asset-thumb';
     const canvas = document.createElement('canvas');
@@ -526,7 +527,10 @@ function makePalette() {
     title.textContent = nameOfAsset(asset);
     const layer = document.createElement('small');
     layer.textContent = `${CATEGORY_ALIASES[asset.category] ?? LAYER_LABELS[asset.defaultLayer] ?? asset.category} · ${asset.footprint.join('×')}`;
-    card.append(thumb, title, layer);
+    const review = document.createElement('small');
+    review.className = `asset-review-status status-${String(asset.reviewStatus ?? 'UNRESOLVED').toLowerCase()}`;
+    review.textContent = `Status: ${asset.reviewStatus ?? 'UNRESOLVED'}`;
+    card.append(thumb, title, layer, review);
     card.addEventListener('click', () => {
       activeAssetId = asset.id;
       activePrefabId = null;
@@ -1189,6 +1193,11 @@ function validateScene(candidate) {
   if (!candidate || candidate.schemaVersion !== 1 || !candidate.grid || !Array.isArray(candidate.placements)) errors.push('O arquivo não corresponde ao schema Riose Scene v1.');
   if (!Array.isArray(candidate.layers) || !Array.isArray(candidate.zones) || !Array.isArray(candidate.prefabInstances)) errors.push('A cena precisa conter layers, zones e prefabInstances.');
   if (candidate.grid?.projection !== 'isometric-2-to-1') errors.push('A projeção precisa ser isometric-2-to-1.');
+  for (const diagnostic of validateFarmLayout(candidate, {
+    prefabs: prefabLibrary,
+    manifest,
+    constraints: candidate.generation?.constraints ?? [],
+  })) if (diagnostic.severity === 'error') errors.push(diagnostic.message);
   const assetIds = new Set(manifest.assets.map((asset) => asset.id));
   const unknown = [...new Set((candidate.placements ?? []).map((item) => item.assetId).filter((id) => !assetIds.has(id)))];
   if (unknown.length) errors.push(`Assets ausentes no manifesto: ${unknown.slice(0, 6).join(', ')}`);
@@ -1267,9 +1276,12 @@ async function openSceneFile(file) {
 }
 
 async function regenerateScene() {
-  scene = scene.metadata.scenarioType === 'beef'
-    ? createBeefFarmScene(prefabLibrary, scene.metadata.seed)
-    : createDairyFarmScene(prefabLibrary, scene.metadata.seed);
+  scene = generateFarmLayout({
+    scenarioType: scene.metadata.scenarioType === 'beef' ? 'beef' : 'dairy',
+    seed: scene.metadata.seed,
+    prefabs: prefabLibrary,
+    manifest,
+  });
   selectedId = null;
   pushHistory();
   rebuildEditor();
@@ -1351,7 +1363,10 @@ async function loadEditor() {
   ]);
   manifest = loadedManifest;
   prefabLibrary = loadedPrefabs.prefabs;
-  loadedScenes = {dairy: dairyScene, beef: beefScene};
+  loadedScenes = {
+    dairy: generateFarmLayout({scenarioType: 'dairy', seed: dairyScene.metadata.seed, prefabs: prefabLibrary, manifest}),
+    beef: generateFarmLayout({scenarioType: 'beef', seed: beefScene.metadata.seed, prefabs: prefabLibrary, manifest}),
+  };
   const activeId = localStorage.getItem(activeSceneKey);
   const preset = activeId === 'riose-beef-composer-v1' ? 'beef' : activeId === 'riose-dairy-composer-v1' ? 'dairy' : activeId ? 'custom' : 'dairy';
   $('scene-preset').value = preset;

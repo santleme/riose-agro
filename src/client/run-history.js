@@ -1,4 +1,7 @@
-import {createComparisonManifest,validateComparisonManifest} from './engine.js';
+import {
+  createComparisonManifest,createConfiguredComparisonManifest,
+  validateComparisonManifest,validateConfiguredComparisonManifest
+} from './engine.js';
 
 export const RUN_HISTORY_KEY='agroville-run-history-v1';
 export const RUN_HISTORY_VERSION=1;
@@ -80,9 +83,13 @@ export function getRun(runId,storage=globalThis.localStorage){
 
 export function createRunRecord({manifest,result,status='completed',error,now=Date.now(),id}){
   if(!manifest||!['completed','failed'].includes(status))throw new Error('Registro de execução inválido.');
-  validateComparisonManifest(manifest);
+  const configured=manifest.type==='riose-configured-comparison';
+  if(configured)validateConfiguredComparisonManifest(manifest);
+  else validateComparisonManifest(manifest);
   const snapshot=sanitizedSnapshot(manifest.initialSnapshot);
-  const replayManifest=createComparisonManifest(snapshot,manifest.periodDays);
+  const replayManifest=configured
+    ?createConfiguredComparisonManifest(snapshot,{days:manifest.periodDays,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario})
+    :createComparisonManifest(snapshot,manifest.periodDays);
   return {
     id:id??globalThis.crypto?.randomUUID?.()??`run-${now}-${Math.random().toString(36).slice(2)}`,
     timestamp:new Date(now).toISOString(),operation:'comparison',status,
@@ -134,8 +141,13 @@ export function clearRunHistory(storage=globalThis.localStorage){
 
 export function runCompatibility(run){
   if(!run||run.status!=='completed')return {supported:false,reason:'Esta execução não foi concluída e não pode ser reproduzida.'};
+  if(run.provenance?.historyVersion!==RUN_HISTORY_VERSION)return {supported:false,reason:'Versão do registro de histórico incompatível com esta instalação.'};
   if(run.engineVersion!==COMPARISON_ENGINE_VERSION)return {supported:false,reason:'Versão do motor incompatível com esta execução.'};
-  if(run.manifest?.type!=='agroville-comparison'||run.manifest.version!==1)return {supported:false,reason:'Versão do manifesto não suportada por esta instalação.'};
-  try{validateComparisonManifest(run.manifest);return {supported:true,reason:''};}
+  if(!(['agroville-comparison','riose-configured-comparison'].includes(run.manifest?.type))||run.manifest.version!==1)return {supported:false,reason:'Versão do manifesto não suportada por esta instalação.'};
+  try{
+    if(run.manifest.type==='riose-configured-comparison')validateConfiguredComparisonManifest(run.manifest);
+    else validateComparisonManifest(run.manifest);
+    return {supported:true,reason:''};
+  }
   catch(error){return {supported:false,reason:error.message};}
 }

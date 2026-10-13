@@ -1,0 +1,59 @@
+{
+  "protocolId": "precision_beef_instrument_agreement_90s_windows",
+  "amendmentDate": "2026-10-13",
+  "status": "registered_before_model_fit",
+  "supersedes": "preregistration.json",
+  "scope": [
+    "analysis time unit",
+    "collar-halter temporal alignment",
+    "per-window completeness and coverage accounting"
+  ],
+  "reason": {
+    "publishedAnalysisUnit": "90-second blocks",
+    "source": "https://doi.org/10.3390/s22062323",
+    "exactTimestampJoinAudit": "An earlier exact timestamp inner-join audit paired only about 0.1% of the two streams for animal 12; this coverage loss motivated the amendment before model fitting."
+  },
+  "alignment": {
+    "anchor": "Per-animal Collar Start Timestamp in the downloaded Zenodo README summary table; timestamp displayed to whole-second precision and shared by collar and halter.",
+    "timezone": "Preserve source-naive wall-clock time; do not normalize timezone.",
+    "windowSeconds": 90,
+    "intervalConvention": "half-open [anchor + 90*k, anchor + 90*(k+1))",
+    "sampleAssignment": "floor((timestamp - anchor) / 90 seconds)",
+    "forbidden": [
+      "exact timestamp join",
+      "row-index join",
+      "nearest-neighbor join",
+      "time shifting",
+      "interpolation"
+    ]
+  },
+  "cohort": {
+    "requiredValidStreams": [
+      "at least one valid collar sample",
+      "at least one valid halter classification"
+    ],
+    "collarFeatures": "The same twelve preregistered x/y/z mean, population standard deviation, minimum, and maximum features, using collar values only.",
+    "target": "Unique majority of valid halter class labels in the same wall-clock window; halter labels never enter features.",
+    "ties": "Retain and flag in coverage; null target and exclude from fitting/scoring.",
+    "partialBoundaries": "Retain and flag windows extending beyond the README-advertised coverage interval in processed outputs; exclude them from fitting/scoring. README end timestamp is inclusive at displayed second, so exclusive bound is one second later. No padding.",
+    "eligibility": "Exclude partial-boundary bins, bins missing either valid stream, tied/invalid halter majorities, bins with missing/nonfinite collar features, and bins with fewer than 800 valid samples in either stream. This fixed threshold is 800/900 (88.9%) of the nominal 10 Hz samples per 90-second window. Keep every window in processed Parquet; do not impute or pad.",
+    "minimumValidSamplesPerStream": 800,
+    "nominalSamplesPerStream": 900,
+    "coverage": "Report union, collar-only, halter-only, common-valid, eligible, tie, partial-boundary, below-threshold, and per-stream valid sample counts for every output window and summarized by animal.",
+    "invalidOrDuplicateSamples": "Do not contribute; do not synthesize or interpolate samples."
+  },
+  "unchangedProtocol": {
+    "sourceDoi": "10.5281/zenodo.4064802",
+    "features": "Exactly the fixed feature list in preregistration.json.",
+    "models": "Exactly the fixed model procedures in preregistration.json; no search or tuning.",
+    "sourceTestAnimals": [
+      4,
+      10,
+      11
+    ],
+    "animalGroupSplit": "Keep each animal wholly in its README source split; source-test animals never enter development, fitting, or preprocessing.",
+    "metricsAndInterpretationLimits": "Unchanged from preregistration.json. Exploratory instrument agreement only, not independent validation."
+  },
+  "fitPerformedAfterRegistration": true,
+  "result": "experiments/behavior/precision-beef-instrument-agreement/results-90s.json"
+}

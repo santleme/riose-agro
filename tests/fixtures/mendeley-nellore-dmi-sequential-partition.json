@@ -1,0 +1,18 @@
+[
+  {"animal_id":"A1","date":"2025-01-01","treatment":"No shade","dmi_kg_day":9.0},
+  {"animal_id":"A1","date":"2025-01-02","treatment":"No shade","dmi_kg_day":10.5},
+  {"animal_id":"A1","date":"2025-01-03","treatment":"No shade","dmi_kg_day":11.0},
+  {"animal_id":"A1","date":"2025-01-04","treatment":"No shade","dmi_kg_day":12.0},
+  {"animal_id":"A2","date":"2025-01-01","treatment":"No shade","dmi_kg_day":11.0},
+  {"animal_id":"A2","date":"2025-01-02","treatment":"No shade","dmi_kg_day":12.0},
+  {"animal_id":"A2","date":"2025-01-03","treatment":"No shade","dmi_kg_day":13.5},
+  {"animal_id":"A2","date":"2025-01-04","treatment":"No shade","dmi_kg_day":14.0},
+  {"animal_id":"B1","date":"2025-01-01","treatment":"Shade","dmi_kg_day":14.0},
+  {"animal_id":"B1","date":"2025-01-02","treatment":"Shade","dmi_kg_day":15.0},
+  {"animal_id":"B1","date":"2025-01-03","treatment":"Shade","dmi_kg_day":16.5},
+  {"animal_id":"B1","date":"2025-01-04","treatment":"Shade","dmi_kg_day":17.0},
+  {"animal_id":"B2","date":"2025-01-01","treatment":"Shade","dmi_kg_day":16.0},
+  {"animal_id":"B2","date":"2025-01-02","treatment":"Shade","dmi_kg_day":17.5},
+  {"animal_id":"B2","date":"2025-01-03","treatment":"Shade","dmi_kg_day":18.0},
+  {"animal_id":"B2","date":"2025-01-04","treatment":"Shade","dmi_kg_day":19.0}
+]

@@ -1,0 +1,15 @@
+# Batch experiment manifest v1
+
+`riose-batch-experiment` v1 identifies a batch of independent, reproducible scenario runs. It is a separate contract from `agroville-comparison` v1/v2 and farm snapshots; it does not change either older persisted format. The JSON Schema is [batch-experiment-manifest-v1.schema.json](../../schemas/batch-experiment-manifest-v1.schema.json), and the Node reader/writer helpers are [experiments/batch-manifest.js](../../experiments/batch-manifest.js).
+
+Each run records `scenarioFormat` and `scenarioVersion` together; a version is never interpreted without its format. The explicit dispatch supports comparison/reproducibility `agroville-comparison` v1/v2, the distinct `riose-scenario-harness` v1 used by #104, and native Rust requests identified by their `baseline` or `housing-comparison` type at version 1. Unknown formats and versions fail closed. Each run requires a safe relative scenario reference, the seed validated from that input, and a semantic digest computed only after the selected validator accepts the scenario. `scenarioId` is required when the source declares one (comparison v2 and harness); comparison v1 and native requests record null because those contracts have no scenario ID. Missing or invalid input receives no fallback digest or seed.
+
+Engine/model identity and version, dataset and evidence references, unit-tagged inputs and outputs, and execution status retain the batch v1 provenance contract. Missing provenance remains explicit with `status: "missing"` and null identity fields. Native CLI `inputSha256` remains the exact request-byte digest and is distinct from semantic `scenarioDigest`.
+
+The manifest is the batch index. Result records live separately as line-oriented JSON (`riose-experiment-result` v1), one record per completed run. `manifestDigest` covers canonical JSON of the manifest excluding itself. `scenarioDigest` covers canonical JSON of the validated scenario. `outputDigest` covers canonical JSON of semantic outputs. `resultDigest` covers exact UTF-8 bytes of the persisted JSONL record, excluding LF or CRLF terminators, and is calculated from the same serialization that is written. The scanner hashes raw bytes before decoding or parsing. A completed `resultRef` must match `${basename(resultsPath)}#${runId}`. Non-JSON values, non-finite numbers, and cycles are rejected.
+
+An experiment is reproducible only when its scenario digest, seed, exact engine/model versions, referenced dataset bytes, and output record are retained. A digest verifies identity, not scientific validity, and a reference with `unverified` status does not become validated by being included in the manifest.
+
+## Isolated serialization measurement
+
+Run `node scripts/benchmark-batch-manifest.mjs`. The script reports manifest and JSONL result bytes and their construction/serialization time separately. It deliberately does not run a simulation, so those timings are metadata overhead and cannot be interpreted as engine performance. Workload size and repetition count can be set with `RIOSE_EXPERIMENT_RUNS` (1–10,000) and `RIOSE_EXPERIMENT_REPETITIONS` (1–100).

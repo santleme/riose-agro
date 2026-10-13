@@ -1,6 +1,7 @@
 use riose_core::{
     run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
-    NativeScenarioResult, NATIVE_SCENARIO_VERSION,
+    ADG_KG_PER_DAY_RANGE, BODY_WEIGHT_KG_RANGE, CONFIGURED_COMPARISON_REQUEST_VERSION,
+    NATIVE_SCENARIO_VERSION, SUPPLEMENT_KG_DM_PER_DAY_RANGE,
 };
 use serde::de::{self, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
@@ -68,7 +69,8 @@ struct SuccessRecord<'a> {
     version: u16,
     request_version: u16,
     scenario: &'static str,
-    seed: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    seed: Option<u32>,
     status: &'static str,
     run_id: String,
     input_sha256: String,
@@ -274,6 +276,7 @@ fn execute() -> Result<(), CliError> {
     let json_value = parse_json(&input_bytes)?;
     let request = validate_and_decode(&json_value)?;
     let (scenario, seed) = request_identity(&request);
+    let request_version = request_version(&request);
 
     let native_result =
         run_native_scenario(request).map_err(|error| classify_native_error(error, scenario))?;
@@ -297,7 +300,7 @@ fn execute() -> Result<(), CliError> {
     let record = SuccessRecord {
         record_type: "riose-native-result",
         version: RESULT_PROTOCOL_VERSION,
-        request_version: NATIVE_SCENARIO_VERSION,
+        request_version,
         scenario,
         seed,
         status: "success",
@@ -394,7 +397,19 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
     let root = object_at(value, "")?;
     let scenario = required_string(root, "type", "")?;
     let version = required_u64(root, "version", "")?;
-    if version != u64::from(NATIVE_SCENARIO_VERSION) {
+    let supported_version = match scenario {
+        "baseline" | "housing-comparison" | "br-corte-pasture-dmi" => NATIVE_SCENARIO_VERSION,
+        "configured-comparison" => CONFIGURED_COMPARISON_REQUEST_VERSION,
+        _ => {
+            return Err(CliError::at(
+                6,
+                "UNSUPPORTED_SCENARIO",
+                "/type",
+                "scenario type is not supported.",
+            ))
+        }
+    };
+    if version != u64::from(supported_version) {
         return Err(CliError::at(
             6,
             "UNSUPPORTED_VERSION",
@@ -412,19 +427,29 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
             "hours",
         ],
         "housing-comparison" => &["type", "version", "snapshot", "days"],
-        _ => {
-            return Err(CliError::at(
-                6,
-                "UNSUPPORTED_SCENARIO",
-                "/type",
-                "scenario type is not supported.",
-            ))
-        }
+        "br-corte-pasture-dmi" => &[
+            "type",
+            "version",
+            "bodyWeightKg",
+            "adgKgPerDay",
+            "supplementKgDMPerDay",
+        ],
+        "configured-comparison" => &[
+            "type",
+            "version",
+            "snapshot",
+            "days",
+            "referenceConfig",
+            "scenarioConfig",
+        ],
+        _ => unreachable!("scenario type was prevalidated"),
     };
 
     match scenario {
         "baseline" => validate_baseline_fields(root)?,
         "housing-comparison" => validate_housing_fields(root)?,
+        "br-corte-pasture-dmi" => validate_br_corte_fields(root)?,
+        "configured-comparison" => validate_configured_comparison_fields(root)?,
         _ => unreachable!(),
     }
     reject_unknown_fields(root, expected_fields, "")?;
@@ -433,10 +458,11 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
         CliError::at(
             5,
             "INVALID_REQUEST",
-            if scenario == "baseline" {
-                "/configuration"
-            } else {
-                "/snapshot"
+            match scenario {
+                "baseline" => "/configuration",
+                "housing-comparison" => "/snapshot",
+                "br-corte-pasture-dmi" => "/bodyWeightKg",
+                _ => "/snapshot",
             },
             "request fields do not match the supported scenario schema.",
         )
@@ -489,6 +515,87 @@ fn validate_housing_fields(root: &Map<String, Value>) -> Result<(), CliError> {
     }
     let snapshot = required(root, "snapshot", "")?;
     validate_snapshot_unknown_fields(snapshot, "/snapshot")?;
+    let snapshot = object_at(snapshot, "/snapshot")?;
+    let snapshot_config = required(snapshot, "config", "/snapshot")?;
+    let snapshot_config_object = object_at(snapshot_config, "/snapshot/config")?;
+    require_fields(
+        snapshot_config_object,
+        &["diet", "housing", "weather", "supplement"],
+        "/snapshot/config",
+    )?;
+    Ok(())
+}
+
+fn validate_br_corte_fields(root: &Map<String, Value>) -> Result<(), CliError> {
+    for (field, range) in [
+        ("bodyWeightKg", BODY_WEIGHT_KG_RANGE),
+        ("adgKgPerDay", ADG_KG_PER_DAY_RANGE),
+        ("supplementKgDMPerDay", SUPPLEMENT_KG_DM_PER_DAY_RANGE),
+    ] {
+        let value = required(root, field, "")?.as_f64().ok_or_else(|| {
+            CliError::at(
+                5,
+                "INVALID_REQUEST",
+                pointer("", field),
+                "field must be a finite number.",
+            )
+        })?;
+        if !value.is_finite() || value < range[0] || value > range[1] {
+            return Err(CliError::at(
+                5,
+                "VALIDATION_ERROR",
+                pointer("", field),
+                match field {
+                    "bodyWeightKg" => "bodyWeightKg must be between 133 and 474 kg for BR-CORTE Eq. 2.6.",
+                    "adgKgPerDay" => "adgKgPerDay must be between -0.18 and 1.34 kg/day for BR-CORTE Eq. 2.6.",
+                    _ => "supplementKgDMPerDay must be between 0 and 5.32 kg DM/day for BR-CORTE Eq. 2.6.",
+                },
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn validate_configured_comparison_fields(root: &Map<String, Value>) -> Result<(), CliError> {
+    let days = required_u64(root, "days", "")?;
+    if !(1..=365).contains(&days) {
+        return Err(CliError::at(
+            5,
+            "VALIDATION_ERROR",
+            "/days",
+            "days must be between 1 and 365.",
+        ));
+    }
+    let snapshot = required(root, "snapshot", "")?;
+    validate_snapshot_unknown_fields(snapshot, "/snapshot")?;
+    for name in ["referenceConfig", "scenarioConfig"] {
+        let path = pointer("", name);
+        let value = required(root, name, "")?;
+        let config = object_at(value, &path)?;
+        require_fields(config, &["diet", "housing", "weather", "supplement"], &path)?;
+        validate_config(value, &path)?;
+    }
+
+    let reference = object_at(required(root, "referenceConfig", "")?, "/referenceConfig")?;
+    let scenario = object_at(required(root, "scenarioConfig", "")?, "/scenarioConfig")?;
+    let changed = ["diet", "housing", "weather", "supplement"]
+        .iter()
+        .filter(|field| {
+            let field = **field;
+            match field {
+                "supplement" => reference[field].as_f64() != scenario[field].as_f64(),
+                _ => reference[field] != scenario[field],
+            }
+        })
+        .count();
+    if changed != 1 {
+        return Err(CliError::at(
+            5,
+            "VALIDATION_ERROR",
+            "/scenarioConfig",
+            "referenceConfig and scenarioConfig must differ in exactly one supported factor.",
+        ));
+    }
     Ok(())
 }
 
@@ -826,12 +933,23 @@ fn pointer(path: &str, field: &str) -> String {
     }
 }
 
-fn request_identity(request: &NativeScenarioRequest) -> (&'static str, u32) {
+fn request_identity(request: &NativeScenarioRequest) -> (&'static str, Option<u32>) {
     match request {
-        NativeScenarioRequest::Baseline { seed, .. } => ("baseline", *seed),
+        NativeScenarioRequest::Baseline { seed, .. } => ("baseline", Some(*seed)),
         NativeScenarioRequest::HousingComparison { snapshot, .. } => {
-            ("housing-comparison", snapshot.initial_seed)
+            ("housing-comparison", Some(snapshot.initial_seed))
         }
+        NativeScenarioRequest::BrCortePastureDmi { .. } => ("br-corte-pasture-dmi", None),
+        NativeScenarioRequest::ConfiguredComparison { snapshot, .. } => {
+            ("configured-comparison", Some(snapshot.initial_seed))
+        }
+    }
+}
+
+fn request_version(request: &NativeScenarioRequest) -> u16 {
+    match request {
+        NativeScenarioRequest::ConfiguredComparison { version, .. } => *version,
+        _ => NATIVE_SCENARIO_VERSION,
     }
 }
 
@@ -844,7 +962,7 @@ fn classify_native_error(error: String, scenario: &'static str) -> CliError {
             "hours must be between 1 and 8760.",
         );
     }
-    if scenario == "housing-comparison" {
+    if scenario == "housing-comparison" || scenario == "configured-comparison" {
         return CliError::at(
             5,
             "VALIDATION_ERROR",

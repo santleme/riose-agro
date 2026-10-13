@@ -7,6 +7,14 @@ use serde_json::{json, Value};
 const BASELINE_GOLDEN: &str = include_str!("../../../tests/scenario-goldens/baseline-pasture.json");
 const HOUSING_GOLDEN: &str =
     include_str!("../../../tests/scenario-goldens/housing-comparison.json");
+const PARITY_TOLERANCES: &str =
+    include_str!("../../../tests/scenario-goldens/parity-tolerances-v1.json");
+
+#[derive(Default)]
+struct ParityCursor {
+    events: Vec<Value>,
+    histories: std::collections::HashMap<String, Vec<Value>>,
+}
 
 fn parse_golden(contents: &str) -> Value {
     serde_json::from_str(contents).expect("official scenario golden must be valid JSON")
@@ -37,8 +45,9 @@ fn native_baseline_matches_the_official_seed_417_24_hour_golden_exactly() {
     let NativeScenarioResult::Baseline { snapshot, metrics } = first.result else {
         panic!("baseline request must return baseline result");
     };
+    assert_native_provenance(&first.engine);
     assert_exact_json(
-        &serde_json::to_value(snapshot).unwrap(),
+        &serde_json::to_value(&snapshot).unwrap(),
         &golden["output"]["state"],
         "baseline state",
     );
@@ -47,6 +56,26 @@ fn native_baseline_matches_the_official_seed_417_24_hour_golden_exactly() {
         &golden["output"]["metrics"],
         "baseline metrics",
     );
+    let mut engine =
+        FarmEngine::new(417, golden["animalCount"].as_u64().unwrap() as usize).unwrap();
+    engine
+        .configure(serde_json::from_value(golden["configuration"].clone()).unwrap())
+        .unwrap();
+    let mut cursor = ParityCursor::default();
+    let mut trajectory = Vec::new();
+    let baseline_days = golden["horizon"]["value"].as_u64().unwrap().div_ceil(24);
+    for day in 1..=baseline_days {
+        engine.tick(24).unwrap();
+        let mut row = parity_state(&engine, &mut cursor);
+        row["day"] = json!(day);
+        trajectory.push(row);
+    }
+    assert_tolerant_json(
+        &Value::Array(trajectory),
+        &golden["trajectory"],
+        "baseline daily trajectory",
+    );
+    assert!(snapshot.hour == golden["output"]["state"]["hour"]);
 }
 
 #[test]
@@ -80,6 +109,7 @@ fn native_housing_comparison_matches_the_official_seed_2026_30_day_golden_exactl
         &golden["output"],
         "housing comparison",
     );
+    assert_native_provenance(&first.engine);
 
     let days_in_hours = 30 * 24;
     for arm in ["baseline", "scenario"] {
@@ -100,6 +130,99 @@ fn native_housing_comparison_matches_the_official_seed_2026_30_day_golden_exactl
             &format!("{arm} endpoint"),
         );
     }
+
+    let configs = [
+        serde_json::from_value::<riose_core::FarmConfig>(
+            manifest["inputs"]["baseline_config"].clone(),
+        )
+        .unwrap(),
+        serde_json::from_value::<riose_core::FarmConfig>(
+            manifest["inputs"]["scenario_config"].clone(),
+        )
+        .unwrap(),
+    ];
+    let mut engines = [
+        FarmEngine::from_snapshot(snapshot.clone()).unwrap(),
+        FarmEngine::from_snapshot(snapshot.clone()).unwrap(),
+    ];
+    engines[0].configure(configs[0].clone()).unwrap();
+    engines[1].configure(configs[1].clone()).unwrap();
+    let mut cursors = [ParityCursor::default(), ParityCursor::default()];
+    let mut trajectory = vec![json!({
+        "day": 0,
+        "baseline": parity_state(&engines[0], &mut cursors[0]),
+        "scenario": parity_state(&engines[1], &mut cursors[1]),
+    })];
+    for day in 1..=golden["horizon"]["value"].as_u64().unwrap() {
+        engines[0].tick(24).unwrap();
+        engines[1].tick(24).unwrap();
+        trajectory.push(json!({
+            "day": day,
+            "baseline": parity_state(&engines[0], &mut cursors[0]),
+            "scenario": parity_state(&engines[1], &mut cursors[1]),
+        }));
+    }
+    assert_tolerant_json(
+        &Value::Array(trajectory),
+        &golden["trajectory"],
+        "housing daily trajectory",
+    );
+}
+
+fn assert_native_provenance(engine: &riose_core::EngineMetadata) {
+    assert_eq!(engine.engine_version, env!("CARGO_PKG_VERSION"));
+    assert_eq!(
+        engine.build_id,
+        option_env!("RIOSE_BUILD_ID").unwrap_or(concat!("riose-core@", env!("CARGO_PKG_VERSION")))
+    );
+    assert_eq!(engine.model_status, "demonstrative_unvalidated");
+    assert_eq!(engine.provenance, "native-rust-core");
+    assert!(!engine.validated);
+}
+
+fn parity_state(engine: &FarmEngine, cursor: &mut ParityCursor) -> Value {
+    let mut snapshot = serde_json::to_value(engine.snapshot()).unwrap();
+    let current_events = snapshot["events"].as_array().unwrap().clone();
+    let event_delta = prepended_records(&cursor.events, &current_events);
+    cursor.events = current_events;
+    let animals = snapshot["animals"].as_array_mut().unwrap();
+    let mut history_deltas = serde_json::Map::new();
+    for animal in animals {
+        let id = animal["id"].to_string();
+        let history = animal["history"].as_array().unwrap().clone();
+        let previous = cursor.histories.get(&id).cloned().unwrap_or_default();
+        history_deltas.insert(
+            id.clone(),
+            Value::Array(appended_records(&previous, &history)),
+        );
+        cursor.histories.insert(id, history);
+        animal.as_object_mut().unwrap().remove("history");
+    }
+    snapshot.as_object_mut().unwrap().remove("events");
+    json!({
+        "snapshot": snapshot,
+        "metrics": serde_json::to_value(engine.metrics()).unwrap(),
+        "eventDelta": event_delta,
+        "historyDeltas": history_deltas,
+    })
+}
+
+fn appended_records(previous: &[Value], current: &[Value]) -> Vec<Value> {
+    for overlap in (1..=previous.len().min(current.len())).rev() {
+        if previous[previous.len() - overlap..] == current[..overlap] {
+            return current[overlap..].to_vec();
+        }
+    }
+    current.to_vec()
+}
+
+fn prepended_records(previous: &[Value], current: &[Value]) -> Vec<Value> {
+    for overlap in (1..=previous.len().min(current.len())).rev() {
+        if previous[..overlap] == current[current.len() - overlap..] {
+            return current[..current.len() - overlap].to_vec();
+        }
+    }
+    current.to_vec()
 }
 
 #[test]
@@ -166,6 +289,103 @@ fn endpoint_projection(engine: &FarmEngine) -> Value {
 
 fn assert_exact_json(actual: &Value, expected: &Value, path: &str) {
     compare_exact_json(actual, expected, path).unwrap_or_else(|error| panic!("{error}"));
+}
+
+fn assert_tolerant_json(actual: &Value, expected: &Value, path: &str) {
+    let tolerances: Value = serde_json::from_str(PARITY_TOLERANCES)
+        .expect("parity tolerance policy must be valid JSON");
+    assert_eq!(tolerances["format"], "riose-cross-engine-parity-tolerances");
+    assert_eq!(tolerances["version"], 1);
+    assert_eq!(tolerances["default"], "exact");
+    compare_tolerant_json(actual, expected, &mut Vec::new(), &tolerances, path)
+        .unwrap_or_else(|error| panic!("{error}"));
+}
+
+fn compare_tolerant_json(
+    actual: &Value,
+    expected: &Value,
+    path_parts: &mut Vec<String>,
+    tolerances: &Value,
+    display_path: &str,
+) -> Result<(), String> {
+    match (actual, expected) {
+        (Value::Number(actual), Value::Number(expected)) => {
+            let tolerance_key = match path_parts.as_slice() {
+                [.., parent, index] if index.parse::<usize>().is_ok() => format!("{parent}/*"),
+                [.., field] => field.clone(),
+                _ => String::new(),
+            };
+            if let Some(rule) = tolerances["floatingFields"].get(&tolerance_key) {
+                let actual = actual.as_f64().ok_or_else(|| {
+                    format!("{display_path}: non-finite or non-f64 actual number")
+                })?;
+                let expected = expected.as_f64().ok_or_else(|| {
+                    format!("{display_path}: non-finite or non-f64 expected number")
+                })?;
+                let absolute = rule["absolute"].as_f64().unwrap();
+                let relative = rule["relative"].as_f64().unwrap();
+                let allowed = absolute + relative * expected.abs();
+                if (actual - expected).abs() <= allowed {
+                    Ok(())
+                } else {
+                    Err(format!("{display_path}: numeric values differ ({actual} vs {expected}; tolerance {allowed})"))
+                }
+            } else if canonical_number(actual) == canonical_number(expected) {
+                Ok(())
+            } else {
+                Err(format!(
+                    "{display_path}: exact numeric values differ ({actual} vs {expected})"
+                ))
+            }
+        }
+        (Value::Object(actual), Value::Object(expected)) => {
+            if actual.len() != expected.len() {
+                return Err(format!("{display_path}: object field count differs"));
+            }
+            for (key, actual_value) in actual {
+                let expected_value = expected
+                    .get(key)
+                    .ok_or_else(|| format!("{display_path}.{key}: unexpected field"))?;
+                path_parts.push(key.clone());
+                let result = compare_tolerant_json(
+                    actual_value,
+                    expected_value,
+                    path_parts,
+                    tolerances,
+                    &format!("{display_path}.{key}"),
+                );
+                path_parts.pop();
+                result?;
+            }
+            Ok(())
+        }
+        (Value::Array(actual), Value::Array(expected)) => {
+            if actual.len() != expected.len() {
+                return Err(format!(
+                    "{display_path}: array lengths differ ({} vs {})",
+                    actual.len(),
+                    expected.len()
+                ));
+            }
+            for (index, (actual, expected)) in actual.iter().zip(expected).enumerate() {
+                path_parts.push(index.to_string());
+                let result = compare_tolerant_json(
+                    actual,
+                    expected,
+                    path_parts,
+                    tolerances,
+                    &format!("{display_path}[{index}]"),
+                );
+                path_parts.pop();
+                result?;
+            }
+            Ok(())
+        }
+        _ if actual == expected => Ok(()),
+        _ => Err(format!(
+            "{display_path}: values differ ({actual} vs {expected})"
+        )),
+    }
 }
 
 fn compare_exact_json(actual: &Value, expected: &Value, path: &str) -> Result<(), String> {
@@ -254,4 +474,29 @@ fn exact_json_comparison_normalizes_numeric_formatting_without_tolerance() {
 fn exact_json_comparison_preserves_fields_and_array_order() {
     assert!(compare_exact_json(&json!({"a": 1}), &json!({"b": 1}), "field set").is_err());
     assert!(compare_exact_json(&json!([1, 2]), &json!([2, 1]), "array order").is_err());
+}
+
+#[test]
+fn parity_tolerance_policy_is_field_specific_and_keeps_ordered_fields_exact() {
+    assert_tolerant_json(
+        &json!({"weight": 350.00000000001, "pastures": [12.00000000001]}),
+        &json!({"weight": 350.0, "pastures": [12.0]}),
+        "tolerated floating fields",
+    );
+    assert!(compare_tolerant_json(
+        &json!({"id": 1.0000000001}),
+        &json!({"id": 1}),
+        &mut Vec::new(),
+        &serde_json::from_str(PARITY_TOLERANCES).unwrap(),
+        "exact ID",
+    )
+    .is_err());
+    assert!(compare_tolerant_json(
+        &json!({"historyDeltas": {"1": ["first", "second"]}}),
+        &json!({"historyDeltas": {"1": ["second", "first"]}}),
+        &mut Vec::new(),
+        &serde_json::from_str(PARITY_TOLERANCES).unwrap(),
+        "history order",
+    )
+    .is_err());
 }

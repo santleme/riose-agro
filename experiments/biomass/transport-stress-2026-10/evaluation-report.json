@@ -1,0 +1,1927 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "completed",
+  "experiment": "Mendeley-only fixed OLS transport stress",
+  "epistemicStatus": {
+    "cohortPreviouslyReviewed": true,
+    "independentValidation": false,
+    "usesDryad": false,
+    "selectionOrTuning": false,
+    "interpretation": "All outcomes in this Mendeley cohort have been inspected in prior analyses. These are sensitivity and transport diagnostics on development data, not independent validation, and cannot promote a model or establish generalization beyond these two farms."
+  },
+  "input": {
+    "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+    "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+    "rows": 234,
+    "farms": [
+      "Poderosa",
+      "Santa Clara"
+    ],
+    "campaigns": [
+      "2018-11",
+      "2019-03"
+    ],
+    "spatialComponents": 13
+  },
+  "protocolSha256": "b45d5629f804f6f0347578694043e552de4313527757be78bd403c28ec062ec8",
+  "protocolPath": "experiments/diagnostics/biomass/preregister-transport-stress-2026-10.json",
+  "estimator": {
+    "id": "fixed_ols",
+    "class": "sklearn.linear_model.LinearRegression",
+    "fitIntercept": true,
+    "predictors": [
+      "sward_height_cm"
+    ],
+    "target": "dry_matter_yield_kg_dm_ha"
+  },
+  "leaveOneFarmOut": {
+    "folds": [
+      {
+        "fold": "farm=Poderosa",
+        "status": "scored",
+        "trainRows": 180,
+        "testRows": 54,
+        "rows": 54,
+        "maeKgDmHa": 1039.160396860857,
+        "rmseKgDmHa": 1348.8152637663413,
+        "biasPredictedMinusObservedKgDmHa": -840.6808127004588,
+        "trainHeightRangeCm": [
+          2.0,
+          48.0
+        ],
+        "testOutsideTrainRangeRows": 2
+      },
+      {
+        "fold": "farm=Santa Clara",
+        "status": "scored",
+        "trainRows": 54,
+        "testRows": 180,
+        "rows": 180,
+        "maeKgDmHa": 1078.6815984612103,
+        "rmseKgDmHa": 1204.3267795269196,
+        "biasPredictedMinusObservedKgDmHa": 977.1704183731283,
+        "trainHeightRangeCm": [
+          7.0,
+          56.0
+        ],
+        "testOutsideTrainRangeRows": 35
+      }
+    ],
+    "scoredRows": 234,
+    "coverage": 1.0,
+    "pooledMetrics": {
+      "rows": 234,
+      "maeKgDmHa": 1069.5613211688215,
+      "rmseKgDmHa": 1239.1665240476395,
+      "biasPredictedMinusObservedKgDmHa": 557.6662881253775
+    }
+  },
+  "leaveOneCampaignOut": {
+    "folds": [
+      {
+        "fold": "campaign=2018-11",
+        "status": "unscored_no_nonoverlap_training_points",
+        "trainRows": 0,
+        "testRows": 117,
+        "testCoordinateGroups": 117,
+        "removedOverlappingTrainingRows": 117,
+        "overlapCoordinateGroups": 0
+      },
+      {
+        "fold": "campaign=2019-03",
+        "status": "unscored_no_nonoverlap_training_points",
+        "trainRows": 0,
+        "testRows": 117,
+        "testCoordinateGroups": 117,
+        "removedOverlappingTrainingRows": 117,
+        "overlapCoordinateGroups": 0
+      }
+    ],
+    "scoredRows": 0,
+    "coverage": 0.0,
+    "pooledMetrics": null
+  },
+  "bufferSensitivity": {
+    "0": {
+      "rows": 234,
+      "maeKgDmHa": 647.8177827075959,
+      "rmseKgDmHa": 883.9130950946584,
+      "biasPredictedMinusObservedKgDmHa": -0.19855346935349724,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 647.817782707596,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 1535.4593956677566,
+          "rmseKgDmHa": 1868.2901303002302,
+          "biasPredictedMinusObservedKgDmHa": -951.4090405083201,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 52.70719647845744,
+          "rows": 18,
+          "maeKgDmHa": 611.2743373291967,
+          "rmseKgDmHa": 765.3751669993143,
+          "biasPredictedMinusObservedKgDmHa": -424.8569152114278,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 52.70719647845744,
+          "rows": 18,
+          "maeKgDmHa": 719.7218273505677,
+          "rmseKgDmHa": 794.6299517966281,
+          "biasPredictedMinusObservedKgDmHa": -564.0524597140321,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 692.3016809459737,
+          "rmseKgDmHa": 853.7376769057366,
+          "biasPredictedMinusObservedKgDmHa": 175.81640287023683,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 365.30711230942046,
+          "rmseKgDmHa": 446.46757901994624,
+          "biasPredictedMinusObservedKgDmHa": 364.3174496776965,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 381.52317492839705,
+          "rmseKgDmHa": 498.66172046569477,
+          "biasPredictedMinusObservedKgDmHa": -294.244665847428,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 960.6723703924858,
+          "rmseKgDmHa": 1277.8433126919924,
+          "biasPredictedMinusObservedKgDmHa": 52.36584706645855,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 133.707056898659,
+          "rows": 18,
+          "maeKgDmHa": 661.4334344638966,
+          "rmseKgDmHa": 808.8662278982256,
+          "biasPredictedMinusObservedKgDmHa": -55.40223621796027,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 364.614102970261,
+          "rmseKgDmHa": 473.51248247585306,
+          "biasPredictedMinusObservedKgDmHa": -84.45237839461034,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 178.8570362846032,
+          "rows": 18,
+          "maeKgDmHa": 414.1276483348995,
+          "rmseKgDmHa": 547.3560290987893,
+          "biasPredictedMinusObservedKgDmHa": 378.3137313436052,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 464.90855393174803,
+          "rmseKgDmHa": 617.711506238608,
+          "biasPredictedMinusObservedKgDmHa": 356.8063967442779,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 955.485186782507,
+          "rmseKgDmHa": 1252.696281031279,
+          "biasPredictedMinusObservedKgDmHa": -646.7728051445932,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 555.5175614851227,
+          "rmseKgDmHa": 738.1860712793796,
+          "biasPredictedMinusObservedKgDmHa": 193.7737220332184,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 557.3717095372958,
+          "rmseKgDmHa": 774.8701769525738,
+          "biasPredictedMinusObservedKgDmHa": -103.90684493408511,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 738.2638558778962,
+          "rmseKgDmHa": 980.9082160065356,
+          "biasPredictedMinusObservedKgDmHa": 103.50973799537806,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 677.6228575949577,
+          "rmseKgDmHa": 1007.3988263761655,
+          "biasPredictedMinusObservedKgDmHa": -14.467959203061312,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 622.2705756612858,
+          "rmseKgDmHa": 762.3100516131578,
+          "biasPredictedMinusObservedKgDmHa": 12.032365730967433,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 649.8088690857987,
+        "rmseKgDmHa": 887.0786426244597,
+        "biasPredictedMinusObservedKgDmHa": -8.619508350598634
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 556.6260265859088,
+        "rmseKgDmHa": 724.2515443095144,
+        "biasPredictedMinusObservedKgDmHa": 385.48118009167234
+      },
+      "outsideTrainingHeightSupportRows": 5
+    },
+    "25": {
+      "rows": 234,
+      "maeKgDmHa": 647.8177827075959,
+      "rmseKgDmHa": 883.9130950946584,
+      "biasPredictedMinusObservedKgDmHa": -0.19855346935349724,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 647.817782707596,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 1535.4593956677566,
+          "rmseKgDmHa": 1868.2901303002302,
+          "biasPredictedMinusObservedKgDmHa": -951.4090405083201,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 52.70719647845744,
+          "rows": 18,
+          "maeKgDmHa": 611.2743373291967,
+          "rmseKgDmHa": 765.3751669993143,
+          "biasPredictedMinusObservedKgDmHa": -424.8569152114278,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 52.70719647845744,
+          "rows": 18,
+          "maeKgDmHa": 719.7218273505677,
+          "rmseKgDmHa": 794.6299517966281,
+          "biasPredictedMinusObservedKgDmHa": -564.0524597140321,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 692.3016809459737,
+          "rmseKgDmHa": 853.7376769057366,
+          "biasPredictedMinusObservedKgDmHa": 175.81640287023683,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 365.30711230942046,
+          "rmseKgDmHa": 446.46757901994624,
+          "biasPredictedMinusObservedKgDmHa": 364.3174496776965,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 381.52317492839705,
+          "rmseKgDmHa": 498.66172046569477,
+          "biasPredictedMinusObservedKgDmHa": -294.244665847428,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 960.6723703924858,
+          "rmseKgDmHa": 1277.8433126919924,
+          "biasPredictedMinusObservedKgDmHa": 52.36584706645855,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 133.707056898659,
+          "rows": 18,
+          "maeKgDmHa": 661.4334344638966,
+          "rmseKgDmHa": 808.8662278982256,
+          "biasPredictedMinusObservedKgDmHa": -55.40223621796027,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 364.614102970261,
+          "rmseKgDmHa": 473.51248247585306,
+          "biasPredictedMinusObservedKgDmHa": -84.45237839461034,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 178.8570362846032,
+          "rows": 18,
+          "maeKgDmHa": 414.1276483348995,
+          "rmseKgDmHa": 547.3560290987893,
+          "biasPredictedMinusObservedKgDmHa": 378.3137313436052,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 464.90855393174803,
+          "rmseKgDmHa": 617.711506238608,
+          "biasPredictedMinusObservedKgDmHa": 356.8063967442779,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 955.485186782507,
+          "rmseKgDmHa": 1252.696281031279,
+          "biasPredictedMinusObservedKgDmHa": -646.7728051445932,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 555.5175614851227,
+          "rmseKgDmHa": 738.1860712793796,
+          "biasPredictedMinusObservedKgDmHa": 193.7737220332184,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 557.3717095372958,
+          "rmseKgDmHa": 774.8701769525738,
+          "biasPredictedMinusObservedKgDmHa": -103.90684493408511,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 738.2638558778962,
+          "rmseKgDmHa": 980.9082160065356,
+          "biasPredictedMinusObservedKgDmHa": 103.50973799537806,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 677.6228575949577,
+          "rmseKgDmHa": 1007.3988263761655,
+          "biasPredictedMinusObservedKgDmHa": -14.467959203061312,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 622.2705756612858,
+          "rmseKgDmHa": 762.3100516131578,
+          "biasPredictedMinusObservedKgDmHa": 12.032365730967433,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 649.8088690857987,
+        "rmseKgDmHa": 887.0786426244597,
+        "biasPredictedMinusObservedKgDmHa": -8.619508350598634
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 556.6260265859088,
+        "rmseKgDmHa": 724.2515443095144,
+        "biasPredictedMinusObservedKgDmHa": 385.48118009167234
+      },
+      "outsideTrainingHeightSupportRows": 5
+    },
+    "100": {
+      "rows": 234,
+      "maeKgDmHa": 649.6933926173374,
+      "rmseKgDmHa": 885.6957278164331,
+      "biasPredictedMinusObservedKgDmHa": -3.294263269822287,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 649.6933926173374,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 1535.4593956677566,
+          "rmseKgDmHa": 1868.2901303002302,
+          "biasPredictedMinusObservedKgDmHa": -951.4090405083201,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 210,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 114.1381121732435,
+          "rows": 18,
+          "maeKgDmHa": 620.2526366466286,
+          "rmseKgDmHa": 776.981403081822,
+          "biasPredictedMinusObservedKgDmHa": -445.3142724675388,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 210,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 114.13811124279108,
+          "rows": 18,
+          "maeKgDmHa": 735.1264568597737,
+          "rmseKgDmHa": 809.0396279036987,
+          "biasPredictedMinusObservedKgDmHa": -583.8393298640153,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 692.3016809459737,
+          "rmseKgDmHa": 853.7376769057366,
+          "biasPredictedMinusObservedKgDmHa": 175.81640287023683,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 365.30711230942046,
+          "rmseKgDmHa": 446.46757901994624,
+          "biasPredictedMinusObservedKgDmHa": 364.3174496776965,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 123.049370748865,
+          "rows": 18,
+          "maeKgDmHa": 381.52317492839705,
+          "rmseKgDmHa": 498.66172046569477,
+          "biasPredictedMinusObservedKgDmHa": -294.244665847428,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 960.6723703924858,
+          "rmseKgDmHa": 1277.8433126919924,
+          "biasPredictedMinusObservedKgDmHa": 52.36584706645855,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 133.707056898659,
+          "rows": 18,
+          "maeKgDmHa": 661.4334344638966,
+          "rmseKgDmHa": 808.8662278982256,
+          "biasPredictedMinusObservedKgDmHa": -55.40223621796027,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 124.08865783946406,
+          "rows": 18,
+          "maeKgDmHa": 364.614102970261,
+          "rmseKgDmHa": 473.51248247585306,
+          "biasPredictedMinusObservedKgDmHa": -84.45237839461034,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 178.8570362846032,
+          "rows": 18,
+          "maeKgDmHa": 414.1276483348995,
+          "rmseKgDmHa": 547.3560290987893,
+          "biasPredictedMinusObservedKgDmHa": 378.3137313436052,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 138.6872698467237,
+          "rows": 18,
+          "maeKgDmHa": 464.90855393174803,
+          "rmseKgDmHa": 617.711506238608,
+          "biasPredictedMinusObservedKgDmHa": 356.8063967442779,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 963.6128297247197,
+          "rmseKgDmHa": 1258.1405898164167,
+          "biasPredictedMinusObservedKgDmHa": -660.1875476132914,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 555.5175614851227,
+          "rmseKgDmHa": 738.1860712793796,
+          "biasPredictedMinusObservedKgDmHa": 193.7737220332184,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 558.7550746348923,
+          "rmseKgDmHa": 776.8112538262973,
+          "biasPredictedMinusObservedKgDmHa": -107.0385948998925,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 740.6317105997823,
+          "rmseKgDmHa": 982.5874619968331,
+          "biasPredictedMinusObservedKgDmHa": 100.45006836024788,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 677.6228575949577,
+          "rmseKgDmHa": 1007.3988263761655,
+          "biasPredictedMinusObservedKgDmHa": -14.467959203061312,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 625.7538512079483,
+          "rmseKgDmHa": 766.1429946011758,
+          "biasPredictedMinusObservedKgDmHa": 6.283190387239704,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 651.7254311769755,
+        "rmseKgDmHa": 888.8936706408791,
+        "biasPredictedMinusObservedKgDmHa": -11.78281006810821
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 556.6260265859088,
+        "rmseKgDmHa": 724.2515443095144,
+        "biasPredictedMinusObservedKgDmHa": 385.48118009167234
+      },
+      "outsideTrainingHeightSupportRows": 5
+    },
+    "250": {
+      "rows": 234,
+      "maeKgDmHa": 649.0422059438134,
+      "rmseKgDmHa": 887.5980636006326,
+      "biasPredictedMinusObservedKgDmHa": -4.365876605019708,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 649.0422059438133,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 1535.4593956677566,
+          "rmseKgDmHa": 1868.2901303002302,
+          "biasPredictedMinusObservedKgDmHa": -951.4090405083201,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 634.1964993171024,
+          "rmseKgDmHa": 795.7722602216095,
+          "biasPredictedMinusObservedKgDmHa": -477.14985914183904,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 809.2375545588342,
+          "rows": 18,
+          "maeKgDmHa": 750.3751225011903,
+          "rmseKgDmHa": 823.8558493753696,
+          "biasPredictedMinusObservedKgDmHa": -603.4007185134133,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 204,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 267.09851859253445,
+          "rows": 18,
+          "maeKgDmHa": 708.4189618285882,
+          "rmseKgDmHa": 861.4056938366951,
+          "biasPredictedMinusObservedKgDmHa": 221.87551045760617,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 336.3861908538195,
+          "rmseKgDmHa": 421.7529509788603,
+          "biasPredictedMinusObservedKgDmHa": 330.87120925598305,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2064.0767402320976,
+          "rows": 18,
+          "maeKgDmHa": 357.91305611473746,
+          "rmseKgDmHa": 475.89427811912196,
+          "biasPredictedMinusObservedKgDmHa": -252.36797169523606,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 194,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 250.2350068485523,
+          "rows": 18,
+          "maeKgDmHa": 960.048735954955,
+          "rmseKgDmHa": 1281.8574961588636,
+          "biasPredictedMinusObservedKgDmHa": 30.84634015254182,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 200,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 250.2354350641772,
+          "rows": 18,
+          "maeKgDmHa": 664.3585518409075,
+          "rmseKgDmHa": 813.455810873234,
+          "biasPredictedMinusObservedKgDmHa": -78.277936785946,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 204,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 256.21961977236253,
+          "rows": 18,
+          "maeKgDmHa": 360.06799869868917,
+          "rmseKgDmHa": 474.4411800371088,
+          "biasPredictedMinusObservedKgDmHa": -61.478121718320935,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 210,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 264.04547641267476,
+          "rows": 18,
+          "maeKgDmHa": 413.8621174581562,
+          "rmseKgDmHa": 547.1670346339172,
+          "biasPredictedMinusObservedKgDmHa": 377.6633417895845,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 204,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 267.0978931989216,
+          "rows": 18,
+          "maeKgDmHa": 466.17451045952737,
+          "rmseKgDmHa": 619.4955450977258,
+          "biasPredictedMinusObservedKgDmHa": 361.85417775219554,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 973.34367249535,
+          "rmseKgDmHa": 1265.2404200606134,
+          "biasPredictedMinusObservedKgDmHa": -677.319872721191,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 551.7517659783525,
+          "rmseKgDmHa": 737.5157104044113,
+          "biasPredictedMinusObservedKgDmHa": 197.52032222983163,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 557.1202185716728,
+          "rmseKgDmHa": 779.22086689214,
+          "biasPredictedMinusObservedKgDmHa": -109.71618795419303,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 740.9641933159539,
+          "rmseKgDmHa": 984.1115209238469,
+          "biasPredictedMinusObservedKgDmHa": 100.98443474415365,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 668.7194899977019,
+          "rmseKgDmHa": 1004.6174004069838,
+          "biasPredictedMinusObservedKgDmHa": -16.75786632597106,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 632.1759624690517,
+          "rmseKgDmHa": 773.3283783560686,
+          "biasPredictedMinusObservedKgDmHa": 6.255828870081491,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 651.4918776501901,
+        "rmseKgDmHa": 890.9715266263971,
+        "biasPredictedMinusObservedKgDmHa": -12.44596987800102
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 536.8472417917619,
+        "rmseKgDmHa": 716.2633089125824,
+        "biasPredictedMinusObservedKgDmHa": 365.70239529752547
+      },
+      "outsideTrainingHeightSupportRows": 5
+    },
+    "500": {
+      "rows": 234,
+      "maeKgDmHa": 651.5872496471054,
+      "rmseKgDmHa": 890.25846164459,
+      "biasPredictedMinusObservedKgDmHa": 3.1992571937978034,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 651.5872496471054,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 1535.4593956677566,
+          "rmseKgDmHa": 1868.2901303002302,
+          "biasPredictedMinusObservedKgDmHa": -951.4090405083201,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 652.4661376926366,
+          "rows": 18,
+          "maeKgDmHa": 634.1964993171024,
+          "rmseKgDmHa": 795.7722602216095,
+          "biasPredictedMinusObservedKgDmHa": -477.14985914183904,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 809.2375545588342,
+          "rows": 18,
+          "maeKgDmHa": 750.3751225011903,
+          "rmseKgDmHa": 823.8558493753696,
+          "biasPredictedMinusObservedKgDmHa": -603.4007185134133,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 192,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 534.1987647574978,
+          "rows": 18,
+          "maeKgDmHa": 715.634558002264,
+          "rmseKgDmHa": 866.2513470750023,
+          "biasPredictedMinusObservedKgDmHa": 242.87278874726405,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 336.3861908538195,
+          "rmseKgDmHa": 421.7529509788603,
+          "biasPredictedMinusObservedKgDmHa": 330.87120925598305,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2064.0767402320976,
+          "rows": 18,
+          "maeKgDmHa": 357.91305611473746,
+          "rmseKgDmHa": 475.89427811912196,
+          "biasPredictedMinusObservedKgDmHa": -252.36797169523606,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 176,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 512.9745433855534,
+          "rows": 18,
+          "maeKgDmHa": 963.4335833650625,
+          "rmseKgDmHa": 1289.0791127352752,
+          "biasPredictedMinusObservedKgDmHa": 37.52429804606754,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 168,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 502.90684879187586,
+          "rows": 18,
+          "maeKgDmHa": 664.7887583281183,
+          "rmseKgDmHa": 809.6109234043321,
+          "biasPredictedMinusObservedKgDmHa": -35.4239832961618,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 192,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 502.90684878401504,
+          "rows": 18,
+          "maeKgDmHa": 367.26464428027623,
+          "rmseKgDmHa": 486.2165840628701,
+          "biasPredictedMinusObservedKgDmHa": -58.460592062177625,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 196,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 512.9745433780242,
+          "rows": 18,
+          "maeKgDmHa": 406.42137481410373,
+          "rmseKgDmHa": 540.6783218382388,
+          "biasPredictedMinusObservedKgDmHa": 367.70050067276003,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 196,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 509.94170448808416,
+          "rows": 18,
+          "maeKgDmHa": 488.47352559379436,
+          "rmseKgDmHa": 648.3142409720446,
+          "biasPredictedMinusObservedKgDmHa": 396.6170389245366,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 973.34367249535,
+          "rmseKgDmHa": 1265.2404200606134,
+          "biasPredictedMinusObservedKgDmHa": -677.319872721191,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 555.0603227926321,
+          "rmseKgDmHa": 741.6725496620339,
+          "biasPredictedMinusObservedKgDmHa": 207.35499616829443,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 556.0342354637543,
+          "rmseKgDmHa": 776.5598881634797,
+          "biasPredictedMinusObservedKgDmHa": -104.37897641210766,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 747.1402638304567,
+          "rmseKgDmHa": 990.9969713148004,
+          "biasPredictedMinusObservedKgDmHa": 110.77749079970329,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 668.0435074587111,
+          "rmseKgDmHa": 1005.5715066195236,
+          "biasPredictedMinusObservedKgDmHa": -17.30534686318757,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 637.4818858085861,
+          "rmseKgDmHa": 777.9310785976703,
+          "biasPredictedMinusObservedKgDmHa": 20.774632099785272,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 654.2224936698778,
+        "rmseKgDmHa": 893.7184898533861,
+        "biasPredictedMinusObservedKgDmHa": -4.582425757362057
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 530.8930734041317,
+        "rmseKgDmHa": 714.0410101302544,
+        "biasPredictedMinusObservedKgDmHa": 359.6003363569198
+      },
+      "outsideTrainingHeightSupportRows": 5
+    },
+    "1000": {
+      "rows": 234,
+      "maeKgDmHa": 676.8490794717322,
+      "rmseKgDmHa": 929.3816703950355,
+      "biasPredictedMinusObservedKgDmHa": 3.8637372714805305,
+      "coverage": 1.0,
+      "equalSpatialBlockMaeKgDmHa": 676.849079471732,
+      "folds": [
+        {
+          "fold": "Poderosa/A2_T1_P1",
+          "status": "scored",
+          "trainRows": 180,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 6907.855180650856,
+          "rows": 18,
+          "maeKgDmHa": 1572.2213737453642,
+          "rmseKgDmHa": 1956.402674615157,
+          "biasPredictedMinusObservedKgDmHa": -1187.158530498241,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 2
+        },
+        {
+          "fold": "Poderosa/A2_T3_P1",
+          "status": "scored",
+          "trainRows": 180,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 6117.822406590057,
+          "rows": 18,
+          "maeKgDmHa": 709.5227322556467,
+          "rmseKgDmHa": 895.163230358853,
+          "biasPredictedMinusObservedKgDmHa": -621.9560894670408,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Poderosa/A2_T3_P2",
+          "status": "scored",
+          "trainRows": 180,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 5950.161165090457,
+          "rows": 18,
+          "maeKgDmHa": 835.7370845815602,
+          "rmseKgDmHa": 910.5378702060439,
+          "biasPredictedMinusObservedKgDmHa": -712.9278181360953,
+          "trainHeightRangeCm": [
+            2.0,
+            48.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T1_P6",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 408.6474439367875,
+          "rmseKgDmHa": 467.04110779568924,
+          "biasPredictedMinusObservedKgDmHa": 363.84892304962005,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T3_P17",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2841.6691174938246,
+          "rows": 18,
+          "maeKgDmHa": 772.7781560522023,
+          "rmseKgDmHa": 915.6460875812901,
+          "biasPredictedMinusObservedKgDmHa": 404.5988947608313,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P7b",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 1910.2324051195699,
+          "rows": 18,
+          "maeKgDmHa": 336.3861908538195,
+          "rmseKgDmHa": 421.7529509788603,
+          "biasPredictedMinusObservedKgDmHa": 330.87120925598305,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1a_T7_P8",
+          "status": "scored",
+          "trainRows": 198,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2064.0767402320976,
+          "rows": 18,
+          "maeKgDmHa": 357.91305611473746,
+          "rmseKgDmHa": 475.89427811912196,
+          "biasPredictedMinusObservedKgDmHa": -252.36797169523606,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P2",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2200.19403151009,
+          "rows": 18,
+          "maeKgDmHa": 988.7523700942761,
+          "rmseKgDmHa": 1319.1924902415865,
+          "biasPredictedMinusObservedKgDmHa": 156.73031873461963,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 3
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_P5",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2224.410311090678,
+          "rows": 18,
+          "maeKgDmHa": 672.8044449279388,
+          "rmseKgDmHa": 814.6415189495459,
+          "biasPredictedMinusObservedKgDmHa": 6.877321324485517,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PA",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2274.3034468139153,
+          "rows": 18,
+          "maeKgDmHa": 366.5599338594205,
+          "rmseKgDmHa": 503.72682710771625,
+          "biasPredictedMinusObservedKgDmHa": 71.60482561983518,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T2_PD",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2214.439999312054,
+          "rows": 18,
+          "maeKgDmHa": 400.82205242478125,
+          "rmseKgDmHa": 539.5217190216619,
+          "biasPredictedMinusObservedKgDmHa": 347.80423993355157,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T3_P13",
+          "status": "scored",
+          "trainRows": 126,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 2847.6546655518205,
+          "rows": 18,
+          "maeKgDmHa": 535.253101648626,
+          "rmseKgDmHa": 706.7952926733318,
+          "biasPredictedMinusObservedKgDmHa": 461.9355116066455,
+          "trainHeightRangeCm": [
+            4.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        },
+        {
+          "fold": "Santa Clara/A1b_T8_P1",
+          "status": "scored",
+          "trainRows": 216,
+          "testRows": 18,
+          "minimumTrainToTestDistanceMeters": 3174.4775184433256,
+          "rows": 18,
+          "maeKgDmHa": 841.6400926373569,
+          "rmseKgDmHa": 928.2597833467339,
+          "biasPredictedMinusObservedKgDmHa": 680.367750040288,
+          "trainHeightRangeCm": [
+            2.0,
+            56.0
+          ],
+          "testOutsideTrainRangeRows": 0
+        }
+      ],
+      "byFarm": [
+        {
+          "farm": "Poderosa",
+          "rows": 54,
+          "maeKgDmHa": 1039.160396860857,
+          "rmseKgDmHa": 1348.8152637663413,
+          "biasPredictedMinusObservedKgDmHa": -840.6808127004588,
+          "spatialBlocks": 3
+        },
+        {
+          "farm": "Santa Clara",
+          "rows": 180,
+          "maeKgDmHa": 568.1556842549946,
+          "rmseKgDmHa": 759.6608396616393,
+          "biasPredictedMinusObservedKgDmHa": 257.22710226306236,
+          "spatialBlocks": 10
+        }
+      ],
+      "byCampaign": [
+        {
+          "campaign": "2018-11",
+          "rows": 117,
+          "maeKgDmHa": 552.709741869484,
+          "rmseKgDmHa": 774.7228508739303,
+          "biasPredictedMinusObservedKgDmHa": -118.36791448607305,
+          "spatialBlocks": 13
+        },
+        {
+          "campaign": "2019-03",
+          "rows": 117,
+          "maeKgDmHa": 800.98841707398,
+          "rmseKgDmHa": 1061.746242219064,
+          "biasPredictedMinusObservedKgDmHa": 126.09538902903414,
+          "spatialBlocks": 13
+        }
+      ],
+      "byManagement": [
+        {
+          "management_type": "1",
+          "rows": 108,
+          "maeKgDmHa": 677.457081194961,
+          "rmseKgDmHa": 1039.3381105960457,
+          "biasPredictedMinusObservedKgDmHa": -40.04530186995042,
+          "spatialBlocks": 6
+        },
+        {
+          "management_type": "2",
+          "rows": 126,
+          "maeKgDmHa": 676.3279351375359,
+          "rmseKgDmHa": 823.5299900547743,
+          "biasPredictedMinusObservedKgDmHa": 41.50005653556421,
+          "spatialBlocks": 7
+        }
+      ],
+      "inTrainingHeightSupport": {
+        "rows": 229,
+        "maeKgDmHa": 679.0645462340524,
+        "rmseKgDmHa": 934.2710687881129,
+        "biasPredictedMinusObservedKgDmHa": -1.4830569605892616
+      },
+      "outsideTrainingHeightSupport": {
+        "rows": 5,
+        "maeKgDmHa": 575.380701757466,
+        "rmseKgDmHa": 668.1423836503451,
+        "biasPredictedMinusObservedKgDmHa": 248.7469131002772
+      },
+      "outsideTrainingHeightSupportRows": 5
+    }
+  },
+  "blockBootstrapAt100m": {
+    "resamplingUnit": "whole spatial block score",
+    "blocks": 13,
+    "farms": 2,
+    "replicates": 10000,
+    "seed": 20261013,
+    "observedEqualBlockMaeKgDmHa": 649.6933926173374,
+    "quantiles025_050_975": [
+      497.86293818840716,
+      642.969400189824,
+      839.9752150284377
+    ],
+    "interpretation": "Descriptive stability only, not a population confidence interval: 13 blocks nested in two farms."
+  },
+  "runtime": {
+    "leaveOneFarmOut": {
+      "fitSeconds": 0.0008966740006144391,
+      "predictSeconds": 0.00032009300048230216,
+      "fitCount": 2,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.44833700030721957,
+      "predictMicrosecondsPerRow": 1.3679188054799238
+    },
+    "spatial0m": {
+      "fitSeconds": 0.004341312000178732,
+      "predictSeconds": 0.0020419240008777706,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.3339470769368255,
+      "predictMicrosecondsPerRow": 8.726170943922096
+    },
+    "spatial25m": {
+      "fitSeconds": 0.00476896700092766,
+      "predictSeconds": 0.0020233309969626134,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.3668436154559738,
+      "predictMicrosecondsPerRow": 8.64671366223339
+    },
+    "spatial100m": {
+      "fitSeconds": 0.004501957000684342,
+      "predictSeconds": 0.001964336002856726,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.3463043846680263,
+      "predictMicrosecondsPerRow": 8.394598302806521
+    },
+    "spatial250m": {
+      "fitSeconds": 0.004617498001607601,
+      "predictSeconds": 0.0018837920015357668,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.3551921539698154,
+      "predictMicrosecondsPerRow": 8.050393168956267
+    },
+    "spatial500m": {
+      "fitSeconds": 0.005052556003647624,
+      "predictSeconds": 0.0021319620009307982,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.38865815412674026,
+      "predictMicrosecondsPerRow": 9.110948721926489
+    },
+    "spatial1000m": {
+      "fitSeconds": 0.004639053000573767,
+      "predictSeconds": 0.0018817320014932193,
+      "fitCount": 13,
+      "predictionRows": 234,
+      "fitMillisecondsPerFit": 0.3568502308133667,
+      "predictMicrosecondsPerRow": 8.041589749971022
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "scikitLearn": "1.5.2",
+    "gitHead": "a8ac3f7d5e8b8e162cebadfb7e0099b3dbf4a052",
+    "workingTreeDirtyAtRun": true
+  },
+  "legacyOofReconciliation": {
+    "path": "experiments/biomass/mendeley-spatial-cv/buffered-spatial-oof-predictions.csv",
+    "sha256": "a82f1eedeedd568657341534e82754a961b575bf61d2c0e3784f1b51094c69c6",
+    "rows": 234,
+    "sameSpatialBlocks": true,
+    "sameFoldIds": true,
+    "sameFarmAndCampaignAssignments": true,
+    "maximumOlsPredictionAbsoluteDifferenceKgDmHa": 4.96174834552221e-09,
+    "interpretation": "Post-fit implementation integrity comparison only; no model selection or tuning."
+  },
+  "groupingAudit": {
+    "componentDefinition": "Connected farm/field components; fields sharing an exact farm-coordinate are joined; campaign repeats remain in the same spatial block.",
+    "bufferValidation": "Every scored spatial fold asserted coordinate identity did not cross train/test and minimum geodesic separation met its preregistered distance.",
+    "campaignValidation": "Campaign train/test exact coordinate intersection was asserted empty.",
+    "100mOofAssignmentsUnique": true,
+    "100mScoredRows": 234,
+    "100mUniqueRows": 234,
+    "100mBlocks": 13
+  },
+  "limitations": [
+    "Mendeley outcomes were already reviewed; none of these results are pristine validation.",
+    "The 13 spatial components are nested in two farms and the two campaigns; no population-level uncertainty is claimed.",
+    "Height and biomass are observed at the same sampling points, and measurement order relative to clipping is undocumented.",
+    "A train-range support flag does not isolate extrapolation from farm, campaign, or management shifts.",
+    "No Dryad rows, predictions, metrics, or outcomes may be read by this experiment."
+  ],
+  "outputs": {
+    "predictions": "experiments/biomass/transport-stress-2026-10/predictions.csv",
+    "reportJson": "experiments/biomass/transport-stress-2026-10/evaluation-report.json",
+    "reportMarkdown": "experiments/biomass/transport-stress-2026-10/evaluation-report.md"
+  }
+}

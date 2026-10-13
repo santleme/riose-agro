@@ -1,0 +1,86 @@
+{
+  "domainExpertReview": {
+    "status": "pending_not_obtained",
+    "statement": "Fixture: no external expert review was performed.",
+    "reference": "expert-review.md",
+    "attributionNote": "Fixture decision is not an expert opinion."
+  },
+  "evidenceFiles": {
+    "public-manifest.json": {"doi": "10.0000/public", "license": "CC BY 4.0"},
+    "public-audit.json": {"studyDesign": "randomized block experiment", "coverage": {"animalCount": 6, "trialCount": 2, "missingDmiRows": 1}},
+    "private-manifest.json": {"access": "private"},
+    "private-audit.json": {"coverage": {"animalCount": 12}},
+    "no-label-manifest.json": {"license": "CC0-1.0"},
+    "no-label-audit.json": {"coverage": {"animals": 4}},
+    "no-license-manifest.json": {"license": null},
+    "no-license-audit.json": {"coverage": {"animals": 3}}
+  },
+  "sources": [
+    {
+      "id": "public-with-dmi",
+      "name": "Public source with documented DMI",
+      "manifest": "public-manifest.json",
+      "audit": "public-audit.json",
+      "decisionRef": "public-audit.json",
+      "access": "available_local",
+      "license": "CC BY 4.0",
+      "population": "Fixture cattle population",
+      "units": "DMI kg/day",
+      "missingness": "One DMI row is missing.",
+      "reportedFacts": {
+        "studyDesign": {"value": "randomized block experiment", "definition": "source-reported design", "reference": "public-audit.json#/studyDesign"},
+        "animals": {"value": 6, "definition": "animals", "reference": "public-audit.json#/coverage/animalCount"},
+        "trials": {"value": 2, "definition": "trials", "reference": "public-audit.json#/coverage/trialCount"},
+        "missingness": {"value": {"missingDmiRows": 1}, "definition": "source-reported missing DMI count", "reference": "public-audit.json#/coverage/missingDmiRows"}
+      },
+      "dmi": {"status": "conditional", "trainable": true, "reason": "Available DMI labels support a bounded component assessment."},
+      "adg": {"status": "ineligible", "trainable": false, "reason": "No ADG label is available."},
+      "permissibleUse": "DMI component assessment only."
+    },
+    {
+      "id": "private-source",
+      "name": "Private inaccessible source",
+      "manifest": "private-manifest.json",
+      "audit": "private-audit.json",
+      "decisionRef": "private-audit.json",
+      "access": "unavailable_or_not_reusable",
+      "license": "CC BY 4.0 stated for article; underlying rows unavailable",
+      "population": "Private fixture population",
+      "units": "DMI kg/day",
+      "missingness": "Individual outcomes unavailable.",
+      "dmi": {"status": "conditional", "trainable": true, "reason": "An outcome is described by the fixture."},
+      "adg": {"status": "ineligible", "trainable": false, "reason": "No ADG labels."},
+      "permissibleUse": "Literature context only."
+    },
+    {
+      "id": "source-without-label",
+      "name": "Source without DMI label",
+      "manifest": "no-label-manifest.json",
+      "audit": "no-label-audit.json",
+      "decisionRef": "no-label-audit.json",
+      "access": "available_local",
+      "license": "CC0-1.0",
+      "population": "Unlabeled fixture population",
+      "units": "ADG kg/day",
+      "missingness": "DMI outcome is not present.",
+      "dmi": {"status": "ineligible", "trainable": false, "reason": "No individual DMI outcome is present."},
+      "adg": {"status": "conditional", "trainable": true, "reason": "ADG labels are present."},
+      "permissibleUse": "ADG assessment only."
+    },
+    {
+      "id": "source-without-license",
+      "name": "Source with undocumented rights",
+      "manifest": "no-license-manifest.json",
+      "audit": "no-license-audit.json",
+      "decisionRef": "no-license-audit.json",
+      "access": "available_local",
+      "license": null,
+      "population": "Unlicensed fixture population",
+      "units": "DMI kg/day",
+      "missingness": "Not reported.",
+      "dmi": {"status": "conditional", "trainable": true, "reason": "DMI labels are present."},
+      "adg": {"status": "conditional", "trainable": true, "reason": "ADG labels are present."},
+      "permissibleUse": "No reuse until data rights are documented."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+name: Graphics screenshot regression
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/graphics-screenshot-regression.yml'
+      - 'graphics-poc/**'
+      # The PoC starts a simulation Worker whose initial herd state determines
+      # the sprites and positions captured by these screenshots.
+      - 'src/client/worker.js'
+      - 'src/client/engine.js'
+      - 'src/client/metabolism-wasm.js'
+      - 'src/client/environment-model.js'
+      - 'src/client/feeding-model.js'
+      - 'assets/**'
+      - 'schemas/visual-scene.schema.json'
+      - 'scripts/graphics-screenshot-regression.mjs'
+      - 'scripts/graphics-screenshot-utils.mjs'
+      - 'scripts/build-composer-scenes.mjs'
+      - 'scripts/build-graphics-poc.mjs'
+      - 'docs/architecture/graphics-screenshot-regressions.md'
+      - 'public/assets/**'
+      - 'tests/graphics-screenshot-*.test.js'
+      - 'tests/fixtures/graphics-screenshots-v1/**'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graphics-screenshot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Locate preinstalled Chrome/Chromium
+        shell: bash
+        run: |
+          for browser in /usr/bin/google-chrome /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$browser" ]]; then
+              echo "CHROME_BIN=$browser" >> "$GITHUB_ENV"
+              "$browser" --version
+              exit 0
+            fi
+          done
+          echo 'No Chrome/Chromium browser found on this runner image.' >&2
+          exit 1
+      - name: Build scenes and run pinned screenshot regressions
+        run: npm run test:graphics-screenshots

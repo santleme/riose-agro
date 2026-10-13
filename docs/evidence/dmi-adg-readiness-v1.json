@@ -1,0 +1,2041 @@
+{
+  "schemaVersion": "riose.dmi-adg-readiness/v1",
+  "version": "1.1.0",
+  "generator": "scripts/build_dmi_adg_readiness.py",
+  "purpose": "Reference-only readiness assessment for DMI/ADG datasets and separate scientific modules.",
+  "domainExpertReview": {
+    "status": "pending_not_obtained",
+    "statement": "Nenhum parecer zootécnico independente foi realizado; a fonte USDA/CPER continua identificada como yearling steers e não é evidência de vacas adultas.",
+    "reference": "docs/caso-zootecnico-demonstrativo.md",
+    "attributionNote": "A definição da pergunta exploratória foi aprovada pelo responsável do projeto; isso não é parecer de especialista. Nenhuma revisão independente foi realizada; a issue #22 foi encerrada como NOT_PLANNED e não é dependência para o uso exploratório."
+  },
+  "sources": [
+    {
+      "id": "dryad-finishing-steers",
+      "name": "Dryad finishing steers methane-model dataset",
+      "references": {
+        "manifest": "data/dryad-finishing-steers/manifest.json",
+        "audit": "docs/evidence/dryad-finishing-steers-audit.json",
+        "decision": "docs/evidence/engine-dmi-dryad-finishing-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.5061/dryad.qnk98sfsn",
+        "license": "CC0-1.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Five experiment-level groups; finishing-phase summaries, not paired daily trajectories",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/dryad-finishing-steers-audit.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": 446,
+          "definition": "unique Project+Animal keys; raw Animal IDs repeat across experiments",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/nUniqueProjectAnimalKeys"
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": 5,
+          "definition": "experiments",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/nExperiments"
+        }
+      },
+      "population": "Finishing/feedlot beef steers across five experiments.",
+      "units": "One animal-by-experiment summary row; DMI and ADG in kg/day.",
+      "missingness": {
+        "summary": "The linked audit reports 446 complete outcome rows; no daily paired trajectory.",
+        "documentedMetrics": {
+          "value": {
+            "missingByColumn": "all audited columns have zero missing values"
+          },
+          "definition": "audit's per-column missingByColumn counts",
+          "reference": "docs/evidence/dryad-finishing-steers-audit.json#/coverage/missingByColumn"
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Open individual experiment-level DMI is usable for a fixed-default finishing component diagnostic, but not pasture transfer or full-engine validation."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "ADG is reported for the same finishing cohort, but it is not the approved pasture population and is a phase summary."
+        }
+      },
+      "permissibleUse": "Limited finishing/feedlot component assessment; keep experiment IDs grouped and do not transfer conclusions to grazing."
+    },
+    {
+      "id": "dryad-grazing-yearlings",
+      "name": "Dryad grazing yearling steers",
+      "references": {
+        "manifest": "data/dryad-grazing-yearlings/manifest.json",
+        "audit": "docs/evidence/dryad-grazing-yearlings-audit.json",
+        "decision": "docs/evidence/issue-15-dryad-yearling-eligibility.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.5061/dryad.dbrv15fg8",
+        "license": "CC0-1.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Four independent experiments are described in the paper, but the row-level model file has no experiment/site/year grouping key",
+        "definition": "primary-source design and model-file grouping audit",
+        "reference": "docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/groupingEvidence"
+      },
+      "counts": {
+        "animals": {
+          "value": 154,
+          "definition": "unique model steer IDs",
+          "reference": "docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/uniqueModelSteerIds"
+        },
+        "animalObservationUnits": {
+          "value": 154,
+          "definition": "model rows with ADG and body weight",
+          "reference": "docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/modelRowsWithAdgAndBw"
+        },
+        "trials": {
+          "value": 4,
+          "definition": "independent experiments reported by the paper; individual rows cannot be assigned to these groups",
+          "reference": "docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/independentExperimentsInPrimarySource"
+        }
+      },
+      "population": "Yearling grazing steers.",
+      "units": "One ADG (kg/day) and body-weight (kg) record per steer; gas visits are repeated interval summaries, not repeated ADG.",
+      "missingness": {
+        "summary": "The 154-row model file has no DMI, animal-specific initial/final weights and elapsed days, engine-aligned inputs, or experiment/site/year key. Repeated gas records do not supply these ADG fields.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No DMI outcome is present."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Observed ADG and BW support descriptive cohort statistics only; model-ready paired engine inputs/outcome horizon and row-level experiment/site/year groups are absent, so this source cannot train or evaluate the current engine or support a grouped holdout."
+        }
+      },
+      "permissibleUse": "Separate descriptive yearling-steer ADG/BW cohort reference only; not a training or engine-validation source, not DMI evidence, and not adult-cow inference."
+    },
+    {
+      "id": "grastech-dairy-grazing",
+      "name": "GrASTech dairy grazing DMI",
+      "references": {
+        "manifest": "data/grastech-dairy-grazing-dmi/manifest.json",
+        "audit": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json",
+        "decision": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.57745/GTTJAR",
+        "license": "Etalab Open License 2.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "One farm and one experiment; evaluation groups are within-study Latin-square groups",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/grastech-dairy-grazing-dmi-engine-check.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Lactating dairy cows in a grazing supplementation experiment.",
+      "units": "See audit report; linked workbooks hold animal, period, feed and herbage measures.",
+      "missingness": {
+        "summary": "Use workbook-level missingness and coverage in the linked audit; not copied into this matrix.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Individual grazing-intake evidence is available, but dairy population and study-specific measurement limit transfer to beef cattle."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The cited audit does not establish an approved paired ADG target for this assessment."
+        }
+      },
+      "permissibleUse": "Dairy grazing DMI component analysis only; do not treat it as beef-cattle validation."
+    },
+    {
+      "id": "mdpi-angus-cows",
+      "name": "Angus cows on dormant-season rangeland",
+      "references": {
+        "manifest": "data/mdpi-angus-cow-grazing/manifest.json",
+        "audit": "docs/evidence/mdpi-angus-cow-grazing-audit.json",
+        "decision": "docs/evidence/mdpi-angus-cow-grazing-audit.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.3390/ani11061518",
+        "license": "CC-BY-4.0 (manifest/article supplement; inspect data terms before redistribution)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": 241,
+          "definition": "unique cow IDs across the two study years",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1UniqueCowIdsAcrossYears"
+        },
+        "animalObservationUnits": {
+          "value": 408,
+          "definition": "cow-season rows",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1CowSeasonRows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Pregnant commercial Angus cows, ages 1–10, on dormant mixed-grass rangeland.",
+      "units": "Cow-season weight change; ADG is derived over a study-reported 84-day period.",
+      "missingness": {
+        "summary": "Audit reports missing weight/BCS changes; 167 cow IDs recur across years, and GPS covers a subset/45 days.",
+        "documentedMetrics": {
+          "value": {
+            "weightChange": 5,
+            "bodyConditionScoreChange": 3
+          },
+          "definition": "rows missing weight-change and BCS-change values",
+          "reference": "docs/evidence/mdpi-angus-cow-grazing-audit.json#/coverage/s1MissingWeightChange"
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Total forage DMI is not observed; supplement intake is not total DMI."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Derived period weight change can serve as a descriptive cow-season reference, not verified daily ADG or an engine prediction target."
+        }
+      },
+      "permissibleUse": "Descriptive period-change reference with year+animal grouping and missingness disclosure."
+    },
+    {
+      "id": "pasture-dmi-triage-1770302",
+      "name": "Deployable DMI Prediction Using GPBoost, MLOps, and Flask",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/8"
+      },
+      "sourceIdentity": {
+        "doi": "10.3389/fanim.2026.1770302",
+        "license": "Open access article; no separate data license or dataset deposit identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Beef-cattle DMI cohorts; article reports animal-ID grouped train/validation/test partitions.",
+      "units": "Article-level model metrics only; no individual data file retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No public individual-level dataset or data-specific reuse terms were identified. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual ADG target file is publicly available in the reviewed source. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Peer-reviewed workflow/methods reference only; not external validation or calibration evidence."
+    },
+    {
+      "id": "pasture-dmi-triage-8262715",
+      "name": "Statistical Methodologies for Prediction of Beef Cattle Pasture DMI",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/0"
+      },
+      "sourceIdentity": {
+        "doi": "10.21203/rs.3.rs-8262715/v1",
+        "license": "CC BY 4.0 article license; individual records are confidential and not licensed for reuse."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "881 animals from 38 Brazilian studies; reported holdout is study-level.",
+      "units": "No reusable individual outcomes; article-level metrics are not source records.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Data availability statement identifies confidential private records; the article license does not cover underlying observations. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records or paired input rows were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Methods/literature context only; do not reconstruct records from tables or figures."
+    },
+    {
+      "id": "pasture-dmi-triage-ancp-nellore-1539056",
+      "name": "Nellore Feed-Efficiency GWAS Using ANCP Records",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/11"
+      },
+      "sourceIdentity": {
+        "doi": "10.3389/fgene.2025.1539056",
+        "license": "Open-access article; underlying ANCP records are private and no data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "23,170 Nellore young bulls and heifers from 301 feed-efficiency trials; pasture-based raising is reported, but these are not established mature beef cows.",
+      "units": "Automated DMI measurements in group-pen TMR trials; no public individual file retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Underlying ANCP observations are not publicly released, formal permission is required, and pen-based TMR intake does not match pasture field DMI for mature cows. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No public reusable mature-cow pasture ADG records and paired predictors were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Brazilian DMI research context only; do not treat young-bull/heifer TMR observations or article summaries as eligible pasture-cow labels."
+    },
+    {
+      "id": "pasture-dmi-triage-cabral-2012-pregnant-cows",
+      "name": "Levels of Supplementation for Grazing Pregnant Beef Cows During the Dry Season",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/14"
+      },
+      "sourceIdentity": {
+        "doi": "10.1590/S1516-35982012001200009",
+        "license": "The article is CC BY-NC 4.0; no public individual-record deposit or separate data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "28 pregnant crossbred beef cows, predominantly Zebu, grazing Brachiaria decumbens in Viçosa, Brazil; four supplement treatments with seven replicates each. Age is not reported; parity was considered.",
+      "units": "The study estimates individual pasture and supplement DMI, summed as total kg DM/animal/day over a marker-based digestibility period; only treatment-level means are published.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Population, pasture setting, and total-DMI outcome are relevant, but no cow-level source file, animal/trial keys, or data-specific reuse terms were found. Published treatment means are not individual training or validation rows. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article reports treatment-level weight-gain summaries, not reusable individual ADG rows with paired predictors. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant Brazilian mature-cow pasture-DMI method reference only; request the underlying records and reuse terms before reconsideration, and do not reconstruct rows from aggregates."
+    },
+    {
+      "id": "pasture-dmi-triage-cattlesat-2026",
+      "name": "CattleSat Cow-Calf Grazing Decision-Support Model",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/18"
+      },
+      "sourceIdentity": {
+        "doi": "10.3390/ani16111675",
+        "license": "CC BY 4.0 article; the article/supplement do not provide observed animal-level DMI records."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Modeled cow-calf grazing system using satellite-derived forage mass; the publication states that no human or animal subjects were used.",
+      "units": "Mechanistically generated DMI outputs for a case-study simulation; no measured animal-period labels or animal/trial IDs.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The cow-pasture framing is not an observed cohort: DMI is generated by model equations, and the source states that no animals were used. Simulated outputs cannot serve as supervised field labels or independent validation. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Modeled cow/calf performance outputs are not observed individual ADG records with paired field predictors. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Mechanistic and decision-support methods reference only; preserve its simulated provenance and do not treat outputs as observed animal data."
+    },
+    {
+      "id": "pasture-dmi-triage-etd-13250",
+      "name": "Differences in DMI in Grazing and Drylot Beef Cattle",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/1"
+      },
+      "sourceIdentity": {
+        "doi": "10.33915/etd.13250",
+        "license": "No separate open-data license for underlying data found on repository record."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "163 beef cattle across four experimental groups and two grazing seasons.",
+      "units": "No openly licensed individual DMI records retrieved; pasture DMI described as LSTM-estimated.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No openly licensed individual file; the pasture target described in the abstract is model-estimated rather than directly measured. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records with paired predictors were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Literature context only; do not score as independent pasture DMI validation."
+    },
+    {
+      "id": "pasture-dmi-triage-figshare-28801181",
+      "name": "Labeled Sensor Dataset of Beef Cattle Behavior on Desert Rangelands",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/10"
+      },
+      "sourceIdentity": {
+        "doi": "10.6084/m9.figshare.28801181.v2",
+        "license": "CC BY 4.0 for deposited behavior/sensor files; this does not create an absent DMI outcome."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "24 mature beef cows aged 4–9 years on desert rangelands, with per-animal sensor and minute-level behavior labels.",
+      "units": "Animal/time-level behavior observations; no total-DMI outcome or measurement protocol.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The publicly reusable files label sensor and grazing behavior but contain no individual total-DMI outcome in kg DM/animal/day. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual ADG outcome and paired predictors were identified in the behavior dataset. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Reusable behavior research only; do not infer DMI from behavior labels or treat them as intake measurements."
+    },
+    {
+      "id": "pasture-dmi-triage-livsci-2015",
+      "name": "Herbage Selection, Intake, and Digestibility in Grazing Beef Cattle",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/3"
+      },
+      "sourceIdentity": {
+        "doi": "10.1016/j.livsci.2015.01.020",
+        "license": "2015 Elsevier article copyright; no separate data-specific reuse license identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "20 nonlactating Angus cows averaging 50 months of age grazing mixed pasture.",
+      "units": "Article reports aggregate grazing herbage intake; no reusable per-cow total-DMI records retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article describes individual herbage-intake estimates but no downloadable row-level file or data-specific reuse terms were located; herbage intake also does not document the specified total-DMI outcome including supplement. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records or paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Strong adult-cow population and method reference only; do not reconstruct microdata from reported aggregates."
+    },
+    {
+      "id": "pasture-dmi-triage-nowakowski-2017",
+      "name": "Estimation of Pasture Herbage Intake by Beef Cattle Based on n-Alkanes as Markers",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/16"
+      },
+      "sourceIdentity": {
+        "doi": "10.5586/aa.1702",
+        "license": "CC BY article; no separate individual-data file or data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "16 beef cows continuously grazing permanent pastures in Poland.",
+      "units": "Marker-based pasture-herbage DMI estimates are reported in aggregate; total DMI including supplement and reusable cow-level rows/keys are unavailable.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No downloadable animal-level dataset or data-specific reuse terms were found, and total DMI including supplement is not established. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "European beef-cow pasture measurement-method reference only; do not reconstruct individual rows from article summaries."
+    },
+    {
+      "id": "pasture-dmi-triage-pampa-corte-thesis-2024",
+      "name": "Evaluation of Techniques and Markers for Intake Prediction in the Pampa Corte Model",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/17"
+      },
+      "sourceIdentity": {
+        "doi": "10.21203/rs.3.rs-8262715/v1",
+        "license": "AGRIS lists CC BY-NC-ND 4.0 for the thesis PDF; no separate animal-record dataset or data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "46 beef cows in two native-pasture trials in Uruguay; thesis also contains growing-cattle trials in southern Brazil.",
+      "units": "Cow outcome is forage organic-matter intake compared with Pampa Corte predictions, not total dry-matter intake including supplement; no separate row-level file located.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The outcome does not match total DMI and no separate reusable animal-level dataset was found; the thesis carries a no-derivatives license. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Growing-cattle ADG data are outside the mature-cow population and the individual records have no separate dataset deposit identified. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant Pampa Corte model-comparison context only; do not use as total-DMI training/validation or extract rows for this gate."
+    },
+    {
+      "id": "pasture-dmi-triage-skab279",
+      "name": "Herbage mass, genotype, and intake of beef cows on native grassland",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/2"
+      },
+      "sourceIdentity": {
+        "doi": "10.1093/jas/skab279",
+        "license": "Open full-text article; no separate individual-data license located."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "24–36 adult multiparous Hereford, Angus, and crossbred cows across eight paddocks and six periods.",
+      "units": "Article-level intake estimated by n-alkane ratio; no reusable individual file retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual file or data-specific reuse terms; do not reconstruct observations from tables or figures. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Reported calf ADG is not the approved adult-cattle target; individual records were not retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Peer-reviewed methods and population reference only."
+    },
+    {
+      "id": "pasture-dmi-triage-skaf429",
+      "name": "Forage Intake and Digesta Kinetics of Lactating Beef Cattle on Idaho Rangelands",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/4"
+      },
+      "sourceIdentity": {
+        "doi": "10.1093/jas/skaf429",
+        "license": "No data-specific reuse license for cow-level records identified; OSF example datasets/code are not study observations."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "24 2-year-old lactating Angus × Hereford cows grazing Idaho rangeland in spring and summer periods.",
+      "units": "Individual forage-intake estimates are described, but no public animal-period outcome file was retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article links example datasets and SAS code, not the grazing-cohort records; no individual data file or reuse terms were identified. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG outcome file and paired predictors were located. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Recent population/method reference only; exclude example model inputs from observed-outcome validation."
+    },
+    {
+      "id": "pasture-dmi-triage-skag054",
+      "name": "Characterization of Individual Beef Cattle Water Intake",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/6"
+      },
+      "sourceIdentity": {
+        "doi": "10.1093/jas/skag054",
+        "license": "CC BY-NC-ND 4.0 article license does not license underlying individual records."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "2,084 beef animals across two West Virginia sites, including grazing crossbred steers.",
+      "units": "Article reports daily DMI, body weight, and water records; no downloadable individual file retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Publication summaries are not training records; data-specific reuse license and public deposit were not located. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable ADG file or paired pasture covariates were located. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Methods and cohort context only; revisit if a public data deposit and reuse terms appear."
+    },
+    {
+      "id": "pasture-dmi-triage-skag133",
+      "name": "Generalizable LSTM Models for Beef Cattle DMI Under Grazing",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/7"
+      },
+      "sourceIdentity": {
+        "doi": "10.1093/jas/skag133",
+        "license": "CC BY-NC-ND 4.0 article license; underlying data is available only by author inquiry."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Individual DMI, BW, water, and climate records across grazing/drylot cohorts, including West Virginia crossbred steers.",
+      "units": "Article describes daily records and animal-grouped partitions; no public individual file retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Author-mediated access is not public reusable access; the article license does not license underlying records. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No public individual ADG file and aligned inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Methods/benchmark context only; do not reproduce results from aggregate metrics as external validation."
+    },
+    {
+      "id": "pasture-dmi-triage-soares-2026-holstein-gyr",
+      "name": "Canopy Structure, DMI, and Performance of Holstein × Gyr Cows on Urochloa Pastures",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/13"
+      },
+      "sourceIdentity": {
+        "doi": "10.1007/s11250-026-05169-5",
+        "license": "Open-access article; underlying study records are available only on reasonable request, with no public file or data-specific reuse license identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Ten lactating Holstein × Gyr dairy cows (five per treatment) in rotationally stocked Urochloa pastures; not mature beef cows.",
+      "units": "Pasture DMI estimated per grazing cycle; cow fecal samples were pooled by cow within each evaluation period. No public individual rows retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Ineligible for the frozen target: dairy cows are outside the mature beef-cow population, the reported outcome is pasture DMI rather than total DMI including forage and supplement, and the underlying rows are available only on reasonable request. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual ADG outcome file with paired eligible predictors was retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant tropical pasture-dairy methods reference only; do not use as target training or validation, or infer individual records from article summaries."
+    },
+    {
+      "id": "pasture-dmi-triage-sowell-2003-beef-cows",
+      "name": "Liquid Supplement and Forage Intake by Range Beef Cows",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/15"
+      },
+      "sourceIdentity": {
+        "doi": "10.2527/2003.811294x",
+        "license": "USDA-hosted article copy carries © 2003 ASAS, all rights reserved; no public data deposit or data-specific reuse license was identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "180 pregnant crossbred beef cows aged 2–6 years grazing native range across six pastures over two winters; individual forage and supplement intake components were estimated with markers.",
+      "units": "Forage and supplement DMI summaries are reported separately by year/treatment and age; linked animal-level total-DMI rows and IDs are unavailable.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable animal-level records, linked total-DMI rows, cow/pasture/year keys, or data-specific reuse terms were located. Published marginal summaries cannot be combined into individual outcomes; ages 4–6 and repeated animal identities would also need resolution. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Highly relevant U.S. mature beef-cow pasture-intake reference only; request deidentified linked rows and explicit reuse terms before reconsideration, and do not reconstruct rows from tables."
+    },
+    {
+      "id": "pasture-dmi-triage-teagasc-2019",
+      "name": "Developing and Validating a Model for DMI of Grazing Lactating Beef Cows",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/5"
+      },
+      "sourceIdentity": {
+        "doi": "10.1017/S1751731119001241",
+        "license": "Open-access article; no separate data license or public deposit for underlying cow-level records identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "94 DMI measurements on 106 beef/beef-dairy crossbred cows, with model results also reported on a separate 60-cow lactating herd.",
+      "units": "Published model results only; no downloadable individual DMI rows or animal/trial keys retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The institutional full-text and publisher abstract contain cohort metrics but no public microdata, row-level IDs, or data-specific reuse terms. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired outcome inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Highly relevant methods/population reference only; published regression metrics cannot substitute for cow-level records."
+    },
+    {
+      "id": "pasture-dmi-triage-teagasc-2019-williams",
+      "name": "Teagasc Grazing-Cow DMI Model Study",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/12"
+      },
+      "sourceIdentity": {
+        "doi": "10.1017/S1751731119001241",
+        "license": "Open-access article; no separate data license or public deposit for individual records was identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Calibration on 106 beef/beef-dairy crossbred cows and validation on 60 lactating beef cows in grazing herds.",
+      "units": "Article reports 94 calibration DMI measurements; outcome could not be confirmed as total DMI, and animal-period rows were unavailable.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No underlying records or data-specific reuse terms were located, and total DMI including supplement is not established by the reviewed accessible materials. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No public individual ADG file with paired eligible predictors was retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant grazing-cow methods reference only; require source rows, outcome definition, and explicit data reuse terms before reconsideration."
+    },
+    {
+      "id": "pasture-dmi-triage-usda-mindy-28071860",
+      "name": "USDA MINDY Grazing-Scenario Model Outputs",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/9"
+      },
+      "sourceIdentity": {
+        "doi": "10.15482/USDA.ADC/28071860.v1",
+        "license": "CC BY 4.0 for deposited files; intake outputs are simulated scenario results, not observed animal records."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Pregnant beef-cow grazing-system scenario modelled across 25 management/feed scenarios.",
+      "units": "Public scenario outputs include modelled DMI but no observed cow-period outcome labels.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "DMI values are generated by the grazing-system model, not measured individual-animal outcomes; simulation outputs cannot serve as supervised field labels or independent validation. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable observed individual ADG records with paired field predictors were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Reusable scenario/model-output context only; retain the simulated provenance and do not treat as observed animal data."
+    },
+    {
+      "id": "rothamsted-dairy-beef-grazing",
+      "name": "Rothamsted dairy-cross beef grazing",
+      "references": {
+        "manifest": "data/rothamsted/manifest.json",
+        "audit": "docs/evidence/rothamsted-adg-audit.json",
+        "decision": "docs/evidence/engine-adg-rothamsted-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.23637/rothamsted.00033688",
+        "license": "CC BY 4.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": 248,
+          "definition": "unique official tags",
+          "reference": "docs/evidence/rothamsted-adg-audit.json#/integrity/uniqueOfficialTagCount"
+        },
+        "animalObservationUnits": {
+          "value": 2362,
+          "definition": "animal-period rows",
+          "reference": "docs/evidence/rothamsted-adg-audit.json#/integrity/animalPeriodRowCount"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Young growing dairy-cross beef cattle in temperate pasture; not a mature-cow cohort.",
+      "units": "Animal-period daily liveweight gain kg/steer/day; repeated periods per official tag.",
+      "missingness": {
+        "summary": "Integrity, coverage and cohort details are in the linked audit report.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Open repeated animal-period ADG supports a bounded component diagnostic, but its population and predictors differ from the approved CPER case."
+        }
+      },
+      "permissibleUse": "Held-out cohort ADG component diagnostic only; not full-engine or adult-cow validation."
+    },
+    {
+      "id": "sdsu-individual-dmi",
+      "name": "SDSU individual DMI on rangeland",
+      "references": {
+        "manifest": "data/sdsu-individual-dmi/manifest.json",
+        "audit": "docs/evidence/sdsu-individual-dmi-audit.json",
+        "decision": "docs/evidence/sdsu-engine-dmi-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.3389/fvets.2025.1625448",
+        "license": "CC BY (manifest article/supplement; see source-specific evidence)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Hay-feeding experiment; derivative restricted to seven selected non-lactating cows",
+        "definition": "audit scope",
+        "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/scope/population_and_setting"
+      },
+      "counts": {
+        "animals": {
+          "value": 14,
+          "definition": "animals with intake tags; not the seven-tag selected complete-case cohort",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/coverage/animals_in_intake_with_tag"
+        },
+        "animalObservationUnits": {
+          "value": 1480,
+          "definition": "intake rows",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/coverage/intake_rows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Rangeland grazing cohort described in the linked audit; verify eligibility for any target population before use.",
+      "units": "Derived DMI kg/day from intake pounds and period mean dry-matter percentage; see manifest derivation.",
+      "missingness": {
+        "summary": "Rows without forage matching are retained with derived DMI blank; see audit and manifest.",
+        "documentedMetrics": {
+          "value": {
+            "selectedCompleteCaseRowsWithoutMatchingForagePeriod": 147
+          },
+          "definition": "audit quality-check count",
+          "reference": "docs/evidence/sdsu-individual-dmi-audit.json#/qualityChecks/selected_complete_case_intake_rows_without_matching_forage_period"
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Local source and derivation are available, but derived intake and population/period limitations require a component-only interpretation."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The paired source/audit does not establish an approved ADG outcome for the target use."
+        }
+      },
+      "permissibleUse": "DMI component diagnostic under the documented derivation; no claim of complete pasture-engine validation."
+    },
+    {
+      "id": "usda-ars-feedlot-dmi",
+      "name": "USDA-ARS individual feedlot DMI",
+      "references": {
+        "manifest": "data/usda-ars-individual-dmi-feedlot/manifest.json",
+        "audit": "docs/evidence/usda-ars-feedlot-dmi-audit.json",
+        "decision": "docs/evidence/usda-ars-feedlot-engine-dmi-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.17632/wcc46fhff8.1",
+        "license": "CC BY 4.0 (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Three published finishing/feedlot experiments; treatment allocation is not summarized in the combined audit",
+        "definition": "audit limitations",
+        "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/limitations"
+      },
+      "counts": {
+        "animals": {
+          "value": 149,
+          "definition": "animals across the three experiments",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimals"
+        },
+        "animalObservationUnits": {
+          "value": 150,
+          "definition": "animal-experiment rows",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nAnimalExperimentRows"
+        },
+        "trials": {
+          "value": 3,
+          "definition": "experiments",
+          "reference": "docs/evidence/usda-ars-feedlot-dmi-audit.json#/coverage/nExperiments"
+        }
+      },
+      "population": "Beef cattle in feedlot experiments.",
+      "units": "Individual feedlot DMI and supporting fields as listed in the audit.",
+      "missingness": {
+        "summary": "See linked audit report; do not infer missing values from publication summaries.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Open feedlot DMI can support a feedlot component assessment, not a pasture-DMI claim."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": false,
+          "reason": "Performance association is not sufficient by itself to establish a paired approved ADG validation target."
+        }
+      },
+      "permissibleUse": "Feedlot DMI component analysis within dataset license and attribution terms."
+    },
+    {
+      "id": "usda-cper-behavior",
+      "name": "USDA/CPER foraging behavior and weight gains",
+      "references": {
+        "manifest": "data/usda-cper/manifest.json",
+        "audit": "docs/evidence/usda-cper-association.json",
+        "decision": "docs/caso-zootecnico-demonstrativo.md",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.15482/USDA.ADC/1524788",
+        "license": "U.S. Public Domain (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "within-study observational association exploration",
+        "definition": "audit classification",
+        "reference": "docs/evidence/usda-cper-association.json#/classification"
+      },
+      "counts": {
+        "animals": {
+          "value": 33,
+          "definition": "unique animal IDs",
+          "reference": "docs/evidence/usda-cper-association.json#/coverage/uniqueAnimals"
+        },
+        "animalObservationUnits": {
+          "value": 36,
+          "definition": "animal-period rows",
+          "reference": "docs/evidence/usda-cper-association.json#/coverage/animalPeriodRows"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Yearling cattle on semi-arid Colorado rangeland; adult classification is unresolved.",
+      "units": "Animal-period ADG in kg/day; DMI is not present.",
+      "missingness": {
+        "summary": "See linked audit report; source has repeated animal-period observations.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Suitable only for the approved exploratory association/component scope; yearling classification, observational design and repeated animal keys constrain generalization."
+        }
+      },
+      "permissibleUse": "Exploratory observational ADG/pastejo analysis; no causal claim, adult-cow claim, or full-engine validation."
+    },
+    {
+      "id": "usda-cper-ltgi",
+      "name": "USDA/CPER long-term grazing intensity weight gains",
+      "references": {
+        "manifest": "data/usda-cper-ltgi-2000-2019/manifest.json",
+        "audit": "docs/evidence/usda-cper-ltgi-audit.json",
+        "decision": "docs/evidence/engine-adg-usda-cper-ltgi-check.json",
+        "sourceAssessment": null
+      },
+      "sourceIdentity": {
+        "doi": "10.15482/USDA.ADC/1528520",
+        "license": "U.S. Public Domain (manifest)"
+      },
+      "access": "available_local",
+      "studyDesign": {
+        "value": "Grazing-intensity study with one pasture replication per treatment",
+        "definition": "audit limitation; not a causal replicated treatment design",
+        "reference": "docs/evidence/usda-cper-ltgi-audit.json#/limitations/0"
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": 1283,
+          "definition": "unique animal-season keys; not a unique-animal count",
+          "reference": "docs/evidence/usda-cper-ltgi-audit.json#/coverage/uniqueAnimalSeasonKeys"
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Yearling cattle (heifers and steers) managed under grazing intensities, 2000–2019.",
+      "units": "One animal-season row; entry/exit weights converted to kg; derived ADG kg/day.",
+      "missingness": {
+        "summary": "Exclusions, repeated keys and measurement protocol changes are described in the audit report.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual DMI outcome is present."
+        },
+        "adg": {
+          "status": "conditional",
+          "trainable": true,
+          "reason": "Public individual seasonal gain supports a bounded ADG component diagnostic; it is not a daily trajectory or replicated causal treatment experiment."
+        }
+      },
+      "permissibleUse": "Bounded ADG component assessment with year/pasture/animal key discipline; not full-engine or causal treatment validation."
+    }
+  ],
+  "processing": {
+    "sourceCount": 28,
+    "inputFileCount": 48,
+    "elapsedSeconds": 0.025229,
+    "elapsedTimeKind": "observed_wall_clock_seconds",
+    "componentAssessmentCount": 7
+  },
+  "componentAssessments": [
+    {
+      "id": "adult-beef-cow-pasture-total-dmi-gate",
+      "module": "adult_beef_cow_pasture_total_dmi",
+      "decision": "NO_GO",
+      "source": {
+        "doi": null,
+        "audit": "docs/evidence/dmi-baseline-no-go-2026-10.json",
+        "candidateTriage": "docs/evidence/open-scientific-data-discovery-2026-10.md",
+        "access": "no qualifying public row-level cohort obtained",
+        "license": "no qualifying source with applicable reuse rights"
+      },
+      "population": "Target is mature beef cows grazing pasture; no candidate currently passes the complete gate.",
+      "target": "Individual total DMI, measured or scientifically eligible estimate, kg DM/animal/day; forage plus supplement where applicable.",
+      "groups": [
+        "animal_id",
+        "trial_or_herd",
+        "farm_or_site"
+      ],
+      "repeatedDimensions": [
+        "animal_period"
+      ],
+      "metrics": {
+        "eligibleCohorts": 0,
+        "decision": "NO_GO; no training or validation permitted for the original target",
+        "basis": "No source simultaneously has retrieved records, compatible target/population, known units, group keys, reusable license, and defensible independent evaluation."
+      },
+      "limitations": [
+        "Open article access is not evidence that underlying individual data are public or reusable.",
+        "Dairy, yearling, feedlot, estimated non-total DMI, aggregate-only, and simulated cohorts do not satisfy this target.",
+        "BR-CORTE 2023 Eq. 2.6 remains available for conditional scenarios in its published growing-Zebu supplemented-pasture domain when ADG is supplied; it does not establish adult-cow individual-DMI accuracy.",
+        "This does not prevent equation-based simulation or progress on separate biomass, behavior, or ADG modules."
+      ],
+      "references": [
+        "docs/evidence/dmi-baseline-no-go-2026-10.json",
+        "docs/evidence/open-scientific-data-discovery-2026-10.md",
+        "docs/evidence/br-corte-pasture-dmi-domain-audit-2026-10.md"
+      ]
+    },
+    {
+      "id": "dryad-mob-rotational-biomass",
+      "module": "forage_biomass",
+      "decision": "CONDITIONAL",
+      "source": {
+        "doi": "10.5061/dryad.79cnp5ht4",
+        "manifest": "data/dryad-mob-rotational-biomass/manifest.json",
+        "audit": "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json",
+        "access": "public_anonymous_downloaded_and_checksums_verified",
+        "license": "CC0-1.0 (Dryad API record)"
+      },
+      "population": "Cool-season grass-legume pasture grazed by yearling beef cattle at one northeastern-US research farm; no animals are observed in this file.",
+      "target": "Pre-grazing forage mass (PGFM), kg/ha; paddock-time mean over available quadrats, paired with paddock-level pre-grazing height in cm.",
+      "groups": [
+        "treatment",
+        "replicate_paddock"
+      ],
+      "repeatedDimensions": [
+        "calendar_year",
+        "julian_day"
+      ],
+      "metrics": {
+        "datasetRows": 64,
+        "independentGroups": 8,
+        "missingTargetSourceSlots": 17,
+        "selectedModel": "height-only OLS selected on 13-fold 100 m-buffered Mendeley development CV",
+        "externalRows": 64,
+        "externalMaeKgDmHa": 2507.1157652653906,
+        "externalRmseKgDmHa": 2986.389260697643,
+        "externalBiasPredictedMinusObservedKgDmHa": 2094.7279551697575,
+        "inSupportRows": 40,
+        "inSupportMaeKgDmHa": 1659.2452528855429,
+        "aboveSupportRows": 24,
+        "aboveSupportMaeKgDmHa": 3920.23328589847,
+        "modelEvaluation": "completed single-cohort external evaluation; not calibration or broad validation"
+      },
+      "limitations": [
+        "Only eight paddocks recur over time; every split must preserve paddock groups.",
+        "Biomass and height are aligned only after the documented paddock-time aggregation.",
+        "The Mendeley sampling-point target and Dryad paddock-time quadrat mean are not identical sampling estimands.",
+        "All 24 above-Mendeley-height-support rows are MOB treatment; support status is confounded with management, so the large above-support error cannot be attributed to extrapolation alone.",
+        "The external bias is strongly positive even within height support; overall MAE is 2507.1 kg DM/ha and in-support MAE is 1659.2 kg DM/ha.",
+        "Temperate US pasture does not validate Brazilian tropical pasture predictions.",
+        "Not animal DMI, ADG, or full-engine evidence."
+      ],
+      "references": [
+        "data/dryad-mob-rotational-biomass/manifest.json",
+        "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json",
+        "experiments/biomass/dryad-external/evaluation-report.json"
+      ]
+    },
+    {
+      "id": "perea-rangeland-behavior",
+      "module": "behavior_classification",
+      "decision": "ELIGIBLE",
+      "source": {
+        "doi": "10.6084/m9.figshare.28801181.v2",
+        "audit": "docs/evidence/perea-rangeland-behavior-audit.json",
+        "evaluation": "docs/evidence/perea-behavior-grouped-evaluation.json",
+        "access": "public_downloaded_local",
+        "license": "CC BY 4.0"
+      },
+      "population": "24 beef cattle across four breeds at two New Mexico ranches; sampled daylight sessions in summer/fall 2022.",
+      "target": "Human-reviewed minute-level behavior class (GR, RE, RU, WA) from a single motion-index predictor; 8,864 analysis rows after the predeclared duplicate/conflicting-label policy.",
+      "groups": [
+        "breed",
+        "animal_id"
+      ],
+      "repeatedDimensions": [
+        "animal_minute",
+        "sampled_session"
+      ],
+      "metrics": {
+        "evaluation": "nested animal-grouped diagnostic; six outer folds, no animal overlap",
+        "nestedRows": 5582,
+        "nestedAnimalsInOuterFolds": 24,
+        "selectedCandidatesAcrossOuterFolds": {
+          "cart_depth_4": 4,
+          "temporal_logistic_c_10": 2
+        },
+        "nestedEqualAnimalMeanF1_RE_RU": 0.4025871778670964,
+        "nestedEqualAnimalMacroF1": 0.665958419440892,
+        "nestedEqualAnimalRecall_RE": 0.3081198933322601,
+        "nestedEqualAnimalRecall_RU": 0.7265047037876734,
+        "nestedObservationWeightedAccuracy": 0.813686850591186,
+        "modelEvaluation": "nested within-source exploratory evaluation; not external validation"
+      },
+      "previousStaticGroupedOof": {
+        "sourceReport": "docs/evidence/perea-behavior-grouped-evaluation.json",
+        "rows": 8864,
+        "model": "single motion-index multinomial logistic regression",
+        "equalAnimalAccuracy": 0.741130619912341,
+        "equalAnimalBalancedAccuracy": 0.7200270840148827,
+        "equalAnimalMacroF1": 0.6642230410345241,
+        "restingRecall": 0.25444948829835656,
+        "interpretation": "prior static grouped-OOF diagnostic; these values are not metrics for the nested-selected model"
+      },
+      "limitations": [
+        "Breed is perfectly confounded with ranch/site in the documented source structure.",
+        "RE recall is low; the main confusion is resting versus ruminating.",
+        "Nested OOF results are exploratory within this source and reuse both ranches across outer folds; they do not establish performance at a new ranch.",
+        "Sampled sessions do not represent full-day activity budgets or whole-season behavior.",
+        "Behavior classification does not validate DMI consumption, ADG, BR-CORTE, or the full Riose engine."
+      ],
+      "references": [
+        "docs/evidence/perea-rangeland-behavior-audit.json",
+        "docs/evidence/perea-behavior-grouped-evaluation.json",
+        "docs/evidence/perea-behavior-oof-diagnostic.json",
+        "experiments/diagnostics/behavior/preregister-perea-nested-animal-evaluation-2026-10.json",
+        "experiments/behavior/perea-nested-animal/results.json"
+      ]
+    },
+    {
+      "id": "precision-beef-90s-instrument-agreement",
+      "module": "behavior_instrument_agreement",
+      "decision": "CONDITIONAL",
+      "source": {
+        "doi": "10.5281/zenodo.4064802",
+        "manifest": "data/precision-beef/manifest.json",
+        "processingReport": "data/precision-beef/processing-report-90s.json",
+        "alignmentAudit": "data/precision-beef/alignment-audit.json",
+        "evaluation": "experiments/behavior/precision-beef-instrument-agreement/results-90s.json",
+        "access": "public_downloaded_checksums_verified",
+        "license": "CC BY 4.0"
+      },
+      "population": "18 housed finishing beef steers in the Precision Beef source cohort; source split holds animals 04, 10, and 11 for test.",
+      "target": "90-second majority behavior class inferred from the RumiWatch halter; collar accelerometer summary features predict instrument-derived labels.",
+      "groups": [
+        "animal_id",
+        "farm_trial_id"
+      ],
+      "repeatedDimensions": [
+        "90_second_window",
+        "animal"
+      ],
+      "metrics": {
+        "sourceFilesDownloadedAndChecksummed": 37,
+        "processedParquets": 18,
+        "unionWindows": 138453,
+        "eligibleWindows": 138118,
+        "scoringRule": "Exclude partial boundary windows, tied/invalid labels, nonfinite collar features, and either-stream counts below 800 of 900 nominal samples.",
+        "developmentAnimals": 15,
+        "developmentLeaveOneAnimalOutMacroF1": 0.6561634775497532,
+        "sourceTestAnimals": [
+          "04",
+          "10",
+          "11"
+        ],
+        "sourceTestRows": 18866,
+        "sourceTestRandomForestMacroF1": 0.6558422947305994,
+        "sourceTestRandomForestBalancedAccuracy": 0.7125059032164268,
+        "sourceTestRandomForestAccuracy": 0.6755539064984628,
+        "sourceTestMajorityBaselineMacroF1": 0.21990148716491428,
+        "sourceTestMajorityBaselineAccuracy": 0.49220820523693415,
+        "modelEvaluation": "reproducible instrument-agreement diagnostic on the source-provided animal split; test animals have appeared in the associated publication and are not an independent literature-level holdout"
+      },
+      "limitations": [
+        "The prediction target is a RumiWatch instrument-derived majority label, not video-confirmed human ground truth.",
+        "The primary paper states time alignment was verified but does not specify row pairing or clock-offset corrections; processing uses README-anchored shared wall-clock bins and must not be interpreted as proof of exact synchronization.",
+        "The cohort consists of housed finishing steers; it does not evaluate grazing behavior or transport to farms/ranches.",
+        "This behavior result does not measure DMI or ADG and does not validate BR-CORTE or the Riose engine.",
+        "Animals 04, 10, and 11 are the source-provided test split, not a newly collected or literature-independent holdout."
+      ],
+      "references": [
+        "data/precision-beef/manifest.json",
+        "data/precision-beef/alignment-audit.json",
+        "data/precision-beef/processing-report-90s.json",
+        "experiments/behavior/precision-beef-instrument-agreement/amendment-2026-10-13.md",
+        "experiments/behavior/precision-beef-instrument-agreement/results-90s.json"
+      ]
+    },
+    {
+      "id": "usda-cper-cgrec-adg-transport",
+      "module": "adg_transport_diagnostic",
+      "decision": "CONDITIONAL",
+      "source": {
+        "doi": "10.15482/USDA.ADC/1524719",
+        "audit": "docs/evidence/usda-cgrec-longterm-audit.json",
+        "evaluation": "docs/evidence/engine-adg-usda-cgrec-transport-check.json",
+        "access": "public_local",
+        "license": "U.S. Public Domain"
+      },
+      "population": "291 eligible yearling steers at CGREC, North Dakota; years 1989, 1994, and 2015.",
+      "target": "Observed endpoint ADG = (final weight - initial weight) / ADG_DAYS, kg/head/day.",
+      "groups": [
+        "animal_tag",
+        "year",
+        "pasture"
+      ],
+      "repeatedDimensions": [
+        "not_applicable_to_eligible_steer_rows"
+      ],
+      "metrics": {
+        "evaluation": "historical external-site transport diagnostic; already consulted, not a fresh final holdout",
+        "defaultEngineMaeKgHeadDay": 0.5396938859151102,
+        "cperScaledEngineMaeKgHeadDay": 0.2221192500940076,
+        "calibratedOnCgrec": false,
+        "modelSelectionAllowed": false
+      },
+      "limitations": [
+        "The CPER scale used for comparison was fitted on CPER development data; the CGREC data have already been consulted.",
+        "Engine runs used illustrative pasture settings without observed forage, weather, or supplementation inputs.",
+        "Yearling steers do not establish adult-cow performance or mature-cow DMI validity.",
+        "This is an ADG component diagnostic only, not full-engine validation."
+      ],
+      "references": [
+        "docs/evidence/usda-cgrec-longterm-audit.json",
+        "docs/evidence/engine-adg-usda-cgrec-transport-check.json"
+      ]
+    },
+    {
+      "id": "usda-cper-ltgi-internal-adg",
+      "module": "adg_internal_development",
+      "decision": "CONDITIONAL",
+      "source": {
+        "doi": "10.15482/USDA.ADC/1528520",
+        "audit": "docs/evidence/usda-cper-ltgi-audit.json",
+        "evaluation": "experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+        "protocol": "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
+        "access": "public_local",
+        "license": "U.S. Public Domain"
+      },
+      "population": "CPER yearling steers, development years 2009–2013; 320 rows before and 302 after identity-proxy purge for fold training, with 320 OOF rows scored.",
+      "target": "Endpoint ADG = (final weight - initial weight) / grazing days, kg/head/day.",
+      "groups": [
+        "year",
+        "owner_tag_color_tag_identity_proxy"
+      ],
+      "repeatedDimensions": [
+        "animal_identity_across_years"
+      ],
+      "metrics": {
+        "evaluation": "leave-one-year-out internal development CV with matching identity proxies purged from training",
+        "oofRows": 320,
+        "referenceCandidate": "M0 fold-training mean",
+        "M0PooledMaeKgHeadDay": 0.22092262449947703,
+        "M0PooledRmseKgHeadDay": 0.29833995811165487,
+        "M0PooledBiasPredictedMinusObservedKgHeadDay": 0.0013676331085086392,
+        "selectedCandidate": null,
+        "anyCandidatePassedAdvancementRule": false
+      },
+      "limitations": [
+        "This is internal CPER development evidence, not external transport or a final holdout.",
+        "Only five year blocks; nominal confidence or prediction-interval coverage is not justified.",
+        "One remaining pasture replicate per treatment; engine inputs omit observed forage, weather, breed, and supplementation.",
+        "Yearling-steer ADG does not validate adult-cow DMI or the full engine."
+      ],
+      "references": [
+        "docs/evidence/usda-cper-ltgi-audit.json",
+        "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
+        "experiments/diagnostics/adg/cper-internal-cv-2026-10.json"
+      ]
+    },
+    {
+      "id": "xgain-cattle-hourly-behavior",
+      "module": "behavior_descriptive_profiles",
+      "decision": "CONDITIONAL",
+      "source": {
+        "doi": "10.5281/zenodo.15600573",
+        "manifest": "data/xgain-cattle-behavior/manifest.json",
+        "quality": "docs/evidence/xgain-hourly-behavior-quality-2026-10.json",
+        "access": "public_anonymous_downloaded_and_md5_verified",
+        "license": "Zenodo metadata says CC BY 4.0; embedded README says CC BY-NC (conflict)",
+        "reuseStatus": "not cleared for commercial training"
+      },
+      "population": "10 adult lactating Holstein cows with pasture access at ILVO, Belgium.",
+      "target": "Hourly counts of one-minute classifier outputs for grazing, ruminating, resting, and other activity; not human reference labels.",
+      "groups": [
+        "animal_id"
+      ],
+      "repeatedDimensions": [
+        "hour",
+        "calendar_day"
+      ],
+      "metrics": {
+        "records": 5760,
+        "animals": 10,
+        "hoursPerAnimal": 576,
+        "missingValues": 0,
+        "duplicateAnimalHourKeys": 0,
+        "predictiveMetrics": "not_available; no independent human reference outcomes in archive"
+      },
+      "limitations": [
+        "The released outcomes are decision-tree predictions; raw IMU and human-reference labels are absent.",
+        "License conflict means commercial training is not cleared.",
+        "Source time zone is unspecified; preserve timestamps as naive local time.",
+        "Descriptive profiles and ingestion tests only; no classifier validation, DMI, or ADG assessment."
+      ],
+      "references": [
+        "data/xgain-cattle-behavior/manifest.json",
+        "docs/evidence/xgain-hourly-behavior-quality-2026-10.json"
+      ]
+    }
+  ]
+}

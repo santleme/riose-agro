@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "registered_before_fitting",
+  "registeredAt": "2026-10-13",
+  "purpose": "Exploratory post-baseline model-family development on an already inspected within-source cohort; not confirmatory or independent validation.",
+  "source": {
+    "doi": "10.6084/m9.figshare.28801181.v2",
+    "license": "CC BY 4.0",
+    "file": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "md5": "7cd143e8cccc79a5e159eaa83428529f",
+    "analysisRows": 5582,
+    "animals": 24,
+    "labels": ["GR", "RE", "RU", "WA"]
+  },
+  "features": "The common temporally complete rows and [MI_t, MI_t-1, MI_t-2, MI_t-3, MI_t-4] generated only from consecutive one-minute observations within an animal, exactly as in the frozen prior nested evaluation. No labels, future values, identifiers, breed, or ranch are predictors.",
+  "folds": {
+    "outer": "Use the six frozen animal-level outer assignments in experiments/diagnostics/behavior/preregister-perea-nested-animal-evaluation-2026-10.json; each animal is test exactly once.",
+    "inner": "Within each outer training set, sort animals within breed and assign one per breed to each of five fixed folds, matching the previous preregistration.",
+    "fitBoundary": "Scaling and sample weights are computed using only the current training partition. No animal may cross a train/validation/test boundary."
+  },
+  "selection": {
+    "primaryMetric": "Equal-animal mean of per-animal F1 for RE and RU, with equal class weight.",
+    "tieBreakers": ["higher minimum equal-animal RE/RU recall", "higher equal-animal four-class macro-F1", "fixed simplicity order: static logistic, temporal logistic (lower C first), CART (shallower first), RandomForest, HistGradientBoosting"],
+    "candidates": [
+      {"id": "static_logistic", "model": "existing fixed full-batch multinomial logistic regression on MI_t, as in prior nested candidate set"},
+      {"id": "temporal_logistic_c_0_1", "model": "multinomial L2 logistic regression C=0.1; train-only StandardScaler"},
+      {"id": "temporal_logistic_c_1", "model": "multinomial L2 logistic regression C=1; train-only StandardScaler"},
+      {"id": "temporal_logistic_c_10", "model": "multinomial L2 logistic regression C=10; train-only StandardScaler; prior selected comparator"},
+      {"id": "cart_depth_2", "model": "DecisionTreeClassifier max_depth=2, min_samples_leaf=20, random_state=20261013"},
+      {"id": "cart_depth_3", "model": "DecisionTreeClassifier max_depth=3, min_samples_leaf=20, random_state=20261013"},
+      {"id": "cart_depth_4", "model": "DecisionTreeClassifier max_depth=4, min_samples_leaf=20, random_state=20261013; prior selected comparator"},
+      {"id": "random_forest", "model": "RandomForestClassifier n_estimators=100, max_depth=6, min_samples_leaf=20, max_features=1.0, n_jobs=1, random_state=20261013"},
+      {"id": "hist_gradient_boosting", "model": "HistGradientBoostingClassifier max_iter=100, max_leaf_nodes=7, min_samples_leaf=20, l2_regularization=1.0, early_stopping=False, random_state=20261013"}
+    ],
+    "trainingWeights": "Equalize animal contribution, then equalize total class mass across the four labels, using training rows only.",
+    "selectionProcedure": "For each outer training set, make stitched inner animal-group OOF predictions for every fixed candidate, select only by the stated inner metrics and tie-breakers, refit the selected candidate on all outer training animals, and predict the held-out animals. Also report all fixed candidate outer OOF results descriptively.",
+    "advancementRule": "No candidate is considered improved unless the expanded nested procedure exceeds the prior nested-selection primary score on the same frozen outer folds and the lower 2.5th percentile of its animal-cluster paired bootstrap difference exceeds zero. This is exploratory development and cannot establish generalization beyond these animals."
+  },
+  "uncertainty": {
+    "method": "Paired percentile bootstrap of animal-level metric contributions, resampling the 24 animals as intact groups with replacement; 10000 replicates, seed 20261013.",
+    "interpretation": "A descriptive within-cohort sensitivity interval only; not predictive calibration, not an interval over ranches or populations. No row-level bootstrap."
+  },
+  "diagnostics": {
+    "required": ["per-class precision, recall, F1", "four-class macro-F1", "balanced accuracy", "observation accuracy", "per-animal and outer-fold metrics", "breed-stratified metrics", "outer-fold train CPU and per-animal held-out inference CPU timing"],
+    "ranch": "The source's two ranches are confounded with breed; ranch labels are not present in the analysis CSV. Report that ranch-specific contrasts are not identifiable and make no ranch transport claim."
+  },
+  "reproducibility": {
+    "python": "3.12",
+    "dependencies": ["numpy==1.26.4", "scikit-learn==1.5.2"],
+    "seed": 20261013,
+    "no_search": "No parameter search outside the nine fixed candidates above."
+  }
+}

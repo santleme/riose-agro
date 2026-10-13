@@ -1,0 +1,95 @@
+{
+  "analysis": {
+    "byTreatmentDescriptiveOnly": {
+      "No shade": {
+        "animals": 23,
+        "meanDmiKgPerAnimalDay": 11.67938718,
+        "nAnimalDays": 1837,
+        "sampleSdDmiKgPerAnimalDay": 2.57524889
+      },
+      "Shade": {
+        "animals": 24,
+        "meanDmiKgPerAnimalDay": 11.51384648,
+        "nAnimalDays": 1920,
+        "sampleSdDmiKgPerAnimalDay": 2.63136548
+      }
+    },
+    "meanDmiKgPerAnimalDay": 11.59478826,
+    "missingAnimalDaysExcluded": 0,
+    "nAnimals": 47,
+    "nCalendarDays": 82,
+    "nObservedAnimalDays": 3757,
+    "sampleSdDmiKgPerAnimalDay": 2.60504677,
+    "sequentialOls": {
+      "components": [
+        {
+          "name": "treatment_between_animals",
+          "shareOfObservedCenteredSumSquares": 0.0010093,
+          "sumSquares": 25.72638552
+        },
+        {
+          "name": "animal_within_treatment",
+          "shareOfObservedCenteredSumSquares": 0.21167904,
+          "sumSquares": 5395.53465574
+        },
+        {
+          "name": "calendar_date_after_animal",
+          "shareOfObservedCenteredSumSquares": 0.13317565,
+          "sumSquares": 3394.54399549
+        },
+        {
+          "name": "unexplained_animal_day_residual",
+          "shareOfObservedCenteredSumSquares": 0.65413601,
+          "sumSquares": 16673.42001483
+        }
+      ],
+      "factorOrder": [
+        "treatment_between_animals",
+        "animal_within_treatment",
+        "calendar_date_after_animal",
+        "unexplained_animal_day_residual"
+      ],
+      "interpretation": "Sequential fixed-effect sums of squares in this order; descriptive, order-dependent, and not random-effect variance estimates.",
+      "totalCenteredSumSquaresKgSquaredPerDaySquared": 25489.22505158
+    },
+    "treatmentCounts": {
+      "No shade": 1837,
+      "Shade": 1920
+    }
+  },
+  "classification": "descriptive_feedlot_cohort_variability_not_pasture_validation",
+  "outcome": {
+    "name": "observed daily dry matter intake",
+    "targetScope": "feedlot Nellore steers only",
+    "unit": "kg dry matter per animal per day"
+  },
+  "population": {
+    "category": "22-month-old steers",
+    "period": "82 calendar dates with DMI animal-day slots; study reported as 83 days",
+    "species": "Bos taurus indicus (Nellore cattle)",
+    "system": "controlled tropical feedlot study",
+    "treatments": "Shade and No shade; 47 animals across four collective pens (two pens per treatment, per associated article)"
+  },
+  "reproduction": "python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py",
+  "scientificLimitations": [
+    "This is an exploratory description of one feedlot cohort, not evidence for mature beef cows grazing pasture or the DMI target in issue 109.",
+    "Treatment is constant within animal and associated with collective pen assignment. The treatment share is a descriptive between-group sum of squares, not an independently replicated treatment variance or causal shade effect.",
+    "The animal term is the sequential contribution of animal identity after the treatment grouping. It is not measurement error and does not separate stable animal differences from all other animal-level factors.",
+    "The calendar-date term is a common date contribution conditional on animal identity. It is not attributed to weather or another cause.",
+    "The residual combines remaining animal-day variation and any unmeasured influences; no independent replicate measurement exists here to identify measurement error.",
+    "Sums of squares are sequential and order-dependent. No bootstrap quantiles or calibrated prediction intervals are produced.",
+    "No engine outputs, liveweight values, model predictions, parameter fitting, or motor-versus-DMI metrics are used.",
+    "DMI contains 97 missing animal-day values; they are excluded without imputation."
+  ],
+  "source": {
+    "animalDayPairs": 3854,
+    "articleDoi": "10.1371/journal.pone.0331238",
+    "doi": "10.17632/cctgpznjrc.1",
+    "license": "CC BY 4.0",
+    "missingDmiValuesExcluded": 97,
+    "observedAnimalDays": 3757,
+    "sha256": "c1aaf5cb4eb5076d809d5756bb211b1f5733b850fea9aa5c5233fd579d144c23",
+    "sourceUrl": "https://data.mendeley.com/datasets/cctgpznjrc/1"
+  },
+  "title": "Observed daily DMI variability in adult Nellore feedlot steers"
+}
