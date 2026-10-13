@@ -744,7 +744,9 @@ async function initialize() {
     window.__graphicsInitStage = 'starting-simulation-worker';
     state.worker = new Worker('/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;
     state.worker.onerror = event => {
-      const error = new Error(event.message || `Simulation Worker failed to load ${event.filename || '/worker.js'}`);
+      const location = event.filename ? `${event.filename}:${event.lineno}:${event.colno}` : '/worker.js (unknown script location)';
+      const cause = event.message || event.error?.message || `Worker ${event.type} event`;
+      const error = new Error(`Simulation Worker failed at ${location}: ${cause}`);
       for (const pending of state.pending.splice(0)) pending.reject(error);
     };
     window.__graphicsInitStage = 'resetting-simulation-worker';
