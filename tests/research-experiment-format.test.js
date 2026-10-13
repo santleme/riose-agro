@@ -18,7 +18,7 @@ test('format study round-trips the batch manifest/result contract with units and
   assert.equal(report.workload.populations[0].count, 3);
   assert.equal(report.workload.populations[1].animals, 100);
   assert.equal(report.configuration.repetitions, 3);
-  assert.deepEqual(report.configuration.warmupRuns, {write: 1, fullRead: 1, selectiveMetricRead: 0});
+  assert.deepEqual(report.configuration.warmupRuns, {write: 1, fullRead: 1, selectiveMetricRead: 1});
   assert.equal(report.results.workload.records, 3);
   assert.equal(report.results.workload.exactNormalizedRoundTrip, true);
   assert.equal(report.results.workload.comparedRecordShape, 'batch manifest run joined to riose-experiment-result v1 by runId');

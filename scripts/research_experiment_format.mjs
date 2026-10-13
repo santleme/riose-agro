@@ -206,6 +206,10 @@ const selectedExpectedDigest = digest(records.map(record => ({
   scenarioId: record.run.scenarioId,
   totalIntakeKgDM: record.run.outputs.totalDryMatterIntake.value,
 })));
+for (const [name, format] of Object.entries(workloads)) {
+  const actualSelectedDigest = await format.selectiveMetricRead();
+  assert.equal(actualSelectedDigest, selectedExpectedDigest, `${name} selective read changed projected values`);
+}
 assert.deepEqual(JSON.parse(jsonText), records, 'JSON round trip changed units, null provenance or result data');
 assert.deepEqual(jsonlText.trimEnd().split('\n').map(line => JSON.parse(line)), records, 'JSONL round trip changed units, null provenance or result data');
 for (const {run, result} of records) {
@@ -359,7 +363,7 @@ for (const {run, result} of records) {
       hoursPerRun: hours,
       fixture: 'tests/scenarios/baseline-pasture.json',
     },
-    configuration: {warmupRuns: {write: 1, fullRead: 1, selectiveMetricRead: 0}, repetitions},
+    configuration: {warmupRuns: {write: 1, fullRead: 1, selectiveMetricRead: 1}, repetitions},
     phases: {serialization: {status: 'measured', measurements: phaseMeasurements}},
     timingBoundaries: [
       {phase: 'serialization', timed: ['JSON stringify plus local file write', 'JSONL row serialization plus local file write'], notTimed: ['scenario execution and manifest/result construction', 'gzip compression; compressed byte count only', 'process memory sampling']},
