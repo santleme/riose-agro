@@ -99,6 +99,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Node.js for cross-engine trajectory parity
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # pinned action revision
         with:
@@ -113,6 +118,9 @@ jobs:
 
       - name: Build native Rust workspace
         run: cargo build --locked --workspace --release
+
+      - name: Compare complete JavaScript and native trajectories
+        run: npm run test:parity
 
       - name: Measure native CLI and scenario timings
         env:

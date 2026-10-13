@@ -1,148 +1,128 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#faf9f7">
-    <meta name="description" content="Agroville é um protótipo interativo para explorar cenários demonstrativos de manejo de bovinos.">
-    <title>Agroville — um mundo de fazenda para explorar</title>
+    <meta name="theme-color" content="#f7f7f4">
+    <meta name="description" content="Riose — Brazilian applied research and technology for agriculture.">
+    <title>Riose — Research beyond the expected</title>
+    <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/client/home.css">
   </head>
   <body>
-    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-    <header class="site-header">
-      <a class="wordmark" href="./" aria-label="Agroville, página inicial">agroville</a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
-        <span></span><span></span>
-      </button>
-      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#transparencia">Transparência</a>
-        <a href="observed-data.html">Dados observados</a>
-        <a href="adult-data.html">ADG e pastejo (adultos)</a>
-        <a href="#contato">Contato</a>
-        <a class="nav-cta" href="index.html">Explorar a fazenda</a>
-      </nav>
+    <a class="skip-link" href="#research">Skip to content</a>
+    <header class="site-header" aria-label="Riose">
+      <a class="header-manifesto" href="manifesto.html">manifesto</a>
+      <div class="header-mark-group">
+        <div class="header-name-control">
+          <button class="header-wordmark meaning-trigger" type="button" aria-label="About the name Riose" aria-expanded="false" aria-controls="riose-definition" aria-describedby="riose-definition">Riose</button>
+          <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
+            <span class="definition-title">Riose</span>
+            <span class="definition-meta">proper noun / origin</span>
+            <p>Named after Bel Riose, a general from <em>Foundation</em>, a character inspired by the Byzantine commander Belisarius.</p>
+            <p class="definition-note">A name for seeing farther and turning the unseen into knowledge.</p>
+          </aside>
+        </div>
+          <a class="header-product" href="product.html">· product</a>
+      </div>
+      <span class="header-place">são paulo, brazil</span>
     </header>
 
-    <main id="conteudo">
+    <main>
       <section class="hero" aria-labelledby="hero-title">
-        <img class="hero-worlds" src="assets/agroville-farm-worlds.png" alt="" aria-hidden="true">
-        <div class="hero-copy">
-          <p class="eyebrow hero-badge"><span class="eyebrow-dot"></span> Protótipo interativo para cenários de fazenda</p>
-          <h1 id="hero-title">Explore cenários na fazenda.</h1>
-          <p class="hero-description">Mude uma condição, acompanhe o rebanho e veja o que acontece neste pequeno mundo demonstrativo.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="index.html">Explorar a fazenda</a>
-            <a class="hero-more" href="#como-funciona">Conhecer o projeto</a>
-          </div>
-          <p class="hero-note">Protótipo experimental · resultados não validados para manejo real</p>
+        <div class="hero-lockup">
+          <h1 class="hero-wordmark" id="hero-title">Riose</h1>
+          <span class="hero-monogram" aria-hidden="true">R</span>
         </div>
-        <a class="scroll-cue" href="#pergunta">Role para conhecer o Agroville</a>
-      </section>
-
-      <section class="intro-section section-wrap" id="pergunta">
-        <p class="eyebrow">PERGUNTAS ANTES DE RESPOSTAS</p>
-        <h2>Uma mudança de cada vez.</h2>
-        <p class="section-lede">O Agroville transforma uma pergunta de manejo em um cenário que você pode explorar. A comparação mantém as demais condições iguais para tornar visível o que o protótipo está testando.</p>
-        <p class="quiet-note">É uma ferramenta de exploração e aprendizagem. Não faz previsões nem recomenda decisões para uma fazenda real.</p>
-      </section>
-
-      <section class="feature-section section-wrap" id="como-funciona" aria-labelledby="feature-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">COMO FUNCIONA</p>
-            <h2 id="feature-title">Do mapa à comparação.</h2>
-          </div>
-          <a class="text-link" href="index.html">Conhecer o simulador</a>
+        <div class="hero-scene">
+          <img src="assets/riose-cow-cutout.png" alt="A left-facing white pixel-art Nelore cow with a yellow Riose ear tag, standing on a stylized cutaway pasture with a rustic fence." width="1774" height="887" fetchpriority="high">
         </div>
-        <div class="feature-grid">
-          <article class="feature-item">
-            <span class="step-number">01</span>
-            <h3>Observe o rebanho</h3>
-            <p>Explore o mapa da fazenda e acompanhe a rotina simulada dos animais ao longo do dia.</p>
-          </article>
-          <article class="feature-item">
-            <span class="step-number">02</span>
-            <h3>Escolha uma condição</h3>
-            <p>Altere alojamento, dieta, suplemento ou clima sem misturar as mudanças no mesmo experimento.</p>
-          </article>
-          <article class="feature-item">
-            <span class="step-number">03</span>
-            <h3>Compare o cenário</h3>
-            <p>Veja lado a lado o cenário de referência e a alternativa durante 30 dias demonstrativos.</p>
-          </article>
+        <div class="hero-footer">
+          <div class="hero-copy">
+            <p>Tracking what matters beyond expectations.</p>
+            <a href="#research">Here’s how we do it <span aria-hidden="true">↓</span></a>
+          </div>
+          <a class="system-preview" href="product.html" aria-label="Open the Riose product simulation">
+            <div class="map-window" aria-hidden="true">
+              <svg class="farm-map" viewBox="0 0 260 132" role="img" aria-label="Illustrated preview of the demonstration farm map">
+                <rect width="260" height="132" fill="#d7d5c5"/>
+                <path d="M0 21 48 0h65l-9 44-48 13L0 46zm126-21h79l-4 39-48 21-41-19zm91 0h43v51l-36-8zM0 63l55-12 47 4-4 44-58 20L0 106zm113-8 45-12 39 19-8 41-42 29-35-28zm95 12 38-8 14 14v59h-58l-7-37z" fill="#b9b69f"/>
+                <path d="m2 59 50-9 49 6m7-9 48-17 50 18m-95 4 44 38 49-19m0 2 52-13M51 51l-7 69m112-80 1 72m47-53 3 73" fill="none" stroke="#f0eee5" stroke-width="2"/>
+                <path d="M14 92c16-9 21-15 32-28 12-14 22-15 38-11 12 3 19 13 27 26 7 11 19 13 32 6 11-7 16-23 28-24 14-2 18 18 30 27 12 9 19 8 28-3 8-10 13-12 24-8" fill="none" stroke="#829075" stroke-width="3" opacity=".75"/>
+                <g fill="#3e4038" stroke="#f7f5ec" stroke-width="1.4"><path d="M49 67h8l2 3-2 3h-8l-2-3z"/><path d="M112 72h8l2 3-2 3h-8l-2-3z"/><path d="M172 84h8l2 3-2 3h-8l-2-3z"/><path d="M220 69h8l2 3-2 3h-8l-2-3z"/></g>
+                <circle cx="238" cy="19" r="5" fill="#868f77"/>
+              </svg>
+              <span class="map-label">DEMONSTRATION FARM · 24 ANIMALS</span>
+            </div>
+            <span class="dashboard-link"><span>View dashboard</span><span aria-hidden="true">↗</span></span>
+          </a>
         </div>
       </section>
 
-      <section class="transparency-section" id="transparencia" aria-labelledby="transparency-title">
-        <div class="section-wrap transparency-inner">
-          <div class="transparency-copy">
-            <p class="eyebrow">TRANSPARÊNCIA VEM PRIMEIRO</p>
-            <h2 id="transparency-title">Cada resultado precisa mostrar de onde veio.</h2>
-            <p>O motor atual usa regras e parâmetros simplificados para demonstrar como uma comparação funciona. Ele ainda não foi calibrado nem validado com dados zootécnicos independentes.</p>
-            <a class="text-link" href="index.html">Leia os limites do modelo</a>
+      <section class="research-section" id="research" aria-label="Scientific publications">
+        <article class="publication" aria-labelledby="paper-agents-title">
+          <div class="publication-copy">
+            <time class="publication-year" datetime="2023">2023</time>
+            <h2 id="paper-agents-title">Generative Agents: Interactive Simulacra of Human Behavior</h2>
+            <p class="publication-source">Proceedings of the 36th ACM Symposium on User Interface Software and Technology</p>
+            <p class="publication-authors">Joon Sung Park, Joseph C. O’Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein</p>
+            <p class="publication-summary">A memory architecture lets simulated agents retrieve experience, reflect, and plan in a town of 25 people.</p>
+            <p class="publication-relation">A reference for questions about memory and context in agents. Its evidence concerns simulated human behavior, not physical systems.</p>
+            <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3586183.3606763" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
           </div>
-          <div class="evidence-list">
-            <article>
-              <span class="evidence-index">01</span>
-              <div><h3>Um modelo demonstrativo</h3><p>O que você vê no simulador é calculado por regras locais e reprodutíveis, não por medições de uma fazenda real.</p></div>
-            </article>
-            <article>
-              <span class="evidence-index">02</span>
-              <div><h3>Observações em separado</h3><p>O explorador de dados mostra um ensaio publicado de bezerras; esses registros não calibram o rebanho adulto simulado.</p></div>
-            </article>
-            <article>
-              <span class="evidence-index">03</span>
-              <div><h3>Validação ainda necessária</h3><p>Antes de orientar qualquer decisão, o modelo precisa de um caso zootécnico definido e avaliação independente.</p></div>
-            </article>
-          </div>
-        </div>
-      </section>
+          <figure class="publication-pages" aria-hidden="true">
+            <img class="paper-image paper-image--back" src="assets/research-pages/generative-agents-3.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--middle" src="assets/research-pages/generative-agents-2.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--front" src="assets/research-pages/generative-agents-1.webp" alt="" width="850" height="1100" fetchpriority="low">
+          </figure>
+        </article>
 
-      <section class="observed-section section-wrap" aria-labelledby="observed-title">
-        <div class="observed-copy">
-          <p class="eyebrow">DADOS OBSERVADOS</p>
-          <h2 id="observed-title">Medidas reais. Em uma tela própria.</h2>
-          <p>Explore peso e ingestão registrados em um ensaio publicado com bezerras. Os dados aparecem como observações, separados dos resultados produzidos pelo simulador.</p>
-          <a class="button button-outline" href="observed-data.html">Abrir explorador de dados</a>
-          <a class="button button-outline" href="adult-data.html">ADG e pastejo de adultos</a>
-        </div>
-        <div class="observed-stamp" aria-label="Dados observacionais, 27 bezerras">
-          <span>UM ENSAIO</span>
-          <strong>27</strong>
-          <span>BEZERRAS</span>
-          <span class="stamp-rule"></span>
-          <small>Fonte aberta · Zenodo</small>
-        </div>
-      </section>
-
-      <section class="contact-section" id="contato" aria-labelledby="contact-title">
-        <div class="section-wrap contact-inner">
-          <div>
-            <p class="eyebrow">CONSTRUINDO COM EVIDÊNCIA</p>
-            <h2 id="contact-title">Quer conversar sobre o projeto?</h2>
-            <p>O Agroville está em desenvolvimento. Sugestões de pesquisa, dados e cenários podem ajudar a definir os próximos passos.</p>
+        <article class="publication" aria-labelledby="paper-population-title">
+          <div class="publication-copy">
+            <time class="publication-year" datetime="2024">2024 · revised 2026</time>
+            <h2 id="paper-population-title">LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals</h2>
+            <p class="publication-former-title">First posted as “Generative Agent Simulations of 1,000 People”.</p>
+            <p class="publication-source">arXiv preprint · version 3</p>
+            <p class="publication-authors">Joon Sung Park, Carolyn Q. Zou, Jonne Kamphorst, Niles Egan, Aaron Shaw, Benjamin Mako Hill, Carrie Cai, Meredith Ringel Morris, Percy Liang, Robb Willer, Michael S. Bernstein</p>
+            <p class="publication-summary">Agents grounded in interviews with 1,052 people were evaluated against those participants on selected tasks.</p>
+            <p class="publication-relation">This is evidence for grounding and task-specific evaluation, not accuracy in other populations or physical domains.</p>
+            <a class="publication-link" href="https://arxiv.org/abs/2411.10109" target="_blank" rel="noopener noreferrer">Read the preprint <span aria-hidden="true">↗</span></a>
           </div>
-          <a class="button button-light" href="https://github.com/santleme/riose-agro/issues" target="_blank" rel="noopener noreferrer">Abrir canal do projeto no GitHub</a>
-        </div>
+          <figure class="publication-pages" aria-hidden="true">
+            <img class="paper-image paper-image--back" src="assets/research-pages/grounded-agents-3.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--middle" src="assets/research-pages/grounded-agents-2.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--front" src="assets/research-pages/grounded-agents-1.webp" alt="" width="850" height="1100" loading="eager">
+          </figure>
+        </article>
+
+        <article class="publication" aria-labelledby="paper-simulacra-title">
+          <div class="publication-copy">
+            <time class="publication-year" datetime="2022">2022</time>
+            <h2 id="paper-simulacra-title">Social Simulacra: Creating Populated Prototypes for Social Computing Systems</h2>
+            <p class="publication-source">Proceedings of the 35th ACM Symposium on User Interface Software and Technology</p>
+            <p class="publication-authors">Joon Sung Park, Lindsay Popowski, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein</p>
+            <p class="publication-summary">Populated prototypes use generated posts and replies to explore how rule changes affect social interaction.</p>
+            <p class="publication-relation">A bounded example of scenario exploration in social computing; it does not study agriculture or environmental systems.</p>
+            <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3526113.3545616" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
+          </div>
+          <figure class="publication-pages" aria-hidden="true">
+            <img class="paper-image paper-image--back" src="assets/research-pages/social-simulacra-3.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--middle" src="assets/research-pages/social-simulacra-2.webp" alt="" width="850" height="1100" loading="eager">
+            <img class="paper-image paper-image--front" src="assets/research-pages/social-simulacra-1.webp" alt="" width="850" height="1100" loading="eager">
+          </figure>
+        </article>
+
+        <footer class="research-footer">
+          <a href="adult-data.html">Animal observations <span aria-hidden="true">↗</span></a>
+          <a href="outcome-review.html">Registrar resultado <span aria-hidden="true">↗</span></a>
+          <a href="index.html">Revisar snapshot da fazenda <span aria-hidden="true">↗</span></a>
+        </footer>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <a class="wordmark footer-wordmark" href="./">agroville</a>
-      <p>Protótipo de pesquisa · Simulação demonstrativa, sem validação zootécnica.</p>
-      <nav aria-label="Links do rodapé">
-        <a href="index.html">Explorar a fazenda</a>
-        <a href="observed-data.html">Dados observados</a>
-        <a href="adult-data.html">ADG e pastejo (adultos)</a>
-        <a href="#contato">Contato</a>
-      </nav>
-      <small>© 2026 Agroville</small>
-    </footer>
-    <script src="src/client/home.js" defer></script>
+    <script src="header-interaction.js" defer></script>
+    <script src="home.js" defer></script>
   </body>
 </html>
