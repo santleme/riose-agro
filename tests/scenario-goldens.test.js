@@ -36,6 +36,10 @@ test('baseline fixed-seed output matches the versioned golden and preserves orde
   for (const animal of golden.output.state.animals) {
     assert.ok(animal.history.every((item, index, history) => index === 0 || history[index - 1].hour <= item.hour));
   }
+  assert.deepEqual(golden.trajectory.map(row => row.day), [1]);
+  assert.deepEqual(golden.trajectory[0].snapshot.events, undefined);
+  assert.equal(golden.trajectory[0].eventDelta.at(-1).hour, golden.output.state.events.at(-1).hour);
+  assert.deepEqual(Object.keys(golden.trajectory[0].historyDeltas).sort(), ['1', '2', '3']);
 });
 
 test('housing comparison golden replays the declared contract and freezes each day in order', async () => {
@@ -59,6 +63,17 @@ test('housing comparison golden replays the declared contract and freezes each d
   assert.deepEqual(golden.endpoints.scenario.metrics, golden.output.scenario);
   assert.equal(golden.endpoints.baseline.hour, golden.replayManifest.baseline.hour + 30 * 24);
   assert.equal(golden.endpoints.scenario.hour, golden.replayManifest.baseline.hour + 30 * 24);
+  assert.deepEqual(golden.trajectory.map(row => row.day), Array.from({length: 31}, (_, day) => day));
+  for (const arm of ['baseline', 'scenario']) {
+    assert.deepEqual(golden.trajectory[0][arm].snapshot.hour, golden.replayManifest.baseline.hour);
+    for (let index = 1; index < golden.trajectory.length; index += 1) {
+      assert.equal(golden.trajectory[index][arm].snapshot.hour,
+        golden.trajectory[index - 1][arm].snapshot.hour + 24);
+      assert.ok(Array.isArray(golden.trajectory[index][arm].eventDelta));
+      assert.deepEqual(Object.keys(golden.trajectory[index][arm].historyDeltas).sort(),
+        golden.trajectory[0][arm].snapshot.animals.map(animal => String(animal.id)).sort());
+    }
+  }
 });
 
 test('golden equality detects meaningful deterministic output drift', async () => {
