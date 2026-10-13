@@ -26,6 +26,7 @@ const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);
 const validate = ajv.compile(schema);
+const registrySummaries = [];
 for (const manifestPath of manifestPaths) {
   if (!fs.existsSync(manifestPath)) {
     fail(`registered manifest is missing: ${path.relative(root, manifestPath)}`);
@@ -92,7 +93,17 @@ for (const manifestPath of manifestPaths) {
   if (manifest.source.doi === '10.17632/nj72kmdj77.1' && manifest.population.animalsObserved) {
     fail('forage-only Mendeley source was incorrectly classified as animal observation');
   }
+  registrySummaries.push({
+    doi: manifest.source.doi,
+    sourceFiles: manifest.files.filter((file) => file.selectedForDownload).length,
+    parquetRows: manifest.processedOutputs
+      .filter((output) => output.format === 'parquet')
+      .reduce((sum, output) => sum + output.rows, 0),
+  });
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log(`Scientific data registry valid: ${manifestPaths.length} manifests; source files and available processed outputs checksum-verified.`);
+const summary = registrySummaries
+  .map((item) => `${item.doi}: ${item.sourceFiles} source files checksum-verified; ${item.parquetRows} Parquet rows`)
+  .join('; ');
+console.log(`Scientific data registry valid: ${manifestPaths.length} manifests; ${summary}; available processed outputs checksum-verified.`);
