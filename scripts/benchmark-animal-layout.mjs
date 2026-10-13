@@ -14,6 +14,7 @@ const repetitions=Number(process.env.ANIMAL_LAYOUT_REPETITIONS??31);
 const warmups=8;
 const allocationSamplingIntervalBytes=4096;
 if(!Number.isInteger(repetitions)||repetitions<3)throw new Error('ANIMAL_LAYOUT_REPETITIONS must be an integer of at least 3');
+if(typeof globalThis.gc!=='function')throw new Error('Run this memory/allocation benchmark with node --expose-gc.');
 const resultPath=process.env.ANIMAL_LAYOUT_OUTPUT??'docs/evidence/animal-layout-study-2026-10.json';
 const maintenance=ASSUMPTIONS.maintenanceKgDM;
 const gainFactor=ASSUMPTIONS.gainFactor;
@@ -212,28 +213,47 @@ for(const count of [100,1_000,10_000]){
     const typedBufferBytes=ids.byteLength+weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength+outputWeights.byteLength+outputEnergies.byteLength;
     const memoryDelta={heapUsedBytes:memoryWithColumns.heapUsedBytes-memoryWithObjects.heapUsedBytes,arrayBuffersBytes:memoryWithColumns.arrayBuffersBytes-memoryWithObjects.arrayBuffersBytes};
     const restingCount=inputs.reduce((total,animal)=>total+(animal.resting?1:0),0);
-    const allocationIterations=Math.max(32,Math.ceil(200_000/count));
-    const allocationAosState=inputs.map(animal=>({...animal}));
-    const allocationColumnState=inputs.map(animal=>({...animal}));
-    const allocationScatterState=inputs.map(animal=>({...animal}));
-    const allocationWeights=new Float64Array(count),allocationEnergies=new Float64Array(count),allocationIntakes=new Float64Array(count),allocationResting=new Uint8Array(count);
-    const allocationOutputWeights=new Float64Array(count),allocationOutputEnergies=new Float64Array(count);
-    const allocationIds=Int32Array.from(inputs,animal=>animal.id);
-    for(let index=0;index<count;index++){
-      const animal=inputs[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;
-    }
-    let sampledAosSnapshot=null,sampledColumnsSnapshot=null;
-    const allocationProfiles={
-      aosTransition:await sampleAllocations(()=>runAosInPlace(allocationAosState),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-      typedColumnsKernel:await sampleAllocations(()=>runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-      typedColumnsGather:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-      typedColumnsScatter:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationScatterState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-      snapshotMaterializationAos:await sampleAllocations(()=>{sampledAosSnapshot=materializeAos(inputs,aosOutput);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-      snapshotMaterializationColumns:await sampleAllocations(()=>{sampledColumnsSnapshot=materializeColumns(allocationIds,allocationOutputWeights,allocationOutputEnergies);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    };
-    if(sampledAosSnapshot?.length!==count||sampledColumnsSnapshot?.length!==count)throw new Error('allocation sampling did not retain complete snapshot projections');
-    rows.push({animals:count,hour,iterationsPerSample,fixture:{path:'tests/scenarios/baseline-pasture.json',scenarioId:scenario.scenarioId,seed:scenario.engine.seed,scaledFromAnimals:scenario.engine.animalCount,branchMix:{resting:restingCount,active:count-restingCount}},outputsIdentical:true,pairedComparison:{paired:true,orderBySample:pairedEndToEnd.orderBySample},memory:{aosAfterGc:memoryWithObjects,afterAddingColumnBuffersAfterGc:memoryWithColumns,processDeltaAfterGc:memoryDelta,typedBufferBytesExact:typedBufferBytes},allocationNotes:{transitionTemporaryObjects:0,snapshotObjectsPerMaterialization:count,typedArrayBuffers:7,allocationSamplingIterations:allocationIterations,allocationSamplingMethod:'V8 HeapProfiler sampled allocation profile; profile timings are excluded from benchmark measurements',peakAllocationsInstrumented:false,profiles:allocationProfiles},measurements:{aosEndToEnd:aos,typedColumnsKernel:columnsKernel,typedColumnsGather:gather,typedColumnsScatter:scatter,typedColumnsEndToEnd:endToEndColumns,nativeRustKernel:summarize(native.samplesMs),snapshotMaterializationAos:snapshotAos,snapshotMaterializationColumns:snapshotColumns,objectSnapshotStructuredClone:objectTransfer,jsonSerialization},transfer:{inputStructuredCloneTransfer:inputTransfer.statistics,outputStructuredCloneTransfer:outputTransfer.statistics,inputBytes:ids.byteLength+weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength,outputBytes:outputWeights.byteLength+outputEnergies.byteLength,jsonSnapshotBytes:Buffer.byteLength(serializedSnapshot)},complexity:{productionCodeChanged:false,alignedColumns:6,stableIdColumn:1,requiredPasses:['gather object fields','update numeric columns','scatter results to objects'],separateSnapshotMaterializer:true,peakAllocationsInstrumented:false}});
+    rows.push({animals:count,hour,iterationsPerSample,fixture:{path:'tests/scenarios/baseline-pasture.json',scenarioId:scenario.scenarioId,seed:scenario.engine.seed,scaledFromAnimals:scenario.engine.animalCount,branchMix:{resting:restingCount,active:count-restingCount}},outputsIdentical:true,pairedComparison:{paired:true,orderBySample:pairedEndToEnd.orderBySample},memory:{aosAfterGc:memoryWithObjects,afterAddingColumnBuffersAfterGc:memoryWithColumns,processDeltaAfterGc:memoryDelta,typedBufferBytesExact:typedBufferBytes},allocationNotes:{transitionTemporaryObjects:0,snapshotObjectsPerMaterialization:count,typedArrayBuffers:7,peakAllocationsInstrumented:false},measurements:{aosEndToEnd:aos,typedColumnsKernel:columnsKernel,typedColumnsGather:gather,typedColumnsScatter:scatter,typedColumnsEndToEnd:endToEndColumns,nativeRustKernel:summarize(native.samplesMs),snapshotMaterializationAos:snapshotAos,snapshotMaterializationColumns:snapshotColumns,objectSnapshotStructuredClone:objectTransfer,jsonSerialization},transfer:{inputStructuredCloneTransfer:inputTransfer.statistics,outputStructuredCloneTransfer:outputTransfer.statistics,inputBytes:ids.byteLength+weights.byteLength+energies.byteLength+intakes.byteLength+resting.byteLength,outputBytes:outputWeights.byteLength+outputEnergies.byteLength,jsonSnapshotBytes:Buffer.byteLength(serializedSnapshot)},complexity:{productionCodeChanged:false,alignedColumns:6,stableIdColumn:1,requiredPasses:['gather object fields','update numeric columns','scatter results to objects'],separateSnapshotMaterializer:true,peakAllocationsInstrumented:false}});
   }
+}
+for(const row of rows){
+  const count=row.animals;
+  const inputEngine=fixtureEngine(count,row.hour);
+  const inputs=inputsForActualTransition(inputEngine);
+  const allocationIterations=Math.max(100,Math.ceil(1_000_000/count));
+  const allocationAosState=inputs.map(animal=>({...animal}));
+  const allocationColumnState=inputs.map(animal=>({...animal}));
+  const allocationScatterState=inputs.map(animal=>({...animal}));
+  const allocationWeights=new Float64Array(count),allocationEnergies=new Float64Array(count),allocationIntakes=new Float64Array(count),allocationResting=new Uint8Array(count);
+  const allocationOutputWeights=new Float64Array(count),allocationOutputEnergies=new Float64Array(count);
+  const allocationAosOutput=new Float64Array(count*2);
+  const allocationIds=Int32Array.from(inputs,animal=>animal.id);
+  for(let index=0;index<count;index++){
+    const animal=inputs[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;
+  }
+  runAos(inputs,allocationAosOutput);
+  runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies);
+  assertSnapshotsEqual(
+    materializeAos(inputs,allocationAosOutput),
+    materializeColumns(allocationIds,allocationOutputWeights,allocationOutputEnergies),
+    'allocation-profile snapshot materialization fixture',
+  );
+  let sampledAosSnapshot=null,sampledColumnsSnapshot=null;
+  const allocationProfiles={
+    aosTransition:await sampleAllocations(()=>runAosInPlace(allocationAosState),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    typedColumnsKernel:await sampleAllocations(()=>runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    typedColumnsGather:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    typedColumnsScatter:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationScatterState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    typedColumnsEndToEnd:await sampleAllocations(()=>{
+      for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}
+      runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies);
+      for(let index=0;index<count;index++){const animal=allocationColumnState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}
+    },allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    snapshotMaterializationAos:await sampleAllocations(()=>{sampledAosSnapshot=materializeAos(inputs,allocationAosOutput);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    snapshotMaterializationColumns:await sampleAllocations(()=>{sampledColumnsSnapshot=materializeColumns(allocationIds,allocationOutputWeights,allocationOutputEnergies);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+  };
+  if(sampledAosSnapshot?.length!==count||sampledColumnsSnapshot?.length!==count)throw new Error('allocation sampling did not retain complete snapshot projections');
+  row.allocationNotes={...row.allocationNotes,allocationSamplingIterations:allocationIterations,allocationSamplingMethod:'V8 HeapProfiler sampled allocation profile; profile timings are excluded from benchmark measurements',profiles:allocationProfiles};
 }
 const limitations=['The checked-in baseline-pasture fixture provides the seed/configuration; its three-animal count is scaled to the supported benchmark populations. The one-hour transition input and expected output are generated from FarmEngine itself at active hour 7 and rest hour 22.','Native Rust measures the identical packed input in a pure kernel; it excludes JSON serialization, FFI, Worker queueing and process startup.','Heap/ArrayBuffer readings are process snapshots after GC; exact typed-buffer byte counts are attributable. V8 allocation sampling estimates allocated bytes and identifies sampled call sites, but is statistical and does not measure exact allocation counts or peak live memory. The separate profiling pass is excluded from all timing observations.','Snapshot materialization projects stable ID, weight and energy, not every public FarmEngine snapshot field. JSON serialization separately measures this output projection.'];
 const phaseMeasurements=[];
@@ -264,7 +284,7 @@ const report=benchmarkReport({
     {phase:'worker',timed:['Node structuredClone transfer-list ownership handoff of preallocated numeric input and output buffers.'],notTimed:['Worker scheduling, message queue latency, browser postMessage and computation.']},
     {phase:'serialization',timed:['JSON.stringify of the same AoS output projection.'],notTimed:['Disk I/O and parsing.']},
   ],
-  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,iterationsPerProfile:'max(32, ceil(200000 / animalCount))',attributedUrl:import.meta.url,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
+  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,warmupIterations:8,iterationsPerProfile:'max(100, ceil(1000000 / animalCount))',attributedUrl:import.meta.url,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
   limitations,
 });
 report.study='animal-layout-aos-vs-aligned-columns';

@@ -20,16 +20,23 @@ export async function sampleAllocations(operation, iterations, samplingIntervalB
     throw new RangeError('Allocation sampling interval must be an integer of at least 512 bytes.');
   }
 
+  // Warm this operation, then collect prior garbage before attributing the sampled pass.
+  globalThis.gc?.();
+  const warmupIterations = 8;
+  for (let index = 0; index < warmupIterations; index++) operation();
+  globalThis.gc?.();
   const session = new Session();
   session.connect();
   let samplingStarted = false;
   try {
     await post(session, 'HeapProfiler.startSampling', {
       samplingInterval: samplingIntervalBytes,
-      includeObjectsCollected: true,
+      includeObjectsCollectedByMajorGC: true,
     });
     samplingStarted = true;
     for (let index = 0; index < iterations; index++) operation();
+    const majorGarbageCollectionForced = typeof globalThis.gc === 'function';
+    globalThis.gc?.();
     const {profile} = await post(session, 'HeapProfiler.stopSampling');
     samplingStarted = false;
 
@@ -62,7 +69,9 @@ export async function sampleAllocations(operation, iterations, samplingIntervalB
     return {
       method: 'v8-heap-profiler-sampling',
       samplingIntervalBytes,
+      warmupIterations,
       iterations,
+      majorGarbageCollectionForced,
       allocationSampleCount: targetSamples.length,
       estimatedAllocatedBytes,
       profileSampleCountIncludingHarness: profile.samples.length,
