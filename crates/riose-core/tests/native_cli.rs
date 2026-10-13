@@ -164,7 +164,7 @@ fn baseline_matches_the_native_official_golden_and_has_a_stable_record() {
     ))
     .unwrap();
     assert_json_exact(
-        record["nativeResult"]["result"]["snapshot"],
+        &record["nativeResult"]["result"]["snapshot"],
         &golden["output"]["state"],
     );
     assert_json_exact(

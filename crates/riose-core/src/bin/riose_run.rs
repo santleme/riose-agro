@@ -493,7 +493,6 @@ fn validate_housing_fields(root: &Map<String, Value>) -> Result<(), CliError> {
 
 fn validate_config(value: &Value, path: &str) -> Result<(), CliError> {
     let config = object_at(value, path)?;
-    reject_unknown_fields(config, &["diet", "housing", "weather", "supplement"], path)?;
     for (name, choices) in [
         ("diet", &["pasture", "balanced", "concentrate"][..]),
         ("housing", &["pasture", "barn"][..]),
@@ -539,6 +538,7 @@ fn validate_config(value: &Value, path: &str) -> Result<(), CliError> {
             ));
         }
     }
+    reject_unknown_fields(config, &["diet", "housing", "weather", "supplement"], path)?;
     Ok(())
 }
 
@@ -551,6 +551,9 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
         ],
         path,
     )?;
+    if let Some(config) = snapshot.get("config") {
+        validate_config(config, &pointer(path, "config"))?;
+    }
     reject_unknown_fields(
         snapshot,
         &[
@@ -567,9 +570,6 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
         ],
         path,
     )?;
-    if let Some(config) = snapshot.get("config") {
-        validate_config(config, &pointer(path, "config"))?;
-    }
     if let Some(intake) = snapshot.get("intake") {
         let intake = object_at(intake, &pointer(path, "intake"))?;
         require_fields(
