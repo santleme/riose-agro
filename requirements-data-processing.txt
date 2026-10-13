@@ -1,0 +1,6 @@
+# Optional pipeline dependencies for downloaded scientific XLSX -> Parquet.
+# Kept separate from requirements-research-ml.txt because PyArrow 26 requires NumPy 2.
+numpy==2.2.6
+pandas==2.2.3
+openpyxl==3.1.5
+pyarrow==26.0.0

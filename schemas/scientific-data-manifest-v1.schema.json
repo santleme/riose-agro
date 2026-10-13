@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.example/schemas/scientific-data-manifest-v1.schema.json",
+  "title": "Riose Scientific Data Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "source", "population", "measurement", "use", "files", "metadataSnapshot", "provenance", "processedOutputs", "processingReport"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "publisher", "doi", "officialUrl", "apiUrl", "license", "licenseUrl", "version", "published", "retrievedOn", "totalArchiveSizeBytes", "licensePermission"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "publisher": { "type": "string", "minLength": 1 },
+        "doi": { "type": "string", "pattern": "^10\\.[0-9]{4,9}/[^\\s]+$" },
+        "officialUrl": { "type": "string", "format": "uri" },
+        "apiUrl": { "type": "string", "format": "uri" },
+        "license": { "type": "string", "minLength": 1 },
+        "licenseUrl": { "type": "string", "format": "uri" },
+        "version": { "type": ["string", "integer", "number"] },
+        "published": { "type": ["string", "null"] },
+        "retrievedOn": { "type": "string", "format": "date" },
+        "totalArchiveSizeBytes": { "type": "integer", "minimum": 0 },
+        "licensePermission": { "type": "string", "minLength": 1 }
+      }
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["species", "location", "livestockContext", "system", "animalsObserved", "animalCategory", "unitOfObservation", "timePoints", "groupKeys"],
+      "properties": {
+        "species": { "type": "string", "minLength": 1 },
+        "breed": { "type": ["string", "null"] },
+        "ageOrPhysiologicalClass": { "type": ["string", "null"] },
+        "location": { "type": "string", "minLength": 1 },
+        "livestockContext": { "type": "string", "minLength": 1 },
+        "system": { "type": "string", "minLength": 1 },
+        "animalsObserved": { "type": "boolean" },
+        "animalCategory": { "type": "string", "minLength": 1 },
+        "unitOfObservation": { "type": "string", "minLength": 1 },
+        "timePoints": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "groupKeys": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experimentType", "outcomes", "targetUnits", "method", "frequency", "missingnessAndDuplicates"],
+      "properties": {
+        "experimentType": { "type": "string", "minLength": 1 },
+        "outcomes": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "targetUnits": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "minLength": 1 },
+        "frequency": { "type": "string", "minLength": 1 },
+        "missingnessAndDuplicates": { "type": "string", "minLength": 1 }
+      }
+    },
+    "use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eligibleCohorts", "dmiTargetEligible", "commercialTrainingLicenseCompatible", "decision", "limitations"],
+      "properties": {
+        "eligibleCohorts": { "type": "array", "items": { "type": "string" } },
+        "dmiTargetEligible": { "type": "boolean" },
+        "commercialTrainingLicenseCompatible": { "type": "boolean" },
+        "decision": { "type": "string", "minLength": 1 },
+        "limitations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "sizeBytes", "sha256", "selectedForDownload", "downloadUrl", "retrievedOn", "localPath"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "sizeBytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "selectedForDownload": { "type": "boolean" },
+          "downloadUrl": { "type": ["string", "null"], "format": "uri" },
+          "retrievedOn": { "type": ["string", "null"], "format": "date" },
+          "localPath": { "type": ["string", "null"] },
+          "verifiedSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "verification": { "type": "string" }
+        },
+        "allOf": [
+          { "if": { "properties": { "selectedForDownload": { "const": true } }, "required": ["selectedForDownload"] }, "then": { "properties": { "verifiedSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "localPath": { "type": "string", "minLength": 1 }, "retrievedOn": { "type": "string", "format": "date" } } } },
+          { "if": { "properties": { "selectedForDownload": { "const": false } } }, "then": { "properties": { "localPath": { "type": "null" }, "retrievedOn": { "type": "null" } } } }
+        ]
+      }
+    },
+    "metadataSnapshot": { "type": "string", "minLength": 1 },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiMetadataSha256", "downloadMethod"],
+      "properties": {
+        "apiMetadataSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "downloadMethod": { "type": "string", "minLength": 1 }
+      }
+    },
+    "processedOutputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "rows", "sha256", "format", "compression"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "rows": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "format": { "type": "string" },
+          "compression": { "type": "string" }
+        }
+      }
+    },
+    "processingReport": { "type": "string", "minLength": 1 }
+  }
+}

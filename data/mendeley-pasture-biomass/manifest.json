@@ -1,0 +1,444 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "title": "Forage biomass of different pasture management systems in Western Region of São Paulo State, Brazil",
+    "publisher": "Mendeley Data",
+    "doi": "10.17632/nj72kmdj77.1",
+    "officialUrl": "https://data.mendeley.com/datasets/nj72kmdj77/1",
+    "apiUrl": "https://data.mendeley.com/public-api/datasets/nj72kmdj77",
+    "license": "CC BY 4.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by/4.0",
+    "version": 1,
+    "published": "2020-02-18T16:33:32.601Z",
+    "retrievedOn": "2026-10-13",
+    "totalArchiveSizeBytes": 1499361501,
+    "licensePermission": "You can share, copy and modify this dataset so long as you give appropriate credit, provide a link to the CC BY license, and indicate if changes were made, but you may not do so in a way that suggests the rights holder has endorsed you or your use of the dataset. Note that further permission may be required for any content within the dataset that is identified as belonging to a third party."
+  },
+  "population": {
+    "species": "mixed pasture vegetation; botanical species composition is not provided for individual samples",
+    "breed": null,
+    "ageOrPhysiologicalClass": "not applicable; plant/soil sampling records",
+    "location": "two farms, western São Paulo State, Brazil",
+    "livestockContext": "cattle pasture fields under rotational and traditional management",
+    "system": "managed pasture sampling; source includes traditional, fertilized, intensified, and recently reformed fields",
+    "animalsObserved": false,
+    "animalCategory": "not applicable; observations are forage/soil sample points, not animals",
+    "unitOfObservation": "forage sampling point within MODIS pixel / field campaign",
+    "timePoints": [
+      "June 2018",
+      "November 2018",
+      "March 2019"
+    ],
+    "groupKeys": [
+      "farm",
+      "field_or_management",
+      "MODIS_pixel",
+      "sampling_point",
+      "campaign"
+    ]
+  },
+  "measurement": {
+    "experimentType": "repeated observational field sampling of pasture biomass under contrasting management",
+    "outcomes": [
+      "green forage biomass",
+      "dry forage biomass",
+      "grass height (later campaigns)",
+      "soil properties (separate workbooks)"
+    ],
+    "targetUnits": "dry_matter_weight_g: g per 0.25 m2 sample; source weight Ton/ha: tonnes/ha; processed target: kg DM/ha",
+    "method": "aboveground forage collected from 0.25 m2 sampling areas; separated into green/dry biomass, oven-dried at 65 C for 72 h, and weighed; soil samples analyzed separately",
+    "frequency": "three pasture field campaigns; two soil campaigns",
+    "missingnessAndDuplicates": "to be reported by processing audit; November/March sampling points substantially repeat across campaigns"
+  },
+  "use": {
+    "eligibleCohorts": [
+      "forage_biomass_and_productivity"
+    ],
+    "dmiTargetEligible": false,
+    "commercialTrainingLicenseCompatible": true,
+    "decision": "ELIGIBLE_FOR_SEPARATE_FORAGE_BIOMASS_MODULE; INELIGIBLE_FOR_DMI",
+    "limitations": [
+      "not animal intake or DMI",
+      "single Brazilian region and two farms",
+      "repeated spatial points across campaigns must remain grouped in validation",
+      "photo archives totaling most of the package are not acquired by this tabular pipeline"
+    ]
+  },
+  "files": [
+    {
+      "name": "Pasture_ForageBiomass_June2018.CPG",
+      "sizeBytes": 5,
+      "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/e6a02725-11a3-4ea8-ba4e-3680b1ebc044/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.CPG",
+      "verifiedSha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.dbf",
+      "sizeBytes": 205606,
+      "sha256": "8dbed9e3c9cd61f9d6a657b089bee0b7f4d6682af582d8f035a22626b1ae0433",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/bdf6af08-1eb2-4713-9e5b-30bc3b94521e/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.dbf",
+      "verifiedSha256": "8dbed9e3c9cd61f9d6a657b089bee0b7f4d6682af582d8f035a22626b1ae0433"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.kmz",
+      "sizeBytes": 8308,
+      "sha256": "c89a1dd1644eeb07475ebcc9fbf2c3239461b9af0a355aa848cd685681aa92e9",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/c5242cd2-a08d-4603-96d1-5f41a1999eba/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.prj",
+      "sizeBytes": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/1311ee9b-9953-42a8-b8e1-090a149aa199/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.prj",
+      "verifiedSha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.sbn",
+      "sizeBytes": 1124,
+      "sha256": "ea77615e65bf4dc1c22d03d7bcf87c42785b7225b67aba13d20d82ca3b0b5546",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/dbe766fc-3d70-4088-b7ba-80436dee5ee7/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.sbx",
+      "sizeBytes": 140,
+      "sha256": "860fd2f0f4ee77370f73415953ddb00e99138037b84d5e2804039b46f2b7ae19",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/d29d192f-148e-477c-8f1e-74e92da1a38a/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.shp",
+      "sizeBytes": 3124,
+      "sha256": "da6f6f2067d836d5962e2f3706f5e9b57748ccafc58c40c859a48d072a0283df",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/79cbe801-f27a-4502-919f-b3346d49a685/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.shp",
+      "verifiedSha256": "da6f6f2067d836d5962e2f3706f5e9b57748ccafc58c40c859a48d072a0283df"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.shp.xml",
+      "sizeBytes": 622,
+      "sha256": "461b57acaa4fd24dd62f8644b7c548350939711735499b0cbea88ddd64b312a6",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/05948b73-223d-4cc8-b917-f12435a6b3c9/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.shx",
+      "sizeBytes": 964,
+      "sha256": "186ca976ab9f480f17fa7f9c796e2c7a92d2e3a896c0f6dfcddca54edbb0f4b4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/fbf072b3-eb40-405d-9993-f57a727a5cae/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.shx",
+      "verifiedSha256": "186ca976ab9f480f17fa7f9c796e2c7a92d2e3a896c0f6dfcddca54edbb0f4b4"
+    },
+    {
+      "name": "Pasture_ForageBiomass_June2018.xlsx",
+      "sizeBytes": 33899,
+      "sha256": "75c3450cc3f790ad80a9a6b333889e366237d5fa825eb56578dcc0ae42c398ef",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/9132749d-03a3-4535-8c05-447ebb58da27/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_June2018.xlsx",
+      "verifiedSha256": "75c3450cc3f790ad80a9a6b333889e366237d5fa825eb56578dcc0ae42c398ef"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.cpg",
+      "sizeBytes": 5,
+      "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/c98195fc-0303-4e7f-84c1-2635ad7ed971/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.cpg",
+      "verifiedSha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.dbf",
+      "sizeBytes": 167005,
+      "sha256": "21c1e92db7a521e1cebcbc4de9851f5c56d4cacdf63b623b6964d165de632ea3",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/78423569-1db8-408e-9499-a385d5e1f276/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.dbf",
+      "verifiedSha256": "21c1e92db7a521e1cebcbc4de9851f5c56d4cacdf63b623b6964d165de632ea3"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.kmz",
+      "sizeBytes": 8866,
+      "sha256": "aff90b57a37e417290a7560f0b088d69ef37691f4901362acf148cf5fc6f58a2",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/fb9185da-c7e5-4d5f-8a23-3f0c06843173/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.prj",
+      "sizeBytes": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/090217b8-eab1-449c-9206-95ee550ae1b6/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.prj",
+      "verifiedSha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.sbn",
+      "sizeBytes": 1196,
+      "sha256": "b236cf952398c33a625576ef50e8b604ecdc653422ae0783b8d878d569196fd6",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/1a2d6eb2-d7e9-4ad5-84d5-ce8f253d0070/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.sbx",
+      "sizeBytes": 140,
+      "sha256": "9553e687e514c963eeb19fbe2c284e78261b58cc3cea638931a91c76263c0a9e",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/f3b66bbc-5530-4a06-bcb1-f8cbdd3c0a7b/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.shp",
+      "sizeBytes": 3376,
+      "sha256": "344b4596c98053b4997c503908c55354bd7f98bd934c4e3fb66b0ac3b0134b95",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/d57ffc85-39a3-4daa-ad7b-1ba39fb9d477/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.shp",
+      "verifiedSha256": "344b4596c98053b4997c503908c55354bd7f98bd934c4e3fb66b0ac3b0134b95"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.shp.xml",
+      "sizeBytes": 619,
+      "sha256": "520eb55e312233ab56154305ce396c68fcc9100f4e1409dd8c9e48cf081ab3ab",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/a2894db1-433a-4bba-9531-665332dac573/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.shx",
+      "sizeBytes": 1036,
+      "sha256": "ad08e0b6d2346d383519f82c73f3bf501403fa731ddddab1147b6d9cb3824265",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/57d1edf6-c21a-4b55-b8b7-0fbe3fd76c94/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.shx",
+      "verifiedSha256": "ad08e0b6d2346d383519f82c73f3bf501403fa731ddddab1147b6d9cb3824265"
+    },
+    {
+      "name": "Pasture_ForageBiomass_March2019.xlsx",
+      "sizeBytes": 22968,
+      "sha256": "188fbc5647f0b184c2ffede6f42ac5fbb18bc31c7ec836c0f75bd96f15028ae0",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/d8035842-7d6d-4414-aae9-5b036acd771f/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_March2019.xlsx",
+      "verifiedSha256": "188fbc5647f0b184c2ffede6f42ac5fbb18bc31c7ec836c0f75bd96f15028ae0"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.cpg",
+      "sizeBytes": 5,
+      "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/3d9bbbc2-7d5f-4d38-87f9-266da8f852ef/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.cpg",
+      "verifiedSha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.dbf",
+      "sizeBytes": 170813,
+      "sha256": "f3a162e13b62713f0a3c7bd784909915dc1141d23855c02ff81e006cbe95836d",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/9930114d-bfd1-414c-9242-4629dcc757fe/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.dbf",
+      "verifiedSha256": "f3a162e13b62713f0a3c7bd784909915dc1141d23855c02ff81e006cbe95836d"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.kmz",
+      "sizeBytes": 10115,
+      "sha256": "3174e724171efeac5b8c8b931dca31298b2f985f1f0fb43f5792c0b7f03db2d4",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/d1553fe6-0b80-496c-96a2-9f72d04491a0/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.prj",
+      "sizeBytes": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/d7534cbd-9682-4f11-94c8-fe697986aa58/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.prj",
+      "verifiedSha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.sbn",
+      "sizeBytes": 1196,
+      "sha256": "a3473b697e85d64aba7e5af11edec65866af5c276edfca4ef2b893c3f747ec68",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/f66d5444-4191-4926-89c9-69c8ae480178/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.sbx",
+      "sizeBytes": 140,
+      "sha256": "9553e687e514c963eeb19fbe2c284e78261b58cc3cea638931a91c76263c0a9e",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/9a300f7b-ed89-43fd-b742-eec8071efcc7/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.shp",
+      "sizeBytes": 3376,
+      "sha256": "c1291b1405251ea5ee22f6be735d5b75b5b813eba533ad5aaff812fbb20547c5",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/bcd268dd-f110-4550-bb46-ef898edcf0f8/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.shp",
+      "verifiedSha256": "c1291b1405251ea5ee22f6be735d5b75b5b813eba533ad5aaff812fbb20547c5"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.shp.xml",
+      "sizeBytes": 622,
+      "sha256": "f09be920b6a8bba4e5fb74ee0614a9c24e13edd8ac37214abc1d24b003d3206c",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/69de6a1f-b72c-4019-9e01-8d82f8ec0d4b/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.shx",
+      "sizeBytes": 1036,
+      "sha256": "ad08e0b6d2346d383519f82c73f3bf501403fa731ddddab1147b6d9cb3824265",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/ecec6880-a5db-4cb5-a2ed-2f1ea21be1ee/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.shx",
+      "verifiedSha256": "ad08e0b6d2346d383519f82c73f3bf501403fa731ddddab1147b6d9cb3824265"
+    },
+    {
+      "name": "Pasture_ForageBiomass_November2018.xlsx",
+      "sizeBytes": 24906,
+      "sha256": "3759a4cb058becfe82a32a0079869a18f8b06f76acb665cf57f2aca0994bb69e",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/f67bdfb2-0888-4cdd-b2af-8a75900ec222/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Pasture_ForageBiomass_November2018.xlsx",
+      "verifiedSha256": "3759a4cb058becfe82a32a0079869a18f8b06f76acb665cf57f2aca0994bb69e"
+    },
+    {
+      "name": "Photos_June2018.rar",
+      "sizeBytes": 796682577,
+      "sha256": "c7b15980554e0f20311dc7ed59011a12ce1aac419c423ec5805e0dacb39b5872",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/e1d84ffd-86e9-47e4-81cf-b099ff7d294c/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Photos_March2019.rar",
+      "sizeBytes": 14014592,
+      "sha256": "c7af2512f9753741c47cec4d0df2f953ab9c0c5711272a7b0fe77f865a83ff4c",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/b78e4c11-5726-408d-85b2-02d2a267c813/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Photos_November2018.rar",
+      "sizeBytes": 687915034,
+      "sha256": "194aa4b725aedc00d0010dc6eede5069b43382f672a24edab70fb5ea9c39ba0d",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/423a017f-bae7-4ccd-ba1d-7df0a6139b4a/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    },
+    {
+      "name": "Soil_Analyses_June2018.xlsx",
+      "sizeBytes": 20569,
+      "sha256": "eae59bb6ed6451ee7219b8f3bc97ed79a345fdec69b00e333a5d5a1045b9f31a",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/f9ff5c17-ac34-4e4f-b2ba-b734ead70dc0/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Soil_Analyses_June2018.xlsx",
+      "verifiedSha256": "eae59bb6ed6451ee7219b8f3bc97ed79a345fdec69b00e333a5d5a1045b9f31a"
+    },
+    {
+      "name": "Soil_Analyses_March2019.xlsx",
+      "sizeBytes": 32708,
+      "sha256": "d3f95a310fe8969306146a2d20b4a8fb7261258348c7fba4e73b26aaf46ea7ca",
+      "selectedForDownload": true,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/8a357e92-7b34-455f-928e-9c13725ab3b7/file_downloaded",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/mendeley-pasture-biomass/raw/Soil_Analyses_March2019.xlsx",
+      "verifiedSha256": "d3f95a310fe8969306146a2d20b4a8fb7261258348c7fba4e73b26aaf46ea7ca"
+    },
+    {
+      "name": "Template_biomass_collection.pdf",
+      "sizeBytes": 24374,
+      "sha256": "f5143b8dbd81bb889d5a9691930c0f1d45bf57e7cff55b887016824bfd335b88",
+      "selectedForDownload": false,
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/nj72kmdj77/files/c201794c-4ce1-4ffe-955c-3be74ebfeceb/file_downloaded",
+      "retrievedOn": null,
+      "localPath": null,
+      "verification": "not_downloaded_unneeded_for_tabular_biomass_cohort"
+    }
+  ],
+  "metadataSnapshot": "data/mendeley-pasture-biomass/source-api-metadata.json",
+  "provenance": {
+    "apiMetadataSha256": "0321f2326fb455fa6ed2bcb351819b5598aab25f88269ccd822333c0d5cb4b45",
+    "downloadMethod": "Mendeley public dataset API file URLs; no authentication"
+  },
+  "processedOutputs": [
+    {
+      "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+      "rows": 342,
+      "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+      "format": "parquet",
+      "compression": "zstd"
+    }
+  ],
+  "processingReport": "data/mendeley-pasture-biomass/processed/quality-report-v1.json"
+}
