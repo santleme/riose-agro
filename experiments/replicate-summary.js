@@ -92,20 +92,24 @@ function describe(values) {
   };
 }
 
-/** Summarize completed replicate records without interpreting their spread as calibrated uncertainty. */
-export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
-  if (!Array.isArray(records)) throw new TypeError('records must be an array');
+function createReplicateReducer({groupBy = [], outputs} = {}) {
   if (!Array.isArray(groupBy) || groupBy.some(field => typeof field !== 'string' || !field)) throw new TypeError('groupBy must contain input field names');
-  const outputNames = outputs ? [...new Set(outputs)] : [...new Set(records.flatMap(record => Object.entries(record.outputs ?? [])
-    .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name)))].sort();
+  const selectedOutputNames = outputs ? [...new Set(outputs)] : null;
+  if (selectedOutputNames && selectedOutputNames.some(name => typeof name !== 'string' || !name)) throw new TypeError('outputs must contain output names');
   const groups = new Map();
   const runIds = new Set();
   const outputUnits = new Map();
+  const discoveredOutputs = new Set(selectedOutputNames ?? []);
 
-  for (const record of records) {
+  const addRecord = record => {
     if (!record || typeof record.runId !== 'string' || !record.runId) throw new TypeError('Each run record requires a runId');
     if (runIds.has(record.runId)) throw new TypeError(`Duplicate runId ${record.runId}`);
     runIds.add(record.runId);
+    if (!selectedOutputNames) {
+      for (const [name, value] of Object.entries(record.outputs ?? [])) {
+        if (typeof value?.value === 'number' && Number.isFinite(value.value)) discoveredOutputs.add(name);
+      }
+    }
     const grouping = Object.fromEntries(groupBy.map(field => [field, record.inputs?.[field] ?? null]));
     // Group identity must use the same strict canonical JSON rules as the
     // manifest and result digests. Permissive JSON.stringify-style encoding
@@ -113,52 +117,86 @@ export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
     const key = canonicalJson(grouping);
     let group = groups.get(key);
     if (!group) {
-      group = {grouping, rows: [], failedIds: [], incompleteIds: []};
+      group = {grouping, completedIds: [], failedIds: [], incompleteIds: [], outputs: new Map()};
       groups.set(key, group);
     }
     if (record.status === 'failed') group.failedIds.push(record.runId);
-    else if (record.status === 'completed') group.rows.push(record);
-    else if (record.status === 'planned' || record.status === 'running') group.incompleteIds.push(record.runId);
-    else throw new TypeError(`Run ${record.runId} has unsupported status ${record.status}`);
-  }
-
-  return [...groups.entries()].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, group]) => ({
-    grouping: group.grouping,
-    completedRuns: group.rows.length,
-    failedRuns: group.failedIds.length,
-    incompleteRuns: group.incompleteIds.length,
-    provenance: {
-      runIds: [...group.rows.map(record => record.runId), ...group.failedIds, ...group.incompleteIds].sort(),
-      completedRunIds: group.rows.map(record => record.runId).sort(),
-      failedRunIds: [...group.failedIds].sort(),
-      incompleteRunIds: [...group.incompleteIds].sort(),
-    },
-    outputs: Object.fromEntries(outputNames.sort().map(name => {
-      let unit = null;
-      const values = [];
-      let missing = 0;
-      const includedRunIds = [];
-      const missingRunIds = [];
-      for (const record of group.rows) {
+    else if (record.status === 'completed') {
+      group.completedIds.push(record.runId);
+      const names = selectedOutputNames ?? Object.entries(record.outputs ?? [])
+        .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name);
+      for (const name of names) {
+        let summary = group.outputs.get(name);
+        if (!summary) {
+          summary = {unit: null, values: [], includedRunIds: []};
+          group.outputs.set(name, summary);
+        }
         const item = outputValue(record, name);
-        if (!item) { missing++; missingRunIds.push(record.runId); continue; }
+        if (!item) continue;
         const knownUnit = outputUnits.get(name);
         if (knownUnit !== undefined && knownUnit !== item.unit) {
           throw new TypeError(`Output ${name} has incompatible units: ${knownUnit} and ${item.unit}`);
         }
         outputUnits.set(name, item.unit);
-        if (unit === null) unit = item.unit;
-        else if (unit !== item.unit) throw new TypeError(`Output ${name} has incompatible units: ${unit} and ${item.unit}`);
-        values.push(item.value);
-        includedRunIds.push(record.runId);
+        if (summary.unit === null) summary.unit = item.unit;
+        else if (summary.unit !== item.unit) throw new TypeError(`Output ${name} has incompatible units: ${summary.unit} and ${item.unit}`);
+        summary.values.push(item.value);
+        summary.includedRunIds.push(record.runId);
       }
+    }
+    else if (record.status === 'planned' || record.status === 'running') group.incompleteIds.push(record.runId);
+    else throw new TypeError(`Run ${record.runId} has unsupported status ${record.status}`);
+  };
+
+  const finish = () => [...groups.entries()].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, group]) => ({
+    grouping: group.grouping,
+    completedRuns: group.completedIds.length,
+    failedRuns: group.failedIds.length,
+    incompleteRuns: group.incompleteIds.length,
+    provenance: {
+      runIds: [...group.completedIds, ...group.failedIds, ...group.incompleteIds].sort(),
+      completedRunIds: [...group.completedIds].sort(),
+      failedRunIds: [...group.failedIds].sort(),
+      incompleteRunIds: [...group.incompleteIds].sort(),
+    },
+    outputs: Object.fromEntries([...discoveredOutputs].sort((a, b) => a < b ? -1 : a > b ? 1 : 0).map(name => {
+      const summary = group.outputs.get(name) ?? {unit: null, values: [], includedRunIds: []};
+      const includedIds = new Set(summary.includedRunIds);
       return [name, {
-        unit, missingRuns: missing,
-        provenance: {includedRunIds: includedRunIds.sort(), missingRunIds: missingRunIds.sort()},
-        ...describe(values),
+        unit: summary.unit, missingRuns: group.completedIds.length - summary.values.length,
+        provenance: {
+          includedRunIds: [...summary.includedRunIds].sort(),
+          missingRunIds: group.completedIds.filter(runId => !includedIds.has(runId)).sort(),
+        },
+        ...describe(summary.values),
       }];
     })),
   }));
+  return {addRecord, finish};
+}
+
+/** Summarize an iterable of completed replicate records without interpreting spread as calibrated uncertainty. */
+export function summarizeReplicates(records, options = {}) {
+  if (!records || typeof records[Symbol.iterator] !== 'function' || typeof records === 'string') throw new TypeError('records must be an iterable of run records');
+  // Arrays can cheaply preserve the legacy global output-name discovery and
+  // validation behavior. A one-shot stream instead discovers names as rows
+  // arrive; callers with a fixed schema can pass `outputs` explicitly.
+  if (Array.isArray(records) && options.outputs === undefined) {
+    const names = [...new Set(records.flatMap(record => Object.entries(record.outputs ?? [])
+      .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name)))].sort();
+    options = {...options, outputs: names};
+  }
+  const reducer = createReplicateReducer(options);
+  for (const record of records) reducer.addRecord(record);
+  return reducer.finish();
+}
+
+/** Summarize an async stream of replicate records without buffering the input records. */
+export async function summarizeReplicatesAsync(records, options = {}) {
+  if (!records || typeof records[Symbol.asyncIterator] !== 'function') throw new TypeError('records must be an async iterable of run records');
+  const reducer = createReplicateReducer(options);
+  for await (const record of records) reducer.addRecord(record);
+  return reducer.finish();
 }
 import {verifyExperimentResults} from './batch-manifest.js';
 

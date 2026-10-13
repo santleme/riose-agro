@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {summarizeExperimentReplicates, summarizeReplicates} from '../experiments/replicate-summary.js';
+import {summarizeExperimentReplicates, summarizeReplicates, summarizeReplicatesAsync} from '../experiments/replicate-summary.js';
 import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
 
 const record = (runId, status, supplement, weight) => ({
@@ -25,6 +25,26 @@ test('replicate summaries are order-independent and label spread as descriptive'
   assert.deepEqual(forward[0].provenance, {
     runIds: ['r1', 'r2', 'r3'], completedRunIds: ['r1', 'r2', 'r3'], failedRunIds: [], incompleteRunIds: [],
   });
+});
+
+test('synchronous and asynchronous iterables reduce incrementally to the same summary', async () => {
+  const records = [record('a', 'completed', 1, 2), record('b', 'completed', 1), record('c', 'failed', 1)];
+  const syncStream = function* () { yield* records; };
+  const asyncStream = async function* () { for (const item of records) yield item; };
+  const expected = summarizeReplicates(records, {groupBy: ['supplement'], outputs: ['weight', 'gain']});
+  assert.deepEqual(summarizeReplicates(syncStream(), {groupBy: ['supplement'], outputs: ['weight', 'gain']}), expected);
+  assert.deepEqual(await summarizeReplicatesAsync(asyncStream(), {groupBy: ['supplement'], outputs: ['weight', 'gain']}), expected);
+  await assert.rejects(summarizeReplicatesAsync(records), /async iterable/);
+});
+
+test('auto-discovered outputs keep a consistent shape across groups', () => {
+  const result = summarizeReplicates([
+    record('beef', 'completed', 'beef', 400),
+    {...record('dairy', 'completed', 'dairy'), outputs: {}},
+  ], {groupBy: ['supplement']});
+  assert.deepEqual(Object.keys(result[0].outputs), ['gain', 'weight']);
+  assert.equal(result[1].outputs.weight.missingRuns, 1);
+  assert.deepEqual(result[1].outputs.weight.provenance.missingRunIds, ['dairy']);
 });
 
 test('floating-point summaries are permutation-stable and use compensated accumulation', () => {
