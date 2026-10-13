@@ -43,10 +43,14 @@ def parse_timestamp(value: str) -> datetime:
     if not text:
         raise ValueError("empty timestamp")
     try:
-        # Source uses a space separator and no timezone suffix.
-        return datetime.fromisoformat(text.replace("Z", "+00:00"))
+        # README specifies a timezone-naive ISO wall clock; do not silently
+        # normalize a different convention into the source time basis.
+        timestamp = datetime.fromisoformat(text)
     except ValueError as error:
         raise ValueError(f"invalid ISO 8601 timestamp {value!r}") from error
+    if timestamp.tzinfo is not None:
+        raise ValueError(f"unexpected timezone on source-naive timestamp {value!r}")
+    return timestamp
 
 
 def _rows(path: Path, required: tuple[str, ...], audit: dict[str, Any], kind: str) -> Iterator[tuple[datetime, dict[str, Any]]]:

@@ -109,3 +109,13 @@ def test_schema_units_and_source_defined_split_metadata():
     assert "reference_fraction_class_0" in row
     assert PROCESSOR.SOURCE_TEST_ANIMALS == {4, 10, 11}
     assert PROCESSOR.TRIAL_BY_ANIMAL[18] == 3
+
+
+def test_source_timestamps_must_remain_timezone_naive():
+    assert PROCESSOR.parse_timestamp("2020-01-01 00:00:00.100").tzinfo is None
+    try:
+        PROCESSOR.parse_timestamp("2020-01-01T00:00:00Z")
+    except ValueError as error:
+        assert "unexpected timezone" in str(error)
+    else:
+        raise AssertionError("timezone-aware timestamp must not be silently accepted")
