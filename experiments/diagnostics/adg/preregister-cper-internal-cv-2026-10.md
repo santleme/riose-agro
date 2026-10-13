@@ -1,6 +1,6 @@
 # ADG diagnosis and internal CV pre-registration
 
-**State:** protocol registered; no candidate models were fit or tuned for this diagnosis.
+**State:** protocol registered before fitting and then executed as written; no candidates were tuned.
 
 ## Scope and prior evidence
 
@@ -36,12 +36,12 @@ This protocol uses only CPER 2009–2013 development rows. It does not use CGREC
 2. **Folds:** Five leave-one-year-out folds, each testing exactly one year in 2009–2013 and training on the other four. Remove from a fold's training rows any row whose `Owner + Tag.Color + Tag` matches an animal proxy in its held-out year. Do not split rows randomly. Report fold/year MAE, RMSE, and signed mean error, plus pooled out-of-fold and equally weighted year-macro values. No confidence or coverage claim from five blocks.
 3. **Frozen candidates (no search):**
    - `M0` constant mean raw ADG calculated from that fold's training animals only.
-   - `M1` ordinary least squares with fixed inputs: starting weight in kg, season duration in days, and one-hot treatment (`light`, `moderate`, `heavy`); standardization, if used, is fitted inside each training fold. No interactions, year, pasture ID, source QC flag, final weight, gain, or any target-derived field.
-   - `M2` frozen default engine using only starting weight and duration with its fixed historical configuration.
+   - `M1` ordinary least squares with fixed inputs: starting weight in kg, season duration in days, and one-hot treatment (`light`, `moderate`, `heavy`); standardization, if used, is fitted inside each training fold. `Season.Days` is explicitly a known-at-prediction horizon fixed before prediction; conclusions apply only where that duration is specified, not where realized grazing duration remains unknown. No interactions, year, pasture ID, source QC flag, final weight, gain, or any target-derived field.
+   - `M2` frozen default engine using only starting weight and the known season-duration horizon with its fixed historical configuration.
    - `M3` frozen engine output multiplied by one non-negative scalar fitted by least squares using only that fold's training rows. This is a fold-local diagnostic adjustment; never update the production engine.
 4. **Primary comparison:** M0 is the prespecified reference. Compare all candidates on exactly the same out-of-fold rows. Primary metric is mean absolute error; also report RMSE and signed bias. Report both pooled and equally weighted year-macro scores so the larger years cannot hide a poor year block. Include each fold's sample count and treatment/flag composition.
 5. **Internal advancement rule:** A non-baseline candidate may be called an internal CPER development improvement only if pooled out-of-fold MAE is at least 10% lower than M0, year-macro MAE is lower than M0, absolute pooled bias is no greater than M0, and no held-out year MAE exceeds M0 by more than 0.10 kg/head/day. These are operational gates for choosing whether to continue local development, not scientific validation thresholds or evidence of transport. If no candidate passes all gates, retain M0 as the descriptive reference and report no candidate advancement.
 6. **No final-test claim:** Passing the internal CV gates authorizes only further exploratory development within this CPER yearling-steer ADG cohort. Any final independent ADG claim requires a new, eligible, unconsulted site/trial with compatible endpoints and grouping metadata. The historical CGREC set is reserved as already-consulted evidence and is not rerun as a new final test.
 7. **Scientific separation:** Do not call any result DMI validation, mature-cow validation, calibration of uncertainty, causal management effect, or full-engine validation. No DMI model is trained under this protocol.
 
-The next implementation step requires a separate explicit instruction to execute this protocol. This file records the diagnosis and freezes the design before any candidate fitting or tuning.
+The protocol was executed only after the design was frozen. Results are recorded in `experiments/diagnostics/adg/cper-internal-cv-2026-10.json` and `.md`; this file remains the preregistration.

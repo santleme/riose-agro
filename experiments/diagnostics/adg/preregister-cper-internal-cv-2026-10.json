@@ -1,5 +1,5 @@
 {
-  "status": "preregistered_not_run",
+  "status": "preregistered_and_executed",
   "analysisType": "diagnosis_and_internal_cv_protocol_only",
   "historicalCgrecRole": "already_consulted_external_site_diagnostic_not_a_new_final_test",
   "dmiOrFullEngineValidation": false,
@@ -9,6 +9,8 @@
     "population": "CPER yearling steers",
     "rawAdgFormula": "(final weight - initial weight) / grazing days",
     "targetUnit": "kg/head/day",
+    "seasonDurationAtPrediction": "known_horizon",
+    "seasonDurationAvailabilityNote": "Season.Days is supplied as a prediction-time horizon fixed before prediction; conclusions apply only to a specified horizon, not to a forecast of an unknown realized grazing duration.",
     "trainRowsBeforeIdentityPurge": 320,
     "trainRowsAfterExistingIdentityPurge": 302,
     "identityProxy": ["Owner", "Tag.Color", "Tag"]
