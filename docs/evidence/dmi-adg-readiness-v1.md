@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 22; `inputFileCount` = 25; `elapsedSeconds` = 0.014978 s (tempo observado).
+**Processamento:** `sourceCount` = 22; `inputFileCount` = 26; `elapsedSeconds` = 0.013562 s (tempo observado).
 
 ## Matriz
 
@@ -14,11 +14,11 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 **Licença:** CC0-1.0 (manifest) **Unidades animal-período/registro:** unknown
 **Missingness:** The linked audit reports 446 complete outcome rows; no daily paired trajectory. **Métricas documentadas:** {"missingByColumn": "all audited columns have zero missing values"} (audit's per-column missingByColumn counts) [docs/evidence/dryad-finishing-steers-audit.json#/coverage/missingByColumn]
 
-| Dryad grazing yearling steers | available_local | unknown | 154 (unique model steer IDs) [docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/uniqueModelSteerIds] | unknown | ineligible (trainable: false) | conditional (trainable: true) | Yearling grazing steers. One ADG and body-weight record per steer; visits are interval records. | Separate yearling ADG descriptive reference only; no full-engine validation or adult-cow inference. | `manifest: data/dryad-grazing-yearlings/manifest.json`, `audit: docs/evidence/dryad-grazing-yearlings-audit.json`, `decision: docs/evidence/dryad-grazing-yearlings-audit.json` |
+| Dryad grazing yearling steers | available_local | Four independent experiments are described in the paper, but the row-level model file has no experiment/site/year grouping key (primary-source design and model-file grouping audit) [docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/groupingEvidence] | 154 (unique model steer IDs) [docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/uniqueModelSteerIds] | 4 (independent experiments reported by the paper; individual rows cannot be assigned to these groups) [docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/independentExperimentsInPrimarySource] | ineligible (trainable: false) | ineligible (trainable: false) | Yearling grazing steers. One ADG (kg/day) and body-weight (kg) record per steer; gas visits are repeated interval summaries, not repeated ADG. | Separate descriptive yearling-steer ADG/BW cohort reference only; not a training or engine-validation source, not DMI evidence, and not adult-cow inference. | `manifest: data/dryad-grazing-yearlings/manifest.json`, `audit: docs/evidence/dryad-grazing-yearlings-audit.json`, `decision: docs/evidence/issue-15-dryad-yearling-eligibility.json` |
 
-**dryad-grazing-yearlings — razões.** DMI: No DMI outcome is present. ADG: Open ADG and BW support a descriptive yearling reference; no experiment ID or paired starting/ending weights for this use.
+**dryad-grazing-yearlings — razões.** DMI: No DMI outcome is present. ADG: Observed ADG and BW support descriptive cohort statistics only; model-ready paired engine inputs/outcome horizon and row-level experiment/site/year groups are absent, so this source cannot train or evaluate the current engine or support a grouped holdout.
 **Licença:** CC0-1.0 (manifest) **Unidades animal-período/registro:** 154 (model rows with ADG and body weight) [docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/modelRowsWithAdgAndBw]
-**Missingness:** The audit reports 154 model rows; DMI and experiment ID are absent, and visit coverage is incomplete for some animals. **Métricas documentadas:** unknown
+**Missingness:** The 154-row model file has no DMI, animal-specific initial/final weights and elapsed days, engine-aligned inputs, or experiment/site/year key. Repeated gas records do not supply these ADG fields. **Métricas documentadas:** unknown
 
 | GrASTech dairy grazing DMI | available_local | One farm and one experiment; evaluation groups are within-study Latin-square groups (audit limitations) [docs/evidence/grastech-dairy-grazing-dmi-engine-check.json#/limitations] | unknown | unknown | conditional (trainable: true) | ineligible (trainable: false) | Lactating dairy cows in a grazing supplementation experiment. See audit report; linked workbooks hold animal, period, feed and herbage measures. | Dairy grazing DMI component analysis only; do not treat it as beef-cattle validation. | `manifest: data/grastech-dairy-grazing-dmi/manifest.json`, `audit: docs/evidence/grastech-dairy-grazing-dmi-engine-check.json`, `decision: docs/evidence/grastech-dairy-grazing-dmi-engine-check.json` |
 
@@ -154,6 +154,6 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 ## Processamento
 
-`sourceCount` = 22; `inputFileCount` = 25; `elapsedSeconds` = 0.014978 s.
+`sourceCount` = 22; `inputFileCount` = 26; `elapsedSeconds` = 0.013562 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.

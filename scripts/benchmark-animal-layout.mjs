@@ -6,9 +6,11 @@ import {calculateFeeding} from '../src/client/feeding-model.js';
 import {getWeatherRules} from '../src/client/environment-model.js';
 import {assertBenchmarkReport,benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 import {evaluateAnimalLayoutDecision} from './animal-layout-decision.mjs';
-import {sampleAllocations} from './benchmark-allocation-sampling.mjs';
+import {normalizeProfileUrl,sampleAllocations} from './benchmark-allocation-sampling.mjs';
 
 const scenarioPath=new URL('../tests/scenarios/baseline-pasture.json',import.meta.url);
+const repositoryRootUrl=new URL('../',import.meta.url);
+const allocationAttributionPath=normalizeProfileUrl(import.meta.url,repositoryRootUrl);
 const scenario=JSON.parse(await readFile(scenarioPath,'utf8'));
 const repetitions=Number(process.env.ANIMAL_LAYOUT_REPETITIONS??31);
 const warmups=8;
@@ -151,6 +153,7 @@ function assertClose(actual,expected,label){
 function assertSnapshotsEqual(actual,expected,label){
   if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${label}: snapshot output differs`);
 }
+const sampleAnimalAllocations=(operation,iterations)=>sampleAllocations(operation,iterations,allocationSamplingIntervalBytes,import.meta.url,repositoryRootUrl);
 
 const rows=[];
 for(const count of [100,1_000,10_000]){
@@ -240,17 +243,17 @@ for(const row of rows){
   );
   let sampledAosSnapshot=null,sampledColumnsSnapshot=null;
   const allocationProfiles={
-    aosTransition:await sampleAllocations(()=>runAosInPlace(allocationAosState),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    typedColumnsKernel:await sampleAllocations(()=>runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies),allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    typedColumnsGather:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    typedColumnsScatter:await sampleAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationScatterState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    typedColumnsEndToEnd:await sampleAllocations(()=>{
+    aosTransition:await sampleAnimalAllocations(()=>runAosInPlace(allocationAosState),allocationIterations),
+    typedColumnsKernel:await sampleAnimalAllocations(()=>runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies),allocationIterations),
+    typedColumnsGather:await sampleAnimalAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}},allocationIterations),
+    typedColumnsScatter:await sampleAnimalAllocations(()=>{for(let index=0;index<count;index++){const animal=allocationScatterState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}},allocationIterations),
+    typedColumnsEndToEnd:await sampleAnimalAllocations(()=>{
       for(let index=0;index<count;index++){const animal=allocationColumnState[index];allocationWeights[index]=animal.weight;allocationEnergies[index]=animal.energy;allocationIntakes[index]=animal.intake;allocationResting[index]=animal.resting?1:0;}
       runColumns(allocationWeights,allocationEnergies,allocationIntakes,allocationResting,allocationOutputWeights,allocationOutputEnergies);
       for(let index=0;index<count;index++){const animal=allocationColumnState[index];animal.weight=allocationOutputWeights[index];animal.energy=allocationOutputEnergies[index];}
-    },allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    snapshotMaterializationAos:await sampleAllocations(()=>{sampledAosSnapshot=materializeAos(inputs,allocationAosOutput);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
-    snapshotMaterializationColumns:await sampleAllocations(()=>{sampledColumnsSnapshot=materializeColumns(allocationIds,allocationOutputWeights,allocationOutputEnergies);},allocationIterations,allocationSamplingIntervalBytes,import.meta.url),
+    },allocationIterations),
+    snapshotMaterializationAos:await sampleAnimalAllocations(()=>{sampledAosSnapshot=materializeAos(inputs,allocationAosOutput);},allocationIterations),
+    snapshotMaterializationColumns:await sampleAnimalAllocations(()=>{sampledColumnsSnapshot=materializeColumns(allocationIds,allocationOutputWeights,allocationOutputEnergies);},allocationIterations),
   };
   if(sampledAosSnapshot?.length!==count||sampledColumnsSnapshot?.length!==count)throw new Error('allocation sampling did not retain complete snapshot projections');
   row.allocationNotes={...row.allocationNotes,allocationSamplingIterations:allocationIterations,allocationSamplingMethod:'V8 HeapProfiler sampled allocation profile; profile timings are excluded from benchmark measurements',profiles:allocationProfiles};
@@ -284,7 +287,7 @@ const report=benchmarkReport({
     {phase:'worker',timed:['Node structuredClone transfer-list ownership handoff of preallocated numeric input and output buffers.'],notTimed:['Worker scheduling, message queue latency, browser postMessage and computation.']},
     {phase:'serialization',timed:['JSON.stringify of the same AoS output projection.'],notTimed:['Disk I/O and parsing.']},
   ],
-  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,warmupIterations:1000,iterationsPerProfile:'max(100, ceil(1000000 / animalCount))',attributedUrl:import.meta.url,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
+  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,warmupIterations:1000,iterationsPerProfile:'max(100, ceil(1000000 / animalCount))',attributedUrl:allocationAttributionPath,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
   limitations,
 });
 report.study='animal-layout-aos-vs-aligned-columns';

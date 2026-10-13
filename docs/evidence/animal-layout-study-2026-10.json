@@ -1755,13 +1755,13 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 243,
                   "estimatedAllocatedBytes": 2844080
                 },
                 {
                   "functionName": "runAosInPlace",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 62,
                   "estimatedAllocatedBytes": 7168
                 }
@@ -1779,7 +1779,7 @@
               "topSites": [
                 {
                   "functionName": "runColumns",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 69,
                   "estimatedAllocatedBytes": 8992
                 }
@@ -1797,7 +1797,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 245,
                   "estimatedAllocatedBytes": 2839968
                 }
@@ -1815,7 +1815,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 12697792
                 }
@@ -1833,7 +1833,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 1346112
                 }
@@ -1851,7 +1851,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 6074256
                 }
@@ -1869,7 +1869,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 6068768
                 }
@@ -2487,13 +2487,13 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 243,
                   "estimatedAllocatedBytes": 9849616
                 },
                 {
                   "functionName": "runAosInPlace",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 62,
                   "estimatedAllocatedBytes": 6228832
                 }
@@ -2511,7 +2511,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 244,
                   "estimatedAllocatedBytes": 6144
                 }
@@ -2540,7 +2540,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 16005616
                 }
@@ -2558,7 +2558,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 16063072
                 }
@@ -2576,7 +2576,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 6286016
                 }
@@ -2594,7 +2594,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 6182576
                 }
@@ -3212,7 +3212,7 @@
               "topSites": [
                 {
                   "functionName": "runAosInPlace",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 62,
                   "estimatedAllocatedBytes": 1756512
                 }
@@ -3230,7 +3230,7 @@
               "topSites": [
                 {
                   "functionName": "runColumns",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 69,
                   "estimatedAllocatedBytes": 11648
                 }
@@ -3259,7 +3259,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 15591120
                 }
@@ -3277,7 +3277,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 1699056
                 }
@@ -3295,7 +3295,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 6374960
                 }
@@ -3313,7 +3313,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 6524176
                 }
@@ -3931,13 +3931,13 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 243,
                   "estimatedAllocatedBytes": 9443312
                 },
                 {
                   "functionName": "runAosInPlace",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 62,
                   "estimatedAllocatedBytes": 6381728
                 }
@@ -3977,7 +3977,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 16235440
                 }
@@ -3995,7 +3995,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 15903024
                 }
@@ -4013,7 +4013,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 6461872
                 }
@@ -4031,7 +4031,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 6387408
                 }
@@ -4649,7 +4649,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 243,
                   "estimatedAllocatedBytes": 3065696
                 }
@@ -4689,7 +4689,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 15525456
                 }
@@ -4707,7 +4707,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 3184704
                 }
@@ -4725,7 +4725,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 13410080
                 }
@@ -4743,7 +4743,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 13542480
                 }
@@ -5361,7 +5361,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 243,
                   "estimatedAllocatedBytes": 16075392
                 }
@@ -5390,7 +5390,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 1,
                   "estimatedAllocatedBytes": 4200
                 }
@@ -5408,7 +5408,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 246,
                   "estimatedAllocatedBytes": 15857872
                 }
@@ -5426,7 +5426,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 247,
                   "estimatedAllocatedBytes": 16128736
                 }
@@ -5444,7 +5444,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 252,
                   "estimatedAllocatedBytes": 12797984
                 }
@@ -5462,7 +5462,7 @@
               "topSites": [
                 {
                   "functionName": "(anonymous)",
-                  "url": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+                  "url": "scripts/benchmark-animal-layout.mjs",
                   "lineNumber": 253,
                   "estimatedAllocatedBytes": 13186784
                 }
@@ -6000,7 +6000,7 @@
       "samplingIntervalBytes": 4096,
       "warmupIterations": 1000,
       "iterationsPerProfile": "max(100, ceil(1000000 / animalCount))",
-      "attributedUrl": "file:///home/lucas_coimbra/.codex/worktrees/0bec/riose-agro/scripts/benchmark-animal-layout.mjs",
+      "attributedUrl": "scripts/benchmark-animal-layout.mjs",
       "profileTimingIncludedInBenchmarkMeasurements": false,
       "estimatedAllocatedBytesAreStatistical": true
     },

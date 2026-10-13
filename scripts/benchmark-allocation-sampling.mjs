@@ -1,4 +1,6 @@
 import {Session} from 'node:inspector';
+import {basename, isAbsolute, relative, sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 function post(session, method, parameters = {}) {
   return new Promise((resolve, reject) => {
@@ -12,12 +14,29 @@ function flattenNodes(node, records = []) {
   return records;
 }
 
+/** Keep profiler filtering exact while exposing only portable file attribution. */
+export function normalizeProfileUrl(url, repositoryRootUrl = null) {
+  if (typeof url !== 'string' || !url.startsWith('file:')) return url || null;
+  const path = fileURLToPath(url);
+  if (!repositoryRootUrl) return `local-file:${basename(path)}`;
+
+  const repositoryRoot = fileURLToPath(repositoryRootUrl);
+  const relativePath = relative(repositoryRoot, path);
+  if (!relativePath || relativePath === '..' || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
+    return `outside-repository:${basename(path)}`;
+  }
+  return relativePath.split(sep).join('/');
+}
+
 /** Collect a V8 sampled allocation profile without including its duration in benchmark timings. */
-export async function sampleAllocations(operation, iterations, samplingIntervalBytes = 8192, sourceUrl = null) {
+export async function sampleAllocations(operation, iterations, samplingIntervalBytes = 8192, sourceUrl = null, repositoryRootUrl = null) {
   if (typeof operation !== 'function') throw new TypeError('Allocation sampling requires an operation function.');
   if (!Number.isInteger(iterations) || iterations < 1) throw new RangeError('Allocation sampling iterations must be a positive integer.');
   if (!Number.isInteger(samplingIntervalBytes) || samplingIntervalBytes < 512) {
     throw new RangeError('Allocation sampling interval must be an integer of at least 512 bytes.');
+  }
+  if (sourceUrl && !repositoryRootUrl) {
+    throw new TypeError('Allocation attribution requires a repository root URL.');
   }
 
   // Warm this operation, then collect prior garbage before attributing the sampled pass.
@@ -53,7 +72,7 @@ export async function sampleAllocations(operation, iterations, samplingIntervalB
       const key = `${frame.url ?? ''}\u0000${frame.functionName ?? ''}\u0000${frame.lineNumber ?? -1}`;
       const site = allocationSites.get(key) ?? {
         functionName: frame.functionName || '(anonymous)',
-        url: frame.url || null,
+        url: normalizeProfileUrl(frame.url || null, repositoryRootUrl),
         lineNumber: Number.isInteger(frame.lineNumber) ? frame.lineNumber + 1 : null,
         estimatedAllocatedBytes: 0,
       };

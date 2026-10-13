@@ -29,6 +29,17 @@ test('DMI/ADG readiness matrix keeps ordered source references and component out
   assert.equal(inaccessible.outcomes.adg.trainable, false);
   assert.ok(report.sources.some(source => source.outcomes.dmi.status === 'conditional'));
   assert.ok(report.sources.some(source => source.outcomes.adg.status === 'conditional'));
+  const dryadYearlings = report.sources.find(source => source.id === 'dryad-grazing-yearlings');
+  assert.ok(dryadYearlings);
+  assert.equal(dryadYearlings.outcomes.dmi.status, 'ineligible');
+  assert.equal(dryadYearlings.outcomes.adg.status, 'ineligible');
+  assert.equal(dryadYearlings.outcomes.adg.trainable, false);
+  assert.equal(dryadYearlings.counts.animals.value, 154);
+  assert.equal(dryadYearlings.counts.trials.value, 4);
+  assert.match(dryadYearlings.counts.trials.definition, /cannot be assigned/);
+  assert.equal(dryadYearlings.references.decision, 'docs/evidence/issue-15-dryad-yearling-eligibility.json');
+  assert.match(dryadYearlings.permissibleUse, /descriptive.*only/);
+  assert.match(dryadYearlings.permissibleUse, /not a training or engine-validation source/);
   for (const source of report.sources) {
     assert.ok(Object.hasOwn(source, 'studyDesign'));
     assert.ok(Object.hasOwn(source.counts, 'animals'));

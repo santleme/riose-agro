@@ -78,7 +78,7 @@
       "references": {
         "manifest": "data/dryad-grazing-yearlings/manifest.json",
         "audit": "docs/evidence/dryad-grazing-yearlings-audit.json",
-        "decision": "docs/evidence/dryad-grazing-yearlings-audit.json",
+        "decision": "docs/evidence/issue-15-dryad-yearling-eligibility.json",
         "sourceAssessment": null
       },
       "sourceIdentity": {
@@ -87,9 +87,9 @@
       },
       "access": "available_local",
       "studyDesign": {
-        "value": null,
-        "definition": null,
-        "reference": null
+        "value": "Four independent experiments are described in the paper, but the row-level model file has no experiment/site/year grouping key",
+        "definition": "primary-source design and model-file grouping audit",
+        "reference": "docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/groupingEvidence"
       },
       "counts": {
         "animals": {
@@ -103,15 +103,15 @@
           "reference": "docs/evidence/dryad-grazing-yearlings-audit.json#/coverage/modelRowsWithAdgAndBw"
         },
         "trials": {
-          "value": null,
-          "definition": null,
-          "reference": null
+          "value": 4,
+          "definition": "independent experiments reported by the paper; individual rows cannot be assigned to these groups",
+          "reference": "docs/evidence/issue-15-dryad-yearling-eligibility.json#/populationAndDesign/independentExperimentsInPrimarySource"
         }
       },
       "population": "Yearling grazing steers.",
-      "units": "One ADG and body-weight record per steer; visits are interval records.",
+      "units": "One ADG (kg/day) and body-weight (kg) record per steer; gas visits are repeated interval summaries, not repeated ADG.",
       "missingness": {
-        "summary": "The audit reports 154 model rows; DMI and experiment ID are absent, and visit coverage is incomplete for some animals.",
+        "summary": "The 154-row model file has no DMI, animal-specific initial/final weights and elapsed days, engine-aligned inputs, or experiment/site/year key. Repeated gas records do not supply these ADG fields.",
         "documentedMetrics": {
           "value": null,
           "definition": null,
@@ -125,12 +125,12 @@
           "reason": "No DMI outcome is present."
         },
         "adg": {
-          "status": "conditional",
-          "trainable": true,
-          "reason": "Open ADG and BW support a descriptive yearling reference; no experiment ID or paired starting/ending weights for this use."
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Observed ADG and BW support descriptive cohort statistics only; model-ready paired engine inputs/outcome horizon and row-level experiment/site/year groups are absent, so this source cannot train or evaluate the current engine or support a grouped holdout."
         }
       },
-      "permissibleUse": "Separate yearling ADG descriptive reference only; no full-engine validation or adult-cow inference."
+      "permissibleUse": "Separate descriptive yearling-steer ADG/BW cohort reference only; not a training or engine-validation source, not DMI evidence, and not adult-cow inference."
     },
     {
       "id": "grastech-dairy-grazing",
@@ -1340,8 +1340,8 @@
   ],
   "processing": {
     "sourceCount": 22,
-    "inputFileCount": 25,
-    "elapsedSeconds": 0.014978,
+    "inputFileCount": 26,
+    "elapsedSeconds": 0.013562,
     "elapsedTimeKind": "observed_wall_clock_seconds"
   }
 }

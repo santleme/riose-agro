@@ -64,6 +64,11 @@ test('checked-in animal layout evidence contains separate statistical allocation
   assert.equal(report.results.allocationProfiling.samplingIntervalBytes,4096);
   assert.equal(report.results.allocationProfiling.profileTimingIncludedInBenchmarkMeasurements,false);
   assert.equal(report.results.allocationProfiling.estimatedAllocatedBytesAreStatistical,true);
+  const attributionUrls=[report.results.allocationProfiling.attributedUrl,...report.results.rows.flatMap(row=>
+    Object.values(row.allocationNotes.profiles).flatMap(profile=>profile.topSites.map(site=>site.url)))];
+  assert.ok(attributionUrls.length>0);
+  assert.ok(attributionUrls.every(url=>url==='scripts/benchmark-animal-layout.mjs'));
+  assert.ok(attributionUrls.every(url=>!url.includes('file://')&&!url.includes('/home/')&&!/^[A-Za-z]:[\\/]/.test(url)));
   assert.equal(report.results.rows.length,6);
 
   for(const row of report.results.rows){

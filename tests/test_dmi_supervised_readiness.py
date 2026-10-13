@@ -25,6 +25,25 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 22)
         VALIDATOR.validate(self.report)
 
+    def test_dryad_yearling_candidate_is_included_but_ineligible_for_model_training(self):
+        matrix_path = ROOT / self.report["reviewedMatrix"]["path"]
+        matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+        source = next(item for item in matrix["sources"] if item["id"] == "dryad-grazing-yearlings")
+        self.assertEqual(source["outcomes"]["dmi"]["status"], "ineligible")
+        self.assertFalse(source["outcomes"]["dmi"]["trainable"])
+        self.assertEqual(source["outcomes"]["adg"]["status"], "ineligible")
+        self.assertFalse(source["outcomes"]["adg"]["trainable"])
+        self.assertEqual(source["counts"]["trials"]["value"], 4)
+        self.assertIn("cannot be assigned", source["counts"]["trials"]["definition"])
+        self.assertEqual(matrix["processing"]["sourceCount"], 22)
+        self.assertEqual(self.report["reviewedMatrix"]["eligibleSourcesForTarget"], 0)
+        self.assertEqual(self.report["reviewedMatrix"]["conditionalSourcesForTarget"], 0)
+        self.assertEqual(self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"], 22)
+        candidate = next(item for item in self.report["candidateEvidence"] if item["id"] == "dryad-dbrv15fg8-yearling-adg")
+        self.assertIn("already represented in the 22-source", candidate["decision"])
+        self.assertIn("not the frozen engine ADG evaluation", candidate["outcomeFit"])
+        VALIDATOR.validate(self.report)
+
     def test_human_readable_gate_report_matches_the_current_source_count(self):
         markdown = (ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.md").read_text(encoding="utf-8")
         self.assertIn("matriz de 22 fontes", markdown)

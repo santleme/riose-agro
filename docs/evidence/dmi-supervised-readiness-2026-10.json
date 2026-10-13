@@ -159,6 +159,22 @@
       ]
     },
     {
+      "id": "dryad-dbrv15fg8-yearling-adg",
+      "source": "docs/evidence/issue-15-dryad-yearling-eligibility.json",
+      "decision": "The public CC0 dataset is already represented in the 22-source DMI/ADG matrix. Its 154 yearling-steer rows include ADG and body weight, but no row-level experiment/site/year key, paired engine inputs, outcome horizon, or DMI; it is descriptive evidence only and is ineligible for ADG model training or engine validation.",
+      "access": "available_public_cc0",
+      "license": "CC0-1.0 for the Dryad dataset.",
+      "populationFit": "Ineligible for the mature beef-cow pasture target: the cohort consists of growing yearling steers.",
+      "outcomeFit": "Ineligible for supervised DMI: no DMI outcome. ADG supports descriptive statistics only, not the frozen engine ADG evaluation.",
+      "missingnessAndIdentity": "154 animal IDs are present, but model rows cannot be assigned to the four paper-level experiments; repeated gas visits are not repeated ADG or independent trial labels.",
+      "references": [
+        "https://doi.org/10.5061/dryad.dbrv15fg8",
+        "https://doi.org/10.1071/AN26172",
+        "docs/evidence/dryad-grazing-yearlings-audit.json",
+        "docs/evidence/dmi-adg-readiness-v1.json"
+      ]
+    },
+    {
       "id": "ancp-nellore-2025",
       "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
       "decision": "The ANCP study reports 23,170 Nellore young bulls and heifers with DMI measured by automated systems in group-pen TMR trials; the underlying records are not public and require formal authorization.",
