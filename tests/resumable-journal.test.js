@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createBatchExperimentManifest, digestScenario, sha256Digest, validateBatchExperimentManifest} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, digestScenario, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../experiments/batch-manifest.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
 
 function plannedRun(runId) {
@@ -81,6 +81,28 @@ test('a digest mismatch or corrupt JSONL row is discarded and the run safely rer
   assert.equal(runs, 1);
   assert.equal(resumed.manifest.runs[0].outputs.gain.value, 2);
   assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, 1);
+});
+
+test('compaction keeps only the uniquely verified row when a corrupt duplicate shares its runId', async t => {
+  const options = await setup(t, ['r1']);
+  await runResumableBatch({...options, executeRun: async () => ({gain: {value: 4, unit: 'kg/day'}})});
+  const validLine = (await readFile(options.resultsPath, 'utf8')).trim();
+  const corruptDuplicate = JSON.parse(validLine);
+  corruptDuplicate.outputs = {gain: {value: 999, unit: 'kg/day'}};
+  await writeFile(options.resultsPath, `${validLine}\n${JSON.stringify(corruptDuplicate)}\n`);
+
+  let executed = false;
+  const resumed = await runResumableBatch({...options, executeRun: async () => { executed = true; return {}; }});
+  const compactedRecords = (await readFile(options.resultsPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+
+  assert.equal(executed, false);
+  assert.equal(resumed.completedRuns, 1);
+  assert.equal(compactedRecords.length, 1);
+  assert.deepEqual(verifyExperimentResults(resumed.manifest, compactedRecords), {
+    valid: true,
+    completedRuns: 1,
+    resultRecords: 1,
+  });
 });
 
 test('a middle run failure is recorded and does not stop unrelated runs', async t => {

@@ -43,18 +43,23 @@ async function scanAndRepairResults(path, manifestRuns, {maxRetainedResults, ver
   const absolute = resolve(path), indexById = new Map(manifestRuns.map((run, index) => [run.runId, index]));
   const potential = new Set(), duplicates = new Set(), retained = new Map();
   const retainedFrom = Math.max(0, manifestRuns.length - maxRetainedResults);
+  const isVerifiedRecord = async record => {
+    if (record.type !== 'riose-experiment-result' || record.version !== 1 || typeof record.runId !== 'string') return false;
+    const runIndex = indexById.get(record.runId);
+    const run = manifestRuns[runIndex];
+    if (!run || run.status !== 'completed' || record.outputDigest !== run.outputDigest || sha256Digest(record.outputs) !== record.outputDigest) return false;
+    return !verifyCompletedRun || await verifyCompletedRun(run, record);
+  };
   try {
     for await (const line of readLines(absolute)) {
       if (!line.trim()) continue;
       try {
         const [record] = parseExperimentResultJsonl(`${line}\n`);
-        if (record.type !== 'riose-experiment-result' || record.version !== 1 || typeof record.runId !== 'string') continue;
-        const run = manifestRuns[indexById.get(record.runId)];
-        if (!run || run.status !== 'completed' || record.outputDigest !== run.outputDigest || sha256Digest(record.outputs) !== record.outputDigest) continue;
-        if (verifyCompletedRun && !(await verifyCompletedRun(run, record))) continue;
+        if (!(await isVerifiedRecord(record))) continue;
+        const runIndex = indexById.get(record.runId);
         if (potential.has(record.runId)) { duplicates.add(record.runId); retained.delete(record.runId); continue; }
         potential.add(record.runId);
-        if (indexById.get(record.runId) >= retainedFrom) retained.set(record.runId, {record, line});
+        if (runIndex >= retainedFrom) retained.set(record.runId, {record, line});
       } catch {
         // Ignore truncated or corrupt lines; completed runs without a verified row are rerun.
       }
@@ -67,12 +72,17 @@ async function scanAndRepairResults(path, manifestRuns, {maxRetainedResults, ver
   const temp = `${absolute}.${process.pid}.${randomUUID()}.tmp`;
   await mkdir(dirname(absolute), {recursive: true});
   const output = createWriteStream(temp, {flags: 'wx'});
+  const written = new Set();
   try {
     for await (const line of readLines(absolute)) {
       if (!line.trim()) continue;
       try {
         const [record] = parseExperimentResultJsonl(`${line}\n`);
-        if (potential.has(record.runId) && !duplicates.has(record.runId) && !output.write(`${line}\n`)) await once(output, 'drain');
+        if (potential.has(record.runId) && !duplicates.has(record.runId) && !written.has(record.runId)
+          && await isVerifiedRecord(record)) {
+          written.add(record.runId);
+          if (!output.write(`${line}\n`)) await once(output, 'drain');
+        }
       } catch { /* remove corrupt rows during compaction */ }
     }
   } catch (error) {
