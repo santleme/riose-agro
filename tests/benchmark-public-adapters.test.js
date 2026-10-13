@@ -141,7 +141,20 @@ test('graphics evidence and scenario scheduler use the shared benchmark envelope
   assertMeasurements(scheduler);
   assert.equal(scheduler.configuration.repetitions, 1);
   assert.equal(scheduler.results.rows.length, scheduler.configuration.concurrencyCases.length);
-  assert.ok(scheduler.results.rows.every(row => row.samples.length === 1 && row.allPassed));
+  assert.ok(scheduler.results.rows.every(row => row.samples.length === 1 && row.allPassed
+    && Number.isFinite(row.medianCpuUtilizationOneCoreEquivalentPercent)
+    && Number.isFinite(row.medianCpuUtilizationHostNormalizedPercent)));
+  for (const row of scheduler.results.rows) {
+    const sample = row.samples[0];
+    const expectedOneCore = sample.processCpuMs.total / sample.wallMs * 100;
+    assert.ok(Math.abs(sample.cpuUtilization.oneCoreEquivalentPercent - expectedOneCore) <= 0.002);
+    assert.ok(Math.abs(sample.cpuUtilization.hostNormalizedPercent
+      - expectedOneCore / scheduler.environment.reportedAvailableParallelism) <= 0.002);
+    assert.equal(sample.cpuUtilization.normalizationCores, scheduler.environment.reportedAvailableParallelism);
+  }
+  for (const phase of ['engine', 'startup', 'worker']) {
+    assert.ok(scheduler.phases[phase].measurements.every(item => Number.isInteger(item.concurrency)));
+  }
   assert.ok(scheduler.phases.worker.measurements[0].statistics.sampleCount > 0);
 });
 

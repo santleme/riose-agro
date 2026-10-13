@@ -188,6 +188,41 @@ export function assertBenchmarkReport(report) {
     const details = validateReport.errors.map(error => `${error.instancePath || '/'} ${error.message}`).join('; ');
     throw new TypeError(`Invalid benchmark report: ${details}`);
   }
+  if (report.benchmark.name === 'scenario-scheduler-concurrency') {
+    const availableParallelism = report.results.environment.reportedAvailableParallelism;
+    const workloadAvailableWorkers = Math.min(availableParallelism, report.results.workload.scenarios);
+    const expectedConcurrencyCases = [...new Set([1, Math.min(2, workloadAvailableWorkers), workloadAvailableWorkers])];
+    if (report.results.environment.workloadAvailableWorkers !== workloadAvailableWorkers
+      || JSON.stringify(report.configuration.concurrencyCases) !== JSON.stringify(expectedConcurrencyCases)
+      || JSON.stringify(report.results.rows.map(row => row.concurrency)) !== JSON.stringify(expectedConcurrencyCases)) {
+      throw new TypeError('Invalid benchmark report: concurrency cases must cover serial, two-worker, and effective-available limits after workload capping.');
+    }
+    for (const [rowIndex, row] of report.results.rows.entries()) {
+      const oneCoreMedian = summarizeNumericObservations(row.samples.map(sample => sample.cpuUtilization.oneCoreEquivalentPercent)).median;
+      const hostNormalizedMedian = summarizeNumericObservations(row.samples.map(sample => sample.cpuUtilization.hostNormalizedPercent)).median;
+      if (!closeEnough(row.medianCpuUtilizationOneCoreEquivalentPercent, oneCoreMedian)
+        || !closeEnough(row.medianCpuUtilizationHostNormalizedPercent, hostNormalizedMedian)) {
+        throw new TypeError(`Invalid benchmark report: scenario scheduler row ${rowIndex} CPU utilization medians do not match the raw samples.`);
+      }
+      for (const [sampleIndex, sample] of row.samples.entries()) {
+        const prefix = `scenario scheduler row ${rowIndex} sample ${sampleIndex}`;
+        const cpu = sample.processCpuMs;
+        const utilization = sample.cpuUtilization;
+        const close = closeEnough;
+        if (!close(cpu.total, cpu.user + cpu.system)) {
+          throw new TypeError(`Invalid benchmark report: ${prefix} process CPU total does not equal user plus system CPU.`);
+        }
+        const oneCore = cpu.total / sample.wallMs * 100;
+        if (!close(utilization.oneCoreEquivalentPercent, oneCore)) {
+          throw new TypeError(`Invalid benchmark report: ${prefix} one-core-equivalent CPU utilization does not match process CPU and workload wall time.`);
+        }
+        if (utilization.normalizationCores !== availableParallelism
+          || !close(utilization.hostNormalizedPercent, oneCore / availableParallelism)) {
+          throw new TypeError(`Invalid benchmark report: ${prefix} host-normalized CPU utilization does not match os.availableParallelism.`);
+        }
+      }
+    }
+  }
   const declaredBoundaries = new Set(report.timingBoundaries.map(boundary => boundary.phase));
   for (const [phase, phaseReport] of Object.entries(report.phases)) {
     if (phaseReport.status === 'measured' && !declaredBoundaries.has(phase)) {
@@ -226,6 +261,10 @@ export function assertBenchmarkReport(report) {
     }
   }
   return report;
+}
+
+function closeEnough(left, right) {
+  return Math.abs(left - right) <= 0.002;
 }
 
 export function measurement(phase, metric, unit, statistics, details = {}) {

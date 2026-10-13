@@ -20,6 +20,24 @@ function sampleReport() {
   });
 }
 
+function schedulerReport() {
+  const report = sampleReport();
+  report.benchmark.name = 'scenario-scheduler-concurrency';
+  report.configuration.concurrencyCases = [1, 2];
+  report.results = {
+    environment: {reportedAvailableParallelism: 2, workloadAvailableWorkers: 2},
+    workload: {scenarios: 2, hours: 24, seeds: [1, 2]},
+    measurement: {},
+    rows: [
+      {concurrency: 1, medianCpuUtilizationOneCoreEquivalentPercent: 25, medianCpuUtilizationHostNormalizedPercent: 12.5,
+        samples: [{wallMs: 10, processCpuMs: {user: 2, system: 0.5, total: 2.5}, cpuUtilization: {oneCoreEquivalentPercent: 25, hostNormalizedPercent: 12.5, normalizationCores: 2}}]},
+      {concurrency: 2, medianCpuUtilizationOneCoreEquivalentPercent: 60, medianCpuUtilizationHostNormalizedPercent: 30,
+        samples: [{wallMs: 10, processCpuMs: {user: 4, system: 2, total: 6}, cpuUtilization: {oneCoreEquivalentPercent: 60, hostNormalizedPercent: 30, normalizationCores: 2}}]},
+    ],
+  };
+  return report;
+}
+
 test('versioned benchmark adapter output validates against the shared JSON Schema and retains observations', () => {
   const report = sampleReport();
   assert.equal(validate(report), true, JSON.stringify(validate.errors));
@@ -43,6 +61,23 @@ test('benchmark schema rejects missing boundaries, seed, or population metadata'
     mutate(report);
     assert.equal(validate(report), false, label);
   }
+});
+
+test('scenario scheduler reports per-run one-core and host-normalized CPU utilization', () => {
+  const report = schedulerReport();
+  assert.equal(validate(report), true, JSON.stringify(validate.errors));
+  assert.doesNotThrow(() => assertBenchmarkReport(report));
+
+  const missingUtilization = schedulerReport();
+  delete missingUtilization.results.rows[1].samples[0].cpuUtilization.hostNormalizedPercent;
+  assert.equal(validate(missingUtilization), false);
+  assert.throws(() => assertBenchmarkReport(missingUtilization), /Invalid benchmark report/);
+
+  const inconsistentUtilization = schedulerReport();
+  inconsistentUtilization.results.rows[1].samples[0].cpuUtilization.hostNormalizedPercent = 31;
+  inconsistentUtilization.results.rows[1].medianCpuUtilizationHostNormalizedPercent = 31;
+  assert.equal(validate(inconsistentUtilization), true, 'JSON schema validates the shape; semantic validator checks the formula');
+  assert.throws(() => assertBenchmarkReport(inconsistentUtilization), /host-normalized CPU utilization/);
 });
 
 test('benchmark report requires numeric warmup and repetition counts, including per-phase warmup maps', () => {
