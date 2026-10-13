@@ -16,7 +16,7 @@ const HOUSING_GOLDEN: &str =
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let baseline_fixture: Value = serde_json::from_str(BASELINE_SCENARIO)?;
-    let baseline = serde_json::from_value(json!({
+    let baseline: NativeScenarioRequest = serde_json::from_value(json!({
         "type": "baseline",
         "version": 1,
         "seed": baseline_fixture["engine"]["seed"],
@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "hours": baseline_fixture["run"]["hours"]
     }))?;
     let golden: Value = serde_json::from_str(HOUSING_GOLDEN)?;
-    let housing = serde_json::from_value(json!({
+    let housing: NativeScenarioRequest = serde_json::from_value(json!({
         "type": "housing-comparison",
         "version": 1,
         "snapshot": golden["replayManifest"]["baseline"].clone(),
