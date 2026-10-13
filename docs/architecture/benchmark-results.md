@@ -8,7 +8,7 @@ The envelope records source revision and dirty state, runtime, host hardware, wo
 
 The report's GPU memory field is `null` unless a harness can actually measure it; JavaScript heap does not stand in for GPU allocation. Compare benchmark reports as one cohort only when OS, architecture, CPU, runtime, browser (when applicable), and source revision match; otherwise retain separate host/revision results and document any justified comparison. The `benchmarkComparison` helper reports incompatibilities and never silently combines them. The default limit metadata distinguishes the 10,000-animal FarmEngine and renderer limits from isolated numeric-kernel measurements at 100,000. A 100,000 kernel row must declare `scope: "numeric-kernel-only"`; it is not evidence for a full-engine or renderer load. These limits describe current measurement scope and do not add performance thresholds.
 
-For post-GC retained deltas, `memoryType: "retained-heap"` covers the exact metric named in `metric` (including JS heap, external, and ArrayBuffer deltas). Immediate JS heap points are `js-heap`; whole-process RSS points and sampled peaks are `process-rss`. ArrayBuffer/external fields remain separately named so their subdomain is not confused with JS heap.
+Post-GC retained deltas use `memoryType: "retained-heap"`. V8 `external` and `arrayBuffers` deltas use distinct `v8-external-memory` and `arraybuffer-memory` types; ArrayBuffer memory is included in V8's external total, so retain both as separate observations and do not add them together. Immediate JS heap points are `js-heap`; whole-process RSS points and sampled peaks are `process-rss`.
 
 ## Memory profiling protocol
 
