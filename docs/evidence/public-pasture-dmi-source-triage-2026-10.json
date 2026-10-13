@@ -124,6 +124,29 @@
       "individualDataRetrieved": true,
       "publicDataAssessment": "The deposit provides animal-level behavior/sensor observations but no individual DMI outcome or total-DMI measurement protocol.",
       "decision": "Exclude from supervised DMI training and DMI validation: the mature pasture-cow population is relevant, but behavior labels are not DMI outcomes. Retain as a reusable behavior dataset candidate for separate behavior research only."
+    },
+    {
+      "title": "Genome-wide association study for feed efficiency indicator traits in Nellore cattle considering genotype-by-environment interactions",
+      "doi": "10.3389/fgene.2025.1539056",
+      "url": "https://doi.org/10.3389/fgene.2025.1539056",
+      "openArticleUrl": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2025.1539056/full",
+      "publicationLicense": "Open-access article; underlying ANCP records are not publicly released and article license does not establish data reuse rights.",
+      "reportedPopulation": "23,170 Nellore young bulls and heifers across 301 feed-efficiency trials at 25 farms (2011–2023); animals are described as raised in pasture-based systems.",
+      "dataAvailabilityStatement": "Data supplied by ANCP for academic research; the article states that they are not publicly available and formal requests are required.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "DMI was measured with automated systems in group pens under a standardized ad-libitum TMR protocol, largely silage-based. Public individual records and data-specific reuse terms were not identified; mature cow-calf status is not established for this young-bull/heifer population.",
+      "decision": "Exclude from the mature beef-cow pasture DMI target: animals are young bulls and heifers, intake was measured in group-pen TMR trials rather than pasture field conditions, and underlying ANCP records are private/permission-gated. Retain as a large Brazilian DMI research reference only; do not train on paper summaries or infer pasture-cow eligibility."
+    },
+    {
+      "title": "Developing and validating a model to predict the dry matter intake of grazing lactating beef cows",
+      "doi": "10.1017/S1751731119001241",
+      "url": "https://doi.org/10.1017/S1751731119001241",
+      "openArticleUrl": "https://t-stor.teagasc.ie/server/api/core/bitstreams/e4d35fbb-0eac-43e8-b22a-0d8f2832ec08/content",
+      "publicationLicense": "Open-access article; no separate data license or public deposit for the underlying individual DMI records was identified.",
+      "reportedPopulation": "Calibration reports 94 DMI measurements on 106 beef or beef-dairy crossbred cows, with validation in a separate herd of 60 lactating beef cows.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The article and institutional full-text copy report individual intake measurement/model results but no animal-period microdata, repository DOI, or data-specific reuse terms. The source reviewed here does not establish that the outcome is total DMI including supplement.",
+      "decision": "Retain as a relevant grazing-cow measurement/model reference only. Do not use for supervised target training or validation without the underlying animal records, documented total-DMI outcome definition, and explicit reuse terms."
     }
   ],
   "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",

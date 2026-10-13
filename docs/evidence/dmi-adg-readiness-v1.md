@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 20; `inputFileCount` = 25; `elapsedSeconds` = 0.014530 s (tempo observado).
+**Processamento:** `sourceCount` = 22; `inputFileCount` = 25; `elapsedSeconds` = 0.014978 s (tempo observado).
 
 ## Matriz
 
@@ -42,6 +42,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 **pasture-dmi-triage-8262715 — razões.** DMI: Data availability statement identifies confidential private records; the article license does not cover underlying observations. Source is inaccessible or not reusable. ADG: No reusable individual ADG records or paired input rows were retrieved. Source is inaccessible or not reusable.
 **Licença:** CC BY 4.0 article license; individual records are confidential and not licensed for reuse. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| Nellore Feed-Efficiency GWAS Using ANCP Records | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 23,170 Nellore young bulls and heifers from 301 feed-efficiency trials; pasture-based raising is reported, but these are not established mature beef cows. Automated DMI measurements in group-pen TMR trials; no public individual file retrieved. | Brazilian DMI research context only; do not treat young-bull/heifer TMR observations or article summaries as eligible pasture-cow labels. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/11` |
+
+**pasture-dmi-triage-ancp-nellore-1539056 — razões.** DMI: Underlying ANCP observations are not publicly released, formal permission is required, and pen-based TMR intake does not match pasture field DMI for mature cows. Source is inaccessible or not reusable. ADG: No public reusable mature-cow pasture ADG records and paired predictors were retrieved. Source is inaccessible or not reusable.
+**Licença:** Open-access article; underlying ANCP records are private and no data-specific reuse terms were identified. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
 | Differences in DMI in Grazing and Drylot Beef Cattle | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 163 beef cattle across four experimental groups and two grazing seasons. No openly licensed individual DMI records retrieved; pasture DMI described as LSTM-estimated. | Literature context only; do not score as independent pasture DMI validation. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/1` |
@@ -90,6 +96,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 **pasture-dmi-triage-teagasc-2019 — razões.** DMI: The institutional full-text and publisher abstract contain cohort metrics but no public microdata, row-level IDs, or data-specific reuse terms. Source is inaccessible or not reusable. ADG: No reusable individual ADG records and paired outcome inputs were retrieved. Source is inaccessible or not reusable.
 **Licença:** Open-access article; no separate data license or public deposit for underlying cow-level records identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| Teagasc Grazing-Cow DMI Model Study | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | Calibration on 106 beef/beef-dairy crossbred cows and validation on 60 lactating beef cows in grazing herds. Article reports 94 calibration DMI measurements; outcome could not be confirmed as total DMI, and animal-period rows were unavailable. | Relevant grazing-cow methods reference only; require source rows, outcome definition, and explicit data reuse terms before reconsideration. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/12` |
+
+**pasture-dmi-triage-teagasc-2019-williams — razões.** DMI: No underlying records or data-specific reuse terms were located, and total DMI including supplement is not established by the reviewed accessible materials. Source is inaccessible or not reusable. ADG: No public individual ADG file with paired eligible predictors was retrieved. Source is inaccessible or not reusable.
+**Licença:** Open-access article; no separate data license or public deposit for individual records was identified. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
 | USDA MINDY Grazing-Scenario Model Outputs | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | Pregnant beef-cow grazing-system scenario modelled across 25 management/feed scenarios. Public scenario outputs include modelled DMI but no observed cow-period outcome labels. | Reusable scenario/model-output context only; retain the simulated provenance and do not treat as observed animal data. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/9` |
@@ -142,6 +154,6 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 ## Processamento
 
-`sourceCount` = 20; `inputFileCount` = 25; `elapsedSeconds` = 0.014530 s.
+`sourceCount` = 22; `inputFileCount` = 25; `elapsedSeconds` = 0.014978 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.

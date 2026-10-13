@@ -126,6 +126,25 @@ class ReadinessFixtureTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "elapsedSeconds"):
                     READINESS.validate_readiness_report(invalid)
 
+    def test_recent_near_miss_candidates_are_cited_but_not_trainable(self):
+        report = json.loads(REPORT.read_text(encoding="utf-8"))
+        records = {source["id"]: source for source in report["sources"]}
+        expected = {
+            "pasture-dmi-triage-ancp-nellore-1539056",
+            "pasture-dmi-triage-teagasc-2019-williams",
+        }
+        self.assertTrue(expected.issubset(records))
+        for source_id in expected:
+            with self.subTest(source=source_id):
+                source = records[source_id]
+                self.assertEqual(source["outcomes"]["dmi"]["status"], "ineligible")
+                self.assertFalse(source["outcomes"]["dmi"]["trainable"])
+                self.assertIn(
+                    "public-pasture-dmi-source-triage-2026-10.json#/sources/",
+                    source["references"]["sourceAssessment"],
+                )
+        READINESS.validate_readiness_report(report)
+
 
 if __name__ == "__main__":
     unittest.main()

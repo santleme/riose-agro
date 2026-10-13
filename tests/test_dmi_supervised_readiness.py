@@ -19,10 +19,10 @@ class SupervisedReadinessReportTests(unittest.TestCase):
 
     def test_current_report_accounts_for_every_source_for_the_target(self):
         matrix = self.report["reviewedMatrix"]
-        self.assertEqual(matrix["reviewedSourceCount"], 20)
+        self.assertEqual(matrix["reviewedSourceCount"], 22)
         self.assertEqual(matrix["eligibleSourcesForTarget"], 0)
         self.assertEqual(matrix["conditionalSourcesForTarget"], 0)
-        self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 20)
+        self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 22)
         VALIDATOR.validate(self.report)
 
     def test_target_counts_must_classify_every_reviewed_source(self):

@@ -342,6 +342,26 @@ TRIAGE_CANDIDATES = [
         "adgReason": "No individual ADG outcome and paired predictors were identified in the behavior dataset.",
         "use": "Reusable behavior research only; do not infer DMI from behavior labels or treat them as intake measurements.",
     },
+    {
+        "id": "pasture-dmi-triage-ancp-nellore-1539056", "doi": "10.3389/fgene.2025.1539056",
+        "name": "Nellore Feed-Efficiency GWAS Using ANCP Records",
+        "license": "Open-access article; underlying ANCP records are private and no data-specific reuse terms were identified.",
+        "population": "23,170 Nellore young bulls and heifers from 301 feed-efficiency trials; pasture-based raising is reported, but these are not established mature beef cows.",
+        "units": "Automated DMI measurements in group-pen TMR trials; no public individual file retrieved.",
+        "dmiReason": "Underlying ANCP observations are not publicly released, formal permission is required, and pen-based TMR intake does not match pasture field DMI for mature cows.",
+        "adgReason": "No public reusable mature-cow pasture ADG records and paired predictors were retrieved.",
+        "use": "Brazilian DMI research context only; do not treat young-bull/heifer TMR observations or article summaries as eligible pasture-cow labels.",
+    },
+    {
+        "id": "pasture-dmi-triage-teagasc-2019-williams", "doi": "10.1017/S1751731119001241",
+        "name": "Teagasc Grazing-Cow DMI Model Study",
+        "license": "Open-access article; no separate data license or public deposit for individual records was identified.",
+        "population": "Calibration on 106 beef/beef-dairy crossbred cows and validation on 60 lactating beef cows in grazing herds.",
+        "units": "Article reports 94 calibration DMI measurements; outcome could not be confirmed as total DMI, and animal-period rows were unavailable.",
+        "dmiReason": "No underlying records or data-specific reuse terms were located, and total DMI including supplement is not established by the reviewed accessible materials.",
+        "adgReason": "No public individual ADG file with paired eligible predictors was retrieved.",
+        "use": "Relevant grazing-cow methods reference only; require source rows, outcome definition, and explicit data reuse terms before reconsideration.",
+    },
 ]
 for candidate_index, candidate in enumerate(TRIAGE_CANDIDATES):
     SOURCES.append({

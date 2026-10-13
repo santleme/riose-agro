@@ -34,10 +34,10 @@
   "reviewedMatrix": {
     "path": "docs/evidence/dmi-adg-readiness-v1.json",
     "schemaVersion": "riose.dmi-adg-readiness/v1",
-    "reviewedSourceCount": 20,
+    "reviewedSourceCount": 22,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
-    "ineligibleOrUnavailableSourcesForTarget": 20
+    "ineligibleOrUnavailableSourcesForTarget": 22
   },
   "candidateEvidence": [
     {
@@ -156,6 +156,33 @@
       "missingnessAndIdentity": "Source-specific limitations are in the linked matrix and its audit references.",
       "references": [
         "docs/evidence/dmi-adg-readiness-v1.json"
+      ]
+    },
+    {
+      "id": "ancp-nellore-2025",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "The ANCP study reports 23,170 Nellore young bulls and heifers with DMI measured by automated systems in group-pen TMR trials; the underlying records are not public and require formal authorization.",
+      "access": "unavailable_or_not_reusable",
+      "license": "The open-access article does not grant reuse rights for private ANCP records.",
+      "populationFit": "Ineligible: young bulls and heifers are not the specified mature beef-cow population, despite pasture-based raising being reported.",
+      "outcomeFit": "Ineligible: intake was measured in group-pen TMR trials, not as mature-cow pasture field DMI.",
+      "missingnessAndIdentity": "No individual data file or row-level identity/missingness information was available.",
+      "references": [
+        "https://doi.org/10.3389/fgene.2025.1539056"
+      ]
+    },
+    {
+      "id": "teagasc-williams-2019",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "The study reports grazing-cow DMI measurements but no individual data deposit or data-specific reuse terms; total DMI including supplement is not established by the reviewed accessible materials.",
+      "access": "unavailable_or_not_reusable",
+      "license": "Open-access article; underlying individual-data reuse rights were not identified.",
+      "populationFit": "Grazing beef and beef-dairy crossbred cows are relevant, with a separate lactating beef-cow validation herd.",
+      "outcomeFit": "Ineligible pending source rows and confirmation that the target is total DMI including supplement.",
+      "missingnessAndIdentity": "Animal-period records, keys, and row-level missingness cannot be audited without the source data.",
+      "references": [
+        "https://doi.org/10.1017/S1751731119001241",
+        "https://t-stor.teagasc.ie/server/api/core/bitstreams/e4d35fbb-0eac-43e8-b22a-0d8f2832ec08/content"
       ]
     }
   ],
