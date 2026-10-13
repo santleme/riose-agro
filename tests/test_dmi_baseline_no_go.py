@@ -12,6 +12,8 @@ from validate_dmi_baseline_no_go import REPORT, validate  # noqa: E402
 
 with REPORT.open(encoding="utf-8") as stream:
     REPORT_DATA = json.load(stream)
+with (ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.json").open(encoding="utf-8") as stream:
+    READINESS_DATA = json.load(stream)
 
 
 class BaselineNoGoReportTest(unittest.TestCase):
@@ -44,6 +46,25 @@ class BaselineNoGoReportTest(unittest.TestCase):
         report = copy.deepcopy(REPORT_DATA)
         report["sourceReadiness"]["path"] = "../outside-readiness.json"
         with self.assertRaisesRegex(ValueError, "missing or unsafe source-readiness report"):
+            validate(report)
+
+    def test_linked_readiness_report_must_pass_its_full_gate(self):
+        readiness = copy.deepcopy(READINESS_DATA)
+        readiness["reviewedMatrix"]["eligibleSourcesForTarget"] = 1
+        readiness["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"] -= 1
+        with self.assertRaisesRegex(ValueError, "eligible source count must be zero"):
+            validate(copy.deepcopy(REPORT_DATA), readiness)
+
+    def test_evaluation_must_keep_all_required_metrics_explicitly_unmeasured(self):
+        report = copy.deepcopy(REPORT_DATA)
+        del report["heldOutEvaluation"]["metrics"]["rmseKgDMPerAnimalDay"]
+        with self.assertRaisesRegex(ValueError, "declare every required metric"):
+            validate(report)
+
+    def test_leakage_split_must_keep_studies_and_repeated_animals_together(self):
+        report = copy.deepcopy(REPORT_DATA)
+        report["leakageAudit"]["requiredSplitUnit"] = "random animal-period rows"
+        with self.assertRaisesRegex(ValueError, "group whole studies or trials"):
             validate(report)
 
 

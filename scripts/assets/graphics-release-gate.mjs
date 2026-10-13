@@ -209,6 +209,9 @@ function validateRendererManifest(renderer, sourceManifests, releaseScenes, erro
       .find(entry => entry.id === id || entry.id === asset?.sourceSemanticId || entry.semanticId === asset?.sourceSemanticId);
     check(Boolean(source), `${id} semantic/source record does not resolve`, errors);
     if (source) {
+      const sourceFile = source.source?.sourceFile ?? source.sourceFile;
+      check(typeof sourceFile === 'string' && asset.sourceFile === sourceFile,
+        `${id} renderer source file does not match its semantic source record`, errors);
       check(source.status === 'RELEASED', `${id} source status ${String(source.status)} is not RELEASED`, errors);
       check(source.review?.art === 'pass' && source.review?.technical === 'pass', `${id} source review is not explicitly approved`, errors);
       check(source.rights?.licenseState === 'documented' && typeof source.rights.notes === 'string' && source.rights.notes.trim().length > 0,

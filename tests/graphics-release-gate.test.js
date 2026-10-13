@@ -156,6 +156,15 @@ test('release gate rejects a renderer asset without a matching semantic source r
   );
 });
 
+test('release gate rejects renderer provenance that points at a different source file', () => {
+  const fixture = cloneFixture();
+  fixture.rendererManifest.assets[0].sourceFile = 'assets/another-approved-image.png';
+  assert.throws(
+    () => assertGraphicsReleaseInputsReady(fixture),
+    /nelore-adult renderer source file does not match its semantic source record/
+  );
+});
+
 test('release gate rejects duplicate semantic asset IDs', () => {
   const fixture = cloneFixture();
   fixture.semanticManifest.assets.push(structuredClone(fixture.semanticManifest.assets[0]));

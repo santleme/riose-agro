@@ -48,6 +48,26 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         finally:
             link.unlink(missing_ok=True)
 
+    def test_target_must_keep_total_dmi_population_and_unit_explicit(self):
+        self.report["estimand"]["outcome"] = "DMI in kg per day"
+        with self.assertRaisesRegex(ValueError, "define total DMI"):
+            VALIDATOR.validate(self.report)
+
+    def test_split_must_preserve_study_and_animal_groups(self):
+        self.report["eligibility"]["splitUnit"] = "Randomly split animal-period rows."
+        with self.assertRaisesRegex(ValueError, "preserve study and animal groups"):
+            VALIDATOR.validate(self.report)
+
+    def test_candidate_source_link_must_resolve_inside_repository(self):
+        self.report["candidateEvidence"][0]["source"] = "docs/evidence/not-a-real-source.json"
+        with self.assertRaisesRegex(ValueError, "missing source evidence"):
+            VALIDATOR.validate(self.report)
+
+    def test_no_go_must_keep_domain_review_and_owner_signoff_as_open_gates(self):
+        self.report["nextEvidenceRequired"] = ["A dataset was located."]
+        with self.assertRaisesRegex(ValueError, "independent domain review and owner signoff"):
+            VALIDATOR.validate(self.report)
+
 
 if __name__ == "__main__":
     unittest.main()

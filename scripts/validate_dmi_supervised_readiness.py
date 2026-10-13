@@ -37,13 +37,32 @@ def validate(report: dict[str, Any]) -> None:
     for field in ("population", "outcome", "unitOfAnalysis", "intendedUse"):
         require(isinstance(estimand.get(field), str) and estimand[field].strip(), f"missing estimand.{field}")
     require(estimand.get("unitOfAnalysis") == "animal-period", "unexpected analysis unit")
-    require("kg" in estimand.get("outcome", "") and "DMI" in estimand.get("outcome", ""), "outcome must name DMI units")
+    outcome = estimand.get("outcome", "").lower()
+    require(
+        "total dmi" in outcome and "forage" in outcome and "supplement" in outcome
+        and "kg dry matter" in outcome and "animal per day" in outcome,
+        "outcome must define total DMI, its components, and animal-day units",
+    )
+    population = estimand.get("population", "").lower()
+    require(
+        "mature beef cows" in population and "pasture" in population,
+        "population must define mature beef cows managed on pasture",
+    )
 
     eligibility = report.get("eligibility", {})
     for field in ("inclusion", "exclusion", "groupIdentity"):
         require(isinstance(eligibility.get(field), list) and eligibility[field], f"missing eligibility.{field}")
-    require(isinstance(eligibility.get("splitUnit"), str) and eligibility["splitUnit"].strip(), "missing splitUnit")
+    split_unit = eligibility.get("splitUnit", "").lower()
+    require(
+        "whole studies/trials" in split_unit and "for an animal in one partition" in split_unit
+        and "do not randomly split" in split_unit,
+        "splitUnit must preserve study and animal groups and prohibit row-random splits",
+    )
     require(eligibility.get("outcomeUnit") == "kg DM/animal/day", "unexpected outcome unit")
+    require(
+        set(eligibility.get("groupIdentity", [])) == {"study_or_trial_id", "animal_id", "animal_period_id"},
+        "groupIdentity must identify study/trial, animal, and animal-period",
+    )
 
     matrix = report.get("reviewedMatrix", {})
     matrix_path = matrix.get("path")
@@ -70,6 +89,7 @@ def validate(report: dict[str, Any]) -> None:
         evidence_file(source_path, f"source evidence for {candidate['id']}")
         require(isinstance(candidate.get("references"), list) and candidate["references"], f"{candidate['id']}: references required")
         for reference in candidate["references"]:
+            require(isinstance(reference, str) and reference.strip(), f"{candidate['id']}: invalid reference")
             if reference.startswith("http://") or reference.startswith("https://"):
                 continue
             evidence_file(reference, f"{candidate['id']}: reference {reference}")
@@ -80,6 +100,15 @@ def validate(report: dict[str, Any]) -> None:
     require(matrix.get("ineligibleOrUnavailableSourcesForTarget") == matrix.get("reviewedSourceCount"), "every reviewed source must be excluded from this target")
     require(report.get("blockers"), "no_go requires blockers")
     require(report.get("nextEvidenceRequired"), "decision must state reopening evidence")
+    require(
+        any("No locally accessible" in item and "total-DMI outcome" in item for item in report["blockers"]),
+        "no_go must state the missing target-matched source and outcome",
+    )
+    require(
+        any("independent zootechnical review" in item.lower() for item in report["nextEvidenceRequired"])
+        and any("project-owner signoff" in item.lower() for item in report["nextEvidenceRequired"]),
+        "reopening criteria must require independent domain review and owner signoff",
+    )
     signoff = report.get("signoff", {})
     require(signoff.get("status") == "pending", "this unsigned report must remain pending")
     require(signoff.get("domainExpertReview") == "pending_not_obtained", "do not imply expert signoff")
