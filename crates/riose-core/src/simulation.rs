@@ -12,17 +12,42 @@ use crate::{update_metabolism, EntityId, EntityIdAllocator, Housing, SeedStreams
 use serde::{Deserialize, Serialize};
 
 const NAMES: [&str; 24] = [
-    "Aurora", "Bento", "Cacau", "Dália", "Estrela", "Figo", "Gaia", "Hugo", "Íris",
-    "Joca", "Kiara", "Luna", "Milo", "Nina", "Oliva", "Pingo", "Quinoa", "Rubi", "Sol",
-    "Teca", "Uva", "Vento", "Wally", "Zara",
+    "Aurora", "Bento", "Cacau", "Dália", "Estrela", "Figo", "Gaia", "Hugo", "Íris", "Joca",
+    "Kiara", "Luna", "Milo", "Nina", "Oliva", "Pingo", "Quinoa", "Rubi", "Sol", "Teca", "Uva",
+    "Vento", "Wally", "Zara",
 ];
 const PATCH_BOUNDS: [Bounds; 4] = [
-    Bounds { x: 35.0, y: 45.0, w: 135.0, h: 100.0 },
-    Bounds { x: 200.0, y: 45.0, w: 135.0, h: 100.0 },
-    Bounds { x: 35.0, y: 180.0, w: 135.0, h: 100.0 },
-    Bounds { x: 200.0, y: 180.0, w: 135.0, h: 100.0 },
+    Bounds {
+        x: 35.0,
+        y: 45.0,
+        w: 135.0,
+        h: 100.0,
+    },
+    Bounds {
+        x: 200.0,
+        y: 45.0,
+        w: 135.0,
+        h: 100.0,
+    },
+    Bounds {
+        x: 35.0,
+        y: 180.0,
+        w: 135.0,
+        h: 100.0,
+    },
+    Bounds {
+        x: 200.0,
+        y: 180.0,
+        w: 135.0,
+        h: 100.0,
+    },
 ];
-const BARN_BOUNDS: Bounds = Bounds { x: 392.0, y: 186.0, w: 132.0, h: 98.0 };
+const BARN_BOUNDS: Bounds = Bounds {
+    x: 392.0,
+    y: 186.0,
+    w: 132.0,
+    h: 98.0,
+};
 
 #[derive(Clone, Copy)]
 struct Bounds {
@@ -108,7 +133,13 @@ impl FarmEngine {
                 target_y: y,
                 history: Vec::new(),
             };
-            record_activity(&mut animal, 6, ActivityReason::PastureHousing, 20.0, Housing::Pasture);
+            record_activity(
+                &mut animal,
+                6,
+                ActivityReason::PastureHousing,
+                20.0,
+                Housing::Pasture,
+            );
             animals.push(animal);
         }
         let mut engine = Self {
@@ -139,7 +170,11 @@ impl FarmEngine {
         snapshot.validate()?;
         let model_rng = SeededRng::new(snapshot.seed);
         let locomotion_rng = SeededRng::new(snapshot.locomotion_seed);
-        Ok(Self { state: snapshot, model_rng, locomotion_rng })
+        Ok(Self {
+            state: snapshot,
+            model_rng,
+            locomotion_rng,
+        })
     }
 
     pub fn snapshot(&self) -> FarmSnapshot {
@@ -161,11 +196,14 @@ impl FarmEngine {
             for index in 0..self.state.animals.len() {
                 self.place(index);
             }
-            self.log(if config.housing == Housing::Barn {
-                "Rebanho transferido para o confinamento.".to_owned()
-            } else {
-                "Rebanho voltou ao pasto.".to_owned()
-            }, None);
+            self.log(
+                if config.housing == Housing::Barn {
+                    "Rebanho transferido para o confinamento.".to_owned()
+                } else {
+                    "Rebanho voltou ao pasto.".to_owned()
+                },
+                None,
+            );
         }
         if config.diet != previous.diet {
             let label = match config.diet {
@@ -176,7 +214,10 @@ impl FarmEngine {
             self.log(format!("Dieta alterada: {label}."), None);
         }
         if config.supplement != previous.supplement {
-            self.log(format!("Suplementação: {} kg de MS/animal/dia.", config.supplement), None);
+            self.log(
+                format!("Suplementação: {} kg de MS/animal/dia.", config.supplement),
+                None,
+            );
         }
         if config.weather != previous.weather {
             let label = match config.weather {
@@ -196,13 +237,17 @@ impl FarmEngine {
         let mut metabolism_input = vec![0.0; self.state.animals.len() * 4];
         let mut metabolism_output = vec![0.0; self.state.animals.len() * 2];
         for _ in 0..hours {
-            self.state.hour = self.state.hour.checked_add(1)
+            self.state.hour = self
+                .state
+                .hour
+                .checked_add(1)
                 .ok_or_else(|| "simulation hour exhausted".to_owned())?;
             let time = (self.state.hour % 24) as u8;
             let config = self.state.config;
             let environment = weather_rules(config.weather);
             for pasture in &mut self.state.pastures {
-                *pasture = ( *pasture + DAILY_PASTURE_GROWTH_KG_DM * environment.pasture_growth_multiplier / 24.0)
+                *pasture = (*pasture
+                    + DAILY_PASTURE_GROWTH_KG_DM * environment.pasture_growth_multiplier / 24.0)
                     .min(PASTURE_CAP_KG_DM);
             }
 
@@ -255,8 +300,11 @@ impl FarmEngine {
                     metabolism_input[offset] = animal.weight;
                     metabolism_input[offset + 1] = animal.energy;
                     metabolism_input[offset + 2] = feeding.energy_intake_kg_dm;
-                    metabolism_input[offset + 3] =
-                        if animal.action == Activity::Resting { 1.0 } else { 0.0 };
+                    metabolism_input[offset + 3] = if animal.action == Activity::Resting {
+                        1.0
+                    } else {
+                        0.0
+                    };
 
                     let event = if animal.action != previous_action {
                         record_activity(
@@ -275,12 +323,10 @@ impl FarmEngine {
                     };
 
                     let bounds = bounds_for(config.housing, patch_index);
-                    animal.target_x = bounds.x
-                        + 10.0
-                        + self.locomotion_rng.next_f64() * (bounds.w - 20.0);
-                    animal.target_y = bounds.y
-                        + 10.0
-                        + self.locomotion_rng.next_f64() * (bounds.h - 20.0);
+                    animal.target_x =
+                        bounds.x + 10.0 + self.locomotion_rng.next_f64() * (bounds.w - 20.0);
+                    animal.target_y =
+                        bounds.y + 10.0 + self.locomotion_rng.next_f64() * (bounds.h - 20.0);
                     animal.x = clamp(
                         animal.x + (animal.target_x - animal.x) * 0.15,
                         bounds.x + 8.0,
@@ -298,15 +344,17 @@ impl FarmEngine {
                 }
             }
 
-            update_metabolism(&metabolism_input, &mut metabolism_output)
-                .map_err(str::to_owned)?;
+            update_metabolism(&metabolism_input, &mut metabolism_output).map_err(str::to_owned)?;
             for (index, animal) in self.state.animals.iter_mut().enumerate() {
                 animal.weight = metabolism_output[index * 2];
                 animal.energy = metabolism_output[index * 2 + 1];
             }
             self.sync_rng_states();
             if time == 6 {
-                self.log(format!("Novo dia: peso médio {:.1} kg.", self.metrics().weight), None);
+                self.log(
+                    format!("Novo dia: peso médio {:.1} kg.", self.metrics().weight),
+                    None,
+                );
             }
         }
         Ok(())
@@ -331,7 +379,14 @@ impl FarmEngine {
     }
 
     fn log(&mut self, text: String, animal_id: Option<EntityId>) {
-        self.state.events.insert(0, FarmEvent { hour: self.state.hour, text, animal_id });
+        self.state.events.insert(
+            0,
+            FarmEvent {
+                hour: self.state.hour,
+                text,
+                animal_id,
+            },
+        );
         self.state.events.truncate(100);
     }
 
@@ -342,7 +397,11 @@ impl FarmEngine {
 }
 
 fn bounds_for(housing: Housing, patch: usize) -> Bounds {
-    if housing == Housing::Barn { BARN_BOUNDS } else { PATCH_BOUNDS[patch] }
+    if housing == Housing::Barn {
+        BARN_BOUNDS
+    } else {
+        PATCH_BOUNDS[patch]
+    }
 }
 
 fn clamp(value: f64, min: f64, max: f64) -> f64 {
@@ -382,10 +441,18 @@ fn record_activity(
 
 pub fn metrics(snapshot: &FarmSnapshot) -> FarmMetrics {
     let count = snapshot.animals.len() as f64;
-    let weight = snapshot.animals.iter().map(|animal| animal.weight).sum::<f64>() / count;
-    let gain = snapshot.animals.iter()
+    let weight = snapshot
+        .animals
+        .iter()
+        .map(|animal| animal.weight)
+        .sum::<f64>()
+        / count;
+    let gain = snapshot
+        .animals
+        .iter()
         .map(|animal| animal.weight - animal.initial_weight)
-        .sum::<f64>() / count;
+        .sum::<f64>()
+        / count;
     let pasture = snapshot.pastures.iter().sum();
     let intake = IntakeMetrics {
         pasture_kg_dm: snapshot.intake.pasture_kg_dm,
@@ -528,7 +595,14 @@ mod tests {
     fn native_initialization_uses_stable_ids_and_the_two_js_rng_streams() {
         let engine = FarmEngine::new(917, 2).unwrap();
         let snapshot = engine.snapshot();
-        assert_eq!(snapshot.animals.iter().map(|animal| animal.id.0).collect::<Vec<_>>(), [1, 2]);
+        assert_eq!(
+            snapshot
+                .animals
+                .iter()
+                .map(|animal| animal.id.0)
+                .collect::<Vec<_>>(),
+            [1, 2]
+        );
         assert_eq!(snapshot.seed, 1_949_569_679);
         assert_eq!(snapshot.animals[0].weight, 371.40174839645624);
         assert_eq!(snapshot.locomotion_seed, 2_052_957_951);
@@ -558,7 +632,14 @@ mod tests {
     #[test]
     fn weather_config_and_thirst_rules_are_applied_before_sequential_feeding() {
         let mut engine = FarmEngine::new(42, 1).unwrap();
-        engine.configure(FarmConfig { diet: Diet::Balanced, housing: Housing::Pasture, weather: Weather::Hot, supplement: 0.0 }).unwrap();
+        engine
+            .configure(FarmConfig {
+                diet: Diet::Balanced,
+                housing: Housing::Pasture,
+                weather: Weather::Hot,
+                supplement: 0.0,
+            })
+            .unwrap();
         engine.tick(1).unwrap();
         let snapshot = engine.snapshot();
         assert!((snapshot.animals[0].thirst - 29.0).abs() < 1e-12);
@@ -574,7 +655,14 @@ mod tests {
         snapshot.animals[0].weight = 190.0;
         snapshot.animals[0].energy = 99.0;
         let mut engine = FarmEngine::from_snapshot(snapshot).unwrap();
-        engine.configure(FarmConfig { diet: Diet::Concentrate, housing: Housing::Barn, weather: Weather::Normal, supplement: 4.0 }).unwrap();
+        engine
+            .configure(FarmConfig {
+                diet: Diet::Concentrate,
+                housing: Housing::Barn,
+                weather: Weather::Normal,
+                supplement: 4.0,
+            })
+            .unwrap();
         engine.tick(1).unwrap();
         let animal = &engine.snapshot().animals[0];
         assert!(animal.weight >= 200.0);

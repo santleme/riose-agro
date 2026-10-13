@@ -64,7 +64,9 @@ pub struct FarmConfig {
 impl FarmConfig {
     pub fn validate(&self) -> Result<(), String> {
         if !self.supplement.is_finite() || !(0.0..=4.0).contains(&self.supplement) {
-            return Err("supplement must be finite and between 0 and 4 kg DM per animal per day".into());
+            return Err(
+                "supplement must be finite and between 0 and 4 kg DM per animal per day".into(),
+            );
         }
         Ok(())
     }
@@ -211,7 +213,10 @@ impl FarmSnapshot {
                 return Err(format!("duplicate animal id {}", animal.id.0));
             }
             if animal.patch >= 4 {
-                return Err(format!("animal {} has unsupported patch {}", animal.id.0, animal.patch));
+                return Err(format!(
+                    "animal {} has unsupported patch {}",
+                    animal.id.0, animal.patch
+                ));
             }
             if [
                 animal.weight,
@@ -226,7 +231,10 @@ impl FarmSnapshot {
             .iter()
             .any(|value| !value.is_finite())
             {
-                return Err(format!("animal {} contains a non-finite field", animal.id.0));
+                return Err(format!(
+                    "animal {} contains a non-finite field",
+                    animal.id.0
+                ));
             }
             if animal.history.len() > 40 {
                 return Err(format!("animal {} history exceeds 40 records", animal.id.0));

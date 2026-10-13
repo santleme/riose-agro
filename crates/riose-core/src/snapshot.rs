@@ -24,8 +24,11 @@ pub fn encode_farm_snapshot(snapshot: &FarmSnapshot) -> Result<String, serde_jso
 }
 
 pub fn decode_farm_snapshot(json: &str) -> Result<FarmSnapshot, FarmSnapshotDecodeError> {
-    let snapshot: FarmSnapshot = serde_json::from_str(json).map_err(FarmSnapshotDecodeError::Json)?;
-    snapshot.validate().map_err(FarmSnapshotDecodeError::Invalid)?;
+    let snapshot: FarmSnapshot =
+        serde_json::from_str(json).map_err(FarmSnapshotDecodeError::Json)?;
+    snapshot
+        .validate()
+        .map_err(FarmSnapshotDecodeError::Invalid)?;
     Ok(snapshot)
 }
 
@@ -58,8 +61,14 @@ mod tests {
             "supplementKgDM",
             "dietExtraKgDM",
         ] {
-            assert!(fixture["intake"].get(field).is_some(), "missing JS field {field}");
-            assert!(encoded["intake"].get(field).is_some(), "missing native field {field}");
+            assert!(
+                fixture["intake"].get(field).is_some(),
+                "missing JS field {field}"
+            );
+            assert!(
+                encoded["intake"].get(field).is_some(),
+                "missing native field {field}"
+            );
         }
         assert_eq!(snapshot.animals[0].name, "Aurora");
         assert_eq!(snapshot.initial_seed, 2026);

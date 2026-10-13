@@ -1,6 +1,8 @@
 //! Explicit input/output contract for native demonstrative scenario runs.
 
-use crate::{compare_housing, FarmConfig, FarmEngine, FarmMetrics, FarmSnapshot, HousingComparison};
+use crate::{
+    compare_housing, FarmConfig, FarmEngine, FarmMetrics, FarmSnapshot, HousingComparison,
+};
 use serde::{Deserialize, Serialize};
 
 pub const NATIVE_SCENARIO_VERSION: u16 = 1;
@@ -71,7 +73,13 @@ pub struct NativeRunResult {
 
 pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunResult, String> {
     let result = match request {
-        NativeScenarioRequest::Baseline { version, seed, animal_count, configuration, hours } => {
+        NativeScenarioRequest::Baseline {
+            version,
+            seed,
+            animal_count,
+            configuration,
+            hours,
+        } => {
             validate_version(version)?;
             let mut engine = FarmEngine::new(seed, animal_count)?;
             engine.configure(configuration)?;
@@ -81,7 +89,11 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
                 metrics: engine.metrics(),
             }
         }
-        NativeScenarioRequest::HousingComparison { version, snapshot, days } => {
+        NativeScenarioRequest::HousingComparison {
+            version,
+            snapshot,
+            days,
+        } => {
             validate_version(version)?;
             NativeScenarioResult::HousingComparison {
                 comparison: compare_housing(&snapshot, days)?,
@@ -132,6 +144,9 @@ mod tests {
             option_env!("RIOSE_BUILD_ID")
                 .unwrap_or(concat!("riose-core@", env!("CARGO_PKG_VERSION")))
         );
-        assert!(matches!(result.result, NativeScenarioResult::Baseline { .. }));
+        assert!(matches!(
+            result.result,
+            NativeScenarioResult::Baseline { .. }
+        ));
     }
 }
