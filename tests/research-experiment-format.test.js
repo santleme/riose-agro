@@ -10,7 +10,7 @@ test('format study round-trips the batch manifest/result contract with units and
   assert.equal(execution.status, 0, execution.stderr);
   const report = JSON.parse(execution.stdout);
 
-  assert.equal(report.schemaVersion, 1);
+  assert.equal(report.schemaVersion, 2);
   assert.equal(report.benchmark.name, 'json-jsonl-parquet-experiment-output-format-study');
   assert.match(report.benchmark.source.revision, /^[a-f0-9]{40}$/);
   assert.equal(typeof report.benchmark.source.dirty, 'boolean');
@@ -38,6 +38,8 @@ test('format study round-trips the batch manifest/result contract with units and
       assert.equal(phaseMetric.statistics.rawObservations.length, 3);
       const memoryMetric = report.phases.serialization.measurements.find(item => item.metric === `${format}-${operation === 'fullRead' ? 'full-read' : operation === 'selectiveMetricRead' ? 'selective-read' : 'write'}-heapUsedBytes-delta`);
       assert.equal(memoryMetric.statistics.rawObservations.length, 3);
+      const externalMemoryMetric = report.phases.serialization.measurements.find(item => item.metric === `${format}-${operation === 'fullRead' ? 'full-read' : operation === 'selectiveMetricRead' ? 'selective-read' : 'write'}-externalBytes-delta`);
+      assert.equal(externalMemoryMetric.memoryType, 'v8-external-memory');
     }
     for (const suffix of ['uncompressed-size', 'gzip-level-6-size']) {
       const sizeMetric = report.phases.serialization.measurements.find(item => item.metric === `${format}-${suffix}`);

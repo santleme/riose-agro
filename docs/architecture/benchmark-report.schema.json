@@ -139,7 +139,7 @@
     "phase": {
       "type": "object",
       "required": ["status", "measurements"],
-      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "memoryType": {"enum": ["js-heap", "retained-heap", "process-rss", "serialized-payload", "wasm-memory", "gpu-memory"]}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
+      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "memoryType": {"enum": ["js-heap", "retained-heap", "process-rss", "serialized-payload", "wasm-memory", "gpu-memory", "v8-external-memory", "arraybuffer-memory"]}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
       "allOf": [{
         "if": {"properties": {"status": {"const": "measured"}}, "required": ["status"]},
         "then": {

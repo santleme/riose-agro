@@ -270,6 +270,7 @@ test('memory taxonomy, raw observations, units, and duration values are validate
   for (const [metric, expectedType] of [
     ['jsHeapBytes', 'js-heap'], ['retainedHeapBytes', 'retained-heap'], ['processRssBytes', 'process-rss'],
     ['serializedPayloadBytes', 'serialized-payload'], ['wasmLinearMemoryBytes', 'wasm-memory'], ['gpuMemoryBytes', 'gpu-memory'],
+    ['externalMemoryBytes', 'v8-external-memory'], ['arrayBuffersBytes', 'arraybuffer-memory'],
   ]) {
     const typed = benchmarkReport({
       name: 'memory-type-fixture', workload: report.workload, configuration: report.configuration,
