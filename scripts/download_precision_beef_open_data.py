@@ -31,7 +31,7 @@ EXPECTED_FILES = {"Readme.md"} | {f"accel-{i:02d}.csv" for i in range(1, 19)} | 
 }
 USER_AGENT = "Riose-open-scientific-data/1.0"
 CHUNK_SIZE = 4 * 1024 * 1024
-MAX_WORKERS = 4
+MAX_WORKERS = 8
 
 
 def validate_record(record: dict[str, Any]) -> dict[str, Any]:
