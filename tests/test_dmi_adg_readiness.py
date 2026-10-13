@@ -166,9 +166,16 @@ class ReadinessFixtureTests(unittest.TestCase):
         self.assertEqual(perea["metrics"]["nestedRows"], 5582)
         self.assertEqual(perea["metrics"]["selectedCandidatesAcrossOuterFolds"], {"cart_depth_4": 4, "temporal_logistic_c_10": 2})
         self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalMeanF1_RE_RU"], 0.4025871778670964)
+        self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalMacroF1"], 0.665958419440892)
         self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalRecall_RE"], 0.3081198933322601)
         self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalRecall_RU"], 0.7265047037876734)
         self.assertAlmostEqual(perea["metrics"]["nestedObservationWeightedAccuracy"], 0.813686850591186)
+        self.assertNotIn("equalAnimalMacroF1", perea["metrics"])
+        prior = perea["previousStaticGroupedOof"]
+        self.assertEqual(prior["sourceReport"], "docs/evidence/perea-behavior-grouped-evaluation.json")
+        self.assertEqual(prior["rows"], 8864)
+        self.assertAlmostEqual(prior["equalAnimalMacroF1"], 0.6642230410345241)
+        self.assertIn("not metrics for the nested-selected model", prior["interpretation"])
         self.assertIn("nested within-source exploratory", perea["metrics"]["modelEvaluation"])
         self.assertIn("does not validate DMI consumption", " ".join(perea["limitations"]))
         self.assertIn("breed", perea["groups"])
@@ -188,7 +195,9 @@ class ReadinessFixtureTests(unittest.TestCase):
         self.assertEqual(dmi_gate["metrics"]["eligibleCohorts"], 0)
 
         self.assertEqual(report["processing"]["componentAssessmentCount"], len(records))
-        self.assertIn("adult-beef-cow-pasture-total-dmi-gate", READINESS.render_markdown(report))
+        rendered = READINESS.render_markdown(report)
+        self.assertIn("adult-beef-cow-pasture-total-dmi-gate", rendered)
+        self.assertIn("previousStaticGroupedOof", rendered)
 
     def test_legacy_v1_report_without_component_collection_remains_valid(self):
         report = self.build()

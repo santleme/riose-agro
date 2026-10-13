@@ -10,12 +10,13 @@ from __future__ import annotations
 
 import argparse
 import csv
+import heapq
 import hashlib
 import json
 import math
 import sys
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -35,6 +36,7 @@ TRIAL_BY_ANIMAL = {
 SOURCE_TEST_ANIMALS = {4, 10, 11}
 AXES = ("x", "y", "z")
 VALID_LABELS = {0, 1, 2}
+TIMESTAMP_REORDER_WINDOW = timedelta(seconds=1)
 
 
 def parse_timestamp(value: str) -> datetime:
@@ -57,12 +59,29 @@ def _rows(path: Path, required: tuple[str, ...], audit: dict[str, Any], kind: st
     """Yield contiguous timestamp groups as (timestamp, unique row or empty marker).
 
     A duplicate timestamp yields an empty marker, so it cannot be silently
-    resolved by row order. Input must be monotonic; an out-of-order source file
-    is rejected because external sorting would alter the audited source.
+    resolved by row order. A bounded one-second event-time buffer restores
+    source timestamp order when device rows arrive slightly late; original
+    timestamps and values are not changed. Larger inversions are rejected.
     """
-    previous: datetime | None = None
+    max_seen: datetime | None = None
+    last_emitted: datetime | None = None
     group_ts: datetime | None = None
     group_rows: list[dict[str, Any]] = []
+    pending: list[tuple[datetime, int, dict[str, Any]]] = []
+    sequence = 0
+
+    def consume(timestamp: datetime, parsed: dict[str, Any]) -> tuple[datetime, dict[str, Any]] | None:
+        nonlocal group_ts, group_rows
+        if group_ts is None:
+            group_ts, group_rows = timestamp, [parsed]
+            return None
+        if timestamp == group_ts:
+            group_rows.append(parsed)
+            return None
+        completed = _finish_group(group_ts, group_rows, audit, kind)
+        group_ts, group_rows = timestamp, [parsed]
+        return completed
+
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         if reader.fieldnames is None or not set(required).issubset(reader.fieldnames):
@@ -73,6 +92,9 @@ def _rows(path: Path, required: tuple[str, ...], audit: dict[str, Any], kind: st
         audit[f"{kind}InvalidValueRows"] = 0
         audit[f"{kind}DuplicateTimestampGroups"] = 0
         audit[f"{kind}DuplicateRows"] = 0
+        audit[f"{kind}OutOfOrderRows"] = 0
+        audit[f"{kind}MaxReorderLagSeconds"] = 0.0
+        audit[f"{kind}TimestampOrdering"] = "source order retained; bounded one-second event-time buffer"
         for raw in reader:
             audit[f"{kind}RowsRead"] += 1
             try:
@@ -80,9 +102,15 @@ def _rows(path: Path, required: tuple[str, ...], audit: dict[str, Any], kind: st
             except ValueError:
                 audit[f"{kind}InvalidTimestampRows"] += 1
                 continue
-            if previous is not None and timestamp < previous:
-                raise ValueError(f"{path.name}: timestamps are not monotonically increasing")
-            previous = timestamp
+            if max_seen is not None and timestamp < max_seen:
+                audit[f"{kind}OutOfOrderRows"] += 1
+                lag = (max_seen - timestamp).total_seconds()
+                audit[f"{kind}MaxReorderLagSeconds"] = max(audit[f"{kind}MaxReorderLagSeconds"], lag)
+                if lag > TIMESTAMP_REORDER_WINDOW.total_seconds():
+                    raise ValueError(
+                        f"{path.name}: timestamp inversion of {lag:g}s exceeds the bounded "
+                        f"{TIMESTAMP_REORDER_WINDOW.total_seconds():g}s reorder window"
+                    )
             parsed: dict[str, Any] = {}
             valid = True
             for name in required[1:]:
@@ -105,13 +133,32 @@ def _rows(path: Path, required: tuple[str, ...], audit: dict[str, Any], kind: st
                     valid = False
             if not valid:
                 parsed = {}
-            if group_ts is None:
-                group_ts, group_rows = timestamp, [parsed]
-            elif timestamp == group_ts:
-                group_rows.append(parsed)
-            else:
-                yield _finish_group(group_ts, group_rows, audit, kind)
-                group_ts, group_rows = timestamp, [parsed]
+            heapq.heappush(pending, (timestamp, sequence, parsed))
+            sequence += 1
+            max_seen = timestamp if max_seen is None or timestamp > max_seen else max_seen
+            watermark = max_seen - TIMESTAMP_REORDER_WINDOW
+            while pending and pending[0][0] <= watermark:
+                ready_ts, _, ready_row = heapq.heappop(pending)
+                if last_emitted is not None and ready_ts < last_emitted:
+                    raise ValueError(
+                        f"{path.name}: timestamp inversion exceeds the bounded "
+                        f"{TIMESTAMP_REORDER_WINDOW.total_seconds():g}s reorder window"
+                    )
+                last_emitted = ready_ts
+                completed = consume(ready_ts, ready_row)
+                if completed is not None:
+                    yield completed
+        while pending:
+            ready_ts, _, ready_row = heapq.heappop(pending)
+            if last_emitted is not None and ready_ts < last_emitted:
+                raise ValueError(
+                    f"{path.name}: timestamp inversion exceeds the bounded "
+                    f"{TIMESTAMP_REORDER_WINDOW.total_seconds():g}s reorder window"
+                )
+            last_emitted = ready_ts
+            completed = consume(ready_ts, ready_row)
+            if completed is not None:
+                yield completed
         if group_ts is not None:
             yield _finish_group(group_ts, group_rows, audit, kind)
 
@@ -179,7 +226,7 @@ def aggregate_pair(collar_path: Path, halter_path: Path, animal_id: int, writer:
         "collarFile": collar_path.name,
         "halterFile": halter_path.name,
         "timestampJoin": "exact timestamp equality only; no nearest-neighbor or interpolation",
-        "aggregation": "timezone-naive source timestamp second; arithmetic mean/population SD/min/max per axis; class proportions and unique majority label from aligned halter samples; tied majority is null",
+        "aggregation": "timezone-naive source timestamp second; bounded one-second event-time buffer for late rows; arithmetic mean/population SD/min/max per axis; class proportions and unique majority label from aligned halter samples; tied majority is null",
         "expectedSamplesPerSecond": 10,
     }
     collar_iter = iter(_rows(collar_path, ("timestamp", *AXES), audit, "collar"))
@@ -370,7 +417,7 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
         "sourceTestHandling": "Processed and preserved with their source-defined split; not used for feature/target selection or model fitting.",
         "timeBasis": "Source ISO 8601 naive wall clock retained as naive; README supplies no timezone.",
         "sensorTargetSeparation": "Only x/y/z collar accelerometer values enter sensor feature summaries. Halter classification is kept in separately named reference_* outcome columns.",
-        "aggregationMethod": "Exact timestamp inner join, then floor to source second. For each second, per-axis arithmetic mean, population SD, minimum, and maximum; reference-label fractions and unique majority. Tied majority is null. No interpolation. Duplicate timestamp groups are excluded as ambiguous. Incomplete seconds are retained and flagged; complete means exactly 10 paired, valid 10 Hz samples.",
+        "aggregationMethod": "A bounded one-second event-time buffer restores timestamp order for late source rows without changing timestamps or values; larger inversions fail. Then exact timestamp inner join and floor to source second. For each second, per-axis arithmetic mean, population SD, minimum, and maximum; reference-label fractions and unique majority. Tied majority is null. No interpolation. Duplicate timestamp groups are excluded as ambiguous. Incomplete seconds are retained and flagged; complete means exactly 10 paired, valid 10 Hz samples.",
         "coverageAccounting": {
             "exactTimestampGroups": "Count of unique timestamps present in both files, including groups whose values are ambiguous or invalid; not raw rows and not necessarily usable samples.",
             "emittedSeconds": "Seconds containing at least one exact timestamp group; seconds with no exact match are absent.",
@@ -419,6 +466,10 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
                 "sourceSplit": item["sourceSplit"],
                 "collarRowsRead": item["collarRowsRead"],
                 "halterRowsRead": item["halterRowsRead"],
+                "collarOutOfOrderRows": item["collarOutOfOrderRows"],
+                "halterOutOfOrderRows": item["halterOutOfOrderRows"],
+                "collarMaxReorderLagSeconds": item["collarMaxReorderLagSeconds"],
+                "halterMaxReorderLagSeconds": item["halterMaxReorderLagSeconds"],
                 "exactTimestampGroups": item["exactTimestampGroups"],
                 "exactTimestampRows": item["exactTimestampRows"],
                 "collarOnlyTimestampRows": item["collarOnlyTimestampRows"],

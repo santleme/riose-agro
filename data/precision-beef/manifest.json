@@ -1,0 +1,607 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "title": "Precision Beef - Animal Behaviour Classification",
+    "publisher": "Zenodo",
+    "doi": "10.5281/zenodo.4064802",
+    "officialUrl": "https://zenodo.org/records/4064802",
+    "apiUrl": "https://zenodo.org/api/records/4064802",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "version": "1",
+    "published": "2021-06-09",
+    "retrievedOn": "2026-10-13",
+    "totalArchiveSizeBytes": 8225260123,
+    "licensePermission": "Creative Commons Attribution 4.0 International: reuse and adaptation are allowed with appropriate attribution, a link to the license, and an indication of changes."
+  },
+  "population": {
+    "species": "Bos taurus",
+    "breed": "Limousin cross-breed (reported in primary article 10.3390/s22062323)",
+    "ageOrPhysiologicalClass": "steers; exact ages not reported",
+    "location": "Easter Howgate Farm, UK",
+    "livestockContext": "18 finishing steers across three farm trials",
+    "system": "indoor straw housing with ad libitum total mixed ration",
+    "animalsObserved": true,
+    "animalCategory": "steers; Limousin cross-breed per primary article",
+    "unitOfObservation": "timestamped 10 Hz sensor row paired to an instrument-derived behavior label",
+    "timePoints": [
+      "farm trial 1",
+      "farm trial 2",
+      "farm trial 3"
+    ],
+    "groupKeys": [
+      "animal_id",
+      "farm_trial",
+      "source_split"
+    ]
+  },
+  "measurement": {
+    "experimentType": "observational sensor and behavior-classification dataset from three housed-cattle farm trials",
+    "outcomes": [
+      "other",
+      "rumination",
+      "eating_or_drinking"
+    ],
+    "targetUnits": "acceleration in mg; categorical label codes 0, 1, 2",
+    "method": "neck collar 3-axis MEMS accelerometer paired with RumiWatch muzzle halter jaw-pressure classifier; the halter labels are not independent human-video annotations",
+    "frequency": "10 Hz for collar and halter records",
+    "missingnessAndDuplicates": "Must be audited from downloaded files before modeling; drinking is merged into eating in the published labels. Animal and trial groups must stay intact during evaluation."
+  },
+  "use": {
+    "eligibleCohorts": [
+      "housed_finishing_steer_sensor_to_instrument_reference_agreement"
+    ],
+    "dmiTargetEligible": false,
+    "commercialTrainingLicenseCompatible": true,
+    "decision": "CONDITIONAL_FOR_SEPARATE_HOUSED_STEER_SENSOR_AGREEMENT_TASK; INELIGIBLE_FOR_PASTURE_BEHAVIOR_AND_DMI",
+    "limitations": [
+      "Housed finishing steers are not grazing beef cows or pasture grazing sessions.",
+      "The source-defined test set contains three animals, one from each trial; those animals were already used as a test cohort in the publication.",
+      "Labels are instrument-derived and drinking is merged into eating; this is not human-confirmed ethological ground truth.",
+      "This cohort cannot validate DMI, ADG, pasture behavior, or the Riose engine."
+    ]
+  },
+  "files": [
+    {
+      "name": "Readme.md",
+      "sizeBytes": 6620,
+      "sha256": "625fc103c95b1bd074fd3a9f826d721a7de844d1d246e1bcee5831df4e891542",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/Readme.md/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/Readme.md",
+      "verifiedSha256": "625fc103c95b1bd074fd3a9f826d721a7de844d1d246e1bcee5831df4e891542",
+      "verification": "Zenodo publisher MD5 e52efa933769610b68cf7872f65479e7 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-01.csv",
+      "sizeBytes": 577338664,
+      "sha256": "bdb25d95ae9b96cc0f27e74ee82d266cc919eace21ebc5c06ffd3ac6915444ed",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-01.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-01.csv",
+      "verifiedSha256": "bdb25d95ae9b96cc0f27e74ee82d266cc919eace21ebc5c06ffd3ac6915444ed",
+      "verification": "Zenodo publisher MD5 ae6c00a0adf3e82155d70e264cb29f46 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-02.csv",
+      "sizeBytes": 181405945,
+      "sha256": "3becba4f1668db9be765eae8e4ebadbddc746f657c0dcdbf197a5eaa4210d0ea",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-02.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-02.csv",
+      "verifiedSha256": "3becba4f1668db9be765eae8e4ebadbddc746f657c0dcdbf197a5eaa4210d0ea",
+      "verification": "Zenodo publisher MD5 75f692dbd5757183d4c025766ebae923 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-03.csv",
+      "sizeBytes": 455176137,
+      "sha256": "1a74f404e2762c91f150604be686c92ad20bc3400d58835a3e9c61dff086a503",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-03.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-03.csv",
+      "verifiedSha256": "1a74f404e2762c91f150604be686c92ad20bc3400d58835a3e9c61dff086a503",
+      "verification": "Zenodo publisher MD5 a190502f74f2fb1d9fdf6561cf29f8e4 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-04.csv",
+      "sizeBytes": 198249718,
+      "sha256": "00d0d5ed172e04a9112d4edce979de8d303b3122a1e927849d1ac4e85baab19f",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-04.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-04.csv",
+      "verifiedSha256": "00d0d5ed172e04a9112d4edce979de8d303b3122a1e927849d1ac4e85baab19f",
+      "verification": "Zenodo publisher MD5 8487c47410fef2dbbc6cf921199112a9 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-05.csv",
+      "sizeBytes": 178328086,
+      "sha256": "a5da3114b89aaf83a35d8ddd01ae31c902412ca5e3f81989b73946605ad3bde6",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-05.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-05.csv",
+      "verifiedSha256": "a5da3114b89aaf83a35d8ddd01ae31c902412ca5e3f81989b73946605ad3bde6",
+      "verification": "Zenodo publisher MD5 e5dd19d7e863df0aff83c66a9369771d and local SHA-256 verified"
+    },
+    {
+      "name": "accel-06.csv",
+      "sizeBytes": 574068682,
+      "sha256": "351e6d5904673d66900669599d550c1b75996eb027766e9d9ffe6090675707cd",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-06.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-06.csv",
+      "verifiedSha256": "351e6d5904673d66900669599d550c1b75996eb027766e9d9ffe6090675707cd",
+      "verification": "Zenodo publisher MD5 bb1deaaeb3f4285ecd133efbc2174d90 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-07.csv",
+      "sizeBytes": 243901845,
+      "sha256": "bd983eda24c9e4c63f278f8365a0cfe89ee7ec9ed832c31f4c062dda11421560",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-07.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-07.csv",
+      "verifiedSha256": "bd983eda24c9e4c63f278f8365a0cfe89ee7ec9ed832c31f4c062dda11421560",
+      "verification": "Zenodo publisher MD5 4fc0e3ee0c193bd935fe2340b56c820c and local SHA-256 verified"
+    },
+    {
+      "name": "accel-08.csv",
+      "sizeBytes": 244239987,
+      "sha256": "b205a5a26117af716156d139658a45e53d16294762eb3c8796f1cfdbb69f66b4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-08.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-08.csv",
+      "verifiedSha256": "b205a5a26117af716156d139658a45e53d16294762eb3c8796f1cfdbb69f66b4",
+      "verification": "Zenodo publisher MD5 d354648b754d95cfec64d3e9656f8f9c and local SHA-256 verified"
+    },
+    {
+      "name": "accel-09.csv",
+      "sizeBytes": 237512732,
+      "sha256": "dea7f9d933a7df312cf645a400b1b7cf65123906d07e2b1a7632c7aef539ef3d",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-09.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-09.csv",
+      "verifiedSha256": "dea7f9d933a7df312cf645a400b1b7cf65123906d07e2b1a7632c7aef539ef3d",
+      "verification": "Zenodo publisher MD5 14c77e34a00c328e2a62bfdd5bcae311 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-10.csv",
+      "sizeBytes": 233854528,
+      "sha256": "e15ee71cf4ec0105653062ef103c11f6758898c27fc01c8242eae63df01750bd",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-10.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-10.csv",
+      "verifiedSha256": "e15ee71cf4ec0105653062ef103c11f6758898c27fc01c8242eae63df01750bd",
+      "verification": "Zenodo publisher MD5 f5e131d7790fe252726047226aad2c85 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-11.csv",
+      "sizeBytes": 240183480,
+      "sha256": "b96be8af4f6a1f5d764333d6be1e0b26959f2e9019f42d81d959c7b034149338",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-11.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-11.csv",
+      "verifiedSha256": "b96be8af4f6a1f5d764333d6be1e0b26959f2e9019f42d81d959c7b034149338",
+      "verification": "Zenodo publisher MD5 3d7e080fbccd33cdf800667a6db042e0 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-12.csv",
+      "sizeBytes": 208713025,
+      "sha256": "49f2f93554fb2a9fcc67e01610bd818a75cbc7ccfb1a73430303b24add4d4afa",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-12.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-12.csv",
+      "verifiedSha256": "49f2f93554fb2a9fcc67e01610bd818a75cbc7ccfb1a73430303b24add4d4afa",
+      "verification": "Zenodo publisher MD5 a3d5b3fed759a135e83d9fce1068e3e7 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-13.csv",
+      "sizeBytes": 242989935,
+      "sha256": "bab0c91210634e80c574eac2db26391e59e07c001b1a123c1d22da6bd5104f23",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-13.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-13.csv",
+      "verifiedSha256": "bab0c91210634e80c574eac2db26391e59e07c001b1a123c1d22da6bd5104f23",
+      "verification": "Zenodo publisher MD5 7ba2259c875a646cba638890b812551b and local SHA-256 verified"
+    },
+    {
+      "name": "accel-14.csv",
+      "sizeBytes": 240211125,
+      "sha256": "97165f9ac47d0827d3f1e78fea4fd47c32dc7eddc85ae1b77a9f1c6bf7f2dbec",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-14.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-14.csv",
+      "verifiedSha256": "97165f9ac47d0827d3f1e78fea4fd47c32dc7eddc85ae1b77a9f1c6bf7f2dbec",
+      "verification": "Zenodo publisher MD5 ec0c356b59333fe81c0298f329e7e7dc and local SHA-256 verified"
+    },
+    {
+      "name": "accel-15.csv",
+      "sizeBytes": 242156909,
+      "sha256": "79992e4cee3bb52df758bdb24e4d738ef33b9d8e8f7b00766f7d9e63d073f111",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-15.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-15.csv",
+      "verifiedSha256": "79992e4cee3bb52df758bdb24e4d738ef33b9d8e8f7b00766f7d9e63d073f111",
+      "verification": "Zenodo publisher MD5 fb3a0b06fd55e8fdee0f130dbc79d5c5 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-16.csv",
+      "sizeBytes": 202809769,
+      "sha256": "65af5d7dad69a5d7fec5bf6a365c636683499f515c569eaa3b805e85d00e96c6",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-16.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-16.csv",
+      "verifiedSha256": "65af5d7dad69a5d7fec5bf6a365c636683499f515c569eaa3b805e85d00e96c6",
+      "verification": "Zenodo publisher MD5 96b8c15c04390d7a61d4b1b8ee79bda7 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-17.csv",
+      "sizeBytes": 242603165,
+      "sha256": "2252fac82a312c16511b8f37929af270b30d6d795ad106f27b274568bfbdfae8",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-17.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-17.csv",
+      "verifiedSha256": "2252fac82a312c16511b8f37929af270b30d6d795ad106f27b274568bfbdfae8",
+      "verification": "Zenodo publisher MD5 7bae6097192ab0e5b2192ce4d4fcb2b8 and local SHA-256 verified"
+    },
+    {
+      "name": "accel-18.csv",
+      "sizeBytes": 241809221,
+      "sha256": "b56f79bad3f36dd35e95921fab709da10f323e2a757a820296a9044b7dc05374",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/accel-18.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/accel-18.csv",
+      "verifiedSha256": "b56f79bad3f36dd35e95921fab709da10f323e2a757a820296a9044b7dc05374",
+      "verification": "Zenodo publisher MD5 40e15b0ef918f6cf73a6e3cc158c38be and local SHA-256 verified"
+    },
+    {
+      "name": "halter-01.csv",
+      "sizeBytes": 377207947,
+      "sha256": "4af1a07c8a6d4348bcf771cbc0867e8e27af630700947593e522e32d00e9266b",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-01.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-01.csv",
+      "verifiedSha256": "4af1a07c8a6d4348bcf771cbc0867e8e27af630700947593e522e32d00e9266b",
+      "verification": "Zenodo publisher MD5 79ee4556e5d50d2a4f680ad0f65a28ee and local SHA-256 verified"
+    },
+    {
+      "name": "halter-02.csv",
+      "sizeBytes": 119807947,
+      "sha256": "92d9603aa682b2b8402621c03727536afe2ae24bb17c720ea602cff41ffea86a",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-02.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-02.csv",
+      "verifiedSha256": "92d9603aa682b2b8402621c03727536afe2ae24bb17c720ea602cff41ffea86a",
+      "verification": "Zenodo publisher MD5 f933becfe7a5f9a51a0d7db7a1cd85bd and local SHA-256 verified"
+    },
+    {
+      "name": "halter-03.csv",
+      "sizeBytes": 293435947,
+      "sha256": "2433e25108f3ba2b54f457b1fcff64d06810e3591358d7e84b3eca4d9e3bc97f",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-03.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-03.csv",
+      "verifiedSha256": "2433e25108f3ba2b54f457b1fcff64d06810e3591358d7e84b3eca4d9e3bc97f",
+      "verification": "Zenodo publisher MD5 2430e583849d9a946c9c17a863b711bd and local SHA-256 verified"
+    },
+    {
+      "name": "halter-04.csv",
+      "sizeBytes": 133379947,
+      "sha256": "0494305d5cfd88a6e0a26485f8548e95fe0f3dbbb18fb71a87f8ef3967cbb987",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-04.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-04.csv",
+      "verifiedSha256": "0494305d5cfd88a6e0a26485f8548e95fe0f3dbbb18fb71a87f8ef3967cbb987",
+      "verification": "Zenodo publisher MD5 be80be57b2e6033f7db4e225d2a3587d and local SHA-256 verified"
+    },
+    {
+      "name": "halter-05.csv",
+      "sizeBytes": 119339947,
+      "sha256": "539ae7cefc5b05beaf42208b4a34ebb26cd268f4d362356d591128474dee97ee",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-05.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-05.csv",
+      "verifiedSha256": "539ae7cefc5b05beaf42208b4a34ebb26cd268f4d362356d591128474dee97ee",
+      "verification": "Zenodo publisher MD5 f1dd057ca95923bd561f636c4319f158 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-06.csv",
+      "sizeBytes": 376271947,
+      "sha256": "411524b8cffc76e24ef48310522c0b7d292df75a5bddf9b5d8efb95b3f4beac3",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-06.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-06.csv",
+      "verifiedSha256": "411524b8cffc76e24ef48310522c0b7d292df75a5bddf9b5d8efb95b3f4beac3",
+      "verification": "Zenodo publisher MD5 cefd8132f21f978d66f51c2a642f82d5 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-07.csv",
+      "sizeBytes": 155843947,
+      "sha256": "77a59261afce443795701c0855fbe999d28826cadb24e8e3d9e5191c5b94c1c0",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-07.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-07.csv",
+      "verifiedSha256": "77a59261afce443795701c0855fbe999d28826cadb24e8e3d9e5191c5b94c1c0",
+      "verification": "Zenodo publisher MD5 68e19efe1e84619d2aaf9b1113bfcefa and local SHA-256 verified"
+    },
+    {
+      "name": "halter-08.csv",
+      "sizeBytes": 156311947,
+      "sha256": "8e243334233d4ac8f9758b0faaa31e8562e827a2ab55c9be934cbc768e61d6e4",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-08.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-08.csv",
+      "verifiedSha256": "8e243334233d4ac8f9758b0faaa31e8562e827a2ab55c9be934cbc768e61d6e4",
+      "verification": "Zenodo publisher MD5 4ab6261f827fbb08334d34d3bab84218 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-09.csv",
+      "sizeBytes": 155375947,
+      "sha256": "8b16666c0debeea8e87bdd9deace44f1e477f137fbe39061153a6ef9fc78b345",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-09.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-09.csv",
+      "verifiedSha256": "8b16666c0debeea8e87bdd9deace44f1e477f137fbe39061153a6ef9fc78b345",
+      "verification": "Zenodo publisher MD5 41cd681b3441f67ceb257c1eceb10694 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-10.csv",
+      "sizeBytes": 155375947,
+      "sha256": "88227d53bfd55157b0be5fbe251ef91a435b0aef1229ef47b337532a98895e70",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-10.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-10.csv",
+      "verifiedSha256": "88227d53bfd55157b0be5fbe251ef91a435b0aef1229ef47b337532a98895e70",
+      "verification": "Zenodo publisher MD5 d35d27cdab21d31d599942ccc403956c and local SHA-256 verified"
+    },
+    {
+      "name": "halter-11.csv",
+      "sizeBytes": 153919453,
+      "sha256": "f63a66158594b9ca19302d57b88908f196e0467fb90ba1100d4d7c5e431de42c",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-11.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-11.csv",
+      "verifiedSha256": "f63a66158594b9ca19302d57b88908f196e0467fb90ba1100d4d7c5e431de42c",
+      "verification": "Zenodo publisher MD5 6784f1c5826dc95e7202ad0916a0d0f9 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-12.csv",
+      "sizeBytes": 136268573,
+      "sha256": "55ee989a9d40b6ded068b285cc87bca549bdde7dc9c39bed6d61084ecbd9aa0c",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-12.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-12.csv",
+      "verifiedSha256": "55ee989a9d40b6ded068b285cc87bca549bdde7dc9c39bed6d61084ecbd9aa0c",
+      "verification": "Zenodo publisher MD5 97d196dae05c368f4ed33bec2d525bbd and local SHA-256 verified"
+    },
+    {
+      "name": "halter-13.csv",
+      "sizeBytes": 154496393,
+      "sha256": "d4dd1702ac64f5098ed9ad958fa97598b2e2d1b0fbb86a52a0a2c7878fb2934c",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-13.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-13.csv",
+      "verifiedSha256": "d4dd1702ac64f5098ed9ad958fa97598b2e2d1b0fbb86a52a0a2c7878fb2934c",
+      "verification": "Zenodo publisher MD5 58a897d103baca54f6940f5cfbe3144d and local SHA-256 verified"
+    },
+    {
+      "name": "halter-14.csv",
+      "sizeBytes": 157560961,
+      "sha256": "7ab69f70e2d5cf8dd70d7fb43d08b2da18746f883ced20804b56f303a03294fd",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-14.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-14.csv",
+      "verifiedSha256": "7ab69f70e2d5cf8dd70d7fb43d08b2da18746f883ced20804b56f303a03294fd",
+      "verification": "Zenodo publisher MD5 46028070ba943bdc488003cb3727efc4 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-15.csv",
+      "sizeBytes": 156831973,
+      "sha256": "53bebfb8f8be9a261f17ba6dcc8d510daaee614acab60659c53e03bb9fba9492",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-15.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-15.csv",
+      "verifiedSha256": "53bebfb8f8be9a261f17ba6dcc8d510daaee614acab60659c53e03bb9fba9492",
+      "verification": "Zenodo publisher MD5 bea6cb517f10d04ff277ef6b44ebad8d and local SHA-256 verified"
+    },
+    {
+      "name": "halter-16.csv",
+      "sizeBytes": 129551421,
+      "sha256": "21977e27e191d8c75e7ed668dbde0a3e5465635dc7ef32936858bc195a4da0db",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-16.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-16.csv",
+      "verifiedSha256": "21977e27e191d8c75e7ed668dbde0a3e5465635dc7ef32936858bc195a4da0db",
+      "verification": "Zenodo publisher MD5 f3d9d3d7cd5104a73fdcb0491c1c2837 and local SHA-256 verified"
+    },
+    {
+      "name": "halter-17.csv",
+      "sizeBytes": 156422733,
+      "sha256": "96e2f7224669fa841c8d2f842179a816179eddfc94fc8e17376cc6ce73ca57f2",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-17.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-17.csv",
+      "verifiedSha256": "96e2f7224669fa841c8d2f842179a816179eddfc94fc8e17376cc6ce73ca57f2",
+      "verification": "Zenodo publisher MD5 bb1df725fd74de938524c28602d0b88b and local SHA-256 verified"
+    },
+    {
+      "name": "halter-18.csv",
+      "sizeBytes": 152297573,
+      "sha256": "4b6da6d4a470dfd823ebe4e20227a0d8d7647fd0bb6f27625fa02aee970ac647",
+      "selectedForDownload": true,
+      "downloadUrl": "https://zenodo.org/api/records/4064802/files/halter-18.csv/content",
+      "retrievedOn": "2026-10-13",
+      "localPath": "data/raw/zenodo-4064802/halter-18.csv",
+      "verifiedSha256": "4b6da6d4a470dfd823ebe4e20227a0d8d7647fd0bb6f27625fa02aee970ac647",
+      "verification": "Zenodo publisher MD5 8268412415e10a285cfb4a7662c6fb7c and local SHA-256 verified"
+    }
+  ],
+  "metadataSnapshot": "data/precision-beef/zenodo-record-4064802.json",
+  "provenance": {
+    "apiMetadataSha256": "a3fb713698d7728b2d6e76d5ded6f42c51240419911a693417380acf5d9200ad",
+    "downloadMethod": "Official Zenodo record API followed by resumable HTTPS downloads with up to 8 workers; each file is accepted only after publisher MD5 and local SHA-256 verification. Breed is sourced from linked primary article 10.3390/s22062323."
+  },
+  "processedOutputs": [
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-01.parquet",
+      "rows": 16120,
+      "sha256": "5209ecfc01d065b13ebff57001d6478b6b71f0d9ebe654cb42bb17e464efebc2",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-02.parquet",
+      "rows": 5120,
+      "sha256": "80a83c16c74474694a3f6e07ff26c9c1cb2f5cacdfa8edf93ceda2d1729e395e",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-03.parquet",
+      "rows": 12540,
+      "sha256": "220b66ec3a9c186e6b2f0635d211a8c3434584a2eb8c6f817791583e8d3aedf5",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-04.parquet",
+      "rows": 5700,
+      "sha256": "342025b76d57d27dc370b1f8aef1425f00cf3b2511da51f388372fc6c287989f",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-05.parquet",
+      "rows": 5100,
+      "sha256": "47745cf8522a9894939a12b20a6ea495d7c193100fc718998fb8f88526b6658e",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-06.parquet",
+      "rows": 16080,
+      "sha256": "8610af038dbb3a67dff9e7e02537eb5e4c2fb94e55514811b04b7dd3abc6f314",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-07.parquet",
+      "rows": 6660,
+      "sha256": "5d9a8f33e7d9dfd254a77f7578c7b4d542649622702dfadee9577e700036534a",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-08.parquet",
+      "rows": 6680,
+      "sha256": "3b11aa0684fa86a76b08246f2b2d656850ff6b2a5c1df3efc4c9fab7196b4dcd",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-09.parquet",
+      "rows": 6640,
+      "sha256": "6ea2664d204a4c45ce8a84d0f7e4b67347f533bf33d2c01a3fa19869430d45f7",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-10.parquet",
+      "rows": 6640,
+      "sha256": "af68b7677cb4c8e18f0f9b349568843149d5ed8eb16db54c4ef91ad561ea29b3",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-11.parquet",
+      "rows": 6578,
+      "sha256": "41980f5e14169c0eadc42a54f799933510910525edc147bc11a88e9ff5c5b296",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-12.parquet",
+      "rows": 5824,
+      "sha256": "277b0e1d574b1f53536dd30534dbb2b1664d09dbd54089475c391d532df1b5e0",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-13.parquet",
+      "rows": 6603,
+      "sha256": "905a216d8951560be4ef7478e70f79915361018ccbd649fc5e4cf19cfcb6631e",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-14.parquet",
+      "rows": 6734,
+      "sha256": "ec8a3cc8161c3e43bfc9010167809bd61d579105ab6a189095aaf6939a95d5b5",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-15.parquet",
+      "rows": 6703,
+      "sha256": "27dbc2a4dd579efac3676e830226a6ee68bb1f7414842cc74cdae96b5b0467c7",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-16.parquet",
+      "rows": 5537,
+      "sha256": "24c361edd7bcc7a0ac9f2a11f74075ae5a59391f193562bf73b0b9241ba9cf60",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-17.parquet",
+      "rows": 6685,
+      "sha256": "b31e7c40202a39115440dd3b653a4212854b3b935f8e45120b22dfb1921ca238",
+      "format": "parquet",
+      "compression": "zstd"
+    },
+    {
+      "path": "data/processed/zenodo-4064802-90s/animal-18.parquet",
+      "rows": 6509,
+      "sha256": "570e2bee0c0f8e2d3245a6a04b878d075201b5ac2cf8458db4cd2a2ef248ed9d",
+      "format": "parquet",
+      "compression": "zstd"
+    }
+  ],
+  "processingReport": "data/precision-beef/processing-report-90s.json"
+}

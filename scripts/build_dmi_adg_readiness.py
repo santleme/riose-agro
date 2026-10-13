@@ -299,14 +299,21 @@ COMPONENT_ASSESSMENTS: list[dict[str, Any]] = [
             "nestedAnimalsInOuterFolds": 24,
             "selectedCandidatesAcrossOuterFolds": {"cart_depth_4": 4, "temporal_logistic_c_10": 2},
             "nestedEqualAnimalMeanF1_RE_RU": 0.4025871778670964,
+            "nestedEqualAnimalMacroF1": 0.665958419440892,
             "nestedEqualAnimalRecall_RE": 0.3081198933322601,
             "nestedEqualAnimalRecall_RU": 0.7265047037876734,
             "nestedObservationWeightedAccuracy": 0.813686850591186,
+            "modelEvaluation": "nested within-source exploratory evaluation; not external validation",
+        },
+        "previousStaticGroupedOof": {
+            "sourceReport": "docs/evidence/perea-behavior-grouped-evaluation.json",
+            "rows": 8864,
+            "model": "single motion-index multinomial logistic regression",
             "equalAnimalAccuracy": 0.741130619912341,
             "equalAnimalBalancedAccuracy": 0.7200270840148827,
             "equalAnimalMacroF1": 0.6642230410345241,
             "restingRecall": 0.25444948829835656,
-            "modelEvaluation": "nested within-source exploratory evaluation; not external validation",
+            "interpretation": "prior static grouped-OOF diagnostic; these values are not metrics for the nested-selected model",
         },
         "limitations": [
             "Breed is perfectly confounded with ranch/site in the documented source structure.",
@@ -394,6 +401,55 @@ COMPONENT_ASSESSMENTS: list[dict[str, Any]] = [
             "docs/evidence/usda-cper-ltgi-audit.json",
             "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
             "experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+        ],
+    },
+    {
+        "id": "precision-beef-90s-instrument-agreement",
+        "module": "behavior_instrument_agreement",
+        "decision": "CONDITIONAL",
+        "source": {
+            "doi": "10.5281/zenodo.4064802",
+            "manifest": "data/precision-beef/manifest.json",
+            "processingReport": "data/precision-beef/processing-report-90s.json",
+            "alignmentAudit": "data/precision-beef/alignment-audit.json",
+            "evaluation": "experiments/behavior/precision-beef-instrument-agreement/results-90s.json",
+            "access": "public_downloaded_checksums_verified",
+            "license": "CC BY 4.0",
+        },
+        "population": "18 housed finishing beef steers in the Precision Beef source cohort; source split holds animals 04, 10, and 11 for test.",
+        "target": "90-second majority behavior class inferred from the RumiWatch halter; collar accelerometer summary features predict instrument-derived labels.",
+        "groups": ["animal_id", "farm_trial_id"],
+        "repeatedDimensions": ["90_second_window", "animal"],
+        "metrics": {
+            "sourceFilesDownloadedAndChecksummed": 37,
+            "processedParquets": 18,
+            "unionWindows": 138453,
+            "eligibleWindows": 138118,
+            "scoringRule": "Exclude partial boundary windows, tied/invalid labels, nonfinite collar features, and either-stream counts below 800 of 900 nominal samples.",
+            "developmentAnimals": 15,
+            "developmentLeaveOneAnimalOutMacroF1": 0.6561634775497532,
+            "sourceTestAnimals": ["04", "10", "11"],
+            "sourceTestRows": 18866,
+            "sourceTestRandomForestMacroF1": 0.6558422947305994,
+            "sourceTestRandomForestBalancedAccuracy": 0.7125059032164268,
+            "sourceTestRandomForestAccuracy": 0.6755539064984628,
+            "sourceTestMajorityBaselineMacroF1": 0.21990148716491428,
+            "sourceTestMajorityBaselineAccuracy": 0.49220820523693415,
+            "modelEvaluation": "reproducible instrument-agreement diagnostic on the source-provided animal split; test animals have appeared in the associated publication and are not an independent literature-level holdout",
+        },
+        "limitations": [
+            "The prediction target is a RumiWatch instrument-derived majority label, not video-confirmed human ground truth.",
+            "The primary paper states time alignment was verified but does not specify row pairing or clock-offset corrections; processing uses README-anchored shared wall-clock bins and must not be interpreted as proof of exact synchronization.",
+            "The cohort consists of housed finishing steers; it does not evaluate grazing behavior or transport to farms/ranches.",
+            "This behavior result does not measure DMI or ADG and does not validate BR-CORTE or the Riose engine.",
+            "Animals 04, 10, and 11 are the source-provided test split, not a newly collected or literature-independent holdout.",
+        ],
+        "references": [
+            "data/precision-beef/manifest.json",
+            "data/precision-beef/alignment-audit.json",
+            "data/precision-beef/processing-report-90s.json",
+            "experiments/behavior/precision-beef-instrument-agreement/amendment-2026-10-13.md",
+            "experiments/behavior/precision-beef-instrument-agreement/results-90s.json",
         ],
     },
     {
@@ -1050,10 +1106,14 @@ def render_markdown(document: dict[str, Any]) -> str:
     for item in document.get("componentAssessments", []):
         source = item["source"]
         refs = ", ".join(f"`{reference}`" for reference in item["references"])
+        metric_summary = json.dumps(item["metrics"], ensure_ascii=False, sort_keys=True)
+        previous_static = item.get("previousStaticGroupedOof")
+        if previous_static:
+            metric_summary += " | previousStaticGroupedOof=" + json.dumps(previous_static, ensure_ascii=False, sort_keys=True)
         lines.append(
             f"| {item['id']} | {item['module']} | {item['decision']} | {source['access']} | {source['license']} | "
             f"{item['population']} | {item['target']} | {', '.join(item['groups'])} | "
-            f"`{json.dumps(item['metrics'], ensure_ascii=False, sort_keys=True)}` | "
+            f"`{metric_summary}` | "
             f"{' '.join(item['limitations'])} | {refs} |"
         )
     lines.extend([

@@ -143,7 +143,7 @@ def create_manifest(
             "title": metadata["title"],
             "publisher": "Zenodo",
             "doi": metadata["doi"],
-            "officialUrl": record.get("links", {}).get("html"),
+            "officialUrl": record.get("links", {}).get("html") or f"https://zenodo.org/records/{RECORD_ID}",
             "apiUrl": API_URL,
             "license": "CC BY 4.0",
             "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",

@@ -1,0 +1,901 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "title": "Precision Beef - Animal Behaviour Classification",
+    "doi": "10.5281/zenodo.4064802",
+    "readme": "Readme.md"
+  },
+  "audit": {
+    "timestampColumnOnly": true,
+    "windowSeconds": 90,
+    "windowConvention": "half-open",
+    "minimumRowsForDenseSharedWindow": 800,
+    "sensorValuesRead": false,
+    "behaviorLabelsRead": false,
+    "modelFit": false,
+    "animals": [
+      {
+        "animalId": 1,
+        "readmePairedStartAnchor": "2015-06-12 13:30:00",
+        "collar": {
+          "file": "accel-01.csv",
+          "timestampRows": 14595853,
+          "firstTimestamp": "2015-06-12 13:30:00.161041",
+          "lastTimestamp": "2015-06-29 08:29:59.813619",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 16120,
+          "samplesPerWindowAllBins": {
+            "min": 904,
+            "median": 905.0,
+            "max": 906
+          }
+        },
+        "halter": {
+          "file": "halter-01.csv",
+          "timestampRows": 14507997,
+          "firstTimestamp": "2015-06-12 13:30:00.200000",
+          "lastTimestamp": "2015-06-29 08:29:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 16120,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 16120,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 16120,
+        "collarSamplesPerSharedWindow": {
+          "min": 904,
+          "median": 905.0,
+          "max": 906
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 16119,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 2,
+        "readmePairedStartAnchor": "2015-06-12 13:30:00",
+        "collar": {
+          "file": "accel-02.csv",
+          "timestampRows": 4596052,
+          "firstTimestamp": "2015-06-12 13:30:00.127295",
+          "lastTimestamp": "2015-06-17 21:29:59.890960",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5120,
+          "samplesPerWindowAllBins": {
+            "min": 897,
+            "median": 898.0,
+            "max": 898
+          }
+        },
+        "halter": {
+          "file": "halter-02.csv",
+          "timestampRows": 4607997,
+          "firstTimestamp": "2015-06-12 13:30:00.200000",
+          "lastTimestamp": "2015-06-17 21:29:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5120,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 5120,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 5120,
+        "collarSamplesPerSharedWindow": {
+          "min": 897,
+          "median": 898.0,
+          "max": 898
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 5119,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 3,
+        "readmePairedStartAnchor": "2015-06-12 15:00:00",
+        "collar": {
+          "file": "accel-03.csv",
+          "timestampRows": 11483826,
+          "firstTimestamp": "2015-06-12 15:00:00.165925",
+          "lastTimestamp": "2015-06-25 16:29:59.879715",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 12540,
+          "samplesPerWindowAllBins": {
+            "min": 914,
+            "median": 916.0,
+            "max": 917
+          }
+        },
+        "halter": {
+          "file": "halter-03.csv",
+          "timestampRows": 11285997,
+          "firstTimestamp": "2015-06-12 15:00:00.200000",
+          "lastTimestamp": "2015-06-25 16:29:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 12540,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 12540,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 12540,
+        "collarSamplesPerSharedWindow": {
+          "min": 914,
+          "median": 916.0,
+          "max": 917
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 12539,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 4,
+        "readmePairedStartAnchor": "2015-06-12 14:30:00",
+        "collar": {
+          "file": "accel-04.csv",
+          "timestampRows": 5060287,
+          "firstTimestamp": "2015-06-12 14:30:00.139318",
+          "lastTimestamp": "2015-06-18 12:59:59.829860",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5700,
+          "samplesPerWindowAllBins": {
+            "min": 887,
+            "median": 888.0,
+            "max": 889
+          }
+        },
+        "halter": {
+          "file": "halter-04.csv",
+          "timestampRows": 5129997,
+          "firstTimestamp": "2015-06-12 14:30:00.200000",
+          "lastTimestamp": "2015-06-18 12:59:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5700,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 5700,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 5700,
+        "collarSamplesPerSharedWindow": {
+          "min": 887,
+          "median": 888.0,
+          "max": 889
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 5699,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 5,
+        "readmePairedStartAnchor": "2015-06-12 14:30:00",
+        "collar": {
+          "file": "accel-05.csv",
+          "timestampRows": 4486228,
+          "firstTimestamp": "2015-06-12 14:30:00.140154",
+          "lastTimestamp": "2015-06-17 21:59:59.799160",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5100,
+          "samplesPerWindowAllBins": {
+            "min": 878,
+            "median": 880.0,
+            "max": 880
+          }
+        },
+        "halter": {
+          "file": "halter-05.csv",
+          "timestampRows": 4589997,
+          "firstTimestamp": "2015-06-12 14:30:00.200000",
+          "lastTimestamp": "2015-06-17 21:59:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5100,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 5100,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 5100,
+        "collarSamplesPerSharedWindow": {
+          "min": 878,
+          "median": 880.0,
+          "max": 880
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 5099,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 6,
+        "readmePairedStartAnchor": "2015-06-12 14:30:00",
+        "collar": {
+          "file": "accel-06.csv",
+          "timestampRows": 14490831,
+          "firstTimestamp": "2015-06-12 14:30:00.108630",
+          "lastTimestamp": "2015-06-29 08:29:59.875528",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 16080,
+          "samplesPerWindowAllBins": {
+            "min": 900,
+            "median": 901.0,
+            "max": 902
+          }
+        },
+        "halter": {
+          "file": "halter-06.csv",
+          "timestampRows": 14471997,
+          "firstTimestamp": "2015-06-12 14:30:00.200000",
+          "lastTimestamp": "2015-06-29 08:29:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 16080,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 16080,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 16080,
+        "collarSamplesPerSharedWindow": {
+          "min": 900,
+          "median": 901.0,
+          "max": 902
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 16079,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 7,
+        "readmePairedStartAnchor": "2015-09-14 09:00:00",
+        "collar": {
+          "file": "accel-07.csv",
+          "timestampRows": 6184415,
+          "firstTimestamp": "2015-09-14 09:00:00.188505",
+          "lastTimestamp": "2015-09-21 07:29:59.859548",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6660,
+          "samplesPerWindowAllBins": {
+            "min": 927,
+            "median": 929.0,
+            "max": 929
+          }
+        },
+        "halter": {
+          "file": "halter-07.csv",
+          "timestampRows": 5993997,
+          "firstTimestamp": "2015-09-14 09:00:00.200000",
+          "lastTimestamp": "2015-09-21 07:29:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6660,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6660,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6660,
+        "collarSamplesPerSharedWindow": {
+          "min": 927,
+          "median": 929.0,
+          "max": 929
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6659,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 8,
+        "readmePairedStartAnchor": "2015-09-14 09:00:00",
+        "collar": {
+          "file": "accel-08.csv",
+          "timestampRows": 6084135,
+          "firstTimestamp": "2015-09-14 09:00:00.135202",
+          "lastTimestamp": "2015-09-21 07:59:59.863822",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6680,
+          "samplesPerWindowAllBins": {
+            "min": 910,
+            "median": 911.0,
+            "max": 911
+          }
+        },
+        "halter": {
+          "file": "halter-08.csv",
+          "timestampRows": 6011997,
+          "firstTimestamp": "2015-09-14 09:00:00.200000",
+          "lastTimestamp": "2015-09-21 07:59:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6680,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6680,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6680,
+        "collarSamplesPerSharedWindow": {
+          "min": 910,
+          "median": 911.0,
+          "max": 911
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6679,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 9,
+        "readmePairedStartAnchor": "2015-09-14 10:00:00",
+        "collar": {
+          "file": "accel-09.csv",
+          "timestampRows": 6042522,
+          "firstTimestamp": "2015-09-14 10:00:00.175520",
+          "lastTimestamp": "2015-09-21 07:59:59.890440",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6640,
+          "samplesPerWindowAllBins": {
+            "min": 909,
+            "median": 910.0,
+            "max": 911
+          }
+        },
+        "halter": {
+          "file": "halter-09.csv",
+          "timestampRows": 5975997,
+          "firstTimestamp": "2015-09-14 10:00:00.200000",
+          "lastTimestamp": "2015-09-21 07:59:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6640,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6640,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6640,
+        "collarSamplesPerSharedWindow": {
+          "min": 909,
+          "median": 910.0,
+          "max": 911
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6639,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 10,
+        "readmePairedStartAnchor": "2015-09-14 10:00:00",
+        "collar": {
+          "file": "accel-10.csv",
+          "timestampRows": 5929292,
+          "firstTimestamp": "2015-09-14 10:00:00.104021",
+          "lastTimestamp": "2015-09-21 07:59:59.858737",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6640,
+          "samplesPerWindowAllBins": {
+            "min": 892,
+            "median": 893.0,
+            "max": 894
+          }
+        },
+        "halter": {
+          "file": "halter-10.csv",
+          "timestampRows": 5975997,
+          "firstTimestamp": "2015-09-14 10:00:00.200000",
+          "lastTimestamp": "2015-09-21 07:59:59.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6640,
+          "samplesPerWindowAllBins": {
+            "min": 898,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6640,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6640,
+        "collarSamplesPerSharedWindow": {
+          "min": 892,
+          "median": 893.0,
+          "max": 894
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 898,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6639,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 11,
+        "readmePairedStartAnchor": "2016-09-19 12:34:10",
+        "collar": {
+          "file": "accel-11.csv",
+          "timestampRows": 5956874,
+          "firstTimestamp": "2016-09-19 12:34:10.088000",
+          "lastTimestamp": "2016-09-26 09:00:47.854900",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6578,
+          "samplesPerWindowAllBins": {
+            "min": 683,
+            "median": 906.0,
+            "max": 906
+          }
+        },
+        "halter": {
+          "file": "halter-11.csv",
+          "timestampRows": 5919978,
+          "firstTimestamp": "2016-09-19 12:34:10.100000",
+          "lastTimestamp": "2016-09-26 09:00:47.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6578,
+          "samplesPerWindowAllBins": {
+            "min": 679,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6578,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6577,
+        "collarSamplesPerSharedWindow": {
+          "min": 683,
+          "median": 906.0,
+          "max": 906
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 679,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6577,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 12,
+        "readmePairedStartAnchor": "2016-10-03 12:01:47",
+        "collar": {
+          "file": "accel-12.csv",
+          "timestampRows": 5234400,
+          "firstTimestamp": "2016-10-03 12:01:47.021100",
+          "lastTimestamp": "2016-10-09 13:36:56.888000",
+          "sourceTimestampInversions": 2,
+          "maxInversionLagSeconds": 0.1386,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5824,
+          "samplesPerWindowAllBins": {
+            "min": 399,
+            "median": 899.0,
+            "max": 901
+          }
+        },
+        "halter": {
+          "file": "halter-12.csv",
+          "timestampRows": 5241098,
+          "firstTimestamp": "2016-10-03 12:01:47.100000",
+          "lastTimestamp": "2016-10-09 13:36:56.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5824,
+          "samplesPerWindowAllBins": {
+            "min": 399,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 5824,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 5823,
+        "collarSamplesPerSharedWindow": {
+          "min": 399,
+          "median": 899.0,
+          "max": 901
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 399,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 5823,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 13,
+        "readmePairedStartAnchor": "2016-09-19 12:46:41",
+        "collar": {
+          "file": "accel-13.csv",
+          "timestampRows": 6015540,
+          "firstTimestamp": "2016-09-19 12:46:41.033500",
+          "lastTimestamp": "2016-09-26 09:50:17.827900",
+          "sourceTimestampInversions": 5,
+          "maxInversionLagSeconds": 0.3048,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6603,
+          "samplesPerWindowAllBins": {
+            "min": 373,
+            "median": 911,
+            "max": 916
+          }
+        },
+        "halter": {
+          "file": "halter-13.csv",
+          "timestampRows": 5942168,
+          "firstTimestamp": "2016-09-19 12:46:41.100000",
+          "lastTimestamp": "2016-09-26 09:50:17.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6603,
+          "samplesPerWindowAllBins": {
+            "min": 369,
+            "median": 900,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6603,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6602,
+        "collarSamplesPerSharedWindow": {
+          "min": 373,
+          "median": 911,
+          "max": 916
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 369,
+          "median": 900,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6602,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 14,
+        "readmePairedStartAnchor": "2016-09-12 10:04:23",
+        "collar": {
+          "file": "accel-14.csv",
+          "timestampRows": 5999714,
+          "firstTimestamp": "2016-09-12 10:04:23.152200",
+          "lastTimestamp": "2016-09-19 10:24:26.704200",
+          "sourceTimestampInversions": 2,
+          "maxInversionLagSeconds": 0.1445,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6734,
+          "samplesPerWindowAllBins": {
+            "min": 334,
+            "median": 891.0,
+            "max": 894
+          }
+        },
+        "halter": {
+          "file": "halter-14.csv",
+          "timestampRows": 6060036,
+          "firstTimestamp": "2016-09-12 10:04:23.200000",
+          "lastTimestamp": "2016-09-19 10:24:26.700000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6734,
+          "samplesPerWindowAllBins": {
+            "min": 338,
+            "median": 900.0,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6734,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6733,
+        "collarSamplesPerSharedWindow": {
+          "min": 334,
+          "median": 891.0,
+          "max": 894
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 338,
+          "median": 900.0,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6733,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 15,
+        "readmePairedStartAnchor": "2016-08-29 10:18:24",
+        "collar": {
+          "file": "accel-15.csv",
+          "timestampRows": 6113527,
+          "firstTimestamp": "2016-08-29 10:18:24.056900",
+          "lastTimestamp": "2016-09-05 09:51:43.855200",
+          "sourceTimestampInversions": 4,
+          "maxInversionLagSeconds": 0.333,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6703,
+          "samplesPerWindowAllBins": {
+            "min": 202,
+            "median": 912,
+            "max": 917
+          }
+        },
+        "halter": {
+          "file": "halter-15.csv",
+          "timestampRows": 6031998,
+          "firstTimestamp": "2016-08-29 10:18:24.100000",
+          "lastTimestamp": "2016-09-05 09:51:43.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6703,
+          "samplesPerWindowAllBins": {
+            "min": 199,
+            "median": 900,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6703,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6702,
+        "collarSamplesPerSharedWindow": {
+          "min": 202,
+          "median": 912,
+          "max": 917
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 199,
+          "median": 900,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6702,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 16,
+        "readmePairedStartAnchor": "2016-09-13 10:30:38",
+        "collar": {
+          "file": "accel-16.csv",
+          "timestampRows": 5034477,
+          "firstTimestamp": "2016-09-13 10:30:38.170800",
+          "lastTimestamp": "2016-09-19 04:55:12.753800",
+          "sourceTimestampInversions": 4,
+          "maxInversionLagSeconds": 0.2963,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5537,
+          "samplesPerWindowAllBins": {
+            "min": 352,
+            "median": 909,
+            "max": 914
+          }
+        },
+        "halter": {
+          "file": "halter-16.csv",
+          "timestampRows": 4982746,
+          "firstTimestamp": "2016-09-13 10:30:38.200000",
+          "lastTimestamp": "2016-09-19 04:55:12.700000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 5537,
+          "samplesPerWindowAllBins": {
+            "min": 348,
+            "median": 900,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 5537,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 5536,
+        "collarSamplesPerSharedWindow": {
+          "min": 352,
+          "median": 909,
+          "max": 914
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 348,
+          "median": 900,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 5536,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 17,
+        "readmePairedStartAnchor": "2016-08-29 09:37:37",
+        "collar": {
+          "file": "accel-17.csv",
+          "timestampRows": 5982426,
+          "firstTimestamp": "2016-08-29 09:37:37.037600",
+          "lastTimestamp": "2016-09-05 08:44:42.806900",
+          "sourceTimestampInversions": 4,
+          "maxInversionLagSeconds": 0.2771,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6685,
+          "samplesPerWindowAllBins": {
+            "min": 654,
+            "median": 895,
+            "max": 898
+          }
+        },
+        "halter": {
+          "file": "halter-17.csv",
+          "timestampRows": 6016258,
+          "firstTimestamp": "2016-08-29 09:37:37.100000",
+          "lastTimestamp": "2016-09-05 08:44:42.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6685,
+          "samplesPerWindowAllBins": {
+            "min": 659,
+            "median": 900,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6685,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6684,
+        "collarSamplesPerSharedWindow": {
+          "min": 654,
+          "median": 895,
+          "max": 898
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 659,
+          "median": 900,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6684,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      },
+      {
+        "animalId": 18,
+        "readmePairedStartAnchor": "2016-09-05 14:14:43",
+        "collar": {
+          "file": "accel-18.csv",
+          "timestampRows": 6041489,
+          "firstTimestamp": "2016-09-05 14:14:43.023000",
+          "lastTimestamp": "2016-09-12 08:57:22.870500",
+          "sourceTimestampInversions": 4,
+          "maxInversionLagSeconds": 0.3325,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6509,
+          "samplesPerWindowAllBins": {
+            "min": 412,
+            "median": 928,
+            "max": 933
+          }
+        },
+        "halter": {
+          "file": "halter-18.csv",
+          "timestampRows": 5857598,
+          "firstTimestamp": "2016-09-05 14:14:43.100000",
+          "lastTimestamp": "2016-09-12 08:57:22.800000",
+          "sourceTimestampInversions": 0,
+          "maxInversionLagSeconds": 0.0,
+          "adjacentDuplicateTimestamps": 0,
+          "windowCount": 6509,
+          "samplesPerWindowAllBins": {
+            "min": 399,
+            "median": 900,
+            "max": 900
+          }
+        },
+        "sharedNonemptyWindowCount": 6509,
+        "sharedWindowsWithAtLeast800RowsInBothStreams": 6508,
+        "collarSamplesPerSharedWindow": {
+          "min": 412,
+          "median": 928,
+          "max": 933
+        },
+        "halterSamplesPerSharedWindow": {
+          "min": 399,
+          "median": 900,
+          "max": 900
+        },
+        "firstSharedWindowIndex": 0,
+        "lastSharedWindowIndex": 6508,
+        "method": "timestamp-only; k=floor((timestamp - README paired rounded start)/90s); half-open windows [anchor+90k, anchor+90(k+1)); no sensor values or labels read"
+      }
+    ]
+  }
+}

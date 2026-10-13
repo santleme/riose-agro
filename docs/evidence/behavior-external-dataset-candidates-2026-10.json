@@ -1,14 +1,14 @@
 {
   "title": "Open cattle behavior dataset candidates for independent evaluation",
   "audited_at": "2026-10-13",
-  "scope": "Metadata, archive inspection, and rights audit; XGain public archive was downloaded and normalized; no model fitted.",
+  "scope": "Official repository records and primary articles were audited; open files were downloaded and checksummed where access permitted. Precision Beef raw files were checksum-verified, its timestamp-only audit read no behavior labels or sensor values, and a dated pre-fit amendment preceded the completed, narrowly scoped 90-second instrument-agreement diagnostic.",
   "candidates": [
     {
       "name": "Precision Beef - Animal Behaviour Classification",
       "doi": "10.5281/zenodo.4064802",
       "official_record": "https://zenodo.org/records/4064802",
       "metadata_api": "https://zenodo.org/api/records/4064802",
-      "access": "Open; public direct file download via Zenodo API.",
+      "access": "Open; all 37 files downloaded anonymously from the Zenodo API and checksum-verified locally. Raw files are excluded from Git.",
       "license": "CC BY 4.0",
       "files": {
         "count": 37,
@@ -20,20 +20,48 @@
         ],
         "readme_direct": "https://zenodo.org/api/records/4064802/files/Readme.md/content",
         "largest_file_bytes": 577338664,
-        "note": "The complete record is about 8.2 GB; no data file was fetched."
+        "note": "The complete record is about 8.2 GB; no data file was fetched.",
+        "total_record_size_bytes": 8225260123,
+        "archive_downloaded": true,
+        "raw_checksums_verified": true,
+        "manifest": "data/precision-beef/manifest.json",
+        "alignment_audit": "data/precision-beef/alignment-audit.json",
+        "processed_output": "data/precision-beef/processing-report-90s.json"
       },
       "population": "18 Limousin-cross steers, three farm trials at Easter Howgate Farm, Edinburgh, UK; housed indoors on straw and fed total mixed ration ad libitum.",
       "labels_and_measurement": "Eating, rumination, other. Neck collar has raw 3-axis acceleration at 10 Hz; Rumiwatch halter measures jaw pressure and supplies behavior classifications at 10 Hz. The paper describes 3,460 hours and alignment checks between devices; analysis segments data into 90-second blocks.",
-      "groups_and_grain": "Animal identifiers 01-18 are present in filenames, allowing animal-grouped evaluation. Trial membership is not apparent from the Zenodo metadata or filenames; trial-held-out evaluation needs README/data inspection. Samples are high-frequency time series and the paper's analysis uses 90-second labeled windows.",
-      "best_riose_module": "Behavior classification, restricted to eating/rumination/other in housed beef steers. Can support a separate rumination/eating classifier evaluation; cannot validate pasture grazing, walking/resting, DMI, or the Riose pasture behavior ontology as a whole.",
+      "groups_and_grain": "README identifies farm-trial membership and source-test animals 04, 10, and 11. A timestamp-only audit read only timestamp columns, anchored paired 90-second half-open wall-clock windows to each README start time, and found shared nonempty windows for all 18 animals. Some collar files have timestamp inversions; row-index pairing is not justified.",
+      "best_riose_module": "Separate housed-steer collar-to-RumiWatch instrument-agreement diagnostic using 90-second windows; not the pasture grazing behavior classifier.",
       "decision": "CONDITIONAL",
-      "decision_reason": "Open CC-BY data with useful labels and animal IDs, but the population/system and label ontology differ from free-grazing behavior. A group-by-animal independent evaluation of compatible feeding/rumination classes is plausible after README/schema and trial mapping audit. Full download is large.",
-      "external_validation": "Potentially feasible for a separately scoped feeding/rumination behavior task using animal-level holdout. Not an external validation of grazing behavior. No result can be claimed without downloading, auditing fields, and freezing a group split before fitting.",
+      "decision_reason": "The open, licensed source is checksum-verified and contains animal IDs, raw collar axes, and instrument-derived halter classifications. The primary article uses 90-second windows and majority labels. This supports a distinct instrument-agreement task after timestamp-window processing; it does not provide human-confirmed labels or a pasture population.",
+      "external_validation": "A source-defined animal split supports a bounded exploratory instrument-agreement diagnostic. The three source-test animals were already used in the publication, so this is not new literature-independent validation and cannot support farm/trial transfer.",
       "evidence": [
         "https://zenodo.org/records/4064802",
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC8951529/",
-        "https://pureportal.strath.ac.uk/en/projects/precisionbeef/datasets/"
-      ]
+        "data/precision-beef/manifest.json",
+        "data/precision-beef/alignment-audit.json",
+        "experiments/behavior/precision-beef-instrument-agreement/amendment-2026-10-13.json",
+        "data/precision-beef/processing-report-90s.json",
+        "experiments/behavior/precision-beef-instrument-agreement/results-90s.json",
+        "experiments/behavior/precision-beef-instrument-agreement/results-90s.md"
+      ],
+      "evaluation_result": {
+        "task": "90-second collar features to instrument-derived RumiWatch majority label",
+        "eligible_windows": 138118,
+        "source_test_animals": [
+          "04",
+          "10",
+          "11"
+        ],
+        "source_test_rows": 18866,
+        "random_forest_macro_f1": 0.6558422947305994,
+        "random_forest_balanced_accuracy": 0.7125059032164268,
+        "random_forest_accuracy": 0.6755539064984628,
+        "majority_baseline_macro_f1": 0.21990148716491428,
+        "development_leave_one_animal_out_macro_f1": 0.6561634775497532,
+        "report": "experiments/behavior/precision-beef-instrument-agreement/results-90s.md",
+        "limitations": "Instrument agreement only; published source test split, not literature-independent or grazing validation."
+      }
     },
     {
       "name": "IoT sensor data XGain UC6",

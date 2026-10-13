@@ -60,6 +60,7 @@ class PrecisionBeefDownloadTests(unittest.TestCase):
         ]
         manifest = DOWNLOAD.create_manifest(record, verified, "c" * 64, "2026-10-13")
         self.assertEqual(manifest["source"]["license"], "CC BY 4.0")
+        self.assertEqual(manifest["source"]["officialUrl"], "https://zenodo.org/records/4064802")
         self.assertEqual(manifest["source"]["totalArchiveSizeBytes"], 370)
         self.assertTrue(manifest["population"]["animalsObserved"])
         self.assertFalse(manifest["use"]["dmiTargetEligible"])

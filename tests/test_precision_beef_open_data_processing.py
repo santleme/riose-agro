@@ -109,6 +109,35 @@ def test_partial_second_and_tied_reference_class_are_explicit(tmp_path):
     assert report["tiedMajorityFractionAmongEmittedSeconds"] == 1.0
 
 
+def test_bounded_event_time_buffer_restores_small_late_row_without_changing_join(tmp_path):
+    timestamps = [f"2020-01-01 00:00:00.{i:03d}" for i in range(0, 1000, 100)]
+    order = [0, 1, 3, 2, 4, 5, 6, 7, 8, 9]
+    collar = [[timestamps[i], i, i + 1, i + 2] for i in order]
+    halter = [[timestamp, i % 3] for i, timestamp in enumerate(timestamps)]
+    rows, report = paired_fixture(tmp_path, collar, halter)
+
+    assert len(rows) == 1
+    assert rows[0]["is_complete_10hz_second"] is True
+    assert report["collarOutOfOrderRows"] == 1
+    assert report["collarMaxReorderLagSeconds"] == 0.1
+    assert report["exactTimestampGroups"] == 10
+
+
+def test_event_time_buffer_rejects_late_rows_beyond_one_second(tmp_path):
+    collar = [
+        ["2020-01-01 00:00:00.000", 1, 2, 3],
+        ["2020-01-01 00:00:02.000", 2, 3, 4],
+        ["2020-01-01 00:00:00.500", 3, 4, 5],
+    ]
+    halter = [["2020-01-01 00:00:00.000", 0]]
+    try:
+        paired_fixture(tmp_path, collar, halter)
+    except ValueError as error:
+        assert "exceeds the bounded 1s reorder window" in str(error)
+    else:
+        raise AssertionError("large timestamp disorder must be rejected")
+
+
 def test_emitted_second_fraction_does_not_claim_temporal_coverage(tmp_path):
     # The whole second at 03:00 is absent from both files; the processor must
     # not invent it or use it as a denominator for temporal coverage.
