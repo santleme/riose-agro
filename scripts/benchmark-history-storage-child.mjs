@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {FarmEngine} from '../src/client/engine.js';
+import {separateLegacySnapshot} from '../src/client/animal-view-state.js';
 import {ColumnHistoryEngine} from './column-history-engine.mjs';
 
 const [variant, countText, hoursText, repetitionsText] = process.argv.slice(2);
@@ -20,7 +21,10 @@ function oneRun() {
   collect(); const baseline = sampleMemory(), engine = new Engine(20261012, count);
   const tickStarted = performance.now(); engine.tick(hours, undefined, false); const tickMs = performance.now() - tickStarted;
   collect(); const retained = sampleMemory();
-  const snapshotStarted = performance.now(), snapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
+  const snapshotStarted = performance.now(), rawSnapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
+  // Compare domain state only: FarmEngine keeps compatibility coordinates in its
+  // legacy snapshot, while ColumnHistoryEngine already exposes separated state.
+  const snapshot = variant === 'objectRing' ? separateLegacySnapshot(rawSnapshot).state : rawSnapshot;
   const digest = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
   const historyEntries = snapshot.animals.reduce((sum, animal) => sum + animal.history.length, 0);
   collect(); const materialized = sampleMemory();
