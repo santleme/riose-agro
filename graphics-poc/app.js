@@ -713,6 +713,7 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
 }
 
 async function initialize() {
+  window.__graphicsInitStage = 'loading-assets';
   const [scene, dairyScene, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
@@ -740,8 +741,15 @@ async function initialize() {
   state.terrainCells = sceneTerrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
   if (state.selectedDomain === 'beef') {
+    window.__graphicsInitStage = 'starting-simulation-worker';
     state.worker = new Worker('/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;
+    state.worker.onerror = event => {
+      const error = new Error(event.message || `Simulation Worker failed to load ${event.filename || '/worker.js'}`);
+      for (const pending of state.pending.splice(0)) pending.reject(error);
+    };
+    window.__graphicsInitStage = 'resetting-simulation-worker';
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
+    window.__graphicsInitStage = 'simulation-worker-ready';
   }
   state.canvasSizing = {width: $('stage').clientWidth, height: $('stage').clientHeight, ratio: Math.min(devicePixelRatio || 1, 1.5)};
   syncCanvasSize(); state.camera.zoom = fitSceneZoom(); refreshScene(); requestAnimationFrame(drawCanvas); updateHud();
@@ -773,6 +781,7 @@ async function initialize() {
   $('canvas-renderer').addEventListener('pointerdown', beginPointer); $('canvas-renderer').addEventListener('pointermove', movePointer); $('canvas-renderer').addEventListener('pointerup', endPointer); $('canvas-renderer').addEventListener('pointercancel', () => { state.drag = null; });
   $('stage').addEventListener('wheel', event => { event.preventDefault(); state.camera.zoom = Math.min(4, Math.max(.15, state.camera.zoom * (event.deltaY < 0 ? 1.1 : .9))); refreshScene(); }, {passive: false});
   window.addEventListener('resize', () => { syncCanvasSize(); refreshScene(); });
+  window.__graphicsInitStage = 'ready';
   window.__graphicsReady = true; window.__runGraphicsBenchmark = runGraphicsBenchmark; window.__graphicsStats = frameStats;
   window.__graphicsControl = {
     setRenderer: renderer => { switchRenderer(renderer); return renderer === 'pixi' ? initPixi() : Promise.resolve(); },

@@ -82,7 +82,8 @@ const waitPage = async () => {
     if (error) throw new Error(error);
     await delay(100);
   }
-  throw new Error(`Graphics PoC did not signal ready within ${graphicsReadyTimeoutMs} ms. Check npm run build:graphics-poc and the local server.`);
+  const diagnostic = await cdp.evaluate(`JSON.stringify({stage:window.__graphicsInitStage ?? null, error:window.__graphicsError ?? null, readyState:document.readyState, status:document.querySelector('#scene-status')?.textContent ?? null})`);
+  throw new Error(`Graphics PoC did not signal ready within ${graphicsReadyTimeoutMs} ms (${diagnostic}). Check npm run build:graphics-poc and the local server.`);
 };
 
 try {
