@@ -1,4 +1,4 @@
-import {readFile} from 'node:fs/promises';
+import {readFile, realpath} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -22,7 +22,12 @@ function resolveRepoPath(reference, repositoryRoot) {
 
 async function fileMetadata(reference, repositoryRoot) {
   const filePath = resolveRepoPath(reference, repositoryRoot);
-  const bytes = await readFile(filePath);
+  const [realRoot, realFilePath] = await Promise.all([realpath(repositoryRoot), realpath(filePath)]);
+  const relative = path.relative(realRoot, realFilePath);
+  if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`resolved path escapes repository: ${reference}`);
+  }
+  const bytes = await readFile(realFilePath);
   return {
     size: bytes.length,
     sha256: createHash('sha256').update(bytes).digest('hex'),

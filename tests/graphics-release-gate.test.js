@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, mkdir, readFile, rm, unlink, writeFile} from 'node:fs/promises';
+import {mkdtemp, mkdir, readFile, rm, symlink, unlink, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -217,6 +217,21 @@ test('filesystem gate rejects missing source and export files in an isolated fix
     assert(errors.some(error => /livestock\.cattle\.nelore\.adult\.v1 export file is missing or unreadable/.test(error)));
     assert(errors.some(error => /livestock\.cattle\.nelore\.adult\.v1 source file is missing or unreadable/.test(error)));
     assert(errors.some(error => /nelore-adult source file is missing or unreadable/.test(error)));
+  });
+});
+
+test('filesystem gate rejects asset paths that escape through a repository symlink', async () => {
+  await withFilesystemFixture(async ({repositoryRoot, inputs}) => {
+    const outsideDirectory = await mkdtemp(path.join(tmpdir(), 'riose-graphics-outside-'));
+    try {
+      await writeFile(path.join(outsideDirectory, 'source.png'), Buffer.from('outside source'));
+      await symlink(outsideDirectory, path.join(repositoryRoot, 'external'), 'dir');
+      inputs.semanticManifest.assets[0].source.sourceFile = 'external/source.png';
+      const errors = await inspectGraphicsReleaseFiles(inputs, repositoryRoot);
+      assert(errors.some(error => /livestock\.cattle\.nelore\.adult\.v1 source file is missing or unreadable: external\/source\.png \(resolved path escapes repository/.test(error)));
+    } finally {
+      await rm(outsideDirectory, {recursive: true, force: true});
+    }
   });
 });
 
