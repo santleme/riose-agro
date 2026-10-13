@@ -12,6 +12,7 @@ const counts = (process.env.BENCH_HERDS ?? '100,1000,10000').split(',').map(Numb
 const durationMs = Number(process.env.BENCH_DURATION_MS ?? 2500), warmupMs = Number(process.env.BENCH_WARMUP_MS ?? 700);
 const cameraZoom = Number(process.env.BENCH_CAMERA_ZOOM ?? 3.2);
 const repeats = Number(process.env.BENCH_REPEATS ?? 2);
+const graphicsReadyTimeoutMs = Number(process.env.RIOSE_GRAPHICS_READY_TIMEOUT_MS ?? 30_000);
 
 async function chromePath() {
   const candidates = [process.env.CHROME_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
@@ -73,8 +74,15 @@ const chrome = await chromePath(), userData = await mkdtemp(path.join(tmpdir(), 
 const browser = spawn(chrome, ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--enable-webgl', '--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=swiftshader-webgl', '--remote-debugging-port=0', `--user-data-dir=${userData}`, 'about:blank'], {stdio: 'ignore'});
 let cdp;
 const waitPage = async () => {
-  for (let i = 0; i < 200; i++) { const ready = await cdp.evaluate('Boolean(window.__graphicsReady)'); if (ready) return; const error = await cdp.evaluate('window.__graphicsError'); if (error) throw new Error(error); await delay(50); }
-  throw new Error('Graphics PoC did not signal ready. Check npm run build:graphics-poc and the local server.');
+  const deadline = Date.now() + graphicsReadyTimeoutMs;
+  while (Date.now() < deadline) {
+    const ready = await cdp.evaluate('Boolean(window.__graphicsReady)');
+    if (ready) return;
+    const error = await cdp.evaluate('window.__graphicsError');
+    if (error) throw new Error(error);
+    await delay(100);
+  }
+  throw new Error(`Graphics PoC did not signal ready within ${graphicsReadyTimeoutMs} ms. Check npm run build:graphics-poc and the local server.`);
 };
 
 try {
