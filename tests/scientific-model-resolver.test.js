@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {BR_CORTE_PASTURE_DMI_MODEL} from '../scientific/br_corte_dmi_adapter.js';
 import {BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE} from '../scientific/br_corte_pasture_dmi.js';
-import {defineScientificModel, registerScientificModel, resolveScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
+import {defineScientificModel, registerScientificModel, resolveScientificModel, runRegisteredScientificModel, runScientificModel} from '../scientific/model-contract.js';
 import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
 import {renderSimulationReport} from '../src/client/simulation-report.js';
 import {createRunRecord, getRun, recordRun, runCompatibility} from '../src/client/run-history.js';
@@ -17,6 +17,41 @@ test('resolves an exact registered scientific model ID and version', () => {
     version: '2024',
     inputs: {bodyWeightKg: 330, adgKgPerDay: 0.5, supplementKgDMPerDay: 1.6}
   }), /Unknown scientific model version/);
+});
+
+test('scientific model execution status fails closed for in-progress, review, and unsupported models', () => {
+  for (const executionStatus of ['in-progress', 'review', 'unsupported']) {
+    const id = `issue-95-${executionStatus}`;
+    let calls = 0;
+    registerScientificModel(defineScientificModel({
+      id,
+      version: '1',
+      inputs: {value: 'number'},
+      outputs: {value: 'number'},
+      evidence: {status: 'demonstrative'},
+      executionStatus,
+      run: ({value}) => { calls++; return {value}; }
+    }));
+
+    assert.throws(() => runRegisteredScientificModel({id, version: '1', inputs: {value: 4}}),
+      new RegExp(`execution unavailable: ${id}@1 is ${executionStatus}`));
+    assert.throws(() => runScientificModel(resolveScientificModel(id, '1'), {value: 4}),
+      new RegExp(`execution unavailable: ${id}@1 is ${executionStatus}`));
+    assert.equal(calls, 0, `${executionStatus} model code must not run`);
+  }
+
+  assert.throws(() => defineScientificModel({
+    id: 'issue-95-invalid-status',
+    version: '1',
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    evidence: {},
+    executionStatus: 'maybe',
+    run: ({value}) => ({value})
+  }), /executionStatus must be one of/);
+  assert.throws(() => runScientificModel({...BR_CORTE_PASTURE_DMI_MODEL, executionStatus: 'unlisted'}, {
+    bodyWeightKg: 330, adgKgPerDay: 0.5, supplementKgDMPerDay: 1.6
+  }), /has no supported execution status/);
 });
 
 test('registry rejects model-shaped objects that bypass immutable contract validation', () => {

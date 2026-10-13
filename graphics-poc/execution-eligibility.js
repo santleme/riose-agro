@@ -27,6 +27,17 @@ function isActuallyRegisteredModel(id) {
   }
 }
 
+function registeredModelExecutionStatus(id) {
+  if (!isVersionedModelId(id)) return null;
+  const separator = id.lastIndexOf('@');
+  try {
+    return resolveScientificModel(id.slice(0, separator), id.slice(separator + 1)).executionStatus;
+  } catch (error) {
+    if (/Unknown scientific model version/.test(error?.message ?? '')) return null;
+    throw error;
+  }
+}
+
 /**
  * Resolve whether a scene can issue numeric work. Visual scene loading does not
  * depend on this result. The existing beef engine remains explicitly labeled as
@@ -62,7 +73,10 @@ export function sceneExecutionAvailability(scene) {
   }
 
   const allModelsRegistered = modelIds.length > 0 && modelIds.every(isActuallyRegisteredModel);
-  if (status === 'validated' && allModelsRegistered) {
+  const blockedModelId = allModelsRegistered
+    ? modelIds.find(id => registeredModelExecutionStatus(id) !== 'eligible')
+    : null;
+  if (status === 'validated' && allModelsRegistered && !blockedModelId) {
     return {
       available: true,
       status: 'validated',
@@ -76,7 +90,9 @@ export function sceneExecutionAvailability(scene) {
   return {
     available: false,
     status: 'unavailable',
-    reason: modelIds.length
+    reason: blockedModelId
+      ? `Modelo ${blockedModelId} não está elegível para execução.`
+      : modelIds.length
       ? modelIds.every(isVersionedModelId)
         ? 'Modelo não registrado para execução nesta versão.'
         : 'Modelo sem versão explícita para execução.'

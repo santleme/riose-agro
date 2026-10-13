@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {assertSceneCommandAllowed, sceneExecutionAvailability, terminateNumericWorker, unavailableExecutionState} from '../graphics-poc/execution-eligibility.js';
-import {defineScientificModel, registerScientificModel} from '../scientific/model-contract.js';
+import {defineScientificModel, registerScientificModel, runRegisteredScientificModel} from '../scientific/model-contract.js';
 
 const dairyScene = {
   simulation: {productionSystem: 'dairy', scenarioId: 'riose-dairy-composer-v1'},
@@ -46,6 +46,33 @@ test('validated model execution requires a registered versioned model ID', () =>
   const forged = {...scene, domainModule: {...scene.domainModule, modelIds: ['dairy-fake@1.0.0']}};
   assert.equal(sceneExecutionAvailability(forged).available, false,
     'a version-looking string cannot stand in for a model contract registered with the resolver');
+});
+
+test('validated module cannot bypass an in-progress model status through the resolver or scene gate', async () => {
+  const model = registerScientificModel(defineScientificModel({
+    id: 'dairy-lactation-in-progress',
+    version: '0.1.0',
+    inputs: {days: 'integer'},
+    outputs: {milkKg: 'number'},
+    executionStatus: 'in-progress',
+    evidence: {status: 'demonstrative'},
+    run: ({days}) => ({milkKg: days * 20})
+  }));
+  const scene = {
+    simulation: {productionSystem: 'dairy', scenarioId: 'riose-dairy-composer-v1'},
+    domainModule: {moduleId: 'livestock-dairy', version: '0.1.0', status: 'validated', modelIds: [`${model.id}@${model.version}`]}
+  };
+
+  assert.throws(() => runRegisteredScientificModel({id: model.id, version: model.version, inputs: {days: 1}}), /execution unavailable/);
+  assert.equal(sceneExecutionAvailability(scene).available, false);
+  assert.match(sceneExecutionAvailability(scene).reason, /não está elegível/);
+  assert.throws(() => assertSceneCommandAllowed(scene, 'tick'), /Execução numérica indisponível/);
+  assert.equal(unavailableExecutionState(scene).kind, 'numeric-execution-unavailable');
+  assert.equal(Object.hasOwn(unavailableExecutionState(scene), 'outputs'), false);
+
+  const visual = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
+  assert.equal(visual.domainModule.status, 'in-progress');
+  assert.ok(visual.prefabs.length > 0, 'the visual dairy scene remains loadable');
 });
 
 test('beef demo remains available but is explicitly classified as demonstrative', () => {

@@ -1,4 +1,6 @@
 const SUPPORTED_FIELD_TYPES = new Set(['array', 'boolean', 'integer', 'number', 'object', 'string']);
+const SCIENTIFIC_MODEL_EXECUTION_STATUSES = new Set(['eligible', 'in-progress', 'review', 'unsupported']);
+const BLOCKED_EXECUTION_STATUSES = new Set(['in-progress', 'review', 'unsupported']);
 
 export const SCIENTIFIC_MODEL_INTERFACE_VERSION = 1;
 // Keep IDs and versions as separate keys. Delimiter concatenation can alias
@@ -77,7 +79,7 @@ function cloneAndFreeze(value, ancestors = new Set()) {
   return Object.freeze(clone);
 }
 
-export function defineScientificModel({id, version, inputs, outputs, units = {}, evidence, implementationSource, run} = {}) {
+export function defineScientificModel({id, version, inputs, outputs, units = {}, evidence, executionStatus = 'eligible', implementationSource, run} = {}) {
   if (typeof id !== 'string' || !id.trim()) throw new TypeError('Scientific model id must be a non-empty string');
   if (typeof version !== 'string' || !version.trim()) throw new TypeError(`Scientific model "${id}" version must be a non-empty string`);
   assertShape(inputs, `Scientific model "${id}" inputs`);
@@ -92,6 +94,9 @@ export function defineScientificModel({id, version, inputs, outputs, units = {},
     throw new TypeError(`Scientific model "${id}" evidence must be an object`);
   }
   if (typeof run !== 'function') throw new TypeError(`Scientific model "${id}" run must be a function`);
+  if (!SCIENTIFIC_MODEL_EXECUTION_STATUSES.has(executionStatus)) {
+    throw new TypeError(`Scientific model "${id}" executionStatus must be one of: ${[...SCIENTIFIC_MODEL_EXECUTION_STATUSES].join(', ')}`);
+  }
   if (implementationSource !== undefined && (typeof implementationSource !== 'string' || !implementationSource.trim())) {
     throw new TypeError(`Scientific model "${id}" implementationSource must be a non-empty string`);
   }
@@ -104,6 +109,7 @@ export function defineScientificModel({id, version, inputs, outputs, units = {},
     outputs: Object.freeze({...outputs}),
     units: Object.freeze({...units}),
     evidence: cloneAndFreeze(evidence),
+    executionStatus,
     implementationSource: implementationSource ?? run.toString(),
     run
   });
@@ -126,6 +132,15 @@ export function resolveScientificModel(id, version) {
   const model = modelsForId(id)?.get(version);
   if (!model) throw new Error(`Unknown scientific model version: ${id}@${version}`);
   return model;
+}
+
+function assertScientificModelExecutionEligible(model) {
+  if (!SCIENTIFIC_MODEL_EXECUTION_STATUSES.has(model.executionStatus)) {
+    throw new Error(`Scientific model execution unavailable: ${model.id}@${model.version} has no supported execution status`);
+  }
+  if (BLOCKED_EXECUTION_STATUSES.has(model.executionStatus)) {
+    throw new Error(`Scientific model execution unavailable: ${model.id}@${model.version} is ${model.executionStatus}`);
+  }
 }
 
 // Synchronous SHA-256 keeps report creation deterministic in both Node and browser modules.
@@ -198,6 +213,7 @@ export function runScientificModel(model, inputs) {
     throw new TypeError(`Scientific model "${model.id}" evidence must be an object`);
   }
   if (typeof model.run !== 'function') throw new TypeError(`Scientific model "${model.id}" run must be a function`);
+  assertScientificModelExecutionEligible(model);
 
   assertDataMatchesShape(inputs, model.inputs, `Scientific model "${model.id}" inputs`);
   const outputs = model.run(inputs);
