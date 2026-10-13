@@ -369,6 +369,46 @@ def _read_source_reference(reference: str) -> dict[str, Any]:
     return read_json(ROOT / reference)
 
 
+def _resolve_json_pointer(document: Any, pointer: str, reference: str) -> Any:
+    """Resolve a JSON Pointer so evidence citations cannot silently go stale."""
+    if not pointer:
+        return document
+    if not pointer.startswith("/"):
+        raise ValueError(f"Invalid JSON Pointer in evidence reference: {reference}")
+
+    current = document
+    for encoded_token in pointer[1:].split("/"):
+        # RFC 6901 permits only ~0 and ~1 escapes. Reject malformed escapes
+        # instead of accepting a citation that points somewhere unexpected.
+        index = 0
+        while index < len(encoded_token):
+            if encoded_token[index] == "~":
+                if index + 1 >= len(encoded_token) or encoded_token[index + 1] not in "01":
+                    raise ValueError(f"Invalid JSON Pointer escape in evidence reference: {reference}")
+                index += 2
+            else:
+                index += 1
+        token = encoded_token.replace("~1", "/").replace("~0", "~")
+        try:
+            if isinstance(current, dict):
+                current = current[token]
+            elif isinstance(current, list):
+                if token == "-" or not token.isdigit() or (len(token) > 1 and token.startswith("0")):
+                    raise KeyError(token)
+                current = current[int(token)]
+            else:
+                raise KeyError(token)
+        except (KeyError, IndexError) as error:
+            raise ValueError(f"Unresolved JSON Pointer in evidence reference: {reference}") from error
+    return current
+
+
+def _read_evidence_reference(reference: str, read_reference=_read_source_reference) -> Any:
+    path, separator, pointer = reference.partition("#")
+    document = read_reference(path)
+    return _resolve_json_pointer(document, pointer, reference) if separator else document
+
+
 def _readiness_outcome(source: dict[str, Any], dimension: str) -> dict[str, Any]:
     declared = source[dimension]
     if declared["status"] not in {"eligible", "conditional", "ineligible"}:
@@ -444,7 +484,7 @@ def build_record(source: dict[str, Any], read_reference=_read_source_reference) 
     for fact in [result["studyDesign"], *result["counts"].values(), result["missingness"]["documentedMetrics"]]:
         fact_ref = fact.get("reference")
         if fact_ref:
-            read_reference(fact_ref.split("#", 1)[0])
+            _read_evidence_reference(fact_ref, read_reference)
     if manifest is not None and not manifest:
         raise ValueError(f"Empty manifest: {manifest_ref}")
     if not audit:

@@ -62,6 +62,20 @@ class ReadinessFixtureTests(unittest.TestCase):
         self.assertIsNone(no_label["counts"]["trials"]["value"])
         self.assertIsNone(no_label["missingness"]["documentedMetrics"]["value"])
 
+    def test_evidence_json_pointers_must_resolve(self):
+        sources = json.loads(json.dumps(self.fixture["sources"]))
+        sources[0]["reportedFacts"]["animals"]["reference"] = "public-audit.json#/coverage/animalCounnt"
+        with self.assertRaisesRegex(ValueError, "Unresolved JSON Pointer"):
+            self.build(sources)
+
+    def test_json_pointer_uses_rfc6901_escapes_and_array_indices(self):
+        self.assertEqual(
+            READINESS._resolve_json_pointer({"nested/key": [{"~field": "value"}]}, "/nested~1key/0/~0field", "fixture.json#/nested~1key/0/~0field"),
+            "value",
+        )
+        with self.assertRaisesRegex(ValueError, "Invalid JSON Pointer escape"):
+            READINESS._resolve_json_pointer({"x~2y": 1}, "/x~2y", "fixture.json#/x~2y")
+
     def test_source_order_and_markdown_are_stable_for_reordered_inputs(self):
         sources = self.fixture["sources"]
         first = self.build(sources)

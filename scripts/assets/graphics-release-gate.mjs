@@ -188,6 +188,24 @@ function validateManifest(manifest, label, errors) {
   }
 }
 
+function validateSourceIdentityUniqueness(sourceManifests, errors) {
+  const ownersByIdentity = new Map();
+  for (const [manifestIndex, manifest] of sourceManifests.entries()) {
+    for (const [assetIndex, asset] of (manifest?.assets ?? []).entries()) {
+      const identities = new Set([asset?.id, asset?.semanticId]
+        .filter(identity => typeof identity === 'string' && identity.length > 0));
+      for (const identity of identities) {
+        const owners = ownersByIdentity.get(identity) ?? new Set();
+        owners.add(`${manifestIndex}:${assetIndex}`);
+        ownersByIdentity.set(identity, owners);
+      }
+    }
+  }
+  for (const [identity, owners] of ownersByIdentity) {
+    check(owners.size === 1, `source identity ${identity} resolves to multiple source records`, errors);
+  }
+}
+
 function validateRendererManifest(renderer, sourceManifests, releaseScenes, errors) {
   const atlases = renderer?.atlases ?? {};
   const assets = Array.isArray(renderer?.assets) ? renderer.assets : [];
@@ -264,7 +282,9 @@ export async function assertGraphicsReleaseReady() {
 export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, runtimeManifest, releaseScenes}, initialErrors = []) {
   const errors = [...initialErrors];
   validateManifest(semanticManifest, 'semantic manifest', errors);
-  validateRendererManifest(rendererManifest, [semanticManifest, dairyManifest], releaseScenes, errors);
+  const sourceManifests = [semanticManifest, dairyManifest];
+  validateSourceIdentityUniqueness(sourceManifests, errors);
+  validateRendererManifest(rendererManifest, sourceManifests, releaseScenes, errors);
   validateRuntimeManifest(runtimeManifest, errors);
   if (errors.length) {
     throw new Error(`Graphics release blocked (${errors.length} manifest issue(s)):\n${errors.map(error => `- ${error}`).join('\n')}`);

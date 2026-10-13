@@ -174,6 +174,19 @@ test('release gate rejects duplicate semantic asset IDs', () => {
   );
 });
 
+test('release gate rejects semantic source identities shared across product manifests', () => {
+  const fixture = cloneFixture();
+  fixture.dairyManifest.assets.push({
+    id: 'dairy-alias-conflict',
+    semanticId: fixture.semanticManifest.assets[0].id,
+    status: 'REVIEW',
+  });
+  assert.throws(
+    () => assertGraphicsReleaseInputsReady(fixture),
+    /source identity livestock\.cattle\.nelore\.adult\.v1 resolves to multiple source records/
+  );
+});
+
 test('release gate rejects duplicate renderer asset IDs', () => {
   const fixture = cloneFixture();
   fixture.rendererManifest.assets.push(structuredClone(fixture.rendererManifest.assets[0]));
