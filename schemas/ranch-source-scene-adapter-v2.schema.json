@@ -11,22 +11,24 @@
     "sourceFormat": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["formatId", "schemaVersion", "sceneId", "sourceDigest", "coordinateFrame", "ids"],
+      "required": ["formatId", "schemaVersion", "sceneId", "sourceDigest", "derivedDigest", "coordinateFrame", "ids"],
       "properties": {
         "formatId": {"const": "riose-ranch-composition-v4"},
         "schemaVersion": {"type": "string"},
         "sceneId": {"type": "string", "minLength": 1},
         "sourceDigest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "derivedDigest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
         "coordinateFrame": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["frameId", "units", "footprintPx", "projection", "originConvention"],
+          "required": ["frameId", "units", "footprintPx", "projection", "originConvention", "gridMappingStatus"],
           "properties": {
             "frameId": {"const": "ranch-composition-v4-canvas-pixel"},
             "units": {"const": "px"},
             "footprintPx": {"$ref": "#/$defs/pair"},
             "projection": {"type": "string"},
-            "originConvention": {"type": "string"}
+            "originConvention": {"type": "string"},
+            "gridMappingStatus": {"const": "unsupported"}
           }
         },
         "ids": {
@@ -45,7 +47,7 @@
     "sourceScene": {"type": "object", "required": ["schemaVersion", "sceneId", "footprintPx", "placements"], "properties": {"schemaVersion": {"const": 1}, "sceneId": {"type": "string"}, "footprintPx": {"$ref": "#/$defs/pair"}, "placements": {"type": "array", "items": {"type": "object", "required": ["placementId", "assetId", "anchorPx", "requestedSizePx", "transform", "depthKey", "block"], "properties": {"placementId": {"type": "string"}, "assetId": {"type": "string"}, "anchorPx": {"$ref": "#/$defs/pair"}, "requestedSizePx": {"$ref": "#/$defs/pair"}, "transform": {"type": "object"}, "depthKey": {"type": "number"}, "block": {"type": "string"}}}}}},
     "placements": {"type": "array", "items": {"type": "object", "required": ["placementId", "assetId", "anchorPx", "requestedSizePx", "transform", "depthKey", "block", "canonicalAsset"], "properties": {"placementId": {"type": "string"}, "assetId": {"type": "string"}, "anchorPx": {"$ref": "#/$defs/pair"}, "requestedSizePx": {"$ref": "#/$defs/pair"}, "transform": {"type": "object"}, "depthKey": {"type": "number"}, "block": {"type": "string"}, "canonicalAsset": {"$ref": "#/$defs/resolvedAsset"}}}},
     "assets": {"type": "array", "items": {"$ref": "#/$defs/resolvedAsset"}},
-    "unknownSourceFields": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path"], "properties": {"path": {"type": "string"}, "sourceId": {"type": "string"}}}}
+    "unknownSourceFields": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "reason", "disposition"], "properties": {"path": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1}, "disposition": {"const": "preserved"}, "sourceId": {"type": "string"}}}}
   },
   "$defs": {
     "pair": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},

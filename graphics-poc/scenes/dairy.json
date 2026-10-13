@@ -1,5 +1,6 @@
 {
   "schemaVersion": "1.0.0",
+  "representationRole": "runtime-presentation",
   "sceneId": "riose-dairy-horizonte",
   "name": "Fazenda Leiteira Horizonte",
   "domainModule": {

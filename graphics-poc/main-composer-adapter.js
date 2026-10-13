@@ -213,6 +213,7 @@ export function adaptMainComposerScene(source, rendererManifest) {
   const visualGroups = isDairy ? splitDairyGroups(scene.visualGroups, entities) : undefined;
   return {
     schemaVersion: '1.0.0',
+    representationRole: 'runtime-presentation',
     sceneId: isDairy ? 'riose-dairy-horizonte' : 'riose-beef-boa-esperanca',
     name: scene.metadata.name,
     domainModule: isDairy

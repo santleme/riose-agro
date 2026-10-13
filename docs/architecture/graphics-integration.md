@@ -25,6 +25,8 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 
 ## Composer behavior in the PoC
 
+`scene-adapter-v1.js` is the authored-preservation adapter for `visual-scene` v1: it retains source identity and authored zones, placements, and source JSON for deterministic restoration. Its `representationRole` is `authored-preservation`. `main-composer-adapter.js` remains a runtime-presentation helper used by the Graphics PoC build; it may derive paddocks, fences, or representative positions and labels its output `runtime-presentation`. Those outputs share the v1 scene schema, but are not interchangeable fidelity or round-trip contracts. Consumers that need authored fidelity must use the preservation adapter.
+
 - Isometric projection is 2:1 and exactly invertible for grid snapping.
 - Beef and dairy layouts are reproducible adapters of the committed main Scenario Composer exports. The pinned source snapshots live under `graphics-poc/source/main-composer-v1/`; `scripts/build-composer-scenes.mjs` writes both scenes using `main-composer-adapter.js`.
 - Both layouts preserve their 36×24 grid, 864 individually assigned terrain tiles and Composer provenance. Beef retains its source zones and 219 expanded prefab placements. The dairy adapter subdivides the two source pasture areas into four editable visual paddocks, adds 18 internal fence segments and two gates, and emits 247 prefab placements. Its 14 visual representatives remain linked to groups totaling 200 animals; beef keeps its Worker population as the sole operational animal source.

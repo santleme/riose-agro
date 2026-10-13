@@ -7,6 +7,7 @@
   "required": ["schemaVersion", "sceneId", "name", "domainModule", "simulation", "projection", "assets", "entities", "zones", "prefabs", "layerOrder"],
   "properties": {
     "schemaVersion": {"const": "1.0.0"},
+    "representationRole": {"enum": ["authored-preservation", "runtime-presentation"]},
     "sceneId": {"$ref": "#/$defs/id"},
     "name": {"type": "string", "minLength": 1},
     "domainModule": {"$ref": "#/$defs/scienceModuleRef"},

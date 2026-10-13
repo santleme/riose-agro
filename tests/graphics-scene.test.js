@@ -6,6 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../src/server/server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
+import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
 import {enrichRendererManifest} from '../scripts/assets/runtime-asset-provenance.mjs';
 import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, paintZoneTerrainTiles, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from '../graphics-poc/contract.js';
 
@@ -281,6 +282,11 @@ test('checked-in beef and dairy scenes are reproducible adaptations of pinned Co
   const enrichedRendererManifest = enrichRendererManifest(renderManifest, {semanticManifest, dairyManifest});
   assert.deepEqual(adaptMainComposerScene(beefSource, enrichedRendererManifest), scene);
   assert.deepEqual(adaptMainComposerScene(dairySource, enrichedRendererManifest), dairyScene);
+  const authoredDairy = adaptComposerDocument(dairySource, enrichedRendererManifest).scene;
+  assert.equal(authoredDairy.representationRole, 'authored-preservation');
+  assert.equal(dairyScene.representationRole, 'runtime-presentation');
+  assert.equal(authoredDairy.zones.length, dairySource.scene.zones.length, 'preservation keeps source zones one-to-one');
+  assert.notEqual(dairyScene.zones.length, authoredDairy.zones.length, 'runtime presentation may derive paddock zones');
 });
 
 test('scene edits resolve canonical asset references and preserve review status in the shared manifest contract', () => {
