@@ -19,10 +19,10 @@ class SupervisedReadinessReportTests(unittest.TestCase):
 
     def test_current_report_accounts_for_every_source_for_the_target(self):
         matrix = self.report["reviewedMatrix"]
-        self.assertEqual(matrix["reviewedSourceCount"], 27)
+        self.assertEqual(matrix["reviewedSourceCount"], 28)
         self.assertEqual(matrix["eligibleSourcesForTarget"], 0)
         self.assertEqual(matrix["conditionalSourcesForTarget"], 0)
-        self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 27)
+        self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 28)
         VALIDATOR.validate(self.report)
 
     def test_dryad_yearling_candidate_is_included_but_ineligible_for_model_training(self):
@@ -35,24 +35,38 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         self.assertFalse(source["outcomes"]["adg"]["trainable"])
         self.assertEqual(source["counts"]["trials"]["value"], 4)
         self.assertIn("cannot be assigned", source["counts"]["trials"]["definition"])
-        self.assertEqual(matrix["processing"]["sourceCount"], 27)
+        self.assertEqual(matrix["processing"]["sourceCount"], 28)
         self.assertEqual(self.report["reviewedMatrix"]["eligibleSourcesForTarget"], 0)
         self.assertEqual(self.report["reviewedMatrix"]["conditionalSourcesForTarget"], 0)
-        self.assertEqual(self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"], 27)
+        self.assertEqual(self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"], 28)
         soares = next(item for item in matrix["sources"] if item["id"] == "pasture-dmi-triage-soares-2026-holstein-gyr")
         self.assertEqual(soares["outcomes"]["dmi"]["status"], "ineligible")
         self.assertFalse(soares["outcomes"]["dmi"]["trainable"])
         candidate = next(item for item in self.report["candidateEvidence"] if item["id"] == "dryad-dbrv15fg8-yearling-adg")
-        self.assertIn("already represented in the 27-source", candidate["decision"])
+        self.assertIn("already represented in the 28-source", candidate["decision"])
         self.assertIn("not the frozen engine ADG evaluation", candidate["outcomeFit"])
         VALIDATOR.validate(self.report)
 
+    def test_cattlesat_model_outputs_are_not_promoted_to_observed_dmi_rows(self):
+        matrix_path = ROOT / self.report["reviewedMatrix"]["path"]
+        matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+        source = next(item for item in matrix["sources"] if item["id"] == "pasture-dmi-triage-cattlesat-2026")
+        self.assertEqual(source["outcomes"]["dmi"]["status"], "ineligible")
+        self.assertFalse(source["outcomes"]["dmi"]["trainable"])
+        self.assertIn("Simulated outputs", source["outcomes"]["dmi"]["reason"])
+        reference = source["references"]["sourceAssessment"]
+        self.assertTrue(reference.endswith("#/sources/18"))
+        triage = json.loads((ROOT / "docs/evidence/public-pasture-dmi-source-triage-2026-10.json").read_text(encoding="utf-8"))
+        cattlesat = triage["sources"][18]
+        self.assertFalse(cattlesat["individualDataRetrieved"])
+        self.assertIn("no human or animal subjects", cattlesat["reportedPopulation"])
+
     def test_human_readable_gate_report_matches_the_current_source_count(self):
         markdown = (ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.md").read_text(encoding="utf-8")
-        self.assertIn("matriz de 27 fontes", markdown)
-        self.assertIn("27 ineligíveis ou indisponíveis", markdown)
+        self.assertIn("matriz de 28 fontes", markdown)
+        self.assertIn("28 ineligíveis ou indisponíveis", markdown)
         candidate = next(item for item in self.report["candidateEvidence"] if item["id"] == "dmi-adg-readiness-matrix")
-        self.assertIn("27-source matrix", candidate["decision"])
+        self.assertIn("28-source matrix", candidate["decision"])
 
     def test_target_counts_must_classify_every_reviewed_source(self):
         self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"] -= 1

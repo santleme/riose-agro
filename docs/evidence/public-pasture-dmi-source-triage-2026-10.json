@@ -209,9 +209,21 @@
       "individualDataRetrieved": false,
       "publicDataAssessment": "The cow-trial outcome compares forage organic-matter intake predicted by Pampa Corte with marker estimates. This is not total dry-matter intake including supplement. Although the thesis describes individual observations and paired model inputs, no separate reusable row-level file was located; the thesis carries a no-derivatives license.",
       "decision": "Retain as a relevant model-comparison and cow-population reference, but exclude from supervised total-DMI training/validation: the outcome is forage organic-matter intake, no separate animal-level dataset was found, and the thesis license is CC BY-NC-ND 4.0. Do not extract or reconstruct individual records from the thesis for this gate."
+    },
+    {
+      "title": "Developing a Decision-Support Tool to Improve the Performance and Sustainability of Cow–Calf Grazing Systems Using Satellite Remote Sensing and Mechanistic Nutrition Models",
+      "doi": "10.3390/ani16111675",
+      "url": "https://doi.org/10.3390/ani16111675",
+      "openArticleUrl": "https://www.mdpi.com/2076-2615/16/11/1675",
+      "publicationLicense": "The article is open access under CC BY 4.0; the article/supplement do not provide a public observed animal-level DMI dataset.",
+      "reportedPopulation": "Cow–calf grazing-system case study built from satellite-derived forage mass and mechanistic/empirical submodels; the paper states that no human or animal subjects were used.",
+      "dataAvailabilityStatement": "The article states that original contributions are included in the article and Supplementary Material; further inquiries can be directed to the corresponding authors.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "CattleSat generates DMI from mechanistic nutrition equations and forage-allowance adjustments for a modeled cow–calf system. The case study is not a cohort of observed cows, and the available article/supplement provide no individual measured DMI outcomes, animal-period IDs, or study split keys.",
+      "decision": "Exclude from supervised training and independent validation despite its cow–calf pasture framing: DMI is a model output rather than an observed individual outcome, and the paper explicitly used no animal subjects. Retain as a mechanistic-model/methods reference only; do not treat simulated DMI as field labels or as independent evidence for the target."
     }
   ],
-  "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. The Brazilian Cabral et al. and U.S. Sowell et al. studies are strong biological/method matches but provide aggregate publication results without reusable animal-level rows. The Polish and Pampa Corte thesis sources are also near-misses because they do not establish reusable total-DMI records. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",
+  "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. The Brazilian Cabral et al. and U.S. Sowell et al. studies are strong biological/method matches but provide aggregate publication results without reusable animal-level rows. The Polish and Pampa Corte thesis sources are also near-misses because they do not establish reusable total-DMI records. A 2026 cow–calf grazing decision-support model was also reviewed; its DMI outputs are mechanistic model results, not observed animal labels. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",
   "followUpLeads": [
     {
       "title": "National Animal Nutrition Program (NANP) Modeling Animal Performance Information",
