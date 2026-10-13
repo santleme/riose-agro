@@ -18,6 +18,7 @@
     "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "build:graphics-release": "node scripts/build-composer-scenes.mjs --release && node scripts/build-graphics-poc.mjs",
     "bench:graphics-poc": "npm run build:graphics-poc && node scripts/benchmark-graphics-poc.mjs",
+    "bench:farm-core": "cargo run --release -p riose-core --bin bench-farm-core",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "research:experiment-format": "node --expose-gc scripts/research_experiment_format.mjs",
     "archive:comparison": "node scripts/archive-comparison.js",

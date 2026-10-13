@@ -26,15 +26,35 @@ The shared JavaScript reader-boundary fixtures are table-driven in `tests/persis
 
 | Contract | Initial encoding | Version / validation |
 | --- | --- | --- |
-| Scenario configuration and UI commands | JSON | Existing enums and validation; command envelope should gain an explicit protocol version before external clients appear |
+| Worker commands and responses | Flat structured-clone envelope | Worker protocol v1 uses `protocolVersion: 1`; known unversioned messages pass through a narrow legacy adapter. Protocol version is independent of snapshot and comparison-manifest versions. |
 | Farm snapshot and comparison manifest | JSON | Current JSON Schemas and manifest `type`/`version`; preserve exact manifest bytes for digest links |
-| Small Worker state envelope | Structured clone / JSON-compatible values | Include engine implementation metadata; current state payload still contains descriptive objects |
+| Small Worker state envelope | Structured clone / JSON-compatible values | State, view and comparison responses carry protocol version and engine implementation identity. Errors carry a stable code and readable message. |
+| Worker packed view | Three transferred typed-array buffers | V1 declares array element types, element counts, stride, value fields and action codes; the client validates the complete view before applying it by stable animal ID. Legacy views are adapted only when they match the current typed-array layout. |
 | Dense metabolism input | `Float64Array`, packed `[weight, energy, intake, resting]` per animal | ABI `riose-metabolism-batch/1`, count ≤ 100,000, all buffers are `f64` values; reserved field expansion requires a new ABI version |
 | Dense metabolism output | `Float64Array`, packed `[weight, energy]` per animal | Same order and count as input, finite numeric values expected for valid model state |
 | Rust core snapshot | JSON `riose-core-snapshot` | Internal core format v1; carries tick, initial seed and both current RNG states, next ID, metrics, entity/component values, pending commands and recent events. Decoder rejects unsupported type/version. Not used for app persistence yet. |
 | Core command/event envelope | JSON object with version, sequence, tick, optional entity ID, type and payload | Each record carries its own schema version. Current Worker messages remain the JS command contract until an explicit adapter migration. |
 | Scientific results / large analytical exports | CSV today; Arrow/Parquet candidate | Include scenario ID, seed, model/version, units, source/provenance, timestamps and validation status |
 | Errors | Worker `error` message or negative ABI status | Do not silently return default scientific values; JS fallback is a runtime choice and is reported separately |
+
+## Worker command protocol v1
+
+Commands and responses use flat structured-clone objects with `protocolVersion: 1` and the existing `type` and payload fields. This version belongs only to the client/Worker boundary; it does not version farm snapshots, comparison manifests, simulation outputs or engine implementations.
+
+| Command | Payload | Success response |
+| --- | --- | --- |
+| `reset` | Optional `seed`, `count` (defaults 2026 and 24) | `state` |
+| `load` | Required current engine `snapshot`, optional `selectedAnimalId` (defaults 1) | `state` |
+| `configure` | Required `patch` | `view` |
+| `select` | Required `animalId` | `view` |
+| `tick` | Optional `hours` (defaults 1) | `view` |
+| `compare` | Optional `snapshot`, `days` (defaults to live snapshot and 30) | `comparison` |
+| `replayComparison` | Required `manifest` | `comparison` |
+| `snapshot` | No payload | `state` |
+
+`state`, `view` and `comparison` responses retain their existing flat payloads and add `protocolVersion` and `engineImplementation`. `view` declares `viewLayout.version: 1`, `animalCount`, each array's element type/count/stride/exact byte length, the four `animalValues` fields and units, and action codes. The client verifies each typed array and its backing buffer are densely packed to that layout before applying it. The three array buffers remain transferred in the same ID/value/action order.
+
+An unversioned message is legacy only when the version property is absent and its type is one of the known commands or response types. The adapter preserves documented defaults, validates the known legacy shape, and returns a v1 response. A present but malformed version, an unsupported version, an unknown command or a malformed legacy payload returns a structured `error` with a stable code and readable message. Unversioned commands remain supported throughout protocol v1; removing them requires a separately documented protocol transition.
 
 ## Memory and lifetime
 

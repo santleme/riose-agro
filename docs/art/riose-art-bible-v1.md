@@ -6,16 +6,16 @@
 
 O sistema cobre pecuária bovina brasileira: animais, pastagem e forragem vinculadas ao rebanho, água, manejo, construções, transporte e tecnologia pecuária. O motor de simulação é independente da arte; este documento não define nem altera arquitetura, lógica científica, colisão ou regras de negócio.
 
-1. **Autoridade de acabamento:** [referência urbana original](../assets/pixel-art-urban-reference.png) (1257×850 RGBA). Usar para linguagem de pixel art, precisão geométrica, peso de linha, densidade, materiais, luz, escala aparente e qualidade de composição; não copiar seus edifícios nem seu layout. A [versão limpa](../assets/pixel-art-urban-reference-clean.png) é um crop auxiliar de comparação, não a fonte principal. Auditoria confirmou que o original do projeto é byte-identical à imagem-fonte em Downloads (SHA-256 correspondente).
-2. **Autoridade aprovada de conteúdo e escala rural:** [fazenda brasileira completa v7](../assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png) (1525×1031 RGB), byte-identical à imagem original gerada. O brief do usuário designa explicitamente a V7 como aprovada para conteúdo, escala relativa e composição rural; consultar o [comparativo](../assets/review-farm-pixel/comparativo-referencia-urbana-fazenda-v7.png). Essa aprovação não aprova sprites individuais nem substitui o gate de estilo/produção.
-3. **Exemplo inicial de conteúdo:** [amostra rural de seis elementos v3](../assets/farm-pixel-art-sample-v3.png). Foi aceita como base de direção; requer linhas mais delicadas e mais detalhe de terreno/construção.
+1. **Gramática de composição:** [referência urbana original](../assets/pixel-art-urban-reference.png) (1257×850 RGBA). Usar exclusivamente como modelo de footprint do diorama, hierarquia, distribuição de massas, densidade equilibrada e conectividade visual. Não usar a cidade como autoridade de paleta ou acabamento por sprite, nem copiar seus edifícios/layout. A [versão limpa](../assets/pixel-art-urban-reference-clean.png) é um crop auxiliar. Auditoria confirmou que o original do projeto corresponde byte a byte à imagem-fonte em Downloads.
+2. **Conteúdo, escala e riqueza rural:** [Fazenda brasileira V7](../assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png) (1525×1031 RGB), correspondente ao original gerado e aprovada pelo usuário para contexto, densidade e escala rural. Consultar o [comparativo](../assets/review-farm-pixel/comparativo-referencia-urbana-fazenda-v7.png). Essa aprovação não promove sprites individuais.
+3. **Terreno e integração com o chão:** [piloto Riose V2](../../assets/previews/pilot-v2/ranch-pilot-terrain-v2.png) orienta o tratamento de grama/terra, bordas orgânicas, desgaste local e grounding. A [variante de grounding V2 selecionada](../../assets/previews/ranch-composition-v4/rural-diorama-grounding-v2-selected.png) foi escolhida sobre V1; isso aprova apenas esse overlay.
 4. **Evidência de falha:** [comparativo da cena pecuária em escala v2](../assets/review-cattle-pixel/comparativo-referencia-urbana-fazenda-escala-v2.png), [cena v2 reprovada](../assets/review-cattle-pixel/rejected/fazenda-pecuaria-escala-v2-reprovada.png) e [registro do gate](../assets/review-cattle-pixel/README.md). As candidatas v3–v6 e v1/v2 de escala não autorizam recorte, atlas ou produção em lote.
 
-**Auditoria de fonte registrada:** os arquivos-fonte e suas dimensões estão identificados acima; a referência urbana original foi conferida contra o arquivo em Downloads por correspondência SHA-256, e a V7 corresponde byte a byte ao original gerado. Manter a grade, espessura de contorno, luz, paleta e densidade como valores provisórios até medi-los na escala nativa e concluir a prancha de calibração. Não solicitar novamente essas referências nem revalidar a aprovação da V7 para conteúdo/escala.
+**Calibração e aprovação:** as três fontes têm papéis diferentes e não devem ser misturadas: urbana = composição; V7 = conteúdo/escala rural; Riose V2 = terreno e grounding. Como referências locais de execução visual, usar apenas os sprites individuais aprovados listados abaixo. A direção global continua em calibração; esses quatro assets e o overlay V2 não equivalem a um style lock. Não solicitar novamente as referências nem revalidar a aprovação da V7 para conteúdo/escala.
 
 ## 2. Identidade visual desejada
 
-Handcrafted isometric pixel art de mapa de jogo comercial: plano de chão consistente, silhuetas em degraus, clusters intencionais, materiais legíveis, contornos escuros finos e seletivos, sombreamento gráfico de poucos tons e composição rural conectada e rica. O rural precisa compartilhar o acabamento urbano da referência A; a referência B informa o que compor e a escala relativa rural.
+Identidade Riose em calibração baseada nos sprites individualmente aprovados: [casa-sede](../../assets/approved/infrastructure/farmhouse-v2.png), [árvore](../../assets/approved/vegetation/shade-tree-v2.png), [trator](../../assets/approved/vehicles/tractor-v2.png) e [Nelore adulto](../../assets/approved/livestock/nelore-adult-idle-v1.png). A referência urbana define apenas a gramática compositiva; a V7 define conteúdo e escala rural; Riose V2 define tratamento do chão. Buscar coerência de perspectiva, clusters, contornos, materiais e luz entre os sprites aprovados, mas manter o style lock global pendente até o gate de comparação da cena completa.
 
 **Reprovar** pintura semirrealista, concept art, render 3D/mobile-game gloss, vetor geométrico simplificado, gradiente volumétrico, luz cinematográfica, textura fotográfica, ruído de pixel aleatório, contorno preto espesso uniforme, copa feita de bolotas repetidas, anti-aliasing borrado e halo colorido. Não converter uma pintura em pixel art por redução, posterização ou filtro.
 
@@ -57,7 +57,7 @@ O relatório lista 12 chips median-cut representativos da urbana. Eles não são
 
 ### Extração do master urbano
 
-Uma extração median-cut foi feita no PNG urbano original verificado, excluindo pixels neutros quase brancos com a regra documentada no relatório. Os chips abaixo são **cores representativas medidas da imagem**, não tokens finais nem mapeamentos semânticos: median-cut identifica regiões cromáticas, não determina sozinho se um chip é sombra, folhagem ou material. A fonte de estilo é a referência urbana; a paleta da V7 é mais saturada e serve para conteúdo/escala rural, não para governar cores do sistema.
+Uma extração median-cut descritiva foi feita no PNG urbano original verificado. Os chips abaixo são **amostras daquela imagem**, não tokens visuais da Riose: a referência urbana é apenas compositiva nesta fase e não governa paleta, contorno ou acabamento de sprites. A paleta final deve ser medida nas peças Riose aprovadas e no terreno V2, preservando a função distinta da V7 como fonte de conteúdo/escala.
 
 | Grupo cromático representativo extraído | Chips exatos | Observação |
 | --- | --- | --- |
@@ -77,14 +77,14 @@ Este mapeamento é uma hipótese de uso dos chips extraídos, não uma nova extr
 
 Madeira, telha, pelagens, maquinaria e tecnologia ainda precisam de amostras próprias na referência ou aprovação por calibração; não derivar sua escala cromática de paleta agrícola saturada. Manter saturação moderada e contraste suficiente para zoom médio.
 
-**Densidade de cena:** usar a cena urbana e a fazenda v7 como referências para contagem relativa de massas, conexões e microdetalhes. Para cada amostra, avaliar separadamente: número de setores conectados, detalhes arquitetônicos legíveis, variação de solo/pasto e áreas vazias deliberadas. Não estabelecer uma contagem universal de pixels por tile antes de auditar a escala nativa. Reprovar cena rural que seja funcional mas pareça vazia ao lado da referência; não corrigir densidade com ruído ou decoração sem função.
+**Densidade de cena:** usar o footprint e a hierarquia urbana para distribuir zonas; usar a V7 para densidade de conteúdo rural; usar Riose V2 para leitura do terreno. Para cada amostra, avaliar separadamente: número de setores conectados, detalhes arquitetônicos legíveis, variação de solo/pasto e áreas vazias deliberadas. Não estabelecer uma contagem universal de pixels por tile antes de auditar a escala nativa. Reprovar cena rural que seja funcional mas pareça vazia ao lado da referência; não corrigir densidade com ruído ou decoração sem função.
 
 Níveis de detalhe para produção: **L0** silhueta/cores e ligação ao chão; **L1** leitura em zoom de mapa; **L2** detalhe de construção/equipamento visto em zoom próximo. A passagem de nível deve remover clusters inteiros por hierarquia de leitura, nunca aplicar blur ou redução automática. Definir o zoom de corte só após medir o renderizador e a referência.
 
 ## 7. Gramática de conteúdo e composição
 
 - Cena de pecuária precisa apresentar relações de uso, não uma coleção de ícones: sede/apoio conectados à estrada; curral e corredores ligados aos piquetes; cerca e porteira com conectores; animais posicionados em pasto/água/manejo de forma legível.
-- Construções devem manter telhado, beiral, vãos, portas, janelas, pilares e equipamento pequeno como detalhes hierarquizados em pixel clusters, acompanhando o acabamento da referência urbana.
+- Construções devem manter telhado, beiral, vãos, portas, janelas, pilares e equipamentos pequenos em hierarquia clara, compatível com os sprites Riose aprovados e a escala de conteúdo da V7.
 - Árvores e vegetação terão silhuetas distintas por porte/espécie e irregularidade de copa; distribuir clusters e vazios, evitando repetição de bolotas.
 - Solo, pasto, lama, estradas e água devem formar superfícies contínuas. Tiles declaram bordas, cantos, transições e conectores; nunca compor losangos isolados com pedestal ou emenda visível.
 - Cada peça tem ponto de ancoragem, footprint, orientação, shadow policy e conectores, quando aplicável. A dimensão física da célula não é igual à altura visual do objeto.
@@ -94,16 +94,16 @@ Níveis de detalhe para produção: **L0** silhueta/cores e ligação ao chão; 
 ```text
 Create ONE production-ready native handcrafted isometric pixel-art asset for the RIOSE Brazilian cattle-ranch simulation.
 
-STYLE AUTHORITY: use the supplied urban isometric pixel-art source as the dominant authority for pixel scale, delicacy of contours, cluster design, geometry, materials, palette relationships, shadow treatment and visual density. Use the supplied approved Brazilian farm V7 only for rural content, relative scale and connected ranch composition. Do not copy urban buildings or layout.
+REFERENCE ROLES: use the urban source only for scene composition, hierarchy, density balance and diorama footprint; use Fazenda V7 for Brazilian ranch content and relative scale; use Riose V2 for ground transitions and grounding; use approved isolated Riose sprites as local visual compatibility anchors. Do not copy urban subject matter or layout. Do not infer a global palette/style lock from one reference.
 STYLE: fixed 2:1 ground projection; crisp deliberate stepped edges; selective fine dark colored outlines; controlled clusters; 3–5 hard-edged shades per material; consistent light direction after reference audit; moderately desaturated, readable colors; refined architectural/environmental microdetails with clear hierarchy. Native pixel-art construction, not a painting processed into pixels.
 SUBJECT: [asset and variant]. FUNCTION: [ranch use]. MATERIALS: [materials]. FOOTPRINT: [logical cells]. ORIENTATION: [grid direction]. GROUND ANCHOR: [normalized point]. STATE: [visual state].
 OUTPUT: one isolated clean PNG RGBA sprite, transparent background, no halo, no labels/frame/watermark, consistent padding and declared ground anchor. No baked terrain, neighboring object or unrelated scene. [For tiles: continuous declared connectors with transparent exterior and exact compatible edges.]
 AVOID: semirealistic/painterly art, concept art, 3D/mobile-game render, gradients, soft photographic shadows, glossy highlights, blur/anti-aliasing, random micro-noise, heavy uniform black outlines, false pixelation filters, inconsistent camera/light/scale.
 ```
 
-Anexar a referência urbana original como autoridade de estilo e a fazenda V7 como guia de conteúdo/escala rural. Prompt não é evidência de estilo nem critério de aprovação.
+Anexar as referências de acordo com os papéis acima, além dos sprites Riose aprovados quando forem úteis à família. Prompt não é evidência de estilo nem critério de aprovação.
 
 ## 9. Aprovação e revisões
 
-Estado obrigatório: `DRAFT → REVIEW → APPROVED → RELEASED`; reprovações registram motivo e caminho da evidência. A referência urbana governa estilo; a fazenda V7 aprovada governa conteúdo/escala rural. Uma nova cena precisa demonstrar que aplica a linguagem sem copiar conteúdo. Embora a proveniência das referências esteja auditada, os parâmetros desta bíblia continuam **provisórios** até a calibração mensurada e aprovação do gate; nenhum prompt, sprite, atlas ou composição candidata herda estado `APPROVED` por padrão.
+Estado obrigatório: `DRAFT → REVIEW → APPROVED → RELEASED`; reprovações registram motivo e evidência. A referência urbana governa somente a composição; V7 governa conteúdo/escala rural; Riose V2 governa tratamento do terreno; sprites aprovados ancoram a execução visual asset a asset. Os parâmetros globais continuam **provisórios** até a prancha de calibração ser avaliada. Nenhum prompt, sprite, atlas ou composição candidata herda `APPROVED` por padrão.
 

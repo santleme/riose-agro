@@ -18,3 +18,7 @@ path = "src/bin/bench_metabolism.rs"
 [[bin]]
 name = "bench-layout"
 path = "src/bin/bench_layout.rs"
+
+[[bin]]
+name = "bench-farm-core"
+path = "src/bin/bench_farm_core.rs"

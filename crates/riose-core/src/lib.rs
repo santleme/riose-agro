@@ -1,11 +1,32 @@
 //! Small deterministic numerical kernels shared by native and WebAssembly builds.
 
+mod contract;
+mod environment;
+mod feeding;
 mod runtime;
+mod simulation;
+mod snapshot;
+mod state;
+pub use contract::{
+    run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
+    NativeScenarioResult, MODEL_STATUS, NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,
+};
+pub use environment::{environmental_stress, weather_rules, Weather, WeatherRules};
+pub use feeding::{calculate_feeding, FeedingResult};
 pub use runtime::*;
+pub use simulation::{
+    compare_housing, metrics, ComparisonRow, FarmEngine, HousingComparison, ModelAssumptions,
+};
+pub use snapshot::{decode_farm_snapshot, encode_farm_snapshot, FarmSnapshotDecodeError};
+pub use state::{
+    Activity, ActivityReason, ActivityRecord, AnimalState, Diet, FarmConfig, FarmEvent,
+    FarmMetrics, FarmSnapshot, Housing, IntakeMetrics, IntakeTotals, ObservedActivityState,
+    DAILY_PASTURE_GROWTH_KG_DM, INITIAL_PASTURE_KG_DM, PASTURE_CAP_KG_DM,
+};
 
 pub const MAX_BATCH: usize = 100_000;
-const MAINTENANCE_KG_DM: f64 = 5.3;
-const GAIN_FACTOR: f64 = 0.22;
+pub const MAINTENANCE_KG_DM: f64 = 5.3;
+pub const GAIN_FACTOR: f64 = 0.22;
 
 /// Version of the packed metabolism batch ABI.
 #[no_mangle]
