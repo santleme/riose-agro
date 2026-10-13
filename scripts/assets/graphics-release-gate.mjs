@@ -292,10 +292,31 @@ export async function assertGraphicsReleaseReady() {
 /** Validate the exact manifest inputs used by a release build; exported for isolated fixture tests. */
 export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifest, rendererManifest, runtimeManifest, releaseScenes}, initialErrors = []) {
   const errors = [...initialErrors];
+  check(Array.isArray(releaseScenes) && releaseScenes.length > 0,
+    'release scenes must be supplied for asset-reference validation', errors);
+  const validReleaseScenes = [];
+  if (Array.isArray(releaseScenes)) {
+    const sceneNames = new Set();
+    for (const [index, entry] of releaseScenes.entries()) {
+      const [name, scene] = Array.isArray(entry) ? entry : [];
+      check(typeof name === 'string' && name.trim().length > 0,
+        `release scene ${index} has no name`, errors);
+      if (typeof name === 'string') {
+        check(!sceneNames.has(name), `duplicate release scene name: ${name}`, errors);
+        sceneNames.add(name);
+      }
+      check(scene !== null && typeof scene === 'object' && !Array.isArray(scene),
+        `release scene ${name ?? index} is not an object`, errors);
+      if (typeof name === 'string' && name.trim().length > 0
+        && scene !== null && typeof scene === 'object' && !Array.isArray(scene)) {
+        validReleaseScenes.push([name, scene]);
+      }
+    }
+  }
   validateManifest(semanticManifest, 'semantic manifest', errors);
   const sourceManifests = [semanticManifest, dairyManifest];
   validateSourceIdentityUniqueness(sourceManifests, errors);
-  validateRendererManifest(rendererManifest, sourceManifests, releaseScenes, errors);
+  validateRendererManifest(rendererManifest, sourceManifests, validReleaseScenes, errors);
   validateRuntimeManifest(runtimeManifest, sourceManifests, rendererManifest, errors);
   if (errors.length) {
     throw new Error(`Graphics release blocked (${errors.length} manifest issue(s)):\n${errors.map(error => `- ${error}`).join('\n')}`);

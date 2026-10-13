@@ -98,6 +98,22 @@ test('fully reviewed release fixture resolves semantic and renderer atlas member
   assert.doesNotThrow(() => assertGraphicsReleaseInputsReady(approvedFixture));
 });
 
+test('release gate requires named, valid scenes before checking asset references', () => {
+  const missing = cloneFixture();
+  delete missing.releaseScenes;
+  assert.throws(() => assertGraphicsReleaseInputsReady(missing),
+    /release scenes must be supplied for asset-reference validation/);
+
+  const malformed = cloneFixture();
+  malformed.releaseScenes = [['beef scene', {}], ['beef scene', []], [null, {}]];
+  assert.throws(() => assertGraphicsReleaseInputsReady(malformed), error => {
+    assert.match(error.message, /duplicate release scene name: beef scene/);
+    assert.match(error.message, /release scene beef scene is not an object/);
+    assert.match(error.message, /release scene 2 has no name/);
+    return true;
+  });
+});
+
 test('runtime release gate treats missing status as unresolved and rejects every non-release status', () => {
   for (const status of ['REVIEW', 'UNRESOLVED', 'APPROVED']) {
     const fixture = cloneFixture();
