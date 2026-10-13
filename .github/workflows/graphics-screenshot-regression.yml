@@ -5,6 +5,13 @@ on:
     paths:
       - '.github/workflows/graphics-screenshot-regression.yml'
       - 'graphics-poc/**'
+      # The PoC starts a simulation Worker whose initial herd state determines
+      # the sprites and positions captured by these screenshots.
+      - 'src/client/worker.js'
+      - 'src/client/engine.js'
+      - 'src/client/metabolism-wasm.js'
+      - 'src/client/environment-model.js'
+      - 'src/client/feeding-model.js'
       - 'assets/**'
       - 'schemas/visual-scene.schema.json'
       - 'scripts/graphics-screenshot-regression.mjs'

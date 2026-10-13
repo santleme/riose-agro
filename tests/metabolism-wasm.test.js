@@ -23,14 +23,15 @@ test('WASM metabolism batch matches the legacy JavaScript formula across clamps 
   wasmKernel.dispose();
 });
 
-function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocateFailureAt=Infinity,allocateThrowAt=Infinity,missingExport}={}){
+function createWasmFixture({status=0,abiVersion=1,abiVersionThrows=false,updateThrows=false,growDuringUpdate=false,allocateFailureAt=Infinity,allocateThrowAt=Infinity,invalidPointerAt=Infinity,invalidPointer=9,releaseThrowAt=Infinity,missingExport}={}){
   const memory=new WebAssembly.Memory({initial:1,maximum:32});
-  const allocations=[],releases=[];
+  const allocations=[],releases=[],releaseCalls=[];
   let nextPointer=8,allocationCount=0;
   const allocate=length=>{
     allocationCount++;
     if(allocationCount===allocateThrowAt)throw new RangeError('simulated linear-memory allocation trap');
     if(allocationCount===allocateFailureAt)return 0;
+    if(allocationCount===invalidPointerAt)return invalidPointer;
     const pointer=nextPointer;
     nextPointer+=length*Float64Array.BYTES_PER_ELEMENT+8;
     const required=nextPointer;
@@ -38,8 +39,13 @@ function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocat
     allocations.push({pointer,length});
     return pointer;
   };
-  const release=(pointer,length)=>releases.push({pointer,length});
+  const release=(pointer,length)=>{
+    releaseCalls.push({pointer,length});
+    if(releaseCalls.length===releaseThrowAt)throw new WebAssembly.RuntimeError('simulated free trap');
+    releases.push({pointer,length});
+  };
   const update=(count,inputPointer,outputPointer)=>{
+    if(updateThrows)throw new WebAssembly.RuntimeError('simulated update trap');
     if(status!==0)return status;
     const input=new Float64Array(memory.buffer,inputPointer,count*4);
     const output=new Float64Array(memory.buffer,outputPointer,count*2);
@@ -50,9 +56,9 @@ function createWasmFixture({status=0,abiVersion=1,growDuringUpdate=false,allocat
     if(growDuringUpdate)memory.grow(1);
     return 0;
   };
-  const exports={memory,riose_abi_version:()=>abiVersion,riose_alloc_f64:allocate,riose_free_f64:release,riose_update_metabolism_batch:update};
+  const exports={memory,riose_abi_version:()=>{if(abiVersionThrows)throw new WebAssembly.RuntimeError('simulated ABI version trap');return abiVersion;},riose_alloc_f64:allocate,riose_free_f64:release,riose_update_metabolism_batch:update};
   if(missingExport)delete exports[missingExport];
-  return {memory,allocations,releases,exports,instance:{exports}};
+  return {memory,allocations,releases,releaseCalls,exports,instance:{exports}};
 }
 
 async function withInstantiatedFixture(fixture,callback){
@@ -129,6 +135,35 @@ test('WASM reads fresh views after memory growth and preserves caller output on 
   });
 });
 
+test('WASM wraps ABI export and kernel traps as actionable errors without exposing partial output',async()=>{
+  const invalidExports=['memory','riose_abi_version','riose_alloc_f64','riose_free_f64','riose_update_metabolism_batch'];
+  for(const missingExport of invalidExports){
+    await withInstantiatedFixture(createWasmFixture({missingExport}),async()=>{
+      await assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),
+        /WASM exports do not match riose-core ABI/,`missing export ${missingExport}`);
+    });
+  }
+  await withInstantiatedFixture(createWasmFixture({abiVersionThrows:true}),async()=>{
+    await assert.rejects(loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true})),error=>{
+      assert.match(error.message,/WASM exports do not match riose-core ABI/);
+      assert.match(error.cause?.message??'',/simulated ABI version trap/);
+      return true;
+    });
+  });
+  const trapping=createWasmFixture({updateThrows:true});
+  await withInstantiatedFixture(trapping,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    const output=Float64Array.of(71,72,73);
+    assert.throws(()=>kernel(Float64Array.of(10,20,30,0),1,output),error=>{
+      assert.match(error.message,/WASM metabolism call failed; no results were returned/);
+      assert.match(error.cause?.message??'',/simulated update trap/);
+      return true;
+    });
+    assert.deepEqual(Array.from(output),[71,72,73]);
+    kernel.dispose();
+  });
+});
+
 test('WASM reports allocation, fetch, compilation, export, and ABI failures clearly',async()=>{
   const allocation=createWasmFixture({allocateFailureAt:2});
   await withInstantiatedFixture(allocation,async()=>{
@@ -161,6 +196,56 @@ test('WASM cleans up partial allocations when the allocator traps',async()=>{
     assert.equal(fixture.releases.length,1,'the first allocation is released after the second allocation traps');
     kernel.dispose();
     assert.equal(fixture.releases.length,1,'failed allocation leaves no partially owned buffer to dispose');
+  });
+});
+
+test('WASM rejects misaligned and out-of-range allocator pointers before constructing views',async()=>{
+  for(const [label,invalidPointer] of [['misaligned',9],['outside memory',65_536]]){
+    const fixture=createWasmFixture({invalidPointerAt:1,invalidPointer});
+    await withInstantiatedFixture(fixture,async()=>{
+      const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+      assert.throws(()=>kernel(new Float64Array(4)),/WASM returned invalid metabolism buffer pointers/,
+        `${label} pointers must be rejected as ABI contract failures`);
+      assert.equal(fixture.releaseCalls.length,0,'an invalid pointer must never be passed to free');
+      kernel.dispose();
+    });
+  }
+  const outputOutOfRange=createWasmFixture({invalidPointerAt:2,invalidPointer:65_536});
+  await withInstantiatedFixture(outputOutOfRange,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    assert.throws(()=>kernel(new Float64Array(4)),/WASM returned invalid metabolism buffer pointers/);
+    assert.equal(outputOutOfRange.releaseCalls.length,1,'the valid input allocation is cleaned up; invalid output is never freed');
+    kernel.dispose();
+  });
+});
+
+test('WASM release traps are actionable, attempt both frees, and leave growth/dispose state deterministic',async()=>{
+  const growth=createWasmFixture({releaseThrowAt:1});
+  await withInstantiatedFixture(growth,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    kernel(Float64Array.from({length:8},(_,index)=>index));
+    assert.throws(()=>kernel(Float64Array.from({length:12},(_,index)=>index)),error=>{
+      assert.match(error.message,/could not release previous metabolism buffers after capacity growth/);
+      assert.match(error.cause?.errors?.[0]?.message??'',/simulated free trap/);
+      return true;
+    });
+    assert.equal(growth.releaseCalls.length,2,'both old buffers are attempted even when the first free traps');
+    assert.deepEqual(Array.from(kernel(Float64Array.from({length:4},(_,index)=>index))),[1,3]);
+    kernel.dispose();
+    assert.equal(growth.releaseCalls.length,4,'dispose frees the current pair after a growth release error');
+  });
+
+  const disposal=createWasmFixture({releaseThrowAt:1});
+  await withInstantiatedFixture(disposal,async()=>{
+    const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
+    kernel(Float64Array.of(10,20,30,0));
+    assert.throws(()=>kernel.dispose(),/could not release metabolism buffers during dispose/);
+    assert.equal(disposal.releaseCalls.length,2,'dispose attempts both frees after the first traps');
+    assert.doesNotThrow(()=>kernel.dispose(),'a failed dispose is idempotent and does not risk a double-free retry');
+    assert.equal(disposal.releaseCalls.length,2);
+    assert.deepEqual(Array.from(kernel(Float64Array.of(10,20,30,0))),[11,22],
+      'kernel can allocate a new pair after a failed dispose');
+    kernel.dispose();
   });
 });
 
