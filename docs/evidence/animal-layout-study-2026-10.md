@@ -1,17 +1,17 @@
 # Estudo AoS e colunas numéricas alinhadas
 
-Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O comando grava a coleta detalhada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A captura limpa mais recente foi feita em `a81f6ebdf4f77f4d43548e3dd6da81b30fb5d6b2` (`dirty: false`) e usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
+Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O comando grava a coleta detalhada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A captura limpa mais recente foi feita em `b9cbc09045bc2e81fd5f4c9a179c756352106f88` (`dirty: false`) e usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
 
 O protótipo SoA usa colunas numéricas alinhadas e mede kernel, gather, scatter e custo fim a fim separadamente. Também mede materialização de snapshot, clonagem, serialização JSON e transferência de buffers. A tabela mostra medianas em milissegundos por transição. O Rust nativo mede apenas o kernel pré-alocado.
 
 | Animais | Hora | AoS direto | SoA kernel | Gather | Scatter | SoA fim a fim | Rust nativo |
 |---:|---:|---:|---:|---:|---:|---:|---:|
-| 100 | 7 | 0,000959 | 0,000210 | 0,000132 | 0,000712 | 0,000911 | 0,000108 |
-| 100 | 22 | 0,000926 | 0,000849 | 0,000500 | 0,000581 | 0,001660 | 0,000162 |
-| 1.000 | 7 | 0,008806 | 0,005014 | 0,006390 | 0,008592 | 0,020598 | 0,000918 |
-| 1.000 | 22 | 0,007790 | 0,005640 | 0,004860 | 0,005695 | 0,016105 | 0,000909 |
-| 10.000 | 7 | 0,121534 | 0,049896 | 0,047698 | 0,085628 | 0,192398 | 0,009306 |
-| 10.000 | 22 | 0,078538 | 0,048999 | 0,053133 | 0,056624 | 0,158203 | 0,009216 |
+| 100 | 7 | 0,000810 | 0,000211 | 0,000126 | 0,000667 | 0,000925 | 0,000153 |
+| 100 | 22 | 0,000957 | 0,000512 | 0,000477 | 0,000629 | 0,001651 | 0,000108 |
+| 1.000 | 7 | 0,008754 | 0,004880 | 0,004620 | 0,009904 | 0,021941 | 0,000927 |
+| 1.000 | 22 | 0,008825 | 0,005077 | 0,006121 | 0,005103 | 0,018526 | 0,000919 |
+| 10.000 | 7 | 0,126766 | 0,089465 | 0,061755 | 0,102820 | 0,230713 | 0,014643 |
+| 10.000 | 22 | 0,086326 | 0,076775 | 0,063033 | 0,063002 | 0,171427 | 0,009387 |
 
 O kernel SoA isolado é mais rápido, mas gather e scatter tornam o caminho fim a fim mais lento que AoS nas seis combinações desta coleta. Os sete buffers tipados usam 4.500, 45.000 e 450.000 bytes, respectivamente. A comparação de heap após GC é ruidosa e não foi interpretada como economia.
 
@@ -21,12 +21,12 @@ O benchmark também coleta perfis amostrados do V8 para transição AoS, kernel 
 
 | Animais | Hora | Transição AoS | SoA fim a fim | Snapshot AoS | Snapshot colunas |
 |---:|---:|---:|---:|---:|---:|
-| 100 | 7 | 2,85 MB | 1,35 MB | 6,07 MB | 6,07 MB |
-| 100 | 22 | 16,08 MB | 16,06 MB | 6,29 MB | 6,18 MB |
-| 1.000 | 7 | 1,76 MB | 1,70 MB | 6,37 MB | 6,52 MB |
-| 1.000 | 22 | 15,83 MB | 15,90 MB | 6,46 MB | 6,39 MB |
-| 10.000 | 7 | 3,07 MB | 3,18 MB | 13,41 MB | 13,54 MB |
-| 10.000 | 22 | 16,08 MB | 16,13 MB | 12,80 MB | 13,19 MB |
+| 100 | 7 | 2,71 MB | 1,30 MB | 5,87 MB | 6,41 MB |
+| 100 | 22 | 16,12 MB | 15,63 MB | 6,07 MB | 6,11 MB |
+| 1.000 | 7 | 1,67 MB | 1,54 MB | 6,46 MB | 6,60 MB |
+| 1.000 | 22 | 16,11 MB | 16,15 MB | 6,70 MB | 6,45 MB |
+| 10.000 | 7 | 2,93 MB | 2,75 MB | 13,36 MB | 12,60 MB |
+| 10.000 | 22 | 16,09 MB | 15,73 MB | 13,09 MB | 13,31 MB |
 
 Esses valores são estimativas estatísticas do `HeapProfiler`, não contagens exatas de objetos ou bytes, nem memória viva ou pico de alocação. A amostragem tem variância e pode incluir efeitos do runtime; o relatório JSON preserva a contagem de amostras, bytes estimados e principais pontos atribuídos para cada perfil. Não usar diferenças pequenas como prova de economia.
 
