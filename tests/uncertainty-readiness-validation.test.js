@@ -4,6 +4,9 @@ import {readFile} from 'node:fs/promises';
 import {validateOutcomeUncertaintyClassifications} from '../scripts/uncertainty-readiness-validation.mjs';
 
 const fixture = JSON.parse(await readFile(new URL('../docs/evidence/uncertainty-readiness-issue-15.json', import.meta.url), 'utf8'));
+const dryadEligibility = JSON.parse(await readFile(new URL('../docs/evidence/issue-15-dryad-yearling-eligibility.json', import.meta.url), 'utf8'));
+const dryadManifest = JSON.parse(await readFile(new URL('../data/dryad-grazing-yearlings/manifest.json', import.meta.url), 'utf8'));
+const dryadAudit = JSON.parse(await readFile(new URL('../docs/evidence/dryad-grazing-yearlings-audit.json', import.meta.url), 'utf8'));
 
 test('issue 15 fixture classifies every uncertainty source for every outcome', () => {
   assert.deepEqual(
@@ -41,4 +44,23 @@ test('outcome classification rejects invalid status or a missing explanation', (
   const errors = validateOutcomeUncertaintyClassifications(outcomes, fixture.sourcesOfUncertainty).join('\n');
   assert.match(errors, /classification must be not-estimable, partially-estimable, or not-applicable/);
   assert.match(errors, /weight-and-average-daily-gain\/parameter: classification reason is required/);
+});
+
+test('issue 15 keeps the public Dryad yearling cohort out of interval calibration for documented compatibility gaps', () => {
+  assert.equal(dryadEligibility.issue, 15);
+  assert.equal(dryadEligibility.decision, 'not-eligible-for-issue-15-calibration');
+  assert.equal(dryadEligibility.source.datasetDoi, dryadManifest.doi);
+  assert.equal(dryadEligibility.source.license, dryadManifest.license);
+  assert.equal(dryadEligibility.source.license, 'CC0-1.0');
+  assert.equal(dryadEligibility.populationAndDesign.independentExperimentsInPrimarySource, 4);
+  assert.equal(dryadEligibility.populationAndDesign.groupingAvailableInModelFile, false);
+  assert.equal(dryadAudit.interpretation.experimentIdInModelFile, false);
+  assert.equal(dryadEligibility.outcomeCompatibility.modelFileColumns.join(','), 'ID,CO2,CH4,O2,ADG,BW');
+  assert.ok(dryadEligibility.outcomeCompatibility.requiredForFrozenEngineAdgEvaluationButAbsent.includes('animal-specific initial body weight'));
+  assert.ok(dryadEligibility.outcomeCompatibility.requiredForFrozenEngineAdgEvaluationButAbsent.includes('animal-to-experiment/site/year grouping key'));
+  assert.equal(dryadEligibility.issue15Assessment.eligibleForCalibration, false);
+  assert.equal(dryadEligibility.issue15Assessment.eligibleForFinalHoldout, false);
+  assert.ok(dryadEligibility.issue15Assessment.remainingExternalDependency.length > 100);
+  assert.ok(fixture.outcomes.find(outcome => outcome.id === 'weight-and-average-daily-gain').evidence.includes('issue-15-dryad-yearling-eligibility.json'));
+  assert.equal(fixture.productState.probabilisticIntervals, 'unavailable');
 });

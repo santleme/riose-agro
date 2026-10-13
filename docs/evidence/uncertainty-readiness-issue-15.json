@@ -107,7 +107,8 @@
         "engine-adg-usda-cper-ltgi-check.json",
         "engine-adg-usda-cgrec-transport-check.json",
         "engine-adg-zenodo-cows-check.json",
-        "engine-adg-ufms-check.json"
+        "engine-adg-ufms-check.json",
+        "issue-15-dryad-yearling-eligibility.json"
       ],
       "predictionInterval": null,
       "intervalAuthorized": false,
@@ -415,6 +416,7 @@
     "engine-adg-usda-cgrec-transport-check.json",
     "engine-adg-zenodo-cows-check.json",
     "engine-adg-ufms-check.json",
+    "issue-15-dryad-yearling-eligibility.json",
     "mendeley-nellore-engine-dmi-check.json",
     "usda-ars-feedlot-engine-dmi-check.json",
     "sdsu-engine-dmi-check.json",

@@ -114,7 +114,12 @@ const jsonBytes = Buffer.byteLength(jsonText);
 const jsonlBytes = Buffer.byteLength(jsonlText);
 const jsonGzipBytes = gzipSync(jsonText, {level: 6}).byteLength;
 const jsonlGzipBytes = gzipSync(jsonlText, {level: 6}).byteLength;
-const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const canonicalize = value => Array.isArray(value)
+  ? value.map(canonicalize)
+  : value !== null && typeof value === 'object'
+    ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonicalize(value[key])]))
+    : value;
+const digest = value => createHash('sha256').update(JSON.stringify(canonicalize(value))).digest('hex');
 const expectedDigest = digest(records);
 const tempDirectory = await mkdtemp(path.join(os.tmpdir(), 'riose-format-study-'));
 

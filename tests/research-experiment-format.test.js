@@ -53,13 +53,26 @@ test('format study round-trips the batch manifest/result contract with units and
   if (parquetAvailable) {
     const parquet = report.results.toolchain.parquetPrototype;
     assert.equal(parquet.roundTrip.exactNormalized, true);
+    assert.equal(parquet.roundTrip.sha256, report.results.workload.sha256);
+    assert.equal(parquet.roundTrip.records, report.results.workload.records);
     assert.equal(parquet.selectiveRead.exactProjection, true);
+    assert.deepEqual(parquet.selectiveRead.columns, [
+      'run.scenarioId',
+      'run.outputs.totalDryMatterIntake.value',
+    ]);
+    assert.equal(parquet.selectiveRead.sha256, report.results.measurements.json.selectiveMetricRead.expectedDigest);
+    assert.equal(parquet.compression, 'zstd');
     assert.ok(parquet.bytes > 0);
     assert.ok(parquet.installedPackageBytes > parquet.bytes);
     assert.equal(parquet.write.durationsMs.length, 3);
     assert.equal(parquet.fullRead.durationsMs.length, 3);
     assert.equal(parquet.selectiveMetricRead.durationsMs.length, 3);
+    assert.ok(parquet.write.durationsMs.every(Number.isFinite));
+    assert.ok(parquet.fullRead.durationsMs.every(Number.isFinite));
+    assert.ok(parquet.selectiveMetricRead.durationsMs.every(Number.isFinite));
   } else {
+    assert.equal(process.env.FORMAT_STUDY_PYTHON, undefined,
+      'FORMAT_STUDY_PYTHON was supplied but did not expose PyArrow; optional Parquet validation must not silently skip');
     assert.equal(report.results.toolchain.parquetPrototype, null);
   }
   for (const packageInfo of pythonPackages) {
