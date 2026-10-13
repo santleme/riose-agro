@@ -74,7 +74,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             amd_detector=self.unavailable_detector,
             executor=executor,
             timestamp_utc="2026-10-12T12:00:00Z",
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         serialized = json.dumps(report, allow_nan=False)
         self.assertIn('"schema_version": 1', serialized)
@@ -112,7 +112,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             amd_detector=self.available_detector,
             executor=executor,
             timestamp_utc="2026-10-12T12:00:00Z",
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertEqual(report["correctness_check"]["status"], "passed")
         self.assertTrue(report["correctness_check"]["equivalent"])
@@ -144,7 +144,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             vector_length=8,
             amd_detector=self.available_detector,
             executor=mismatching_executor,
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertFalse(report["correctness_check"]["equivalent"])
         self.assertEqual(report["correctness_check"]["status"], "failed")
@@ -168,7 +168,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             vector_length=8,
             amd_detector=self.available_detector,
             executor=fallback_executor,
-            project_commit="test123",
+            project_commit="a1b2c3d",
         )
         self.assertTrue(report["environment"]["amd"]["available"])
         self.assertEqual(report["amd"]["status"], "unavailable")
