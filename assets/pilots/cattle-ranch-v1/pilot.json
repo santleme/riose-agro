@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "pilotId": "riose-cattle-ranch-pilot-v1",
+  "title": "Riose Brazilian cattle ranch visual pilot",
+  "sourceManifest": "assets/manifests/manifest.json",
+  "sourceScene": "assets/previews/ranch-composition-v4/rural-diorama-scene-v4-grounding-v2-gate-v2-water-v2-feed-v2-review.json",
+  "assetIds": [
+    "livestock.nelore.adult.idle.imagegen.v1",
+    "livestock.nelore.adult.walking.ne.v1",
+    "livestock.nelore.adult.grazing.ne.v1",
+    "livestock.nelore.calf.idle.ne.v1",
+    "fence.wire.wood-post.imagegen.v1",
+    "fence.gate.wood.imagegen.v2",
+    "water.trough.cattle.galvanized.imagegen.v2",
+    "feed.trough.hay.imagegen.v2",
+    "corral.wood.standard.imagegen.v1",
+    "terrain.grass.pasture-base.imagegen.v4",
+    "technology.ear-tag.rfid.imagegen.v2",
+    "technology.monitor.station.imagegen.v2"
+  ],
+  "approvalPolicy": "The user approved the art of the 12 selected sprites and the composed pilot scene on 2026-10-13. Record art decisions separately from technical validation and release rights; contact sheets alone do not imply approval.",
+  "referenceRoles": {
+    "urban": "composition grammar only",
+    "fazendaV7": "Brazilian rural content and relative scale",
+    "rioseV2": "ground treatment, transitions, and grounding",
+    "approvedRioseSprites": "local visual consistency anchors"
+  },
+  "artReview": {
+    "decision": "pass",
+    "reviewer": "user",
+    "reviewedAt": "2026-10-13",
+    "scope": "Visual appearance of all 12 pilot PNG depictions and the composed ranch scene shown in the pilot-v3 approval comparison.",
+    "evidence": [
+      "assets/previews/pilot-v3/contact-sheet.png",
+      "assets/previews/pilot-v3/approval-comparison.png",
+      "assets/previews/ranch-composition-v4/rural-diorama-grounding-v2-gate-v2-water-v2-feed-v2-tech-v2-review.png"
+    ],
+    "exclusions": "Does not establish a global style lock, technical pass for pending files, rights clearance, release approval, or approval of unrelated assets. The compacted-grounding V2 overlay retains its separately recorded approval."
+  },
+  "technicalReview": {
+    "decision": "pass for the current pilot image files",
+    "date": "2026-10-13",
+    "evidence": "python3 scripts/assets/validate_library.py reports zero structural/integrity errors; the three animal exports and the pasture plate use binary alpha, and their sRGB ICC assignment preserved RGBA pixel values (scripts/assets/assign_srgb_profile.py).",
+    "scopeNote": "The pasture V4 image is approved only as a single ground plate; its 3x3 repeat proof has tonal joins, so it is not an auto-repeat tile. This does not block the current composed scene, which uses the unified ground V2 plate."
+  }
+}
