@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {FarmEngine,compare,createComparisonManifest} from '../src/client/engine.js';
-import {COMPARISON_ENGINE_VERSION,createRunRecord,getRun,listRuns,recordRun,runCompatibility,RUN_HISTORY_KEY} from '../src/client/run-history.js';
+import {COMPARISON_ENGINE_VERSION,createRunRecord,getRun,listRuns,recordRun,runCompatibility,RUN_HISTORY_KEY,MAX_RUN_HISTORY_BYTES,getRunHistoryStats,exportRunHistory,clearRunHistory} from '../src/client/run-history.js';
 
 class MemoryStorage{
   constructor(values=new Map()){this.values=values;}
   getItem(key){return this.values.get(key)??null;}
   setItem(key,value){this.values.set(key,String(value));}
+  removeItem(key){this.values.delete(key);}
 }
 
 function completedRun({id='run-1',now=Date.UTC(2026,9,12),seed=15}={}){
@@ -129,6 +130,110 @@ test('fails closed when a saved run has missing or future history provenance',()
 test('handles local storage quota errors without hiding the run result',()=>{
   const storage={getItem(){return null;},setItem(){throw new DOMException('quota exceeded','QuotaExceededError');}};
   assert.throws(()=>recordRun(completedRun(),storage),/continua disponível/);
+});
+
+test('keeps the previous persisted history when a replacement write fails',()=>{
+  const previous=completedRun({id:'previous'}),raw=JSON.stringify({version:1,runs:[previous]}),storage={
+    getItem(){return raw;},
+    setItem(){throw new DOMException('quota exceeded','QuotaExceededError');}
+  };
+  assert.throws(()=>recordRun(completedRun({id:'new'}),storage),/continua disponível/);
+  assert.equal(storage.getItem(RUN_HISTORY_KEY),raw);
+});
+
+test('rejects a run larger than the byte budget without touching the saved history',()=>{
+  const previous=completedRun({id:'previous'}),raw=JSON.stringify({version:1,runs:[previous]});
+  let writes=0;
+  const storage={getItem(){return raw;},setItem(){writes++;}};
+  const oversized=completedRun({id:'oversized'});oversized.payload='x'.repeat(MAX_RUN_HISTORY_BYTES);
+
+  assert.throws(()=>recordRun(oversized,storage),/histórico anterior foi preservado/);
+  assert.equal(writes,0);
+  assert.equal(storage.getItem(RUN_HISTORY_KEY),raw);
+});
+
+test('enforces the serialized UTF-8 byte budget while retaining newer records first',()=>{
+  const storage=new MemoryStorage(),older=completedRun({id:'older',now:1000}),newer=completedRun({id:'newer',now:2000});
+  older.payload='é'.repeat(650_000);
+  newer.payload='🐄'.repeat(220_000);
+  recordRun(older,storage);
+  recordRun(newer,storage);
+
+  const raw=storage.getItem(RUN_HISTORY_KEY),stats=getRunHistoryStats(storage);
+  assert.deepEqual(listRuns(storage).map(run=>run.id),['newer']);
+  assert.equal(stats.bytes,new TextEncoder().encode(raw).byteLength);
+  assert.ok(stats.bytes<=MAX_RUN_HISTORY_BYTES);
+});
+
+test('skips a legacy oversized record and continues retaining smaller older records',()=>{
+  const oldest=completedRun({id:'oldest',now:1000}),tooLarge=completedRun({id:'large',now:2000});
+  oldest.payload='a'.repeat(700_000);
+  tooLarge.payload='b'.repeat(MAX_RUN_HISTORY_BYTES);
+  const storage=new MemoryStorage(new Map([[RUN_HISTORY_KEY,JSON.stringify({version:1,runs:[tooLarge,oldest]})]]));
+
+  recordRun(completedRun({id:'incoming',now:4000}),storage);
+
+  assert.deepEqual(listRuns(storage).map(run=>run.id),['incoming','oldest']);
+  assert.ok(getRunHistoryStats(storage).bytes<=MAX_RUN_HISTORY_BYTES);
+});
+
+test('applies byte and count caps together without letting a large run block smaller records',()=>{
+  const largeButLowerPriority=completedRun({id:'large',now:2000});largeButLowerPriority.payload='b'.repeat(400_000);
+  const smallRuns=Array.from({length:21},(_,index)=>completedRun({id:`small-${index}`,now:100+index}));
+  const storage=new MemoryStorage(new Map([[RUN_HISTORY_KEY,JSON.stringify({version:1,runs:[largeButLowerPriority,...smallRuns]})]]));
+  const incoming=completedRun({id:'incoming',now:3000});incoming.payload='a'.repeat(1_800_000);
+
+  recordRun(incoming,storage);
+
+  const runs=listRuns(storage),ids=new Set(runs.map(run=>run.id));
+  assert.equal(runs.length,20);
+  assert.ok(ids.has('incoming'));
+  assert.ok(!ids.has('large'));
+  assert.equal(smallRuns.filter(run=>ids.has(run.id)).length,19);
+  assert.ok(getRunHistoryStats(storage).bytes<=MAX_RUN_HISTORY_BYTES);
+});
+
+test('reports exact stored UTF-8 usage, including non-ASCII JSON content',()=>{
+  const storage=new MemoryStorage(),run=completedRun();run.note='forragem 🐄';recordRun(run,storage);
+  const raw=storage.getItem(RUN_HISTORY_KEY),stats=getRunHistoryStats(storage);
+  assert.equal(stats.count,1);
+  assert.equal(stats.bytes,new TextEncoder().encode(raw).byteLength);
+  assert.equal(stats.maxBytes,MAX_RUN_HISTORY_BYTES);
+});
+
+test('exports the stored text without mutation, including malformed JSON',()=>{
+  const raw='{"version":1,"runs":[broken';
+  const storage=new MemoryStorage(new Map([[RUN_HISTORY_KEY,raw],['other','keep']]));
+  assert.equal(exportRunHistory(storage),raw);
+  assert.equal(storage.getItem(RUN_HISTORY_KEY),raw);
+  assert.equal(storage.getItem('other'),'keep');
+});
+
+test('exports a valid empty envelope when no history exists',()=>{
+  assert.deepEqual(JSON.parse(exportRunHistory(new MemoryStorage())),{version:1,runs:[]});
+});
+
+test('clears only the run-history key after an explicit cleanup request',()=>{
+  const storage=new MemoryStorage(new Map([[RUN_HISTORY_KEY,'{}'],['scenario','keep']]));
+  clearRunHistory(storage);
+  assert.equal(storage.getItem(RUN_HISTORY_KEY),null);
+  assert.equal(storage.getItem('scenario'),'keep');
+});
+
+test('reports interrupted cleanup without claiming the history was removed',()=>{
+  const raw=JSON.stringify({version:1,runs:[completedRun()]}),storage={
+    getItem(){return raw;},
+    removeItem(){throw new DOMException('denied','SecurityError');}
+  };
+  assert.throws(()=>clearRunHistory(storage),/não conseguiu limpar/);
+  assert.equal(storage.getItem(RUN_HISTORY_KEY),raw);
+});
+
+test('uses a stable ID order for equal timestamps',()=>{
+  const storage=new MemoryStorage();
+  recordRun(completedRun({id:'z',now:1000}),storage);
+  recordRun(completedRun({id:'a',now:1000}),storage);
+  assert.deepEqual(listRuns(storage).map(run=>run.id),['a','z']);
 });
 
 test('records the explicit compatibility version and bounds the history to 20 runs',()=>{

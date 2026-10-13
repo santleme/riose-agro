@@ -8,7 +8,7 @@ A análise **One At A Time (OAT)** executa novamente o mesmo snapshot do `FarmEn
 node examples/sensitivity-analysis.js
 ```
 
-Ou importe `analyzeSensitivity` de `sensitivity-analysis.js` e forneça:
+Ou importe `analyzeSensitivity` de `src/client/sensitivity-analysis.js` e forneça:
 
 - `snapshot`: snapshot completo do `FarmEngine`, incluindo a seed e a configuração base;
 - `targetVariable`: um campo existente da configuração: `diet`, `housing`, `weather` ou `supplement`;

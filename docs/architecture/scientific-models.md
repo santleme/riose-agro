@@ -18,4 +18,4 @@ Each model release should carry:
 
 Python remains the home for exploratory data analysis, statistical calibration, holdout evaluation and uncertainty analysis. Rust may host a production/runtime kernel after the model is reviewed and its inputs are available at execution time. Do not infer causal effects from observational associations, and do not merge worktree datasets into a model without provenance and review.
 
-The uncommitted science/data branch found in the repository-wide audit adds important candidate datasets and transport audits. Preserve that work and revisit model boundaries after it is committed and integrated; do not duplicate those extractors here.
+The repository-wide audit records earlier uncommitted science/data work; subsequent main commits integrated research artifacts and transport audits. Keep their provenance and validation status explicit, and do not treat candidate datasets as model validation or duplicate existing extractors.

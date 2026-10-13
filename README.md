@@ -54,6 +54,8 @@ Run the deterministic engine and data-contract tests with Node.js:
 npm test
 ```
 
+The supported CI toolchains and checks are documented in [docs/ci.md](docs/ci.md).
+
 Run the preset scenario harness and write one `*.result.json` file per scenario:
 
 ```bash
@@ -84,7 +86,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 
 ## Project files
 
-- `index.html`, `style.css` — interactive cattle-farm simulator and Scenario Studio
+- `index.html`, `src/client/style.css` — interactive cattle-farm simulator and Scenario Studio
 - `home.html`, `src/client/home.css`, `src/client/home.js` — optional responsive project landing page
 - `simulator.html` — direct link to the farm experience
 - `assets/agroville-farm-worlds.png` — original generated hero illustration

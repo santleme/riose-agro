@@ -11,4 +11,4 @@ data/, schemas/, scientific/                         input data and domain contr
 scripts/, tests/, examples/, docs/                  development and project material
 ```
 
-The root HTML pages load implementation assets from `/src/client/`. Browser module imports within `src/client/` stay relative to that directory. Node scripts and tests import the same modules from their new location. `npm start` remains the supported entry point for the Node server.
+The root HTML pages load implementation assets through relative `src/client/` URLs, preserving deployment under a repository subpath. Browser module imports within `src/client/` stay relative to that directory. Node scripts and tests import the same modules from their new location. `npm start` remains the supported entry point for the Node server.

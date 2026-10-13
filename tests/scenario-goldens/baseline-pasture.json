@@ -1,0 +1,336 @@
+{
+  "format": "riose-js-scenario-golden",
+  "formatVersion": 1,
+  "scenarioId": "baseline-pasture",
+  "execution": "engine-harness",
+  "engineVersion": "agroville-engine/1",
+  "seed": 417,
+  "animalCount": 3,
+  "horizon": {
+    "value": 24,
+    "unit": "hour"
+  },
+  "configuration": {
+    "diet": "pasture",
+    "housing": "pasture",
+    "weather": "normal",
+    "supplement": 0
+  },
+  "output": {
+    "state": {
+      "hour": 30,
+      "animals": [
+        {
+          "id": 1,
+          "name": "Aurora",
+          "weight": 358.4283122246884,
+          "initialWeight": 357.83741344697773,
+          "energy": 99.8274210073046,
+          "thirst": 12,
+          "action": "drinking",
+          "patch": 0,
+          "x": 103.26467905452287,
+          "y": 103.50028644313294,
+          "targetX": 50.00012459931895,
+          "targetY": 110.33669443801045,
+          "history": [
+            {
+              "hour": 6,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 6,
+                "thirst": 20,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 16,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 16,
+                "thirst": 70,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 17,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 17,
+                "thirst": 17,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 21,
+              "action": "resting",
+              "reason": "rest_window",
+              "observed": {
+                "hour": 21,
+                "thirst": 37,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 30,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 6,
+                "thirst": 82,
+                "housing": "pasture"
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Bento",
+          "weight": 337.69931401897844,
+          "initialWeight": 337.1425887127407,
+          "energy": 99.75065221773032,
+          "thirst": 12,
+          "action": "drinking",
+          "patch": 1,
+          "x": 281.1796172785595,
+          "y": 100.57270843849435,
+          "targetX": 282.1551215695217,
+          "targetY": 125.17622610554099,
+          "history": [
+            {
+              "hour": 6,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 6,
+                "thirst": 20,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 16,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 16,
+                "thirst": 70,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 17,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 17,
+                "thirst": 17,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 21,
+              "action": "resting",
+              "reason": "rest_window",
+              "observed": {
+                "hour": 21,
+                "thirst": 37,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 30,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 6,
+                "thirst": 82,
+                "housing": "pasture"
+              }
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Cacau",
+          "weight": 354.5863978588066,
+          "initialWeight": 354.0018327953294,
+          "energy": 99.81319267303634,
+          "thirst": 12,
+          "action": "drinking",
+          "patch": 2,
+          "x": 93.7963941101205,
+          "y": 232.03238253998137,
+          "targetX": 76.11290995264426,
+          "targetY": 234.2342553474009,
+          "history": [
+            {
+              "hour": 6,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 6,
+                "thirst": 20,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 16,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 16,
+                "thirst": 70,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 17,
+              "action": "grazing",
+              "reason": "pasture_housing",
+              "observed": {
+                "hour": 17,
+                "thirst": 17,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 21,
+              "action": "resting",
+              "reason": "rest_window",
+              "observed": {
+                "hour": 21,
+                "thirst": 37,
+                "housing": "pasture"
+              }
+            },
+            {
+              "hour": 30,
+              "action": "drinking",
+              "reason": "thirst_threshold",
+              "observed": {
+                "hour": 6,
+                "thirst": 82,
+                "housing": "pasture"
+              }
+            }
+          ]
+        }
+      ],
+      "pastures": [
+        1827.0417673035558,
+        1827.5020160776035,
+        1827.1270698521566,
+        1834.9999999999982
+      ],
+      "intake": {
+        "pastureKgDM": 23.329146766678484,
+        "barnBaseKgDM": 0,
+        "supplementKgDM": 0,
+        "dietExtraKgDM": 0
+      },
+      "config": {
+        "diet": "pasture",
+        "housing": "pasture",
+        "weather": "normal",
+        "supplement": 0
+      },
+      "cost": 0,
+      "events": [
+        {
+          "hour": 30,
+          "text": "Novo dia: peso médio 350.2 kg."
+        },
+        {
+          "hour": 30,
+          "text": "Cacau: bebendo água.",
+          "animalId": 3
+        },
+        {
+          "hour": 30,
+          "text": "Bento: bebendo água.",
+          "animalId": 2
+        },
+        {
+          "hour": 30,
+          "text": "Aurora: bebendo água.",
+          "animalId": 1
+        },
+        {
+          "hour": 21,
+          "text": "Cacau: descansando.",
+          "animalId": 3
+        },
+        {
+          "hour": 21,
+          "text": "Bento: descansando.",
+          "animalId": 2
+        },
+        {
+          "hour": 21,
+          "text": "Aurora: descansando.",
+          "animalId": 1
+        },
+        {
+          "hour": 17,
+          "text": "Cacau: pastando.",
+          "animalId": 3
+        },
+        {
+          "hour": 17,
+          "text": "Bento: pastando.",
+          "animalId": 2
+        },
+        {
+          "hour": 17,
+          "text": "Aurora: pastando.",
+          "animalId": 1
+        },
+        {
+          "hour": 16,
+          "text": "Cacau: bebendo água.",
+          "animalId": 3
+        },
+        {
+          "hour": 16,
+          "text": "Bento: bebendo água.",
+          "animalId": 2
+        },
+        {
+          "hour": 16,
+          "text": "Aurora: bebendo água.",
+          "animalId": 1
+        },
+        {
+          "hour": 6,
+          "text": "Fazenda iniciada. Os animais estão no pasto."
+        }
+      ],
+      "seed": 1472672670,
+      "initialSeed": 417,
+      "locomotionSeed": 2374808501
+    },
+    "metrics": {
+      "weight": 350.23800803415776,
+      "gain": 0.5773963824752096,
+      "cost": 0,
+      "pasture": 7316.670853233314,
+      "pastureByPaddock": [
+        1827.0417673035558,
+        1827.5020160776035,
+        1827.1270698521566,
+        1834.9999999999982
+      ],
+      "intake": {
+        "pastureKgDM": 23.329146766678484,
+        "barnBaseKgDM": 0,
+        "supplementKgDM": 0,
+        "dietExtraKgDM": 0,
+        "totalKgDM": 23.329146766678484
+      },
+      "stress": 5
+    }
+  }
+}

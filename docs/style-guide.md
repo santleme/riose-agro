@@ -208,8 +208,8 @@ Tile metadata usa `edgeMask` e `connectors` para provar que segmentos se encaixa
 
 ## 11. Auditoria e próximos passos
 
-- **Reaproveitar:** `engine.js`/`worker.js`, estado da simulação, seed e dados de animais; `public/assets/manifest.json` como ponto de partida de schema; referências urbanas/rurais para curadoria.
+- **Reaproveitar:** `src/client/engine.js`/`src/client/worker.js`, estado da simulação, seed e dados de animais; `public/assets/manifest.json` como ponto de partida de schema; referências urbanas/rurais para curadoria.
 - **Manter como legado, não estilo final:** os três atlas atuais em `public/assets/atlas/` e os prompts semirrealistas de [arte-e-pipeline.md](arte-e-pipeline.md). Não substituir esses frames silenciosamente.
 - **Referências não recortáveis:** as cenas em `docs/assets/` são RGB opacas; servem para comparar estilo e layout, não para fatiar como sprites. Gerar novas imagens de sprite com alfa real.
-- **Compositor atual:** `app.js` carrega frames por manifesto, mas o posicionamento/escala está codificado manualmente e não consome âncoras/footprints/variantes; o mapa visual ainda é composto em posições fixas. A integração dos novos metadados e a geração procedural são etapa posterior, fora deste lote visual.
+- **Compositor atual:** `src/client/app.js` carrega frames por manifesto, mas o posicionamento/escala está codificado manualmente e não consome âncoras/footprints/variantes; o mapa visual ainda é composto em posições fixas. A integração dos novos metadados e a geração procedural são etapa posterior, fora deste lote visual.
 - **Próximas ações:** produzir os 27 PNGs do kit base sob esse contrato; aprovar individualmente e na prancha; montar cena teste v2; atualizar atlas/manifesto/runtime em mudança separada após aprovação da arte.
