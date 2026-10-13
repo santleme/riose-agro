@@ -597,7 +597,7 @@ async function selectScene(domain) {
   state.terrainCells = sceneTerrainCells(state.scene);
   setSimulationRunning(false);
   if (domain === 'beef') {
-    state.worker ??= new Worker('/worker.js', {type: 'module'});
+    state.worker ??= new Worker('/src/client/worker.js', {type: 'module'});
     state.worker.onmessage = workerMessage;
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
     if (generation !== state.sceneSelectionGeneration) return;
@@ -742,11 +742,14 @@ async function initialize() {
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
   if (state.selectedDomain === 'beef') {
     window.__graphicsInitStage = 'starting-simulation-worker';
-    state.worker = new Worker('/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;
+    state.worker = new Worker('/src/client/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;
     state.worker.onerror = event => {
-      const location = event.filename ? `${event.filename}:${event.lineno}:${event.colno}` : '/worker.js (unknown script location)';
+      const location = event.filename ? `${event.filename}:${event.lineno}:${event.colno}` : '/src/client/worker.js (unknown script location)';
       const cause = event.message || event.error?.message || `Worker ${event.type} event`;
-      const error = new Error(`Simulation Worker failed at ${location}: ${cause}`);
+      const resources = performance.getEntriesByType('resource')
+        .filter(entry => /worker|engine|metabolism/i.test(entry.name))
+        .map(entry => ({url: entry.name, responseStatus: entry.responseStatus ?? null, durationMs: Math.round(entry.duration), transferSize: entry.transferSize}));
+      const error = new Error(`Simulation Worker failed at ${location}: ${cause}; resource requests=${JSON.stringify(resources)}`);
       for (const pending of state.pending.splice(0)) pending.reject(error);
     };
     window.__graphicsInitStage = 'resetting-simulation-worker';
