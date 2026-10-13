@@ -81,6 +81,15 @@ class DmiBaselineProtocolTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "finite numbers"):
             regression_metrics([1.0], [float("nan")])
 
+    def test_metrics_reject_overflowing_residuals_and_stabilize_large_finite_values(self):
+        largest = float.fromhex("0x1.fffffffffffffp+1023")
+        with self.assertRaisesRegex(ValueError, "residuals must be finite"):
+            regression_metrics([largest], [-largest])
+        self.assertEqual(
+            regression_metrics([0.0, 0.0], [largest, largest]),
+            {"mae": largest, "rmse": largest, "bias": largest},
+        )
+
     def test_split_rejects_too_few_independent_components_and_duplicate_ids(self):
         rows = make_rows()[:3]
         with self.assertRaisesRegex(ValueError, "at least three independent"):

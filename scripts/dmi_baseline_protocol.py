@@ -109,9 +109,15 @@ def fit_standardizer(
         values = [row.get(feature) for row in train]
         if any(not isinstance(value, (int, float)) or not math.isfinite(value) for value in values):
             raise ValueError(f"training feature {feature} must contain only finite numeric values")
-        mean = math.fsum(values) / len(values)
-        variance = math.fsum((value - mean) ** 2 for value in values) / len(values)
-        scale = math.sqrt(variance) or 1.0
+        magnitude = max((abs(value) for value in values), default=0.0)
+        if magnitude == 0:
+            mean, scale = 0.0, 1.0
+        else:
+            normalized = [value / magnitude for value in values]
+            normalized_mean = math.fsum(normalized) / len(normalized)
+            mean = magnitude * normalized_mean
+            variance = math.fsum((value - normalized_mean) ** 2 for value in normalized) / len(normalized)
+            scale = magnitude * math.sqrt(variance) or 1.0
         result[feature] = {"mean": mean, "scale": scale}
     return result
 
@@ -135,7 +141,10 @@ def transform_features(
             params = standardizer[feature]
             if not math.isfinite(params.get("mean", math.nan)) or not math.isfinite(params.get("scale", math.nan)) or params["scale"] <= 0:
                 raise ValueError(f"invalid fitted preprocessing values for {feature}")
-            transformed.append((value - params["mean"]) / params["scale"])
+            normalized = (value - params["mean"]) / params["scale"]
+            if not math.isfinite(normalized):
+                raise ValueError(f"transformed feature {feature} is not finite")
+            transformed.append(normalized)
         matrix.append(transformed)
     return matrix
 
@@ -149,9 +158,21 @@ def regression_metrics(observed: Iterable[float], predicted: Iterable[float]) ->
     for actual, estimate in zip(observed_values, predicted_values):
         if not all(isinstance(value, (int, float)) and math.isfinite(value) for value in (actual, estimate)):
             raise ValueError("observed and predicted values must be finite numbers")
-        errors.append(estimate - actual)
+        error = estimate - actual
+        if not math.isfinite(error):
+            raise ValueError("prediction residuals must be finite")
+        errors.append(error)
+    magnitude = max(abs(error) for error in errors)
+    if magnitude == 0:
+        return {"mae": 0.0, "rmse": 0.0, "bias": 0.0}
+    normalized = [error / magnitude for error in errors]
+    mae = magnitude * (math.fsum(abs(error) for error in normalized) / len(errors))
+    rmse = magnitude * math.sqrt(math.fsum(error * error for error in normalized) / len(errors))
+    bias = magnitude * (math.fsum(normalized) / len(errors))
+    if not all(math.isfinite(value) for value in (mae, rmse, bias)):
+        raise ValueError("regression metrics must be finite")
     return {
-        "mae": math.fsum(abs(error) for error in errors) / len(errors),
-        "rmse": math.sqrt(math.fsum(error * error for error in errors) / len(errors)),
-        "bias": math.fsum(errors) / len(errors),
+        "mae": mae,
+        "rmse": rmse,
+        "bias": bias,
     }
