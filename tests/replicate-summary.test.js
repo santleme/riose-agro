@@ -101,6 +101,14 @@ test('incompatible output units are rejected', () => {
   ]), /incompatible units/);
 });
 
+test('output units must stay consistent across independently grouped runs', () => {
+  assert.throws(() => summarizeReplicates([
+    record('beef', 'completed', 1, 390),
+    {...record('dairy', 'completed', 1, 400), inputs: {system: {value: 'dairy', unit: 'category'}},
+      outputs: {weight: {value: 400, unit: 'lb'}}},
+  ], {groupBy: ['system']}), /Output weight has incompatible units: kg and lb/);
+});
+
 test('incomplete runs and invalid output envelopes are handled explicitly', () => {
   assert.equal(summarizeReplicates([{runId: 'r1', status: 'running'}])[0].incompleteRuns, 1);
   assert.throws(() => summarizeReplicates([{runId: 'r1', status: 'completed', outputs: {weight: {value: 2}}}], {outputs: ['weight']}), /value and unit/);

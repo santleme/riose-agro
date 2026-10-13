@@ -104,6 +104,7 @@ export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
     .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name)))].sort();
   const groups = new Map();
   const runIds = new Set();
+  const outputUnits = new Map();
 
   for (const record of records) {
     if (!record || typeof record.runId !== 'string' || !record.runId) throw new TypeError('Each run record requires a runId');
@@ -142,6 +143,11 @@ export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
       for (const record of group.rows) {
         const item = outputValue(record, name);
         if (!item) { missing++; missingRunIds.push(record.runId); continue; }
+        const knownUnit = outputUnits.get(name);
+        if (knownUnit !== undefined && knownUnit !== item.unit) {
+          throw new TypeError(`Output ${name} has incompatible units: ${knownUnit} and ${item.unit}`);
+        }
+        outputUnits.set(name, item.unit);
         if (unit === null) unit = item.unit;
         else if (unit !== item.unit) throw new TypeError(`Output ${name} has incompatible units: ${unit} and ${item.unit}`);
         values.push(item.value);

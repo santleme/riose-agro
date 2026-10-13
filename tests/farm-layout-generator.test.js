@@ -83,6 +83,44 @@ test('seed sweep preserves deterministic, collision-free in-bounds layouts for b
   }
 });
 
+test('generated systems contain their facilities, paddocks, access and shared service props', () => {
+  const expected = {
+    beef: ['farmstead', 'corral-scale', 'supplement-area', 'gateway-antenna'],
+    dairy: ['farmstead', 'corral-scale', 'supplement-area', 'gateway-antenna', 'dairy-milking-base', 'dairy-calf-unit'],
+  };
+  const sharedAssets = [
+    'water-pond-imagegen-v1', 'feed-trough-hay-imagegen-v1', 'feed-salt-roofed-imagegen-v1',
+    'vehicle-tractor-imagegen-v1', 'vehicle-pickup-rural-imagegen-v1',
+    'building-workshop-imagegen-v1', 'technology-traceability-system-imagegen-v1',
+  ];
+
+  for (const scenarioType of ['beef', 'dairy']) {
+    const scene = generateFarmLayout({scenarioType, seed: 417, prefabs, manifest});
+    const prefabIds = scene.prefabInstances.map(item => item.prefabId);
+    for (const required of expected[scenarioType]) {
+      assert.ok(prefabIds.includes(required), `${scenarioType} includes required ${required} facility`);
+    }
+    assert.equal(prefabIds.filter(id => id === 'water-point').length, 4, `${scenarioType} has one water point per paddock`);
+    assert.equal(new Set(scene.placements.filter(item => item.assetId === 'fence-wire-wood-post-imagegen-v1').map(item => item.properties.autoTileGroup)).size, 4,
+      `${scenarioType} has four independently editable paddock fence runs`);
+    assert.ok(scene.placements.filter(item => item.layer === 'roads').length >= 30, `${scenarioType} has connected access roads`);
+    for (const assetId of sharedAssets) {
+      assert.ok(scene.placements.some(item => item.assetId === assetId), `${scenarioType} includes shared service asset ${assetId}`);
+    }
+    assert.ok(scene.zones.some(zone => zone.type === 'pasture'));
+    assert.ok(scene.zones.some(zone => zone.type === 'service'));
+    assert.deepEqual(validateFarmLayout(scene, {prefabs, manifest}), []);
+
+    // Generated placements are ordinary scene objects: a user edit remains part
+    // of the scene and can be revalidated before the Composer saves it.
+    const edited = structuredClone(scene);
+    const animal = edited.placements.find(item => item.layer === 'animals');
+    animal.properties.visualState = 'resting';
+    assert.deepEqual(validateFarmLayout(edited, {prefabs, manifest}), []);
+    assert.equal(edited.placements.find(item => item.id === animal.id).properties.visualState, 'resting');
+  }
+});
+
 test('safe-integer seed high bits affect structural placement instead of aliasing at 32 bits', () => {
   for (const scenarioType of ['beef', 'dairy']) {
     const lowSeed = generateFarmLayout({scenarioType, seed: 0, prefabs, manifest});
