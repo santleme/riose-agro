@@ -1,7 +1,327 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "graphics-herd-visual-model",
+    "source": {
+      "revision": "944b2dd8711312790cc58253b7afff3b6a156185",
+      "dirty": true
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": "deterministic-synthetic-herd",
+    "populations": [
+      {
+        "animals": 100,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      },
+      {
+        "animals": 1000,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      },
+      {
+        "animals": 10000,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      }
+    ]
+  },
+  "configuration": {
+    "warmupRuns": 2,
+    "repetitions": 9,
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    }
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "screen-space culling",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 0.033301000000008685,
+            "spread": {
+              "min": 0.004787999999990689,
+              "max": 0.13403900000000135,
+              "range": 0.12925100000001066
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "screen-space bounding-box intersection for each simulated animal"
+        },
+        {
+          "phase": "layout",
+          "metric": "LOD classification, grouping, membership assertion",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 1.6836550000000017,
+            "spread": {
+              "min": 0.11046000000000333,
+              "max": 13.301586999999984,
+              "range": 13.19112699999998
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation"
+        },
+        {
+          "phase": "layout",
+          "metric": "draw-unit descriptor preparation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 0.0334710000000058,
+            "spread": {
+              "min": 0.0015570000000053597,
+              "max": 0.0685450000000003,
+              "range": 0.06698799999999494
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work"
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "layout",
+      "timed": [
+        "synthetic input array processing",
+        "screen-space culling",
+        "LOD classification",
+        "far-animal grouping",
+        "membership conservation assertion",
+        "draw-unit descriptor construction"
+      ],
+      "notTimed": [
+        "FarmEngine simulation",
+        "Canvas/Pixi/GPU rendering",
+        "asset loading",
+        "browser frame scheduling"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "simulatedAnimals": 100,
+      "visibleAnimals": 97,
+      "culledAnimals": 3,
+      "visibleGroups": 13,
+      "visibleIndividuals": 38,
+      "drawUnits": 51,
+      "accountedAnimalIds": 97,
+      "culling": {
+        "medianMs": 0.005130000000008295,
+        "p95Ms": 0.0061109999999899856,
+        "samplesMs": [
+          0.0061109999999899856,
+          0.005021999999996751,
+          0.00490499999999372,
+          0.004787999999990689,
+          0.005347000000000435,
+          0.005130000000008295,
+          0.005211000000002741,
+          0.006309000000001674,
+          0.0049949999999938655
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 0.11371699999999407,
+        "p95Ms": 0.1474139999999977,
+        "samplesMs": [
+          0.12542700000000195,
+          0.11315900000001022,
+          0.11404100000000028,
+          0.11144900000000746,
+          0.11067500000000052,
+          0.11046000000000333,
+          0.11371699999999407,
+          0.19575399999999377,
+          0.1474139999999977
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.001880999999997357,
+        "p95Ms": 0.003753000000003226,
+        "samplesMs": [
+          0.0059130000000067184,
+          0.0021610000000009677,
+          0.003753000000003226,
+          0.0017100000000027649,
+          0.001880999999997357,
+          0.00186300000000017,
+          0.0015570000000053597,
+          0.0019800000000032014,
+          0.0015750000000025466
+        ]
+      }
+    },
+    {
+      "simulatedAnimals": 1000,
+      "visibleAnimals": 978,
+      "culledAnimals": 22,
+      "visibleGroups": 154,
+      "visibleIndividuals": 162,
+      "drawUnits": 316,
+      "accountedAnimalIds": 978,
+      "culling": {
+        "medianMs": 0.033301000000008685,
+        "p95Ms": 0.03612700000000757,
+        "samplesMs": [
+          0.036062999999998624,
+          0.03785500000000752,
+          0.03612700000000757,
+          0.033301000000008685,
+          0.035757000000003814,
+          0.01829799999998727,
+          0.018180000000000973,
+          0.01751400000000558,
+          0.01774900000000912
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 1.6836550000000017,
+        "p95Ms": 1.9509869999999978,
+        "samplesMs": [
+          1.2586390000000023,
+          1.839850999999996,
+          1.9509869999999978,
+          1.6836550000000017,
+          2.121351000000004,
+          1.2284250000000014,
+          1.307456000000002,
+          1.6716490000000022,
+          1.9149779999999907
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.04060899999998924,
+        "p95Ms": 0.04791699999999821,
+        "samplesMs": [
+          0.04060899999998924,
+          0.0470979999999912,
+          0.04377699999999152,
+          0.0334710000000058,
+          0.032049999999998136,
+          0.03399399999999275,
+          0.03163499999999431,
+          0.05185900000000743,
+          0.04791699999999821
+        ]
+      }
+    },
+    {
+      "simulatedAnimals": 10000,
+      "visibleAnimals": 7793,
+      "culledAnimals": 2207,
+      "visibleGroups": 204,
+      "visibleIndividuals": 1402,
+      "drawUnits": 1606,
+      "accountedAnimalIds": 7793,
+      "culling": {
+        "medianMs": 0.09094699999999989,
+        "p95Ms": 0.10514000000000578,
+        "samplesMs": [
+          0.13403900000000135,
+          0.089453000000006,
+          0.09311599999999487,
+          0.08782399999999768,
+          0.08760800000000302,
+          0.10514000000000578,
+          0.09525800000000118,
+          0.09094699999999989,
+          0.08830999999999278
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 11.004660000000001,
+        "p95Ms": 13.055296999999996,
+        "samplesMs": [
+          12.602996999999988,
+          13.301586999999984,
+          11.888815000000022,
+          13.055296999999996,
+          8.886612000000014,
+          11.004660000000001,
+          10.349968000000018,
+          8.56382099999999,
+          10.447238999999996
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.04968099999999254,
+        "p95Ms": 0.06268600000001356,
+        "samplesMs": [
+          0.06268600000001356,
+          0.05085099999999443,
+          0.0685450000000003,
+          0.054225999999999885,
+          0.04968099999999254,
+          0.0494109999999921,
+          0.02940399999999954,
+          0.029673999999999978,
+          0.03442499999999882
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic coordinates and animal counts are a graphics-model microbenchmark, not a representative farm workload.",
+    "No renderer, browser, GPU, asset, or FarmEngine work is included."
+  ],
   "study": "graphics-herd-visual-model-benchmark",
-  "generatedAt": "2026-10-12T20:47:34.276Z",
+  "generatedAt": "2026-10-13T01:57:26.739Z",
   "environment": {
     "node": "v20.20.2",
     "platform": "linux",
@@ -17,169 +337,5 @@
     "culling": "screen-space bounding-box intersection for each simulated animal",
     "visualUpdateAndGrouping": "classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation",
     "drawUnitPreparation": "prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work"
-  },
-  "results": [
-    {
-      "simulatedAnimals": 100,
-      "visibleAnimals": 97,
-      "culledAnimals": 3,
-      "visibleGroups": 13,
-      "visibleIndividuals": 38,
-      "drawUnits": 51,
-      "accountedAnimalIds": 97,
-      "culling": {
-        "medianMs": 0.00920799999999744,
-        "p95Ms": 0.010286999999998159,
-        "samplesMs": [
-          0.00920799999999744,
-          0.010286999999998159,
-          0.010331999999998231,
-          0.008576999999998947,
-          0.008829000000002196,
-          0.008532999999999902,
-          0.01008900000000068,
-          0.01020600000000016,
-          0.008622000000002572
-        ]
-      },
-      "visualUpdateAndGrouping": {
-        "medianMs": 0.3086789999999979,
-        "p95Ms": 0.6390759999999993,
-        "samplesMs": [
-          0.7358370000000001,
-          0.26117599999999896,
-          0.2831279999999978,
-          0.3086789999999979,
-          0.3140430000000016,
-          0.6390759999999993,
-          0.12113300000000038,
-          0.33750699999999867,
-          0.18988600000000133
-        ]
-      },
-      "drawUnitPreparation": {
-        "medianMs": 0.002466999999999331,
-        "p95Ms": 0.0030420000000006553,
-        "samplesMs": [
-          0.007785000000001929,
-          0.0030420000000006553,
-          0.00242099999999823,
-          0.0024930000000011887,
-          0.002366999999999564,
-          0.002268000000000825,
-          0.002978999999999843,
-          0.002466999999999331,
-          0.002465999999998303
-        ]
-      }
-    },
-    {
-      "simulatedAnimals": 1000,
-      "visibleAnimals": 978,
-      "culledAnimals": 22,
-      "visibleGroups": 154,
-      "visibleIndividuals": 162,
-      "drawUnits": 316,
-      "accountedAnimalIds": 978,
-      "culling": {
-        "medianMs": 0.01764999999999972,
-        "p95Ms": 0.03811499999999768,
-        "samplesMs": [
-          0.03811499999999768,
-          0.5195539999999994,
-          0.01960199999999901,
-          0.01747800000000055,
-          0.01764999999999972,
-          0.01649699999999754,
-          0.01702799999999982,
-          0.016947999999999297,
-          0.017792999999997505
-        ]
-      },
-      "visualUpdateAndGrouping": {
-        "medianMs": 1.812933000000001,
-        "p95Ms": 2.0572479999999977,
-        "samplesMs": [
-          2.0572479999999977,
-          1.6473119999999994,
-          2.111614000000003,
-          1.7360540000000029,
-          1.812933000000001,
-          1.8204029999999989,
-          1.5910249999999948,
-          1.8526430000000005,
-          1.0134830000000008
-        ]
-      },
-      "drawUnitPreparation": {
-        "medianMs": 0.011285999999998353,
-        "p95Ms": 0.018180000000000973,
-        "samplesMs": [
-          0.014419000000003734,
-          0.01117800000000102,
-          0.020997000000001265,
-          0.01092599999999777,
-          0.010863999999997986,
-          0.011051999999999396,
-          0.018180000000000973,
-          0.017020000000002256,
-          0.011285999999998353
-        ]
-      }
-    },
-    {
-      "simulatedAnimals": 10000,
-      "visibleAnimals": 7793,
-      "culledAnimals": 2207,
-      "visibleGroups": 204,
-      "visibleIndividuals": 1402,
-      "drawUnits": 1606,
-      "accountedAnimalIds": 7793,
-      "culling": {
-        "medianMs": 0.21078499999999423,
-        "p95Ms": 0.23117000000000587,
-        "samplesMs": [
-          0.21151300000000361,
-          0.18081399999999803,
-          0.17493600000000242,
-          0.19672599999999818,
-          0.21078499999999423,
-          0.22631799999999913,
-          0.2528509999999997,
-          0.23117000000000587,
-          0.18706900000000104
-        ]
-      },
-      "visualUpdateAndGrouping": {
-        "medianMs": 10.443885999999992,
-        "p95Ms": 12.907654000000008,
-        "samplesMs": [
-          14.638071999999994,
-          12.907654000000008,
-          11.242426999999992,
-          10.925052999999991,
-          10.443885999999992,
-          8.604757000000006,
-          9.584589999999992,
-          10.187663000000015,
-          9.027254
-        ]
-      },
-      "drawUnitPreparation": {
-        "medianMs": 0.04966299999998114,
-        "p95Ms": 0.07240600000000086,
-        "samplesMs": [
-          1.5669850000000167,
-          0.05415500000000861,
-          0.07011099999999715,
-          0.04966299999998114,
-          0.07240600000000086,
-          0.04311999999998761,
-          0.030564999999995734,
-          0.03296800000001099,
-          0.022770000000008395
-        ]
-      }
-    }
-  ]
+  }
 }

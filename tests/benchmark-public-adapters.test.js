@@ -122,6 +122,29 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
   assert.ok(history.phases.snapshot.measurements.every(item => item.observationsMs?.length === 1));
 });
 
+test('graphics evidence and scenario scheduler use the shared benchmark envelope', async () => {
+  const [atlas, herd] = await Promise.all([
+    readFile(new URL('../docs/evidence/graphics-atlas-load-2026-10-12.json', import.meta.url), 'utf8').then(JSON.parse),
+    readFile(new URL('../docs/evidence/herd-visual-model-benchmark-2026-10.json', import.meta.url), 'utf8').then(JSON.parse),
+  ]);
+  assertMeasurements(atlas);
+  assert.equal(atlas.results.atlasCount, atlas.atlasCount);
+  assert.equal(atlas.results.atlases.length, atlas.atlasCount);
+  assert.ok(atlas.results.atlases.every(row => row.browserSamples.length === atlas.configuration.repetitions));
+  assertMeasurements(herd);
+  assert.equal(herd.results.length, 3);
+  assert.ok(herd.results.every(row => row.culling.samplesMs.length === herd.configuration.repetitions
+    && row.visualUpdateAndGrouping.samplesMs.length === herd.configuration.repetitions
+    && row.drawUnitPreparation.samplesMs.length === herd.configuration.repetitions));
+
+  const scheduler = JSON.parse(run('scripts/benchmark-scenario-scheduler.mjs', [], {RIOSE_SCHEDULER_REPETITIONS: '1'}));
+  assertMeasurements(scheduler);
+  assert.equal(scheduler.configuration.repetitions, 1);
+  assert.equal(scheduler.results.rows.length, scheduler.configuration.concurrencyCases.length);
+  assert.ok(scheduler.results.rows.every(row => row.samples.length === 1 && row.allPassed));
+  assert.ok(scheduler.phases.worker.measurements[0].statistics.sampleCount > 0);
+});
+
 test('browser and graphics PoC adapters emit valid reports when Chromium is available', async t => {
   const chrome = await localChrome();
   if (!chrome) {

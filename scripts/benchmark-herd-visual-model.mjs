@@ -1,6 +1,7 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {clusterFarAnimals, assertVisibleAnimalMembership} from '../graphics-poc/herd-visual-model.js';
 import {distanceToViewportCenter, intersectsViewport, visualLod} from '../graphics-poc/contract.js';
 
@@ -59,21 +60,28 @@ for (const count of sizes) {
   });
 }
 
-const report = {
-  schemaVersion: '1.0.0',
-  study: 'graphics-herd-visual-model-benchmark',
-  generatedAt: new Date().toISOString(),
-  environment: {node: process.version, platform: process.platform, arch: process.arch},
-  methodology: {
-    repeats,
-    warmups: 2,
-    viewport,
-    culling: 'screen-space bounding-box intersection for each simulated animal',
-    visualUpdateAndGrouping: 'classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation',
-    drawUnitPreparation: 'prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work',
-  },
-  results,
+const methodology = {
+  repeats,
+  warmups: 2,
+  viewport,
+  culling: 'screen-space bounding-box intersection for each simulated animal',
+  visualUpdateAndGrouping: 'classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation',
+  drawUnitPreparation: 'prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work',
 };
+const report = benchmarkReport({
+  name: 'graphics-herd-visual-model',
+  workload: {seed: 'deterministic-synthetic-herd', populations: sizes.map(animals => ({animals, scope: 'graphics-visual-model-only', limit: 'Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer'}))},
+  configuration: {warmupRuns: methodology.warmups, repetitions: repeats, viewport},
+  phases: {layout: {status: 'measured', measurements: [
+    measurement('layout', 'screen-space culling', 'ms', summarizeSamples(results.flatMap(row => row.culling.samplesMs)), {population: 'all configured synthetic herd sizes', source: methodology.culling}),
+    measurement('layout', 'LOD classification, grouping, membership assertion', 'ms', summarizeSamples(results.flatMap(row => row.visualUpdateAndGrouping.samplesMs)), {population: 'all configured synthetic herd sizes', source: methodology.visualUpdateAndGrouping}),
+    measurement('layout', 'draw-unit descriptor preparation', 'ms', summarizeSamples(results.flatMap(row => row.drawUnitPreparation.samplesMs)), {population: 'all configured synthetic herd sizes', source: methodology.drawUnitPreparation}),
+  ]}},
+  timingBoundaries: [{phase: 'layout', timed: ['synthetic input array processing', 'screen-space culling', 'LOD classification', 'far-animal grouping', 'membership conservation assertion', 'draw-unit descriptor construction'], notTimed: ['FarmEngine simulation', 'Canvas/Pixi/GPU rendering', 'asset loading', 'browser frame scheduling']}],
+  results,
+  limitations: ['Synthetic coordinates and animal counts are a graphics-model microbenchmark, not a representative farm workload.', 'No renderer, browser, GPU, asset, or FarmEngine work is included.'],
+});
+Object.assign(report, {study: 'graphics-herd-visual-model-benchmark', generatedAt: new Date().toISOString(), environment: {node: process.version, platform: process.platform, arch: process.arch}, methodology, results});
 const output = path.resolve('docs/evidence/herd-visual-model-benchmark-2026-10.json');
 await mkdir(path.dirname(output), {recursive: true});
 await writeFile(output, `${JSON.stringify(report, null, 2)}\n`);

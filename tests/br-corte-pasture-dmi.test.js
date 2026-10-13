@@ -37,6 +37,31 @@ test('BR-CORTE 2023 Eq. 2.6 reproduces Table 2.14 worked example', () => {
 });
 
 test('equation input and output units and evidence metadata are explicit', () => {
+  // Keep these source-derived contracts independent of both the implementation
+  // metadata and the fixture so a coordinated metadata edit cannot silently
+  // widen or relabel the scientific reference domain.
+  assert.equal(table214.locator.source, 'https://brcorte.com.br/assets/book2023/br/02.pdf');
+  assert.equal(table214.locator.printedPage, 37);
+  assert.equal(table214.locator.pdfPage, 22);
+  assert.equal(table214.locator.table, '2.14');
+  assert.equal(table214.domainAssumptions.source, 'https://brcorte.com.br/assets/book2023/br/02.pdf');
+  assert.equal(table214.domainAssumptions.printedPage, 36);
+  assert.equal(table214.domainAssumptions.pdfPage, 21);
+  assert.equal(table214.domainAssumptions.table, '2.12, independent validation set for Zebu cattle grazing pasture');
+  assert.equal(table214.domainAssumptions.experimentalUnits, 174);
+  assert.deepEqual({
+    bodyWeightKg: table214.domainAssumptions.bodyWeightKg,
+    adgKgPerDay: table214.domainAssumptions.adgKgPerDay,
+    supplementKgDMPerDay: table214.domainAssumptions.supplementKgDMPerDay
+  }, {
+    bodyWeightKg: [133, 474],
+    adgKgPerDay: [-0.18, 1.34],
+    supplementKgDMPerDay: [0, 5.32]
+  });
+  assert.deepEqual(table214.inputs.bodyWeightKg.unit, 'kg');
+  assert.deepEqual(table214.inputs.adgKgPerDay.unit, 'kg/day');
+  assert.deepEqual(table214.inputs.supplementKgDMPerDay.unit, 'kg DM/day');
+  assert.deepEqual(table214.expected.unit, 'kg DM/day');
   assert.deepEqual(BR_CORTE_PASTURE_DMI.validatedDomain, {
     bodyWeightKg: table214.domainAssumptions.bodyWeightKg,
     adgKgPerDay: table214.domainAssumptions.adgKgPerDay,

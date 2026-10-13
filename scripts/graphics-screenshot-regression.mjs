@@ -11,6 +11,7 @@ import {decodePng,comparePng} from './graphics-screenshot-utils.mjs';
 const fixtures = path.resolve('tests/fixtures/graphics-screenshots-v1');
 const update = process.argv.includes('--update');
 const width = 1280, height = 900;
+const channelTolerance = 18, maxChangedRatio = .005;
 const cases = [
   {name:'beef', query:'', setup:'await window.__graphicsControl.selectScene("beef");'},
   {name:'dairy', query:'?scene=dairy', setup:'await window.__graphicsControl.selectScene("dairy");'},
@@ -68,7 +69,7 @@ try {
     const png=Buffer.from(shot.data,'base64'), dimensions=decodePng(png), filename=path.join(fixtures,`${test.name}.png`);
     if(update){await writeFile(filename,png);results.push({name:test.name,status:'updated',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},captureMs});continue;}
     let baseline;try{baseline=await readFile(filename);}catch{throw new Error(`Missing ${filename}; review the intended visual state, then run with --update to create baselines.`);}
-    const diff=comparePng(decodePng(baseline),decodePng(png),{channelTolerance:18,maxChangedRatio:.035});
+    const diff=comparePng(decodePng(baseline),decodePng(png),{channelTolerance,maxChangedRatio});
     results.push({name:test.name,status:diff.pass?'pass':'fail',capture:{...capture,bitmap:{width:dimensions.width,height:dimensions.height}},changedRatio:diff.changedRatio,maxChannelDelta:diff.maxChannelDelta,captureMs});
   }
   console.log(JSON.stringify({browser:(await cdp.send('Browser.getVersion')).product,viewport:{width,height,deviceScaleFactor:1},seed:20261012,renderer:'Canvas 2D',results},null,2));

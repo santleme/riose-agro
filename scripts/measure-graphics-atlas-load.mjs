@@ -6,6 +6,7 @@ import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createHash} from 'node:crypto';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const ORIGIN = process.env.RIOSE_ATLAS_URL ?? 'http://127.0.0.1:8000';
@@ -129,8 +130,7 @@ try {
     atlas.browserLoad = {repeats: REPEATS, medianTotalMs: Number(totals[Math.floor(totals.length / 2)].toFixed(3)), minTotalMs: Number(totals[0].toFixed(3)), maxTotalMs: Number(totals.at(-1).toFixed(3))};
   }
 
-  const report = {
-    schemaVersion: 1,
+  const details = {
     measuredAt: '2026-10-12',
     purpose: 'Atlas byte size and local browser fetch/decode evidence for the current graphics PoC manifest.',
     scope: 'Only atlases listed by graphics-poc/assets/main-composer-render-manifest.json; review/unresolved candidates remain unapproved. No renderer comparison was performed.',
@@ -143,7 +143,21 @@ try {
     atlases: atlasRows,
     limitations: ['Local loopback timing is a development-host baseline, not a network/CDN or supported-device estimate.', 'Browser cache was disabled and each atlas was fetched and decoded sequentially; concurrency behavior was not measured.', 'The measurements cover current REVIEW/UNRESOLVED atlas candidates only and do not imply visual, technical, rights, or release approval.'],
   };
-  if (report.atlases.some(atlas => atlas.browserSamples.length !== REPEATS || atlas.browserSamples.some(sample => !Number.isFinite(sample.totalMs)))) throw new Error('Atlas load evidence failed sample validation.');
+  const totalBytes = atlasRows.reduce((total, atlas) => total + atlas.byteSize, 0);
+  const report = benchmarkReport({
+    name: 'graphics-atlas-fetch-decode',
+    runtime: {browser: browserInfo.product, browserRevision: browserInfo.revision, userAgent: browserInfo.userAgent},
+    workload: {seed: 'no-random-input', populations: [{count: atlasRows.length, unit: 'atlases', scope: 'local-browser-asset-fetch-decode'}]},
+    configuration: {warmupRuns: 0, repetitions: REPEATS, cacheDisabled: true, sequential: true},
+    phases: {render: {status: 'measured', measurements: [
+      measurement('render', 'atlas fetch and image decode', 'ms', summarizeSamples(atlasRows.flatMap(atlas => atlas.browserSamples.map(sample => sample.totalMs))), {population: {count: atlasRows.length, unit: 'atlases'}, source: 'Chrome performance.now(); sequential fetch(cache=no-store), Blob read, createImageBitmap decode'}),
+    ]}},
+    timingBoundaries: [{phase: 'render', timed: ['HTTP fetch to loopback origin', 'Blob read', 'createImageBitmap decode'], notTimed: ['manifest validation', 'SHA-256 file verification', 'renderer draw', 'concurrent asset loading', 'CDN/network/device conditions']}],
+    results: {atlasCount: atlasRows.length, totalBytes, totalMiB: Number((totalBytes / 1024 / 1024).toFixed(3)), atlases: atlasRows},
+    limitations: details.limitations,
+  });
+  if (report.results.atlases.some(atlas => atlas.browserSamples.length !== REPEATS || atlas.browserSamples.some(sample => !Number.isFinite(sample.totalMs)))) throw new Error('Atlas load evidence failed sample validation.');
+  Object.assign(report, details, {schemaVersion: 1, atlasCount: report.results.atlasCount, totalBytes: report.results.totalBytes, totalMiB: report.results.totalMiB, atlases: report.results.atlases});
   await writeFile(OUTPUT, `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`Wrote ${path.relative(ROOT, OUTPUT)}: ${atlasRows.length} atlases, ${report.totalBytes} bytes, ${REPEATS} browser sample(s) per atlas.\n`);
 } finally {

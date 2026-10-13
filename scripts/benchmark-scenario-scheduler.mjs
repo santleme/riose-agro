@@ -6,6 +6,7 @@ import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {runScenarioDirectoryResumable} from './run-scenarios.js';
 import {ScenarioWorkerPool} from './scenario-worker-pool.js';
+import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions = Number(process.env.RIOSE_SCHEDULER_REPETITIONS ?? 4);
 const memoryPerWorkerMb = Number(process.env.RIOSE_SCHEDULER_WORKER_MEMORY_MB ?? 128);
@@ -106,19 +107,45 @@ for (const concurrency of concurrencyCases) {
     medianEndToEndMs: median('endToEndMs'), medianEndToEndThroughputScenariosPerSecond: median('endToEndThroughputScenariosPerSecond'),
     medianPeakObservedRssBytes: median('peakObservedRssBytes'), allPassed: samples.every(sample => sample.allPassed)});
 }
-process.stdout.write(`${JSON.stringify({
-  format: 'riose-scenario-scheduler-benchmark-v2',
-  environment: {node: process.version, platform: process.platform, arch: process.arch, reportedAvailableParallelism: availableParallelism(), workloadAvailableWorkers: availableWorkers},
-  workload: {scenarios: scenarioCount, hours: scenarioTemplate.run.hours, seeds: Array.from({length: scenarioCount}, (_, index) => 20261012 + index)},
-  repetitions,
-  measurement: {
-    workerStartup: 'Worker constructor through ready handshake; separate from workload wall and CPU time',
-    processCpu: 'process.cpuUsage delta during journaled workload; worker startup reported separately',
-    peakRss: `Independent Worker thread polls process.memoryUsage.rss() every ${rssPollIntervalMs}ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.`,
-    rssLimit: 'Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.',
-    includes: ['scenario execution', 'manifest and journal writes', 'result verification'],
-    endToEndTime: 'worker startup + workload wall + worker shutdown; serial is workload wall only',
-    excludesFromWorkloadTime: ['scenario fixture creation', 'worker startup', 'worker shutdown', 'RSS monitor startup'],
+const environment = {node: process.version, platform: process.platform, arch: process.arch, reportedAvailableParallelism: availableParallelism(), workloadAvailableWorkers: availableWorkers};
+const workload = {scenarios: scenarioCount, hours: scenarioTemplate.run.hours, seeds: Array.from({length: scenarioCount}, (_, index) => 20261012 + index)};
+const measurementDetails = {
+  workerStartup: 'Worker constructor through ready handshake; separate from workload wall and CPU time',
+  processCpu: 'process.cpuUsage delta during journaled workload; worker startup reported separately',
+  peakRss: `Independent Worker thread polls process.memoryUsage.rss() every ${rssPollIntervalMs}ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.`,
+  rssLimit: 'Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.',
+  includes: ['scenario execution', 'manifest and journal writes', 'result verification'],
+  endToEndTime: 'worker startup + workload wall + worker shutdown; serial is workload wall only',
+  excludesFromWorkloadTime: ['scenario fixture creation', 'worker startup', 'worker shutdown', 'RSS monitor startup'],
+};
+const allSamples = rows.flatMap(row => row.samples);
+const report = benchmarkReport({
+  name: 'scenario-scheduler-concurrency',
+  runtime: {platform: process.platform},
+  workload: {seed: 20261012, populations: [{count: scenarioCount, unit: 'scenarios', scope: 'FarmEngine scenario scheduler; worker concurrency comparison'}], hours: scenarioTemplate.run.hours, scenarioSeeds: workload.seeds},
+  configuration: {warmupRuns: 0, repetitions, concurrencyCases, workerMemoryLimitMb: memoryPerWorkerMb, rssPollIntervalMs},
+  phases: {
+    engine: {status: 'measured', measurements: [
+      measurement('engine', 'journaled workload wall time', 'ms', summarizeSamples(allSamples.map(sample => sample.wallMs)), {source: 'runScenarioDirectoryResumable from first dispatch through verified results'}),
+      measurement('engine', 'end-to-end time', 'ms', summarizeSamples(allSamples.map(sample => sample.endToEndMs)), {source: 'worker startup + workload wall + worker shutdown; serial path has no worker startup'}),
+      measurement('engine', 'process CPU total', 'ms', summarizeSamples(allSamples.map(sample => sample.processCpuMs.total)), {source: 'process.cpuUsage delta during journaled workload; startup CPU is recorded separately in raw samples'}),
+    ]},
+    startup: {status: 'measured', measurements: [measurement('startup', 'worker pool startup', 'ms', summarizeSamples(allSamples.map(sample => sample.workerStartupMs)), {source: 'Worker constructor through ready handshake; serial case is zero'})]},
+    worker: {status: 'measured', measurements: [measurement('worker', 'sampled process peak RSS', 'bytes', summarizeSamples(allSamples.map(sample => sample.peakObservedRssBytes)), {source: measurementDetails.peakRss})]},
   },
+  timingBoundaries: [
+    {phase: 'engine', timed: measurementDetails.includes, notTimed: measurementDetails.excludesFromWorkloadTime},
+    {phase: 'startup', timed: ['Worker construction and ready handshake'], notTimed: ['scenario fixture creation', 'scenario execution', 'worker shutdown']},
+    {phase: 'worker', timed: ['process RSS observations collected while the run executes'], notTimed: ['per-worker RSS attribution', 'hard process memory enforcement', 'memory outside the polling interval']},
+  ],
+  results: {environment, workload, measurement: measurementDetails, rows},
+  limitations: [measurementDetails.peakRss, measurementDetails.rssLimit, 'Synthetic baseline scenarios and this host-specific measurement do not establish performance on other machines.'],
+});
+Object.assign(report, {
+  format: 'riose-scenario-scheduler-benchmark-v2',
+  environment,
+  legacyWorkload: workload,
+  measurement: measurementDetails,
   rows,
-}, null, 2)}\n`);
+});
+process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
