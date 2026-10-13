@@ -34,10 +34,10 @@
   "reviewedMatrix": {
     "path": "docs/evidence/dmi-adg-readiness-v1.json",
     "schemaVersion": "riose.dmi-adg-readiness/v1",
-    "reviewedSourceCount": 23,
+    "reviewedSourceCount": 27,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
-    "ineligibleOrUnavailableSourcesForTarget": 23
+    "ineligibleOrUnavailableSourcesForTarget": 27
   },
   "candidateEvidence": [
     {
@@ -148,7 +148,7 @@
     {
       "id": "dmi-adg-readiness-matrix",
       "source": "docs/evidence/dmi-adg-readiness-v1.json",
-      "decision": "The 23-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
+      "decision": "The 27-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope. Newly reviewed Cabral et al. (2012) and Sowell et al. (2003) match the population and methods more closely, but publish no reusable linked animal-level DMI rows. Nowakowski et al. (2017) and the Pampa Corte thesis are additional near-misses: the former lacks reusable rows and total-DMI definition, while the latter evaluates forage organic-matter intake under a no-derivatives license.",
       "access": "mixed; assessed per source in the linked matrix",
       "license": "Assessed per source in the linked matrix and source manifests.",
       "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome. The SDSU beef-cow source is a hay-feeding experiment, not pasture DMI.",
@@ -161,7 +161,7 @@
     {
       "id": "dryad-dbrv15fg8-yearling-adg",
       "source": "docs/evidence/issue-15-dryad-yearling-eligibility.json",
-      "decision": "The public CC0 dataset is already represented in the 23-source DMI/ADG matrix. Its 154 yearling-steer rows include ADG and body weight, but no row-level experiment/site/year key, paired engine inputs, outcome horizon, or DMI; it is descriptive evidence only and is ineligible for ADG model training or engine validation.",
+      "decision": "The public CC0 dataset is already represented in the 27-source DMI/ADG matrix. Its 154 yearling-steer rows include ADG and body weight, but no row-level experiment/site/year key, paired engine inputs, outcome horizon, or DMI; it is descriptive evidence only and is ineligible for ADG model training or engine validation.",
       "access": "available_public_cc0",
       "license": "CC0-1.0 for the Dryad dataset.",
       "populationFit": "Ineligible for the mature beef-cow pasture target: the cohort consists of growing yearling steers.",

@@ -159,9 +159,68 @@
       "individualDataRetrieved": false,
       "publicDataAssessment": "The paper estimates daily pasture DMI using fecal output and pasture digestibility, with concentrate intake accounted for in the fecal-output calculation. No downloadable animal-period microdata were provided; the accessible DMI outcome is pasture DMI, not the target total DMI including forage and supplement.",
       "decision": "Exclude as a near-miss from the issue #109 mature beef-cow target: the cohort consists of dairy cows, and the reported DMI is pasture DMI rather than total DMI including supplement. Individual source data are available only on reasonable request, with no public row-level file or data-specific reuse terms identified. Do not infer eligibility from the open article or its aggregate results."
+    },
+    {
+      "title": "Levels of supplementation for grazing pregnant beef cows during the dry season",
+      "doi": "10.1590/S1516-35982012001200009",
+      "url": "https://doi.org/10.1590/S1516-35982012001200009",
+      "openArticleUrl": "https://rbz.org.br/wp-content/uploads/articles_xml/1516-3598-rbz-S1516-35982012001200009/1516-3598-rbz-S1516-35982012001200009.pdf",
+      "repositoryRecordUrl": "https://locus.ufv.br/items/9eb8db04-fad9-4820-bdc9-9871d29863ec",
+      "publicationLicense": "The article is CC BY-NC 4.0; no public individual-record deposit or separate data-specific reuse terms were identified.",
+      "reportedPopulation": "Twenty-eight pregnant crossbred beef cows, predominantly Zebu, grazing Brachiaria decumbens in Viçosa, Brazil, during June–August 2009; four supplement treatments with seven replicates each. Age is not reported; parity was considered.",
+      "dataAvailabilityStatement": "The article and UFV repository record provide the publication PDF; no statement or deposit for row-level study data was identified.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The methods estimate individual pasture DMI from fecal output and forage iNDF, individual supplement intake from fecal titanium dioxide, and total DMI as their sum. The digestibility trial lasted nine days, with fecal samples collected over three days. The paper publishes treatment-level means (including total DMI) but no animal-level rows, identifiers, or source measurements.",
+      "decision": "Retain as a strong Brazilian mature-cow pasture population and total-DMI methods reference, but exclude from supervised training and validation because the underlying individual records and data-specific reuse terms are unavailable. Do not reconstruct individual observations from treatment means. Revisit only if row-level data, animal/trial keys, and reuse terms are provided."
+    },
+    {
+      "title": "Liquid supplement and forage intake by range beef cows",
+      "doi": "10.2527/2003.811294x",
+      "url": "https://doi.org/10.2527/2003.811294x",
+      "openArticleUrl": "https://www.ars.usda.gov/ARSUserFiles/30300000/Publications/sowell-liquidsupplement.pdf",
+      "repositoryRecordUrl": "https://www.ars.usda.gov/research/publications/publication/?seqNo115=126256",
+      "publicationLicense": "USDA-hosted article copy carries © 2003 ASAS, all rights reserved; no public data deposit or data-specific reuse license was identified.",
+      "reportedPopulation": "One hundred eighty pregnant crossbred beef cows aged 2–6 years grazing native range across six pastures over two winters; individual forage and supplement intake components were estimated with markers.",
+      "dataAvailabilityStatement": "The USDA-hosted full text provides the article, not an individual-record data file; no underlying data statement or public microdata deposit was identified.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The paper reports forage and supplement DMI summaries by year and treatment, plus age-group summaries; it does not provide linked cow-level rows or animal/pasture/year keys. Published marginal summaries cannot be combined into individual total-DMI observations. Restricting a future authorized extract to mature cows would also require identifying ages 4–6 and resolving repeated animal identities.",
+      "decision": "Retain as a highly relevant U.S. mature beef-cow pasture-intake reference, but exclude from supervised training and validation because no reusable animal-level records, linked total-DMI rows, keys, or data-specific reuse terms were located. The article copyright is not a data license. Do not reconstruct individual rows from tables."
+    },
+    {
+      "title": "Estimation of pasture herbage intake by beef cattle based on n-alkanes as markers",
+      "doi": "10.5586/aa.1702",
+      "url": "https://doi.org/10.5586/aa.1702",
+      "openArticleUrl": "https://pbsociety.org.pl/journals/index.php/aa/article/view/6758",
+      "publicationLicense": "The article is CC BY; no separate individual-data file or data-specific reuse terms were identified.",
+      "reportedPopulation": "Sixteen beef cows continuously grazing permanent pastures in Poland; pasture herbage DMI was estimated with n-alkane markers.",
+      "dataAvailabilityStatement": "The journal record and article provide the publication; no data deposit or downloadable cow-level rows were identified.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The paper describes marker-based pasture-herbage DMI estimates but reports aggregate results. The target's total DMI including supplement, individual animal-period rows, IDs, and trial keys are not available in a reusable file. The CC BY article license does not create the missing data rows.",
+      "decision": "Retain as a European beef-cow pasture measurement-method reference only. Exclude from supervised target training and validation because no reusable animal-level records or keys were located and total DMI including supplement is not established. Do not reconstruct individual rows from article summaries."
+    },
+    {
+      "title": "Evaluation of techniques and markers used to predict digestibility and intake by free-ranging beef cattle in the context of the Pampa Corte Model",
+      "doi": null,
+      "url": "https://repositorio.ufsm.br/handle/1/34525",
+      "openArticleUrl": "https://agris.fao.org/search/ar/records/6800e305dd564a9a8282515f",
+      "publicationLicense": "AGRIS lists CC BY-NC-ND 4.0 for the thesis PDF; no separate public animal-record dataset or data-specific reuse terms were identified.",
+      "reportedPopulation": "A 2024 thesis compiles individual observations from two trials with 46 beef cows on native pastures in Uruguay, alongside growing-cattle trials in southern Brazil.",
+      "dataAvailabilityStatement": "The repository/AGRIS record exposes the thesis PDF; no separate row-level dataset deposit was identified.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The cow-trial outcome compares forage organic-matter intake predicted by Pampa Corte with marker estimates. This is not total dry-matter intake including supplement. Although the thesis describes individual observations and paired model inputs, no separate reusable row-level file was located; the thesis carries a no-derivatives license.",
+      "decision": "Retain as a relevant model-comparison and cow-population reference, but exclude from supervised total-DMI training/validation: the outcome is forage organic-matter intake, no separate animal-level dataset was found, and the thesis license is CC BY-NC-ND 4.0. Do not extract or reconstruct individual records from the thesis for this gate."
     }
   ],
-  "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",
+  "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. The Brazilian Cabral et al. and U.S. Sowell et al. studies are strong biological/method matches but provide aggregate publication results without reusable animal-level rows. The Polish and Pampa Corte thesis sources are also near-misses because they do not establish reusable total-DMI records. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",
+  "followUpLeads": [
+    {
+      "title": "National Animal Nutrition Program (NANP) Modeling Animal Performance Information",
+      "url": "https://agdatacommons.nal.usda.gov/articles/dataset/National_Animal_Nutrition_Program_NANP_Modeling_Animal_Performance_Information/24662358",
+      "license": "Ag Data Commons metadata reports U.S. Public Domain for the deposit.",
+      "status": "Unverified collection-level lead: accessible metadata does not establish a mature beef-cow pasture-DMI subset, row-level granularity, or data-specific cohort identity. Additional inspection through the NANP query/export interface is required before adding any source rows to the target matrix.",
+      "decision": "Do not count as an eligible source or use collection-level license metadata as proof that a specific cohort is present or reusable."
+    }
+  ],
   "limits": [
     "A source-level search is not proof that no other dataset exists.",
     "A publication license is not assumed to license its underlying data.",

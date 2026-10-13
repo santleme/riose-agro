@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 23; `inputFileCount` = 26; `elapsedSeconds` = 0.017185 s (tempo observado).
+**Processamento:** `sourceCount` = 27; `inputFileCount` = 26; `elapsedSeconds` = 0.020188 s (tempo observado).
 
 ## Matriz
 
@@ -50,6 +50,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 **Licença:** Open-access article; underlying ANCP records are private and no data-specific reuse terms were identified. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
+| Levels of Supplementation for Grazing Pregnant Beef Cows During the Dry Season | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 28 pregnant crossbred beef cows, predominantly Zebu, grazing Brachiaria decumbens in Viçosa, Brazil; four supplement treatments with seven replicates each. Age is not reported; parity was considered. The study estimates individual pasture and supplement DMI, summed as total kg DM/animal/day over a marker-based digestibility period; only treatment-level means are published. | Relevant Brazilian mature-cow pasture-DMI method reference only; request the underlying records and reuse terms before reconsideration, and do not reconstruct rows from aggregates. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/14` |
+
+**pasture-dmi-triage-cabral-2012-pregnant-cows — razões.** DMI: Population, pasture setting, and total-DMI outcome are relevant, but no cow-level source file, animal/trial keys, or data-specific reuse terms were found. Published treatment means are not individual training or validation rows. Source is inaccessible or not reusable. ADG: The article reports treatment-level weight-gain summaries, not reusable individual ADG rows with paired predictors. Source is inaccessible or not reusable.
+**Licença:** The article is CC BY-NC 4.0; no public individual-record deposit or separate data-specific reuse terms were identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
 | Differences in DMI in Grazing and Drylot Beef Cattle | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 163 beef cattle across four experimental groups and two grazing seasons. No openly licensed individual DMI records retrieved; pasture DMI described as LSTM-estimated. | Literature context only; do not score as independent pasture DMI validation. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/1` |
 
 **pasture-dmi-triage-etd-13250 — razões.** DMI: No openly licensed individual file; the pasture target described in the abstract is model-estimated rather than directly measured. Source is inaccessible or not reusable. ADG: No reusable individual ADG records with paired predictors were retrieved. Source is inaccessible or not reusable.
@@ -66,6 +72,18 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 **pasture-dmi-triage-livsci-2015 — razões.** DMI: The article describes individual herbage-intake estimates but no downloadable row-level file or data-specific reuse terms were located; herbage intake also does not document the specified total-DMI outcome including supplement. Source is inaccessible or not reusable. ADG: No reusable individual ADG records or paired inputs were retrieved. Source is inaccessible or not reusable.
 **Licença:** 2015 Elsevier article copyright; no separate data-specific reuse license identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| Estimation of Pasture Herbage Intake by Beef Cattle Based on n-Alkanes as Markers | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 16 beef cows continuously grazing permanent pastures in Poland. Marker-based pasture-herbage DMI estimates are reported in aggregate; total DMI including supplement and reusable cow-level rows/keys are unavailable. | European beef-cow pasture measurement-method reference only; do not reconstruct individual rows from article summaries. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/16` |
+
+**pasture-dmi-triage-nowakowski-2017 — razões.** DMI: No downloadable animal-level dataset or data-specific reuse terms were found, and total DMI including supplement is not established. Source is inaccessible or not reusable. ADG: No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable.
+**Licença:** CC BY article; no separate individual-data file or data-specific reuse terms were identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| Evaluation of Techniques and Markers for Intake Prediction in the Pampa Corte Model | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 46 beef cows in two native-pasture trials in Uruguay; thesis also contains growing-cattle trials in southern Brazil. Cow outcome is forage organic-matter intake compared with Pampa Corte predictions, not total dry-matter intake including supplement; no separate row-level file located. | Relevant Pampa Corte model-comparison context only; do not use as total-DMI training/validation or extract rows for this gate. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/17` |
+
+**pasture-dmi-triage-pampa-corte-thesis-2024 — razões.** DMI: The outcome does not match total DMI and no separate reusable animal-level dataset was found; the thesis carries a no-derivatives license. Source is inaccessible or not reusable. ADG: Growing-cattle ADG data are outside the mature-cow population and the individual records have no separate dataset deposit identified. Source is inaccessible or not reusable.
+**Licença:** AGRIS lists CC BY-NC-ND 4.0 for the thesis PDF; no separate animal-record dataset or data-specific reuse terms were identified. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
 | Herbage mass, genotype, and intake of beef cows on native grassland | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 24–36 adult multiparous Hereford, Angus, and crossbred cows across eight paddocks and six periods. Article-level intake estimated by n-alkane ratio; no reusable individual file retrieved. | Peer-reviewed methods and population reference only. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/2` |
@@ -96,6 +114,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 **pasture-dmi-triage-soares-2026-holstein-gyr — razões.** DMI: Ineligible for the frozen target: dairy cows are outside the mature beef-cow population, the reported outcome is pasture DMI rather than total DMI including forage and supplement, and the underlying rows are available only on reasonable request. Source is inaccessible or not reusable. ADG: No individual ADG outcome file with paired eligible predictors was retrieved. Source is inaccessible or not reusable.
 **Licença:** Open-access article; underlying study records are available only on reasonable request, with no public file or data-specific reuse license identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
+| Liquid Supplement and Forage Intake by Range Beef Cows | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 180 pregnant crossbred beef cows aged 2–6 years grazing native range across six pastures over two winters; individual forage and supplement intake components were estimated with markers. Forage and supplement DMI summaries are reported separately by year/treatment and age; linked animal-level total-DMI rows and IDs are unavailable. | Highly relevant U.S. mature beef-cow pasture-intake reference only; request deidentified linked rows and explicit reuse terms before reconsideration, and do not reconstruct rows from tables. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/15` |
+
+**pasture-dmi-triage-sowell-2003-beef-cows — razões.** DMI: No reusable animal-level records, linked total-DMI rows, cow/pasture/year keys, or data-specific reuse terms were located. Published marginal summaries cannot be combined into individual outcomes; ages 4–6 and repeated animal identities would also need resolution. Source is inaccessible or not reusable. ADG: No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable.
+**Licença:** USDA-hosted article copy carries © 2003 ASAS, all rights reserved; no public data deposit or data-specific reuse license was identified. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
 | Developing and Validating a Model for DMI of Grazing Lactating Beef Cows | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 94 DMI measurements on 106 beef/beef-dairy crossbred cows, with model results also reported on a separate 60-cow lactating herd. Published model results only; no downloadable individual DMI rows or animal/trial keys retrieved. | Highly relevant methods/population reference only; published regression metrics cannot substitute for cow-level records. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/5` |
@@ -160,6 +184,6 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 ## Processamento
 
-`sourceCount` = 23; `inputFileCount` = 26; `elapsedSeconds` = 0.017185 s.
+`sourceCount` = 27; `inputFileCount` = 26; `elapsedSeconds` = 0.020188 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.

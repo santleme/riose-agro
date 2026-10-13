@@ -436,6 +436,66 @@
       "permissibleUse": "Brazilian DMI research context only; do not treat young-bull/heifer TMR observations or article summaries as eligible pasture-cow labels."
     },
     {
+      "id": "pasture-dmi-triage-cabral-2012-pregnant-cows",
+      "name": "Levels of Supplementation for Grazing Pregnant Beef Cows During the Dry Season",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/14"
+      },
+      "sourceIdentity": {
+        "doi": "10.1590/S1516-35982012001200009",
+        "license": "The article is CC BY-NC 4.0; no public individual-record deposit or separate data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "28 pregnant crossbred beef cows, predominantly Zebu, grazing Brachiaria decumbens in Viçosa, Brazil; four supplement treatments with seven replicates each. Age is not reported; parity was considered.",
+      "units": "The study estimates individual pasture and supplement DMI, summed as total kg DM/animal/day over a marker-based digestibility period; only treatment-level means are published.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Population, pasture setting, and total-DMI outcome are relevant, but no cow-level source file, animal/trial keys, or data-specific reuse terms were found. Published treatment means are not individual training or validation rows. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The article reports treatment-level weight-gain summaries, not reusable individual ADG rows with paired predictors. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant Brazilian mature-cow pasture-DMI method reference only; request the underlying records and reuse terms before reconsideration, and do not reconstruct rows from aggregates."
+    },
+    {
       "id": "pasture-dmi-triage-etd-13250",
       "name": "Differences in DMI in Grazing and Drylot Beef Cattle",
       "references": {
@@ -614,6 +674,126 @@
         }
       },
       "permissibleUse": "Strong adult-cow population and method reference only; do not reconstruct microdata from reported aggregates."
+    },
+    {
+      "id": "pasture-dmi-triage-nowakowski-2017",
+      "name": "Estimation of Pasture Herbage Intake by Beef Cattle Based on n-Alkanes as Markers",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/16"
+      },
+      "sourceIdentity": {
+        "doi": "10.5586/aa.1702",
+        "license": "CC BY article; no separate individual-data file or data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "16 beef cows continuously grazing permanent pastures in Poland.",
+      "units": "Marker-based pasture-herbage DMI estimates are reported in aggregate; total DMI including supplement and reusable cow-level rows/keys are unavailable.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No downloadable animal-level dataset or data-specific reuse terms were found, and total DMI including supplement is not established. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "European beef-cow pasture measurement-method reference only; do not reconstruct individual rows from article summaries."
+    },
+    {
+      "id": "pasture-dmi-triage-pampa-corte-thesis-2024",
+      "name": "Evaluation of Techniques and Markers for Intake Prediction in the Pampa Corte Model",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/17"
+      },
+      "sourceIdentity": {
+        "doi": "10.21203/rs.3.rs-8262715/v1",
+        "license": "AGRIS lists CC BY-NC-ND 4.0 for the thesis PDF; no separate animal-record dataset or data-specific reuse terms were identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "46 beef cows in two native-pasture trials in Uruguay; thesis also contains growing-cattle trials in southern Brazil.",
+      "units": "Cow outcome is forage organic-matter intake compared with Pampa Corte predictions, not total dry-matter intake including supplement; no separate row-level file located.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "The outcome does not match total DMI and no separate reusable animal-level dataset was found; the thesis carries a no-derivatives license. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Growing-cattle ADG data are outside the mature-cow population and the individual records have no separate dataset deposit identified. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant Pampa Corte model-comparison context only; do not use as total-DMI training/validation or extract rows for this gate."
     },
     {
       "id": "pasture-dmi-triage-skab279",
@@ -914,6 +1094,66 @@
         }
       },
       "permissibleUse": "Relevant tropical pasture-dairy methods reference only; do not use as target training or validation, or infer individual records from article summaries."
+    },
+    {
+      "id": "pasture-dmi-triage-sowell-2003-beef-cows",
+      "name": "Liquid Supplement and Forage Intake by Range Beef Cows",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/15"
+      },
+      "sourceIdentity": {
+        "doi": "10.2527/2003.811294x",
+        "license": "USDA-hosted article copy carries © 2003 ASAS, all rights reserved; no public data deposit or data-specific reuse license was identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "180 pregnant crossbred beef cows aged 2–6 years grazing native range across six pastures over two winters; individual forage and supplement intake components were estimated with markers.",
+      "units": "Forage and supplement DMI summaries are reported separately by year/treatment and age; linked animal-level total-DMI rows and IDs are unavailable.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable animal-level records, linked total-DMI rows, cow/pasture/year keys, or data-specific reuse terms were located. Published marginal summaries cannot be combined into individual outcomes; ages 4–6 and repeated animal identities would also need resolution. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No reusable individual ADG records and paired inputs were retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Highly relevant U.S. mature beef-cow pasture-intake reference only; request deidentified linked rows and explicit reuse terms before reconsideration, and do not reconstruct rows from tables."
     },
     {
       "id": "pasture-dmi-triage-teagasc-2019",
@@ -1399,9 +1639,9 @@
     }
   ],
   "processing": {
-    "sourceCount": 23,
+    "sourceCount": 27,
     "inputFileCount": 26,
-    "elapsedSeconds": 0.017185,
+    "elapsedSeconds": 0.020188,
     "elapsedTimeKind": "observed_wall_clock_seconds"
   }
 }
