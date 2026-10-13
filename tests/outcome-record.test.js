@@ -119,7 +119,7 @@ test('outcome record links exact manifest and archived projection, then reports 
   const report = validateOutcomeRecord(record, archiveBytes, manifestBytes, snapshotBytes);
   assert.equal(report.valid, true, report.errors.join('\n'));
   assert.equal(report.engineSourceSha256, archive.engineSourceSha256);
-  assert.deepEqual(archive.engineSourceFiles, ['engine.js', 'feeding-model.js', 'environment-model.js', 'metabolism-wasm.js']);
+  assert.deepEqual(archive.engineSourceFiles, ['engine.js', 'animal-view-state.js', 'feeding-model.js', 'environment-model.js', 'metabolism-wasm.js']);
   assert.deepEqual(report.coverage, {totalObservations: 1, observedValues: 1, comparableValues: 1, unavailableOrBlocked: 0, comparableFractionOfAll: 1});
   assert.equal(report.comparisons[0].status, 'comparable-descriptive');
   assert.equal(report.comparisons[0].difference, 2);

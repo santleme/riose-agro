@@ -49,13 +49,13 @@ test('housing changes consume locomotion randomness without advancing the model 
   const changed = new FarmEngine(417, 8);
   const unchanged = new FarmEngine(417, 8);
   const modelSeed = changed.state.seed;
-  const locomotionSeed = changed.state.locomotionSeed;
+  const locomotionSeed = changed.viewState.locomotionSeed;
 
   changed.configure({housing: 'barn'});
   changed.tick(3);
 
   assert.equal(changed.state.seed, modelSeed);
-  assert.notEqual(changed.state.locomotionSeed, locomotionSeed);
+  assert.notEqual(changed.viewState.locomotionSeed, locomotionSeed);
   assert.equal(changed.random(), unchanged.random());
 });
 
@@ -67,8 +67,8 @@ test('legacy snapshots get a deterministic locomotion stream without being mutat
   const second = FarmEngine.from(legacySnapshot);
 
   assert.deepEqual(legacySnapshot, original);
-  assert.ok(Number.isInteger(first.state.locomotionSeed));
-  assert.equal(first.state.locomotionSeed, second.state.locomotionSeed);
+  assert.ok(Number.isInteger(first.viewState.locomotionSeed));
+  assert.equal(first.viewState.locomotionSeed, second.viewState.locomotionSeed);
   first.tick(24);
   second.tick(24);
   assert.deepEqual(first.snapshot(), second.snapshot());

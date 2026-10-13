@@ -20,7 +20,8 @@ function postView(){
   for(let index=0;index<animals.length;index++){
     const animal=animals[index],offset=index*4;
     ids[index]=animal.id;
-    values[offset]=animal.x;values[offset+1]=animal.y;values[offset+2]=animal.weight;values[offset+3]=animal.initialWeight;
+    const position=engine.viewState.get(animal.id);
+    values[offset]=position.x;values[offset+1]=position.y;values[offset+2]=animal.weight;values[offset+3]=animal.initialWeight;
     actions[index]=actionCodes[animal.action]??0;
   }
   const selectedAnimal=animals.find(animal=>animal.id===selectedAnimalId)??animals[0];
