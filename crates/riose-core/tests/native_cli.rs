@@ -49,7 +49,13 @@ fn run_cli(args: &[&str], input: Option<&[u8]>) -> Output {
         .spawn()
         .unwrap();
     if let Some(input) = input {
-        child.stdin.take().unwrap().write_all(input).unwrap();
+        if let Err(error) = child.stdin.take().unwrap().write_all(input) {
+            assert_eq!(
+                error.kind(),
+                std::io::ErrorKind::BrokenPipe,
+                "failed to write CLI input: {error}"
+            );
+        }
     }
     child.wait_with_output().unwrap()
 }
