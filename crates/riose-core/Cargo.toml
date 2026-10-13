@@ -22,3 +22,7 @@ path = "src/bin/bench_layout.rs"
 [[bin]]
 name = "bench-farm-core"
 path = "src/bin/bench_farm_core.rs"
+
+[[bin]]
+name = "riose-run"
+path = "src/bin/riose_run.rs"
