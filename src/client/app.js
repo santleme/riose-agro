@@ -34,7 +34,7 @@ const scenarioStorageKey='agroville-scenarios-v1',scenarioActiveKey='agroville-a
 let scenarios=[],activeScenarioId=null,storageWarningShown=false;
 function scenarioSummary(snapshot){return {hour:snapshot.hour,config:{...snapshot.config},eventCount:snapshot.events?.length??0};}
 const farmSnapshotStorageKey='agroville-farm-snapshot-v1',farmSelectionStorageKey='agroville-farm-selection-v1';
-let farmSnapshot=null,selectedPaddockDomainZone=null,selectedLotId=null,activeLotContext=null,environmentState=null;
+let farmSnapshot=null,selectedPaddockDomainZone=null,selectedLotId=null,environmentState=null;
 try{const saved=localStorage.getItem(farmSnapshotStorageKey);if(saved)farmSnapshot=JSON.parse(saved);}catch{}
 try{environmentState=initialEnvironmentState(farmSnapshot,JSON.parse(localStorage.getItem('agroville-environment-scenario-v1')??'null'));}catch{environmentState=initialEnvironmentState(farmSnapshot);}
 try{const saved=JSON.parse(localStorage.getItem(farmSelectionStorageKey)??'null');selectedPaddockDomainZone=saved?.domainZoneId??null;selectedLotId=saved?.lotId??null;}catch{}
@@ -60,7 +60,7 @@ function renderEnvironmentInputs(){
 function renderLotSelection(){
   const host=$('lot-selection-details'),status=$('lot-selection-status'),compareButton=$('lot-compare');
   if(!host||!status||!compareButton)return;
-  host.replaceChildren?.();host.innerHTML='';activeLotContext=null;compareButton.disabled=true;
+  host.replaceChildren?.();host.innerHTML='';compareButton.disabled=true;
   if(!farmSnapshot){status.textContent='Conecte um snapshot para consultar lotes reais.';return;}
   if(!selectedPaddockDomainZone){status.textContent='Snapshot conectado · selecione um piquete no mapa.';return;}
   const selection=resolveLotSelection(farmSnapshot,selectedPaddockDomainZone);
@@ -69,7 +69,6 @@ function renderLotSelection(){
   if(!lots.length){host.innerHTML='<p class="lot-empty">Nenhum lote deste snapshot está ligado a este piquete.</p>';return;}
   if(!lots.some(item=>item.lot.id===selectedLotId))selectedLotId=lots[0].lot.id;
   const picked=lots.find(item=>item.lot.id===selectedLotId);
-  activeLotContext={snapshotId:farmSnapshot.snapshotId,paddockId:selection.paddock.id,domainZoneId:selectedPaddockDomainZone,lotId:picked.lot.id,animalIds:[...picked.lot.animalIds],animalCount:picked.lot.animalIds.length,area:picked.area,feedingFrequency:picked.fields.find(field=>/feeding_frequency|feedings_per_day|meals_per_day/.test(field.path))??farmSnapshot.observations.find(field=>/feeding_frequency|feedings_per_day|meals_per_day/.test(field.path))??null};
   const readiness=assessLotSimulationReadiness(farmSnapshot,picked.lot);
   compareButton.disabled=true;
   compareButton.textContent=readiness.status==='eligible'?'Comparar este lote ↗':'Comparação do lote bloqueada';
