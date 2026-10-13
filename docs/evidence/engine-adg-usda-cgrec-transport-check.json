@@ -9,7 +9,7 @@
     "md5": "650a892956aa1ab2d22eff26dbadb8d1",
     "totalRows": 4705,
     "eligibleSteerYearlings": 291,
-    "integrityAuditSha256": "4c4a17bf847aaa30d773980c321dc6d9c5b698ed13e3f7c9014583b4fc9ef82b",
+    "integrityAuditSha256": "8f18603d5a6274c0a254f0ca8322e082c6003353139d5d9237e3c367aa305513",
     "years": [
       1989,
       1994,
@@ -20,8 +20,8 @@
   },
   "transferFromCper": {
     "cperSourceDoi": "10.15482/USDA.ADC/1528520",
-    "cperEngineSha256": "30ef6f2dc882cf4ba0719a2a9adc23dfa0111f20a5280785ecd579fddf48663d",
-    "engineSha256": "30ef6f2dc882cf4ba0719a2a9adc23dfa0111f20a5280785ecd579fddf48663d",
+    "cperEngineSha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
+    "engineSha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
     "engineSourceFiles": [
       "engine.js",
       "animal-view-state.js",
