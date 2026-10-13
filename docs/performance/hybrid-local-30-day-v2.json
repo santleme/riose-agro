@@ -1,0 +1,2365 @@
+{
+  "schemaVersion": 2,
+  "benchmark": {
+    "name": "hybrid-local-30-day-comparison",
+    "source": {
+      "revision": "a6293fdcac909a3a99748e9ccb1bea37ad486aae",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": 2026,
+    "populations": [
+      {
+        "count": 100,
+        "unit": "animals",
+        "scope": "30-day housing comparison"
+      },
+      {
+        "count": 1000,
+        "unit": "animals",
+        "scope": "30-day housing comparison"
+      },
+      {
+        "count": 10000,
+        "unit": "animals",
+        "scope": "30-day housing comparison"
+      }
+    ],
+    "days": 30
+  },
+  "configuration": {
+    "warmupRuns": 1,
+    "repetitions": 5,
+    "snapshotConstruction": "excluded from engine timing",
+    "processStartupSamples": 12
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "engine",
+          "metric": "JavaScript 30-day housing comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 201.84341300000006,
+            "spread": {
+              "min": 198.71663400000006,
+              "max": 208.47399500000006,
+              "range": 9.757361000000003
+            },
+            "rawObservations": [
+              198.71663400000006,
+              198.76428099999998,
+              201.84341300000006,
+              208.47399500000006,
+              203.82454200000006
+            ]
+          },
+          "source": "FarmEngine.compare(snapshot, 30); excludes construction, transfer, JSON serialization and storage.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "engine",
+          "metric": "Rust native process end-to-end comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 7.007420999999908,
+            "spread": {
+              "min": 6.775386000000026,
+              "max": 7.160372000000052,
+              "range": 0.38498600000002625
+            },
+            "rawObservations": [
+              7.007420999999908,
+              6.8023339999999735,
+              7.160372000000052,
+              7.069631000000072,
+              6.775386000000026
+            ]
+          },
+          "source": "riose-run from spawn through stdout and process exit; includes native startup, request transfer, JSON parse/serialize and comparison.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "engine",
+          "metric": "JavaScript 30-day housing comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 2305.036907,
+            "spread": {
+              "min": 2286.459858,
+              "max": 2339.2403059999997,
+              "range": 52.780447999999524
+            },
+            "rawObservations": [
+              2305.036907,
+              2309.966061,
+              2339.2403059999997,
+              2295.208138,
+              2286.459858
+            ]
+          },
+          "source": "FarmEngine.compare(snapshot, 30); excludes construction, transfer, JSON serialization and storage.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "engine",
+          "metric": "Rust native process end-to-end comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 51.3159770000002,
+            "spread": {
+              "min": 50.29614799999945,
+              "max": 51.73674399999982,
+              "range": 1.4405960000003688
+            },
+            "rawObservations": [
+              50.29614799999945,
+              51.73674399999982,
+              51.66754899999978,
+              51.3159770000002,
+              50.51325200000065
+            ]
+          },
+          "source": "riose-run from spawn through stdout and process exit; includes native startup, request transfer, JSON parse/serialize and comparison.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "engine",
+          "metric": "JavaScript 30-day housing comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 25488.295602000013,
+            "spread": {
+              "min": 25128.329400999995,
+              "max": 26221.812118999995,
+              "range": 1093.4827179999993
+            },
+            "rawObservations": [
+              25887.61874199999,
+              26221.812118999995,
+              25488.295602000013,
+              25128.329400999995,
+              25313.16467899998
+            ]
+          },
+          "source": "FarmEngine.compare(snapshot, 30); excludes construction, transfer, JSON serialization and storage.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "engine",
+          "metric": "Rust native process end-to-end comparison",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 666.2404740000056,
+            "spread": {
+              "min": 641.3544540000003,
+              "max": 726.3088920000009,
+              "range": 84.95443800000066
+            },
+            "rawObservations": [
+              726.3088920000009,
+              666.2404740000056,
+              641.3544540000003,
+              665.2678989999986,
+              688.585619999998
+            ]
+          },
+          "source": "riose-run from spawn through stdout and process exit; includes native startup, request transfer, JSON parse/serialize and comparison.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        }
+      ]
+    },
+    "snapshot": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "snapshot",
+          "metric": "structuredClone transfer proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.29719599999998536,
+            "spread": {
+              "min": 0.22150399999998172,
+              "max": 0.3825270000000387,
+              "range": 0.16102300000005698
+            },
+            "rawObservations": [
+              0.3825270000000387,
+              0.22150399999998172,
+              0.29719599999998536,
+              0.31285700000000816,
+              0.27133900000012545
+            ]
+          },
+          "source": "Snapshot structured clone in-process; not a Worker message measurement.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "snapshot",
+          "metric": "structuredClone transfer proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 2.3601380000000063,
+            "spread": {
+              "min": 2.3280700000013894,
+              "max": 5.441886000000068,
+              "range": 3.1138159999986783
+            },
+            "rawObservations": [
+              5.441886000000068,
+              2.3601380000000063,
+              2.3280700000013894,
+              2.3780299999998533,
+              2.344927000000098
+            ]
+          },
+          "source": "Snapshot structured clone in-process; not a Worker message measurement.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "snapshot",
+          "metric": "structuredClone transfer proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 28.87351900000067,
+            "spread": {
+              "min": 28.317574999993667,
+              "max": 29.78335199999856,
+              "range": 1.4657770000048913
+            },
+            "rawObservations": [
+              28.87351900000067,
+              28.877965000006952,
+              29.78335199999856,
+              28.330195000002277,
+              28.317574999993667
+            ]
+          },
+          "source": "Snapshot structured clone in-process; not a Worker message measurement.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        }
+      ]
+    },
+    "serialization": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.08585300000004281,
+            "spread": {
+              "min": 0.0823249999999689,
+              "max": 0.0877259999999751,
+              "range": 0.005401000000006206
+            },
+            "rawObservations": [
+              0.0823249999999689,
+              0.08275700000001507,
+              0.0877259999999751,
+              0.08662700000013501,
+              0.08585300000004281
+            ]
+          },
+          "source": "JSON.stringify of the completed comparison.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result JSON parse and reserialize proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.11348399999997127,
+            "spread": {
+              "min": 0.10615699999993922,
+              "max": 0.1211519999999382,
+              "range": 0.014994999999998981
+            },
+            "rawObservations": [
+              0.11348399999997127,
+              0.10615699999993922,
+              0.113933999999972,
+              0.11012600000003658,
+              0.1211519999999382
+            ]
+          },
+          "source": "Client-side parse/serialize of the Rust comparison object; native serializer time is part of process end-to-end.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "comparison request serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.13617299999998522,
+            "spread": {
+              "min": 0.12178199999993922,
+              "max": 0.14274399999999332,
+              "range": 0.020962000000054104
+            },
+            "rawObservations": [
+              0.14274399999999332,
+              0.12372600000003331,
+              0.13617299999998522,
+              0.13842400000010002,
+              0.12178199999993922
+            ]
+          },
+          "source": "Per-repetition JSON.stringify of the versioned native comparison request.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 23208,
+            "spread": {
+              "min": 23208,
+              "max": 23208,
+              "range": 0
+            },
+            "rawObservations": [
+              23208,
+              23208,
+              23208,
+              23208,
+              23208
+            ]
+          },
+          "source": "Serialized JavaScript comparison object.",
+          "animalCount": 100,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 23208,
+            "spread": {
+              "min": 23208,
+              "max": 23208,
+              "range": 0
+            },
+            "rawObservations": [
+              23208,
+              23208,
+              23208,
+              23208,
+              23208
+            ]
+          },
+          "source": "Serialized Rust comparison object, excluding the native result envelope.",
+          "animalCount": 100,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result envelope stdout bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 24609,
+            "spread": {
+              "min": 24609,
+              "max": 24609,
+              "range": 0
+            },
+            "rawObservations": [
+              24609,
+              24609,
+              24609,
+              24609,
+              24609
+            ]
+          },
+          "source": "Full stdout JSON envelope returned by riose-run.",
+          "animalCount": 100,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "serialized native request bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 37078,
+            "spread": {
+              "min": 37078,
+              "max": 37078,
+              "range": 0
+            },
+            "rawObservations": [
+              37078,
+              37078,
+              37078,
+              37078,
+              37078
+            ]
+          },
+          "source": "Versioned JSON request sent over local stdin to riose-run.",
+          "animalCount": 100,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.12873899999976857,
+            "spread": {
+              "min": 0.12099899999884656,
+              "max": 0.13205999999991036,
+              "range": 0.011061000001063803
+            },
+            "rawObservations": [
+              0.1288379999996323,
+              0.12099899999884656,
+              0.13205999999991036,
+              0.12753300000076706,
+              0.12873899999976857
+            ]
+          },
+          "source": "JSON.stringify of the completed comparison.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result JSON parse and reserialize proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.10607700000036857,
+            "spread": {
+              "min": 0.10366500000054657,
+              "max": 0.11050499999873864,
+              "range": 0.00683999999819207
+            },
+            "rawObservations": [
+              0.1055369999994582,
+              0.10770599999887054,
+              0.10366500000054657,
+              0.11050499999873864,
+              0.10607700000036857
+            ]
+          },
+          "source": "Client-side parse/serialize of the Rust comparison object; native serializer time is part of process end-to-end.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "comparison request serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 1.282162999999855,
+            "spread": {
+              "min": 1.1101419999995414,
+              "max": 1.332194999999956,
+              "range": 0.2220530000004146
+            },
+            "rawObservations": [
+              1.332194999999956,
+              1.2203410000001895,
+              1.3119530000003579,
+              1.282162999999855,
+              1.1101419999995414
+            ]
+          },
+          "source": "Per-repetition JSON.stringify of the versioned native comparison request.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 22469,
+            "spread": {
+              "min": 22469,
+              "max": 22469,
+              "range": 0
+            },
+            "rawObservations": [
+              22469,
+              22469,
+              22469,
+              22469,
+              22469
+            ]
+          },
+          "source": "Serialized JavaScript comparison object.",
+          "animalCount": 1000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 22469,
+            "spread": {
+              "min": 22469,
+              "max": 22469,
+              "range": 0
+            },
+            "rawObservations": [
+              22469,
+              22469,
+              22469,
+              22469,
+              22469
+            ]
+          },
+          "source": "Serialized Rust comparison object, excluding the native result envelope.",
+          "animalCount": 1000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result envelope stdout bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 23954,
+            "spread": {
+              "min": 23954,
+              "max": 23954,
+              "range": 0
+            },
+            "rawObservations": [
+              23954,
+              23954,
+              23954,
+              23954,
+              23954
+            ]
+          },
+          "source": "Full stdout JSON envelope returned by riose-run.",
+          "animalCount": 1000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "serialized native request bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 369213,
+            "spread": {
+              "min": 369213,
+              "max": 369213,
+              "range": 0
+            },
+            "rawObservations": [
+              369213,
+              369213,
+              369213,
+              369213,
+              369213
+            ]
+          },
+          "source": "Versioned JSON request sent over local stdin to riose-run.",
+          "animalCount": 1000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.14582200002041645,
+            "spread": {
+              "min": 0.14061899999796879,
+              "max": 0.1546960000123363,
+              "range": 0.014077000014367513
+            },
+            "rawObservations": [
+              0.14575899999181274,
+              0.14061899999796879,
+              0.14586699999927077,
+              0.1546960000123363,
+              0.14582200002041645
+            ]
+          },
+          "source": "JSON.stringify of the completed comparison.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result JSON parse and reserialize proxy",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.10541099999682046,
+            "spread": {
+              "min": 0.10322399999131449,
+              "max": 3.5945920000085607,
+              "range": 3.4913680000172462
+            },
+            "rawObservations": [
+              0.10483499999099877,
+              0.10322399999131449,
+              0.10541099999682046,
+              3.5945920000085607,
+              0.11498600000049919
+            ]
+          },
+          "source": "Client-side parse/serialize of the Rust comparison object; native serializer time is part of process end-to-end.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "comparison request serialization",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 13.338630000012927,
+            "spread": {
+              "min": 13.029435000004014,
+              "max": 19.682373999996344,
+              "range": 6.65293899999233
+            },
+            "rawObservations": [
+              19.682373999996344,
+              13.371208999989904,
+              13.046562000003178,
+              13.338630000012927,
+              13.029435000004014
+            ]
+          },
+          "source": "Per-repetition JSON.stringify of the versioned native comparison request.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "JavaScript comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 22463,
+            "spread": {
+              "min": 22463,
+              "max": 22463,
+              "range": 0
+            },
+            "rawObservations": [
+              22463,
+              22463,
+              22463,
+              22463,
+              22463
+            ]
+          },
+          "source": "Serialized JavaScript comparison object.",
+          "animalCount": 10000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust comparison JSON payload bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 22463,
+            "spread": {
+              "min": 22463,
+              "max": 22463,
+              "range": 0
+            },
+            "rawObservations": [
+              22463,
+              22463,
+              22463,
+              22463,
+              22463
+            ]
+          },
+          "source": "Serialized Rust comparison object, excluding the native result envelope.",
+          "animalCount": 10000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "Rust result envelope stdout bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 23948,
+            "spread": {
+              "min": 23948,
+              "max": 23948,
+              "range": 0
+            },
+            "rawObservations": [
+              23948,
+              23948,
+              23948,
+              23948,
+              23948
+            ]
+          },
+          "source": "Full stdout JSON envelope returned by riose-run.",
+          "animalCount": 10000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "serialization",
+          "metric": "serialized native request bytes",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 3709960,
+            "spread": {
+              "min": 3709960,
+              "max": 3709960,
+              "range": 0
+            },
+            "rawObservations": [
+              3709960,
+              3709960,
+              3709960,
+              3709960,
+              3709960
+            ]
+          },
+          "source": "Versioned JSON request sent over local stdin to riose-run.",
+          "animalCount": 10000,
+          "memoryType": "serialized-payload",
+          "population": "all configured populations"
+        }
+      ]
+    },
+    "storage": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "storage",
+          "metric": "temporary JSON write",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 1.057166000000052,
+            "spread": {
+              "min": 0.4036060000000816,
+              "max": 1.496026000000029,
+              "range": 1.0924199999999473
+            },
+            "rawObservations": [
+              1.057166000000052,
+              1.4435909999999694,
+              1.496026000000029,
+              0.4036060000000816,
+              0.5422229999999217
+            ]
+          },
+          "source": "Write paired JavaScript and Rust outputs to a temporary local file.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "storage",
+          "metric": "temporary JSON read",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.2764239999999063,
+            "spread": {
+              "min": 0.20054300000015246,
+              "max": 0.3639419999999518,
+              "range": 0.16339899999979934
+            },
+            "rawObservations": [
+              0.24708299999997507,
+              0.30084099999999125,
+              0.3639419999999518,
+              0.20054300000015246,
+              0.2764239999999063
+            ]
+          },
+          "source": "Read paired outputs back from temporary local storage.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "storage",
+          "metric": "temporary JSON write",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 3.722569999999905,
+            "spread": {
+              "min": 3.325079000000187,
+              "max": 4.308533000001262,
+              "range": 0.9834540000010747
+            },
+            "rawObservations": [
+              3.690074000000095,
+              3.9657330000009097,
+              3.722569999999905,
+              4.308533000001262,
+              3.325079000000187
+            ]
+          },
+          "source": "Write paired JavaScript and Rust outputs to a temporary local file.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "storage",
+          "metric": "temporary JSON read",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.22440199999982724,
+            "spread": {
+              "min": 0.19430599999941478,
+              "max": 0.3617369999992661,
+              "range": 0.16743099999985134
+            },
+            "rawObservations": [
+              0.3617369999992661,
+              0.20421499999974912,
+              0.23637299999973038,
+              0.22440199999982724,
+              0.19430599999941478
+            ]
+          },
+          "source": "Read paired outputs back from temporary local storage.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "storage",
+          "metric": "temporary JSON write",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 3.2636429999838583,
+            "spread": {
+              "min": 0.5899369999824557,
+              "max": 9.238045999998576,
+              "range": 8.64810900001612
+            },
+            "rawObservations": [
+              0.646842000001925,
+              9.238045999998576,
+              3.3795660000032512,
+              0.5899369999824557,
+              3.2636429999838583
+            ]
+          },
+          "source": "Write paired JavaScript and Rust outputs to a temporary local file.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "storage",
+          "metric": "temporary JSON read",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0.2662899999995716,
+            "spread": {
+              "min": 0.26306800000020303,
+              "max": 0.32015600000158884,
+              "range": 0.05708800000138581
+            },
+            "rawObservations": [
+              0.2665689999994356,
+              0.32015600000158884,
+              0.26306800000020303,
+              0.2633370000112336,
+              0.2662899999995716
+            ]
+          },
+          "source": "Read paired outputs back from temporary local storage.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        }
+      ]
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "startup",
+          "metric": "riose-run --version process startup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 12,
+            "median": 1.224034500000009,
+            "spread": {
+              "min": 1.1599039999999974,
+              "max": 1.5735320000000002,
+              "range": 0.41362800000000277
+            },
+            "rawObservations": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "source": "15 process launches, first three discarded as warmups.",
+          "animalCount": 100,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "startup",
+          "metric": "riose-run --version process startup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 12,
+            "median": 1.224034500000009,
+            "spread": {
+              "min": 1.1599039999999974,
+              "max": 1.5735320000000002,
+              "range": 0.41362800000000277
+            },
+            "rawObservations": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "source": "15 process launches, first three discarded as warmups.",
+          "animalCount": 1000,
+          "population": "all configured populations"
+        },
+        {
+          "phase": "startup",
+          "metric": "riose-run --version process startup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 12,
+            "median": 1.224034500000009,
+            "spread": {
+              "min": 1.1599039999999974,
+              "max": 1.5735320000000002,
+              "range": 0.41362800000000277
+            },
+            "rawObservations": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "source": "15 process launches, first three discarded as warmups.",
+          "animalCount": 10000,
+          "population": "all configured populations"
+        }
+      ]
+    },
+    "coldStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "warmStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "bridgeMarshaling": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "fullScenario": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "uiEndToEnd": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "memory": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "memory",
+          "metric": "JavaScript retained heap delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 26976120,
+            "spread": {
+              "min": 24386608,
+              "max": 29099608,
+              "range": 4713000
+            },
+            "rawObservations": [
+              26976120,
+              27035848,
+              26964000,
+              24386608,
+              29099608
+            ]
+          },
+          "source": "V8 heap before/after one JS comparison; result retained, not peak allocation.",
+          "animalCount": 100,
+          "memoryType": "retained-heap",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "native child sampled peak RSS",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 3932160,
+            "spread": {
+              "min": 3932160,
+              "max": 3932160,
+              "range": 0
+            },
+            "rawObservations": [
+              3932160
+            ]
+          },
+          "source": "GNU time maximum RSS from a separate native invocation; whole child process, separate from timed samples.",
+          "animalCount": 100,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "Node harness RSS after workload",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 102195200,
+            "spread": {
+              "min": 102195200,
+              "max": 102195200,
+              "range": 0
+            },
+            "rawObservations": [
+              102195200
+            ]
+          },
+          "source": "Whole benchmark process after workload; cumulative, not per operation.",
+          "animalCount": 100,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "JavaScript retained heap delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 107831800,
+            "spread": {
+              "min": 107802832,
+              "max": 108022584,
+              "range": 219752
+            },
+            "rawObservations": [
+              107844256,
+              107831800,
+              107814680,
+              108022584,
+              107802832
+            ]
+          },
+          "source": "V8 heap before/after one JS comparison; result retained, not peak allocation.",
+          "animalCount": 1000,
+          "memoryType": "retained-heap",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "native child sampled peak RSS",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 13631488,
+            "spread": {
+              "min": 13631488,
+              "max": 13631488,
+              "range": 0
+            },
+            "rawObservations": [
+              13631488
+            ]
+          },
+          "source": "GNU time maximum RSS from a separate native invocation; whole child process, separate from timed samples.",
+          "animalCount": 1000,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "Node harness RSS after workload",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 192528384,
+            "spread": {
+              "min": 192528384,
+              "max": 192528384,
+              "range": 0
+            },
+            "rawObservations": [
+              192528384
+            ]
+          },
+          "source": "Whole benchmark process after workload; cumulative, not per operation.",
+          "animalCount": 1000,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "JavaScript retained heap delta",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 569659104,
+            "spread": {
+              "min": 569564152,
+              "max": 810620352,
+              "range": 241056200
+            },
+            "rawObservations": [
+              685740224,
+              569564152,
+              569577632,
+              810620352,
+              569659104
+            ]
+          },
+          "source": "V8 heap before/after one JS comparison; result retained, not peak allocation.",
+          "animalCount": 10000,
+          "memoryType": "retained-heap",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "native child sampled peak RSS",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 115662848,
+            "spread": {
+              "min": 115662848,
+              "max": 115662848,
+              "range": 0
+            },
+            "rawObservations": [
+              115662848
+            ]
+          },
+          "source": "GNU time maximum RSS from a separate native invocation; whole child process, separate from timed samples.",
+          "animalCount": 10000,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        },
+        {
+          "phase": "memory",
+          "metric": "Node harness RSS after workload",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 713945088,
+            "spread": {
+              "min": 713945088,
+              "max": 713945088,
+              "range": 0
+            },
+            "rawObservations": [
+              713945088
+            ]
+          },
+          "source": "Whole benchmark process after workload; cumulative, not per operation.",
+          "animalCount": 10000,
+          "memoryType": "process-rss",
+          "population": "all configured populations"
+        }
+      ]
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "engine",
+      "timed": [
+        "FarmEngine.compare or riose-run process invocation"
+      ],
+      "notTimed": [
+        "initial snapshot construction",
+        "browser rendering"
+      ],
+      "whatIsTimed": [
+        "FarmEngine.compare or riose-run process invocation"
+      ],
+      "whatIsNotTimed": [
+        "initial snapshot construction",
+        "browser rendering"
+      ]
+    },
+    {
+      "phase": "snapshot",
+      "timed": [
+        "structuredClone of the FarmEngine snapshot"
+      ],
+      "notTimed": [
+        "actual browser Worker message delivery"
+      ],
+      "whatIsTimed": [
+        "structuredClone of the FarmEngine snapshot"
+      ],
+      "whatIsNotTimed": [
+        "actual browser Worker message delivery"
+      ]
+    },
+    {
+      "phase": "startup",
+      "timed": [
+        "riose-run --version process startup"
+      ],
+      "notTimed": [
+        "Cargo build and native invocation workload"
+      ],
+      "whatIsTimed": [
+        "riose-run --version process startup"
+      ],
+      "whatIsNotTimed": [
+        "Cargo build and native invocation workload"
+      ]
+    },
+    {
+      "phase": "serialization",
+      "timed": [
+        "per-repetition request stringify and client result parse/JSON stringify proxies"
+      ],
+      "notTimed": [
+        "native internal JSON parse/serialize as a separately isolated phase"
+      ],
+      "whatIsTimed": [
+        "per-repetition request stringify and client result parse/JSON stringify proxies"
+      ],
+      "whatIsNotTimed": [
+        "native internal JSON parse/serialize as a separately isolated phase"
+      ]
+    },
+    {
+      "phase": "memory",
+      "timed": [
+        "retained JS heap delta and separate native child peak RSS"
+      ],
+      "notTimed": [
+        "allocator-level peak and GPU memory"
+      ],
+      "whatIsTimed": [
+        "retained JS heap delta and separate native child peak RSS"
+      ],
+      "whatIsNotTimed": [
+        "allocator-level peak and GPU memory"
+      ]
+    },
+    {
+      "phase": "storage",
+      "timed": [
+        "temporary JSON comparison write and read"
+      ],
+      "notTimed": [
+        "durable database commit or cloud storage"
+      ],
+      "whatIsTimed": [
+        "temporary JSON comparison write and read"
+      ],
+      "whatIsNotTimed": [
+        "durable database commit or cloud storage"
+      ]
+    }
+  ],
+  "results": {
+    "startup": {
+      "medianMs": 1.2229680000000087,
+      "p95Ms": 1.5735320000000002,
+      "samplesMs": [
+        1.2229680000000087,
+        1.2442180000000036,
+        1.2003780000000006,
+        1.2251010000000093,
+        1.260220000000004,
+        1.265035999999995,
+        1.2055259999999919,
+        1.343787000000006,
+        1.5735320000000002,
+        1.1941850000000045,
+        1.206344999999999,
+        1.1599039999999974
+      ]
+    },
+    "rows": [
+      {
+        "animalCount": 100,
+        "days": 30,
+        "requestBytes": 37078,
+        "outputBytes": {
+          "javascriptComparisonJson": 23208,
+          "nativeComparisonJson": 23208,
+          "nativeEnvelopeStdout": 24609
+        },
+        "requestSerialization": {
+          "medianMs": 0.13617299999998522,
+          "p95Ms": 0.14274399999999332,
+          "samplesMs": [
+            0.14274399999999332,
+            0.12372600000003331,
+            0.13617299999998522,
+            0.13842400000010002,
+            0.12178199999993922
+          ]
+        },
+        "javascript": {
+          "calculation": {
+            "medianMs": 201.84341300000006,
+            "p95Ms": 208.47399500000006,
+            "samplesMs": [
+              198.71663400000006,
+              198.76428099999998,
+              201.84341300000006,
+              208.47399500000006,
+              203.82454200000006
+            ]
+          },
+          "outputSerialization": {
+            "medianMs": 0.08585300000004281,
+            "p95Ms": 0.0877259999999751,
+            "samplesMs": [
+              0.0823249999999689,
+              0.08275700000001507,
+              0.0877259999999751,
+              0.08662700000013501,
+              0.08585300000004281
+            ]
+          },
+          "transferProxyStructuredClone": {
+            "medianMs": 0.29719599999998536,
+            "p95Ms": 0.3825270000000387,
+            "samplesMs": [
+              0.3825270000000387,
+              0.22150399999998172,
+              0.29719599999998536,
+              0.31285700000000816,
+              0.27133900000012545
+            ]
+          },
+          "retainedHeapDeltaBytes": {
+            "medianMs": 26976120,
+            "p95Ms": 29099608,
+            "samplesMs": [
+              26976120,
+              27035848,
+              26964000,
+              24386608,
+              29099608
+            ]
+          },
+          "processRssAfterBytes": {
+            "medianMs": 100884480,
+            "p95Ms": 101314560,
+            "samplesMs": [
+              100839424,
+              101314560,
+              101048320,
+              100802560,
+              100884480
+            ]
+          }
+        },
+        "rust": {
+          "processEndToEnd": {
+            "medianMs": 7.007420999999908,
+            "p95Ms": 7.160372000000052,
+            "samplesMs": [
+              7.007420999999908,
+              6.8023339999999735,
+              7.160372000000052,
+              7.069631000000072,
+              6.775386000000026
+            ]
+          },
+          "processStartup": {
+            "medianMs": 1.2229680000000087,
+            "p95Ms": 1.5735320000000002,
+            "samplesMs": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "outputParseProxy": {
+            "medianMs": 0.11348399999997127,
+            "p95Ms": 0.1211519999999382,
+            "samplesMs": [
+              0.11348399999997127,
+              0.10615699999993922,
+              0.113933999999972,
+              0.11012600000003658,
+              0.1211519999999382
+            ]
+          },
+          "sampledPeakProcessRssBytes": 3932160
+        },
+        "storage": {
+          "jsonBytes": 46431,
+          "write": {
+            "medianMs": 1.057166000000052,
+            "p95Ms": 1.496026000000029,
+            "samplesMs": [
+              1.057166000000052,
+              1.4435909999999694,
+              1.496026000000029,
+              0.4036060000000816,
+              0.5422229999999217
+            ]
+          },
+          "read": {
+            "medianMs": 0.2764239999999063,
+            "p95Ms": 0.3639419999999518,
+            "samplesMs": [
+              0.24708299999997507,
+              0.30084099999999125,
+              0.3639419999999518,
+              0.20054300000015246,
+              0.2764239999999063
+            ]
+          }
+        },
+        "parity": {
+          "status": "passed",
+          "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+        },
+        "harnessProcessMemoryAfterBytes": {
+          "rss": 102195200,
+          "heapUsed": 22494416,
+          "external": 2042037
+        }
+      },
+      {
+        "animalCount": 1000,
+        "days": 30,
+        "requestBytes": 369213,
+        "outputBytes": {
+          "javascriptComparisonJson": 22469,
+          "nativeComparisonJson": 22469,
+          "nativeEnvelopeStdout": 23954
+        },
+        "requestSerialization": {
+          "medianMs": 1.282162999999855,
+          "p95Ms": 1.332194999999956,
+          "samplesMs": [
+            1.332194999999956,
+            1.2203410000001895,
+            1.3119530000003579,
+            1.282162999999855,
+            1.1101419999995414
+          ]
+        },
+        "javascript": {
+          "calculation": {
+            "medianMs": 2305.036907,
+            "p95Ms": 2339.2403059999997,
+            "samplesMs": [
+              2305.036907,
+              2309.966061,
+              2339.2403059999997,
+              2295.208138,
+              2286.459858
+            ]
+          },
+          "outputSerialization": {
+            "medianMs": 0.12873899999976857,
+            "p95Ms": 0.13205999999991036,
+            "samplesMs": [
+              0.1288379999996323,
+              0.12099899999884656,
+              0.13205999999991036,
+              0.12753300000076706,
+              0.12873899999976857
+            ]
+          },
+          "transferProxyStructuredClone": {
+            "medianMs": 2.3601380000000063,
+            "p95Ms": 5.441886000000068,
+            "samplesMs": [
+              5.441886000000068,
+              2.3601380000000063,
+              2.3280700000013894,
+              2.3780299999998533,
+              2.344927000000098
+            ]
+          },
+          "retainedHeapDeltaBytes": {
+            "medianMs": 107831800,
+            "p95Ms": 108022584,
+            "samplesMs": [
+              107844256,
+              107831800,
+              107814680,
+              108022584,
+              107802832
+            ]
+          },
+          "processRssAfterBytes": {
+            "medianMs": 186687488,
+            "p95Ms": 187420672,
+            "samplesMs": [
+              185942016,
+              186556416,
+              187420672,
+              186687488,
+              186761216
+            ]
+          }
+        },
+        "rust": {
+          "processEndToEnd": {
+            "medianMs": 51.3159770000002,
+            "p95Ms": 51.73674399999982,
+            "samplesMs": [
+              50.29614799999945,
+              51.73674399999982,
+              51.66754899999978,
+              51.3159770000002,
+              50.51325200000065
+            ]
+          },
+          "processStartup": {
+            "medianMs": 1.2229680000000087,
+            "p95Ms": 1.5735320000000002,
+            "samplesMs": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "outputParseProxy": {
+            "medianMs": 0.10607700000036857,
+            "p95Ms": 0.11050499999873864,
+            "samplesMs": [
+              0.1055369999994582,
+              0.10770599999887054,
+              0.10366500000054657,
+              0.11050499999873864,
+              0.10607700000036857
+            ]
+          },
+          "sampledPeakProcessRssBytes": 13631488
+        },
+        "storage": {
+          "jsonBytes": 44953,
+          "write": {
+            "medianMs": 3.722569999999905,
+            "p95Ms": 4.308533000001262,
+            "samplesMs": [
+              3.690074000000095,
+              3.9657330000009097,
+              3.722569999999905,
+              4.308533000001262,
+              3.325079000000187
+            ]
+          },
+          "read": {
+            "medianMs": 0.22440199999982724,
+            "p95Ms": 0.3617369999992661,
+            "samplesMs": [
+              0.3617369999992661,
+              0.20421499999974912,
+              0.23637299999973038,
+              0.22440199999982724,
+              0.19430599999941478
+            ]
+          }
+        },
+        "parity": {
+          "status": "passed",
+          "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+        },
+        "harnessProcessMemoryAfterBytes": {
+          "rss": 192528384,
+          "heapUsed": 112365768,
+          "external": 2370562
+        }
+      },
+      {
+        "animalCount": 10000,
+        "days": 30,
+        "requestBytes": 3709960,
+        "outputBytes": {
+          "javascriptComparisonJson": 22463,
+          "nativeComparisonJson": 22463,
+          "nativeEnvelopeStdout": 23948
+        },
+        "requestSerialization": {
+          "medianMs": 13.338630000012927,
+          "p95Ms": 19.682373999996344,
+          "samplesMs": [
+            19.682373999996344,
+            13.371208999989904,
+            13.046562000003178,
+            13.338630000012927,
+            13.029435000004014
+          ]
+        },
+        "javascript": {
+          "calculation": {
+            "medianMs": 25488.295602000013,
+            "p95Ms": 26221.812118999995,
+            "samplesMs": [
+              25887.61874199999,
+              26221.812118999995,
+              25488.295602000013,
+              25128.329400999995,
+              25313.16467899998
+            ]
+          },
+          "outputSerialization": {
+            "medianMs": 0.14582200002041645,
+            "p95Ms": 0.1546960000123363,
+            "samplesMs": [
+              0.14575899999181274,
+              0.14061899999796879,
+              0.14586699999927077,
+              0.1546960000123363,
+              0.14582200002041645
+            ]
+          },
+          "transferProxyStructuredClone": {
+            "medianMs": 28.87351900000067,
+            "p95Ms": 29.78335199999856,
+            "samplesMs": [
+              28.87351900000067,
+              28.877965000006952,
+              29.78335199999856,
+              28.330195000002277,
+              28.317574999993667
+            ]
+          },
+          "retainedHeapDeltaBytes": {
+            "medianMs": 569659104,
+            "p95Ms": 810620352,
+            "samplesMs": [
+              685740224,
+              569564152,
+              569577632,
+              810620352,
+              569659104
+            ]
+          },
+          "processRssAfterBytes": {
+            "medianMs": 699920384,
+            "p95Ms": 943636480,
+            "samplesMs": [
+              823226368,
+              698290176,
+              699174912,
+              943636480,
+              699920384
+            ]
+          }
+        },
+        "rust": {
+          "processEndToEnd": {
+            "medianMs": 666.2404740000056,
+            "p95Ms": 726.3088920000009,
+            "samplesMs": [
+              726.3088920000009,
+              666.2404740000056,
+              641.3544540000003,
+              665.2678989999986,
+              688.585619999998
+            ]
+          },
+          "processStartup": {
+            "medianMs": 1.2229680000000087,
+            "p95Ms": 1.5735320000000002,
+            "samplesMs": [
+              1.2229680000000087,
+              1.2442180000000036,
+              1.2003780000000006,
+              1.2251010000000093,
+              1.260220000000004,
+              1.265035999999995,
+              1.2055259999999919,
+              1.343787000000006,
+              1.5735320000000002,
+              1.1941850000000045,
+              1.206344999999999,
+              1.1599039999999974
+            ]
+          },
+          "outputParseProxy": {
+            "medianMs": 0.10541099999682046,
+            "p95Ms": 3.5945920000085607,
+            "samplesMs": [
+              0.10483499999099877,
+              0.10322399999131449,
+              0.10541099999682046,
+              3.5945920000085607,
+              0.11498600000049919
+            ]
+          },
+          "sampledPeakProcessRssBytes": 115662848
+        },
+        "storage": {
+          "jsonBytes": 44941,
+          "write": {
+            "medianMs": 3.2636429999838583,
+            "p95Ms": 9.238045999998576,
+            "samplesMs": [
+              0.646842000001925,
+              9.238045999998576,
+              3.3795660000032512,
+              0.5899369999824557,
+              3.2636429999838583
+            ]
+          },
+          "read": {
+            "medianMs": 0.2662899999995716,
+            "p95Ms": 0.32015600000158884,
+            "samplesMs": [
+              0.2665689999994356,
+              0.32015600000158884,
+              0.26306800000020303,
+              0.2633370000112336,
+              0.2662899999995716
+            ]
+          }
+        },
+        "parity": {
+          "status": "passed",
+          "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+        },
+        "harnessProcessMemoryAfterBytes": {
+          "rss": 713945088,
+          "heapUsed": 598223888,
+          "external": 5711280
+        }
+      }
+    ],
+    "parity": "passed for every paired 30-day comparison"
+  },
+  "limitations": [
+    "Native process end-to-end includes process startup and IPC; the local Rust C ABI metabolism adapter is not a full-simulation backend.",
+    "The Rust child peak RSS is measured with GNU time in a separate invocation. JS heap delta is retained output memory, not peak allocation.",
+    "structuredClone is only a transfer proxy here. The bounded Worker benchmark measures actual message transfer and journal/storage costs separately.",
+    "The Modal backend is a candidate only; no remote execution was made and no remote latency/cost is reported."
+  ],
+  "format": "riose-hybrid-local-benchmark-v1",
+  "startup": {
+    "medianMs": 1.2229680000000087,
+    "p95Ms": 1.5735320000000002,
+    "samplesMs": [
+      1.2229680000000087,
+      1.2442180000000036,
+      1.2003780000000006,
+      1.2251010000000093,
+      1.260220000000004,
+      1.265035999999995,
+      1.2055259999999919,
+      1.343787000000006,
+      1.5735320000000002,
+      1.1941850000000045,
+      1.206344999999999,
+      1.1599039999999974
+    ]
+  },
+  "rows": [
+    {
+      "animalCount": 100,
+      "days": 30,
+      "requestBytes": 37078,
+      "outputBytes": {
+        "javascriptComparisonJson": 23208,
+        "nativeComparisonJson": 23208,
+        "nativeEnvelopeStdout": 24609
+      },
+      "requestSerialization": {
+        "medianMs": 0.13617299999998522,
+        "p95Ms": 0.14274399999999332,
+        "samplesMs": [
+          0.14274399999999332,
+          0.12372600000003331,
+          0.13617299999998522,
+          0.13842400000010002,
+          0.12178199999993922
+        ]
+      },
+      "javascript": {
+        "calculation": {
+          "medianMs": 201.84341300000006,
+          "p95Ms": 208.47399500000006,
+          "samplesMs": [
+            198.71663400000006,
+            198.76428099999998,
+            201.84341300000006,
+            208.47399500000006,
+            203.82454200000006
+          ]
+        },
+        "outputSerialization": {
+          "medianMs": 0.08585300000004281,
+          "p95Ms": 0.0877259999999751,
+          "samplesMs": [
+            0.0823249999999689,
+            0.08275700000001507,
+            0.0877259999999751,
+            0.08662700000013501,
+            0.08585300000004281
+          ]
+        },
+        "transferProxyStructuredClone": {
+          "medianMs": 0.29719599999998536,
+          "p95Ms": 0.3825270000000387,
+          "samplesMs": [
+            0.3825270000000387,
+            0.22150399999998172,
+            0.29719599999998536,
+            0.31285700000000816,
+            0.27133900000012545
+          ]
+        },
+        "retainedHeapDeltaBytes": {
+          "medianMs": 26976120,
+          "p95Ms": 29099608,
+          "samplesMs": [
+            26976120,
+            27035848,
+            26964000,
+            24386608,
+            29099608
+          ]
+        },
+        "processRssAfterBytes": {
+          "medianMs": 100884480,
+          "p95Ms": 101314560,
+          "samplesMs": [
+            100839424,
+            101314560,
+            101048320,
+            100802560,
+            100884480
+          ]
+        }
+      },
+      "rust": {
+        "processEndToEnd": {
+          "medianMs": 7.007420999999908,
+          "p95Ms": 7.160372000000052,
+          "samplesMs": [
+            7.007420999999908,
+            6.8023339999999735,
+            7.160372000000052,
+            7.069631000000072,
+            6.775386000000026
+          ]
+        },
+        "processStartup": {
+          "medianMs": 1.2229680000000087,
+          "p95Ms": 1.5735320000000002,
+          "samplesMs": [
+            1.2229680000000087,
+            1.2442180000000036,
+            1.2003780000000006,
+            1.2251010000000093,
+            1.260220000000004,
+            1.265035999999995,
+            1.2055259999999919,
+            1.343787000000006,
+            1.5735320000000002,
+            1.1941850000000045,
+            1.206344999999999,
+            1.1599039999999974
+          ]
+        },
+        "outputParseProxy": {
+          "medianMs": 0.11348399999997127,
+          "p95Ms": 0.1211519999999382,
+          "samplesMs": [
+            0.11348399999997127,
+            0.10615699999993922,
+            0.113933999999972,
+            0.11012600000003658,
+            0.1211519999999382
+          ]
+        },
+        "sampledPeakProcessRssBytes": 3932160
+      },
+      "storage": {
+        "jsonBytes": 46431,
+        "write": {
+          "medianMs": 1.057166000000052,
+          "p95Ms": 1.496026000000029,
+          "samplesMs": [
+            1.057166000000052,
+            1.4435909999999694,
+            1.496026000000029,
+            0.4036060000000816,
+            0.5422229999999217
+          ]
+        },
+        "read": {
+          "medianMs": 0.2764239999999063,
+          "p95Ms": 0.3639419999999518,
+          "samplesMs": [
+            0.24708299999997507,
+            0.30084099999999125,
+            0.3639419999999518,
+            0.20054300000015246,
+            0.2764239999999063
+          ]
+        }
+      },
+      "parity": {
+        "status": "passed",
+        "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+      },
+      "harnessProcessMemoryAfterBytes": {
+        "rss": 102195200,
+        "heapUsed": 22494416,
+        "external": 2042037
+      }
+    },
+    {
+      "animalCount": 1000,
+      "days": 30,
+      "requestBytes": 369213,
+      "outputBytes": {
+        "javascriptComparisonJson": 22469,
+        "nativeComparisonJson": 22469,
+        "nativeEnvelopeStdout": 23954
+      },
+      "requestSerialization": {
+        "medianMs": 1.282162999999855,
+        "p95Ms": 1.332194999999956,
+        "samplesMs": [
+          1.332194999999956,
+          1.2203410000001895,
+          1.3119530000003579,
+          1.282162999999855,
+          1.1101419999995414
+        ]
+      },
+      "javascript": {
+        "calculation": {
+          "medianMs": 2305.036907,
+          "p95Ms": 2339.2403059999997,
+          "samplesMs": [
+            2305.036907,
+            2309.966061,
+            2339.2403059999997,
+            2295.208138,
+            2286.459858
+          ]
+        },
+        "outputSerialization": {
+          "medianMs": 0.12873899999976857,
+          "p95Ms": 0.13205999999991036,
+          "samplesMs": [
+            0.1288379999996323,
+            0.12099899999884656,
+            0.13205999999991036,
+            0.12753300000076706,
+            0.12873899999976857
+          ]
+        },
+        "transferProxyStructuredClone": {
+          "medianMs": 2.3601380000000063,
+          "p95Ms": 5.441886000000068,
+          "samplesMs": [
+            5.441886000000068,
+            2.3601380000000063,
+            2.3280700000013894,
+            2.3780299999998533,
+            2.344927000000098
+          ]
+        },
+        "retainedHeapDeltaBytes": {
+          "medianMs": 107831800,
+          "p95Ms": 108022584,
+          "samplesMs": [
+            107844256,
+            107831800,
+            107814680,
+            108022584,
+            107802832
+          ]
+        },
+        "processRssAfterBytes": {
+          "medianMs": 186687488,
+          "p95Ms": 187420672,
+          "samplesMs": [
+            185942016,
+            186556416,
+            187420672,
+            186687488,
+            186761216
+          ]
+        }
+      },
+      "rust": {
+        "processEndToEnd": {
+          "medianMs": 51.3159770000002,
+          "p95Ms": 51.73674399999982,
+          "samplesMs": [
+            50.29614799999945,
+            51.73674399999982,
+            51.66754899999978,
+            51.3159770000002,
+            50.51325200000065
+          ]
+        },
+        "processStartup": {
+          "medianMs": 1.2229680000000087,
+          "p95Ms": 1.5735320000000002,
+          "samplesMs": [
+            1.2229680000000087,
+            1.2442180000000036,
+            1.2003780000000006,
+            1.2251010000000093,
+            1.260220000000004,
+            1.265035999999995,
+            1.2055259999999919,
+            1.343787000000006,
+            1.5735320000000002,
+            1.1941850000000045,
+            1.206344999999999,
+            1.1599039999999974
+          ]
+        },
+        "outputParseProxy": {
+          "medianMs": 0.10607700000036857,
+          "p95Ms": 0.11050499999873864,
+          "samplesMs": [
+            0.1055369999994582,
+            0.10770599999887054,
+            0.10366500000054657,
+            0.11050499999873864,
+            0.10607700000036857
+          ]
+        },
+        "sampledPeakProcessRssBytes": 13631488
+      },
+      "storage": {
+        "jsonBytes": 44953,
+        "write": {
+          "medianMs": 3.722569999999905,
+          "p95Ms": 4.308533000001262,
+          "samplesMs": [
+            3.690074000000095,
+            3.9657330000009097,
+            3.722569999999905,
+            4.308533000001262,
+            3.325079000000187
+          ]
+        },
+        "read": {
+          "medianMs": 0.22440199999982724,
+          "p95Ms": 0.3617369999992661,
+          "samplesMs": [
+            0.3617369999992661,
+            0.20421499999974912,
+            0.23637299999973038,
+            0.22440199999982724,
+            0.19430599999941478
+          ]
+        }
+      },
+      "parity": {
+        "status": "passed",
+        "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+      },
+      "harnessProcessMemoryAfterBytes": {
+        "rss": 192528384,
+        "heapUsed": 112365768,
+        "external": 2370562
+      }
+    },
+    {
+      "animalCount": 10000,
+      "days": 30,
+      "requestBytes": 3709960,
+      "outputBytes": {
+        "javascriptComparisonJson": 22463,
+        "nativeComparisonJson": 22463,
+        "nativeEnvelopeStdout": 23948
+      },
+      "requestSerialization": {
+        "medianMs": 13.338630000012927,
+        "p95Ms": 19.682373999996344,
+        "samplesMs": [
+          19.682373999996344,
+          13.371208999989904,
+          13.046562000003178,
+          13.338630000012927,
+          13.029435000004014
+        ]
+      },
+      "javascript": {
+        "calculation": {
+          "medianMs": 25488.295602000013,
+          "p95Ms": 26221.812118999995,
+          "samplesMs": [
+            25887.61874199999,
+            26221.812118999995,
+            25488.295602000013,
+            25128.329400999995,
+            25313.16467899998
+          ]
+        },
+        "outputSerialization": {
+          "medianMs": 0.14582200002041645,
+          "p95Ms": 0.1546960000123363,
+          "samplesMs": [
+            0.14575899999181274,
+            0.14061899999796879,
+            0.14586699999927077,
+            0.1546960000123363,
+            0.14582200002041645
+          ]
+        },
+        "transferProxyStructuredClone": {
+          "medianMs": 28.87351900000067,
+          "p95Ms": 29.78335199999856,
+          "samplesMs": [
+            28.87351900000067,
+            28.877965000006952,
+            29.78335199999856,
+            28.330195000002277,
+            28.317574999993667
+          ]
+        },
+        "retainedHeapDeltaBytes": {
+          "medianMs": 569659104,
+          "p95Ms": 810620352,
+          "samplesMs": [
+            685740224,
+            569564152,
+            569577632,
+            810620352,
+            569659104
+          ]
+        },
+        "processRssAfterBytes": {
+          "medianMs": 699920384,
+          "p95Ms": 943636480,
+          "samplesMs": [
+            823226368,
+            698290176,
+            699174912,
+            943636480,
+            699920384
+          ]
+        }
+      },
+      "rust": {
+        "processEndToEnd": {
+          "medianMs": 666.2404740000056,
+          "p95Ms": 726.3088920000009,
+          "samplesMs": [
+            726.3088920000009,
+            666.2404740000056,
+            641.3544540000003,
+            665.2678989999986,
+            688.585619999998
+          ]
+        },
+        "processStartup": {
+          "medianMs": 1.2229680000000087,
+          "p95Ms": 1.5735320000000002,
+          "samplesMs": [
+            1.2229680000000087,
+            1.2442180000000036,
+            1.2003780000000006,
+            1.2251010000000093,
+            1.260220000000004,
+            1.265035999999995,
+            1.2055259999999919,
+            1.343787000000006,
+            1.5735320000000002,
+            1.1941850000000045,
+            1.206344999999999,
+            1.1599039999999974
+          ]
+        },
+        "outputParseProxy": {
+          "medianMs": 0.10541099999682046,
+          "p95Ms": 3.5945920000085607,
+          "samplesMs": [
+            0.10483499999099877,
+            0.10322399999131449,
+            0.10541099999682046,
+            3.5945920000085607,
+            0.11498600000049919
+          ]
+        },
+        "sampledPeakProcessRssBytes": 115662848
+      },
+      "storage": {
+        "jsonBytes": 44941,
+        "write": {
+          "medianMs": 3.2636429999838583,
+          "p95Ms": 9.238045999998576,
+          "samplesMs": [
+            0.646842000001925,
+            9.238045999998576,
+            3.3795660000032512,
+            0.5899369999824557,
+            3.2636429999838583
+          ]
+        },
+        "read": {
+          "medianMs": 0.2662899999995716,
+          "p95Ms": 0.32015600000158884,
+          "samplesMs": [
+            0.2665689999994356,
+            0.32015600000158884,
+            0.26306800000020303,
+            0.2633370000112336,
+            0.2662899999995716
+          ]
+        }
+      },
+      "parity": {
+        "status": "passed",
+        "comparison": "all fields and array order; relative/absolute numeric tolerance 1e-12"
+      },
+      "harnessProcessMemoryAfterBytes": {
+        "rss": 713945088,
+        "heapUsed": 598223888,
+        "external": 5711280
+      }
+    }
+  ]
+}

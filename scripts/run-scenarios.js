@@ -10,6 +10,7 @@ import {createBatchExperimentManifest, sha256Digest} from '../experiments/batch-
 import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
 import {ScenarioWorkerPool} from './scenario-worker-pool.js';
+import {selectExperimentExecutor} from '../src/server/experiment-executor.js';
 
 const schemaPath = fileURLToPath(new URL('../schemas/scenario.schema.json', import.meta.url));
 const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
@@ -136,9 +137,16 @@ function resultFileName(file) {
   return file.replace(/\.json$/i, '.result.json');
 }
 
-export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, {concurrency = 1, workerMemoryLimitMb, signal, workerPool: suppliedWorkerPool} = {}) {
-  if (!Number.isInteger(concurrency) || concurrency < 1) throw new RangeError('concurrency must be a positive integer');
-  if (concurrency > 1 && (!Number.isInteger(workerMemoryLimitMb) || workerMemoryLimitMb < 16)) {
+export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, {
+  concurrency: requestedConcurrency = 1, workerMemoryLimitMb: requestedWorkerMemoryLimitMb,
+  signal, workerPool: suppliedWorkerPool, executorProfile, maxCostUsd = 0, maxRssBytes = Infinity,
+  onExecutorSelection,
+} = {}) {
+  const automatic = requestedConcurrency === 'auto';
+  let concurrency = requestedConcurrency;
+  let workerMemoryLimitMb = requestedWorkerMemoryLimitMb;
+  if (!automatic && (!Number.isInteger(concurrency) || concurrency < 1)) throw new RangeError('concurrency must be a positive integer or "auto"');
+  if (!automatic && concurrency > 1 && (!Number.isInteger(workerMemoryLimitMb) || workerMemoryLimitMb < 16)) {
     throw new RangeError('concurrent scenario execution requires workerMemoryLimitMb of at least 16');
   }
   const scenarioFiles = (await readdir(scenarioDirectory, {withFileTypes: true}))
@@ -153,6 +161,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   const engineDigest = sha256Digest(engineSources);
   const plans = [];
   const scenarioByRunId = new Map();
+  const workloadShapes = [];
   for (const file of scenarioFiles) {
     const source = await readFile(resolve(scenarioDirectory, file), 'utf8');
     let scenario;
@@ -164,6 +173,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
     const identity = validateScenarioIdentity({scenarioFormat: HARNESS_FORMAT, scenarioVersion: 1, scenarioId: scenario.scenarioId, scenarioRef: file, seed: scenario.engine.seed, scenario});
     scenarioByRunId.set(runId, {file, scenario});
     const configuration = scenario.configuration ?? {};
+    workloadShapes.push({animalCount: scenario?.engine?.animalCount ?? null, hours: scenario?.run?.hours ?? null});
     plans.push({
       runId,
       scenarioFormat: identity.scenarioFormat,
@@ -183,6 +193,20 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
       },
       outputs: {}, status: 'planned', outputDigest: null, resultDigest: null, resultRef: null,
     });
+  }
+  if (automatic) {
+    const first = workloadShapes[0];
+    const homogeneous = workloadShapes.every(shape => shape.animalCount === first.animalCount && shape.hours === first.hours);
+    const selection = selectExperimentExecutor({profile: executorProfile,
+      workload: {operation: 'scenario-batch', scenarioCount: scenarioFiles.length,
+        animalCount: homogeneous ? first.animalCount : null, hours: homogeneous ? first.hours : null},
+      maxCostUsd, maxRssBytes, availableBackends: ['local-js']});
+    concurrency = selection.concurrency;
+    if (concurrency > 1 && workerMemoryLimitMb === undefined) workerMemoryLimitMb = 128;
+    await onExecutorSelection?.(selection);
+  }
+  if (concurrency > 1 && (!Number.isInteger(workerMemoryLimitMb) || workerMemoryLimitMb < 16)) {
+    throw new RangeError('concurrent scenario execution requires workerMemoryLimitMb of at least 16');
   }
   const manifestPath = resolve(resultDirectory, 'batch-manifest.json');
   const resultsPath = resolve(resultDirectory, 'batch-results.jsonl');
@@ -232,12 +256,23 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
 async function main() {
   const arguments_ = process.argv.slice(2);
   const resumable = arguments_.includes('--resume');
-  const [scenarioArgument, resultArgument] = arguments_.filter(argument => argument !== '--resume');
+  const automatic = arguments_.includes('--auto');
+  const [scenarioArgument, resultArgument] = arguments_.filter(argument => argument !== '--resume' && argument !== '--auto');
   const scenarioDirectory = resolve(scenarioArgument ?? defaultScenarioDirectory);
   const resultDirectory = resolve(resultArgument ?? defaultResultDirectory);
   try {
-    const results = resumable
-      ? await runScenarioDirectoryResumable(scenarioDirectory, resultDirectory)
+    let executorOptions = {};
+    if (automatic) {
+      const executorProfilePath = fileURLToPath(new URL('../docs/performance/executor-profile-v2.json', import.meta.url));
+      const executorProfile = JSON.parse(await readFile(executorProfilePath, 'utf8'));
+      executorOptions = {concurrency: 'auto', executorProfile,
+        maxCostUsd: Number(process.env.RIOSE_EXECUTOR_MAX_COST_USD ?? 0),
+        maxRssBytes: process.env.RIOSE_EXECUTOR_MAX_RSS_BYTES === undefined
+          ? Infinity : Number(process.env.RIOSE_EXECUTOR_MAX_RSS_BYTES),
+        onExecutorSelection: selection => process.stdout.write(`Executor: ${selection.backend}, concurrency ${selection.concurrency} (${selection.reason})\n`)};
+    }
+    const results = resumable || automatic
+      ? await runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, executorOptions)
       : await runScenarioDirectory(scenarioDirectory, resultDirectory);
     for (const result of results) {
       const label = result.passed ? 'PASS' : 'FAIL';
