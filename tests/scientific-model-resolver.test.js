@@ -161,6 +161,32 @@ test('registered provenance snapshots nested inputs before model code and caller
   });
 });
 
+test('registered provenance rejects nested values that cannot round-trip through JSON history', () => {
+  const id = 'issue-93-json-safe-provenance';
+  let calls = 0;
+  registerScientificModel(defineScientificModel({
+    id,
+    version: '1',
+    inputs: {settings: 'object'},
+    outputs: {value: 'number'},
+    evidence: {status: 'demonstrative'},
+    run: () => { calls += 1; return {value: 1}; }
+  }));
+  const invalidValues = [
+    {settings: {threshold: Number.NaN}},
+    {settings: {threshold: -0}},
+    {settings: {threshold: undefined}},
+    {settings: new Date('2026-01-01T00:00:00Z')},
+    {settings: {thresholds: [, 1]}},
+    {settings: {thresholds: Object.assign([1], {label: 'input'})}}
+  ];
+
+  for (const inputs of invalidValues) {
+    assert.throws(() => runRegisteredScientificModel({id, version: '1', inputs}), /provenance inputs/);
+  }
+  assert.equal(calls, 0);
+});
+
 test('report renders optional scientific provenance and keeps legacy reports readable', () => {
   const snapshot = new FarmEngine(42, 2).snapshot();
   const manifest = createComparisonManifest(snapshot, 1);

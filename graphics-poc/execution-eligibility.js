@@ -7,6 +7,11 @@ function moduleModelIds(module) {
   return Array.isArray(module?.modelIds) ? module.modelIds.filter(id => typeof id === 'string' && id.trim()) : [];
 }
 
+function isVersionedModelId(id) {
+  // Scientific model registrations use an immutable semantic version suffix.
+  return /^[a-z0-9][a-z0-9._-]*@\d+\.\d+\.\d+(?:-[a-z0-9.-]+)?(?:\+[a-z0-9.-]+)?$/i.test(id);
+}
+
 /**
  * Resolve whether a scene can issue numeric work. Visual scene loading does not
  * depend on this result. The existing beef engine remains explicitly labeled as
@@ -42,7 +47,7 @@ export function sceneExecutionAvailability(scene, registeredModelIds = []) {
   }
 
   const registered = new Set(registeredModelIds);
-  const allModelsRegistered = modelIds.length > 0 && modelIds.every(id => registered.has(id));
+  const allModelsRegistered = modelIds.length > 0 && modelIds.every(id => isVersionedModelId(id) && registered.has(id));
   if (status === 'validated' && allModelsRegistered) {
     return {
       available: true,
@@ -57,7 +62,11 @@ export function sceneExecutionAvailability(scene, registeredModelIds = []) {
   return {
     available: false,
     status: 'unavailable',
-    reason: modelIds.length ? 'Modelo não registrado para execução nesta versão.' : 'Nenhum modelo numérico registrado para este módulo.',
+    reason: modelIds.length
+      ? modelIds.every(isVersionedModelId)
+        ? 'Modelo não registrado para execução nesta versão.'
+        : 'Modelo sem versão explícita para execução.'
+      : 'Nenhum modelo numérico registrado para este módulo.',
     moduleId: module?.moduleId ?? null,
     moduleStatus: status,
     modelIds

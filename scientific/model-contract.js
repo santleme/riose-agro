@@ -45,10 +45,31 @@ function assertDataMatchesShape(value, shape, name) {
 }
 
 function cloneAndFreeze(value, ancestors = new Set()) {
-  if (!value || typeof value !== 'object') return value;
-  if (ancestors.has(value)) throw new TypeError('Scientific model evidence cannot contain circular references');
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value) || Object.is(value, -0)) {
+      throw new TypeError('Scientific model provenance inputs must contain only JSON-stable finite numbers');
+    }
+    return value;
+  }
+  if (typeof value !== 'object') throw new TypeError('Scientific model provenance inputs must contain only JSON-compatible values');
+  if (ancestors.has(value)) throw new TypeError('Scientific model metadata cannot contain circular references');
+  const isArray = Array.isArray(value);
+  const prototype = Object.getPrototypeOf(value);
+  if (isArray ? prototype !== Array.prototype : prototype !== Object.prototype && prototype !== null) {
+    throw new TypeError('Scientific model provenance inputs must use plain objects and arrays');
+  }
+  if (Reflect.ownKeys(value).some(key => !(isArray && key === 'length') && (typeof key !== 'string' || !Object.getOwnPropertyDescriptor(value, key).enumerable))) {
+    throw new TypeError('Scientific model provenance inputs must contain only enumerable string keys');
+  }
+  if (isArray) {
+    const keys = Object.keys(value);
+    if (keys.length !== value.length || keys.some(key => !/^(0|[1-9]\d*)$/.test(key) || Number(key) >= value.length)) {
+      throw new TypeError('Scientific model provenance inputs must contain dense arrays without extra properties');
+    }
+  }
   ancestors.add(value);
-  const clone = Array.isArray(value)
+  const clone = isArray
     ? value.map(item => cloneAndFreeze(item, ancestors))
     : Object.fromEntries(Object.entries(value).map(([key, item]) => [key, cloneAndFreeze(item, ancestors)]));
   ancestors.delete(value);

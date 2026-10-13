@@ -24,6 +24,12 @@ test('validated model execution requires a registered versioned model ID', () =>
   assert.equal(sceneExecutionAvailability(scene, ['dairy-lactation@1.0.0']).available, true);
   assert.throws(() => assertSceneCommandAllowed(scene, 'compare'), /não registrado/);
   assert.doesNotThrow(() => assertSceneCommandAllowed(scene, 'tick', ['dairy-lactation@1.0.0']));
+
+  const unversioned = {...scene, domainModule: {...scene.domainModule, modelIds: ['dairy-lactation']}};
+  const unavailable = sceneExecutionAvailability(unversioned, ['dairy-lactation']);
+  assert.equal(unavailable.available, false);
+  assert.match(unavailable.reason, /sem versão explícita/);
+  assert.throws(() => assertSceneCommandAllowed(unversioned, 'tick', ['dairy-lactation']), /sem versão explícita/);
 });
 
 test('beef demo remains available but is explicitly classified as demonstrative', () => {
@@ -42,12 +48,15 @@ test('beef demo remains available but is explicitly classified as demonstrative'
 });
 
 test('unavailable state is serializable without numeric outputs and the runtime gates Worker commands', async () => {
-  const serialized = JSON.stringify(unavailableExecutionState(dairyScene));
-  const state = JSON.parse(serialized);
-  assert.equal(state.kind, 'numeric-execution-unavailable');
-  assert.equal(state.moduleId, 'livestock-dairy');
-  assert.equal(Object.hasOwn(state, 'outputs'), false);
-  assert.equal(Object.hasOwn(state, 'results'), false);
+  for (const status of ['in-progress', 'review', 'unsupported', 'candidate-integration']) {
+    const scene = {...dairyScene, domainModule: {...dairyScene.domainModule, status}};
+    const state = JSON.parse(JSON.stringify(unavailableExecutionState(scene)));
+    assert.equal(state.kind, 'numeric-execution-unavailable', status);
+    assert.equal(state.moduleId, 'livestock-dairy', status);
+    assert.equal(state.moduleStatus, status, status);
+    assert.equal(Object.hasOwn(state, 'outputs'), false, status);
+    assert.equal(Object.hasOwn(state, 'results'), false, status);
+  }
   for (const command of ['reset', 'load', 'configure', 'select', 'tick', 'compare', 'replayComparison', 'snapshot']) {
     assert.throws(() => assertSceneCommandAllowed(dairyScene, command), /Execução numérica indisponível/, command);
   }
