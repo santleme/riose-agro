@@ -5,7 +5,7 @@ Registered 2026-10-13 before fitting a model. This is a separate, narrow diagnos
 ## Source and cohort
 
 - Source: Zenodo [10.5281/zenodo.4064802](https://doi.org/10.5281/zenodo.4064802), record-declared CC BY 4.0; primary article [10.3390/s22062323](https://doi.org/10.3390/s22062323).
-- The README describes 18 finishing steers in indoor housing over three UK farm trials; breed and exact age are not given.
+- The primary article describes 18 Limousin cross-breed steers in indoor housing over three UK farm trials; exact ages are not reported.
 - Preserve the README split: animals 04, 10, and 11 are source-test animals; the other 15 are source-train animals. The primary article has already reported a test result using this cohort, so this is not a new independent literature holdout.
 
 ## Frozen preparation

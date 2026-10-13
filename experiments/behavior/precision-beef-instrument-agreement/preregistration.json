@@ -7,7 +7,7 @@
     "doi": "10.5281/zenodo.4064802",
     "primaryArticleDoi": "10.3390/s22062323",
     "license": "CC BY 4.0 (Zenodo record metadata)",
-    "population": "18 finishing steers in indoor straw housing with ad libitum TMR across three UK farm trials; breed and exact age are not specified in the README.",
+    "population": "18 Limousin cross-breed steers in indoor straw housing with ad libitum TMR across three UK farm trials; exact ages are not reported.",
     "sourceSplit": "README marks animals 04, 10, and 11 as test animals; the remaining 15 animals are training animals. The primary article has already reported a test result using these source-test animals, so this can reproduce a source split but is not a new literature-independent holdout."
   },
   "analysisCohort": {
