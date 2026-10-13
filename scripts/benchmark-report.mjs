@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 
 const PHASES = ['engine', 'snapshot', 'serialization', 'worker', 'ui', 'layout', 'render', 'startup', 'coldStartup', 'warmStartup', 'bridgeMarshaling', 'fullScenario', 'uiEndToEnd', 'memory'];
-const MEMORY_TYPES = ['js-heap', 'retained-heap', 'process-rss', 'serialized-payload', 'wasm-memory', 'gpu-memory'];
+const MEMORY_TYPES = ['js-heap', 'retained-heap', 'process-rss', 'serialized-payload', 'wasm-memory', 'gpu-memory', 'v8-external-memory', 'arraybuffer-memory'];
 const schemaPath = fileURLToPath(new URL('../docs/architecture/benchmark-report.schema.json', import.meta.url));
 const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
 const benchmarkSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
@@ -28,7 +28,8 @@ function memoryTypeFor(metric, unit) {
   if (/payload|snapshot-json|serialization|transferbuffer/.test(label)) return 'serialized-payload';
   if (/rss/.test(label)) return 'process-rss';
   if (/retained|materialized/.test(label)) return 'retained-heap';
-  if (/arraybuffer|external/.test(label)) return undefined;
+  if (/arraybuffers?/.test(label)) return 'arraybuffer-memory';
+  if (/external/.test(label)) return 'v8-external-memory';
   if (/heap|memory/.test(label)) return 'js-heap';
   if (/bytes?/.test(unit)) return 'serialized-payload';
   return undefined;
