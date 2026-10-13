@@ -46,6 +46,12 @@ test('versioned benchmark adapter output validates against the shared JSON Schem
   assert.equal(report.workload.populations[0].animals, 100);
 });
 
+test('benchmark report accepts an empty Git status as a clean source state', () => {
+  const report = sampleReport();
+  assert.match(report.benchmark.source.revision, /^[a-f0-9]{40}$/);
+  assert.equal(typeof report.benchmark.source.dirty, 'boolean');
+});
+
 test('benchmark schema rejects missing boundaries, seed, or population metadata', () => {
   const mutations = [
     ['missing timing boundaries', report => {delete report.timingBoundaries;}],
