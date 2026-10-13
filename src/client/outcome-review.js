@@ -72,7 +72,7 @@ function isoDateTime(value) {
 }
 
 function fillProjectionSummary() {
-  const reference = archive.comparison.baseline;
+  const reference = archive.comparison.baseline ?? archive.comparison.reference;
   const scenario = archive.comparison.scenario;
   const metrics = [
     ['Peso médio', reference.weight, scenario.weight, 'kg/animal'],
@@ -424,7 +424,7 @@ $('archive-load').addEventListener('click', async () => {
     if (archive.manifestReference?.sha256 !== manifestHash || archive.manifestReference?.type !== manifest.type || archive.manifestReference?.version !== manifest.version) throw new Error('O arquivo de projeção não referencia os bytes deste manifesto.');
     if (!/^[a-f0-9]{64}$/.test(archive.engineSourceSha256 ?? '')) throw new Error('Hash do código do motor ausente ou inválido.');
     if (archive.comparison?.validated !== false) throw new Error('A projeção precisa preservar o estado demonstrativo não validado do motor.');
-    if (archive.comparison?.days !== manifest.periodDays || !archive.comparison.baseline || !archive.comparison.scenario) throw new Error('Resultados do arquivo não correspondem ao horizonte/base/alternativa do manifesto.');
+    if (archive.comparison?.days !== manifest.periodDays || !(archive.comparison.baseline ?? archive.comparison.reference) || !archive.comparison.scenario) throw new Error('Resultados do arquivo não correspondem ao horizonte/base/alternativa do manifesto.');
     projectionHash = await digestHex(archiveBytes);
     $('archive-download').hidden = true;
     fillProjectionSummary();

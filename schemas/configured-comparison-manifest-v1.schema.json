@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://santleme.github.io/riose-agro/schemas/configured-comparison-manifest-v1.schema.json",
+  "title": "Riose configured scenario comparison manifest",
+  "description": "Two demonstrative FarmEngine runs from the same snapshot, differing in exactly one supported config factor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "engineVersion", "seed", "initialSnapshot", "periodDays", "factor", "scenarios", "validated"],
+  "properties": {
+    "type": {"const": "riose-configured-comparison"},
+    "version": {"const": 1},
+    "engineVersion": {"type": "string", "minLength": 1},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "initialSnapshot": {"type": "object", "description": "Complete shared FarmEngine snapshot; semantically checked by the runtime validator."},
+    "periodDays": {"type": "integer", "minimum": 1, "maximum": 365},
+    "factor": {"enum": ["diet", "housing", "weather", "supplement"]},
+    "scenarios": {
+      "type": "object", "additionalProperties": false, "required": ["reference", "scenario"],
+      "properties": {"reference": {"$ref": "#/$defs/config"}, "scenario": {"$ref": "#/$defs/config"}}
+    },
+    "validated": {"const": false}
+  },
+  "$defs": {
+    "config": {
+      "type": "object", "additionalProperties": false,
+      "required": ["diet", "housing", "weather", "supplement"],
+      "properties": {
+        "diet": {"enum": ["pasture", "balanced", "concentrate"]},
+        "housing": {"enum": ["pasture", "barn"]},
+        "weather": {"enum": ["normal", "hot", "rain"]},
+        "supplement": {"type": "number", "minimum": 0, "maximum": 4}
+      }
+    }
+  }
+}

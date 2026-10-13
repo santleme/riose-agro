@@ -1,8 +1,11 @@
-import {createComparisonManifest, replayComparisonManifest, validateComparisonManifest} from './engine.js';
+import {
+  createComparisonManifest, replayComparisonManifest, validateComparisonManifest,
+  replayConfiguredComparisonManifest, validateConfiguredComparisonManifest, FARM_ENGINE_VERSION
+} from './engine.js';
 
 export const SCENARIO_CONTRACT_TYPE = 'agroville-comparison';
 export const SCENARIO_CONTRACT_VERSION = 2;
-export const SCENARIO_ENGINE_VERSION = 'agroville-engine/1';
+export const SCENARIO_ENGINE_VERSION = FARM_ENGINE_VERSION;
 
 const OUTPUTS = ['weight', 'cost', 'pasture', 'intake'];
 // Legacy engine provenance is valid only for the in-memory object returned by
@@ -108,6 +111,7 @@ export function validateScenarioContract(contract) {
 }
 
 export function validateReproducibilityManifest(manifest) {
+  if (manifest?.type === 'riose-configured-comparison') return validateConfiguredComparisonManifest(manifest);
   if (manifest?.type !== SCENARIO_CONTRACT_TYPE) fail(`type suportado: ${SCENARIO_CONTRACT_TYPE}.`);
   if (manifest.version === 1) return validateComparisonManifest(manifest);
   if (manifest.version === SCENARIO_CONTRACT_VERSION) return validateScenarioContract(manifest);
@@ -154,6 +158,7 @@ export function upgradeComparisonManifestToScenarioContract(manifest, {scenarioI
 }
 
 export function replayScenarioContract(contract) {
+  if (contract?.type === 'riose-configured-comparison') return replayConfiguredComparisonManifest(contract);
   if (contract?.type === SCENARIO_CONTRACT_TYPE && contract.version === 1) return replayComparisonManifest(contract);
   validateReproducibilityManifest(contract);
   return replayComparisonManifest(legacyView(contract));

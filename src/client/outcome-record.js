@@ -93,7 +93,8 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
     errors.push('Decisão marcada como implementada precisa identificar o cenário executado ou declarar unknown.');
   }
   const comparison = archive?.comparison;
-  if (!isRecord(comparison) || !isRecord(comparison.baseline) || !isRecord(comparison.scenario)) {
+  const baselineResult = comparison?.baseline ?? comparison?.reference;
+  if (!isRecord(comparison) || !isRecord(baselineResult) || !isRecord(comparison.scenario)) {
     errors.push('Arquivo de projeção não contém resultados reproduzíveis para base e alternativa.');
   } else {
     if (comparison.validated !== false) errors.push('Arquivo de projeção não preserva o estado demonstrativo não validado do motor.');
@@ -109,7 +110,10 @@ export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snaps
       observationIds.add(observation.id);
     }
     const metric = projectedMetrics[observation?.metricPath];
-    const projected = metric?.get(comparison?.[observation?.scenario]);
+    const scenarioResult = observation?.scenario === 'baseline'
+      ? (comparison?.baseline ?? comparison?.reference)
+      : comparison?.[observation?.scenario];
+    const projected = metric?.get(scenarioResult);
     const item = {
       observationId: observation?.id ?? `observations[${index}]`,
       metricPath: observation?.metricPath,

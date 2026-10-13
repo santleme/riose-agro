@@ -25,6 +25,8 @@ function presentation(snapshot=new FarmEngine(42,2).snapshot()){
     state:new FarmEngine(9,24).snapshot(),structuredClone,validateComparisonManifest,SCENARIO_PRESETS,getScenarioPreset,document:{createElement(){return {value:'',textContent:''};}},
     dietNames:{pasture:'Volumoso / pasto',balanced:'Balanceada',concentrate:'Mais concentrado'},
     scenarioNames:{pasture:'Pasto',barn:'Confinamento',normal:'Ameno',hot:'Calor',rain:'Chuvoso'},calculateThi,THI_SOURCE,environmentDiffRows,
+    comparisonFactorName:factor=>({housing:'alojamento',diet:'dieta',weather:'clima',supplement:'suplemento'}[factor]??'configuração'),
+    comparisonValueName:(factor,value)=>value==null?'Não informado':factor==='supplement'&&Number.isFinite(Number(value))?Number(value).toFixed(1).replace('.',','):({housing:{pasture:'pasto',barn:'confinamento'},diet:{pasture:'volumoso / pasto',balanced:'balanceada',concentrate:'mais concentrado'},weather:{normal:'ameno',hot:'calor',rain:'chuvoso'}}[factor]??{})[value]??String(value),
     escapeHtml:value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])),
     compareBusy(){},setRunning(){},notify(){},persistRun(){},worker:{postMessage(message){context.lastMessage=message;}},
     postWorkerMessage(message){context.worker.postMessage({...message,protocolVersion:WORKER_PROTOCOL_VERSION});}
@@ -57,8 +59,8 @@ test('comparison renders derived metadata, periods, units, assumptions and real-
   assert.match(ui.element('comparison-assumptions').innerHTML,/Hipóteses usadas/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/8,00 kg MS\/animal\/dia/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/Não há calibração nem intervalo de confiança/);
-  assert.match(ui.element('comparison-assumptions').innerHTML,/mesma demanda de matéria seca/);
-  assert.match(ui.element('comparison-assumptions').innerHTML,/não uma resposta biológica medida/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/mesma demanda-base de matéria seca/);
+  assert.match(ui.element('comparison-assumptions').innerHTML,/não são uma resposta biológica medida/);
   for(const id of ['comparison-coverage','comparison-assumptions','chart-note'])assert.match(html,new RegExp('id="'+id+'"'));
 });
 
@@ -127,12 +129,12 @@ test('import keeps its own population, config and snapshot; validated true canno
   assert.match(ui.element('compareconfig').textContent,/demonstrativo · não validado/);
   assert.match(ui.element('comparison-assumptions').innerHTML,/Suplemento efetivamente usado: 1,50/);
   assert.equal(ui.context.comparisonPerAnimal(10),5);
-  const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
-  assert.equal(csv[5],(data.rows.at(-1).baselineConsumptionKgDM/2).toFixed(4));
-  assert.equal(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/2).toFixed(4));
-  assert.notEqual(csv[6],(data.rows.at(-1).scenarioConsumptionKgDM/24).toFixed(4));
-  const csvLines=ui.context.comparisonCSV(data).split('\n'),headers=csvLines[0].split(','),statusIndex=headers.indexOf('status_modelo'),intervalIndex=headers.indexOf('intervalo_probabilistico');
-  for(const line of csvLines.slice(1)){
+  const metricCsvLines=ui.context.comparisonCSV(data).split('\n'),headers=metricCsvLines[0].split(','),csv=metricCsvLines.at(-1).split(',');
+  assert.equal(csv[headers.indexOf('consumo_ref_kgMS_animal')],(data.rows.at(-1).baselineConsumptionKgDM/2).toFixed(4));
+  assert.equal(csv[headers.indexOf('consumo_alternativa_kgMS_animal')],(data.rows.at(-1).scenarioConsumptionKgDM/2).toFixed(4));
+  assert.notEqual(csv[headers.indexOf('consumo_alternativa_kgMS_animal')],(data.rows.at(-1).scenarioConsumptionKgDM/24).toFixed(4));
+  const historyCsvLines=ui.context.comparisonCSV(data).split('\n'),historyHeaders=historyCsvLines[0].split(','),statusIndex=historyHeaders.indexOf('status_modelo'),intervalIndex=historyHeaders.indexOf('intervalo_probabilistico');
+  for(const line of historyCsvLines.slice(1)){
     const row=line.split(',');
     assert.equal(row[statusIndex],'demonstrativo_nao_validado');
     assert.equal(row[intervalIndex],'nao_disponivel_sem_calibracao');
@@ -200,7 +202,8 @@ test('invalid initial pasture values cannot become apparently available trajecto
     assert.doesNotMatch(ui.markup(),/NaN|Infinity|undefined|5\.820/);
     const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
     assert.equal(csv[0],'3');
-    assert.ok(csv.slice(1,-2).every(value=>value==='Indisponível'));
+    assert.deepEqual(csv.slice(1,5),['alojamento','pasture','barn','Indisponível']);
+    assert.ok(csv.slice(5,-2).every(value=>value==='Indisponível'));
     assert.deepEqual(csv.slice(-2),['demonstrativo_nao_validado','nao_disponivel_sem_calibracao']);
   }
   const validSnapshot=new FarmEngine(42,2).snapshot();validSnapshot.pastures=[0,1800,1800,1800];

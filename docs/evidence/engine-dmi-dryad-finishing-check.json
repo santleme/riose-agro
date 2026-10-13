@@ -18,7 +18,7 @@
     "dmiUnit": "kg/head/day"
   },
   "model": {
-    "engineSha256": "30ef6f2dc882cf4ba0719a2a9adc23dfa0111f20a5280785ecd579fddf48663d",
+    "engineSha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
     "engineSourceFiles": [
       "engine.js",
       "animal-view-state.js",

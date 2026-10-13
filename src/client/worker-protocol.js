@@ -9,7 +9,9 @@ const commandFields = {
   select: ['animalId'],
   tick: ['hours'],
   compare: ['snapshot', 'days'],
+  compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
   replayComparison: ['manifest'],
+  replayConfigured: ['manifest'],
   snapshot: []
 };
 const responseTypes = new Set(['state', 'view', 'comparison', 'error']);
@@ -64,8 +66,21 @@ function validateCommandPayload(message) {
       if (message.snapshot != null && !isRecord(message.snapshot)) fail('INVALID_COMMAND_PAYLOAD', 'compare.snapshot must be an object.', command);
       if (message.days != null) requireInteger(message.days, 'compare.days', 1, 365, command);
       break;
+    case 'compareConfigured':
+      if (!isRecord(message.snapshot)) fail('INVALID_COMMAND_PAYLOAD', 'compareConfigured.snapshot must be an object.', command);
+      try {validateState(message.snapshot);} catch (error) {
+        fail('INVALID_COMMAND_PAYLOAD', `compareConfigured.snapshot is invalid: ${error.message}`, command);
+      }
+      if (message.days != null) requireInteger(message.days, 'compareConfigured.days', 1, 365, command);
+      if (!isValidConfig(message.referenceConfig) || !isValidConfig(message.scenarioConfig)) {
+        fail('INVALID_COMMAND_PAYLOAD', 'compareConfigured requires two complete valid configurations.', command);
+      }
+      break;
     case 'replayComparison':
       if (!isRecord(message.manifest)) fail('INVALID_COMMAND_PAYLOAD', 'replayComparison.manifest must be an object.', command);
+      break;
+    case 'replayConfigured':
+      if (!isRecord(message.manifest)) fail('INVALID_COMMAND_PAYLOAD', 'replayConfigured.manifest must be an object.', command);
       break;
     case 'snapshot':
       break;
@@ -281,25 +296,29 @@ function validateHistory(history, field) {
 }
 
 function validateComparison(data) {
+  const configured = isRecord(data) && (Object.hasOwn(data, 'referenceConfig') || Object.hasOwn(data, 'reference'));
+  const referenceConfig = configured ? data.referenceConfig : data?.baselineConfig;
+  const referenceMetrics = configured ? data.reference : data?.baseline;
   if (!isRecord(data) || !Number.isInteger(data.days) || data.days < 1 || data.days > 365
     || !Number.isFinite(data.startWeight) || !isValidConfig(data.initialConfig)
     || !Number.isInteger(data.herdSize) || data.herdSize < 1
     || !Array.isArray(data.initialPastureByPaddock) || data.initialPastureByPaddock.length !== 4
     || data.initialPastureByPaddock.some(value => !Number.isFinite(value))
-    || data.comparisonFactor !== 'housing'
-    || !isValidConfig(data.baselineConfig) || !isValidConfig(data.scenarioConfig)
+    || !['housing', 'diet', 'weather', 'supplement'].includes(data.comparisonFactor)
+    || !isValidConfig(referenceConfig) || !isValidConfig(data.scenarioConfig)
     || !Array.isArray(data.rows) || data.rows.length !== data.days + 1
-    || !isValidMetrics(data.baseline) || !isValidMetrics(data.scenario)
+    || !isValidMetrics(referenceMetrics) || !isValidMetrics(data.scenario)
     || !isRecord(data.assumptions) || data.validated !== false) {
     fail('INVALID_RESPONSE', 'comparison.data does not match the current comparison response shape.');
   }
   for (let index = 0; index < data.rows.length; index++) {
     const row = data.rows[index];
+    const prefix = configured ? 'reference' : 'baseline';
     if (!isRecord(row) || row.day !== index
-      || ![row.baselineWeight, row.scenarioWeight, row.baselineCost, row.scenarioCost,
-        row.baselineConsumptionKgDM, row.scenarioConsumptionKgDM, row.baselinePastureKgDM, row.scenarioPastureKgDM].every(Number.isFinite)
-      || !isValidIntake(row.baselineIntakeBySourceKgDM) || !isValidIntake(row.scenarioIntakeBySourceKgDM)
-      || !isFinitePaddocks(row.baselinePastureByPaddock) || !isFinitePaddocks(row.scenarioPastureByPaddock)) {
+      || ![row[`${prefix}Weight`], row.scenarioWeight, row[`${prefix}Cost`], row.scenarioCost,
+        row[`${prefix}ConsumptionKgDM`], row.scenarioConsumptionKgDM, row[`${prefix}PastureKgDM`], row.scenarioPastureKgDM].every(Number.isFinite)
+      || !isValidIntake(row[`${prefix}IntakeBySourceKgDM`]) || !isValidIntake(row.scenarioIntakeBySourceKgDM)
+      || !isFinitePaddocks(row[`${prefix}PastureByPaddock`]) || !isFinitePaddocks(row.scenarioPastureByPaddock)) {
       fail('INVALID_RESPONSE', `comparison.data.rows[${index}] is malformed.`);
     }
   }

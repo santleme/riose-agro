@@ -1,4 +1,4 @@
-import {FarmEngine,compare,replayComparisonManifest} from './engine.js';
+import {FarmEngine,compare,compareConfiguredScenarios,replayComparisonManifest,replayConfiguredComparisonManifest} from './engine.js';
 import {loadWasmMetabolism,updateMetabolismJS} from './metabolism-wasm.js';
 import {createViewLayout,createWorkerError,createWorkerResponse,decodeWorkerCommand} from './worker-protocol.js';
 
@@ -36,7 +36,9 @@ scope.onmessage=async(event)=>{await wasmReady;let command;try{
   else if(m.type==='select'){selectedAnimalId=m.animalId;postUpdate();return;}
   else if(m.type==='tick'){engine.tick(m.hours??1,metabolismKernel,false);postUpdate();return;}
   else if(m.type==='compare'){scope.postMessage(createWorkerResponse('comparison',{data:compare(m.snapshot??engine.snapshot(),m.days??30,metabolismKernel)},engineImplementation));return;}
+  else if(m.type==='compareConfigured'){scope.postMessage(createWorkerResponse('comparison',{data:compareConfiguredScenarios(m.snapshot,{referenceConfig:m.referenceConfig,scenarioConfig:m.scenarioConfig,days:m.days??30},metabolismKernel)},engineImplementation));return;}
   else if(m.type==='replayComparison'){scope.postMessage(createWorkerResponse('comparison',{data:replayComparisonManifest(m.manifest,metabolismKernel)},engineImplementation));return;}
+  else if(m.type==='replayConfigured'){scope.postMessage(createWorkerResponse('comparison',{data:replayConfiguredComparisonManifest(m.manifest,metabolismKernel)},engineImplementation));return;}
   else if(m.type==='snapshot'){postSnapshot();return;}
   else throw new Error(`Unknown Worker command: ${m.type}.`);
   postSnapshot();

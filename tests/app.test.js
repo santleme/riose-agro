@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../src/client/engine.js';
+import {FarmEngine,metrics,compare,compareConfiguredScenarios,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,replayComparisonManifest,replayConfiguredComparisonManifest} from '../src/client/engine.js';
 import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '../src/client/scenario-presets.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
 import {createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,RUN_HISTORY_KEY} from '../src/client/run-history.js';
@@ -24,7 +24,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
@@ -43,7 +43,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
 }
 async function waitFor(check,timeout=5000){const deadline=Date.now()+timeout;while(!check()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(check(),'timed out waiting for the browser harness');}
 
-test('map comparison freezes one snapshot, changes housing only, and never applies the alternative',async()=>{
+test('map comparison freezes one snapshot, changes one configured factor only, and never applies the alternative',async()=>{
   const ui=await openFarm(),farm=new FarmEngine(89,5);
   assert.equal(ui.workerMessages[0].protocolVersion,WORKER_PROTOCOL_VERSION,'the browser sends the versioned Worker envelope');
   farm.configure({diet:'balanced',supplement:1.5,weather:'rain',housing:'barn'});
@@ -58,16 +58,17 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   ui.elements.get('compare').onclick();
   assert.equal(ui.messages.length,1,'a second click must not replace the in-flight comparison snapshot');
   const request=ui.messages[0];
-  assert.equal(request.type,'compare');
+  assert.equal(request.type,'compareConfigured');
   assert.deepEqual(request.snapshot,snapshot);
   assert.equal(request.days,30);
+  assert.deepEqual(Object.keys(request.referenceConfig).filter(key=>request.referenceConfig[key]!==request.scenarioConfig[key]),['housing']);
   assert.equal(ui.elements.get('play')['aria-label'],'Continuar simulação');
   const otherFarm=new FarmEngine(12,24);
   otherFarm.configure({weather:'hot'});
   ui.deliver('state',otherFarm.snapshot());
-  const result=compare(request.snapshot,request.days);
+  const result=compareConfiguredScenarios(request.snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
   ui.deliver('comparison',result);
-  assert.match(ui.elements.get('compareconfig').textContent,/5 animais.*Balanceada.*1,5.*chuva/);
+  assert.match(ui.elements.get('compareconfig').textContent,/5 animais.*Balanceada.*1,5.*pasto.*chuvoso/);
   assert.equal(ui.elements.get('comparison').open,true);
   assert.match(ui.elements.get('results').innerHTML,/Diferença alternativa − base:/);
   assert.match(ui.elements.get('results').innerHTML,/relativa:/);
@@ -76,6 +77,60 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
   assert.equal(ui.fetches(),0);
+});
+
+test('configured comparison captures one snapshot, sends two configs differing only by the selected factor, and labels its outputs demonstrative',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(91,5);farm.configure({diet:'pasture',weather:'rain',supplement:1});const snapshot=farm.snapshot();ui.deliver('state',snapshot);
+  ui.elements.get('comparison-factor').value='diet';ui.elements.get('comparison-factor').onchange();
+  assert.equal(ui.elements.get('comparison-reference').value,'pasture');assert.equal(ui.elements.get('comparison-scenario').value,'balanced');
+  ui.elements.get('compare').onclick();
+  ui.deliver('state',snapshot);
+  const request=ui.messages.at(-1);assert.equal(request.type,'compareConfigured');assert.deepEqual(request.snapshot,snapshot);assert.equal(request.days,30);
+  const changed=Object.keys(request.referenceConfig).filter(key=>request.referenceConfig[key]!==request.scenarioConfig[key]);assert.deepEqual(changed,['diet']);
+  const result=compareConfiguredScenarios(request.snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
+  ui.deliver('comparison',result);
+  assert.match(ui.elements.get('compareconfig').textContent,/Único fator configurado diferente: dieta/);
+  assert.match(ui.elements.get('compareconfig').textContent,/motor agroville-engine\/1/);
+  assert.match(ui.elements.get('compareconfig').textContent,/Referência: volumoso \/ pasto; alternativa: balanceada/);
+  assert.match(ui.elements.get('comparison-assumptions').innerHTML,/não demonstram efeito causal/);
+  assert.equal(result.validated,false);assert.deepEqual(farm.snapshot(),snapshot);
+});
+
+test('configured comparison manifest import validates and replays through the additive worker command',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(77,4).snapshot(),referenceConfig={...snapshot.config,weather:'normal'},scenarioConfig={...snapshot.config,weather:'hot'};
+  const manifest=createConfiguredComparisonManifest(snapshot,{referenceConfig,scenarioConfig,days:7});validateConfiguredComparisonManifest(manifest);
+  await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}]}});
+  assert.equal(ui.messages.at(-1).type,'replayConfigured');assert.deepEqual(ui.messages.at(-1).manifest,manifest);
+  ui.deliver('comparison',replayConfiguredComparisonManifest(manifest));
+  assert.match(ui.elements.get('compareconfig').textContent,/Único fator configurado diferente: clima/);
+  assert.match(ui.elements.get('compareconfig').textContent,/Referência: ameno; alternativa: calor/);
+});
+
+test('supplement comparison exposes kg MS per animal per day and serializes numeric values',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(44,3).snapshot();ui.deliver('state',snapshot);ui.elements.get('comparison-factor').value='supplement';ui.elements.get('comparison-factor').onchange();
+  ui.elements.get('comparison-reference').value='0.5';ui.elements.get('comparison-scenario').value='2';ui.elements.get('comparison-reference').onchange();
+  assert.equal(ui.elements.get('comparison-reference-unit').textContent,'kg MS/animal/dia');assert.equal(ui.elements.get('comparison-scenario-unit').textContent,'kg MS/animal/dia');
+  ui.elements.get('compare').onclick();ui.deliver('state',snapshot);const request=ui.messages.at(-1);
+  assert.equal(request.referenceConfig.supplement,0.5);assert.equal(request.scenarioConfig.supplement,2);
+  const result=compareConfiguredScenarios(snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30});ui.deliver('comparison',result);
+  assert.match(ui.elements.get('compareconfig').textContent,/Referência: 0,5 kg MS\/animal\/dia; alternativa: 2,0 kg MS\/animal\/dia/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/Fator alterado: suplemento/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/0,5 kg MS\/animal\/dia/);
+  ui.elements.get('export').onclick();
+  const csv=await ui.downloads.at(-1).text();
+  assert.match(csv,/fator_comparado,valor_referencia,valor_alternativa/);
+  assert.match(csv,/suplemento,0\.5,2/);
+  assert.doesNotMatch(csv,/confinamento_final|pasto_final/);
+});
+
+test('configured comparison worker errors retain the last successful result and manifest',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(19,3).snapshot();ui.deliver('state',snapshot);ui.elements.get('compare').onclick();ui.deliver('state',snapshot);
+  const first=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(first.snapshot,{referenceConfig:first.referenceConfig,scenarioConfig:first.scenarioConfig,days:first.days}));
+  ui.elements.get('manifest-export').onclick();const previousManifest=await ui.downloads.at(-1).text();
+  ui.elements.get('comparison-factor').value='weather';ui.elements.get('comparison-factor').onchange();ui.elements.get('compare').onclick();ui.deliver('state',snapshot);
+  assert.equal(ui.messages.at(-1).type,'compareConfigured');ui.deliver('error','Comparison failed');
+  assert.equal(ui.elements.get('compare').disabled,false);assert.match(ui.elements.get('notice').textContent,/Comparison failed/);
+  ui.elements.get('manifest-export').onclick();assert.equal(await ui.downloads.at(-1).text(),previousManifest);
 });
 
 test('worker view keeps motion outside scientific state and joins values by stable ID after reorder',async()=>{
@@ -130,9 +185,9 @@ test('connected snapshot selection persists real lot IDs through the existing co
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/Não informada/);
   assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:farmSnapshot.lots[0].id});
   ui.elements.get('lot-compare').onclick();
-  assert.equal(ui.messages.at(-1).type,'compare');
-  assert.deepEqual(ui.messages.at(-1).snapshot,snapshot,'existing comparator receives its frozen simulator snapshot unchanged');
-  ui.deliver('comparison',compare(snapshot,30));
+  assert.equal(ui.messages.at(-1).type,'compareConfigured');
+  assert.deepEqual(ui.messages.at(-1).snapshot,snapshot,'comparison receives its frozen simulator snapshot unchanged');
+  const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
   assert.match(ui.elements.get('lot-comparison-context').textContent,/Lote real associado/);
   const association=JSON.parse(ui.storage.get('agroville-last-lot-comparison-v1'));
   assert.deepEqual(association.context.animalIds,['eartag-242']);
@@ -165,7 +220,7 @@ test('lot metrics, environmental edits, THI and linked selection persist through
   const persisted=JSON.parse(ui.storage.get('agroville-environment-scenario-v1'));
   assert.equal(persisted.baseline.temperatureC.value,24);assert.equal(persisted.current.temperatureC,'26.8');
   ui.elements.get('lot-compare').onclick();assert.deepEqual(ui.messages.at(-1).snapshot,simulatorSnapshot);
-  ui.deliver('comparison',compare(simulatorSnapshot,30));
+  const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(simulatorSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
   assert.match(ui.elements.get('comparison-variables').innerHTML,/24 °C/);
   assert.match(ui.elements.get('comparison-variables').innerHTML,/26\.8 °C/);
   assert.match(ui.elements.get('comparison-thermal').innerHTML,/75,0/);
@@ -194,14 +249,14 @@ test('completed comparison is persisted and its original manifest can be replaye
   const ui=await openFarm(),farm=new FarmEngine(17,3).snapshot();
   ui.deliver('state',farm);
   ui.elements.get('compare').onclick();
-  const request=ui.messages.at(-1),result=compare(request.snapshot,request.days);
+  const request=ui.messages.at(-1),result=compareConfiguredScenarios(request.snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
   ui.deliver('comparison',result);
   const saved=listRuns({getItem:key=>ui.storage.get(key)??null});
   assert.equal(saved.length,1);
   assert.equal(saved[0].status,'completed');
   ui.elements.get('run-history-select').value=saved[0].id;
   ui.elements.get('run-history-replay').onclick();
-  assert.equal(ui.messages.at(-1).type,'replayComparison');
+  assert.equal(ui.messages.at(-1).type,'replayConfigured');
   assert.deepEqual(ui.messages.at(-1).manifest,saved[0].manifest);
 });
 
@@ -298,7 +353,7 @@ test('manifest can be reopened from the map and uses its herd, conditions and ho
   assert.equal(ui.messages.some(message=>message.type==='load'||message.type==='configure'),false);
   const result=replayComparisonManifest(ui.messages[0].manifest);
   ui.deliver('comparison',result);
-  assert.match(ui.elements.get('compareconfig').textContent,/Horizonte: 7 dias.*3 animais.*Volumoso \/ pasto.*chuva/);
+  assert.match(ui.elements.get('compareconfig').textContent,/Horizonte: 7 dias.*3 animais.*Configurações iguais fora do fator: Volumoso \/ pasto.*chuvoso/);
   assert.match(ui.elements.get('chart')['aria-label'],/kg\/animal durante 7 dias/);
   const consumption=(result.rows.at(-1).scenarioConsumptionKgDM/3).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
   assert.ok(ui.elements.get('results').innerHTML.includes(consumption+' kg MS/animal'));
@@ -307,7 +362,7 @@ test('manifest can be reopened from the map and uses its herd, conditions and ho
   ui.elements.get('export').onclick();
   const csv=await ui.downloads.at(-1).text(),lines=csv.split('\n');
   const header=lines[0].split(','),last=lines.at(-1).split(',');
-  assert.equal(Number(last[header.indexOf('consumo_confinamento_kgMS_animal')]),Number((result.rows.at(-1).scenarioConsumptionKgDM/3).toFixed(4)));
+  assert.equal(Number(last[header.indexOf('consumo_alternativa_kgMS_animal')]),Number((result.rows.at(-1).scenarioConsumptionKgDM/3).toFixed(4)));
   ui.elements.get('manifest-export').onclick();
   assert.deepEqual(JSON.parse(await ui.downloads.at(-1).text()),manifest);
   assert.equal(ui.fetches(),0);
@@ -327,13 +382,13 @@ test('reopened saved snapshots flow into the existing comparison manifest unchan
   ui.deliver('state',FarmEngine.from(ui.messages[0].snapshot).snapshot());
   ui.elements.get('compare').onclick();
   const request=ui.messages.at(-1);
-  assert.equal(request.type,'compare');
+  assert.equal(request.type,'compareConfigured');
   assert.deepEqual(request.snapshot,saved.snapshot);
-  ui.deliver('comparison',compare(request.snapshot,request.days));
+  ui.deliver('comparison',compareConfiguredScenarios(request.snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days}));
   ui.elements.get('manifest-export').onclick();
   const manifest=JSON.parse(await ui.downloads.at(-1).text());
   assert.deepEqual(manifest.initialSnapshot,saved.snapshot);
-  assert.deepEqual(replayComparisonManifest(manifest),compare(saved.snapshot,30));
+  assert.deepEqual(replayConfiguredComparisonManifest(manifest),compareConfiguredScenarios(saved.snapshot,{referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario,days:30}));
 });
 
 test('invalid manifest leaves the current comparison available',async()=>{
@@ -426,11 +481,11 @@ test('initial active scenario loading blocks file actions until the saved state 
   assert.deepEqual(ui.messages.at(-1).snapshot,saved.snapshot);
 });
 
-for(const requestType of ['compare','replayComparison'])test(requestType+' worker errors preserve the last successful CSV and manifest',async()=>{
+for(const requestType of ['compareConfigured','replayConfigured','replayComparison'])test(requestType+' worker errors preserve the last successful CSV and manifest',async()=>{
   const ui=await openFarm(),snapshot=new FarmEngine(19,3).snapshot();
   ui.deliver('state',snapshot);
   ui.elements.get('compare').onclick();
-  const result=compare(snapshot,30);
+  const first=ui.messages.at(-1),result=compareConfiguredScenarios(first.snapshot,{referenceConfig:first.referenceConfig,scenarioConfig:first.scenarioConfig,days:first.days});
   ui.deliver('comparison',result);
   ui.elements.get('manifest-export').onclick();
   const previousManifest=await ui.downloads.at(-1).text();
@@ -438,9 +493,13 @@ for(const requestType of ['compare','replayComparison'])test(requestType+' worke
   const previousCSV=await ui.downloads.at(-1).text();
   const other=new FarmEngine(74,24);
   other.configure({diet:'balanced',weather:'hot'});
-  if(requestType==='compare'){
+  if(requestType==='compareConfigured'){
     ui.deliver('state',other.snapshot());
     ui.elements.get('compare').onclick();
+  }else if(requestType==='replayConfigured'){
+    const referenceConfig={...other.snapshot().config,weather:'normal'},scenarioConfig={...other.snapshot().config,weather:'hot'};
+    const manifest=createConfiguredComparisonManifest(other.snapshot(),{referenceConfig,scenarioConfig,days:7});
+    await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}]}});
   }else{
     const manifest=createComparisonManifest(other.snapshot(),7);
     await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>JSON.stringify(manifest)}]}});
