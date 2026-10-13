@@ -7,12 +7,13 @@ import Ajv2020 from 'ajv/dist/2020.js';
 const PHASES = ['engine', 'snapshot', 'serialization', 'worker', 'ui', 'layout', 'render', 'startup', 'coldStartup', 'warmStartup', 'bridgeMarshaling', 'fullScenario', 'uiEndToEnd', 'memory'];
 const MEMORY_TYPES = ['js-heap', 'retained-heap', 'process-rss', 'serialized-payload', 'wasm-memory', 'gpu-memory'];
 const schemaPath = fileURLToPath(new URL('../docs/architecture/benchmark-report.schema.json', import.meta.url));
+const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
 const benchmarkSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
 const validateReport = new Ajv2020({allErrors: true, strict: false}).compile(benchmarkSchema);
 
 function gitValue(args) {
   try {
-    return execFileSync('git', args, {encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim() || null;
+    return execFileSync('git', args, {cwd: repositoryRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim() || null;
   } catch {
     return null;
   }
