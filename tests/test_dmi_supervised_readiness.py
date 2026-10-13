@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -28,6 +29,24 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"] -= 1
         with self.assertRaisesRegex(ValueError, "classify every reviewed source exactly once"):
             VALIDATOR.validate(self.report)
+
+    def test_matrix_reference_cannot_escape_repository_root(self):
+        self.report["reviewedMatrix"]["path"] = "../outside-readiness.json"
+        with self.assertRaisesRegex(ValueError, "escapes repository root"):
+            VALIDATOR.validate(self.report)
+
+    def test_matrix_reference_cannot_escape_through_symlink(self):
+        link = ROOT / ".tmp-readiness-matrix-link.json"
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as outside:
+                outside.write("{}")
+                outside.flush()
+                link.symlink_to(Path(outside.name))
+                self.report["reviewedMatrix"]["path"] = link.name
+                with self.assertRaisesRegex(ValueError, "escapes repository root"):
+                    VALIDATOR.validate(self.report)
+        finally:
+            link.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

@@ -10,11 +10,24 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.json"
+ROOT_REAL = ROOT.resolve()
 
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise ValueError(message)
+
+
+def evidence_file(reference: str, label: str) -> Path:
+    """Resolve a repository evidence path without following it outside ROOT."""
+    require(isinstance(reference, str) and reference.strip(), f"missing {label}")
+    candidate = (ROOT / reference).resolve()
+    try:
+        candidate.relative_to(ROOT_REAL)
+    except ValueError as error:
+        raise ValueError(f"{label} escapes repository root: {reference}") from error
+    require(candidate.is_file(), f"missing {label}: {reference}")
+    return candidate
 
 
 def validate(report: dict[str, Any]) -> None:
@@ -34,8 +47,8 @@ def validate(report: dict[str, Any]) -> None:
 
     matrix = report.get("reviewedMatrix", {})
     matrix_path = matrix.get("path")
-    require(isinstance(matrix_path, str) and (ROOT / matrix_path).is_file(), "missing readiness matrix reference")
-    with (ROOT / matrix_path).open(encoding="utf-8") as stream:
+    matrix_file = evidence_file(matrix_path, "readiness matrix reference")
+    with matrix_file.open(encoding="utf-8") as stream:
         matrix_doc = json.load(stream)
     require(matrix_doc.get("schemaVersion") == matrix.get("schemaVersion"), "matrix schema mismatch")
     require(matrix_doc.get("processing", {}).get("sourceCount") == matrix.get("reviewedSourceCount"), "matrix source count mismatch")
@@ -54,12 +67,12 @@ def validate(report: dict[str, Any]) -> None:
         for field in ("id", "source", "decision", "access", "license", "populationFit", "outcomeFit", "missingnessAndIdentity"):
             require(isinstance(candidate.get(field), str) and candidate[field].strip(), f"{candidate.get('id', 'candidate')}: missing {field}")
         source_path = candidate["source"]
-        require((ROOT / source_path).is_file(), f"missing source evidence: {source_path}")
+        evidence_file(source_path, f"source evidence for {candidate['id']}")
         require(isinstance(candidate.get("references"), list) and candidate["references"], f"{candidate['id']}: references required")
         for reference in candidate["references"]:
             if reference.startswith("http://") or reference.startswith("https://"):
                 continue
-            require((ROOT / reference).is_file(), f"{candidate['id']}: missing reference {reference}")
+            evidence_file(reference, f"{candidate['id']}: reference {reference}")
 
     require(report.get("decision") == "no_go", "current evidence requires no_go")
     require(matrix.get("eligibleSourcesForTarget") == 0, "eligible source count must be zero for this gate")

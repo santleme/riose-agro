@@ -35,6 +35,17 @@ class BaselineNoGoReportTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "do not imply a signed-off"):
             validate(report)
 
+    def test_no_go_cannot_claim_training_or_load_readiness_outside_repository(self):
+        report = copy.deepcopy(REPORT_DATA)
+        report["performance"]["modelTrainingPerformed"] = True
+        with self.assertRaisesRegex(ValueError, "no training should be claimed"):
+            validate(report)
+
+        report = copy.deepcopy(REPORT_DATA)
+        report["sourceReadiness"]["path"] = "../outside-readiness.json"
+        with self.assertRaisesRegex(ValueError, "missing or unsafe source-readiness report"):
+            validate(report)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,6 +5,7 @@ import {encodeScenarioSnapshot} from '../src/client/scenario-storage.js';
 import {loadWasmMetabolism, updateMetabolismJS} from '../src/client/metabolism-wasm.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {cleanupMemoryBenchmarkResources} from './benchmark-memory-resources.mjs';
+import {maxRssKiBToBytes} from './benchmark-memory-metrics.mjs';
 
 const herds = (process.env.BENCH_MEMORY_HERDS ?? '100,1000,10000,100000').split(',').map(Number);
 const repetitions = Number(process.env.BENCH_MEMORY_REPETITIONS ?? 3);
@@ -22,8 +23,8 @@ function loadBenchmarkWasm() {
 
 function rssHighWaterBytes() {
   const value = process.resourceUsage().maxRSS;
-  // Node reports ru_maxrss in KiB on Linux and bytes on macOS.
-  return process.platform === 'darwin' ? value : value * 1024;
+  // Node/libuv reports ru_maxrss in KiB, including on macOS.
+  return maxRssKiBToBytes(value);
 }
 
 function memorySample(wasmMemoryBytes = null) {
@@ -220,7 +221,7 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
     ['postGcRetainedExternalDelta', row => row.memory.postGcRetainedDelta.externalBytes, 'bytes', true, 'process.memoryUsage().external before and after the phase, with global.gc() when available'],
     ['postGcRetainedArrayBuffersDelta', row => row.memory.postGcRetainedDelta.arrayBuffersBytes, 'bytes', true, 'process.memoryUsage().arrayBuffers before and after the phase, with global.gc() when available'],
     ['postGcRetainedWasmLinearMemoryDelta', row => row.memory.postGcRetainedDelta.wasmLinearMemoryBytes, 'bytes', true, 'WASM wrapper memoryBytes() before and after the phase, with global.gc() when available'],
-    ['processRssHighWaterCumulative', row => row.memory.bestAvailablePeakProxy.processRssHighWaterBytes, 'bytes', false, 'process.resourceUsage().maxRSS cumulative process high-water mark; Linux KiB converted to bytes', 'process'],
+    ['processRssHighWaterCumulative', row => row.memory.bestAvailablePeakProxy.processRssHighWaterBytes, 'bytes', false, 'process.resourceUsage().maxRSS cumulative process high-water mark; Node-reported KiB converted to bytes', 'process'],
     ['processRssImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.processRssBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().rss sampled immediately after the phase', 'process'],
     ['jsHeapUsedImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.jsHeapUsedBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().heapUsed sampled immediately after the phase', 'process'],
     ['operationDuration', row => row.elapsedMs, 'ms', false, 'performance.now() around the phase operation'],

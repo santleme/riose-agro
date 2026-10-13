@@ -58,6 +58,7 @@
     "reason": "No eligible rows or held-out groups are available; null means not measured, not zero error."
   },
   "performance": {
+    "modelTrainingPerformed": false,
     "trainingRuntimeMs": null,
     "cpuInferenceMsPerAnimalPeriod": null,
     "memoryBytes": null,

@@ -17,6 +17,17 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def repo_file(relative_path: Any, message: str) -> Path:
+    require(isinstance(relative_path, str) and relative_path.strip(), message)
+    candidate = (ROOT / relative_path).resolve()
+    try:
+        candidate.relative_to(ROOT.resolve())
+    except ValueError as error:
+        raise ValueError(message) from error
+    require(candidate.is_file(), message)
+    return candidate
+
+
 def validate(report: dict[str, Any]) -> None:
     require(report.get("schemaVersion") == "riose.dmi-baseline-evaluation/v1", "unsupported schemaVersion")
     require(report.get("decision") == "no_go", "current evidence requires no_go")
@@ -27,8 +38,8 @@ def validate(report: dict[str, Any]) -> None:
 
     readiness = report.get("sourceReadiness", {})
     readiness_path = readiness.get("path")
-    require(isinstance(readiness_path, str) and (ROOT / readiness_path).is_file(), "missing source-readiness report")
-    with (ROOT / readiness_path).open(encoding="utf-8") as stream:
+    resolved_readiness_path = repo_file(readiness_path, "missing or unsafe source-readiness report")
+    with resolved_readiness_path.open(encoding="utf-8") as stream:
         gate = json.load(stream)
     require(gate.get("schemaVersion") == readiness.get("schemaVersion"), "readiness schema mismatch")
     require(gate.get("decision") == "no_go", "linked readiness gate is no longer no_go")
@@ -51,6 +62,7 @@ def validate(report: dict[str, Any]) -> None:
     require("not zero error" in evaluation.get("reason", ""), "null metric meaning must be explicit")
 
     performance = report.get("performance", {})
+    require(performance.get("modelTrainingPerformed") is False, "no training should be claimed")
     require(all(performance.get(field) is None for field in ("trainingRuntimeMs", "cpuInferenceMsPerAnimalPeriod", "memoryBytes")),
             "unmeasured performance values must be null")
     models = report.get("candidateModels", [])
