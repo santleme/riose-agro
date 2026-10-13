@@ -392,15 +392,8 @@ fn invalid_snapshot_and_core_validation_error_use_validation_exit_code() {
     unsupported_patch["animals"][0]["patch"] = json!(4);
 
     let mut oversized_history = baseline_snapshot;
-    oversized_history["animals"][0]["history"] = Value::Array(vec![
-        json!({
-            "hour": 1,
-            "action": "resting",
-            "reason": "recovery",
-            "observed": {"energy": 1.0, "thirst": 1.0}
-        });
-        41
-    ]);
+    let activity = oversized_history["animals"][0]["history"][0].clone();
+    oversized_history["animals"][0]["history"] = Value::Array(vec![activity; 41]);
 
     for snapshot in [
         empty_herd,
