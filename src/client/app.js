@@ -389,7 +389,7 @@ function renderRunHistory(){
   $('run-history-replay').disabled=!select.value||requestCompare||loadingScenario;
 }
 function persistRun(manifest,result,status,error){
-  try{const before=listRuns(localStorage),run=createRunRecord({manifest,result,status,error});recordRun(run,localStorage);const afterIds=new Set(listRuns(localStorage).map(item=>item.id)),removed=before.filter(item=>!afterIds.has(item.id)).length;renderRunHistory();if(removed)$('run-history-status').textContent+=` ${removed} registro(s) mais antigo(s) foram removidos para respeitar os limites; exporte o histórico antes de uma nova execução para manter uma cópia.`;}
+  try{const before=listRuns(localStorage),run=createRunRecord({manifest,result,status,error});if(pendingComparison?.environmentState)run.environmentState=structuredClone(pendingComparison.environmentState);recordRun(run,localStorage);const afterIds=new Set(listRuns(localStorage).map(item=>item.id)),removed=before.filter(item=>!afterIds.has(item.id)).length;renderRunHistory();if(removed)$('run-history-status').textContent+=` ${removed} registro(s) mais antigo(s) foram removidos para respeitar os limites; exporte o histórico antes de uma nova execução para manter uma cópia.`;}
   catch(storageError){$('run-history-status').textContent=storageError.message;notify(storageError.message);}
 }
 function failPendingRun(message){if(pendingComparison)persistRun(pendingComparison.manifest,undefined,'failed',message);pendingComparison=null;}

@@ -233,6 +233,9 @@ test('lot metrics, environmental edits, THI and linked selection persist through
   const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(simulatorSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
   assert.equal(ui.elements.get('lot-comparison-context').hidden,true);
   assert.equal(ui.storage.has('agroville-last-lot-comparison-v1'),false);
+  const savedRun=JSON.parse(ui.storage.get('agroville-run-history-v1')).runs[0];
+  assert.equal(savedRun.environmentState.current.temperatureC,'26.8');
+  assert.equal(savedRun.environmentState.current.relativeHumidityPct,'57.5');
   assert.match(ui.elements.get('comparison-variables').innerHTML,/24 °C/);
   assert.match(ui.elements.get('comparison-variables').innerHTML,/26\.8 °C/);
   assert.match(ui.elements.get('comparison-thermal').innerHTML,/75,0/);
