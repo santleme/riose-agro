@@ -3,16 +3,16 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createBatchExperimentManifest, digestScenario, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, digestResultRecordBytes, digestScenario, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../experiments/batch-manifest.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
 
 function plannedRun(runId) {
   const scenario = {scenarioId: runId, hours: 24};
   return {
-    runId, scenarioId: runId, scenarioDigest: digestScenario(scenario), seed: 17,
+    runId, scenarioFormat: 'riose-scenario-harness', scenarioVersion: 1, scenarioId: runId, scenarioRef: `scenarios/${runId}.json`, scenarioDigest: digestScenario(scenario), seed: 17,
     engine: {id: 'farm-engine', version: '1', buildDigest: sha256Digest('engine'), status: 'provided'},
     models: [], datasets: [], evidence: [], inputs: {hours: {value: 24, unit: 'h'}}, outputs: {},
-    status: 'planned', outputDigest: null, resultRef: null,
+    status: 'planned', outputDigest: null, resultDigest: null, resultRef: null,
   };
 }
 
@@ -98,7 +98,7 @@ test('compaction keeps only the uniquely verified row when a corrupt duplicate s
   assert.equal(executed, false);
   assert.equal(resumed.completedRuns, 1);
   assert.equal(compactedRecords.length, 1);
-  assert.deepEqual(verifyExperimentResults(resumed.manifest, compactedRecords), {
+  assert.deepEqual(verifyExperimentResults(resumed.manifest, compactedRecords, {resultRefByRunId: {r1: resumed.manifest.runs[0].resultRef}, resultDigestByRunId: {r1: resumed.manifest.runs[0].resultDigest}}), {
     valid: true,
     completedRuns: 1,
     resultRecords: 1,
@@ -212,4 +212,83 @@ test('serial cancellation leaves unstarted runs planned', async t => {
     },
   });
   assert.deepEqual(serial.manifest.runs.map(run => run.status), ['completed', 'planned']);
+});
+
+test('resultDigest covers exact UTF-8 record bytes and excludes LF and CRLF terminators', () => {
+  const record = Buffer.from('{"runId":"r1","outputs":{}}');
+  const reformatted = Buffer.from('{ "runId":"r1","outputs":{}}');
+  assert.notEqual(digestResultRecordBytes(record), digestResultRecordBytes(reformatted));
+  assert.equal(digestResultRecordBytes(record), digestResultRecordBytes(Buffer.concat([record, Buffer.from('\n')]).subarray(0, record.length)));
+  assert.equal(digestResultRecordBytes(record), digestResultRecordBytes(Buffer.concat([record, Buffer.from('\r\n')]).subarray(0, record.length)));
+});
+
+test('resume seals a valid appended row after crash before manifest completion', async t => {
+  const options = await setup(t, ['r1']);
+  const first = await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  const running = {...first.manifest.runs[0], outputs: {}, status: 'running', outputDigest: null, resultDigest: null, resultRef: null};
+  await writeFile(options.manifestPath, JSON.stringify(createBatchExperimentManifest({experimentId: first.manifest.experimentId, createdAt: first.manifest.createdAt, runs: [running]})));
+  let executed = false;
+  const recovered = await runResumableBatch({...options, executeRun: async () => { executed = true; return {}; }});
+  assert.equal(executed, false);
+  assert.equal(recovered.manifest.runs[0].status, 'completed');
+  assert.equal(recovered.manifest.runs[0].resultDigest, digestResultRecordBytes((await readFile(options.resultsPath, 'utf8')).trim()));
+  assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, 1);
+});
+
+test('valid duplicate records invalidate the run and trigger one rerun', async t => {
+  const options = await setup(t, ['r1']);
+  await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  const row = (await readFile(options.resultsPath, 'utf8')).trim();
+  await writeFile(options.resultsPath, `${row}\n${row}\n`);
+  let executions = 0;
+  const result = await runResumableBatch({...options, executeRun: async () => { executions++; return {gain: {value: 6, unit: 'kg/day'}}; }});
+  assert.equal(executions, 1);
+  assert.equal(result.completedRuns, 1);
+  assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, 1);
+});
+
+test('valid-ID set contains only records retained by the second compaction pass', async t => {
+  const options = await setup(t, ['r1']);
+  await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  let verifications = 0, executions = 0;
+  const result = await runResumableBatch({...options, verifyCompletedRun: async () => ++verifications === 1,
+    executeRun: async () => { executions++; return {gain: {value: 6, unit: 'kg/day'}}; }});
+  assert.equal(executions, 1);
+  assert.equal(result.completedRuns, 1);
+  assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, 1);
+});
+
+test('wrong resultRef and unsafe resultRef are rejected', async t => {
+  const options = await setup(t, ['r1']);
+  const first = await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  const changed = createBatchExperimentManifest({experimentId: first.manifest.experimentId, createdAt: first.manifest.createdAt, runs: [{...first.manifest.runs[0], resultRef: 'elsewhere.jsonl#r1'}]});
+  await writeFile(options.manifestPath, JSON.stringify(changed));
+  let executions = 0;
+  await runResumableBatch({...options, executeRun: async () => { executions++; return {gain: {value: 6, unit: 'kg/day'}}; }});
+  assert.equal(executions, 1);
+  assert.throws(() => createBatchExperimentManifest({experimentId: changed.experimentId, createdAt: changed.createdAt, runs: [{...changed.runs[0], resultRef: '../results.jsonl#r1'}]}), /pattern|safely identify/);
+});
+
+test('CRLF terminator is excluded and byte-reformatted semantic equivalent row is rejected', async t => {
+  const options = await setup(t, ['r1']);
+  await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  const row = (await readFile(options.resultsPath, 'utf8')).trimEnd();
+  await writeFile(options.resultsPath, `${row}\r\n`);
+  let executions = 0;
+  await runResumableBatch({...options, executeRun: async () => { executions++; return {}; }});
+  assert.equal(executions, 0);
+  await writeFile(options.resultsPath, `${row.replace('{', '{ ')}\n`);
+  await runResumableBatch({...options, executeRun: async () => { executions++; return {gain: {value: 6, unit: 'kg/day'}}; }});
+  assert.equal(executions, 1);
+});
+
+test('truncated JSONL row is reported and rerun', async t => {
+  const options = await setup(t, ['r1']);
+  await runResumableBatch({...options, executeRun: async () => ({gain: {value: 5, unit: 'kg/day'}})});
+  const row = (await readFile(options.resultsPath, 'utf8')).trim();
+  await writeFile(options.resultsPath, row.slice(0, -1));
+  let executions = 0;
+  await runResumableBatch({...options, executeRun: async () => { executions++; return {gain: {value: 6, unit: 'kg/day'}}; }});
+  assert.equal(executions, 1);
+  assert.match(await readFile(options.errorsPath, 'utf8'), /truncated JSONL record/);
 });

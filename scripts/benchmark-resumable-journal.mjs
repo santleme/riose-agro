@@ -23,10 +23,10 @@ for (let index = 0; index < args.length; index++) {
 }
 const simulatedRunMs = [0, 2];
 const runPlans = Array.from({length: runCount}, (_, index) => ({
-  runId: `run-${index}`, scenarioId: `scenario-${index}`, scenarioDigest: digestScenario({scenarioId: index}), seed: index,
+  runId: `run-${index}`, scenarioFormat: 'riose-scenario-harness', scenarioVersion: 1, scenarioId: `scenario-${index}`, scenarioRef: `scenarios/${index}.json`, scenarioDigest: digestScenario({scenarioId: index}), seed: index,
   engine: {id: 'synthetic', version: '1', buildDigest: sha256Digest('synthetic-engine'), status: 'provided'},
   models: [], datasets: [], evidence: [], inputs: {index: {value: index, unit: 'index'}}, outputs: {},
-  status: 'planned', outputDigest: null, resultRef: null,
+  status: 'planned', outputDigest: null, resultDigest: null, resultRef: null,
 }));
 const measured = [];
 for (const runDurationMs of simulatedRunMs) {

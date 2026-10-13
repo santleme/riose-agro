@@ -34,10 +34,13 @@
     },
     "run": {
       "type": "object", "additionalProperties": false,
-      "required": ["runId", "scenarioDigest", "seed", "engine", "models", "datasets", "evidence", "inputs", "outputs", "status", "outputDigest", "resultRef"],
+      "required": ["runId", "scenarioFormat", "scenarioVersion", "scenarioId", "scenarioRef", "scenarioDigest", "seed", "engine", "models", "datasets", "evidence", "inputs", "outputs", "status", "outputDigest", "resultDigest", "resultRef"],
       "properties": {
         "runId": {"type": "string", "minLength": 1},
+        "scenarioFormat": {"enum": ["agroville-comparison", "riose-scenario-harness", "baseline", "housing-comparison"]},
+        "scenarioVersion": {"type": "integer", "minimum": 1},
         "scenarioId": {"type": ["string", "null"]},
+        "scenarioRef": {"type": "string", "minLength": 1},
         "scenarioDigest": {"$ref": "#/$defs/digest"},
         "seed": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}]},
         "engine": {
@@ -57,7 +60,8 @@
         "outputs": {"type": "object", "additionalProperties": {"$ref": "#/$defs/unitValue"}},
         "status": {"enum": ["planned", "running", "completed", "failed"]},
         "outputDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
-        "resultRef": {"type": ["string", "null"], "minLength": 1}
+        "resultDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "resultRef": {"type": ["string", "null"], "minLength": 1, "pattern": "^[^/\\\\:#?]+\\.jsonl#[^/\\\\:#?]+$"}
       }
     }
   }

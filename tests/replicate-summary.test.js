@@ -144,12 +144,12 @@ test('grouping rejects non-JSON values that could collapse to the same provenanc
 test('manifest linked summaries verify digests and aggregate only completed numeric outputs', () => {
   const outputs = {weight: {value: 400, unit: 'kg/animal'}, passed: {value: true, unit: 'boolean'}};
   const completed = {
-    runId: 'done', scenarioId: 'done', scenarioDigest: digestScenario({scenarioId: 'done'}), seed: 1,
+    runId: 'done', scenarioFormat: 'riose-scenario-harness', scenarioVersion: 1, scenarioId: 'done', scenarioRef: 'scenarios/done.json', scenarioDigest: digestScenario({scenarioId: 'done'}), seed: 1,
     engine: {id: 'engine', version: '1', buildDigest: sha256Digest('engine'), status: 'provided'},
     models: [], datasets: [], evidence: [], inputs: {system: {value: 'beef', unit: 'category'}},
-    outputs, status: 'completed', outputDigest: sha256Digest(outputs), resultRef: 'results.jsonl#done',
+    outputs, status: 'completed', outputDigest: sha256Digest(outputs), resultDigest: sha256Digest('persisted record'), resultRef: 'results.jsonl#done',
   };
-  const incomplete = {...completed, runId: 'pending', scenarioId: 'pending', scenarioDigest: digestScenario({scenarioId: 'pending'}), outputs: {}, status: 'planned', outputDigest: null, resultRef: null};
+  const incomplete = {...completed, runId: 'pending', scenarioId: 'pending', scenarioRef: 'scenarios/pending.json', scenarioDigest: digestScenario({scenarioId: 'pending'}), outputs: {}, status: 'planned', outputDigest: null, resultDigest: null, resultRef: null};
   const failed = {...incomplete, runId: 'failed', scenarioId: 'failed', scenarioDigest: digestScenario({scenarioId: 'failed'}), status: 'failed'};
   const manifest = createBatchExperimentManifest({experimentId: 'summary', runs: [completed, incomplete, failed]});
   const record = createExperimentResultRecord({runId: 'done', outputs});
@@ -162,7 +162,7 @@ test('manifest linked summaries verify digests and aggregate only completed nume
   assert.equal(summary[0].provenance.experimentId, 'summary');
   assert.equal(summary[0].provenance.manifestDigest, manifest.manifestDigest);
   assert.deepEqual(summary[0].provenance.resultRecordDigests, [{runId: 'done', outputDigest: record.outputDigest}]);
-  assert.throws(() => summarizeExperimentReplicates(manifest, [{...record, outputDigest: sha256Digest({weight: {value: 1, unit: 'kg'}})}]), /Result digest mismatch/);
+  assert.throws(() => summarizeExperimentReplicates(manifest, [{...record, outputDigest: sha256Digest({weight: {value: 1, unit: 'kg'}})}]), /Output digest mismatch/);
 });
 
 test('duplicate generic run identities are rejected to protect provenance', () => {

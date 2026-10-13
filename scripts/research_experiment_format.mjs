@@ -9,7 +9,7 @@ import {createRequire} from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {executeScenario} from './run-scenarios.js';
 
@@ -66,7 +66,10 @@ const experimentRuns = scenarios.map(({scenario, result}) => {
   const resultRecord = createExperimentResultRecord({runId, outputs});
   return {
     runId,
+    scenarioFormat: 'riose-scenario-harness',
+    scenarioVersion: 1,
     scenarioId: scenario.scenarioId,
+    scenarioRef: `tests/scenarios/${scenario.scenarioId}.json`,
     scenarioDigest: digestScenario(scenario),
     seed: scenario.engine.seed,
     engine: {id: 'riose-agro/FarmEngine', version: `source-bundle-${engineBuildDigest.slice(7, 23)}`, buildDigest: engineBuildDigest, status: 'provided'},
@@ -81,6 +84,7 @@ const experimentRuns = scenarios.map(({scenario, result}) => {
     outputs,
     status: 'completed',
     outputDigest: resultRecord.outputDigest,
+    resultDigest: digestResultRecordBytes(JSON.stringify(resultRecord)),
     resultRef: `batch-results.jsonl#${runId}`,
     result: resultRecord,
   };

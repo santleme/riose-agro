@@ -1,5 +1,5 @@
 import {performance} from 'node:perf_hooks';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, serializeExperimentResultJsonl} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, serializeExperimentResultJsonl} from '../experiments/batch-manifest.js';
 
 const runCount = Number.parseInt(process.env.RIOSE_EXPERIMENT_RUNS ?? '100', 10);
 const repetitions = Number.parseInt(process.env.RIOSE_EXPERIMENT_REPETITIONS ?? '7', 10);
@@ -17,17 +17,20 @@ for (let index = 0; index < runCount; index++) {
     costBrl: {value: 1200 + index, unit: 'BRL/animal'}
   };
   results.push({
-    runId: `run-${String(index + 1).padStart(6, '0')}`, scenarioId: scenario.scenarioId,
+    runId: `run-${String(index + 1).padStart(6, '0')}`, scenarioFormat: 'riose-scenario-harness', scenarioVersion: 1, scenarioId: scenario.scenarioId, scenarioRef: `scenarios/${scenario.scenarioId}.json`,
     scenarioDigest: digestScenario(scenario), seed: index,
     engine: {id: 'agroville-comparison', version: 'v1', buildDigest: null, status: 'provided'},
     models: [], datasets: [{id: null, digest: null, uri: null, status: 'missing'}], evidence: [{id: null, digest: null, uri: null, status: 'missing'}],
     inputs: {initialWeight: {value: 300, unit: 'kg/animal'}}, outputs, status: 'completed',
-    outputDigest: null, resultRef: `results.jsonl#${index + 1}`
+    outputDigest: null, resultDigest: null, resultRef: `results.jsonl#run-${String(index + 1).padStart(6, '0')}`
   });
 }
 // Derive the declared output digests from each complete output record.
 const outputRecords = results.map(run => createExperimentResultRecord({runId: run.runId, outputs: run.outputs}));
-for (let index = 0; index < results.length; index++) results[index].outputDigest = outputRecords[index].outputDigest;
+for (let index = 0; index < results.length; index++) {
+  results[index].outputDigest = outputRecords[index].outputDigest;
+  results[index].resultDigest = digestResultRecordBytes(JSON.stringify(outputRecords[index]));
+}
 
 function sample(fn) {
   const start = performance.now();

@@ -47,6 +47,11 @@ export function sha256Digest(value) {
   return `sha256:${createHash('sha256').update(bytes, 'utf8').digest('hex')}`;
 }
 
+export function digestResultRecordBytes(bytes) {
+  if (typeof bytes !== 'string' && !Buffer.isBuffer(bytes)) throw new TypeError('Result record bytes must be UTF-8 text or a Buffer');
+  return `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+}
+
 export function digestScenario(scenario) {
   if (!scenario || typeof scenario !== 'object' || Array.isArray(scenario)) throw new TypeError('Scenario must be an object');
   return sha256Digest(scenario);
@@ -65,6 +70,12 @@ function semanticErrors(manifest) {
     const at = `runs[${index}]`;
     if (runIds.has(run.runId)) errors.push(`${at}.runId must be unique`);
     runIds.add(run.runId);
+    if (!['agroville-comparison', 'riose-scenario-harness', 'baseline', 'housing-comparison'].includes(run.scenarioFormat)) errors.push(`${at}.scenarioFormat is unsupported`);
+    if ((run.scenarioFormat === 'agroville-comparison' && ![1, 2].includes(run.scenarioVersion)) || (run.scenarioFormat === 'riose-scenario-harness' && run.scenarioVersion !== 1) || (['baseline', 'housing-comparison'].includes(run.scenarioFormat) && run.scenarioVersion !== 1)) errors.push(`${at}.scenarioFormat/version is unsupported`);
+    const idRequired = run.scenarioFormat === 'riose-scenario-harness' || (run.scenarioFormat === 'agroville-comparison' && run.scenarioVersion === 2);
+    if (idRequired && (typeof run.scenarioId !== 'string' || !run.scenarioId.trim())) errors.push(`${at}.scenarioId is required for this scenario format`);
+    if (!idRequired && run.scenarioId !== null) errors.push(`${at}.scenarioId must be null because this format does not declare an ID`);
+    if (typeof run.scenarioRef !== 'string' || !run.scenarioRef || run.scenarioRef.startsWith('/') || /[\\:?#]/.test(run.scenarioRef) || run.scenarioRef.split('/').some(part => !part || part === '.' || part === '..')) errors.push(`${at}.scenarioRef must be a safe relative path`);
     const engineHasIdentity = typeof run.engine.id === 'string' && run.engine.id.length > 0 && typeof run.engine.version === 'string' && run.engine.version.length > 0;
     if (run.engine.status === 'provided' && !engineHasIdentity) errors.push(`${at}.engine status provided requires an exact id and version`);
     if (run.engine.status === 'missing' && (run.engine.id !== null || run.engine.version !== null || run.engine.buildDigest !== null)) errors.push(`${at}.engine status missing requires null identity and digest`);
@@ -80,10 +91,11 @@ function semanticErrors(manifest) {
       }
     }
     const completed = run.status === 'completed';
-    if (completed && (run.outputDigest === null || run.resultRef === null)) errors.push(`${at} completed status must have outputDigest and resultRef`);
-    if (!completed && (run.outputDigest !== null || run.resultRef !== null)) errors.push(`${at} non-completed status must not have outputDigest or resultRef`);
+    if (completed && (run.outputDigest === null || run.resultDigest === null || run.resultRef === null)) errors.push(`${at} completed status must have outputDigest, resultDigest, and resultRef`);
+    if (!completed && (run.outputDigest !== null || run.resultDigest !== null || run.resultRef !== null)) errors.push(`${at} non-completed status must not have final result digests or resultRef`);
     if (!completed && Object.keys(run.outputs).length) errors.push(`${at} outputs must be empty unless status is completed`);
     if (completed && sha256Digest(run.outputs) !== run.outputDigest) errors.push(`${at}.outputDigest does not match declared outputs`);
+    if (completed && typeof run.resultRef === 'string' && (run.resultRef.startsWith('/') || /[\\:]/.test(run.resultRef) || run.resultRef.includes('..') || !run.resultRef.endsWith(`#${run.runId}`))) errors.push(`${at}.resultRef must safely identify its runId`);
   }
   return errors;
 }
@@ -123,14 +135,14 @@ export function createExperimentResultRecord({runId, outputs} = {}) {
   return {type: RESULT_TYPE, version: RESULT_VERSION, runId, outputs, outputDigest};
 }
 
-export function verifyExperimentResults(manifest, records, {resultRefByRunId = {}} = {}) {
+export function verifyExperimentResults(manifest, records, {resultRefByRunId = {}, resultDigestByRunId = {}} = {}) {
   validateBatchExperimentManifest(manifest);
   if (!Array.isArray(records)) throw new TypeError('Experiment result records must be an array');
   const byRunId = new Map();
   for (const record of records) {
     if (!record || record.type !== RESULT_TYPE || record.version !== RESULT_VERSION) throw new Error('Unsupported or malformed experiment result record');
     if (byRunId.has(record.runId)) throw new Error(`Duplicate result record for run ${record.runId}`);
-    if (sha256Digest(record.outputs) !== record.outputDigest) throw new Error(`Result digest mismatch for run ${record.runId}`);
+    if (sha256Digest(record.outputs) !== record.outputDigest) throw new Error(`Output digest mismatch for run ${record.runId}`);
     byRunId.set(record.runId, record);
   }
   const completedRuns = manifest.runs.filter(run => run.status === 'completed');
@@ -141,6 +153,7 @@ export function verifyExperimentResults(manifest, records, {resultRefByRunId = {
     if (!record) throw new Error(`Missing result record for run ${run.runId}`);
     if (record.outputDigest !== run.outputDigest) throw new Error(`Output digest link mismatch for run ${run.runId}`);
     if (resultRefByRunId[run.runId] !== undefined && resultRefByRunId[run.runId] !== run.resultRef) throw new Error(`Result reference mismatch for run ${run.runId}`);
+    if (resultDigestByRunId[run.runId] !== undefined && resultDigestByRunId[run.runId] !== run.resultDigest) throw new Error(`Result digest mismatch for run ${run.runId}`);
   }
   return {valid: true, completedRuns: completedRuns.length, resultRecords: byRunId.size};
 }

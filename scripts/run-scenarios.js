@@ -5,7 +5,8 @@ import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {FarmEngine} from '../src/client/engine.js';
-import {createBatchExperimentManifest, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, sha256Digest} from '../experiments/batch-manifest.js';
+import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
 import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 
@@ -153,18 +154,23 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   const scenarioByRunId = new Map();
   for (const file of scenarioFiles) {
     const source = await readFile(resolve(scenarioDirectory, file), 'utf8');
-    let scenario = null;
-    try { scenario = JSON.parse(source); } catch {}
+    let scenario;
+    try { scenario = JSON.parse(source); }
+    catch (error) { throw new Error(`Invalid JSON in ${file}: ${error.message}`); }
     const runId = file;
-    scenarioByRunId.set(runId, {file, scenario, source});
-    const valid = scenario && validateScenario(scenario).valid;
-    const scenarioDigest = valid ? digestScenario(scenario) : sha256Digest(source);
-    const configuration = scenario?.configuration ?? {};
+    const validation = validateScenario(scenario);
+    if (!validation.valid) throw new Error(`Invalid scenario ${file}: ${validation.errors.join('; ')}`);
+    const identity = validateScenarioIdentity({scenarioFormat: HARNESS_FORMAT, scenarioVersion: 1, scenarioId: scenario.scenarioId, scenarioRef: file, seed: scenario.engine.seed, scenario});
+    scenarioByRunId.set(runId, {file, scenario});
+    const configuration = scenario.configuration ?? {};
     plans.push({
       runId,
-      scenarioId: typeof scenario?.scenarioId === 'string' ? scenario.scenarioId : null,
-      scenarioDigest,
-      seed: Number.isInteger(scenario?.engine?.seed) && scenario.engine.seed >= 0 ? scenario.engine.seed : 0,
+      scenarioFormat: identity.scenarioFormat,
+      scenarioVersion: identity.scenarioVersion,
+      scenarioId: identity.scenarioId,
+      scenarioRef: identity.scenarioRef,
+      scenarioDigest: identity.scenarioDigest,
+      seed: identity.seed,
       engine: {id: 'riose-agro/FarmEngine', version: `source-bundle-${engineDigest.slice(7, 23)}`, buildDigest: engineDigest, status: 'provided'},
       models: [],
       datasets: [{id: null, digest: null, uri: null, status: 'missing'}],
@@ -174,7 +180,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
         duration: {value: Number.isInteger(scenario?.run?.hours) ? scenario.run.hours : null, unit: 'h'},
         configuration: {value: configuration, unit: 'engine-configuration-v1'},
       },
-      outputs: {}, status: 'planned', outputDigest: null, resultRef: null,
+      outputs: {}, status: 'planned', outputDigest: null, resultDigest: null, resultRef: null,
     });
   }
   const manifestPath = resolve(resultDirectory, 'batch-manifest.json');
@@ -190,11 +196,11 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   const ownsPool = concurrency > 1 && !suppliedWorkerPool;
   const pool = concurrency > 1 ? suppliedWorkerPool ?? new ScenarioWorkerPool(concurrency, {maxOldGenerationSizeMb: workerMemoryLimitMb}) : null;
   let journal;
-  try { journal = await runResumableBatch({manifestPath, resultsPath, manifest, maxRetainedResults: 100, concurrency, signal, verifyCompletedRun: async run => {
+  try { journal = await runResumableBatch({manifestPath, resultsPath, manifest, maxRetainedResults: 100, concurrency, signal, verifyCompletedRun: async (run, record) => {
     const resultPath = resolve(resultDirectory, resultFileName(scenarioByRunId.get(run.runId).file));
     try {
       const result = JSON.parse(await readFile(resultPath, 'utf8'));
-      return sha256Digest(result) === run.outputs.scenarioResultDigest?.value;
+      return sha256Digest(result) === record.outputs.scenarioResultDigest?.value;
     } catch { return false; }
   }, executeRun: async run => {
     const {file, scenario, source} = scenarioByRunId.get(run.runId);

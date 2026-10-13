@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {digestResultRecordBytes} from '../experiments/batch-manifest.js';
 import {runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
 import {executeScenario} from '../scripts/run-scenarios.js';
 import {ScenarioWorkerPool} from '../scripts/scenario-worker-pool.js';
@@ -26,6 +27,12 @@ test('scenario directory runner resumes verified records and reruns a corrupt pe
   const manifestPath = join(results, 'batch-manifest.json');
   const resultJournalPath = join(results, 'batch-results.jsonl');
   const manifestBefore = JSON.parse(await readFile(manifestPath, 'utf8'));
+  assert.equal(manifestBefore.runs[0].scenarioFormat, 'riose-scenario-harness');
+  assert.equal(manifestBefore.runs[0].scenarioVersion, 1);
+  assert.equal(manifestBefore.runs[0].scenarioId, 'baseline-pasture');
+  assert.equal(manifestBefore.runs[0].scenarioRef, 'baseline.json');
+  assert.deepEqual(manifestBefore.runs[0].models, []);
+  assert.equal(manifestBefore.runs[0].resultDigest, digestResultRecordBytes((await readFile(resultJournalPath, 'utf8')).split('\n')[0]));
   await runScenarioDirectoryResumable(scenarios, results);
   assert.equal((await readFile(resultJournalPath, 'utf8')).trim().split('\n').length, 1);
 
