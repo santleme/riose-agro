@@ -112,6 +112,32 @@ test('calculation provenance preserves evidence status and does not invent absen
   }
 });
 
+test('missing evidence status stays missing in provenance and report text', () => {
+  const id = 'issue-93-missing-evidence-status';
+  registerScientificModel(defineScientificModel({
+    id,
+    version: '1',
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    evidence: {source: 'source-without-status'},
+    implementationSource: 'return {value}',
+    run: ({value}) => ({value})
+  }));
+  const result = runRegisteredScientificModel({id, version: '1', inputs: {value: 2}});
+
+  assert.equal(result.provenance.evidenceStatus, null);
+  assert.deepEqual(result.provenance.evidenceReferences, [
+    {id: 'source-without-status', locator: 'source-without-status'}
+  ]);
+  const report = renderSimulationReport({
+    days: 1,
+    rows: [{day: 1}],
+    scientificProvenance: result.scientificProvenance
+  });
+  assert.match(report, /source-without-status \[status não informado\]/);
+  assert.match(report, /estado: não informado/);
+});
+
 test('registered model result records exact inputs, units, evidence status and implementation hash', () => {
   const inputs = {bodyWeightKg: 330, adgKgPerDay: 0.5, supplementKgDMPerDay: 1.6};
   const result = runRegisteredScientificModel({id: BR_CORTE_PASTURE_DMI_MODEL.id, version: '2023', inputs});

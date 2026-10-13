@@ -5,6 +5,7 @@ export const SCIENTIFIC_MODEL_INTERFACE_VERSION = 1;
 // distinct pairs (for example, ["a@b", "c"] and ["a", "b@c"]).
 const registeredModels = new Map();
 const definedModels = new WeakSet();
+const implementationHashes = new WeakMap();
 
 function modelsForId(id, create = false) {
   let versions = registeredModels.get(id);
@@ -149,6 +150,15 @@ function sha256(text) {
   return h.map(value=>(value>>>0).toString(16).padStart(8,'0')).join('');
 }
 
+function implementationHash(model) {
+  let hash = implementationHashes.get(model);
+  if (!hash) {
+    hash = `sha256:${sha256(model.implementationSource)}`;
+    implementationHashes.set(model, hash);
+  }
+  return hash;
+}
+
 export function runRegisteredScientificModel({id, version, inputs} = {}) {
   const model = resolveScientificModel(id, version);
   // Capture the submitted inputs before model code runs. Models receive the
@@ -158,14 +168,18 @@ export function runRegisteredScientificModel({id, version, inputs} = {}) {
   const result = runScientificModel(model, inputs);
   const references = [];
   const source = model.evidence.source;
-  if (typeof source === 'string' && source.trim()) references.push({id: source, locator: source, status: model.evidence.status ?? 'demonstrative'});
+  if (typeof source === 'string' && source.trim()) {
+    const reference = {id: source, locator: source};
+    if (Object.hasOwn(model.evidence, 'status')) reference.status = model.evidence.status;
+    references.push(reference);
+  }
   const provenance = {
       modelId: model.id,
       version: model.version,
       inputs: Object.fromEntries(Object.entries(capturedInputs).map(([name, value]) => [name, {value, unit: model.units[name] ?? null}])),
       evidenceReferences: references,
-      evidenceStatus: model.evidence.status ?? 'demonstrative',
-      implementationHash: `sha256:${sha256(model.implementationSource)}`
+      evidenceStatus: Object.hasOwn(model.evidence, 'status') ? model.evidence.status : null,
+      implementationHash: implementationHash(model)
   };
   return {...result, provenance, scientificProvenance: [provenance]};
 }
