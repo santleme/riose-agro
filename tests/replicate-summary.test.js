@@ -55,6 +55,28 @@ test('statistics that exceed the finite numeric range fail explicitly', () => {
   ], {groupBy: ['supplement']})[0].outputs.weight.standardDeviation, /outside the finite numeric range/);
 });
 
+test('small but representable replicate spread is not lost to variance underflow', () => {
+  const result = summarizeReplicates([
+    record('zero', 'completed', 1, 0),
+    record('small', 'completed', 1, 1e-200),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.ok(result.standardDeviation > 0);
+  assert.ok(Math.abs(result.standardDeviation / (1e-200 / Math.sqrt(2)) - 1) < 1e-15);
+
+  const subnormal = summarizeReplicates([
+    record('zero-subnormal', 'completed', 1, 0),
+    record('small-subnormal', 'completed', 1, 2 * Number.MIN_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(subnormal.standardDeviation, Number.MIN_VALUE);
+
+  const constantSubnormal = summarizeReplicates([
+    record('constant-subnormal-a', 'completed', 1, Number.MIN_VALUE),
+    record('constant-subnormal-b', 'completed', 1, Number.MIN_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(constantSubnormal.mean, Number.MIN_VALUE);
+  assert.equal(constantSubnormal.standardDeviation, 0);
+});
+
 test('failed runs and completed runs missing an output remain visible in counts', () => {
   const result = summarizeReplicates([
     record('r1', 'completed', 1, 390), record('r2', 'completed', 1), record('r3', 'failed', 1),

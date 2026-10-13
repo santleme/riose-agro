@@ -44,27 +44,47 @@ function describe(values) {
   const n = sorted.length;
   // Divide before summing so a finite mean does not overflow just because
   // the unscaled sum exceeds Number.MAX_VALUE.
-  const mean = n ? stableSum(sorted.map(value => value / n)) : null;
+  let mean = n ? stableSum(sorted.map(value => value / n)) : null;
+  if (n) {
+    const magnitude = sorted.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), 0);
+    const minimumNormal = 2 ** -1022;
+    if (magnitude > 0 && magnitude < minimumNormal) {
+      // Dividing subnormal values before summing can round every term to zero
+      // (for example, the mean of two Number.MIN_VALUE observations). Normalize
+      // only an all-subnormal group so small terms in mixed-scale data retain
+      // the compensated sum path above.
+      mean = magnitude * (stableSum(sorted.map(value => value / magnitude)) / n);
+    }
+  }
   if (mean !== null && !Number.isFinite(mean)) throw new RangeError('Mean is outside the finite numeric range');
   let standardDeviation = null;
   if (n > 1) {
+    // Scale deviations before squaring. This preserves tiny but representable
+    // spreads; if subtraction overflows for opposite-sign extremes, normalize
+    // the observations first and subtract in the normalized range.
     const differences = sorted.map(value => value - mean);
-    const directSquares = differences.map(value => value ** 2);
-    const directVariance = stableSum(directSquares) / (n - 1);
-    if (Number.isFinite(directVariance)) standardDeviation = Math.sqrt(directVariance);
-    else {
-      // Normalize deviations before squaring: direct squared deviations can
-      // overflow even when the resulting sample SD is representable.
-      const scale = sorted.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), Math.abs(mean));
-      if (scale === 0) standardDeviation = 0;
-      else {
-        const scaledMean = mean / scale;
-        const scaledSquares = stableSum(sorted.map(value => (value / scale - scaledMean) ** 2));
-        const scaledSd = Math.sqrt(scaledSquares / (n - 1));
-        if (scaledSd > Number.MAX_VALUE / scale) throw new RangeError('Sample standard deviation is outside the finite numeric range');
-        standardDeviation = scale * scaledSd;
-        if (!Number.isFinite(standardDeviation)) throw new RangeError('Sample standard deviation is outside the finite numeric range');
+    let deviationScale = differences.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), 0);
+    let normalizedDifferences;
+    if (differences.every(Number.isFinite)) {
+      normalizedDifferences = deviationScale === 0 ? differences : differences.map(value => value / deviationScale);
+    } else {
+      const valueScale = sorted.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), Math.abs(mean));
+      if (valueScale === 0) {
+        deviationScale = 0;
+        normalizedDifferences = differences;
+      } else {
+        const scaledMean = mean / valueScale;
+        normalizedDifferences = sorted.map(value => value / valueScale - scaledMean);
+        deviationScale = valueScale;
       }
+    }
+    if (deviationScale === 0) standardDeviation = 0;
+    else {
+      const scaledSquares = stableSum(normalizedDifferences.map(value => value ** 2));
+      const scaledSd = Math.sqrt(scaledSquares / (n - 1));
+      if (scaledSd > Number.MAX_VALUE / deviationScale) throw new RangeError('Sample standard deviation is outside the finite numeric range');
+      standardDeviation = deviationScale * scaledSd;
+      if (!Number.isFinite(standardDeviation)) throw new RangeError('Sample standard deviation is outside the finite numeric range');
     }
   }
   return {
