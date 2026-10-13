@@ -9,14 +9,21 @@ import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions = Number(process.env.RIOSE_SCHEDULER_REPETITIONS ?? 4);
+const warmupRuns = Number(process.env.RIOSE_SCHEDULER_WARMUPS ?? 1);
 const memoryPerWorkerMb = Number(process.env.RIOSE_SCHEDULER_WORKER_MEMORY_MB ?? 128);
 const rssPollIntervalMs = 5;
 const scenarioTemplate = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
-const scenarioCount = 6;
+const scenarioCount = Number(process.env.RIOSE_SCHEDULER_SCENARIO_COUNT ?? 6);
 const reportedAvailableParallelism = availableParallelism();
-const availableWorkers = Math.min(reportedAvailableParallelism, scenarioCount);
+const availableWorkers = Math.min(reportedAvailableParallelism, scenarioCount, 4);
 const concurrencyCases = [1, Math.min(2, availableWorkers), availableWorkers]
   .filter((value, index, values) => values.indexOf(value) === index);
+if (!Number.isSafeInteger(scenarioCount) || scenarioCount < 1 || scenarioCount > 10_000
+    || !Number.isSafeInteger(repetitions) || repetitions < 3
+    || !Number.isSafeInteger(warmupRuns) || warmupRuns < 0
+    || !Number.isSafeInteger(memoryPerWorkerMb) || memoryPerWorkerMb < 16) {
+  throw new RangeError('invalid scheduler benchmark count, warmup, repetition or memory setting');
+}
 
 function startRssMonitor() {
   const worker = new Worker(new URL('./benchmark-rss-monitor.js', import.meta.url), {workerData: {intervalMs: rssPollIntervalMs}});
@@ -33,7 +40,7 @@ function startRssMonitor() {
   });
 }
 
-async function once(concurrency) {
+async function once(concurrency, scenarioCount) {
   const root = await mkdtemp(join(tmpdir(), 'riose-scheduler-bench-'));
   const scenarios = join(root, 'scenarios'), results = join(root, 'results');
   let pool;
@@ -106,22 +113,32 @@ async function once(concurrency) {
 
 const rows = [];
 for (const concurrency of concurrencyCases) {
+  for (let warmup = 0; warmup < warmupRuns; warmup++) {
+    const result = await once(concurrency, scenarioCount);
+    if (!result.allPassed) throw new Error(`scheduler warmup failed at ${scenarioCount} scenarios/concurrency ${concurrency}`);
+  }
   const samples = [];
-  for (let repetition = 0; repetition < repetitions; repetition++) samples.push(await once(concurrency));
-  const median = key => {
+  for (let repetition = 0; repetition < repetitions; repetition++) samples.push(await once(concurrency, scenarioCount));
+  const summary = (key, quantile) => {
     const values = samples.map(sample => key.split('.').reduce((value, part) => value?.[part], sample)).sort((a, b) => a - b);
-    const middle = values.length % 2 ? values[(values.length - 1) / 2] : (values[values.length / 2 - 1] + values[values.length / 2]) / 2;
-    return Number(middle.toFixed(3));
+    if (quantile === 0.5) {
+      const middle = values.length % 2 ? values[(values.length - 1) / 2] : (values[values.length / 2 - 1] + values[values.length / 2]) / 2;
+      return Number(middle.toFixed(3));
+    }
+    return Number(values[Math.max(0, Math.ceil(values.length * quantile) - 1)].toFixed(3));
   };
-  rows.push({concurrency, workerMemoryLimitMb: concurrency > 1 ? memoryPerWorkerMb : null, samples,
-    medianWallMs: median('wallMs'), medianThroughputScenariosPerSecond: median('throughputScenariosPerSecond'),
-    medianProcessCpuMs: median('processCpuMs.total'),
-    medianCpuUtilizationOneCoreEquivalentPercent: median('cpuUtilization.oneCoreEquivalentPercent'),
-    medianCpuUtilizationHostNormalizedPercent: median('cpuUtilization.hostNormalizedPercent'),
-    medianWorkerStartupMs: median('workerStartupMs'),
-    medianWorkerStartupCpuMs: median('workerStartupCpuMs.total'),
-    medianEndToEndMs: median('endToEndMs'), medianEndToEndThroughputScenariosPerSecond: median('endToEndThroughputScenariosPerSecond'),
-    medianPeakObservedRssBytes: median('peakObservedRssBytes'), allPassed: samples.every(sample => sample.allPassed)});
+  rows.push({scenarioCount,concurrency,workerMemoryLimitMb: concurrency > 1 ? memoryPerWorkerMb : null,
+    sampleCount:samples.length,percentileMethod:'nearest-rank; sample p95 is provisional when fewer than 30 independent batch samples are available',samples,
+    medianWallMs:summary('wallMs',0.5),p95WallMs:summary('wallMs',0.95),
+    medianThroughputScenariosPerSecond:summary('throughputScenariosPerSecond',0.5),
+    medianProcessCpuMs:summary('processCpuMs.total',0.5),
+    medianCpuUtilizationOneCoreEquivalentPercent:summary('cpuUtilization.oneCoreEquivalentPercent',0.5),
+    medianCpuUtilizationHostNormalizedPercent:summary('cpuUtilization.hostNormalizedPercent',0.5),
+    medianWorkerStartupMs:summary('workerStartupMs',0.5),medianWorkerStartupCpuMs:summary('workerStartupCpuMs.total',0.5),
+    medianEndToEndMs:summary('endToEndMs',0.5),p95EndToEndMs:summary('endToEndMs',0.95),
+    medianEndToEndThroughputScenariosPerSecond:summary('endToEndThroughputScenariosPerSecond',0.5),
+    medianPeakObservedRssBytes:summary('peakObservedRssBytes',0.5),p95PeakObservedRssBytes:summary('peakObservedRssBytes',0.95),
+    allPassed:samples.every(sample=>sample.allPassed)});
 }
 const environment = {node: process.version, platform: process.platform, arch: process.arch, reportedAvailableParallelism, workloadAvailableWorkers: availableWorkers};
 const workload = {scenarios: scenarioCount, hours: scenarioTemplate.run.hours, seeds: Array.from({length: scenarioCount}, (_, index) => 20261012 + index)};
@@ -129,7 +146,8 @@ const measurementDetails = {
   workerStartup: 'Worker constructor through ready handshake; separate from workload wall and CPU time',
   processCpu: 'process.cpuUsage delta for the whole Node process during journaled workload; includes CPU used by scenario Worker threads and the RSS monitor thread; worker startup CPU is reported separately',
   cpuUtilization: 'Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.',
-  effectiveWorkerCount: `Concurrency is capped at ${scenarioCount} because the benchmark has ${scenarioCount} independent scenarios; available workers means min(os.availableParallelism(), ${scenarioCount}), so hosts reporting more parallelism than scenarios do not exercise every reported CPU.`,
+  effectiveWorkerCount: `Concurrency is capped at ${availableWorkers}; the pool is limited to four Workers, available parallelism, and the scenario count.`,
+  percentile: `Batch p95 uses nearest-rank from ${repetitions} independent measured batches per concurrency; fewer than 30 samples are provisional.`,
   peakRss: `Independent Worker thread polls process.memoryUsage.rss() every ${rssPollIntervalMs}ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.`,
   rssLimit: 'Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.',
   includes: ['scenario execution', 'manifest and journal writes', 'result verification'],
@@ -157,7 +175,7 @@ const report = benchmarkReport({
   name: 'scenario-scheduler-concurrency',
   runtime: {platform: process.platform},
   workload: {seed: 20261012, populations: [{count: scenarioCount, unit: 'scenarios', scope: 'FarmEngine scenario scheduler; worker concurrency comparison'}], hours: scenarioTemplate.run.hours, scenarioSeeds: workload.seeds},
-  configuration: {warmupRuns: 0, repetitions, concurrencyCases, workerMemoryLimitMb: memoryPerWorkerMb, rssPollIntervalMs},
+  configuration: {warmupRuns, repetitions, concurrencyCases, maxWorkerConcurrency:4, workerMemoryLimitMb: memoryPerWorkerMb, rssPollIntervalMs},
   phases: {
     engine: {status: 'measured', measurements: rowMeasurements.filter(item => item.phase === 'engine')},
     startup: {status: 'measured', measurements: rowMeasurements.filter(item => item.phase === 'startup')},

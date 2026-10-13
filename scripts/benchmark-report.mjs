@@ -223,7 +223,11 @@ export function assertBenchmarkReport(report) {
   }
   if (report.benchmark.name === 'scenario-scheduler-concurrency') {
     const availableParallelism = report.results.environment.reportedAvailableParallelism;
-    const workloadAvailableWorkers = Math.min(availableParallelism, report.results.workload.scenarios);
+    const configuredMaximum = report.configuration.maxWorkerConcurrency ?? Number.POSITIVE_INFINITY;
+    if (configuredMaximum !== Number.POSITIVE_INFINITY && (!Number.isSafeInteger(configuredMaximum) || configuredMaximum < 1)) {
+      throw new TypeError('Invalid benchmark report: maxWorkerConcurrency must be a positive integer when provided.');
+    }
+    const workloadAvailableWorkers = Math.min(availableParallelism, report.results.workload.scenarios, configuredMaximum);
     const expectedConcurrencyCases = [...new Set([1, Math.min(2, workloadAvailableWorkers), workloadAvailableWorkers])];
     if (report.results.environment.workloadAvailableWorkers !== workloadAvailableWorkers
       || JSON.stringify(report.configuration.concurrencyCases) !== JSON.stringify(expectedConcurrencyCases)
