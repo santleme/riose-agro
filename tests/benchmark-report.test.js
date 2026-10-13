@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import Ajv2020 from 'ajv/dist/2020.js';
-import {assertBenchmarkReport, benchmarkReport, measurement, summarizeSamples} from '../scripts/benchmark-report.mjs';
+import {assertBenchmarkReport, benchmarkComparison, benchmarkReport, measurement, summarizeSamples} from '../scripts/benchmark-report.mjs';
 
 const schema = JSON.parse(readFileSync(new URL('../docs/architecture/benchmark-report.schema.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: false}).compile(schema);
@@ -140,7 +140,7 @@ test('measured phases require sample count, median, and spread statistics', () =
 
   const notMeasured = sampleReport();
   notMeasured.phases.engine = {status: 'not-measured', measurements: []};
-  notMeasured.timingBoundaries = [{phase: 'snapshot', timed: ['No timed work.'], notTimed: []}];
+  notMeasured.timingBoundaries = [{phase: 'snapshot', timed: ['No timed work.'], notTimed: [], whatIsTimed: ['No timed work.'], whatIsNotTimed: []}];
   assert.equal(validate(notMeasured), true);
   assert.doesNotThrow(() => assertBenchmarkReport(notMeasured));
 });
@@ -226,6 +226,91 @@ test('benchmark report enforces the separate FarmEngine, renderer, and numeric-k
 
 test('benchmark adapter requires a timing boundary for every measured phase', () => {
   const report = sampleReport();
-  report.timingBoundaries = [{phase: 'render', timed: ['Canvas submission.'], notTimed: []}];
+  report.timingBoundaries = [{phase: 'render', timed: ['Canvas submission.'], notTimed: [], whatIsTimed: ['Canvas submission.'], whatIsNotTimed: []}];
   assert.throws(() => assertBenchmarkReport(report), /measured phase "engine" has no timing boundary/);
+});
+
+test('memory taxonomy, raw observations, units, and duration values are validated', () => {
+  const report = sampleReport();
+  report.phases.engine.measurements[0] = measurement('engine', 'jsHeapUsedAfterGc', 'bytes', summarizeSamples([0, 10]), {observations: [0, 10]});
+  const normalized = benchmarkReport({
+    name: 'memory-fixture', workload: report.workload, configuration: report.configuration,
+    phases: {engine: {status: 'measured', measurements: [report.phases.engine.measurements[0]]}},
+    timingBoundaries: report.timingBoundaries, results: {},
+  });
+  assert.equal(normalized.phases.engine.measurements[0].memoryType, 'js-heap');
+  assert.deepEqual(normalized.phases.engine.measurements[0].statistics.rawObservations, [0, 10]);
+  assert.equal(normalized.hardware.gpuMemoryBytes, null);
+
+  const invalidType = structuredClone(normalized);
+  invalidType.phases.engine.measurements[0].memoryType = 'gpu-from-js-heap';
+  assert.equal(validate(invalidType), false);
+  assert.throws(() => assertBenchmarkReport(invalidType), /Invalid benchmark report/);
+
+  const missingType = structuredClone(normalized);
+  delete missingType.phases.engine.measurements[0].memoryType;
+  assert.throws(() => assertBenchmarkReport(missingType), /requires .*memoryType/);
+
+  const lostSamples = structuredClone(normalized);
+  delete lostSamples.phases.engine.measurements[0].statistics.rawObservations;
+  delete lostSamples.phases.engine.measurements[0].observations;
+  assert.throws(() => assertBenchmarkReport(lostSamples), /preserve numeric raw observations/);
+
+  const negativeDuration = sampleReport();
+  negativeDuration.phases.engine.measurements[0].statistics = summarizeSamples([-1]);
+  negativeDuration.phases.engine.measurements[0].observations = [-1];
+  assert.throws(() => assertBenchmarkReport(negativeDuration), /finite non-negative values/);
+
+  for (const [metric, expectedType] of [
+    ['jsHeapBytes', 'js-heap'], ['retainedHeapBytes', 'retained-heap'], ['processRssBytes', 'process-rss'],
+    ['serializedPayloadBytes', 'serialized-payload'], ['wasmLinearMemoryBytes', 'wasm-memory'], ['gpuMemoryBytes', 'gpu-memory'],
+  ]) {
+    const typed = benchmarkReport({
+      name: 'memory-type-fixture', workload: report.workload, configuration: report.configuration,
+      phases: {memory: {status: 'measured', measurements: [measurement('memory', metric, 'bytes', summarizeSamples([12]), {observations: [12]})]}},
+      timingBoundaries: [{phase: 'memory', timed: [`Read ${metric}.`], notTimed: []}], results: {},
+    });
+    assert.equal(typed.phases.memory.measurements[0].memoryType, expectedType);
+  }
+});
+
+test('report version is fixed and incompatible hosts/revisions are explicitly non-comparable', () => {
+  const left = sampleReport();
+  const wrongVersion = structuredClone(left);
+  wrongVersion.schemaVersion = 3;
+  assert.equal(validate(wrongVersion), false);
+  assert.throws(() => assertBenchmarkReport(wrongVersion), /Invalid benchmark report/);
+
+  const missingReadinessPhase = structuredClone(left);
+  delete missingReadinessPhase.phases.coldStartup;
+  assert.equal(validate(missingReadinessPhase), false);
+
+  left.runtime.browser = 'Chromium 156';
+  left.benchmark.source.revision = 'abcdef0123456';
+  const right = structuredClone(left);
+  assert.deepEqual(benchmarkComparison(left, right), {comparable: true, reasons: []});
+  right.runtime.browser = 'Firefox 143';
+  right.hardware.cpu = 'Other CPU';
+  right.benchmark.source.revision = '123456abcdef0';
+  const comparison = benchmarkComparison(left, right);
+  assert.equal(comparison.comparable, false);
+  assert.ok(comparison.reasons.some(reason => reason.startsWith('browser differs')));
+  assert.ok(comparison.reasons.some(reason => reason.startsWith('CPU differs')));
+  assert.ok(comparison.reasons.some(reason => reason.startsWith('revision differs')));
+});
+
+test('#113 readiness fixture can represent its required timing phases without implementing them', () => {
+  const phases = ['coldStartup', 'warmStartup', 'engine', 'worker', 'bridgeMarshaling', 'fullScenario', 'uiEndToEnd', 'memory'];
+  const report = benchmarkReport({
+    name: 'issue-113-readiness-fixture',
+    workload: {seed: 'deterministic readiness fixture', populations: [{count: 1, unit: 'scenario', scope: 'fixture'}]},
+    configuration: {warmupRuns: 1, repetitions: 1},
+    phases: Object.fromEntries(phases.map(phase => [phase, {status: 'measured', measurements: [measurement(phase, phase === 'memory' ? 'jsHeapAfterGc' : 'elapsed', phase === 'memory' ? 'bytes' : 'ms', summarizeSamples([1]), {observations: [1]})]}])),
+    timingBoundaries: phases.map(phase => ({phase, timed: [`Fixture boundary for ${phase}.`], notTimed: ['Other phases.']})),
+    results: {readinessOnly: true}, limitations: ['Synthetic contract fixture; no #113 implementation or benchmark claim.'],
+  });
+  assert.equal(report.schemaVersion, 2);
+  assert.ok(phases.every(phase => report.phases[phase].status === 'measured'));
+  assert.equal(report.phases.memory.measurements[0].memoryType, 'js-heap');
+  assert.doesNotThrow(() => assertBenchmarkReport(report));
 });

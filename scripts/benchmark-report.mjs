@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 
-const PHASES = ['engine', 'snapshot', 'serialization', 'worker', 'ui', 'layout', 'render', 'startup'];
+const PHASES = ['engine', 'snapshot', 'serialization', 'worker', 'ui', 'layout', 'render', 'startup', 'coldStartup', 'warmStartup', 'bridgeMarshaling', 'fullScenario', 'uiEndToEnd', 'memory'];
+const MEMORY_TYPES = ['js-heap', 'retained-heap', 'process-rss', 'serialized-payload', 'wasm-memory', 'gpu-memory'];
 const schemaPath = fileURLToPath(new URL('../docs/architecture/benchmark-report.schema.json', import.meta.url));
 const benchmarkSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
 const validateReport = new Ajv2020({allErrors: true, strict: false}).compile(benchmarkSchema);
@@ -15,6 +16,20 @@ function gitValue(args) {
   } catch {
     return null;
   }
+}
+
+function memoryTypeFor(metric, unit) {
+  const label = String(metric).toLowerCase();
+  if (!/bytes?/.test(unit) && !label.includes('memory') && !/heap|rss|payload|wasm|gpu/.test(label)) return undefined;
+  if (/gpu/.test(label)) return 'gpu-memory';
+  if (/wasm/.test(label)) return 'wasm-memory';
+  if (/payload|snapshot-json|serialization|transferbuffer/.test(label)) return 'serialized-payload';
+  if (/rss/.test(label)) return 'process-rss';
+  if (/retained|materialized/.test(label)) return 'retained-heap';
+  if (/arraybuffer|external/.test(label)) return undefined;
+  if (/heap|memory/.test(label)) return 'js-heap';
+  if (/bytes?/.test(unit)) return 'serialized-payload';
+  return undefined;
 }
 
 function summarizeNumericObservations(values) {
@@ -48,8 +63,10 @@ function normalizeStatistics(statistics, measurementDetails = {}) {
     max: spreadAlias.max,
     range: spreadAlias.range,
   }) ?? derived?.spread;
+  const rawObservations = statistics.rawObservations ?? (Array.isArray(observations) ? observations : undefined);
   return {
     ...statistics,
+    ...(rawObservations === undefined ? {} : {rawObservations}),
     sampleCount,
     median,
     spread,
@@ -71,7 +88,9 @@ export function benchmarkReport({
 }) {
   const cpu = os.cpus()[0]?.model ?? null;
   const revision = gitValue(['rev-parse', 'HEAD']);
-  const dirty = (gitValue(['status', '--porcelain']) ?? '').length > 0;
+  const status = gitValue(['status', '--porcelain']);
+  if (!revision || status === null) throw new Error('Cannot determine benchmark source revision and dirty state; refusing to emit an ambiguous report.');
+  const dirty = status.length > 0;
   const phaseReports = Object.fromEntries(PHASES.map(phase => [
     phase,
     phases[phase]
@@ -79,6 +98,7 @@ export function benchmarkReport({
         ...phases[phase],
         measurements: phases[phase].measurements.map(item => ({
           ...item,
+          memoryType: item.memoryType ?? memoryTypeFor(item.metric, item.unit),
           statistics: normalizeStatistics(item.statistics, item),
           population: item.population ?? (workload.populations.length === 1
             ? workload.populations[0]
@@ -129,9 +149,14 @@ export function benchmarkReport({
   if (!Array.isArray(timingBoundaries) || timingBoundaries.length === 0) {
     throw new TypeError('Benchmark report requires explicit timingBoundaries for measured phases.');
   }
+  const normalizedTimingBoundaries = timingBoundaries.map(boundary => ({
+    ...boundary,
+    whatIsTimed: boundary.whatIsTimed ?? boundary.timed,
+    whatIsNotTimed: boundary.whatIsNotTimed ?? boundary.notTimed,
+  }));
 
   const report = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     benchmark: {name, source: {revision, dirty}},
     runtime: {node: process.version, platform: process.platform, ...runtime},
     hardware: {
@@ -160,7 +185,7 @@ export function benchmarkReport({
       ...limits,
     },
     phases: phaseReports,
-    timingBoundaries,
+    timingBoundaries: normalizedTimingBoundaries,
     results,
     limitations,
   };
@@ -187,6 +212,11 @@ export function assertBenchmarkReport(report) {
   if (!validateReport(report)) {
     const details = validateReport.errors.map(error => `${error.instancePath || '/'} ${error.message}`).join('; ');
     throw new TypeError(`Invalid benchmark report: ${details}`);
+  }
+  if (report.schemaVersion >= 2 && report.timingBoundaries.some(boundary =>
+    JSON.stringify(boundary.whatIsTimed) !== JSON.stringify(boundary.timed)
+      || JSON.stringify(boundary.whatIsNotTimed) !== JSON.stringify(boundary.notTimed))) {
+    throw new TypeError('Invalid benchmark report: whatIsTimed/whatIsNotTimed must match the timing boundary aliases timed/notTimed.');
   }
   if (report.benchmark.name === 'scenario-scheduler-concurrency') {
     const availableParallelism = report.results.environment.reportedAvailableParallelism;
@@ -241,21 +271,47 @@ export function assertBenchmarkReport(report) {
       if (!unavailable && !summarized) {
         throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} requires sampleCount, median, and min/max/range spread statistics.`);
       }
-      const observations = statistics.rawObservations
-        ?? statistics.observations
-        ?? statistics.observationsMs
-        ?? statistics.values
-        ?? item.observations;
-      if (observations !== undefined) {
-        if (Array.isArray(observations) && observations.length === 0 && unavailable) continue;
-        const observedSummary = summarizeNumericObservations(observations);
-        if (!observedSummary
-          || statistics.sampleCount !== observedSummary.sampleCount
-          || statistics.median !== observedSummary.median
-          || spread?.min !== observedSummary.spread.min
-          || spread?.max !== observedSummary.spread.max
-          || spread?.range !== observedSummary.spread.range) {
-          throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} statistics do not match its raw observations.`);
+      if (typeof item.metric !== 'string' || !item.metric.trim() || typeof item.unit !== 'string' || !item.unit.trim()) {
+        throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} requires a metric and unit.`);
+      }
+      if (item.memoryType !== undefined && !MEMORY_TYPES.includes(item.memoryType)) {
+        throw new TypeError(`Invalid benchmark report: unsupported memory type "${item.memoryType}".`);
+      }
+      const memoryType = memoryTypeFor(item.metric, item.unit);
+      if (report.schemaVersion >= 2 && /bytes?/.test(item.unit) && !item.memoryType) {
+        throw new TypeError(`Invalid benchmark report: byte measurement "${item.metric}" requires a canonical memoryType.`);
+      }
+      if (report.schemaVersion >= 2 && memoryType && item.memoryType !== memoryType) {
+        throw new TypeError(`Invalid benchmark report: memory measurement "${item.metric}" requires memoryType "${memoryType}".`);
+      }
+      if (report.schemaVersion >= 2 && !unavailable) {
+        const observations = statistics.rawObservations ?? statistics.observations ?? statistics.observationsMs
+          ?? statistics.values ?? item.observations ?? item.observationsMs;
+        if (!summarizeNumericObservations(observations)) {
+          throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} must preserve numeric raw observations.`);
+        }
+      }
+      if (!unavailable && /^(ms|millisecond|milliseconds|s|second|seconds)$/.test(item.unit)) {
+        const values = [statistics.median, statistics.spread?.min, statistics.spread?.max,
+          ...(statistics.rawObservations ?? statistics.observations ?? statistics.observationsMs ?? statistics.values ?? item.observations ?? item.observationsMs ?? [])];
+        if (values.some(value => typeof value !== 'number' || !Number.isFinite(value) || value < 0)) {
+          throw new TypeError(`Invalid benchmark report: duration measurement "${item.metric}" must contain finite non-negative values.`);
+        }
+      }
+      const observationSets = [statistics.rawObservations, statistics.observations, statistics.observationsMs,
+        statistics.values, item.observations, item.observationsMs].filter(value => value !== undefined);
+      if (observationSets.length) {
+        for (const observations of observationSets) {
+          if (Array.isArray(observations) && observations.length === 0 && unavailable) continue;
+          const observedSummary = summarizeNumericObservations(observations);
+          if (!observedSummary
+            || statistics.sampleCount !== observedSummary.sampleCount
+            || statistics.median !== observedSummary.median
+            || spread?.min !== observedSummary.spread.min
+            || spread?.max !== observedSummary.spread.max
+            || spread?.range !== observedSummary.spread.range) {
+            throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} statistics do not match its raw observations.`);
+          }
         }
       }
     }
@@ -272,7 +328,7 @@ export function measurement(phase, metric, unit, statistics, details = {}) {
 }
 
 export function summarizeSamples(samples) {
-  if (!samples?.length) return {sampleCount: 0, median: null, spread: null};
+  if (!samples?.length) return {sampleCount: 0, median: null, spread: null, rawObservations: []};
   const sorted = [...samples].sort((a, b) => a - b);
   const median = sorted.length % 2
     ? sorted[(sorted.length - 1) / 2]
@@ -281,5 +337,26 @@ export function summarizeSamples(samples) {
     sampleCount: sorted.length,
     median,
     spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]},
+    rawObservations: [...samples],
   };
+}
+
+export function benchmarkComparison(left, right) {
+  const hardwareIdentity = hardware => {
+    if (!hardware || typeof hardware !== 'object') return null;
+    const {gpuMemoryBytes: _measuredGpuMemory, ...identity} = hardware;
+    return JSON.stringify(identity);
+  };
+  const fields = [
+    ['OS', left?.hardware?.os, right?.hardware?.os],
+    ['architecture', left?.hardware?.architecture, right?.hardware?.architecture],
+    ['CPU', left?.hardware?.cpu, right?.hardware?.cpu],
+    ['hardware metadata', hardwareIdentity(left?.hardware), hardwareIdentity(right?.hardware)],
+    ['runtime', JSON.stringify(left?.runtime), JSON.stringify(right?.runtime)],
+    ['browser', left?.runtime?.browser ?? left?.results?.browser?.product ?? null, right?.runtime?.browser ?? right?.results?.browser?.product ?? null],
+    ['revision', left?.benchmark?.source?.revision, right?.benchmark?.source?.revision],
+  ];
+  const reasons = fields.filter(([, a, b]) => a == null || b == null || a !== b)
+    .map(([name, a, b]) => `${name} differs or is missing (${String(a)} vs ${String(b)})`);
+  return {comparable: reasons.length === 0, reasons};
 }

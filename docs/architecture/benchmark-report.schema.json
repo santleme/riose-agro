@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://riose-agro.local/schemas/benchmark-report-v1.json",
+  "$id": "https://riose-agro.local/schemas/benchmark-report-v2.json",
   "title": "Riose benchmark report",
   "type": "object",
   "required": ["schemaVersion", "benchmark", "runtime", "hardware", "workload", "configuration", "limits", "phases", "timingBoundaries", "results", "limitations"],
   "properties": {
-    "schemaVersion": {"const": 1},
+    "schemaVersion": {"enum": [1, 2]},
     "benchmark": {
       "type": "object",
       "required": ["name", "source"],
@@ -63,7 +63,9 @@
       "required": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup"],
       "properties": {
         "engine": {"$ref": "#/$defs/phase"}, "snapshot": {"$ref": "#/$defs/phase"}, "serialization": {"$ref": "#/$defs/phase"}, "worker": {"$ref": "#/$defs/phase"},
-        "ui": {"$ref": "#/$defs/phase"}, "layout": {"$ref": "#/$defs/phase"}, "render": {"$ref": "#/$defs/phase"}, "startup": {"$ref": "#/$defs/phase"}
+        "ui": {"$ref": "#/$defs/phase"}, "layout": {"$ref": "#/$defs/phase"}, "render": {"$ref": "#/$defs/phase"}, "startup": {"$ref": "#/$defs/phase"},
+        "coldStartup": {"$ref": "#/$defs/phase"}, "warmStartup": {"$ref": "#/$defs/phase"}, "bridgeMarshaling": {"$ref": "#/$defs/phase"},
+        "fullScenario": {"$ref": "#/$defs/phase"}, "uiEndToEnd": {"$ref": "#/$defs/phase"}, "memory": {"$ref": "#/$defs/phase"}
       },
       "additionalProperties": false
     },
@@ -74,9 +76,11 @@
         "type": "object",
         "required": ["phase", "timed", "notTimed"],
         "properties": {
-          "phase": {"enum": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup"]},
+          "phase": {"enum": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup", "coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"]},
           "timed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-          "notTimed": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            "notTimed": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "whatIsTimed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "whatIsNotTimed": {"type": "array", "items": {"type": "string", "minLength": 1}}
         },
         "additionalProperties": false
       }
@@ -85,6 +89,9 @@
     "limitations": {"type": "array", "items": {"type": "string"}}
   },
   "allOf": [{
+    "if": {"properties": {"schemaVersion": {"const": 2}}, "required": ["schemaVersion"]},
+    "then": {"properties": {"phases": {"required": ["coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"]}, "timingBoundaries": {"items": {"required": ["whatIsTimed", "whatIsNotTimed"]}}}}
+  }, {
     "if": {"properties": {"benchmark": {"properties": {"name": {"const": "scenario-scheduler-concurrency"}}, "required": ["name"]}}, "required": ["benchmark"]},
     "then": {"properties": {"results": {"$ref": "#/$defs/scenarioSchedulerResults"}}}
   }],
@@ -132,7 +139,7 @@
     "phase": {
       "type": "object",
       "required": ["status", "measurements"],
-      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
+      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "memoryType": {"enum": ["js-heap", "retained-heap", "process-rss", "serialized-payload", "wasm-memory", "gpu-memory"]}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
       "allOf": [{
         "if": {"properties": {"status": {"const": "measured"}}, "required": ["status"]},
         "then": {

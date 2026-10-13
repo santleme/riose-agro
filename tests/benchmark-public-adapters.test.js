@@ -107,6 +107,8 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
   }));
   assertMeasurements(simulation);
   assert.equal(simulation.configuration.repetitions, 1);
+  assert.equal(simulation.schemaVersion, 2);
+  assert.equal(simulation.phases.memory.measurements[0].memoryType, 'wasm-memory');
   assert.ok(simulation.phases.engine.measurements.every(item => item.statistics.observationsMs?.length === 1));
   assert.ok(simulation.phases.engine.measurements.some(item => item.population === 100_000 && item.scope === 'numeric-kernel'));
 
@@ -120,6 +122,19 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
   assert.equal(history.results.snapshotsIdentical, true);
   assert.ok(history.phases.engine.measurements.every(item => item.observationsMs?.length === 1));
   assert.ok(history.phases.snapshot.measurements.every(item => item.observationsMs?.length === 1));
+});
+
+test('history storage adapter preserves typed memory observations separately from timing', () => {
+  const reports = run('scripts/benchmark-history-storage.mjs', [], {
+    BENCH_REPETITIONS: '2', BENCH_HISTORY_HERDS: '1000', BENCH_HISTORY_HOURS: '24',
+  }).trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(reports.length, 1);
+  const [report] = reports;
+  assertMeasurements(report);
+  assert.equal(report.schemaVersion, 2);
+  assert.ok(report.phases.memory.measurements.some(item => item.memoryType === 'retained-heap'));
+  assert.ok(report.phases.memory.measurements.some(item => item.memoryType === 'process-rss'));
+  assert.ok(report.phases.memory.measurements.every(item => item.statistics.rawObservations.length === 2));
 });
 
 test('graphics evidence and scenario scheduler use the shared benchmark envelope', async () => {
