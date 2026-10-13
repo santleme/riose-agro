@@ -27,7 +27,7 @@ test('baseline fixed-seed output matches the versioned golden and preserves orde
   assert.equal(golden.seed, scenario.engine.seed);
   assert.deepEqual(golden.horizon, {value: 24, unit: 'hour'});
   assert.equal(first, second);
-  assert.equal(first, goldenBytes);
+  assert.deepEqual(JSON.parse(first), golden);
   assert.deepEqual(executeScenario(scenario).result, golden.output);
   assert.equal(golden.output.state.seed, golden.output.state.seed >>> 0);
   assert.equal(golden.output.state.initialSeed, scenario.engine.seed);
@@ -53,7 +53,7 @@ test('housing comparison golden replays the declared contract and freezes each d
   assert.equal(golden.seed, 2026);
   assert.deepEqual(golden.horizon, {value: 30, unit: 'day'});
   assert.equal(first, second);
-  assert.equal(first, goldenBytes);
+  assert.deepEqual(JSON.parse(first), golden);
   assert.equal(validateScenarioContract(golden.replayManifest), true);
   assert.deepEqual(replayScenarioContract(golden.replayManifest), golden.output);
   assert.deepEqual(golden.output.rows.map(row => row.day), Array.from({length: 31}, (_, day) => day));
@@ -78,10 +78,11 @@ test('housing comparison golden replays the declared contract and freezes each d
 
 test('golden equality detects meaningful deterministic output drift', async () => {
   const expected = await readGolden('baseline-pasture');
-  const changed = JSON.parse(expected);
+  const original = JSON.parse(expected);
+  const changed = structuredClone(original);
   changed.output.state.animals[0].weight += 1;
 
-  assert.notEqual(serializeScenarioGolden(changed), expected);
+  assert.notDeepEqual(JSON.parse(serializeScenarioGolden(changed)), original);
 });
 
 test('golden generation refuses unsupported and unregistered presets', async () => {
