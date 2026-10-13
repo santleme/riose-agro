@@ -22,7 +22,7 @@ const PUBLIC_FILES = new Set([
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
-  'index.html', 'style.css', 'app.js', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
+  'index.html', 'style.css', 'app.js', 'engine.js', 'animal-view-state.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
   'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
