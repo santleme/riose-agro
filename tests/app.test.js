@@ -8,6 +8,7 @@ import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PAST
 import {createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,RUN_HISTORY_KEY} from '../src/client/run-history.js';
 import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../src/client/scenario-storage.js';
 import {resolveLotSelection,formatLotArea} from '../src/client/lot-selection.js';
+import {assessLotSimulationReadiness} from '../src/client/lot-simulation-readiness.js';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
 import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js';
 import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
@@ -24,7 +25,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,assessLotSimulationReadiness,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
@@ -169,7 +170,19 @@ test('Worker view reordering preserves selected animal identity and Canvas hit t
   assert.equal(ui.messages.at(-1).animalId,2);
 });
 
-test('connected snapshot selection persists real lot IDs through the existing comparison and return to farm',async()=>{
+test('observational lot snapshots fail closed at the FarmEngine comparison gate',async()=>{
+  const snapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
+  const readiness=assessLotSimulationReadiness(snapshot,snapshot.lots[0]);
+  assert.equal(readiness.status,'blocked');
+  assert.equal(readiness.snapshotId,snapshot.snapshotId);
+  assert.deepEqual(readiness.animalIds,['eartag-242']);
+  assert.deepEqual(readiness.blockers.map(item=>item.code),[
+    'NOT_FARM_BASELINE','SNAPSHOT_NOT_ELIGIBLE','NO_REVIEWED_ENGINE_ADAPTER','NO_OBSERVED_INTERVENTION'
+  ]);
+  assert.match(readiness.blockers.at(-1).message,/ADG observado/);
+});
+
+test('connected observed lot stays descriptive and is never attributed to the demonstrative comparison',async()=>{
   const ui=await openFarm(),snapshot=new FarmEngine(702,8).snapshot();
   ui.deliver('state',snapshot);
   const farmSnapshot=JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json',import.meta.url),'utf8'));
@@ -180,19 +193,14 @@ test('connected snapshot selection persists real lot IDs through the existing co
   for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(snapshot.animals.every(animal=>animal.patch!==0||Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
   assert.ok(point,'fixture leaves a tappable area in the paddock');
   const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
-  assert.equal(ui.elements.get('lot-compare').disabled,false);
+  assert.equal(ui.elements.get('lot-compare').disabled,true);
+  assert.match(ui.elements.get('lot-compare').textContent,/bloqueada/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/Não informada/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/não definem uma intervenção pareada/);
   assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:farmSnapshot.lots[0].id});
-  ui.elements.get('lot-compare').onclick();
-  assert.equal(ui.messages.at(-1).type,'compareConfigured');
-  assert.deepEqual(ui.messages.at(-1).snapshot,snapshot,'comparison receives its frozen simulator snapshot unchanged');
-  const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(snapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
-  assert.match(ui.elements.get('lot-comparison-context').textContent,/Lote real associado/);
-  const association=JSON.parse(ui.storage.get('agroville-last-lot-comparison-v1'));
-  assert.deepEqual(association.context.animalIds,['eartag-242']);
-  ui.elements.get('comparison').close();
-  assert.equal(JSON.parse(ui.storage.get('agroville-farm-selection-v1')).lotId,farmSnapshot.lots[0].id,'closing results returns to the same farm and lot');
+  assert.equal(ui.messages.some(message=>message.type==='compareConfigured'),false);
+  assert.equal(ui.storage.has('agroville-last-lot-comparison-v1'),false);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
 });
 
@@ -219,8 +227,12 @@ test('lot metrics, environmental edits, THI and linked selection persist through
   assert.match(ui.elements.get('environment-thi').textContent,/75,0/);
   const persisted=JSON.parse(ui.storage.get('agroville-environment-scenario-v1'));
   assert.equal(persisted.baseline.temperatureC.value,24);assert.equal(persisted.current.temperatureC,'26.8');
-  ui.elements.get('lot-compare').onclick();assert.deepEqual(ui.messages.at(-1).snapshot,simulatorSnapshot);
+  assert.equal(ui.elements.get('lot-compare').disabled,true,'connected observational data cannot silently become the demonstrative engine state');
+  ui.elements.get('compare').onclick();ui.deliver('state',simulatorSnapshot);
+  assert.deepEqual(ui.messages.at(-1).snapshot,simulatorSnapshot);
   const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(simulatorSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
+  assert.equal(ui.elements.get('lot-comparison-context').hidden,true);
+  assert.equal(ui.storage.has('agroville-last-lot-comparison-v1'),false);
   assert.match(ui.elements.get('comparison-variables').innerHTML,/24 °C/);
   assert.match(ui.elements.get('comparison-variables').innerHTML,/26\.8 °C/);
   assert.match(ui.elements.get('comparison-thermal').innerHTML,/75,0/);
