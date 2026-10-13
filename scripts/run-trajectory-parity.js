@@ -51,6 +51,14 @@ function hourLabel(elapsedHours, daily) {
     : `hour-${elapsedHours}`;
 }
 
+function rerunDivergence({scenario, seed, checkpoint, original, rerun, source}) {
+  const comparison = compareTrajectoryCheckpoint({
+    scenario, seed, checkpoint, previousMatchingCheckpoint: null,
+    jsValue: original, rustValue: rerun,
+  });
+  return comparison.firstDivergence ? {...comparison.firstDivergence, source} : null;
+}
+
 function saveTrajectory(name, trajectory) {
   const bytes = gzipSync(Buffer.from(canonicalTrajectoryJson(trajectory), 'utf8'), {mtime: 0});
   const path = resolve(artifactDirectory, `${name}.json.gz`);
@@ -65,21 +73,29 @@ async function main() {
   const jsIdentity = {engineVersion: SCENARIO_ENGINE_VERSION, implementation: 'src/client/engine.js', nodeVersion: process.version};
   const runMetadata = {generatedAt: new Date().toISOString()};
   let firstDivergence = null;
+  let firstBaselineDivergence = null;
+  let firstHousingDivergence = null;
   let comparedFieldCount = 0;
   let checkpointCount = 0;
   let rustIdentity;
   let firstHousingRowDivergence = null;
+  let firstBaselineRerunDivergence = null;
+  let firstHousingRerunDivergence = null;
   const housingArmDivergences = {baseline: null, intervention: null};
   let housingRowComparedFieldCount = 0;
 
   const baselineEngine = new FarmEngine(baselineGolden.seed, baselineGolden.animalCount);
   baselineEngine.configure(baselineGolden.configuration);
+  const baselineRerunEngine = new FarmEngine(baselineGolden.seed, baselineGolden.animalCount);
+  baselineRerunEngine.configure(baselineGolden.configuration);
   const baselineJs = [];
   const baselineRust = [];
   let previousBaselineMatch = null;
   for (let elapsedHours = 1; elapsedHours <= baselineCheckpoints; elapsedHours += 1) {
     baselineEngine.tick(1);
     const jsValue = {state: baselineEngine.snapshot(), metrics: baselineEngine.metrics()};
+    baselineRerunEngine.tick(1);
+    const jsRerunValue = {state: baselineRerunEngine.snapshot(), metrics: baselineRerunEngine.metrics()};
     const request = {
       type: 'baseline', version: 1, seed: baselineGolden.seed,
       animalCount: baselineGolden.animalCount,
@@ -90,6 +106,20 @@ async function main() {
     const rustResult = record.nativeResult.result;
     const rustValue = {state: rustResult.snapshot, metrics: rustResult.metrics};
     rustIdentity = record.nativeResult.engine;
+    const rerunJsDivergence = rerunDivergence({
+      scenario: 'baseline-pasture', seed: baselineGolden.seed,
+      checkpoint: `rerun-javascript-${elapsedHours}`, original: jsValue,
+      rerun: jsRerunValue, source: 'javascript',
+    });
+    const {record: rerunRecord} = runNative(request);
+    const rerunRust = rerunRecord.nativeResult.result;
+    const rerunRustDivergence = rerunDivergence({
+      scenario: 'baseline-pasture', seed: baselineGolden.seed,
+      checkpoint: `rerun-native-${elapsedHours}`, original: rustValue,
+      rerun: {state: rerunRust.snapshot, metrics: rerunRust.metrics}, source: 'native',
+    });
+    firstBaselineRerunDivergence ??= rerunJsDivergence ?? rerunRustDivergence;
+    firstDivergence ??= firstBaselineRerunDivergence;
     const checkpoint = hourLabel(elapsedHours, false);
     const result = compareTrajectoryCheckpoint({
       scenario: 'baseline-pasture', seed: baselineGolden.seed, checkpoint,
@@ -98,7 +128,10 @@ async function main() {
     comparedFieldCount += result.comparedFieldCount;
     checkpointCount += 1;
     if (!result.firstDivergence) previousBaselineMatch = checkpoint;
-    else firstDivergence ??= result.firstDivergence;
+    else {
+      firstBaselineDivergence ??= result.firstDivergence;
+      firstDivergence ??= result.firstDivergence;
+    }
     baselineJs.push({checkpoint, elapsedHours, value: jsValue});
     baselineRust.push({checkpoint, elapsedHours, inputSha256: record.inputSha256, value: rustValue});
   }
@@ -120,8 +153,14 @@ async function main() {
     baseline: FarmEngine.from(housingInitialSnapshot),
     intervention: FarmEngine.from(housingInitialSnapshot),
   };
+  const housingRerunEngines = {
+    baseline: FarmEngine.from(housingInitialSnapshot),
+    intervention: FarmEngine.from(housingInitialSnapshot),
+  };
   housingJSEngines.baseline.configure({housing: 'pasture'});
   housingJSEngines.intervention.configure({housing: 'barn'});
+  housingRerunEngines.baseline.configure({housing: 'pasture'});
+  housingRerunEngines.intervention.configure({housing: 'barn'});
   const housingJSTrajectories = {baseline: [], intervention: []};
   const housingRustTrajectories = {baseline: [], intervention: []};
   const previousHousingMatches = {baseline: null, intervention: null};
@@ -135,6 +174,9 @@ async function main() {
       const jsEngine = housingJSEngines[arm];
       jsEngine.tick(1);
       const jsValue = {state: jsEngine.snapshot(), metrics: jsEngine.metrics()};
+      const jsRerunEngine = housingRerunEngines[arm];
+      jsRerunEngine.tick(1);
+      const jsRerunValue = {state: jsRerunEngine.snapshot(), metrics: jsRerunEngine.metrics()};
       const request = {
         type: 'baseline', version: 1, seed: housingGolden.seed,
         animalCount: housingGolden.animalCount,
@@ -145,6 +187,20 @@ async function main() {
       const rustResult = record.nativeResult.result;
       const rustValue = {state: rustResult.snapshot, metrics: rustResult.metrics};
       rustIdentity = record.nativeResult.engine;
+      const rerunJsDivergence = rerunDivergence({
+        scenario: 'housing-comparison', seed: housingGolden.seed,
+        checkpoint: `rerun-javascript-${arm}-${elapsedHours}`, original: jsValue,
+        rerun: jsRerunValue, source: 'javascript',
+      });
+      const {record: rerunRecord} = runNative(request);
+      const rerunRust = rerunRecord.nativeResult.result;
+      const rerunRustDivergence = rerunDivergence({
+        scenario: 'housing-comparison', seed: housingGolden.seed,
+        checkpoint: `rerun-native-${arm}-${elapsedHours}`, original: rustValue,
+        rerun: {state: rerunRust.snapshot, metrics: rerunRust.metrics}, source: 'native',
+      });
+      firstHousingRerunDivergence ??= rerunJsDivergence ?? rerunRustDivergence;
+      firstDivergence ??= firstHousingRerunDivergence;
       const checkpoint = hourLabel(elapsedHours, true);
       const result = compareTrajectoryCheckpoint({
         scenario: 'housing-comparison', seed: housingGolden.seed,
@@ -156,6 +212,7 @@ async function main() {
       if (!result.firstDivergence) previousHousingMatches[arm] = `${arm}-${checkpoint}`;
       else {
         housingArmDivergences[arm] ??= result.firstDivergence;
+        firstHousingDivergence ??= result.firstDivergence;
         firstDivergence ??= result.firstDivergence;
       }
       housingJSTrajectories[arm].push({checkpoint, elapsedHours, value: jsValue});
@@ -172,6 +229,19 @@ async function main() {
   rustIdentity = housingRecord.nativeResult.engine;
   const nativeComparison = housingRecord.nativeResult.result.comparison;
   const jsComparison = housingExecution.result;
+  const jsComparisonRerun = runScenarioPreset('housing-comparison').result;
+  firstHousingRerunDivergence ??= rerunDivergence({
+    scenario: 'housing-comparison', seed: housingGolden.seed,
+    checkpoint: 'rerun-javascript-comparison', original: jsComparison,
+    rerun: jsComparisonRerun, source: 'javascript',
+  });
+  const {record: rerunHousingRecord} = runNative(housingRequest);
+  firstHousingRerunDivergence ??= rerunDivergence({
+    scenario: 'housing-comparison', seed: housingGolden.seed,
+    checkpoint: 'rerun-native-comparison', original: nativeComparison,
+    rerun: rerunHousingRecord.nativeResult.result.comparison, source: 'native',
+  });
+  firstDivergence ??= firstHousingRerunDivergence;
   const comparisonSummary = {...jsComparison};
   delete comparisonSummary.rows;
   const nativeSummary = {...nativeComparison};
@@ -182,7 +252,10 @@ async function main() {
     jsValue: comparisonSummary, rustValue: nativeSummary,
   });
   comparedFieldCount += summaryResult.comparedFieldCount;
-  if (summaryResult.firstDivergence) firstDivergence ??= summaryResult.firstDivergence;
+  if (summaryResult.firstDivergence) {
+    firstHousingDivergence ??= summaryResult.firstDivergence;
+    firstDivergence ??= summaryResult.firstDivergence;
+  }
 
   for (let day = 0; day <= housingDays; day += 1) {
     const result = compareTrajectoryCheckpoint({
@@ -196,6 +269,7 @@ async function main() {
     checkpointCount += 1;
     if (result.firstDivergence) {
       firstHousingRowDivergence ??= result.firstDivergence;
+      firstHousingDivergence ??= result.firstDivergence;
       firstDivergence ??= result.firstDivergence;
     }
   }
@@ -227,8 +301,10 @@ async function main() {
     }));
   }
 
-  const baselinePass = !firstDivergence || firstDivergence.scenario !== 'baseline-pasture';
-  const housingPass = !firstDivergence || firstDivergence.scenario !== 'housing-comparison';
+  const baselinePass = firstBaselineDivergence === null && firstBaselineRerunDivergence === null;
+  const housingPass = firstHousingDivergence === null && firstHousingRerunDivergence === null;
+  const baselineDivergence = firstBaselineDivergence ?? firstBaselineRerunDivergence;
+  const housingDivergence = firstHousingDivergence ?? firstHousingRerunDivergence;
   const report = {
     format: 'riose-js-rust-trajectory-parity', formatVersion: 1,
     scenario: 'baseline-pasture', seed: 417,
@@ -241,15 +317,15 @@ async function main() {
     }).comparedFieldCount, 0),
     parityResult: baselinePass ? 'PASS' : 'FAIL',
     checks: {
-      rngParity: baselinePass ? 'PASS' : firstDivergence.divergenceClass === 'RNG_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      animalOrdering: baselinePass ? 'PASS' : firstDivergence.divergenceClass === 'ORDER_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      eventOrdering: baselinePass ? 'PASS' : firstDivergence.divergenceClass === 'EVENT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      snapshotShape: baselinePass ? 'PASS' : firstDivergence.divergenceClass === 'SNAPSHOT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      metricsParity: baselinePass ? 'PASS' : firstDivergence.divergenceClass === 'NUMERIC_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      rngParity: baselinePass ? 'PASS' : baselineDivergence.divergenceClass === 'RNG_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      animalOrdering: baselinePass ? 'PASS' : baselineDivergence.divergenceClass === 'ORDER_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      eventOrdering: baselinePass ? 'PASS' : baselineDivergence.divergenceClass === 'EVENT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      snapshotShape: baselinePass ? 'PASS' : baselineDivergence.divergenceClass === 'SNAPSHOT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      metricsParity: baselinePass ? 'PASS' : baselineDivergence.divergenceClass === 'NUMERIC_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
       toleranceIntroduced: false,
-      deterministicRerun: 'PASS',
+      deterministicRerun: firstBaselineRerunDivergence ? 'FAIL' : 'PASS',
     },
-    firstDivergence: firstDivergence?.scenario === 'baseline-pasture' ? firstDivergence : null,
+    firstDivergence: baselineDivergence,
     artifactHashes: traceArtifacts.slice(0, 2),
     metadata: runMetadata,
   };
@@ -272,15 +348,15 @@ async function main() {
     baselineArmParity: housingArmDivergences.baseline ? 'FAIL' : 'PASS',
     interventionArmParity: housingArmDivergences.intervention ? 'FAIL' : 'PASS',
     checks: {
-      rngParity: housingPass ? 'PASS' : firstDivergence.divergenceClass === 'RNG_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      animalOrdering: housingPass ? 'PASS' : firstDivergence.divergenceClass === 'ORDER_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      eventOrdering: housingPass ? 'PASS' : firstDivergence.divergenceClass === 'EVENT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      snapshotShape: housingPass ? 'PASS' : firstDivergence.divergenceClass === 'SNAPSHOT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
-      metricsParity: housingPass ? 'PASS' : firstDivergence.divergenceClass === 'NUMERIC_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      rngParity: housingPass ? 'PASS' : housingDivergence.divergenceClass === 'RNG_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      animalOrdering: housingPass ? 'PASS' : housingDivergence.divergenceClass === 'ORDER_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      eventOrdering: housingPass ? 'PASS' : housingDivergence.divergenceClass === 'EVENT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      snapshotShape: housingPass ? 'PASS' : housingDivergence.divergenceClass === 'SNAPSHOT_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
+      metricsParity: housingPass ? 'PASS' : housingDivergence.divergenceClass === 'NUMERIC_DIVERGENCE' ? 'FAIL' : 'NOT_COMPLETE',
       toleranceIntroduced: false,
-      deterministicRerun: 'PASS',
+      deterministicRerun: firstHousingRerunDivergence ? 'FAIL' : 'PASS',
     },
-    firstDivergence: firstDivergence?.scenario === 'housing-comparison' ? firstDivergence : null,
+    firstDivergence: housingDivergence,
     rowsParity: firstHousingRowDivergence ? 'FAIL' : 'PASS',
     nativeComparisonInputSha256: housingRecord.inputSha256,
     artifactHashes: traceArtifacts.slice(2),
