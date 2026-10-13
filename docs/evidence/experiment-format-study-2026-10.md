@@ -16,12 +16,12 @@ O lote ocupa 44,273 bytes como JSON e 44,271 bytes como JSONL; após gzip nível
 
 | Formato | Gravação (ms) | Leitura completa (ms) | Leitura seletiva (ms) | Bytes gzip nível 6 |
 | --- | ---: | ---: | ---: | ---: |
-| JSON | 0.468 (0.378–2.157) | 0.582 (0.474–0.803) | 0.475 (0.417–0.551) | 5,131 |
-| JSONL | 0.528 (0.470–0.623) | 0.805 (0.666–1.023) | 0.605 (0.514–0.823) | 5,131 |
+| JSON | 0.569 (0.447–1.797) | 0.669 (0.472–1.288) | 0.572 (0.489–0.747) | 5,131 |
+| JSONL | 0.718 (0.511–0.873) | 0.906 (0.830–2.044) | 0.712 (0.549–0.936) | 5,131 |
 
-JSON foi cerca de 11% mais rápido para escrever, 28% para leitura completa e 21% para leitura seletiva nesta coleta. Tamanho comprimido empatou. Os tempos variam entre execuções e não alteram a decisão de formato. Esses números locais não justificam migração de formato nem adoção de Parquet.
+JSON foi cerca de 21% mais rápido para escrever, 26% para leitura completa e 20% para leitura seletiva nesta coleta. Tamanho comprimido empatou. Os tempos variam entre execuções e não alteram a decisão de formato. Esses números locais não justificam migração de formato nem adoção de Parquet.
 
-A medição foi reexecutada em Node 20.20.2, Python 3.12.3, Linux x64, CPU AMD Ryzen 7 7700X, com a revisão `7b0b0770a5f7a3f7bc9c6be03d73e78c2bc2ddd4` e `dirty: true` porque este bloco estava em edição. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
+A medição foi reexecutada em Node 20.20.2, Python 3.12.3, Linux x64, CPU AMD Ryzen 7 7700X, com a revisão `8331dcf1f04d95ab6778228154cd8ddeb56288b7` e `dirty: false`. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
 
 ## Limitações
 
