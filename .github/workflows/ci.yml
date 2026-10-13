@@ -101,3 +101,8 @@ jobs:
 
       - name: Build native Rust workspace
         run: cargo build --locked --workspace --release
+
+      - name: Measure native CLI and scenario timings
+        env:
+          NATIVE_CLI_PERF_RUNNER: ubuntu-24.04
+        run: cargo run --locked --release -p riose-core --example native_cli_performance
