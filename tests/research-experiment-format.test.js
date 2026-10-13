@@ -44,11 +44,18 @@ test('format study round-trips the batch manifest/result contract with units and
       assert.equal(sizeMetric.statistics.rawObservations.length, 1);
     }
   }
-  const parquetAvailable = report.results.toolchain.pyarrowAvailable || report.results.toolchain.fastparquetAvailable;
+  const pythonFormatPackageNames = ['pyarrow', 'fastparquet', 'duckdb', 'polars'];
+  const pythonPackages = pythonFormatPackageNames.map(name => report.results.toolchain[name === 'duckdb' ? 'pythonDuckdb' : name === 'polars' ? 'pythonPolars' : name]);
+  const nodeFormatPackages = Object.values(report.results.toolchain.nodePackages);
+  const parquetAvailable = pythonPackages.some(pkg => pkg.available) || nodeFormatPackages.some(pkg => pkg.available);
+  assert.equal(report.results.toolchain.parquetEnginesAvailable, parquetAvailable);
   assert.equal(report.results.toolchain.parquetMeasurement, parquetAvailable ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed');
-  for (const packageName of ['pyarrow', 'fastparquet']) {
-    const packageInfo = report.results.toolchain[packageName];
+  for (const packageInfo of pythonPackages) {
     assert.equal(packageInfo.available, Boolean(packageInfo.version));
     assert.equal(packageInfo.available, packageInfo.installedPackageBytes !== null);
   }
+  for (const packageInfo of nodeFormatPackages) {
+    assert.equal(packageInfo.available, typeof packageInfo.resolvedEntry === 'string');
+  }
+  assert.equal(report.runtime.nodeParquetPackagesAvailable, nodeFormatPackages.some(pkg => pkg.available));
 });

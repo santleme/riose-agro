@@ -2,7 +2,7 @@
 
 ## Decisão
 
-Manter JSON como formato de intercâmbio e aceitar JSONL para append/streaming quando isso simplificar o fluxo. **Não adotar Parquet agora.** O toolchain Python existente não tem `pyarrow` nem `fastparquet`; adicionar uma dependência binária sem demonstrar benefício não atende ao gate do roadmap.
+Manter JSON como formato de intercâmbio e aceitar JSONL para append/streaming quando isso simplificar o fluxo. **Não adotar Parquet agora.** O toolchain verificado não tem `pyarrow`, `fastparquet`, DuckDB ou Polars em Python, nem `parquetjs`, `parquetjs-lite`, DuckDB Node, `hyparquet` ou Apache Arrow no Node. Adicionar uma dependência binária sem demonstrar benefício não atende ao gate do roadmap.
 
 Reconsiderar Parquet se medições repetidas com a carga representativa mostrarem pelo menos 2× de benefício ponta a ponta na consulta dominante, ou se houver necessidade real de leitura seletiva de colunas em volumes onde parsear registros inteiros seja material, e o footprint/portabilidade da dependência forem aceitáveis.
 
@@ -16,17 +16,17 @@ O lote ocupa 44,273 bytes como JSON e 44,271 bytes como JSONL; após gzip nível
 
 | Formato | Gravação (ms) | Leitura completa (ms) | Leitura seletiva (ms) | Bytes gzip nível 6 |
 | --- | ---: | ---: | ---: | ---: |
-| JSON | 0.448 (0.360–0.629) | 0.496 (0.425–0.635) | 0.403 (0.325–0.576) | 5,131 |
-| JSONL | 0.509 (0.399–0.696) | 0.793 (0.654–1.041) | 0.642 (0.536–0.915) | 5,131 |
+| JSON | 0.468 (0.378–2.157) | 0.582 (0.474–0.803) | 0.475 (0.417–0.551) | 5,131 |
+| JSONL | 0.528 (0.470–0.623) | 0.805 (0.666–1.023) | 0.605 (0.514–0.823) | 5,131 |
 
-JSON foi cerca de 12% mais rápido para escrever e também teve leitura completa e seletiva mais rápida nesta coleta. Tamanho comprimido empatou. Os tempos variam entre execuções e não alteram a decisão de formato. Esses números locais não justificam migração de formato nem adoção de Parquet.
+JSON foi cerca de 11% mais rápido para escrever, 28% para leitura completa e 21% para leitura seletiva nesta coleta. Tamanho comprimido empatou. Os tempos variam entre execuções e não alteram a decisão de formato. Esses números locais não justificam migração de formato nem adoção de Parquet.
 
-A evidência foi capturada em `b26b45bab1a8bac7d73670a4848d1873b5d93e43` com `dirty: false`. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
+A medição foi reexecutada em Node 20.20.2, Python 3.12.3, Linux x64, CPU AMD Ryzen 7 7700X, com a revisão `7b0b0770a5f7a3f7bc9c6be03d73e78c2bc2ddd4` e `dirty: true` porque este bloco estava em edição. O relatório completo com dados brutos por repetição, amostras de memória, manifest digest e limitações está em [`experiment-format-study-2026-10.json`](experiment-format-study-2026-10.json). Reexecute com `npm run research:experiment-format`; `FORMAT_STUDY_RECORDS` e `FORMAT_STUDY_REPETITIONS` ajustam a carga.
 
 ## Limitações
 
 - Uma fixture fixa foi expandida em lote determinístico de 25 registros; isto não representa lotes futuros de milhões de registros.
-- Parquet não foi medido: nenhuma biblioteca Arrow/Parquet estava instalada e o estudo não adicionou dependências. Footprint e portabilidade binária continuam desconhecidos.
+- Parquet não foi medido porque nenhuma biblioteca compatível estava instalada; o estudo não adicionou dependências. Footprint e portabilidade binária de uma implementação permanecem desconhecidos e exigem medição se o gate justificar um protótipo.
 - As medidas de memória são amostras de `process.memoryUsage()` antes/depois de cada operação; RSS é do processo e não representa pico isolado por formato.
 - Tempos e memória são específicos deste host, sem pretensão de representar produção.
 - Uma mudança substancial no contrato de resultados de #103/#104 deve reabrir o estudo.

@@ -5,12 +5,23 @@ import {createReadStream} from 'node:fs';
 import {mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {spawnSync} from 'node:child_process';
 import {createInterface} from 'node:readline';
+import {createRequire} from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {executeScenario} from './run-scenarios.js';
+
+const require = createRequire(import.meta.url);
+const nodeFormatPackages = ['parquetjs', 'parquetjs-lite', '@duckdb/node-api', 'duckdb', 'hyparquet', 'apache-arrow'];
+const nodeFormatToolchain = Object.fromEntries(nodeFormatPackages.map(name => {
+  try {
+    return [name, {available: true, resolvedEntry: require.resolve(name)}];
+  } catch {
+    return [name, {available: false, resolvedEntry: null}];
+  }
+}));
 
 const repetitions = Number(process.env.FORMAT_STUDY_REPETITIONS ?? 9);
 const recordCount = Number(process.env.FORMAT_STUDY_RECORDS ?? 25);
@@ -83,7 +94,7 @@ const records = manifest.runs.map((run, index) => ({run, result: experimentRuns[
 const pythonProbe = spawnSync('python3', ['-c', String.raw`
 import importlib.metadata as metadata, importlib.util, json, os, platform, sys
 packages = {}
-for name in ('pyarrow', 'fastparquet'):
+for name in ('pyarrow', 'fastparquet', 'duckdb', 'polars'):
     available = importlib.util.find_spec(name) is not None
     size = None
     version = None
@@ -208,7 +219,7 @@ for (const {run, result} of records) {
     generatedAt: new Date().toISOString(),
     decision: {
       default: 'JSON/JSONL',
-      parquet: 'no-go for adoption in this study: neither pyarrow nor fastparquet is installed in the existing Python toolchain; no dependency was added.',
+      parquet: 'no-go for adoption in this study: no Python Arrow/Parquet engine or Node Parquet/DuckDB package is installed in the existing toolchain; no dependency was added.',
       threshold: 'Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable.',
     },
     workload: {
@@ -232,8 +243,12 @@ for (const {run, result} of records) {
       fastparquetAvailable: pythonToolchain.packages.fastparquet.available,
       pyarrow: pythonToolchain.packages.pyarrow,
       fastparquet: pythonToolchain.packages.fastparquet,
-      parquetMeasurement: pythonToolchain.packages.pyarrow.available || pythonToolchain.packages.fastparquet.available ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed',
-      note: 'Package installation footprint reflects only installed Python distributions; transitive dependencies and portability across target environments require a separate packaging study.',
+      pythonDuckdb: pythonToolchain.packages.duckdb,
+      pythonPolars: pythonToolchain.packages.polars,
+      nodePackages: nodeFormatToolchain,
+      parquetEnginesAvailable: Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available),
+      parquetMeasurement: Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available) ? 'available-library-not-yet-benchmarked' : 'skipped-no-library-installed',
+      note: 'Installed package bytes are reported only for Python distributions that exist; Node packages are checked by resolution only. Transitive dependency footprint and portability across target environments require a separate packaging study.',
     },
     storage: {jsonBytes, jsonlBytes, jsonGzipLevel6Bytes: jsonGzipBytes, jsonlGzipLevel6Bytes: jsonlGzipBytes},
     measurements: results,
@@ -242,7 +257,7 @@ for (const {run, result} of records) {
     limitations: [
       'One fixed scenario fixture is expanded into a deterministic 25-record (by default) batch; it is a representative experiment-runner record shape, not a survey of every future output contract.',
       'JSONL and JSON contain identical full records; no fields, units, nulls, provenance or failures are dropped.',
-      `No Parquet results are reported because ${pythonToolchain.packages.pyarrow.available || pythonToolchain.packages.fastparquet.available ? 'an installed library requires a separately validated Parquet adapter before comparison' : 'no Arrow/Parquet library is present in the current toolchain'}; no network install or new dependency was introduced.`,
+      `No Parquet results are reported because ${Object.values(pythonToolchain.packages).some(pkg => pkg.available) || Object.values(nodeFormatToolchain).some(pkg => pkg.available) ? 'an installed library requires a separately validated Parquet adapter before comparison' : 'no Arrow/Parquet or DuckDB library is present in the current Python or Node toolchain'}; no network install or new dependency was introduced.`,
       'Timing is specific to this host and includes local file IO; medians/spread are not cross-host product thresholds.',
     ],
   };
@@ -278,6 +293,9 @@ for (const {run, result} of records) {
       python: pythonToolchain.version,
       pyarrowAvailable: pythonToolchain.packages.pyarrow.available,
       fastparquetAvailable: pythonToolchain.packages.fastparquet.available,
+      pythonDuckdbAvailable: pythonToolchain.packages.duckdb.available,
+      pythonPolarsAvailable: pythonToolchain.packages.polars.available,
+      nodeParquetPackagesAvailable: Object.values(nodeFormatToolchain).some(pkg => pkg.available),
     },
     workload: {
       seed: `${fixture.engine.seed}-${fixture.engine.seed + recordCount - 1} (per-record deterministic seed range)`,
