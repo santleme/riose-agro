@@ -284,7 +284,7 @@ const report=benchmarkReport({
     {phase:'worker',timed:['Node structuredClone transfer-list ownership handoff of preallocated numeric input and output buffers.'],notTimed:['Worker scheduling, message queue latency, browser postMessage and computation.']},
     {phase:'serialization',timed:['JSON.stringify of the same AoS output projection.'],notTimed:['Disk I/O and parsing.']},
   ],
-  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,warmupIterations:8,iterationsPerProfile:'max(100, ceil(1000000 / animalCount))',attributedUrl:import.meta.url,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
+  results:{rows,allocationProfiling:{method:'V8 HeapProfiler.startSampling/stopSampling',samplingIntervalBytes:allocationSamplingIntervalBytes,warmupIterations:1000,iterationsPerProfile:'max(100, ceil(1000000 / animalCount))',attributedUrl:import.meta.url,profileTimingIncludedInBenchmarkMeasurements:false,estimatedAllocatedBytesAreStatistical:true},codeComplexity:{productionRepresentation:'object per animal',prototypeRepresentation:'six aligned numeric buffers plus stable ID index',additionalPasses:'gather, update, scatter',separateSnapshotMaterializer:true}},
   limitations,
 });
 report.study='animal-layout-aos-vs-aligned-columns';

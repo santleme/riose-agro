@@ -22,7 +22,7 @@ export async function sampleAllocations(operation, iterations, samplingIntervalB
 
   // Warm this operation, then collect prior garbage before attributing the sampled pass.
   globalThis.gc?.();
-  const warmupIterations = 8;
+  const warmupIterations = 1_000;
   for (let index = 0; index < warmupIterations; index++) operation();
   globalThis.gc?.();
   const session = new Session();

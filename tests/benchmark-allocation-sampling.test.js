@@ -10,7 +10,7 @@ test('allocation sampling reports sampled sites without measuring operation time
 
   assert.equal(retained.length, 1_000);
   assert.equal(profile.method, 'v8-heap-profiler-sampling');
-  assert.equal(profile.warmupIterations, 8);
+  assert.equal(profile.warmupIterations, 1_000);
   assert.equal(profile.iterations, 40);
   assert.equal(profile.samplingIntervalBytes, 512);
   assert.ok(profile.allocationSampleCount > 0);
