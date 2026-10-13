@@ -1,0 +1,81 @@
+{
+  "format": "riose-native-configured-integration-v1",
+  "node": "v20.20.2",
+  "runner": "target/release/riose-run",
+  "workload": {
+    "factors": [
+      "diet",
+      "housing",
+      "weather",
+      "supplement"
+    ],
+    "source": "frozen configured-comparison v2 fixture"
+  },
+  "measurement": {
+    "samplesPerFactor": 1,
+    "latencyIncludes": "Worker request/reply, local HTTP route, native process startup, stdin/stdout JSON and process exit",
+    "p95": "not reported; one smoke sample per factor"
+  },
+  "rows": [
+    {
+      "factor": "diet",
+      "days": 2,
+      "comparisonRows": 3,
+      "tolerance": 1e-10,
+      "maxAbsDifferenceVsRustFixture": 0,
+      "maxAbsDifferenceVsJavaScript": 0,
+      "workerToNativeRoundTripMs": 9.051,
+      "replay": "passed",
+      "historyCompatibility": "passed",
+      "historyExecutor": "local-rust",
+      "buildId": "riose-core@0.1.0",
+      "runId": "sha256:75c1c7ea447454251da9325e49cd1939a34440bbf60b6d372e51acd3186540f3",
+      "inputSha256": "sha256:432a076b9d3d3de2a6a57faae9185425430071b444e6c5beaee4f00a848ed3b2"
+    },
+    {
+      "factor": "housing",
+      "days": 2,
+      "comparisonRows": 3,
+      "tolerance": 1e-10,
+      "maxAbsDifferenceVsRustFixture": 0,
+      "maxAbsDifferenceVsJavaScript": 0,
+      "workerToNativeRoundTripMs": 4.336,
+      "replay": "passed",
+      "historyCompatibility": "passed",
+      "historyExecutor": "local-rust",
+      "buildId": "riose-core@0.1.0",
+      "runId": "sha256:4a43453c8838b4bfdf6dd023de25e7d4de4d6fac9f99f9811d8c19112f7bd17e",
+      "inputSha256": "sha256:bfb1bc5f84a76f25899cf80a63d18712ba6743d6ef26e3751298791c0ded1623"
+    },
+    {
+      "factor": "weather",
+      "days": 2,
+      "comparisonRows": 3,
+      "tolerance": 1e-10,
+      "maxAbsDifferenceVsRustFixture": 0,
+      "maxAbsDifferenceVsJavaScript": 0,
+      "workerToNativeRoundTripMs": 4.252,
+      "replay": "passed",
+      "historyCompatibility": "passed",
+      "historyExecutor": "local-rust",
+      "buildId": "riose-core@0.1.0",
+      "runId": "sha256:d2961fe88013670ddfd998219315ddc4048fa02d7f69c5849fefb3ebb62ec72b",
+      "inputSha256": "sha256:966b5ba64214bb96119fee0885e794c8634ae51aae1d7ef6090229f361433d8f"
+    },
+    {
+      "factor": "supplement",
+      "days": 2,
+      "comparisonRows": 3,
+      "tolerance": 1e-10,
+      "maxAbsDifferenceVsRustFixture": 0,
+      "maxAbsDifferenceVsJavaScript": 0,
+      "workerToNativeRoundTripMs": 3.936,
+      "replay": "passed",
+      "historyCompatibility": "passed",
+      "historyExecutor": "local-rust",
+      "buildId": "riose-core@0.1.0",
+      "runId": "sha256:958eeb6d3315510502d9190b0f92f5cbec432dc0249cedfdcf62d4911966dc7c",
+      "inputSha256": "sha256:ecc583596192cde9864a006caf453e5782160dca1c60ee4416adda184b727f1c"
+    }
+  ]
+}

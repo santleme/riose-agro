@@ -52,6 +52,34 @@ changed factor. Days must be 1–365. The result preserves the JS comparison
 shape, reports the input snapshot's seed, and remains demonstrative with
 `validated: false`; it is not a scientific validation result.
 
+## Product integration
+
+The browser Worker probes `/api/native/configured-comparison` once. It uses
+the local Rust CLI for configured comparisons and configured-manifest replay
+only when the local app server reports the executor available. The route is
+disabled by default. To enable it for a local development session, build the
+release binary and start the server with:
+
+```sh
+cargo build --release -p riose-core --bin riose-run
+RIOSE_NATIVE_COMPARISON=true npm start
+```
+
+Set `RIOSE_RUNNER_PATH` to select a different executable. The API accepts only
+configured-comparison v2 requests, requires loopback clients, and validates
+the request schema before spawning the CLI. Native errors or invalid native
+responses fall back to the JavaScript comparison in the Worker. The saved run
+keeps its existing comparison manifest and result shape and adds an `execution`
+record with the selected backend, build, native run ID, input digest, and
+fallback state. The ordinary simulation ticks, Canvas/diorama rendering, and
+Scene Composer continue to run in their existing browser paths.
+
+After building the release CLI, run
+`node scripts/verify-native-configured-integration.mjs` to check all four
+configured factors through the actual Worker, HTTP route, native process,
+history record, and replay path. The saved smoke report is
+[`native-configured-integration-v1.json`](performance/native-configured-integration-v1.json).
+
 ## Result record
 
 Successful runs emit compact UTF-8 JSON followed by one LF. The record is

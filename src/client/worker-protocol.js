@@ -210,6 +210,16 @@ export function normalizeWorkerResponse(raw) {
   const response = {...raw, protocolVersion: WORKER_PROTOCOL_VERSION};
   if (raw.type === 'state') validateState(raw.state);
   if (raw.type === 'comparison') validateComparison(raw.data);
+  if (raw.type === 'comparison' && owns(raw, 'execution')) {
+    const execution = raw.execution;
+    if (!isRecord(execution) || !['local-rust','local-js'].includes(execution.backend) || typeof execution.fallbackUsed !== 'boolean'
+      || (execution.engineImplementation !== undefined && typeof execution.engineImplementation !== 'string')
+      || (execution.backend === 'local-rust' && (typeof execution.engineVersion !== 'string' || typeof execution.buildId !== 'string'))
+      || (execution.runId !== undefined && typeof execution.runId !== 'string')
+      || (execution.inputSha256 !== undefined && !/^(?:sha256:)?[a-f0-9]{64}$/.test(execution.inputSha256))) {
+      fail('INVALID_RESPONSE', 'comparison.execution must identify a valid local executor and fallback state.');
+    }
+  }
   if (raw.type === 'error') {
     if (legacy) {
       if (typeof raw.message !== 'string' || !raw.message) fail('INVALID_RESPONSE', 'Legacy error.message must be a non-empty string.');

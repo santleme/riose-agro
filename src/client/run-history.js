@@ -56,6 +56,14 @@ function cleanError(error){
   return message||'Falha na execução.';
 }
 
+function cleanExecution(execution){
+  if(!execution||typeof execution!=='object'||Array.isArray(execution))return undefined;
+  if(!['local-rust','local-js'].includes(execution.backend)||typeof execution.fallbackUsed!=='boolean')return undefined;
+  const allowed=['backend','engineImplementation','engineVersion','buildId','modelStatus','runId','inputSha256','fallbackUsed','fallbackReason','availability'];
+  return Object.fromEntries(allowed.filter(key=>typeof execution[key]==='string'||typeof execution[key]==='boolean')
+    .map(key=>[key,typeof execution[key]==='string'?execution[key].slice(0,160):execution[key]]));
+}
+
 function readRaw(storage){
   try{return storage.getItem(RUN_HISTORY_KEY);}catch{throw new Error('O armazenamento local está indisponível.');}
 }
@@ -81,7 +89,7 @@ export function getRun(runId,storage=globalThis.localStorage){
   return listRuns(storage).find(run=>run.id===runId)??null;
 }
 
-export function createRunRecord({manifest,result,status='completed',error,now=Date.now(),id}){
+export function createRunRecord({manifest,result,status='completed',error,execution,now=Date.now(),id}){
   if(!manifest||!['completed','failed'].includes(status))throw new Error('Registro de execução inválido.');
   const configured=manifest.type==='riose-configured-comparison';
   if(configured)validateConfiguredComparisonManifest(manifest);
@@ -90,6 +98,7 @@ export function createRunRecord({manifest,result,status='completed',error,now=Da
   const replayManifest=configured
     ?createConfiguredComparisonManifest(snapshot,{days:manifest.periodDays,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario})
     :createComparisonManifest(snapshot,manifest.periodDays);
+  const safeExecution=cleanExecution(execution);
   return {
     id:id??globalThis.crypto?.randomUUID?.()??`run-${now}-${Math.random().toString(36).slice(2)}`,
     timestamp:new Date(now).toISOString(),operation:'comparison',status,
@@ -97,7 +106,8 @@ export function createRunRecord({manifest,result,status='completed',error,now=Da
     seed:replayManifest.seed,engineVersion:COMPARISON_ENGINE_VERSION,
     manifest:replayManifest,
     ...(status==='completed'?{result}:{error:cleanError(error)}),
-    provenance:{source:'local-browser',historyVersion:RUN_HISTORY_VERSION}
+    provenance:{source:'local-browser',historyVersion:RUN_HISTORY_VERSION},
+    ...(safeExecution?{execution:safeExecution}:{})
   };
 }
 
