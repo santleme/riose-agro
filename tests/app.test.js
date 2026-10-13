@@ -12,18 +12,19 @@ import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
 import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js';
 import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
+import {createViewLayout,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],confirmValue=true){
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-  const elements=new Map(),messages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId],...seedStorage]);
+  const elements=new Map(),messages=[],workerMessages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId],...seedStorage]);
   let scheduledFrame,mapDrawCalls=0;const drawing=new Proxy({}, {get:(_,key)=>key==='drawImage'?()=>mapDrawCalls++:()=>{}});
   function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],scrollTop:0,clientHeight:400,classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
-    Worker:class {constructor(){worker=this;}postMessage(message){if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,structuredClone,Blob,
+    Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
     Option:class {},URLSearchParams,Image:class {set src(value){this.onload?.();}},performance:{now:()=>0},requestAnimationFrame(callback){scheduledFrame=callback;},setTimeout(){return 1;},clearTimeout(){},
@@ -36,12 +37,14 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   const workerEnd=source.indexOf("const worker=new Worker(workerUrl,{type:'module'});",workerStart)+"const worker=new Worker(workerUrl,{type:'module'});".length;
   source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);
   vm.runInContext(source,context,{filename:'app.js'});
-  const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:{data:value})}});};
-  return {elements,messages,downloads,storage,deliver,fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
+  const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:type==='view'?{...value,engineImplementation}:{data:value,engineImplementation})}});};
+  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
 }
+async function waitFor(check,timeout=5000){const deadline=Date.now()+timeout;while(!check()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(check(),'timed out waiting for the browser harness');}
 
 test('map comparison freezes one snapshot, changes housing only, and never applies the alternative',async()=>{
   const ui=await openFarm(),farm=new FarmEngine(89,5);
+  assert.equal(ui.workerMessages[0].protocolVersion,WORKER_PROTOCOL_VERSION,'the browser sends the versioned Worker envelope');
   farm.configure({diet:'balanced',supplement:1.5,weather:'rain',housing:'barn'});
   farm.tick(24);
   const snapshot=farm.snapshot();
@@ -72,6 +75,24 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
   assert.equal(ui.fetches(),0);
+});
+
+test('worker view applies animal values by stable ID when the typed-array order changes',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(31,3).snapshot();
+  ui.deliver('state',snapshot);
+  const diet=ui.elements.get('diet');diet.value='balanced';diet.onchange({target:diet});
+  const animals=[...snapshot.animals].reverse(),ids=new Uint32Array(animals.map(animal=>animal.id));
+  const values=new Float64Array(animals.length*4),actions=new Uint8Array(animals.length),actionNames=['grazing','feeding','drinking','resting'];
+  animals.forEach((animal,index)=>{const offset=index*4;values.set([100+animal.id,200+animal.id,300+animal.id,400+animal.id],offset);actions[index]=animal.id%actionNames.length;});
+  ui.deliver('view',{hour:snapshot.hour+1,pastures:snapshot.pastures,cost:snapshot.cost,intake:snapshot.intake,
+    config:{...snapshot.config,diet:'balanced'},events:snapshot.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,
+    viewLayout:createViewLayout(animals.length),selectedAnimalId:1,selectedHistory:[]});
+  const updated=ui.readState();
+  for(const animal of updated.animals){
+    assert.deepEqual([animal.x,animal.y,animal.weight,animal.initialWeight],
+      [100+animal.id,200+animal.id,300+animal.id,400+animal.id]);
+    assert.equal(animal.action,actionNames[animal.id%actionNames.length]);
+  }
 });
 
 test('connected snapshot selection persists real lot IDs through the existing comparison and return to farm',async()=>{
@@ -223,7 +244,7 @@ test('compressed scenario snapshots round-trip and load from the versioned stora
   assert.deepEqual(await decodeScenarioSnapshot(snapshotData),snapshot);
   assert.ok(snapshotData.length*4/3<JSON.stringify(snapshot).length*.6,'gzip should substantially reduce this repeated state');
   const saved={type:'agroville-scenarios-gzip-v1',scenarios:[{id:'packed',name:'Compactado',selected:1,summary:{hour:snapshot.hour,config:snapshot.config,eventCount:snapshot.events.length},snapshotData}]};
-  const ui=await openFarm(saved,'packed');await new Promise(resolve=>setTimeout(resolve,50));
+  const ui=await openFarm(saved,'packed');await waitFor(()=>ui.messages.some(message=>message.type==='load'));
   assert.equal(ui.messages[0].type,'load');
   assert.deepEqual(ui.messages[0].snapshot,snapshot);
 });
@@ -340,7 +361,7 @@ test('comparison displays signed absolute and relative differences for all four 
   assert.ok(text.includes('+100,00 R$/lote · relativa: indefinida (base zero)'));
 });
 
-test('saved scenario loading blocks comparison and file actions until its own state response',async()=>{
+test('saved scenario loading blocks actions until its state response, even with an earlier view in flight',async()=>{
   const saved={id:'selected',name:'Salvo',snapshot:new FarmEngine(44,3).snapshot(),selected:1};
   const ui=await openFarm([saved]);
   const previous=new FarmEngine(5,24);
@@ -358,8 +379,13 @@ test('saved scenario loading blocks comparison and file actions until its own st
   assert.equal(ui.messages.length,requests);
   assert.equal(ui.downloads.length,0);
   assert.notEqual(ui.elements.get('manifest-file').clicked,true);
-  ui.deliver('state',previous.snapshot());
-  assert.equal(ui.elements.get('compare').disabled,true,'an older state response must not confirm the saved snapshot load');
+  const snapshot=previous.snapshot(),actions={grazing:0,feeding:1,drinking:2,resting:3};
+  const ids=new Uint32Array(snapshot.animals.map(animal=>animal.id)),values=new Float64Array(snapshot.animals.length*4),codes=new Uint8Array(snapshot.animals.length);
+  snapshot.animals.forEach((animal,index)=>{const offset=index*4;values.set([animal.x,animal.y,animal.weight,animal.initialWeight],offset);codes[index]=actions[animal.action];});
+  ui.deliver('view',{hour:snapshot.hour,pastures:snapshot.pastures,cost:snapshot.cost,intake:snapshot.intake,config:snapshot.config,
+    events:snapshot.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:codes,viewLayout:createViewLayout(snapshot.animals.length),
+    selectedAnimalId:1,selectedHistory:previous.historyFor(snapshot.animals[0])});
+  assert.equal(ui.elements.get('compare').disabled,true,'the earlier configure view must not confirm the saved snapshot load');
   ui.elements.get('compare').onclick();
   assert.equal(ui.messages.length,requests);
   ui.deliver('state',saved.snapshot);
