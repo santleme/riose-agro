@@ -1,4 +1,5 @@
 import {FarmEngine,compare,replayComparisonManifest} from './engine.js';
+import {createAnimalViewStateDTO} from './animal-view-state.js';
 import {loadWasmMetabolism,updateMetabolismJS} from './metabolism-wasm.js';
 
 let engine=new FarmEngine();
@@ -17,11 +18,12 @@ function postView(){
   for(let index=0;index<animals.length;index++){
     const animal=animals[index],offset=index*4;
     ids[index]=animal.id;
-    values[offset]=animal.x;values[offset+1]=animal.y;values[offset+2]=animal.weight;values[offset+3]=animal.initialWeight;
+    const position=engine.viewState.get(animal.id);
+    values[offset]=position.x;values[offset+1]=position.y;values[offset+2]=animal.weight;values[offset+3]=animal.initialWeight;
     actions[index]=actionCodes[animal.action]??0;
   }
   const selectedAnimal=animals.find(animal=>animal.id===selectedAnimalId)??animals[0];
-  scope.postMessage({type:'view',hour:state.hour,pastures:state.pastures,cost:state.cost,intake:state.intake,config:state.config,events:state.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,selectedAnimalId:selectedAnimal?.id??null,selectedHistory:engine.historyFor(selectedAnimal),engineImplementation},[ids.buffer,values.buffer,actions.buffer]);
+  scope.postMessage({type:'view',hour:state.hour,pastures:state.pastures,cost:state.cost,intake:state.intake,config:state.config,events:state.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,animalViewState:createAnimalViewStateDTO(animals,engine.viewState),selectedAnimalId:selectedAnimal?.id??null,selectedHistory:engine.historyFor(selectedAnimal),engineImplementation},[ids.buffer,values.buffer,actions.buffer]);
 }
 scope.onmessage=async(event)=>{await wasmReady;try{
   const m=event.data;
