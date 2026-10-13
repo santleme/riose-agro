@@ -1,13 +1,14 @@
 //! Explicit input/output contract for native demonstrative scenario runs.
 
 use crate::{
-    compare_housing, predict_pasture_dmi, BrCortePastureDmiInput, BrCortePastureDmiMetadata,
-    BrCortePastureDmiPrediction, FarmConfig, FarmEngine, FarmMetrics, FarmSnapshot,
-    HousingComparison,
+    compare_configured, compare_housing, predict_pasture_dmi, BrCortePastureDmiInput,
+    BrCortePastureDmiMetadata, BrCortePastureDmiPrediction, ConfiguredComparison, FarmConfig,
+    FarmEngine, FarmMetrics, FarmSnapshot, HousingComparison,
 };
 use serde::{Deserialize, Serialize};
 
 pub const NATIVE_SCENARIO_VERSION: u16 = 1;
+pub const CONFIGURED_COMPARISON_REQUEST_VERSION: u16 = 2;
 pub const NATIVE_ENGINE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const MODEL_STATUS: &str = "demonstrative_unvalidated";
 
@@ -35,6 +36,15 @@ pub enum NativeScenarioRequest {
         adg_kg_per_day: f64,
         #[serde(rename = "supplementKgDMPerDay")]
         supplement_kg_dm_per_day: f64,
+    },
+    ConfiguredComparison {
+        version: u16,
+        snapshot: FarmSnapshot,
+        days: u32,
+        #[serde(rename = "referenceConfig")]
+        reference_config: FarmConfig,
+        #[serde(rename = "scenarioConfig")]
+        scenario_config: FarmConfig,
     },
 }
 
@@ -76,6 +86,9 @@ pub enum NativeScenarioResult {
         metadata: BrCortePastureDmiMetadata,
         prediction: BrCortePastureDmiPrediction,
     },
+    ConfiguredComparison {
+        comparison: ConfiguredComparison,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -95,7 +108,7 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
             configuration,
             hours,
         } => {
-            validate_version(version)?;
+            validate_version(version, NATIVE_SCENARIO_VERSION)?;
             let mut engine = FarmEngine::new(seed, animal_count)?;
             engine.configure(configuration)?;
             engine.tick(hours)?;
@@ -109,7 +122,7 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
             snapshot,
             days,
         } => {
-            validate_version(version)?;
+            validate_version(version, NATIVE_SCENARIO_VERSION)?;
             NativeScenarioResult::HousingComparison {
                 comparison: compare_housing(&snapshot, days)?,
             }
@@ -120,7 +133,7 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
             adg_kg_per_day,
             supplement_kg_dm_per_day,
         } => {
-            validate_version(version)?;
+            validate_version(version, NATIVE_SCENARIO_VERSION)?;
             NativeScenarioResult::BrCortePastureDmi {
                 metadata: BrCortePastureDmiMetadata::default(),
                 prediction: predict_pasture_dmi(BrCortePastureDmiInput {
@@ -128,6 +141,18 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
                     adg_kg_per_day,
                     supplement_kg_dm_per_day,
                 })?,
+            }
+        }
+        NativeScenarioRequest::ConfiguredComparison {
+            version,
+            snapshot,
+            days,
+            reference_config,
+            scenario_config,
+        } => {
+            validate_version(version, CONFIGURED_COMPARISON_REQUEST_VERSION)?;
+            NativeScenarioResult::ConfiguredComparison {
+                comparison: compare_configured(&snapshot, reference_config, scenario_config, days)?,
             }
         }
     };
@@ -138,8 +163,8 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
     })
 }
 
-fn validate_version(version: u16) -> Result<(), String> {
-    if version != NATIVE_SCENARIO_VERSION {
+fn validate_version(version: u16, supported: u16) -> Result<(), String> {
+    if version != supported {
         return Err(format!("unsupported native scenario version: {version}"));
     }
     Ok(())

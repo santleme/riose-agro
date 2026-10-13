@@ -17,13 +17,15 @@ pub use br_corte::{
 };
 pub use contract::{
     run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
-    NativeScenarioResult, MODEL_STATUS, NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,
+    NativeScenarioResult, CONFIGURED_COMPARISON_REQUEST_VERSION, MODEL_STATUS,
+    NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,
 };
 pub use environment::{environmental_stress, weather_rules, Weather, WeatherRules};
 pub use feeding::{calculate_feeding, FeedingResult};
 pub use runtime::*;
 pub use simulation::{
-    compare_housing, metrics, ComparisonRow, FarmEngine, HousingComparison, ModelAssumptions,
+    compare_configured, compare_housing, metrics, ComparisonRow, ConfiguredComparison,
+    ConfiguredComparisonRow, FarmEngine, HousingComparison, ModelAssumptions,
 };
 pub use snapshot::{decode_farm_snapshot, encode_farm_snapshot, FarmSnapshotDecodeError};
 pub use state::{

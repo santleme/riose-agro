@@ -20,7 +20,7 @@ to stdout.
 
 The input is the strict, versioned `NativeScenarioRequest` from the
 [`native-farm-core` contract](native-farm-core.md). Its supported variants are
-`baseline`, `housing-comparison`, and `br-corte-pasture-dmi`. The core defines the accepted fields,
+`baseline`, `housing-comparison`, `configured-comparison`, and `br-corte-pasture-dmi`. The core defines the accepted fields,
 configuration values, and snapshot requirements. Unknown fields, duplicate
 JSON keys, unsupported enum values, and unsupported scenario types are rejected.
 
@@ -39,6 +39,18 @@ domain. ADG is an input assumption, not an equation output. `validated` remains
 false for Riose; the endpoint is not an adult beef cow model and does not claim
 independent validation of Riose predictions. This scalar request has no random
 state, so its success record omits `seed` rather than inventing one.
+
+The configured comparison uses request version 2 and the schema at
+[`configured-comparison-request-v2.schema.json`](../schemas/configured-comparison-request-v2.schema.json):
+
+```json
+{"type":"configured-comparison","version":2,"snapshot":<FarmSnapshot>,"days":2,"referenceConfig":{"diet":"pasture","housing":"pasture","weather":"normal","supplement":0},"scenarioConfig":{"diet":"balanced","housing":"pasture","weather":"normal","supplement":0}}
+```
+
+It runs both configurations from the same snapshot and requires exactly one
+changed factor. Days must be 1–365. The result preserves the JS comparison
+shape, reports the input snapshot's seed, and remains demonstrative with
+`validated: false`; it is not a scientific validation result.
 
 ## Result record
 

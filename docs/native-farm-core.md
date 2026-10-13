@@ -7,7 +7,8 @@ oracle. Native output reports `modelStatus: demonstrative_unvalidated` and
 biological validity.
 
 The v1 input supports the baseline run, pasture-versus-barn housing
-comparison, and the scalar BR-CORTE 2023 Eq. 2.6 calculation. The scalar
+comparison, and the scalar BR-CORTE 2023 Eq. 2.6 calculation. The configured
+comparison request has its own v2 contract. The scalar
 equation is limited to growing Zebu cattle grazing tropical pasture with
 supplementation; it is not an adult-cow model and does not independently
 validate Riose predictions. It preserves the four-paddock model, the existing diet, housing,
@@ -44,6 +45,13 @@ The housing-comparison variant has the fields
 `{"type":"housing-comparison","version":1,"snapshot":<FarmSnapshot>,"days":30}`.
 A valid snapshot must contain 1–10,000 animals, exactly four paddock stocks,
 and all required fields.
+The configured comparison variant is
+`{"type":"configured-comparison","version":2,"snapshot":<FarmSnapshot>,"days":2,"referenceConfig":<FarmConfig>,"scenarioConfig":<FarmConfig>}`.
+Both complete configurations start from the same snapshot and must differ in
+exactly one factor: diet, housing, weather, or supplement. Each arm advances
+the configured number of simulated days from the same initial model and
+locomotion RNG states. This reproduces the demonstrative JS comparison
+contract; it does not establish scientific validation.
 The scalar BR-CORTE variant is
 `{"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1.6}`.
 Its inclusive request ranges are 133–474 kg body weight, −0.18–1.34 kg/day
@@ -54,7 +62,8 @@ The scalar request has no seed because the equation is deterministic.
 The response has `{version, engine, result}`. `engine` contains `engineVersion`,
 `buildId`, `modelStatus`, `provenance`, and `validated`. The tagged `result` is
 either `{type:"baseline", snapshot, metrics}`,
-`{type:"housing-comparison", comparison}`, or
+`{type:"housing-comparison", comparison}`,
+`{type:"configured-comparison", comparison}`, or
 `{type:"br-corte-pasture-dmi", metadata, prediction}`. The baseline snapshot is also the
 snapshot output format: current JS camel-case fields, including `initialSeed`,
 `locomotionSeed`, and `*KgDM` intake names. Snapshot JSON helpers are
@@ -82,9 +91,10 @@ metric intake adds `totalKgDM` to the four snapshot intake fields. The concrete
 JS-generated compatibility fixture is
 [`farm-engine-snapshot.json`](../crates/riose-core/tests/fixtures/farm-engine-snapshot.json).
 
-Only baseline execution and a single housing comparison (pasture versus barn)
-are supported. The latter changes housing only and preserves other configuration
-values. The accepted configuration enums are diets `pasture`, `balanced`, and
+Baseline execution, a single housing comparison (pasture versus barn), and a
+configured one-factor comparison are supported. Housing comparison changes
+housing only and preserves other configuration values. The accepted
+configuration enums are diets `pasture`, `balanced`, and
 `concentrate`; housing `pasture` and `barn`; weather `normal`, `hot`, and `rain`;
 and supplement values from 0 through 4 kg DM per animal per day. Unknown JSON
 fields are rejected at the request, configuration, snapshot, and nested snapshot
@@ -105,7 +115,8 @@ legacy snapshots missing `initialSeed` or `locomotionSeed` use the current
 The Rust integration tests consume the official
 [`baseline-pasture`](../tests/scenario-goldens/baseline-pasture.json) and
 [`housing-comparison`](../tests/scenario-goldens/housing-comparison.json)
-fixtures. They assert exact JSON equality for the complete supported baseline
+fixtures, plus frozen JS configured-comparison vectors across all four factors.
+They assert exact JSON equality for the complete supported baseline
 snapshot and metrics, the complete 30-day comparison output, and the comparison
 endpoint projections including both RNG stream states. They also rerun each
 request to verify deterministic output. The Rust CI job runs formatting,
