@@ -11,7 +11,10 @@
   "approvedUseCase": {
     "reference": "issue-1",
     "population": "USDA/CPER yearling steers in grazing systems",
-    "outcomes": ["average daily gain", "grazing indicators"],
+    "outcomes": [
+      "average daily gain",
+      "grazing indicators"
+    ],
     "scopeNote": "The observational case definition does not establish that the current engine represents this population or that its inputs and outputs are jointly observed."
   },
   "sourcesOfUncertainty": [
@@ -19,99 +22,389 @@
       "source": "measurement",
       "estimableNow": false,
       "reason": "No instrument error, repeatability, or protocol coverage estimates are available for the simulated fields and target population.",
-      "minimumEvidenceToEstimate": ["measurement protocol", "instrument resolution and repeatability", "population and time-window match"]
+      "minimumEvidenceToEstimate": [
+        "measurement protocol",
+        "instrument resolution and repeatability",
+        "population and time-window match"
+      ]
     },
     {
       "source": "parameter",
       "estimableNow": false,
       "reason": "Engine constants are illustrative point assumptions and have not been fit to an eligible calibration cohort.",
-      "minimumEvidenceToEstimate": ["prespecified parameter model", "eligible calibration cohort", "fit limited to calibration data"]
+      "minimumEvidenceToEstimate": [
+        "prespecified parameter model",
+        "eligible calibration cohort",
+        "fit limited to calibration data"
+      ]
     },
     {
       "source": "between-animal",
       "estimableNow": "partially-for-observed-cohort-only",
       "reason": "Some public cohorts contain repeated animal observations and can describe within-cohort metric variability, but do not identify the target engine prediction distribution.",
-      "minimumEvidenceToEstimate": ["stable animal identifiers", "repeated compatible outcomes", "whole-animal holdout"]
+      "minimumEvidenceToEstimate": [
+        "stable animal identifiers",
+        "repeated compatible outcomes",
+        "whole-animal holdout"
+      ]
     },
     {
       "source": "between-farm-year-region-system",
       "estimableNow": false,
       "reason": "Available cohorts do not provide enough independent, compatible clusters across the approved domain to estimate transportable variation.",
-      "minimumEvidenceToEstimate": ["multiple independent farms or sites", "multiple years where relevant", "cluster-held-out evaluation"]
+      "minimumEvidenceToEstimate": [
+        "multiple independent farms or sites",
+        "multiple years where relevant",
+        "cluster-held-out evaluation"
+      ]
     },
     {
       "source": "structural-model-error",
       "estimableNow": "partially-for-component-diagnostics-only",
       "reason": "ADG and DMI diagnostics exist for selected cohorts, but they omit aligned management inputs and the joint outputs required to evaluate the full simulation.",
-      "minimumEvidenceToEstimate": ["frozen engine and estimand", "compatible outcome and input records", "independent grouped evaluation set"]
+      "minimumEvidenceToEstimate": [
+        "frozen engine and estimand",
+        "compatible outcome and input records",
+        "independent grouped evaluation set"
+      ]
     },
     {
       "source": "extrapolation-and-missing-inputs",
       "estimableNow": false,
       "reason": "Coverage of the engine input domain and target population is not established; missing inputs cannot be converted into an uncertainty distribution.",
-      "minimumEvidenceToEstimate": ["declared target domain", "input coverage audit", "explicit unsupported-domain handling"]
+      "minimumEvidenceToEstimate": [
+        "declared target domain",
+        "input coverage audit",
+        "explicit unsupported-domain handling"
+      ]
     }
   ],
   "outcomes": [
     {
       "id": "weight-and-average-daily-gain",
-      "engineOutputs": ["weight", "gain", "baselineWeight", "scenarioWeight"],
+      "engineOutputs": [
+        "weight",
+        "gain",
+        "baselineWeight",
+        "scenarioWeight"
+      ],
       "compatibleIndependentEvidence": "Partial component evidence: USDA/CPER temporal holdout and CPER-to-CGRE external transfer; separate Zenodo adult-cow and other cohort diagnostics.",
-      "estimableNow": ["descriptive error and bias for the exact audited cohort and frozen component rule", "cluster-bootstrap stability of selected error metrics where animal IDs support it"],
-      "notEstimableNow": ["full-engine predictive distribution", "transferable interval coverage across years, farms, regions, or populations", "adult-cow prediction uncertainty from yearling cohorts"],
-      "keyLimitations": ["engine inputs and management are not jointly aligned with observations", "observational ADG is not the same estimand as all engine weight outputs", "empirical coverage varied across held-out site/year subsets"],
-      "evidence": ["engine-adg-usda-cper-ltgi-check.json", "engine-adg-usda-cgrec-transport-check.json", "engine-adg-zenodo-cows-check.json", "engine-adg-ufms-check.json"],
+      "estimableNow": [
+        "descriptive error and bias for the exact audited cohort and frozen component rule",
+        "cluster-bootstrap stability of selected error metrics where animal IDs support it"
+      ],
+      "notEstimableNow": [
+        "full-engine predictive distribution",
+        "transferable interval coverage across years, farms, regions, or populations",
+        "adult-cow prediction uncertainty from yearling cohorts"
+      ],
+      "keyLimitations": [
+        "engine inputs and management are not jointly aligned with observations",
+        "observational ADG is not the same estimand as all engine weight outputs",
+        "empirical coverage varied across held-out site/year subsets"
+      ],
+      "evidence": [
+        "engine-adg-usda-cper-ltgi-check.json",
+        "engine-adg-usda-cgrec-transport-check.json",
+        "engine-adg-zenodo-cows-check.json",
+        "engine-adg-ufms-check.json"
+      ],
       "predictionInterval": null,
-      "intervalAuthorized": false
+      "intervalAuthorized": false,
+      "uncertaintyBySource": [
+        {
+          "source": "measurement",
+          "classification": "not-estimable",
+          "reason": "Measurement error and repeatability are not reported for the compatible target inputs and outcomes."
+        },
+        {
+          "source": "parameter",
+          "classification": "not-estimable",
+          "reason": "Engine constants remain illustrative and no eligible calibration fit is available."
+        },
+        {
+          "source": "between-animal",
+          "classification": "partially-estimable",
+          "reason": "Observed cohorts describe sample variability, but do not identify the engine prediction distribution."
+        },
+        {
+          "source": "between-farm-year-region-system",
+          "classification": "not-estimable",
+          "reason": "Available evaluations do not support transportable variability across independent target clusters."
+        },
+        {
+          "source": "structural-model-error",
+          "classification": "partially-estimable",
+          "reason": "ADG component diagnostics exist, but aligned inputs and full-engine outputs are absent."
+        },
+        {
+          "source": "extrapolation-and-missing-inputs",
+          "classification": "not-estimable",
+          "reason": "Target-domain coverage and aligned management inputs are not established."
+        }
+      ]
     },
     {
       "id": "dry-matter-intake",
-      "engineOutputs": ["intake.totalKgDM", "baselineConsumptionKgDM", "scenarioConsumptionKgDM", "intakeBySource"],
+      "engineOutputs": [
+        "intake.totalKgDM",
+        "baselineConsumptionKgDM",
+        "scenarioConsumptionKgDM",
+        "intakeBySource"
+      ],
       "compatibleIndependentEvidence": "Component checks exist in feedlot, hay, and dairy grazing cohorts; these are distinct systems and populations from the approved USDA/CPER case.",
-      "estimableNow": ["descriptive component error and bias for each exact dataset, protocol, and frozen rule"],
-      "notEstimableNow": ["forage intake uncertainty in the approved target population", "joint intake and weight prediction uncertainty", "a transportable full-engine prediction interval"],
-      "keyLimitations": ["measurement protocols and systems differ", "some sources have small cluster counts or derived outcomes", "DMI results cannot be pooled across domains as one distribution"],
-      "evidence": ["mendeley-nellore-engine-dmi-check.json", "usda-ars-feedlot-engine-dmi-check.json", "sdsu-engine-dmi-check.json", "grastech-dairy-grazing-dmi-engine-check.json"],
+      "estimableNow": [
+        "descriptive component error and bias for each exact dataset, protocol, and frozen rule"
+      ],
+      "notEstimableNow": [
+        "forage intake uncertainty in the approved target population",
+        "joint intake and weight prediction uncertainty",
+        "a transportable full-engine prediction interval"
+      ],
+      "keyLimitations": [
+        "measurement protocols and systems differ",
+        "some sources have small cluster counts or derived outcomes",
+        "DMI results cannot be pooled across domains as one distribution"
+      ],
+      "evidence": [
+        "mendeley-nellore-engine-dmi-check.json",
+        "usda-ars-feedlot-engine-dmi-check.json",
+        "sdsu-engine-dmi-check.json",
+        "grastech-dairy-grazing-dmi-engine-check.json"
+      ],
       "predictionInterval": null,
-      "intervalAuthorized": false
+      "intervalAuthorized": false,
+      "uncertaintyBySource": [
+        {
+          "source": "measurement",
+          "classification": "not-estimable",
+          "reason": "The available protocols and populations differ, and their measurement-error estimates do not support the target population."
+        },
+        {
+          "source": "parameter",
+          "classification": "not-estimable",
+          "reason": "No eligible target-domain calibration cohort or fitted parameter distribution is available."
+        },
+        {
+          "source": "between-animal",
+          "classification": "partially-estimable",
+          "reason": "Some cohorts permit within-cohort descriptions, not a target engine prediction distribution."
+        },
+        {
+          "source": "between-farm-year-region-system",
+          "classification": "not-estimable",
+          "reason": "The small and heterogeneous cluster counts do not support transportable variation."
+        },
+        {
+          "source": "structural-model-error",
+          "classification": "partially-estimable",
+          "reason": "Component diagnostics exist in distinct systems, but do not evaluate the full target simulation."
+        },
+        {
+          "source": "extrapolation-and-missing-inputs",
+          "classification": "not-estimable",
+          "reason": "The available cohorts do not establish input coverage for the approved target population."
+        }
+      ]
     },
     {
       "id": "pasture-stock",
-      "engineOutputs": ["pasture", "pastureByPaddock", "baselinePastureKgDM", "scenarioPastureKgDM"],
+      "engineOutputs": [
+        "pasture",
+        "pastureByPaddock",
+        "baselinePastureKgDM",
+        "scenarioPastureKgDM"
+      ],
       "compatibleIndependentEvidence": "Some public sources report pasture or vegetation indicators at group, paddock, or remote-sensing level; they are not aligned to the engine's initial stock, daily growth, intake, and paddock transitions.",
-      "estimableNow": ["source-specific descriptive summaries when the reported unit and period are retained"],
-      "notEstimableNow": ["individual-farm stock error distribution", "daily or paddock-level predictive intervals for engine stock", "joint stock and animal outcome uncertainty"],
-      "keyLimitations": ["aggregation level and definitions differ", "complete aligned time series and management inputs are absent", "remote-sensing indicators are not direct stock measurements"],
-      "evidence": ["usda-cper-ltgi-audit.json", "usda-grasscast-audit.json", "usda-grasscast-cper-association.json", "compatibilidade-validacao-engine.md"],
+      "estimableNow": [
+        "source-specific descriptive summaries when the reported unit and period are retained"
+      ],
+      "notEstimableNow": [
+        "individual-farm stock error distribution",
+        "daily or paddock-level predictive intervals for engine stock",
+        "joint stock and animal outcome uncertainty"
+      ],
+      "keyLimitations": [
+        "aggregation level and definitions differ",
+        "complete aligned time series and management inputs are absent",
+        "remote-sensing indicators are not direct stock measurements"
+      ],
+      "evidence": [
+        "usda-cper-ltgi-audit.json",
+        "usda-grasscast-audit.json",
+        "usda-grasscast-cper-association.json",
+        "compatibilidade-validacao-engine.md"
+      ],
       "predictionInterval": null,
-      "intervalAuthorized": false
+      "intervalAuthorized": false,
+      "uncertaintyBySource": [
+        {
+          "source": "measurement",
+          "classification": "not-estimable",
+          "reason": "Available vegetation indicators are not direct measurements of the engine stock outputs."
+        },
+        {
+          "source": "parameter",
+          "classification": "not-estimable",
+          "reason": "No aligned stock observations support estimating uncertainty in engine growth or transition parameters."
+        },
+        {
+          "source": "between-animal",
+          "classification": "not-applicable",
+          "reason": "This outcome is paddock or farm pasture stock; individual-animal variation is not its uncertainty unit."
+        },
+        {
+          "source": "between-farm-year-region-system",
+          "classification": "not-estimable",
+          "reason": "Available sources do not provide compatible independent stock series across the target domain."
+        },
+        {
+          "source": "structural-model-error",
+          "classification": "not-estimable",
+          "reason": "Initial stock, growth, intake, and paddock transitions are not jointly observed against the engine."
+        },
+        {
+          "source": "extrapolation-and-missing-inputs",
+          "classification": "not-estimable",
+          "reason": "Aligned management inputs and target-domain coverage are absent."
+        }
+      ]
     },
     {
       "id": "feed-cost",
-      "engineOutputs": ["cost", "baselineCost", "scenarioCost"],
+      "engineOutputs": [
+        "cost",
+        "baselineCost",
+        "scenarioCost"
+      ],
       "compatibleIndependentEvidence": "No independent dataset is currently identified with comparable per-animal feed quantities, local prices, and cost outcomes aligned to the engine scenario.",
-      "estimableNow": ["deterministic arithmetic under explicitly entered price assumptions"],
-      "notEstimableNow": ["observed cost error", "price or cost predictive interval", "probabilistic cost difference between systems"],
-      "keyLimitations": ["engine prices are illustrative constants", "regional and temporal price variation is not observed by the engine"],
-      "evidence": ["compatibilidade-validacao-engine.md", "../politica-incerteza.md"],
+      "estimableNow": [
+        "deterministic arithmetic under explicitly entered price assumptions"
+      ],
+      "notEstimableNow": [
+        "observed cost error",
+        "price or cost predictive interval",
+        "probabilistic cost difference between systems"
+      ],
+      "keyLimitations": [
+        "engine prices are illustrative constants",
+        "regional and temporal price variation is not observed by the engine"
+      ],
+      "evidence": [
+        "compatibilidade-validacao-engine.md",
+        "../politica-incerteza.md"
+      ],
       "predictionInterval": null,
-      "intervalAuthorized": false
+      "intervalAuthorized": false,
+      "uncertaintyBySource": [
+        {
+          "source": "measurement",
+          "classification": "not-estimable",
+          "reason": "No compatible observed cost outcomes and measurement protocols are identified."
+        },
+        {
+          "source": "parameter",
+          "classification": "not-estimable",
+          "reason": "Prices are illustrative assumptions and no target-domain price distribution is available."
+        },
+        {
+          "source": "between-animal",
+          "classification": "not-estimable",
+          "reason": "No compatible individual feed-quantity and cost outcomes are available to estimate this component."
+        },
+        {
+          "source": "between-farm-year-region-system",
+          "classification": "not-estimable",
+          "reason": "Regional and temporal price variation is not observed in compatible independent clusters."
+        },
+        {
+          "source": "structural-model-error",
+          "classification": "not-estimable",
+          "reason": "No independent dataset aligns feed quantities, prices, and cost outcomes with engine scenarios."
+        },
+        {
+          "source": "extrapolation-and-missing-inputs",
+          "classification": "not-estimable",
+          "reason": "Local and temporal price coverage for the target domain is not established."
+        }
+      ]
     },
     {
       "id": "environmental-stress",
-      "engineOutputs": ["stress"],
+      "engineOutputs": [
+        "stress"
+      ],
       "compatibleIndependentEvidence": "Weather and stress rules are fixed deterministic transformations; no compatible physiological or production endpoint dataset is paired to these engine outputs.",
-      "estimableNow": ["deterministic sensitivity to the configured weather category"],
-      "notEstimableNow": ["empirical stress prediction error", "probabilistic stress interval", "calibrated effect on animal outcomes"],
-      "keyLimitations": ["deterministic sensitivity is not a sampling distribution", "weather categories do not establish animal-specific exposure or response"],
-      "evidence": ["compatibilidade-validacao-engine.md", "../politica-incerteza.md"],
+      "estimableNow": [
+        "deterministic sensitivity to the configured weather category"
+      ],
+      "notEstimableNow": [
+        "empirical stress prediction error",
+        "probabilistic stress interval",
+        "calibrated effect on animal outcomes"
+      ],
+      "keyLimitations": [
+        "deterministic sensitivity is not a sampling distribution",
+        "weather categories do not establish animal-specific exposure or response"
+      ],
+      "evidence": [
+        "compatibilidade-validacao-engine.md",
+        "../politica-incerteza.md"
+      ],
       "predictionInterval": null,
-      "intervalAuthorized": false
+      "intervalAuthorized": false,
+      "uncertaintyBySource": [
+        {
+          "source": "measurement",
+          "classification": "not-estimable",
+          "reason": "No compatible physiological or production endpoints are paired with the simulated stress output."
+        },
+        {
+          "source": "parameter",
+          "classification": "not-estimable",
+          "reason": "The fixed weather-to-stress transformation has no eligible fitted parameter distribution."
+        },
+        {
+          "source": "between-animal",
+          "classification": "not-estimable",
+          "reason": "Animal-specific exposure and response observations are not paired with the engine output."
+        },
+        {
+          "source": "between-farm-year-region-system",
+          "classification": "not-estimable",
+          "reason": "Compatible stress outcomes across independent sites, years, or systems are unavailable."
+        },
+        {
+          "source": "structural-model-error",
+          "classification": "not-estimable",
+          "reason": "No compatible endpoint dataset supports estimating error for this fixed transformation."
+        },
+        {
+          "source": "extrapolation-and-missing-inputs",
+          "classification": "not-estimable",
+          "reason": "Weather categories do not establish target-domain exposure or animal-response coverage."
+        }
+      ]
     }
   ],
   "evaluationGate": {
-    "mustFreezeBeforeHoldout": ["estimand and units", "engine version and parameters", "eligible inputs and exclusions", "cluster split", "interval construction method and nominal level"],
-    "requiredReport": ["sample and independent-cluster counts", "population and domain", "error", "bias", "nominal and empirical coverage", "mean interval width", "subgroup results", "missingness and exclusions"],
+    "mustFreezeBeforeHoldout": [
+      "estimand and units",
+      "engine version and parameters",
+      "eligible inputs and exclusions",
+      "cluster split",
+      "interval construction method and nominal level"
+    ],
+    "requiredReport": [
+      "sample and independent-cluster counts",
+      "population and domain",
+      "error",
+      "bias",
+      "nominal and empirical coverage",
+      "mean interval width",
+      "subgroup results",
+      "missingness and exclusions"
+    ],
     "splitPolicy": "Keep all observations from an animal in one partition; also hold out farm, year, region, or system when those clusters define intended transfer.",
     "promotionRule": "A prediction interval may be enabled only for the exact outcome and target domain after an independent compatible evaluation supports its stated coverage. Metric bootstrap intervals and deterministic sensitivity ranges do not satisfy this gate."
   },
