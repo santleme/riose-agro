@@ -2,7 +2,7 @@ import {readFile} from 'node:fs/promises';
 import {existsSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {validateOutcomeUncertaintyClassifications} from './uncertainty-readiness-validation.mjs';
+import {validateIssue15ReadinessContract, validateOutcomeUncertaintyClassifications} from './uncertainty-readiness-validation.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const inventoryPath=path.join(root,'docs/evidence/uncertainty-readiness-issue-15.json');
@@ -19,6 +19,7 @@ requireCondition(inventory.productState?.displayLabel==='Sem calibração sufici
 requireCondition(Array.isArray(inventory.sourcesOfUncertainty)&&inventory.sourcesOfUncertainty.length>0,'uncertainty source inventory is required');
 requireCondition(Array.isArray(inventory.outcomes)&&inventory.outcomes.length>0,'outcome inventory is required');
 for(const error of validateOutcomeUncertaintyClassifications(inventory.outcomes,inventory.sourcesOfUncertainty)) errors.push(error);
+for(const error of validateIssue15ReadinessContract(inventory)) errors.push(error);
 
 const seen=new Set();
 for(const outcome of inventory.outcomes??[]){
