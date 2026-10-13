@@ -162,7 +162,9 @@ fn compare_exact_json(actual: &Value, expected: &Value, path: &str) -> Result<()
             if actual == expected {
                 Ok(())
             } else {
-                Err(format!("{path}: numeric values differ ({actual} vs {expected})"))
+                Err(format!(
+                    "{path}: numeric values differ ({actual} vs {expected})"
+                ))
             }
         }
         (Value::Object(actual), Value::Object(expected)) => {
