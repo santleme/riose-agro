@@ -428,7 +428,7 @@ def run_benchmark(
         # Keep legacy AMD report fields, including their original workload and
         # configuration members, while adding required camelCase envelope keys.
         **legacy_report,
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "benchmark": {
             "name": "compute-service-scale-vector",
             "source": {"revision": legacy_report["project_commit"], "dirty": _project_dirty()},
@@ -465,11 +465,19 @@ def run_benchmark(
             "layout": not_measured,
             "render": not_measured,
             "startup": not_measured,
+            "coldStartup": not_measured,
+            "warmStartup": not_measured,
+            "bridgeMarshaling": not_measured,
+            "fullScenario": not_measured,
+            "uiEndToEnd": not_measured,
+            "memory": not_measured,
         },
         "timingBoundaries": [{
             "phase": "engine",
             "timed": ["scale_vector operation over the prepared numeric input, separately for CPU and AMD backends."],
             "notTimed": ["Input construction, correctness verification, Worker/UI/rendering, and GPU memory measurement."],
+            "whatIsTimed": ["scale_vector operation over the prepared numeric input, separately for CPU and AMD backends."],
+            "whatIsNotTimed": ["Input construction, correctness verification, Worker/UI/rendering, and GPU memory measurement."],
         }],
         "results": legacy_report,
         "limitations": legacy_report["limitations"],

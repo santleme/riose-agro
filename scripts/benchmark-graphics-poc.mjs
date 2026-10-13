@@ -137,7 +137,7 @@ try {
   const report = benchmarkReport({
     name:'graphics-poc',runtime:{browser:browserInfo.product,browserRevision:browserInfo.revision,userAgent:browserInfo.userAgent},
     workload:{populations:counts.map(animals=>({animals,scope:'FarmEngine and renderer',limit:'FarmEngine and renderer maximum 10000'})),seed:20261012},
-    configuration:{warmupRuns:Math.ceil(warmupMs),repetitions:repeats,measurementDurationMs:durationMs},
+    configuration:{warmupRuns:1,repetitions:repeats,measurementDurationMs:durationMs},
     limits:{numericKernelMaxAnimalsMeasured:null},
     phases:{
       worker:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.map(count=>{const rows=grouped(renderer,count);return measurement('worker','roundTrip1h','ms',summarizeSamples(rows.map(row=>row.workerRoundTripMs)),{population:count,renderer,implementation:rows[0]?.engineImplementation});}))},
@@ -151,6 +151,7 @@ try {
         measurement('render','submissionMedian','ms',summarizeSamples(rows.map(row=>row.renderSubmissionMedianMs)),{population:count,renderer,memory:{jsHeapBeforeBytes:summarizeSamples(rows.map(row=>row.jsHeapBeforeBytes)).median,jsHeapAfterBytes:summarizeSamples(rows.map(row=>row.jsHeapAfterBytes)).median,gpuMemoryBytes:null}}),
       ];}))},
       startup:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>{const rows=rendererLoads.filter(row=>row.renderer===renderer);const metric=renderer==='pixi'?'pixiInitMs':'assetsMs';return [measurement('startup',renderer==='pixi'?'rendererInitialization':'assetLoad','ms',summarizeSamples(rows.map(row=>row[metric])),{renderer})];})},
+      memory:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.map(count=>{const rows=grouped(renderer,count);const observations=rows.map(row=>row.jsHeapAfterBytes).filter(Number.isFinite);return measurement('memory','jsHeapUsedAfterGc','bytes',summarizeSamples(observations),{population:count,renderer,observations,source:'Chrome Performance.getMetrics JSHeapUsedSize after forced GC; GPU allocation is unavailable'});}))},
     },
     timingBoundaries:[
       {phase:'worker',timed:['One-hour Worker request and reply round-trip.'],notTimed:['Renderer frame sampling and browser startup.']},
@@ -158,6 +159,7 @@ try {
       {phase:'layout',timed:['Whole-page layout duration delta across the workload.'],notTimed:['GPU rendering time.']},
       {phase:'render',timed:['RAF frame intervals and JavaScript render-submission call duration.'],notTimed:['GPU completion, texture memory and Worker request/reply.']},
       {phase:'startup',timed:['Canvas asset loading or Pixi renderer initialization as reported.'],notTimed:['Simulation ticks and steady-state frame loop.']},
+      {phase:'memory',timed:['JavaScript heap after forced garbage collection, sampled per renderer and population.'],notTimed:['GPU allocation, process RSS and retained per-object attribution.']},
     ],
     results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},url:origin,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
     limitations:measurementNotes,

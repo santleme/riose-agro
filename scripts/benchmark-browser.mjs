@@ -5,7 +5,7 @@ import path from 'node:path';
 import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
-import {benchmarkReport,measurement} from './benchmark-report.mjs';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 import {waitForDevToolsActivePort} from './browser-startup.mjs';
 
 async function findChrome(){
@@ -141,6 +141,7 @@ try{
     ui:{status:'measured',measurements:worker.map(row=>measurement('ui','scriptDurationPerTick','ms',{median:row.scriptDurationPerTickMs,spread:null},{population:row.animals,domNodes:row.domNodes,observations:[row.scriptDurationPerTickMs]}))},
     layout:{status:'measured',measurements:worker.map(row=>measurement('layout','layoutPerTick','ms',{median:row.layoutPerTickMs,spread:null},{population:row.animals,observations:[row.layoutPerTickMs]}))},
     serialization:{status:'measured',measurements:[measurement('serialization','snapshot-json','bytes',{median:persistence.jsonBytes,spread:null},{population:10000,gzipBytes:persistence.gzipBytes,gzipBase64Bytes:persistence.gzipBase64Bytes,observations:[persistence.jsonBytes]})]},
+    memory:{status:'measured',measurements:worker.map(row=>measurement('memory','jsHeapUsedAfterGc','bytes',summarizeSamples([row.heapUsedBytes]),{population:row.animals,implementation:row.implementation,observations:[row.heapUsedBytes],source:'Chrome Performance.getMetrics JSHeapUsedSize after HeapProfiler.collectGarbage'}))},
   };
   const output=benchmarkReport({
     name:'browser-worker',runtime:{browser:browser.product,browserRevision:browser.revision,userAgent:browser.userAgent},
@@ -152,6 +153,7 @@ try{
       {phase:'ui',timed:['Whole-page script-duration delta across the measured Worker workload.'],notTimed:['Isolated allocation attribution to one UI function.']},
       {phase:'layout',timed:['Whole-page layout-duration delta across the measured Worker workload.'],notTimed:['GPU rendering time.']},
       {phase:'serialization',timed:['JSON byte counting and browser gzip snapshot encoding.'],notTimed:['Browser storage quota measurement.']},
+      {phase:'memory',timed:['Chrome JS heap after forced garbage collection.'],notTimed:['Process RSS, retained object attribution, WASM linear memory and GPU allocation.']},
     ],
     results:{browser:{product:'Chromium',url:origin},worker,profile:{implementation:profileTick,sampledAppFunctions:sampledFunctions,metricsDelta:profileMetricsDelta,heapUsedBytes:profileMetrics.JSHeapUsedSize,domNodes:profileMetrics.Nodes},simulationProfile,browserEngine:kernel,persistence},limitations,
   });

@@ -78,6 +78,9 @@ class AmdBenchmarkTests(unittest.TestCase):
         )
         serialized = json.dumps(report, allow_nan=False)
         self.assertIn('"schema_version": 1', serialized)
+        self.assertEqual(report["schemaVersion"], 2)
+        for phase in ("coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"):
+            self.assertEqual(report["phases"][phase]["status"], "not-measured")
         self.assertEqual(report["cpu"]["backend_used"], "cpu")
         self.assertEqual(report["cpu"]["statistics"]["runs"], 2)
         self.assertEqual(report["amd"]["status"], "unavailable")

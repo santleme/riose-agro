@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {FarmEngine} from '../src/client/engine.js';
 import {loadWasmMetabolism,updateMetabolismJS} from '../src/client/metabolism-wasm.js';
-import {benchmarkReport,measurement} from './benchmark-report.mjs';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions=Number(process.env.BENCH_REPETITIONS??25);
 const simulationWarmups=Number(process.env.BENCH_SIMULATION_WARMUPS??10);
@@ -90,6 +90,7 @@ const results={
 const engineMeasurements=simulation.flatMap(row=>['baselineJavaScript','javascript','wasm'].map(implementation=>measurement('engine','tick24h','ms',row[implementation],{population:row.animals,scope:'FarmEngine',implementation})));
 const kernelMeasurements=kernel.flatMap(row=>['javascript','wasm'].map(implementation=>measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals>10_000?'numeric-kernel-only':null})));
 const snapshotMeasurements=stateTransfer.flatMap(row=>['engineSnapshotClone','structuredCloneProxy','jsonStringify'].map(operation=>measurement(operation==='jsonStringify'?'serialization':'snapshot',operation,'ms',row[operation],{population:row.animals,bytes:row[operation].bytes??null})));
+const memoryMeasurements=[measurement('memory','wasmLinearMemoryBytesAfterKernel','bytes',summarizeSamples([results.wasmLinearMemoryBytes]),{population:100_000,memoryType:'wasm-memory',scope:'numeric-kernel-only',observations:[results.wasmLinearMemoryBytes],source:'WASM linear memory size after isolated numeric-kernel workload'})];
 console.log(JSON.stringify(benchmarkReport({
   name:'simulation-engine',
   runtime:{rust:process.env.RUSTC_VERSION??null},
@@ -99,11 +100,13 @@ console.log(JSON.stringify(benchmarkReport({
     engine:{status:'measured',measurements:[...engineMeasurements,...kernelMeasurements]},
     snapshot:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='snapshot')},
     serialization:{status:'measured',measurements:snapshotMeasurements.filter(item=>item.phase==='serialization')},
+    memory:{status:'measured',measurements:memoryMeasurements},
   },
   timingBoundaries:[
     {phase:'engine',timed:['FarmEngine.tick(24) including its final snapshot clone.','JS/WASM metabolism batch including ABI copies.'],notTimed:['FarmEngine construction.','Rendering and Worker messaging.']},
     {phase:'snapshot',timed:['engine.snapshot() clone or structuredClone of the captured snapshot.'],notTimed:['Engine construction and simulation tick.']},
     {phase:'serialization',timed:['JSON.stringify of the captured full snapshot.'],notTimed:['JSON.parse and storage/compression.']},
+    {phase:'memory',timed:['WASM linear memory size after the isolated numeric-kernel workload.'],notTimed:['JS heap, process RSS and GPU allocations.']},
   ],
   results,
   limitations:results.notes,

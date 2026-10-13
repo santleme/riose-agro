@@ -76,7 +76,7 @@ def native_call(library: ctypes.CDLL, count: int, source: array.array, target: a
 def stats(samples: list[float]) -> dict:
     return {"sampleCount": len(samples), "median": median(samples),
             "spread": {"min": min(samples), "max": max(samples), "range": max(samples) - min(samples)},
-            "samples": samples}
+            "rawObservations": samples, "samples": samples}
 
 
 def phase_measurement(phase: str, metric: str, samples: list[float], population: int, source: str) -> dict:
@@ -108,7 +108,7 @@ def try_rocm():
         properties = torch.cuda.get_device_properties(0)
         info = {"available": True, "backend": "rocm_hip", "device": properties.name,
                 "torchVersion": torch.__version__, "rocmVersion": hip,
-                "gpuMemoryBytes": int(properties.total_memory), "setupMs": elapsed_ms(started)}
+                "gpuTotalMemoryBytes": int(properties.total_memory), "setupMs": elapsed_ms(started)}
         return torch, info
     except Exception as exc:
         return None, {"available": False, "reason": f"rocm_initialization_failed: {exc}",
@@ -197,12 +197,12 @@ def report() -> dict:
     engine_phase = {"status": "measured", "measurements": measurements}
     unavailable = {"status": "not-measured", "measurements": []}
     is_go = bool(gpu["available"] and all(outcomes))
-    return {
-        "schemaVersion": 1,
+    result = {
+        "schemaVersion": 2,
         "benchmark": {"name": "cattle-metabolism-cpu-rocm", "source": source_info()},
         "runtime": {"platform": sys.platform, "python": platform.python_version(), "torch": gpu.get("torchVersion"), "rocm": gpu.get("rocmVersion")},
         "hardware": {"os": platform.platform(), "architecture": platform.machine(), "cpu": platform.processor() or None,
-                     "gpuMemoryBytes": gpu.get("gpuMemoryBytes"), "accelerator": gpu,
+                     "gpuMemoryBytes": None, "accelerator": gpu,
                      "deviceNodeProbe": {"/dev/kfd": Path("/dev/kfd").exists(), "/dev/dri": Path("/dev/dri").exists()},
                      "toolProbe": {name: shutil.which(name) for name in ("rocminfo", "rocm-smi", "hipcc", "nvidia-smi")}},
         "workload": {"seed": "deterministic-animal-state-index-v1", "populations": [{"animals": n, "scope": "numeric-kernel-only", **({"limit": "isolated kernel only; not FarmEngine or renderer"} if n == 100_000 else {})} for n in SIZES],
@@ -211,10 +211,14 @@ def report() -> dict:
         "limits": {"farmEngineMaxAnimals": 10000, "rendererMaxAnimals": 10000, "numericKernelMaxAnimalsMeasured": max_animals},
         "phases": {"engine": engine_phase, "snapshot": unavailable, "serialization": unavailable, "worker": unavailable,
                     "ui": unavailable, "layout": unavailable, "render": unavailable,
+                    "coldStartup": unavailable, "warmStartup": unavailable, "bridgeMarshaling": unavailable,
+                    "fullScenario": unavailable, "uiEndToEnd": unavailable, "memory": unavailable,
                     "startup": {"status": "measured" if gpu["available"] else "unavailable",
                                 "measurements": [phase_measurement("accelerator_setup", "rocmInitialization", [gpu["setupMs"]], 0, "PyTorch ROCm initialization") ] if gpu["available"] else []}},
         "timingBoundaries": [{"phase": "engine", "timed": ["Native Rust metabolism kernel; optional actual ROCm tensor kernel, with setup and transfers separately recorded."],
-                              "notTimed": ["FarmEngine orchestration, feeding, weather, snapshot, worker scheduling, UI and rendering."]}],
+                              "notTimed": ["FarmEngine orchestration, feeding, weather, snapshot, worker scheduling, UI and rendering."],
+                              "whatIsTimed": ["Native Rust metabolism kernel; optional actual ROCm tensor kernel, with setup and transfers separately recorded."],
+                              "whatIsNotTimed": ["FarmEngine orchestration, feeding, weather, snapshot, worker scheduling, UI and rendering."]}],
         "results": {"decision": "go" if is_go else "no-go", "reason": "validated actual ROCm comparison" if is_go else gpu.get("reason", "correctness_failed"),
                     "rows": rows, "correctness": {"status": "passed" if torch is not None and all(outcomes) else "not-measured" if torch is None else "failed",
                                                      "reason": None if torch is not None else "accelerator unavailable; no CPU fallback is counted as accelerator"},
@@ -223,6 +227,12 @@ def report() -> dict:
                         "A CPU-only environment is an explicit no-go; CPU measurements are never labeled as GPU results.",
                         "The PyTorch HIP implementation evaluates the same formula but is not integrated into production."]
     }
+    validator = ROOT / "scripts" / "validate-benchmark-report.mjs"
+    validation = subprocess.run(["node", str(validator)], input=json.dumps(result, allow_nan=False),
+                                text=True, capture_output=True)
+    if validation.returncode:
+        raise ValueError(f"shared_benchmark_report_schema_validation_failed: {validation.stderr.strip()}")
+    return result
 
 
 if __name__ == "__main__":

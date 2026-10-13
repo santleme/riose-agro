@@ -7,8 +7,8 @@ const Engine = variant === 'typedColumns' ? ColumnHistoryEngine : FarmEngine;
 const count = Number(countText), hours = Number(hoursText), repetitions = Number(repetitionsText);
 const collect = () => global.gc?.();
 const sampleMemory = () => { const memory = process.memoryUsage(); return {heapUsedBytes: memory.heapUsed, arrayBuffersBytes: memory.arrayBuffers, rssBytes: memory.rss}; };
-const median = values => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
-const summarizeSamples = values => { const sorted = [...values].sort((a, b) => a - b); return {sampleCount: sorted.length, median: median(sorted), spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]}}; };
+const median = values => { const sorted = [...values].sort((a, b) => a - b); return sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2; };
+const summarizeSamples = values => { const sorted = [...values].sort((a, b) => a - b); return {sampleCount: sorted.length, median: median(sorted), spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]}, rawObservations: [...values]}; };
 
 {
   const warmup = new Engine(20261012, count);
@@ -35,11 +35,15 @@ const summarize = field => ({
   snapshotStatistics: summarizeSamples(rows.map(row => row.snapshotMs)),
   baselineRssBytesMedian: median(rows.map(row => row.baselineRssBytes)),
   retainedHeapDeltaBytesMedian: median(rows.map(row => row.retained.heapUsedBytes)),
+  retainedHeapDeltaBytesSamples: rows.map(row => row.retained.heapUsedBytes),
   retainedArrayBuffersDeltaBytesMedian: median(rows.map(row => row.retained.arrayBuffersBytes)),
   retainedRssBytesMedian: median(rows.map(row => row.retained.rssBytes)),
+  retainedRssBytesSamples: rows.map(row => row.retained.rssBytes),
   materializedHeapDeltaBytesMedian: median(rows.map(row => row.materialized.heapUsedBytes)),
+  materializedHeapDeltaBytesSamples: rows.map(row => row.materialized.heapUsedBytes),
   materializedArrayBuffersDeltaBytesMedian: median(rows.map(row => row.materialized.arrayBuffersBytes)),
   materializedRssBytesMedian: median(rows.map(row => row.materialized.rssBytes)),
+  materializedRssBytesSamples: rows.map(row => row.materialized.rssBytes),
   historyEntries: rows.at(-1).historyEntries,
   snapshotDigest: rows.at(-1).digest,
   variant: field
