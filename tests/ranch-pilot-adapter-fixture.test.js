@@ -2,13 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
+import Ajv2020 from 'ajv/dist/2020.js';
 import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
+import {adaptRanchSourceSceneV2, restoreRanchSourceSceneV2, RANCH_SOURCE_SCENE_ADAPTER_VERSION} from '../graphics-poc/ranch-source-scene-adapter-v2.js';
 
-const [pilot, semanticManifest, composerManifest, gapReport] = await Promise.all([
+const [pilot, semanticManifest, composerManifest, gapReport, adapterSchema] = await Promise.all([
   readFile(new URL('../assets/pilots/cattle-ranch-v1/pilot.json', import.meta.url), 'utf8').then(JSON.parse),
   readFile(new URL('../assets/manifests/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
   readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8').then(JSON.parse),
   readFile(new URL('./fixtures/ranch-pilot-adapter-gap-v1.json', import.meta.url), 'utf8').then(JSON.parse),
+  readFile(new URL('../schemas/ranch-source-scene-adapter-v2.schema.json', import.meta.url), 'utf8').then(JSON.parse),
 ]);
 const sourceScene = await readFile(new URL(`../${pilot.sourceScene}`, import.meta.url), 'utf8').then(JSON.parse);
 const assetsById = new Map(semanticManifest.assets.map(asset => [asset.id, asset]));
@@ -88,4 +91,48 @@ test('Composer v1 reports the ranch-pilot source shape as unsupported instead of
   }
   assert.equal(sourceScene.placements.length, 82);
   assert.equal(placementAssetIds(sourceScene).length, 26);
+});
+
+test('ranch source-scene v2 preserves pixel geometry, links, lots and manifest review/rights without promotion', () => {
+  const document = adaptRanchSourceSceneV2(sourceScene, semanticManifest, pilot);
+  const validate = new Ajv2020({allErrors: true, strict: true}).compile(adapterSchema);
+  assert.equal(document.adapterVersion, RANCH_SOURCE_SCENE_ADAPTER_VERSION);
+  assert.equal(validate(document), true, JSON.stringify(validate.errors));
+  assert.deepEqual(document.sourceFormat.coordinateFrame, {
+    frameId: 'ranch-composition-v4-canvas-pixel',
+    units: 'px',
+    footprintPx: sourceScene.footprintPx,
+    projection: sourceScene.projection,
+    originConvention: 'not specified; source coordinates are preserved without transform',
+  });
+  assert.deepEqual(document.sourceFormat.ids.placementIds, sourceScene.placements.map(item => item.placementId));
+  assert.equal(document.placements.length, 82);
+  assert.deepEqual(document.placements.map(({canonicalAsset, ...placement}) => placement), sourceScene.placements);
+  assert.deepEqual(document.sourceScene.zones, sourceScene.zones);
+  assert.deepEqual(document.sourceScene.prefabs, sourceScene.prefabs);
+  assert.deepEqual(document.sourceScene.visualAnimalLots, sourceScene.visualAnimalLots);
+  assert.deepEqual(document.sourceScene.visualAnimalBudget, sourceScene.visualAnimalBudget);
+  assert.deepEqual(restoreRanchSourceSceneV2(document), sourceScene);
+  assert.deepEqual(document.unknownSourceFields, []);
+
+  const canonicalById = new Map(semanticManifest.assets.map(asset => [asset.id, asset]));
+  for (const resolved of document.assets) {
+    const canonical = canonicalById.get(resolved.assetId);
+    assert.equal(resolved.canonicalStatus, canonical.status);
+    assert.deepEqual(resolved.canonicalReview, canonical.review ?? null);
+    assert.deepEqual(resolved.canonicalRights, canonical.rights ?? null);
+    if (pilot.assetIds.includes(resolved.assetId)) {
+      assert.equal(resolved.pilotScope.releasePromotion, false);
+      assert.equal(resolved.canonicalStatus, canonical.status, 'pilot approval never replaces canonical status');
+    }
+  }
+  assert.ok(document.assets.every(asset => asset.canonicalStatus !== 'RELEASED'));
+});
+
+test('ranch source-scene v2 reports newly encountered source fields and still restores them losslessly', () => {
+  const extended = structuredClone(sourceScene);
+  extended.futureReviewFlag = {decision: 'unknown-to-this-adapter'};
+  const document = adaptRanchSourceSceneV2(extended, semanticManifest, pilot);
+  assert.deepEqual(document.unknownSourceFields, [{path: 'futureReviewFlag'}]);
+  assert.deepEqual(restoreRanchSourceSceneV2(document), extended);
 });
