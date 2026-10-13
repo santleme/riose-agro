@@ -129,7 +129,13 @@
               14785208,
               29499752,
               74047272
-            ]
+            ],
+            "median": 29499752,
+            "spread": {
+              "min": 14785208,
+              "max": 74047272,
+              "range": 59262064
+            }
           },
           "population": "one process-level sample after each configured population",
           "source": "process.memoryUsage().heapUsed sampled after aggregation; synthetic input records remain retained",

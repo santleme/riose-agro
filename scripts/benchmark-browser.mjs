@@ -138,9 +138,9 @@ try{
         ['javascript','wasm'].map(implementation=>
           measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals===100000?'numeric-kernel-only':null}))))},
     worker:{status:'measured',measurements:worker.map(row=>measurement('worker','roundTrip24h','ms',row.roundTrip24h,{population:row.animals,implementation:row.implementation,median:row.roundTrip24h.medianMs,spread:{p95:row.roundTrip24h.p95Ms},memory:{jsHeapUsedBytes:row.heapUsedBytes,jsHeapDeltaBytes:row.heapDeltaBytes}}))},
-    ui:{status:'measured',measurements:worker.map(row=>measurement('ui','scriptDurationPerTick','ms',{median:row.scriptDurationPerTickMs,spread:null},{population:row.animals,domNodes:row.domNodes}))},
-    layout:{status:'measured',measurements:worker.map(row=>measurement('layout','layoutPerTick','ms',{median:row.layoutPerTickMs,spread:null},{population:row.animals}))},
-    serialization:{status:'measured',measurements:[measurement('serialization','snapshot-json','bytes',{median:persistence.jsonBytes,spread:null},{population:10000,gzipBytes:persistence.gzipBytes,gzipBase64Bytes:persistence.gzipBase64Bytes})]},
+    ui:{status:'measured',measurements:worker.map(row=>measurement('ui','scriptDurationPerTick','ms',{median:row.scriptDurationPerTickMs,spread:null},{population:row.animals,domNodes:row.domNodes,observations:[row.scriptDurationPerTickMs]}))},
+    layout:{status:'measured',measurements:worker.map(row=>measurement('layout','layoutPerTick','ms',{median:row.layoutPerTickMs,spread:null},{population:row.animals,observations:[row.layoutPerTickMs]}))},
+    serialization:{status:'measured',measurements:[measurement('serialization','snapshot-json','bytes',{median:persistence.jsonBytes,spread:null},{population:10000,gzipBytes:persistence.gzipBytes,gzipBase64Bytes:persistence.gzipBase64Bytes,observations:[persistence.jsonBytes]})]},
   };
   const output=benchmarkReport({
     name:'browser-worker',runtime:{browser:browser.product,browserRevision:browser.revision,userAgent:browser.userAgent},

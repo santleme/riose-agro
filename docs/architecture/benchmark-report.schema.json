@@ -14,7 +14,14 @@
         "source": {
           "type": "object",
           "required": ["revision", "dirty"],
-          "properties": {"revision": {"type": ["string", "null"]}, "dirty": {"type": "boolean"}},
+          "properties": {
+            "revision": {"type": ["string", "null"]},
+            "dirty": {"type": "boolean"}
+          },
+          "allOf": [{
+            "if": {"properties": {"dirty": {"const": false}}, "required": ["dirty"]},
+            "then": {"properties": {"revision": {"type": "string", "pattern": "^[0-9a-fA-F]{7,64}$"}}}
+          }],
           "additionalProperties": false
         }
       },
@@ -36,7 +43,20 @@
       },
       "additionalProperties": true
     },
-    "configuration": {"type": "object", "required": ["warmupRuns", "repetitions"], "properties": {"warmupRuns": {"type": ["integer", "object", "null"]}, "repetitions": {"type": ["integer", "null"]}}, "additionalProperties": true},
+    "configuration": {
+      "type": "object",
+      "required": ["warmupRuns", "repetitions"],
+      "properties": {
+        "warmupRuns": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 0}}
+          ]
+        },
+        "repetitions": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": true
+    },
     "limits": {"type": "object", "required": ["farmEngineMaxAnimals", "rendererMaxAnimals", "numericKernelMaxAnimalsMeasured"], "properties": {"farmEngineMaxAnimals": {"type": ["integer", "null"]}, "rendererMaxAnimals": {"type": ["integer", "null"]}, "numericKernelMaxAnimalsMeasured": {"type": ["integer", "null"]}}, "additionalProperties": true},
     "phases": {
       "type": "object",
@@ -69,7 +89,52 @@
       "type": "object",
       "required": ["status", "measurements"],
       "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
+      "allOf": [{
+        "if": {"properties": {"status": {"const": "measured"}}, "required": ["status"]},
+        "then": {
+          "properties": {
+            "measurements": {
+              "items": {
+                "properties": {
+                  "statistics": {"$ref": "#/$defs/measurementStatistics"}
+                }
+              }
+            }
+          }
+        }
+      }],
       "additionalProperties": false
+    },
+    "measurementStatistics": {
+      "type": "object",
+      "oneOf": [
+        {
+          "required": ["sampleCount", "median", "spread"],
+          "properties": {
+            "sampleCount": {"type": "integer", "minimum": 1},
+            "median": {"type": "number"},
+            "spread": {
+              "type": "object",
+              "required": ["min", "max", "range"],
+              "properties": {
+                "min": {"type": "number"},
+                "max": {"type": "number"},
+                "range": {"type": "number", "minimum": 0}
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        {
+          "required": ["sampleCount", "median", "spread"],
+          "properties": {
+            "sampleCount": {"const": 0},
+            "median": {"type": "null"},
+            "spread": {"type": "null"}
+          }
+        }
+      ],
+      "additionalProperties": true
     }
   },
   "additionalProperties": true

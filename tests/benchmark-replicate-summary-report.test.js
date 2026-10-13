@@ -34,6 +34,14 @@ test('replicate summary benchmark preserves raw timing and process-heap observat
     assert.equal(heap.observations.length, 3);
     assert.match(heap.population, /process-level/);
     assert.match(heap.source, /process\.memoryUsage/);
+    const sortedHeapObservations = [...heap.observations].sort((left, right) => left - right);
+    assert.deepEqual(heap.statistics.values, heap.observations);
+    assert.equal(heap.statistics.median, sortedHeapObservations[1]);
+    assert.deepEqual(heap.statistics.spread, {
+      min: sortedHeapObservations[0],
+      max: sortedHeapObservations.at(-1),
+      range: sortedHeapObservations.at(-1) - sortedHeapObservations[0],
+    });
   } finally {
     await rm(tempDirectory, {recursive: true, force: true});
   }

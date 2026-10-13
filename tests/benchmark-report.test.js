@@ -45,6 +45,71 @@ test('benchmark schema rejects missing boundaries, seed, or population metadata'
   }
 });
 
+test('benchmark report requires numeric warmup and repetition counts, including per-phase warmup maps', () => {
+  for (const [label, mutate] of [
+    ['missing warmups', report => {delete report.configuration.warmupRuns;}],
+    ['null warmups', report => {report.configuration.warmupRuns = null;}],
+    ['negative warmups', report => {report.configuration.warmupRuns = -1;}],
+    ['invalid per-phase warmups', report => {report.configuration.warmupRuns = {engine: null};}],
+    ['missing repetitions', report => {delete report.configuration.repetitions;}],
+    ['null repetitions', report => {report.configuration.repetitions = null;}],
+    ['zero repetitions', report => {report.configuration.repetitions = 0;}],
+  ]) {
+    const report = sampleReport();
+    mutate(report);
+    assert.equal(validate(report), false, label);
+    assert.throws(() => assertBenchmarkReport(report), /configuration\.(warmupRuns|repetitions)/, label);
+  }
+
+  const perPhaseWarmups = sampleReport();
+  perPhaseWarmups.configuration.warmupRuns = {engine: 0, snapshot: 2};
+  assert.equal(validate(perPhaseWarmups), true);
+  assert.doesNotThrow(() => assertBenchmarkReport(perPhaseWarmups));
+});
+
+test('clean benchmark captures require a valid source revision while dirty captures may omit it', () => {
+  for (const [label, mutate] of [
+    ['missing revision', report => {delete report.benchmark.source.revision;}],
+    ['null revision', report => {report.benchmark.source.revision = null;}],
+    ['invalid revision', report => {report.benchmark.source.revision = 'not-a-commit';}],
+  ]) {
+    const report = sampleReport();
+    report.benchmark.source.dirty = false;
+    mutate(report);
+    assert.equal(validate(report), false, label);
+    assert.throws(() => assertBenchmarkReport(report), /clean capture requires a valid hexadecimal source revision/, label);
+  }
+
+  const dirtyWithoutRevision = sampleReport();
+  dirtyWithoutRevision.benchmark.source.dirty = true;
+  dirtyWithoutRevision.benchmark.source.revision = null;
+  assert.equal(validate(dirtyWithoutRevision), true);
+  assert.doesNotThrow(() => assertBenchmarkReport(dirtyWithoutRevision));
+});
+
+test('measured phases require sample count, median, and spread statistics', () => {
+  for (const [label, mutate] of [
+    ['missing sample count', report => {delete report.phases.engine.measurements[0].statistics.sampleCount;}],
+    ['null sample count', report => {report.phases.engine.measurements[0].statistics.sampleCount = null;}],
+    ['missing median', report => {delete report.phases.engine.measurements[0].statistics.median;}],
+    ['null median', report => {report.phases.engine.measurements[0].statistics.median = null;}],
+    ['missing spread', report => {delete report.phases.engine.measurements[0].statistics.spread;}],
+    ['null spread', report => {report.phases.engine.measurements[0].statistics.spread = null;}],
+    ['incomplete spread', report => {report.phases.engine.measurements[0].statistics.spread = {min: 1, max: 3};}],
+  ]) {
+    const report = sampleReport();
+    mutate(report);
+    assert.equal(validate(report), false, label);
+    assert.throws(() => assertBenchmarkReport(report), /Invalid benchmark report/, label);
+  }
+
+  const notMeasured = sampleReport();
+  notMeasured.phases.engine = {status: 'not-measured', measurements: []};
+  notMeasured.timingBoundaries = [{phase: 'snapshot', timed: ['No timed work.'], notTimed: []}];
+  assert.equal(validate(notMeasured), true);
+  assert.doesNotThrow(() => assertBenchmarkReport(notMeasured));
+});
+
 test('benchmark adapter refuses implicit seed/population defaults and conflated 100k animal scope', () => {
   const common = {
     name: 'invalid-test',

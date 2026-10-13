@@ -17,6 +17,45 @@ function gitValue(args) {
   }
 }
 
+function summarizeNumericObservations(values) {
+  if (!Array.isArray(values) || values.length === 0
+    || !values.every(value => typeof value === 'number' && Number.isFinite(value))) return null;
+  const sorted = [...values].sort((left, right) => left - right);
+  const median = sorted.length % 2
+    ? sorted[(sorted.length - 1) / 2]
+    : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+  return {
+    sampleCount: sorted.length,
+    median,
+    spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]},
+  };
+}
+
+function normalizeStatistics(statistics, measurementDetails = {}) {
+  if (!statistics || typeof statistics !== 'object' || Array.isArray(statistics)) return statistics;
+  if (statistics.sampleCount === 0 && statistics.median === null && statistics.spread === null) return statistics;
+  const observations = statistics.rawObservations
+    ?? statistics.observations
+    ?? statistics.observationsMs
+    ?? statistics.values
+    ?? measurementDetails.observations;
+  const derived = summarizeNumericObservations(observations);
+  const spreadAlias = statistics.spreadMs;
+  const median = statistics.median ?? statistics.medianMs ?? statistics.median_ms ?? derived?.median;
+  const sampleCount = statistics.sampleCount ?? derived?.sampleCount;
+  const spread = statistics.spread ?? (spreadAlias && {
+    min: spreadAlias.min,
+    max: spreadAlias.max,
+    range: spreadAlias.range,
+  }) ?? derived?.spread;
+  return {
+    ...statistics,
+    sampleCount,
+    median,
+    spread,
+  };
+}
+
 /** Wrap a benchmark's measurements in the repository-wide, versioned report envelope. */
 export function benchmarkReport({
   name,
@@ -40,6 +79,7 @@ export function benchmarkReport({
         ...phases[phase],
         measurements: phases[phase].measurements.map(item => ({
           ...item,
+          statistics: normalizeStatistics(item.statistics, item),
           population: item.population ?? (workload.populations.length === 1
             ? workload.populations[0]
             : 'all configured populations'),
@@ -129,6 +169,21 @@ export function benchmarkReport({
 }
 
 export function assertBenchmarkReport(report) {
+  const warmupRuns = report?.configuration?.warmupRuns;
+  const validWarmups = Number.isInteger(warmupRuns) && warmupRuns >= 0
+    || (warmupRuns !== null && typeof warmupRuns === 'object' && !Array.isArray(warmupRuns)
+      && Object.keys(warmupRuns).length > 0
+      && Object.values(warmupRuns).every(value => Number.isInteger(value) && value >= 0));
+  if (!validWarmups) {
+    throw new TypeError('Invalid benchmark report: configuration.warmupRuns must be a non-negative integer or a non-empty map of non-negative integers.');
+  }
+  if (!Number.isInteger(report?.configuration?.repetitions) || report.configuration.repetitions < 1) {
+    throw new TypeError('Invalid benchmark report: configuration.repetitions must be a positive integer.');
+  }
+  const source = report?.benchmark?.source;
+  if (source?.dirty === false && (typeof source.revision !== 'string' || !/^[0-9a-f]{7,64}$/i.test(source.revision))) {
+    throw new TypeError('Invalid benchmark report: a clean capture requires a valid hexadecimal source revision.');
+  }
   if (!validateReport(report)) {
     const details = validateReport.errors.map(error => `${error.instancePath || '/'} ${error.message}`).join('; ');
     throw new TypeError(`Invalid benchmark report: ${details}`);
@@ -137,6 +192,20 @@ export function assertBenchmarkReport(report) {
   for (const [phase, phaseReport] of Object.entries(report.phases)) {
     if (phaseReport.status === 'measured' && !declaredBoundaries.has(phase)) {
       throw new TypeError(`Invalid benchmark report: measured phase "${phase}" has no timing boundary.`);
+    }
+    if (phaseReport.status !== 'measured') continue;
+    for (const [index, item] of phaseReport.measurements.entries()) {
+      const statistics = item.statistics;
+      const spread = statistics.spread;
+      const unavailable = statistics.sampleCount === 0 && statistics.median === null && spread === null;
+      const summarized = Number.isInteger(statistics.sampleCount) && statistics.sampleCount > 0
+        && typeof statistics.median === 'number' && Number.isFinite(statistics.median)
+        && spread && typeof spread === 'object'
+        && Number.isFinite(spread.min) && Number.isFinite(spread.max)
+        && Number.isFinite(spread.range) && spread.range >= 0;
+      if (!unavailable && !summarized) {
+        throw new TypeError(`Invalid benchmark report: measured phase "${phase}" measurement ${index} requires sampleCount, median, and min/max/range spread statistics.`);
+      }
     }
   }
   return report;
