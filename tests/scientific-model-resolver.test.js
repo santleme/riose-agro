@@ -131,6 +131,36 @@ test('registered model result records exact inputs, units, evidence status and i
   assert.deepEqual(result.scientificProvenance, [provenance]);
 });
 
+test('registered provenance snapshots nested inputs before model code and caller mutations', () => {
+  const id = 'issue-93-input-snapshot';
+  registerScientificModel(defineScientificModel({
+    id,
+    version: '1',
+    inputs: {settings: 'object'},
+    outputs: {value: 'number'},
+    units: {settings: 'configuration'},
+    evidence: {status: 'demonstrative'},
+    run: ({settings}) => {
+      settings.thresholds[0] = 99;
+      settings.enabled = false;
+      return {value: settings.thresholds[0]};
+    }
+  }));
+  const inputs = {settings: {thresholds: [3, 5], enabled: true}};
+  const result = runRegisteredScientificModel({id, version: '1', inputs});
+  const captured = result.provenance.inputs.settings.value;
+
+  assert.deepEqual(captured, {thresholds: [3, 5], enabled: true});
+  assert.throws(() => { captured.thresholds[0] = 7; }, TypeError);
+  assert.throws(() => { captured.enabled = false; }, TypeError);
+  inputs.settings.thresholds[1] = 100;
+  inputs.settings.enabled = false;
+  assert.deepEqual(result.provenance.inputs.settings, {
+    value: {thresholds: [3, 5], enabled: true},
+    unit: 'configuration'
+  });
+});
+
 test('report renders optional scientific provenance and keeps legacy reports readable', () => {
   const snapshot = new FarmEngine(42, 2).snapshot();
   const manifest = createComparisonManifest(snapshot, 1);

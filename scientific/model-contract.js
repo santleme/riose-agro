@@ -130,6 +130,10 @@ function sha256(text) {
 
 export function runRegisteredScientificModel({id, version, inputs} = {}) {
   const model = resolveScientificModel(id, version);
+  // Capture the submitted inputs before model code runs. Models receive the
+  // caller's values, and a model may mutate nested arrays or objects; report
+  // provenance must still describe the inputs that were submitted.
+  const capturedInputs = cloneAndFreeze(inputs);
   const result = runScientificModel(model, inputs);
   const references = [];
   const source = model.evidence.source;
@@ -137,7 +141,7 @@ export function runRegisteredScientificModel({id, version, inputs} = {}) {
   const provenance = {
       modelId: model.id,
       version: model.version,
-      inputs: Object.fromEntries(Object.entries(inputs).map(([name, value]) => [name, {value, unit: model.units[name] ?? null}])),
+      inputs: Object.fromEntries(Object.entries(capturedInputs).map(([name, value]) => [name, {value, unit: model.units[name] ?? null}])),
       evidenceReferences: references,
       evidenceStatus: model.evidence.status ?? 'demonstrative',
       implementationHash: `sha256:${sha256(model.implementationSource)}`

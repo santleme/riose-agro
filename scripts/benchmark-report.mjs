@@ -68,6 +68,23 @@ export function benchmarkReport({
     if (population.animals >= 100_000 && population.scope !== 'numeric-kernel-only') {
       throw new TypeError('A 100000-animal benchmark population must use scope "numeric-kernel-only".');
     }
+    if (Number.isInteger(population.animals)) {
+      const scope = population.scope.toLowerCase();
+      const isNumericKernel = scope === 'numeric-kernel-only';
+      const engineOrRendererLimit = Math.min(
+        ...(scope.includes('farmengine') ? [limits.farmEngineMaxAnimals ?? 10_000] : []),
+        ...(scope.includes('renderer') ? [limits.rendererMaxAnimals ?? 10_000] : []),
+      );
+      if (engineOrRendererLimit !== Infinity && population.animals > engineOrRendererLimit) {
+        throw new TypeError(`Benchmark population ${index} exceeds its FarmEngine/renderer limit of ${engineOrRendererLimit} animals.`);
+      }
+      if (isNumericKernel) {
+        const numericLimit = limits.numericKernelMaxAnimalsMeasured ?? 100_000;
+        if (population.animals > numericLimit) {
+          throw new TypeError(`Benchmark population ${index} exceeds its numeric-kernel measurement limit of ${numericLimit} animals.`);
+        }
+      }
+    }
   }
   if (!Array.isArray(timingBoundaries) || timingBoundaries.length === 0) {
     throw new TypeError('Benchmark report requires explicit timingBoundaries for measured phases.');
