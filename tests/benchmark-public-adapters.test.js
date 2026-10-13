@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import {execFileSync} from 'node:child_process';
-import {mkdtemp, readFile, rm} from 'node:fs/promises';
+import {execFileSync, spawn} from 'node:child_process';
+import {access, mkdtemp, readFile, rm} from 'node:fs/promises';
 import os from 'node:os';
 import {join} from 'node:path';
+import {setTimeout as delay} from 'node:timers/promises';
 import test from 'node:test';
 import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
 
@@ -14,6 +15,20 @@ const run = (script, args = [], env = {}) => execFileSync(process.execPath, [scr
   env: {...process.env, ...env},
   maxBuffer: 32 * 1024 * 1024,
 });
+
+async function localChrome() {
+  const candidates = [process.env.CHROME_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
+  try {
+    for (const entry of (await (await import('node:fs/promises')).readdir(join(os.homedir(), '.cache/ms-playwright'))).filter(name => /^chromium-\d+$/.test(name))) {
+      candidates.push(join(os.homedir(), '.cache/ms-playwright', entry, 'chrome-linux64/chrome'));
+      candidates.push(join(os.homedir(), '.cache/ms-playwright', entry, 'chrome-linux/chrome'));
+    }
+  } catch {}
+  for (const candidate of candidates.filter(Boolean)) {
+    try { await access(candidate); return candidate; } catch {}
+  }
+  return null;
+}
 
 function assertMeasurements(report) {
   assertBenchmarkReport(report);
@@ -46,6 +61,15 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   assert.ok(animal.results.rows[0].measurements.aosEndToEnd.observations.length >= 5);
   assert.ok(animal.phases.engine.measurements[0].statistics.sampleCount >= 5);
   assert.ok(animal.phases.worker.measurements.length > 0);
+  assert.equal(animal.decisionEvidence.comparisons.length, animal.results.rows.length);
+  assert.equal(animal.decision, animal.decisionEvidence.recommendation);
+  assert.match(animal.decisionEvidence.rule, /counterbalanced paired samples/);
+  assert.ok(animal.results.rows.every(row => row.pairedComparison.paired
+    && row.pairedComparison.orderBySample.length === animal.workload.repetitions
+    && row.pairedComparison.orderBySample.every((order, index, orders) => index === 0 || order !== orders[index - 1])));
+  assert.ok(animal.decisionEvidence.comparisons.every(comparison =>
+    comparison.repeatableNetWin === (comparison.soaEndToEndMedianMs < comparison.aosMedianMs
+      && comparison.sampleWinRate >= animal.decisionEvidence.requiredSampleWinRate)));
 
   const scene = JSON.parse(run('scripts/measure-scene-adapter-v1.mjs'));
   assertMeasurements(scene);
@@ -72,4 +96,76 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   assert.equal(farm.results.results.length, 3);
   assert.ok(farm.results.results[0].observations.generationMs.length >= 5);
   assert.deepEqual(JSON.parse(await readFile(farmPath, 'utf8')), farm);
+});
+
+test('simulation and history benchmark adapters emit schema-valid reports with raw samples', () => {
+  const simulation = JSON.parse(run('scripts/benchmark-simulation.mjs', [], {
+    BENCH_REPETITIONS: '1',
+    BENCH_SIMULATION_WARMUPS: '0',
+    BENCH_KERNEL_WARMUPS: '0',
+    BENCH_SNAPSHOT_WARMUPS: '0',
+  }));
+  assertMeasurements(simulation);
+  assert.equal(simulation.configuration.repetitions, 1);
+  assert.ok(simulation.phases.engine.measurements.every(item => item.statistics.observationsMs?.length === 1));
+  assert.ok(simulation.phases.engine.measurements.some(item => item.population === 100_000 && item.scope === 'numeric-kernel'));
+
+  const historyReports = run('scripts/benchmark-history.mjs', [], {BENCH_REPETITIONS: '1', BENCH_HERDS: '1000'})
+    .trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(historyReports.length, 1);
+  const [history] = historyReports;
+  assertMeasurements(history);
+  assert.equal(history.configuration.repetitions, 1);
+  assert.equal(history.results.animals, 1000);
+  assert.equal(history.results.snapshotsIdentical, true);
+  assert.ok(history.phases.engine.measurements.every(item => item.observationsMs?.length === 1));
+  assert.ok(history.phases.snapshot.measurements.every(item => item.observationsMs?.length === 1));
+});
+
+test('browser and graphics PoC adapters emit valid reports when Chromium is available', async t => {
+  const chrome = await localChrome();
+  if (!chrome) {
+    t.skip('Browser adapter smoke requires Chromium; the standard JavaScript CI job does not install it.');
+    return;
+  }
+  execFileSync('npm', ['run', 'build:graphics-poc'], {cwd: repo, stdio: 'ignore'});
+  const server = spawn(process.execPath, ['src/server/server.js'], {cwd: repo, stdio: 'ignore'});
+  t.after(() => { if (server.exitCode === null) server.kill('SIGTERM'); });
+  const origin = 'http://127.0.0.1:8000/';
+  let ready = false;
+  for (let attempt = 0; attempt < 100; attempt++) {
+    try { ready = (await fetch(origin)).ok; } catch {}
+    if (ready) break;
+    await delay(100);
+  }
+  assert.equal(ready, true, 'local server starts for browser benchmark smoke');
+
+  const browser = JSON.parse(run('scripts/benchmark-browser.mjs', [], {
+    CHROME_BIN: chrome,
+    RIOSE_URL: origin,
+    BENCH_REPETITIONS: '1',
+  }));
+  assertMeasurements(browser);
+  assert.equal(browser.configuration.repetitions, 1);
+  assert.ok(browser.results.worker.every(row => row.roundTrip24h.observationsMs?.length === 1));
+  assert.ok(browser.phases.engine.measurements.some(item => item.population === 100_000));
+
+  await t.test('graphics PoC adapter emits a report when its built bundle is served', async t => {
+    const bundle = await fetch(`${origin}graphics-poc/dist/app.js`);
+    if (!bundle.ok) {
+      assert.fail(`Built graphics PoC bundle should be explicitly served after the build, received HTTP ${bundle.status}.`);
+    }
+    const graphics = JSON.parse(run('scripts/benchmark-graphics-poc.mjs', [], {
+      CHROME_BIN: chrome,
+      RIOSE_GRAPHICS_URL: `${origin}graphics-poc/index.html`,
+      BENCH_HERDS: '100',
+      BENCH_DURATION_MS: '300',
+      BENCH_WARMUP_MS: '10',
+      BENCH_REPEATS: '1',
+    }));
+    assertMeasurements(graphics);
+    assert.equal(graphics.results.results.length > 0, true);
+    assert.ok(graphics.results.results.every(row => Number.isFinite(row.frameMeanFps) && row.frameMeanFps > 0),
+      `the browser capture must collect real animation-frame samples: ${JSON.stringify(graphics.results.results)}`);
+  });
 });

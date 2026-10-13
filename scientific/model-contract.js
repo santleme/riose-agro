@@ -4,6 +4,7 @@ export const SCIENTIFIC_MODEL_INTERFACE_VERSION = 1;
 // Keep IDs and versions as separate keys. Delimiter concatenation can alias
 // distinct pairs (for example, ["a@b", "c"] and ["a", "b@c"]).
 const registeredModels = new Map();
+const definedModels = new WeakSet();
 
 function modelsForId(id, create = false) {
   let versions = registeredModels.get(id);
@@ -73,7 +74,7 @@ export function defineScientificModel({id, version, inputs, outputs, units = {},
     throw new TypeError(`Scientific model "${id}" implementationSource must be a non-empty string`);
   }
 
-  return Object.freeze({
+  const model = Object.freeze({
     interfaceVersion: SCIENTIFIC_MODEL_INTERFACE_VERSION,
     id,
     version,
@@ -84,10 +85,12 @@ export function defineScientificModel({id, version, inputs, outputs, units = {},
     implementationSource: implementationSource ?? run.toString(),
     run
   });
+  definedModels.add(model);
+  return model;
 }
 
 export function registerScientificModel(model) {
-  if (!model || model.interfaceVersion !== SCIENTIFIC_MODEL_INTERFACE_VERSION) throw new TypeError('Cannot register an unsupported scientific model');
+  if (!model || !definedModels.has(model)) throw new TypeError('Cannot register a scientific model that was not created by defineScientificModel');
   const versions = modelsForId(model.id, true);
   const existing = versions.get(model.version);
   const key = `${model.id}@${model.version}`;

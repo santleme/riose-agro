@@ -69,7 +69,7 @@ const cdpRequest=async(url,method='GET')=>{const response=await fetch(url,{metho
 const metrics=async cdp=>Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(metric=>['JSHeapUsedSize','JSHeapTotalSize','TaskDuration','ScriptDuration','LayoutDuration','RecalcStyleDuration','Nodes','Documents','Frames'].includes(metric.name)).map(metric=>[metric.name,metric.value]));
 const median=values=>[...values].sort((a,b)=>a-b)[Math.floor(values.length/2)];
 const p95=values=>[...values].sort((a,b)=>a-b)[Math.ceil(values.length*.95)-1];
-const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {sampleCount:sorted.length,medianMs:median(sorted),p95Ms:p95(sorted),spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]}};};
+const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {sampleCount:sorted.length,medianMs:median(sorted),p95Ms:p95(sorted),spreadMs:{min:sorted[0],max:sorted.at(-1),range:sorted.at(-1)-sorted[0]},observationsMs:values};};
 
 try{
   let active='';for(let attempt=0;attempt<100;attempt++){try{active=await readFile(path.join(userData,'DevToolsActivePort'),'utf8');break;}catch{await delay(100);}}

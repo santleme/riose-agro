@@ -370,4 +370,8 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
     assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.assetId);
   }
   assert.equal((await fetch(origin + '/graphics-poc/app.js')).status, 404, 'source modules remain outside the static allowlist');
+  let bundleBuilt = true;
+  try { await readFile(new URL('../graphics-poc/dist/app.js', import.meta.url)); } catch { bundleBuilt = false; }
+  assert.equal((await fetch(origin + '/graphics-poc/dist/app.js')).status, bundleBuilt ? 200 : 404,
+    'the generated bundle is served only when a local build exists');
 });

@@ -2,7 +2,7 @@ import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsCl
 import {composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
 import {accountAnimalVisibility, assertVisibleAnimalMembership, clusterFarAnimals, selectionForVisualEntry, visualEntryContainsSelection} from './herd-visual-model.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
-import {assertSceneCommandAllowed, sceneExecutionAvailability, unavailableExecutionState} from './execution-eligibility.js';
+import {assertSceneCommandAllowed, sceneExecutionAvailability, terminateNumericWorker, unavailableExecutionState} from './execution-eligibility.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -577,7 +577,7 @@ function updateHud() {
   $('fps-label').textContent = framesMs.length ? `${fps.toFixed(1)} / ${quantile(framesMs, .95).toFixed(1)} ms` : 'a medir';
   $('cost-label').textContent = `${state.updateMs.toFixed(2)} / ${state.paintMs.toFixed(2)} ms`;
   $('load-label').textContent = `${state.imageLoadMs?.toFixed(0) ?? '—'} ms assets · ${state.pixiLoadMs?.toFixed(0) ?? '—'} ms Pixi`;
-  $('engine-badge').textContent = execution.available ? (state.view?.engineImplementation ?? execution.status) : `${execution.moduleId ?? 'modelo'} · ${execution.moduleStatus}`;
+  $('engine-badge').textContent = execution.available ? (state.view?.engineImplementation ?? execution.status) : `EXECUÇÃO NUMÉRICA INDISPONÍVEL · ${execution.moduleId ?? 'modelo'} · ${execution.moduleStatus}`;
 }
 
 function persistScene() { try { normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest); localStorage.setItem(`riose-graphics-scene-v1:${state.scene.sceneId}`, JSON.stringify(state.scene)); } catch (error) { $('scene-status').textContent = `Não foi possível salvar as referências da cena: ${error.message}`; } }
@@ -603,6 +603,7 @@ async function selectScene(domain) {
     if (generation !== state.sceneSelectionGeneration) return;
     $('scene-status').textContent = 'Fazenda de corte · motor demonstrativo no Worker · cena editável.';
   } else {
+    terminateNumericWorker(state.worker, state.pending); state.worker = null; state.workerReady = false;
     const unavailable = unavailableExecutionState(state.scene);
     $('scene-status').textContent = `Cena visual carregada · execução numérica indisponível: ${unavailable.reason}`;
     refreshScene(); updateHud();
@@ -653,7 +654,7 @@ function pixiFrame(time) {
 }
 
 async function resetSimulation(count = Number($('herd-size').value)) {
-  if (state.selectedDomain !== 'beef') return;
+  if (state.selectedDomain !== 'beef') { assertSceneCommandAllowed(state.scene, 'reset'); return; }
   const generation = state.sceneSelectionGeneration;
   state.scene.simulation.populationCount = count;
   state.scene.simulation.seed = 20261012;
@@ -681,12 +682,22 @@ function captureFrames(durationMs) {
 }
 
 async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3000, warmupMs = 800} = {}) {
+  assertSceneCommandAllowed(state.scene, 'reset');
+  const generation = state.sceneSelectionGeneration;
+  const ensureBeefBenchmark = () => {
+    if (generation !== state.sceneSelectionGeneration || state.selectedDomain !== 'beef') {
+      throw new Error('Benchmark numérico cancelado: a cena visual não executa simulação.');
+    }
+    assertSceneCommandAllowed(state.scene, 'reset');
+  };
   setSimulationRunning(false);
   const results = [];
   for (const renderer of ['canvas', 'pixi']) {
+    ensureBeefBenchmark();
     $('renderer').value = renderer; switchRenderer(renderer);
     if (renderer === 'pixi') await initPixi();
     for (const count of counts) {
+      ensureBeefBenchmark();
       $('herd-size').value = String(count); await resetSimulation(count); state.camera.zoom = 2; syncCanvasSize();
       if (!focusAnimal(1)) throw new Error(`Não foi possível enquadrar o animal #1 no benchmark de ${count} bovinos.`);
       await captureFrames(warmupMs); state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0;
@@ -754,7 +765,7 @@ async function initialize() {
   $('distribute-shade').addEventListener('click', distributeShade);
   $('save-scene').addEventListener('click', () => { persistScene(); $('scene-status').textContent = 'Layout salvo no navegador; snapshot de simulação continua separado.'; });
   $('export-scene').addEventListener('click', () => canvasToBlob(null, `${state.scene.sceneId}.json`));
-  $('run-benchmark').addEventListener('click', async () => { $('scene-status').textContent = 'Benchmark Chromium em andamento…'; const report = await runGraphicsBenchmark(); $('scene-status').textContent = `Benchmark concluído: ${report.results.length} cargas, ambos renderizadores.`; });
+  $('run-benchmark').addEventListener('click', async () => { try { $('scene-status').textContent = 'Benchmark Chromium em andamento…'; const report = await runGraphicsBenchmark(); $('scene-status').textContent = `Benchmark concluído: ${report.results.length} cargas, ambos renderizadores.`; } catch (error) { $('scene-status').textContent = error.message; } });
   for (const input of document.querySelectorAll('[data-layer]')) input.addEventListener('change', () => { state.activeLayers[input.dataset.layer] = input.checked; refreshScene(); });
   $('zoom-in').addEventListener('click', () => { state.camera.zoom = Math.min(4, state.camera.zoom * 1.2); refreshScene(); });
   $('zoom-out').addEventListener('click', () => { state.camera.zoom = Math.max(.15, state.camera.zoom / 1.2); refreshScene(); });

@@ -19,6 +19,25 @@ test('resolves an exact registered scientific model ID and version', () => {
   }), /Unknown scientific model version/);
 });
 
+test('registry rejects model-shaped objects that bypass immutable contract validation', () => {
+  const id = 'issue-93-unvalidated-registration';
+  const forged = {
+    interfaceVersion: 1,
+    id,
+    version: '1',
+    inputs: {value: 'number'},
+    outputs: {value: 'number'},
+    units: {},
+    evidence: {},
+    implementationSource: 'return {value}',
+    run: ({value}) => ({value})
+  };
+
+  assert.throws(() => registerScientificModel(forged), /not created by defineScientificModel/);
+  forged.id = 'mutated-after-rejection';
+  assert.throws(() => resolveScientificModel(id, '1'), /Unknown scientific model version/);
+});
+
 test('registering a newer version never changes the selected calculation or its provenance', () => {
   const id = 'issue-93-version-selection-regression';
   const defineVersion = (version, multiplier) => defineScientificModel({

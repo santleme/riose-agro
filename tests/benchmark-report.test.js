@@ -58,6 +58,21 @@ test('benchmark adapter refuses implicit seed/population defaults and conflated 
   assert.throws(() => assertBenchmarkReport({...sampleReport(), workload: {seed: 1, populations: []}}), /Invalid benchmark report/);
 });
 
+test('shared schema and adapter enforce the same numeric-kernel scope above the FarmEngine limit', () => {
+  for (const animals of [99_999, 100_000, 100_001]) {
+    const farmReport = sampleReport();
+    farmReport.workload.populations[0] = {animals, scope: 'FarmEngine'};
+    assert.equal(validate(farmReport), animals < 100_000, `FarmEngine scope at ${animals} animals`);
+    if (animals < 100_000) assert.doesNotThrow(() => assertBenchmarkReport(farmReport));
+    else assert.throws(() => assertBenchmarkReport(farmReport), /Invalid benchmark report/);
+
+    const kernelReport = sampleReport();
+    kernelReport.workload.populations[0] = {animals, scope: 'numeric-kernel-only'};
+    assert.equal(validate(kernelReport), true, `numeric kernel scope at ${animals} animals`);
+    assert.doesNotThrow(() => assertBenchmarkReport(kernelReport));
+  }
+});
+
 test('benchmark adapter requires a timing boundary for every measured phase', () => {
   const report = sampleReport();
   report.timingBoundaries = [{phase: 'render', timed: ['Canvas submission.'], notTimed: []}];

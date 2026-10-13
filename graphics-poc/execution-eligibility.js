@@ -86,3 +86,9 @@ export function unavailableExecutionState(scene) {
     modelIds: availability.modelIds
   };
 }
+
+/** Stop an in-flight numeric Worker when the UI enters a visual-only scene. */
+export function terminateNumericWorker(worker, pending = []) {
+  worker?.terminate?.();
+  for (const request of pending.splice(0)) request.resolve?.({type: 'stale'});
+}

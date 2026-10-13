@@ -43,11 +43,12 @@ class DevTools {
 
 const chrome=await chromePath(), userData=await mkdtemp(path.join(tmpdir(),'riose-screenshot-'));
 if(update)await mkdir(fixtures,{recursive:true});
-const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader-webgl','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:'ignore'});
+const browser=spawn(chrome,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader-webgl','--remote-debugging-port=0',`--user-data-dir=${userData}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+let browserStderr='';browser.stderr.setEncoding('utf8');browser.stderr.on('data',chunk=>{browserStderr=(browserStderr+chunk).slice(-4000);});
 let cdp;
 try {
-  let active='';for(let i=0;i<200;i++){try{active=await readFile(path.join(userData,'DevToolsActivePort'),'utf8');break;}catch{await delay(50);}}
-  if(!active)throw new Error('Chromium did not expose a DevTools port.');
+  let active='';for(let i=0;i<600;i++){try{active=await readFile(path.join(userData,'DevToolsActivePort'),'utf8');break;}catch{if(browser.exitCode!==null)throw new Error(`Chromium exited before opening DevTools (code=${browser.exitCode}, signal=${browser.signalCode}): ${browserStderr.trim()}`);await delay(50);}}
+  if(!active)throw new Error(`Chromium did not expose a DevTools port within 30 seconds: ${browserStderr.trim()}`);
   const port=Number(active.split('\n')[0]), created=await fetch(`http://127.0.0.1:${port}/json/new?about:blank`,{method:'PUT'});if(!created.ok)throw new Error(`Chrome DevTools HTTP ${created.status}`);
   const target=await created.json();cdp=new DevTools(target.webSocketDebuggerUrl);await cdp.send('Page.enable');await cdp.send('Runtime.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
