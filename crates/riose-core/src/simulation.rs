@@ -108,8 +108,10 @@ impl FarmEngine {
             let weight = 330.0 + streams.model.next_f64() * 70.0;
             let patch = (index % 4) as u32;
             let bounds = PATCH_BOUNDS[patch as usize];
-            let x = bounds.x + 10.0 + streams.locomotion.next_f64() * (bounds.w - 20.0);
-            let y = bounds.y + 10.0 + streams.locomotion.next_f64() * (bounds.h - 20.0);
+            let x_offset = js_multiply(streams.locomotion.next_f64(), bounds.w - 20.0);
+            let y_offset = js_multiply(streams.locomotion.next_f64(), bounds.h - 20.0);
+            let x = bounds.x + 10.0 + x_offset;
+            let y = bounds.y + 10.0 + y_offset;
             let id = id_allocator
                 .allocate()
                 .map_err(|_| "animal id space exhausted".to_owned())?;
@@ -323,17 +325,21 @@ impl FarmEngine {
                     };
 
                     let bounds = bounds_for(config.housing, patch_index);
-                    animal.target_x =
-                        bounds.x + 10.0 + self.locomotion_rng.next_f64() * (bounds.w - 20.0);
-                    animal.target_y =
-                        bounds.y + 10.0 + self.locomotion_rng.next_f64() * (bounds.h - 20.0);
+                    let x_offset =
+                        js_multiply(self.locomotion_rng.next_f64(), bounds.w - 20.0);
+                    let y_offset =
+                        js_multiply(self.locomotion_rng.next_f64(), bounds.h - 20.0);
+                    animal.target_x = bounds.x + 10.0 + x_offset;
+                    animal.target_y = bounds.y + 10.0 + y_offset;
+                    let x_step = js_multiply(animal.target_x - animal.x, 0.15);
+                    let y_step = js_multiply(animal.target_y - animal.y, 0.15);
                     animal.x = clamp(
-                        animal.x + (animal.target_x - animal.x) * 0.15,
+                        animal.x + x_step,
                         bounds.x + 8.0,
                         bounds.x + bounds.w - 8.0,
                     );
                     animal.y = clamp(
-                        animal.y + (animal.target_y - animal.y) * 0.15,
+                        animal.y + y_step,
                         bounds.y + 8.0,
                         bounds.y + bounds.h - 8.0,
                     );
@@ -369,8 +375,10 @@ impl FarmEngine {
     fn place(&mut self, index: usize) {
         let patch = self.state.animals[index].patch as usize;
         let bounds = bounds_for(self.state.config.housing, patch);
-        let x = bounds.x + 10.0 + self.random_locomotion() * (bounds.w - 20.0);
-        let y = bounds.y + 10.0 + self.random_locomotion() * (bounds.h - 20.0);
+        let x_offset = js_multiply(self.random_locomotion(), bounds.w - 20.0);
+        let y_offset = js_multiply(self.random_locomotion(), bounds.h - 20.0);
+        let x = bounds.x + 10.0 + x_offset;
+        let y = bounds.y + 10.0 + y_offset;
         let animal = &mut self.state.animals[index];
         animal.x = x;
         animal.y = y;
@@ -406,6 +414,11 @@ fn bounds_for(housing: Housing, patch: usize) -> Bounds {
 
 fn clamp(value: f64, min: f64, max: f64) -> f64 {
     value.max(min).min(max)
+}
+
+#[inline(never)]
+fn js_multiply(left: f64, right: f64) -> f64 {
+    left * right
 }
 
 fn activity_label(activity: Activity) -> &'static str {
