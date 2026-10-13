@@ -151,28 +151,91 @@ fn endpoint_projection(engine: &FarmEngine) -> Value {
 }
 
 fn assert_exact_json(actual: &Value, expected: &Value, path: &str) {
-    if actual == expected
-        || (actual.is_number() && expected.is_number() && actual.as_f64() == expected.as_f64())
-    {
-        return;
-    }
+    compare_exact_json(actual, expected, path).unwrap_or_else(|error| panic!("{error}"));
+}
+
+fn compare_exact_json(actual: &Value, expected: &Value, path: &str) -> Result<(), String> {
     match (actual, expected) {
-        (Value::Object(actual), Value::Object(expected)) => {
-            for key in actual.keys().chain(expected.keys()) {
-                match (actual.get(key), expected.get(key)) {
-                    (Some(actual), Some(expected)) => {
-                        assert_exact_json(actual, expected, &format!("{path}.{key}"));
-                    }
-                    _ => panic!("{path}.{key}: actual={actual:?}, expected={expected:?}"),
-                }
+        (Value::Number(actual), Value::Number(expected)) => {
+            let actual = canonical_number(actual);
+            let expected = canonical_number(expected);
+            if actual == expected {
+                Ok(())
+            } else {
+                Err(format!("{path}: numeric values differ ({actual} vs {expected})"))
             }
+        }
+        (Value::Object(actual), Value::Object(expected)) => {
+            if actual.len() != expected.len() {
+                return Err(format!("{path}: object field count differs"));
+            }
+            for (key, actual_value) in actual {
+                let expected_value = expected
+                    .get(key)
+                    .ok_or_else(|| format!("{path}.{key}: unexpected field"))?;
+                compare_exact_json(actual_value, expected_value, &format!("{path}.{key}"))?;
+            }
+            Ok(())
         }
         (Value::Array(actual), Value::Array(expected)) => {
-            for (index, (actual, expected)) in actual.iter().zip(expected).enumerate() {
-                assert_exact_json(actual, expected, &format!("{path}[{index}]"));
+            if actual.len() != expected.len() {
+                return Err(format!("{path}: array lengths differ"));
             }
-            assert_eq!(actual.len(), expected.len(), "{path}: array lengths differ");
+            for (index, (actual, expected)) in actual.iter().zip(expected).enumerate() {
+                compare_exact_json(actual, expected, &format!("{path}[{index}]"))?;
+            }
+            Ok(())
         }
-        _ => panic!("{path}: actual={actual}, expected={expected}"),
+        _ if actual == expected => Ok(()),
+        _ => Err(format!("{path}: values differ ({actual} vs {expected})")),
     }
+}
+
+fn canonical_number(number: &serde_json::Number) -> String {
+    let source = number.to_string();
+    let exponent_index = source.find(|character| character == 'e' || character == 'E');
+    let (mantissa, exponent) = match exponent_index {
+        Some(index) => (
+            &source[..index],
+            source[index + 1..]
+                .parse::<i64>()
+                .expect("serde_json numbers have a valid exponent"),
+        ),
+        None => (source.as_str(), 0),
+    };
+    let negative = mantissa.starts_with('-');
+    let unsigned = mantissa.strip_prefix('-').unwrap_or(mantissa);
+    let (integer, fraction) = unsigned.split_once('.').unwrap_or((unsigned, ""));
+    let mut digits = format!("{integer}{fraction}");
+    let significant = digits.trim_start_matches('0');
+    if significant.is_empty() {
+        return "0".to_owned();
+    }
+    let leading_zeroes = digits.len() - significant.len();
+    digits.drain(..leading_zeroes);
+    let trailing_zeroes = digits.len() - digits.trim_end_matches('0').len();
+    digits.truncate(digits.len() - trailing_zeroes);
+    let power = exponent - fraction.len() as i64 + trailing_zeroes as i64;
+    format!("{}{}e{power}", if negative { "-" } else { "" }, digits)
+}
+
+#[test]
+fn exact_json_comparison_normalizes_numeric_formatting_without_tolerance() {
+    assert_exact_json(&json!(0), &json!(0.0), "zero");
+    assert_exact_json(&json!(12), &json!(12.0), "integer-valued float");
+    assert_exact_json(&json!(1200), &json!(1.2e3), "exponent notation");
+
+    assert!(compare_exact_json(&json!(0), &json!(0.0000000001), "tiny difference").is_err());
+    assert!(compare_exact_json(
+        &json!(9_007_199_254_740_992_u64),
+        &json!(9_007_199_254_740_993_u64),
+        "adjacent large integers",
+    )
+    .is_err());
+}
+
+#[test]
+fn exact_json_comparison_preserves_fields_and_array_order() {
+    assert!(compare_exact_json(&json!({"a": 1}), &json!({"b": 1}), "field set").is_err());
+    assert!(compare_exact_json(&json!([1, 2]), &json!([2, 1]), "array order").is_err());
 }
