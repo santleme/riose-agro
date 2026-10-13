@@ -1,5 +1,16 @@
 # Estudo de formato para saídas de experimentos (2026-10)
 
+## Reexecução da comparação disponível (2026-10-13)
+
+Foi repetida a medição JSON/JSONL na revisão limpa `ae33ff03b5ae452aacbc87c93b243c4a1bef0a8e`, com 25 registros e 31 repetições. O relatório está em [`experiment-format-study-2026-10-13.json`](./experiment-format-study-2026-10-13.json). Nesta execução, PyArrow e outros leitores Parquet não estavam instalados nos ambientes Python/Node detectados; o artefato registra `skipped-no-pyarrow-installed`, portanto não há novos números Parquet nesta captura. A medição Parquet da captura anterior continua preservada abaixo, mas depende do ambiente Python isolado documentado na seção de reprodução.
+
+| Formato | Tamanho | Gzip nível 6 | Gravação mediana (ms) | Leitura completa (ms) | Leitura seletiva (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| JSON | 44.273 bytes | 5.133 bytes | 0,671 | 1,203 | 0,548 |
+| JSONL | 44.271 bytes | 5.133 bytes | 0,674 | 1,213 | 0,720 |
+
+Ambos os formatos passaram round-trip normalizado exato, incluindo unidades, proveniência nula, identidade/build do engine, digest e status. A medição atual não encontrou razão de desempenho para trocar JSON como formato padrão; JSONL continua útil para append/streaming quando simplifica o fluxo. Para reavaliar Parquet com números comparáveis, use o ambiente opt-in e fixe a captura ao mesmo HEAD limpo.
+
 ## Decisão
 
 Manter JSON como formato de intercâmbio e aceitar JSONL para append/streaming quando isso simplificar o fluxo. **Não adotar Parquet agora.** Medi Parquet de verdade em um ambiente Python opt-in com PyArrow 26.0.0, sem adicionar a biblioteca ao runtime do app. Na carga medida, Parquet foi mais lento que JSON/JSONL nas três operações e seu arquivo comprimido foi maior que JSON/JSONL com gzip; a distribuição PyArrow instalada ocupou 172,316,950 bytes (o wheel baixado ocupou 53.9 MB). A leitura seletiva por colunas funcionou e preservou os valores, mas não compensou esses custos.

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "replicated-scenario-summary",
+    "source": {
+      "revision": "ae33ff03b5ae452aacbc87c93b243c4a1bef0a8e",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": "deterministic-index-no-rng",
+    "populations": [
+      {
+        "count": 1000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      },
+      {
+        "count": 10000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      },
+      {
+        "count": 100000,
+        "unit": "result-records",
+        "scope": "synthetic replicate-summary input"
+      }
+    ],
+    "runCounts": [
+      1000,
+      10000,
+      100000
+    ],
+    "outputsPerRun": 2,
+    "groups": 2,
+    "resultsAreSynthetic": true
+  },
+  "configuration": {
+    "warmupRuns": 1,
+    "repetitions": 7,
+    "aggregation": "sample SD and Type 7 descriptive quantiles"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "summary_runtime",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 18.838719999999967,
+            "spread": {
+              "min": 1.9448579999999822,
+              "max": 297.0910509999999,
+              "range": 295.1461929999999
+            }
+          },
+          "population": "all configured synthetic result-record populations",
+          "source": "performance.now() around one summarizeReplicates call over already constructed records",
+          "observations": [
+            4.6182429999999925,
+            4.868936000000005,
+            4.048376000000019,
+            5.277054000000021,
+            2.4436660000000074,
+            1.9448579999999822,
+            2.79866100000001,
+            21.307361000000014,
+            28.915996000000007,
+            18.431671999999992,
+            19.524655000000024,
+            18.20768899999996,
+            18.838719999999967,
+            18.21083100000004,
+            233.61672600000009,
+            239.44836099999998,
+            259.5683570000001,
+            239.0514720000001,
+            256.5542170000001,
+            297.0910509999999,
+            257.31851300000017
+          ],
+          "details": "Raw timing observations by population are also retained in results."
+        },
+        {
+          "phase": "layout",
+          "metric": "process_heap_used_after_aggregation",
+          "unit": "byte",
+          "statistics": {
+            "sampleCount": 3,
+            "values": [
+              15362264,
+              18634096,
+              83169864
+            ],
+            "median": 18634096,
+            "spread": {
+              "min": 15362264,
+              "max": 83169864,
+              "range": 67807600
+            }
+          },
+          "population": "one process-level sample after each configured population",
+          "source": "process.memoryUsage().heapUsed sampled after aggregation; synthetic input records remain retained",
+          "observations": [
+            15362264,
+            18634096,
+            83169864
+          ],
+          "details": "Process heapUsed sampled after each aggregation; includes retained benchmark inputs."
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "layout",
+      "timed": [
+        "One summarizeReplicates call over the already constructed result records."
+      ],
+      "notTimed": [
+        "Synthetic input construction.",
+        "Initial warm-up aggregation.",
+        "Heap sampling after each timed call."
+      ]
+    }
+  ],
+  "results": [
+    {
+      "runs": 1000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 4.048376000000019,
+        "spread": {
+          "min": 1.9448579999999822,
+          "max": 5.277054000000021,
+          "range": 3.332196000000039
+        }
+      },
+      "runtimeObservationsMs": [
+        4.6182429999999925,
+        4.868936000000005,
+        4.048376000000019,
+        5.277054000000021,
+        2.4436660000000074,
+        1.9448579999999822,
+        2.79866100000001
+      ],
+      "heapUsedBytes": 15362264
+    },
+    {
+      "runs": 10000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 18.838719999999967,
+        "spread": {
+          "min": 18.20768899999996,
+          "max": 28.915996000000007,
+          "range": 10.708307000000048
+        }
+      },
+      "runtimeObservationsMs": [
+        21.307361000000014,
+        28.915996000000007,
+        18.431671999999992,
+        19.524655000000024,
+        18.20768899999996,
+        18.838719999999967,
+        18.21083100000004
+      ],
+      "heapUsedBytes": 18634096
+    },
+    {
+      "runs": 100000,
+      "summarizeMs": {
+        "sampleCount": 7,
+        "median": 256.5542170000001,
+        "spread": {
+          "min": 233.61672600000009,
+          "max": 297.0910509999999,
+          "range": 63.474324999999794
+        }
+      },
+      "runtimeObservationsMs": [
+        233.61672600000009,
+        239.44836099999998,
+        259.5683570000001,
+        239.0514720000001,
+        256.5542170000001,
+        297.0910509999999,
+        257.31851300000017
+      ],
+      "heapUsedBytes": 83169864
+    }
+  ],
+  "limitations": [
+    "Synthetic inputs isolate reducer cost and are not scenario-engine runtime.",
+    "Heap is sampled process heap after each workload, not a peak or per-call allocation profile."
+  ]
+}

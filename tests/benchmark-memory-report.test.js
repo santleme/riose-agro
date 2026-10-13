@@ -6,7 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 
 const schema = JSON.parse(readFileSync(new URL('../docs/architecture/benchmark-report.schema.json', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: false}).compile(schema);
-const committedCapture = JSON.parse(readFileSync(new URL('../docs/evidence/memory-profile-issue90-2026-10-12.json', import.meta.url), 'utf8'));
+const committedCapture = JSON.parse(readFileSync(new URL('../docs/evidence/memory-profile-issue90-2026-10-13.json', import.meta.url), 'utf8'));
 
 function assertPeakProxy(run, phase, animalCount) {
   const memory = run[phase].memory;

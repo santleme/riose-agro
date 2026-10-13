@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 import {evaluateAnimalLayoutDecision} from '../scripts/animal-layout-decision.mjs';
 
-const evidencePath=new URL('../docs/evidence/animal-layout-study-2026-10.json',import.meta.url);
+const evidencePath=new URL('../docs/evidence/animal-layout-study-2026-10-13.json',import.meta.url);
 
 const row=(animals,hour,aos,soa)=>({animals,hour,measurements:{
   aosEndToEnd:{observations:aos},

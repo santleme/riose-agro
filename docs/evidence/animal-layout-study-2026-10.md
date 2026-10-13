@@ -1,8 +1,25 @@
 # Estudo AoS e colunas numéricas alinhadas
 
-Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O comando grava a coleta detalhada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A captura limpa mais recente foi feita em `b9cbc09045bc2e81fd5f4c9a179c756352106f88` (`dirty: false`) e usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
+## Captura atual (2026-10-13)
 
-O protótipo SoA usa colunas numéricas alinhadas e mede kernel, gather, scatter e custo fim a fim separadamente. Também mede materialização de snapshot, clonagem, serialização JSON e transferência de buffers. A tabela mostra medianas em milissegundos por transição. O Rust nativo mede apenas o kernel pré-alocado.
+A reexecução mais recente usou a revisão limpa `ae33ff03b5ae452aacbc87c93b243c4a1bef0a8e`, com 31 repetições e o mesmo fixture, semente, aquecimentos, transições e verificações descritos abaixo. O relatório completo está em [`animal-layout-study-2026-10-13.json`](./animal-layout-study-2026-10-13.json). As medianas em milissegundos por transição mantêm o resultado anterior: colunas isoladas atualizam mais rápido, mas o caminho SoA fim a fim inclui gather/scatter e perdeu para AoS nas seis combinações.
+
+| Animais | Hora | AoS direto | SoA kernel | Gather | Scatter | SoA fim a fim | Rust nativo |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 100 | 7 | 0,000828 | 0,000210 | 0,000134 | 0,000676 | 0,000920 | 0,000108 |
+| 100 | 22 | 0,001223 | 0,000479 | 0,000469 | 0,000576 | 0,002010 | 0,000108 |
+| 1.000 | 7 | 0,008192 | 0,004890 | 0,004522 | 0,008921 | 0,018344 | 0,000901 |
+| 1.000 | 22 | 0,008214 | 0,004738 | 0,004838 | 0,006031 | 0,016459 | 0,001314 |
+| 10.000 | 7 | 0,124060 | 0,047915 | 0,047557 | 0,083073 | 0,191653 | 0,009351 |
+| 10.000 | 22 | 0,084382 | 0,052312 | 0,050144 | 0,058970 | 0,173579 | 0,009252 |
+
+O protótipo mantém a mesma recomendação: AoS continua em produção. Esta repetição confirma que não há ganho líquido do SoA com as conversões necessárias; não mede o tick completo de 24 horas nem renderer, FFI ou integração Rust.
+
+Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O script grava a coleta detalhada; a captura limpa atual está em [`animal-layout-study-2026-10-13.json`](./animal-layout-study-2026-10-13.json), e a captura anterior foi preservada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A configuração usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
+
+### Captura anterior (revisão b9cbc09)
+
+O protótipo SoA usa colunas numéricas alinhadas e mede kernel, gather, scatter e custo fim a fim separadamente. Também mede materialização de snapshot, clonagem, serialização JSON e transferência de buffers. A tabela histórica abaixo mostra medianas em milissegundos por transição. O Rust nativo mede apenas o kernel pré-alocado; para os números mais recentes, use a tabela da captura atual no início deste documento.
 
 | Animais | Hora | AoS direto | SoA kernel | Gather | Scatter | SoA fim a fim | Rust nativo |
 |---:|---:|---:|---:|---:|---:|---:|---:|
