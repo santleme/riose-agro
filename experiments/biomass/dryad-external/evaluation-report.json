@@ -66,6 +66,7 @@
         "rowWeightedRmseChangeVsOls": 0.0001555951534361579,
         "farmSubgroupGate": true,
         "campaignSubgroupGate": true,
+        "aggregationCompatibleWithExternalMeanHeight": true,
         "eligibleForSelection": false
       },
       {
@@ -74,6 +75,7 @@
         "rowWeightedRmseChangeVsOls": 0.002425006411958757,
         "farmSubgroupGate": true,
         "campaignSubgroupGate": true,
+        "aggregationCompatibleWithExternalMeanHeight": true,
         "eligibleForSelection": false
       },
       {
@@ -82,6 +84,7 @@
         "rowWeightedRmseChangeVsOls": 0.016994577875254938,
         "farmSubgroupGate": true,
         "campaignSubgroupGate": true,
+        "aggregationCompatibleWithExternalMeanHeight": false,
         "eligibleForSelection": false
       }
     ],

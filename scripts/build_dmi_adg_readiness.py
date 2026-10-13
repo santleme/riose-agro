@@ -17,7 +17,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 JSON_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.json"
 MARKDOWN_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.md"
 
@@ -225,6 +225,241 @@ SOURCES: list[dict[str, Any]] = [
         "dmi": {"status": "ineligible", "trainable": False, "reason": "Underlying records are private, inaccessible, absent, or not data-specifically licensed; inaccessible sources are never counted as trainable."},
         "adg": {"status": "ineligible", "trainable": False, "reason": "No usable individual ADG records with the required paired inputs were retrieved."},
         "permissibleUse": "Literature/methods context and access follow-up only; do not reconstruct microdata from tables or figures.",
+    },
+]
+
+# Supplementary readiness for science modules outside the DMI/ADG row schema.
+# Keeping this as an optional top-level collection preserves consumers of the
+# original `sources[].outcomes.{dmi,adg}` contract while making the new public
+# cohorts visible in the same deterministic issue #96 report.
+COMPONENT_ASSESSMENTS: list[dict[str, Any]] = [
+    {
+        "id": "dryad-mob-rotational-biomass",
+        "module": "forage_biomass",
+        "decision": "CONDITIONAL",
+        "source": {
+            "doi": "10.5061/dryad.79cnp5ht4",
+            "manifest": "data/dryad-mob-rotational-biomass/manifest.json",
+            "audit": "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json",
+            "access": "public_anonymous_downloaded_and_checksums_verified",
+            "license": "CC0-1.0 (Dryad API record)",
+        },
+        "population": "Cool-season grass-legume pasture grazed by yearling beef cattle at one northeastern-US research farm; no animals are observed in this file.",
+        "target": "Pre-grazing forage mass (PGFM), kg/ha; paddock-time mean over available quadrats, paired with paddock-level pre-grazing height in cm.",
+        "groups": ["treatment", "replicate_paddock"],
+        "repeatedDimensions": ["calendar_year", "julian_day"],
+        "metrics": {
+            "datasetRows": 64,
+            "independentGroups": 8,
+            "missingTargetSourceSlots": 17,
+            "selectedModel": "height-only OLS selected on 13-fold 100 m-buffered Mendeley development CV",
+            "externalRows": 64,
+            "externalMaeKgDmHa": 2507.1157652653906,
+            "externalRmseKgDmHa": 2986.389260697643,
+            "externalBiasPredictedMinusObservedKgDmHa": 2094.7279551697575,
+            "inSupportRows": 40,
+            "inSupportMaeKgDmHa": 1659.2452528855429,
+            "aboveSupportRows": 24,
+            "aboveSupportMaeKgDmHa": 3920.23328589847,
+            "modelEvaluation": "completed single-cohort external evaluation; not calibration or broad validation",
+        },
+        "limitations": [
+            "Only eight paddocks recur over time; every split must preserve paddock groups.",
+            "Biomass and height are aligned only after the documented paddock-time aggregation.",
+            "The Mendeley sampling-point target and Dryad paddock-time quadrat mean are not identical sampling estimands.",
+            "All 24 above-Mendeley-height-support rows are MOB treatment; support status is confounded with management, so the large above-support error cannot be attributed to extrapolation alone.",
+            "The external bias is strongly positive even within height support; overall MAE is 2507.1 kg DM/ha and in-support MAE is 1659.2 kg DM/ha.",
+            "Temperate US pasture does not validate Brazilian tropical pasture predictions.",
+            "Not animal DMI, ADG, or full-engine evidence.",
+        ],
+        "references": [
+            "data/dryad-mob-rotational-biomass/manifest.json",
+            "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json",
+            "experiments/biomass/dryad-external/evaluation-report.json",
+        ],
+    },
+    {
+        "id": "perea-rangeland-behavior",
+        "module": "behavior_classification",
+        "decision": "ELIGIBLE",
+        "source": {
+            "doi": "10.6084/m9.figshare.28801181.v2",
+            "audit": "docs/evidence/perea-rangeland-behavior-audit.json",
+            "evaluation": "docs/evidence/perea-behavior-grouped-evaluation.json",
+            "access": "public_downloaded_local",
+            "license": "CC BY 4.0",
+        },
+        "population": "24 beef cattle across four breeds at two New Mexico ranches; sampled daylight sessions in summer/fall 2022.",
+        "target": "Human-reviewed minute-level behavior class (GR, RE, RU, WA) from a single motion-index predictor; 8,864 analysis rows after the predeclared duplicate/conflicting-label policy.",
+        "groups": ["breed", "animal_id"],
+        "repeatedDimensions": ["animal_minute", "sampled_session"],
+        "metrics": {
+            "evaluation": "nested animal-grouped diagnostic; six outer folds, no animal overlap",
+            "nestedRows": 5582,
+            "nestedAnimalsInOuterFolds": 24,
+            "selectedCandidatesAcrossOuterFolds": {"cart_depth_4": 4, "temporal_logistic_c_10": 2},
+            "nestedEqualAnimalMeanF1_RE_RU": 0.4025871778670964,
+            "nestedEqualAnimalRecall_RE": 0.3081198933322601,
+            "nestedEqualAnimalRecall_RU": 0.7265047037876734,
+            "nestedObservationWeightedAccuracy": 0.813686850591186,
+            "equalAnimalAccuracy": 0.741130619912341,
+            "equalAnimalBalancedAccuracy": 0.7200270840148827,
+            "equalAnimalMacroF1": 0.6642230410345241,
+            "restingRecall": 0.25444948829835656,
+            "modelEvaluation": "nested within-source exploratory evaluation; not external validation",
+        },
+        "limitations": [
+            "Breed is perfectly confounded with ranch/site in the documented source structure.",
+            "RE recall is low; the main confusion is resting versus ruminating.",
+            "Nested OOF results are exploratory within this source and reuse both ranches across outer folds; they do not establish performance at a new ranch.",
+            "Sampled sessions do not represent full-day activity budgets or whole-season behavior.",
+            "Behavior classification does not validate DMI consumption, ADG, BR-CORTE, or the full Riose engine.",
+        ],
+        "references": [
+            "docs/evidence/perea-rangeland-behavior-audit.json",
+            "docs/evidence/perea-behavior-grouped-evaluation.json",
+            "docs/evidence/perea-behavior-oof-diagnostic.json",
+            "experiments/diagnostics/behavior/preregister-perea-nested-animal-evaluation-2026-10.json",
+            "experiments/behavior/perea-nested-animal/results.json",
+        ],
+    },
+    {
+        "id": "xgain-cattle-hourly-behavior",
+        "module": "behavior_descriptive_profiles",
+        "decision": "CONDITIONAL",
+        "source": {
+            "doi": "10.5281/zenodo.15600573",
+            "manifest": "data/xgain-cattle-behavior/manifest.json",
+            "quality": "docs/evidence/xgain-hourly-behavior-quality-2026-10.json",
+            "access": "public_anonymous_downloaded_and_md5_verified",
+            "license": "Zenodo metadata says CC BY 4.0; embedded README says CC BY-NC (conflict)",
+            "reuseStatus": "not cleared for commercial training",
+        },
+        "population": "10 adult lactating Holstein cows with pasture access at ILVO, Belgium.",
+        "target": "Hourly counts of one-minute classifier outputs for grazing, ruminating, resting, and other activity; not human reference labels.",
+        "groups": ["animal_id"],
+        "repeatedDimensions": ["hour", "calendar_day"],
+        "metrics": {
+            "records": 5760,
+            "animals": 10,
+            "hoursPerAnimal": 576,
+            "missingValues": 0,
+            "duplicateAnimalHourKeys": 0,
+            "predictiveMetrics": "not_available; no independent human reference outcomes in archive",
+        },
+        "limitations": [
+            "The released outcomes are decision-tree predictions; raw IMU and human-reference labels are absent.",
+            "License conflict means commercial training is not cleared.",
+            "Source time zone is unspecified; preserve timestamps as naive local time.",
+            "Descriptive profiles and ingestion tests only; no classifier validation, DMI, or ADG assessment.",
+        ],
+        "references": [
+            "data/xgain-cattle-behavior/manifest.json",
+            "docs/evidence/xgain-hourly-behavior-quality-2026-10.json",
+        ],
+    },
+    {
+        "id": "usda-cper-ltgi-internal-adg",
+        "module": "adg_internal_development",
+        "decision": "CONDITIONAL",
+        "source": {
+            "doi": "10.15482/USDA.ADC/1528520",
+            "audit": "docs/evidence/usda-cper-ltgi-audit.json",
+            "evaluation": "experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+            "protocol": "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
+            "access": "public_local",
+            "license": "U.S. Public Domain",
+        },
+        "population": "CPER yearling steers, development years 2009–2013; 320 rows before and 302 after identity-proxy purge for fold training, with 320 OOF rows scored.",
+        "target": "Endpoint ADG = (final weight - initial weight) / grazing days, kg/head/day.",
+        "groups": ["year", "owner_tag_color_tag_identity_proxy"],
+        "repeatedDimensions": ["animal_identity_across_years"],
+        "metrics": {
+            "evaluation": "leave-one-year-out internal development CV with matching identity proxies purged from training",
+            "oofRows": 320,
+            "referenceCandidate": "M0 fold-training mean",
+            "M0PooledMaeKgHeadDay": 0.22092262449947703,
+            "M0PooledRmseKgHeadDay": 0.29833995811165487,
+            "M0PooledBiasPredictedMinusObservedKgHeadDay": 0.0013676331085086392,
+            "selectedCandidate": None,
+            "anyCandidatePassedAdvancementRule": False,
+        },
+        "limitations": [
+            "This is internal CPER development evidence, not external transport or a final holdout.",
+            "Only five year blocks; nominal confidence or prediction-interval coverage is not justified.",
+            "One remaining pasture replicate per treatment; engine inputs omit observed forage, weather, breed, and supplementation.",
+            "Yearling-steer ADG does not validate adult-cow DMI or the full engine.",
+        ],
+        "references": [
+            "docs/evidence/usda-cper-ltgi-audit.json",
+            "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
+            "experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
+        ],
+    },
+    {
+        "id": "usda-cper-cgrec-adg-transport",
+        "module": "adg_transport_diagnostic",
+        "decision": "CONDITIONAL",
+        "source": {
+            "doi": "10.15482/USDA.ADC/1524719",
+            "audit": "docs/evidence/usda-cgrec-longterm-audit.json",
+            "evaluation": "docs/evidence/engine-adg-usda-cgrec-transport-check.json",
+            "access": "public_local",
+            "license": "U.S. Public Domain",
+        },
+        "population": "291 eligible yearling steers at CGREC, North Dakota; years 1989, 1994, and 2015.",
+        "target": "Observed endpoint ADG = (final weight - initial weight) / ADG_DAYS, kg/head/day.",
+        "groups": ["animal_tag", "year", "pasture"],
+        "repeatedDimensions": ["not_applicable_to_eligible_steer_rows"],
+        "metrics": {
+            "evaluation": "historical external-site transport diagnostic; already consulted, not a fresh final holdout",
+            "defaultEngineMaeKgHeadDay": 0.5396938859151102,
+            "cperScaledEngineMaeKgHeadDay": 0.2221192500940076,
+            "calibratedOnCgrec": False,
+            "modelSelectionAllowed": False,
+        },
+        "limitations": [
+            "The CPER scale used for comparison was fitted on CPER development data; the CGREC data have already been consulted.",
+            "Engine runs used illustrative pasture settings without observed forage, weather, or supplementation inputs.",
+            "Yearling steers do not establish adult-cow performance or mature-cow DMI validity.",
+            "This is an ADG component diagnostic only, not full-engine validation.",
+        ],
+        "references": [
+            "docs/evidence/usda-cgrec-longterm-audit.json",
+            "docs/evidence/engine-adg-usda-cgrec-transport-check.json",
+        ],
+    },
+    {
+        "id": "adult-beef-cow-pasture-total-dmi-gate",
+        "module": "adult_beef_cow_pasture_total_dmi",
+        "decision": "NO_GO",
+        "source": {
+            "doi": None,
+            "audit": "docs/evidence/dmi-baseline-no-go-2026-10.json",
+            "candidateTriage": "docs/evidence/open-scientific-data-discovery-2026-10.md",
+            "access": "no qualifying public row-level cohort obtained",
+            "license": "no qualifying source with applicable reuse rights",
+        },
+        "population": "Target is mature beef cows grazing pasture; no candidate currently passes the complete gate.",
+        "target": "Individual total DMI, measured or scientifically eligible estimate, kg DM/animal/day; forage plus supplement where applicable.",
+        "groups": ["animal_id", "trial_or_herd", "farm_or_site"],
+        "repeatedDimensions": ["animal_period"],
+        "metrics": {
+            "eligibleCohorts": 0,
+            "decision": "NO_GO; no training or validation permitted for the original target",
+            "basis": "No source simultaneously has retrieved records, compatible target/population, known units, group keys, reusable license, and defensible independent evaluation.",
+        },
+        "limitations": [
+            "Open article access is not evidence that underlying individual data are public or reusable.",
+            "Dairy, yearling, feedlot, estimated non-total DMI, aggregate-only, and simulated cohorts do not satisfy this target.",
+            "BR-CORTE 2023 Eq. 2.6 remains available for conditional scenarios in its published growing-Zebu supplemented-pasture domain when ADG is supplied; it does not establish adult-cow individual-DMI accuracy.",
+            "This does not prevent equation-based simulation or progress on separate biomass, behavior, or ADG modules.",
+        ],
+        "references": [
+            "docs/evidence/dmi-baseline-no-go-2026-10.json",
+            "docs/evidence/open-scientific-data-discovery-2026-10.md",
+            "docs/evidence/br-corte-pasture-dmi-domain-audit-2026-10.md",
+        ],
     },
 ]
 
@@ -580,6 +815,7 @@ def build_readiness_report(
     read_reference=_read_source_reference,
     *,
     domain_expert_review: dict[str, Any],
+    component_assessments: list[dict[str, Any]] | None = None,
     elapsed_seconds: float = 0.0,
     version: str = VERSION,
 ) -> dict[str, Any]:
@@ -591,6 +827,10 @@ def build_readiness_report(
     """
     ordered_sources = sorted(sources, key=lambda source: source["id"])
     records = [build_record(source, read_reference) for source in ordered_sources]
+    # Fixture builders can omit the new collection and continue exercising the
+    # legacy v1 source contract without needing unrelated evidence fixtures.
+    selected_assessments = COMPONENT_ASSESSMENTS if component_assessments is None and read_reference is _read_source_reference else (component_assessments or [])
+    component_assessments = sorted(selected_assessments, key=lambda assessment: assessment["id"])
     input_paths = {
         reference.split("#", 1)[0]
         for record in records
@@ -600,11 +840,13 @@ def build_readiness_report(
     for record in records:
         fact_refs = [record["studyDesign"], *record["counts"].values(), record["missingness"]["documentedMetrics"]]
         input_paths.update(fact["reference"].split("#", 1)[0] for fact in fact_refs if fact.get("reference"))
+    for assessment in component_assessments:
+        input_paths.update(reference.split("#", 1)[0] for reference in assessment["references"])
     document = {
         "schemaVersion": "riose.dmi-adg-readiness/v1",
         "version": version,
         "generator": "scripts/build_dmi_adg_readiness.py",
-        "purpose": "Reference-only readiness assessment for DMI and ADG component datasets.",
+        "purpose": "Reference-only readiness assessment for DMI/ADG datasets and separate scientific modules.",
         "domainExpertReview": domain_expert_review,
         "sources": records,
         "processing": {
@@ -614,6 +856,12 @@ def build_readiness_report(
             "elapsedTimeKind": "observed_wall_clock_seconds",
         },
     }
+    if component_assessments:
+        # Optional additive field: existing v1 consumers can continue reading
+        # `sources` unchanged; newer consumers can read readiness for other
+        # independently-scoped scientific modules here.
+        document["componentAssessments"] = component_assessments
+        document["processing"]["componentAssessmentCount"] = len(component_assessments)
     validate_readiness_report(document)
     return document
 
@@ -670,11 +918,53 @@ def validate_readiness_report(document: dict[str, Any]) -> None:
             if outcome["trainable"] and not has_license:
                 raise ValueError(f"Unlicensed source cannot be trainable: {source_id}.{dimension}")
 
+    # This collection was added additively in v1.1. Older v1 reports without it
+    # remain valid; when present, every assessment needs an explicit module
+    # decision and the provenance fields required for a scientific gate.
+    component_assessments = document.get("componentAssessments", [])
+    if not isinstance(component_assessments, list):
+        raise ValueError("componentAssessments must be a list when present")
+    component_ids = [item.get("id") for item in component_assessments if isinstance(item, dict)]
+    if len(component_ids) != len(component_assessments) or component_ids != sorted(component_ids) or len(set(component_ids)) != len(component_ids):
+        raise ValueError("Component assessments must have unique sorted IDs")
+    for item in component_assessments:
+        for field in ("id", "module", "population", "target"):
+            if not isinstance(item.get(field), str) or not item[field].strip():
+                raise ValueError(f"Missing component assessment {field}")
+        if item.get("decision") not in {"ELIGIBLE", "CONDITIONAL", "INELIGIBLE", "NO_GO"}:
+            raise ValueError(f"Unknown component assessment decision: {item['id']}")
+        source = item.get("source")
+        if not isinstance(source, dict) or not isinstance(source.get("access"), str) or not source["access"].strip():
+            raise ValueError(f"Missing component source access: {item['id']}")
+        if not isinstance(source.get("license"), str) or not source["license"].strip():
+            raise ValueError(f"Missing component source license: {item['id']}")
+        if not isinstance(item.get("groups"), list) or not item["groups"]:
+            raise ValueError(f"Missing component grouping keys: {item['id']}")
+        if not isinstance(item.get("metrics"), dict) or not item["metrics"]:
+            raise ValueError(f"Missing component metrics or explicit metric status: {item['id']}")
+        if not isinstance(item.get("limitations"), list) or not item["limitations"]:
+            raise ValueError(f"Missing component limitations: {item['id']}")
+        refs = item.get("references")
+        if not isinstance(refs, list) or not refs:
+            raise ValueError(f"Missing component evidence references: {item['id']}")
+        for reference in refs:
+            if not isinstance(reference, str) or not reference.strip():
+                raise ValueError(f"Invalid component evidence reference: {item['id']}")
+            path, separator, pointer = reference.partition("#")
+            if path.endswith(".json"):
+                _read_evidence_reference(reference, _read_source_reference)
+                if separator and not pointer.startswith("/"):
+                    raise ValueError(f"Invalid component evidence pointer: {reference}")
+            elif not (ROOT / path).is_file():
+                raise FileNotFoundError(f"Missing component evidence reference: {reference}")
+
     processing = document.get("processing")
     if not isinstance(processing, dict) or processing.get("sourceCount") != len(sources):
         raise ValueError("Processing sourceCount does not match the readiness matrix")
     if type(processing.get("inputFileCount")) is not int or processing["inputFileCount"] < 0:
         raise ValueError("Invalid processing inputFileCount")
+    if "componentAssessments" in document and processing.get("componentAssessmentCount") != len(component_assessments):
+        raise ValueError("Processing componentAssessmentCount does not match the component matrix")
     elapsed = processing.get("elapsedSeconds")
     if type(elapsed) not in {int, float} or not math.isfinite(elapsed) or elapsed < 0:
         raise ValueError("Invalid processing elapsedSeconds")
@@ -750,6 +1040,24 @@ def render_markdown(document: dict[str, Any]) -> str:
         lines.append("")
     review = document["domainExpertReview"]
     lines.extend([
+        "## Prontidão de módulos científicos independentes",
+        "",
+        "Estas decisões complementam a matriz DMI/ADG sem misturar populações ou desfechos. `ELIGIBLE` e `CONDITIONAL` valem somente para o módulo e uso descritos; `NO_GO` mantém bloqueado o alvo original de DMI de vacas adultas a pasto.",
+        "",
+        "| Fonte | Módulo | Decisão | Acesso | Licença | População | Alvo / unidade | Grupos preservados | Métricas / avaliação | Limitações | Evidências |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
+    ])
+    for item in document.get("componentAssessments", []):
+        source = item["source"]
+        refs = ", ".join(f"`{reference}`" for reference in item["references"])
+        lines.append(
+            f"| {item['id']} | {item['module']} | {item['decision']} | {source['access']} | {source['license']} | "
+            f"{item['population']} | {item['target']} | {', '.join(item['groups'])} | "
+            f"`{json.dumps(item['metrics'], ensure_ascii=False, sort_keys=True)}` | "
+            f"{' '.join(item['limitations'])} | {refs} |"
+        )
+    lines.extend([
+        "",
         "## Parecer especializado",
         "",
         f"**Estado:** {review['status']}. {review['statement']}",

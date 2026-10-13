@@ -149,6 +149,53 @@ class ReadinessFixtureTests(unittest.TestCase):
                 )
         READINESS.validate_readiness_report(report)
 
+    def test_component_assessments_add_module_readiness_without_changing_legacy_dmi_adg_rows(self):
+        report = json.loads(REPORT.read_text(encoding="utf-8"))
+        READINESS.validate_readiness_report(report)
+        records = {item["id"]: item for item in report["componentAssessments"]}
+
+        dryad = records["dryad-mob-rotational-biomass"]
+        self.assertEqual(dryad["decision"], "CONDITIONAL")
+        self.assertEqual(dryad["metrics"]["externalRows"], 64)
+        self.assertAlmostEqual(dryad["metrics"]["externalMaeKgDmHa"], 2507.1157652653906)
+        self.assertIn("not identical sampling estimands", " ".join(dryad["limitations"]))
+        self.assertIn("confounded with management", " ".join(dryad["limitations"]))
+
+        perea = records["perea-rangeland-behavior"]
+        self.assertEqual(perea["decision"], "ELIGIBLE")
+        self.assertEqual(perea["metrics"]["nestedRows"], 5582)
+        self.assertEqual(perea["metrics"]["selectedCandidatesAcrossOuterFolds"], {"cart_depth_4": 4, "temporal_logistic_c_10": 2})
+        self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalMeanF1_RE_RU"], 0.4025871778670964)
+        self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalRecall_RE"], 0.3081198933322601)
+        self.assertAlmostEqual(perea["metrics"]["nestedEqualAnimalRecall_RU"], 0.7265047037876734)
+        self.assertAlmostEqual(perea["metrics"]["nestedObservationWeightedAccuracy"], 0.813686850591186)
+        self.assertIn("nested within-source exploratory", perea["metrics"]["modelEvaluation"])
+        self.assertIn("does not validate DMI consumption", " ".join(perea["limitations"]))
+        self.assertIn("breed", perea["groups"])
+
+        xgain = records["xgain-cattle-hourly-behavior"]
+        self.assertEqual(xgain["decision"], "CONDITIONAL")
+        self.assertIn("conflict", xgain["source"]["license"])
+        self.assertIn("human reference", xgain["metrics"]["predictiveMetrics"])
+
+        cper = records["usda-cper-ltgi-internal-adg"]
+        self.assertEqual(cper["metrics"]["oofRows"], 320)
+        self.assertIsNone(cper["metrics"]["selectedCandidate"])
+        self.assertFalse(cper["metrics"]["anyCandidatePassedAdvancementRule"])
+
+        dmi_gate = records["adult-beef-cow-pasture-total-dmi-gate"]
+        self.assertEqual(dmi_gate["decision"], "NO_GO")
+        self.assertEqual(dmi_gate["metrics"]["eligibleCohorts"], 0)
+
+        self.assertEqual(report["processing"]["componentAssessmentCount"], len(records))
+        self.assertIn("adult-beef-cow-pasture-total-dmi-gate", READINESS.render_markdown(report))
+
+    def test_legacy_v1_report_without_component_collection_remains_valid(self):
+        report = self.build()
+        self.assertNotIn("componentAssessments", report)
+        self.assertNotIn("componentAssessmentCount", report["processing"])
+        READINESS.validate_readiness_report(report)
+
 
 if __name__ == "__main__":
     unittest.main()

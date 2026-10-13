@@ -15,8 +15,11 @@ The broad search covered Dryad, Zenodo, Figshare, DataCite/OpenAlex/Crossref, US
 | [CSIRO Image2Biomass on Kaggle](https://www.kaggle.com/competitions/csiro-biomass/data) | Australian pasture quadrats; lab-measured dry biomass, not animal intake | Kaggle account/token and acceptance of competition rules required | Not downloaded because the requested policy excludes authenticated/restricted access. |
 | [Irish Grass Clover, 10.5281/zenodo.14191859](https://zenodo.org/records/14191859) | Irish pasture images; biomass, composition and height labels | Zenodo record API says CC BY 4.0; README says CC BY-NC-SA 4.0 | Conditional for noncommercial exploration only. Excluded from commercial training because terms conflict; 10+ GB image archives not downloaded. |
 | [Brazil pasture biomass, 10.17632/nj72kmdj77.1](https://data.mendeley.com/datasets/nj72kmdj77/1) | Two farms, three field campaigns; harvested dry-matter yield of forage | Public Mendeley API; CC BY 4.0 | Downloaded 20 small workbooks/spatial files; processed 342 unique sampling rows into Parquet for a separate biomass module. Not DMI. |
+| [Dryad mob/rotational biomass, 10.5061/dryad.79cnp5ht4](https://datadryad.org/dataset/doi:10.5061/dryad.79cnp5ht4) | Temperate US grass-legume pastures; pre-grazing forage mass and mean height | Public anonymous version ZIP; CC0 | Downloaded and checksum-verified. Processed 623 available quadrat records and 64 matched paddock-time aggregates across eight repeated paddocks. One external cohort evaluation is recorded separately; not animal DMI or ADG. |
+| [Perea grazing behavior, 10.6084/m9.figshare.28801181.v2](https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181) | 24 beef cattle; minute-level human-reviewed grazing, resting, rumination, walking labels | Public download; CC BY 4.0 | Existing six-fold animal-held-out evaluation and a preregistered nested comparison operate on a common temporal subset. Labels cover sampled sessions, not full-day behavior. Not DMI. |
+| [XGain hourly behavior, 10.5281/zenodo.15600573](https://zenodo.org/records/15600573) | Ten adult dairy cows with pasture access; hourly classifier counts | Public anonymous ZIP; Zenodo record says CC BY 4.0, embedded README says CC BY-NC | Downloaded and processed for descriptive profiles only. No human-reference labels or raw IMU outcomes are included; commercial reuse is not cleared because license statements conflict. |
 
-Other leads found were not treated as training data: aggregate treatment tables, dairy or feedlot studies, model-generated DMI, sensor-behavior datasets with noncommercial terms, and repository records without verified downloadable microdata. The detailed JSON identifies the record and reason for each decision.
+Other leads found were not treated as training data: aggregate treatment tables, dairy or feedlot studies, model-generated DMI, sensor-behavior datasets with noncommercial or conflicting terms, and repository records without verified downloadable microdata. Source-specific outcomes must remain separate: DMI rate is not total DMI, algorithm-generated behavior counts are not independent labels, and forage mass is not animal performance. The detailed JSON and linked source audits identify the record and reason for each decision.
 
 ## Initial #109 gap matrix
 
@@ -33,6 +36,8 @@ Other leads found were not treated as training data: aggregate treatment tables,
 | **Overall** | All gates pass | **NO-GO** |
 
 The BR-CORTE pasture equation remains scoped to growing Zebu cattle on tropical pasture with supplementation. It does not extend the target population to mature cows, and the simulator does not supply independent DMI measurements.
+
+The Dryad biomass cohort is a useful separate evaluation target but not a strict measurement match to the Brazilian Mendeley samples: Dryad reports paddock-time pre-grazing mass and height, while Mendeley does not document whether height was read before sample clipping. Its 64 external rows have eight repeated paddocks; the 24 rows above Mendeley's 2–56 cm height range are all from the mob-grazing treatment, so in-range versus extrapolation metrics are confounded by management and year.
 
 ## Processing completed
 

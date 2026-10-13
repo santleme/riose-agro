@@ -200,10 +200,14 @@ def main() -> None:
         campaign_rows = subgroup_metrics(dev, model_id, ["campaign"], min_groups=20)
         ols_campaign = {r["campaign"]: r for r in subgroup_metrics(dev, "M1_ols", ["campaign"], min_groups=20)}
         campaign_gate = all((r["maeKgDmHa"] - ols_campaign[r["campaign"]]["maeKgDmHa"]) / max(ols_campaign[r["campaign"]]["maeKgDmHa"], 1e-12) <= 0.10 for r in campaign_rows)
-        passed = mae_reduction >= 0.10 and rmse_change <= 0.05 and farm_gate and campaign_gate
+        is_external_aggregation_compatible = model_id != "M4_quadratic"
+        passed = (is_external_aggregation_compatible and mae_reduction >= 0.10 and
+                  rmse_change <= 0.05 and farm_gate and campaign_gate)
         selection.append({"candidate": model_id, "blockMacroMaeReductionVsOls": mae_reduction,
                           "rowWeightedRmseChangeVsOls": rmse_change, "farmSubgroupGate": farm_gate,
-                          "campaignSubgroupGate": campaign_gate, "eligibleForSelection": passed})
+                          "campaignSubgroupGate": campaign_gate,
+                          "aggregationCompatibleWithExternalMeanHeight": is_external_aggregation_compatible,
+                          "eligibleForSelection": passed})
         if passed:
             eligible_challengers.append(model_id)
     selected = min(eligible_challengers, key=lambda mid: dev_metrics[mid]["blockMacroMaeKgDmHa"]) if eligible_challengers else "M1_ols"
