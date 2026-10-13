@@ -9,7 +9,7 @@ import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
 
 const root = new URL('..', import.meta.url);
 const repo = decodeURIComponent(root.pathname);
-const run = (script, args = [], env = {}) => execFileSync(process.execPath, [script, ...args], {
+const run = (script, args = [], env = {}, nodeOptions = []) => execFileSync(process.execPath, [...nodeOptions, script, ...args], {
   cwd: repo,
   encoding: 'utf8',
   env: {...process.env, ...env},
@@ -49,7 +49,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   const animalSummary = JSON.parse(run('scripts/benchmark-animal-layout.mjs', [], {
     ANIMAL_LAYOUT_REPETITIONS: '5',
     ANIMAL_LAYOUT_OUTPUT: animalPath,
-  }));
+  }, ['--expose-gc']));
   const animal = JSON.parse(await readFile(animalPath, 'utf8'));
   assert.equal(animalSummary.resultPath, animalPath);
   assertMeasurements(animal);

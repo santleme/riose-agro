@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 import {evaluateAnimalLayoutDecision} from '../scripts/animal-layout-decision.mjs';
+
+const evidencePath=new URL('../docs/evidence/animal-layout-study-2026-10.json',import.meta.url);
 
 const row=(animals,hour,aos,soa)=>({animals,hour,measurements:{
   aosEndToEnd:{observations:aos},
@@ -41,4 +45,38 @@ test('animal layout decision rejects unpaired or non-counterbalanced sample vect
   const sameOrder=row(100,7,[10,10,10],[8,8,8]);
   sameOrder.pairedComparison.orderBySample=['AoS-then-SoA','AoS-then-SoA','AoS-then-SoA'];
   assert.throws(()=>evaluateAnimalLayoutDecision([sameOrder]),/counterbalanced paired sample order/);
+});
+
+test('checked-in animal layout evidence contains separate statistical allocation profiles',()=>{
+  const report=JSON.parse(readFileSync(fileURLToPath(evidencePath),'utf8'));
+  const profileNames=[
+    'aosTransition',
+    'typedColumnsKernel',
+    'typedColumnsGather',
+    'typedColumnsScatter',
+    'typedColumnsEndToEnd',
+    'snapshotMaterializationAos',
+    'snapshotMaterializationColumns',
+  ];
+
+  assert.equal(report.benchmark.source.dirty,false);
+  assert.equal(report.results.allocationProfiling.method,'V8 HeapProfiler.startSampling/stopSampling');
+  assert.equal(report.results.allocationProfiling.samplingIntervalBytes,4096);
+  assert.equal(report.results.allocationProfiling.profileTimingIncludedInBenchmarkMeasurements,false);
+  assert.equal(report.results.allocationProfiling.estimatedAllocatedBytesAreStatistical,true);
+  assert.equal(report.results.rows.length,6);
+
+  for(const row of report.results.rows){
+    assert.deepEqual(Object.keys(row.allocationNotes.profiles).sort(),[...profileNames].sort());
+    for(const profile of Object.values(row.allocationNotes.profiles)){
+      assert.equal(profile.method,'v8-heap-profiler-sampling');
+      assert.equal(profile.samplingIntervalBytes,4096);
+      assert.equal(profile.warmupIterations,1000);
+      assert.equal(profile.majorGarbageCollectionForced,true);
+      assert.ok(Number.isInteger(profile.allocationSampleCount));
+      assert.ok(profile.allocationSampleCount>=0);
+      assert.ok(Number.isFinite(profile.estimatedAllocatedBytes));
+      assert.ok(profile.estimatedAllocatedBytes>=0);
+    }
+  }
 });
