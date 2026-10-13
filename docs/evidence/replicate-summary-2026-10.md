@@ -8,15 +8,15 @@ Essas medidas descrevem a variação entre replicatas. Os quantis não são inte
 
 ## Desempenho
 
-`node scripts/benchmark-replicate-summary.mjs` mede sete agregações por carga, após um aquecimento, com dois outputs numéricos e dois grupos sintéticos. A captura anterior usa a revisão `50b53a2ac92ab35410a6a4a635258a70d93b2f02`; a captura limpa atual (`ae33ff03b5ae452aacbc87c93b243c4a1bef0a8e`, `dirty: false`) e suas amostras estão em [`replicate-summary-benchmark-2026-10-13.json`](./replicate-summary-benchmark-2026-10-13.json):
+`node scripts/benchmark-replicate-summary.mjs` mede sete agregações por carga, após um aquecimento, com dois outputs numéricos e dois grupos sintéticos. A captura limpa da implementação atual foi feita na revisão `2e77b83e29ed63eeccaf8cf9766a6b092d2fc998` (`dirty: false`) e suas amostras estão em [`replicate-summary-benchmark-2026-10-13.json`](./replicate-summary-benchmark-2026-10-13.json):
 
 | Registros | Mediana por agregação | Heap observado após agregação |
 | ---: | ---: | ---: |
-| 1.000 | 4,05 ms | 15,4 MB |
-| 10.000 | 18,84 ms | 18,6 MB |
-| 100.000 | 256,55 ms | 83,2 MB |
+| 1.000 | 2,21 ms | 20,3 MB |
+| 10.000 | 22,11 ms | 21,1 MB |
+| 100.000 | 275,45 ms | 189,5 MB |
 
-O heap inclui as entradas sintéticas mantidas pelo benchmark; não representa alocação incremental do agregador. A API recebe uma lista completa, então a agregação não é streaming. Na carga de 100 mil registros, o tempo mediano foi cerca de 257 ms; a retenção total de dados fica visível no relatório JSON. As entradas são sintéticas e o teste mede o agregador sobre uma lista completa, não o runner nem o motor da fazenda. A captura anterior foi preservada em [`replicate-summary-benchmark-2026-10.json`](./replicate-summary-benchmark-2026-10.json).
+O heap inclui as entradas sintéticas mantidas pelo benchmark; não representa alocação incremental do agregador. A API recebe uma lista completa, então a agregação não é streaming. Na carga de 100 mil registros, o tempo mediano foi cerca de 275 ms; a retenção total de dados fica visível no relatório JSON. As entradas são sintéticas e o teste mede o agregador sobre uma lista completa, não o runner nem o motor da fazenda. A captura anterior foi preservada em [`replicate-summary-benchmark-2026-10.json`](./replicate-summary-benchmark-2026-10.json).
 
 ## Limites
 
