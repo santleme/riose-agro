@@ -14,7 +14,8 @@ const validateReport = new Ajv2020({allErrors: true, strict: false}).compile(ben
 function gitValue(args) {
   try {
     return execFileSync('git', args, {cwd: repositoryRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim() || null;
-  } catch {
+  } catch (error) {
+    gitValue.lastError = error.stderr?.toString().trim() || error.message;
     return null;
   }
 }
@@ -90,7 +91,7 @@ export function benchmarkReport({
   const cpu = os.cpus()[0]?.model ?? null;
   const revision = gitValue(['rev-parse', 'HEAD']);
   const status = gitValue(['status', '--porcelain']);
-  if (!revision || status === null) throw new Error('Cannot determine benchmark source revision and dirty state; refusing to emit an ambiguous report.');
+  if (!revision || status === null) throw new Error(`Cannot determine benchmark source revision and dirty state at ${repositoryRoot}: ${gitValue.lastError ?? 'unknown Git error'}; refusing to emit an ambiguous report.`);
   const dirty = status.length > 0;
   const phaseReports = Object.fromEntries(PHASES.map(phase => [
     phase,

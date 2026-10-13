@@ -5,7 +5,7 @@ import path from 'node:path';
 import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
-import {benchmarkReport,measurement} from './benchmark-report.mjs';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 import {waitForDevToolsActivePort} from './browser-startup.mjs';
 
 async function findChrome(){
