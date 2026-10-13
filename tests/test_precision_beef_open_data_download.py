@@ -24,7 +24,9 @@ def fake_record():
             "access_right": "open",
             "license": {"id": "cc-by-4.0"},
             "doi": "10.5281/zenodo.4064802",
+            "title": "Precision Beef open dataset",
             "version": "1",
+            "publication_date": "2022-03-10",
         },
         "files": files,
         "links": {"html": "https://zenodo.org/records/4064802"},
@@ -56,11 +58,15 @@ class PrecisionBeefDownloadTests(unittest.TestCase):
             {**DOWNLOAD.parse_file_entry(item), "sha256": "b" * 64, "status": "verified_existing"}
             for item in record["files"]
         ]
-        manifest = DOWNLOAD.create_manifest(record, verified)
-        self.assertEqual(manifest["license"], "cc-by-4.0")
-        self.assertEqual(manifest["population"]["officialTestAnimals"], ["04", "10", "11"])
-        self.assertIn("not independent human-video annotation", manifest["measurement"]["reference"])
-        self.assertEqual(manifest["totalBytes"], 370)
+        manifest = DOWNLOAD.create_manifest(record, verified, "c" * 64, "2026-10-13")
+        self.assertEqual(manifest["source"]["license"], "CC BY 4.0")
+        self.assertEqual(manifest["source"]["totalArchiveSizeBytes"], 370)
+        self.assertTrue(manifest["population"]["animalsObserved"])
+        self.assertFalse(manifest["use"]["dmiTargetEligible"])
+        self.assertIn("not independent human-video annotations", manifest["measurement"]["method"])
+        self.assertIn("source-defined test set contains three animals", " ".join(manifest["use"]["limitations"]))
+        self.assertEqual(manifest["provenance"]["apiMetadataSha256"], "c" * 64)
+        self.assertEqual(manifest["processedOutputs"], [])
         self.assertEqual(len(manifest["files"]), 37)
 
 

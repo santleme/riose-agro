@@ -24,11 +24,14 @@ RECORD_ID = "4064802"
 API_URL = f"https://zenodo.org/api/records/{RECORD_ID}"
 RAW_DIR = ROOT / "data/raw/zenodo-4064802"
 MANIFEST_PATH = ROOT / "data/precision-beef/manifest.json"
+METADATA_PATH = ROOT / "data/precision-beef/zenodo-record-4064802.json"
+PROCESSING_REPORT_PATH = ROOT / "data/precision-beef/processing-report.json"
 EXPECTED_FILES = {"Readme.md"} | {f"accel-{i:02d}.csv" for i in range(1, 19)} | {
     f"halter-{i:02d}.csv" for i in range(1, 19)
 }
 USER_AGENT = "Riose-open-scientific-data/1.0"
 CHUNK_SIZE = 4 * 1024 * 1024
+MAX_WORKERS = 4
 
 
 def validate_record(record: dict[str, Any]) -> dict[str, Any]:
@@ -122,58 +125,88 @@ def download_one(info: dict[str, Any], retries: int = 3) -> dict[str, Any]:
     raise RuntimeError(f"Failed to download {key} after {retries} attempts: {last_error}")
 
 
-def create_manifest(record: dict[str, Any], verified_files: list[dict[str, Any]]) -> dict[str, Any]:
+def create_manifest(
+    record: dict[str, Any],
+    verified_files: list[dict[str, Any]],
+    metadata_sha256: str,
+    retrieved_on: str,
+) -> dict[str, Any]:
     metadata = record["metadata"]
     ordered = sorted(verified_files, key=lambda item: item["key"])
     if len(ordered) != len(EXPECTED_FILES) or any(
         item["status"] not in {"downloaded_and_verified", "verified_existing"} for item in ordered
     ):
         raise ValueError("Cannot register a partially downloaded or unchecked source")
-    readme = next(item for item in ordered if item["key"] == "Readme.md")
     return {
-        "schemaVersion": "riose.scientific-dataset-manifest/v1",
-        "datasetId": "precision-beef-zenodo-4064802",
-        "doi": metadata.get("doi"),
-        "officialRecord": record.get("links", {}).get("html"),
-        "officialApi": API_URL,
-        "version": metadata.get("version"),
-        "license": metadata["license"]["id"],
-        "accessRight": metadata["access_right"],
-        "downloadedAtUtc": datetime.now(timezone.utc).isoformat(),
+        "schemaVersion": "1.0.0",
+        "source": {
+            "title": metadata["title"],
+            "publisher": "Zenodo",
+            "doi": metadata["doi"],
+            "officialUrl": record.get("links", {}).get("html"),
+            "apiUrl": API_URL,
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+            "version": metadata.get("version", "1"),
+            "published": metadata.get("publication_date"),
+            "retrievedOn": retrieved_on,
+            "totalArchiveSizeBytes": sum(item["bytes"] for item in ordered),
+            "licensePermission": "Creative Commons Attribution 4.0 International: reuse and adaptation are allowed with appropriate attribution, a link to the license, and an indication of changes.",
+        },
         "population": {
             "species": "Bos taurus",
-            "category": "Limousin-cross finishing steers",
-            "count": 18,
-            "trials": 3,
-            "setting": "indoor straw housing, ad libitum total mixed ration, Easter Howgate Farm, UK",
-            "trialByAnimal": {"01-06": 1, "07-10": 2, "11-18": 3},
-            "officialTestAnimals": ["04", "10", "11"],
+            "breed": None,
+            "ageOrPhysiologicalClass": "finishing steers; exact ages not supplied in the dataset README",
+            "location": "Easter Howgate Farm, UK",
+            "livestockContext": "18 finishing steers across three farm trials",
+            "system": "indoor straw housing with ad libitum total mixed ration",
+            "animalsObserved": True,
+            "animalCategory": "finishing steers; breed not specified in the dataset README",
+            "unitOfObservation": "timestamped 10 Hz sensor row paired to an instrument-derived behavior label",
+            "timePoints": ["farm trial 1", "farm trial 2", "farm trial 3"],
+            "groupKeys": ["animal_id", "farm_trial", "source_split"],
         },
         "measurement": {
-            "input": "neck collar 3-axis MEMS acceleration at 10 Hz; acceleration in mg",
-            "reference": "RumiWatch muzzle halter jaw-pressure classifier at 10 Hz, not independent human-video annotation",
-            "labels": {"0": "other", "1": "rumination", "2": "eating_or_drinking"},
-            "warning": "Drinking samples were merged into Eating in the published label set; target is agreement with the instrument-derived reference, not human-confirmed ethological ground truth.",
+            "experimentType": "observational sensor and behavior-classification dataset from three housed-cattle farm trials",
+            "outcomes": ["other", "rumination", "eating_or_drinking"],
+            "targetUnits": "acceleration in mg; categorical label codes 0, 1, 2",
+            "method": "neck collar 3-axis MEMS accelerometer paired with RumiWatch muzzle halter jaw-pressure classifier; the halter labels are not independent human-video annotations",
+            "frequency": "10 Hz for collar and halter records",
+            "missingnessAndDuplicates": "Must be audited from downloaded files before modeling; drinking is merged into eating in the published labels. Animal and trial groups must stay intact during evaluation.",
         },
-        "readme": {"path": f"data/raw/zenodo-{RECORD_ID}/Readme.md", "bytes": readme["bytes"], "md5": readme["md5"], "sha256": readme["sha256"]},
+        "use": {
+            "eligibleCohorts": ["housed_finishing_steer_sensor_to_instrument_reference_agreement"],
+            "dmiTargetEligible": False,
+            "commercialTrainingLicenseCompatible": True,
+            "decision": "CONDITIONAL_FOR_SEPARATE_HOUSED_STEER_SENSOR_AGREEMENT_TASK; INELIGIBLE_FOR_PASTURE_BEHAVIOR_AND_DMI",
+            "limitations": [
+                "Housed finishing steers are not grazing beef cows or pasture grazing sessions.",
+                "The source-defined test set contains three animals, one from each trial; those animals were already used as a test cohort in the publication.",
+                "Labels are instrument-derived and drinking is merged into eating; this is not human-confirmed ethological ground truth.",
+                "This cohort cannot validate DMI, ADG, pasture behavior, or the Riose engine.",
+            ],
+        },
         "files": [
-            {key: value for key, value in item.items() if key != "url"}
-            | {"path": f"data/raw/zenodo-{RECORD_ID}/{item['key']}", "downloadUrl": item["url"]}
+            {
+                "name": item["key"],
+                "sizeBytes": item["bytes"],
+                "sha256": item["sha256"],
+                "selectedForDownload": True,
+                "downloadUrl": item["url"],
+                "retrievedOn": retrieved_on,
+                "localPath": f"data/raw/zenodo-{RECORD_ID}/{item['key']}",
+                "verifiedSha256": item["sha256"],
+                "verification": f"Zenodo publisher MD5 {item['md5']} and local SHA-256 verified",
+            }
             for item in ordered
         ],
-        "totalBytes": sum(item["bytes"] for item in ordered),
-        "limitations": [
-            "Housed finishing steers are not grazing beef cows or pasture grazing sessions.",
-            "Three animals form the source-defined test set (one per trial); inferential stability across animals is limited.",
-            "Labels are RumiWatch-derived and drinking is merged into eating.",
-            "This cohort cannot validate DMI, ADG, pasture behavior, or the Riose engine.",
-        ],
-        "eligibility": {
-            "separate_housed_steer_sensor_agreement_task": "conditional_after_schema_audit",
-            "pasture_behavior_validation": "ineligible",
-            "mature_cow_pasture_dmi": "ineligible",
-            "commercialReuse": "CC BY 4.0; retain attribution and source DOI",
+        "metadataSnapshot": str(METADATA_PATH.relative_to(ROOT)),
+        "provenance": {
+            "apiMetadataSha256": metadata_sha256,
+            "downloadMethod": f"Official Zenodo record API followed by resumable HTTPS downloads with up to {MAX_WORKERS} workers; each file is accepted only after publisher MD5 and local SHA-256 verification.",
         },
+        "processedOutputs": [],
+        "processingReport": str(PROCESSING_REPORT_PATH.relative_to(ROOT)),
     }
 
 
@@ -185,7 +218,7 @@ def main() -> int:
     print(f"Verified open CC BY 4.0 record {RECORD_ID}; files={len(entries)}, bytes={total_bytes}", flush=True)
     results: list[dict[str, Any]] = []
     errors: list[str] = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
         futures = {pool.submit(download_one, item): item["key"] for item in entries}
         for future in concurrent.futures.as_completed(futures):
             key = futures[future]
@@ -200,12 +233,25 @@ def main() -> int:
         print("No complete manifest written; failures:\n" + "\n".join(errors), file=sys.stderr)
         return 1
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    manifest = create_manifest(record, results)
+    metadata_bytes = json.dumps(record, indent=2, ensure_ascii=False).encode("utf-8") + b"\n"
+    metadata_sha256 = hashlib.sha256(metadata_bytes).hexdigest()
+    METADATA_PATH.write_bytes(metadata_bytes)
+    retrieved_on = datetime.now(timezone.utc).date().isoformat()
+    manifest = create_manifest(record, results, metadata_sha256, retrieved_on)
+    PROCESSING_REPORT_PATH.write_text(json.dumps({
+        "sourceDoi": record["metadata"]["doi"],
+        "status": "raw_download_verified_processing_pending",
+        "totalRows": None,
+        "downloadedFiles": len(results),
+        "downloadedBytes": sum(item["bytes"] for item in results),
+        "rowLevelMissingnessAndDuplicates": "Not yet assessed; no modeled or processed output is claimed.",
+        "limitations": manifest["use"]["limitations"],
+    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({
         "manifest": str(MANIFEST_PATH.relative_to(ROOT)),
         "files": len(results),
-        "bytes": manifest["totalBytes"],
+        "bytes": manifest["source"]["totalArchiveSizeBytes"],
         "wallSeconds": time.perf_counter() - started,
     }, ensure_ascii=False))
     return 0
