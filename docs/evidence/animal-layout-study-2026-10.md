@@ -1,17 +1,17 @@
 # Estudo AoS e colunas numéricas alinhadas
 
-Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O comando grava a coleta detalhada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A captura foi feita em `4d56404` (`dirty: false`) e usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
+Reprodução: `node --expose-gc scripts/benchmark-animal-layout.mjs`. O comando grava a coleta detalhada em [`animal-layout-study-2026-10.json`](./animal-layout-study-2026-10.json). A captura limpa mais recente foi feita em `4f81a61d39b9710adbbe4077a572ff6d5191f0ac` (`dirty: false`) e usa o cenário versionado `tests/scenarios/baseline-pasture.json`, semente 417, 8 aquecimentos e 31 amostras por fase para 100, 1.000 e 10.000 animais. As transições ativa (hora 7) e repouso (hora 22) são comparadas com `FarmEngine.tick`; AoS, colunas e Rust precisam produzir peso e energia idênticos.
 
 O protótipo SoA usa colunas numéricas alinhadas e mede kernel, gather, scatter e custo fim a fim separadamente. Também mede materialização de snapshot, clonagem, serialização JSON e transferência de buffers. A tabela mostra medianas em milissegundos por transição. O Rust nativo mede apenas o kernel pré-alocado.
 
 | Animais | Hora | AoS direto | SoA kernel | Gather | Scatter | SoA fim a fim | Rust nativo |
 |---:|---:|---:|---:|---:|---:|---:|---:|
-| 100 | 7 | 0,000781 | 0,000214 | 0,000127 | 0,000659 | 0,000872 | 0,000110 |
-| 100 | 22 | 0,000864 | 0,000501 | 0,000502 | 0,000605 | 0,001612 | 0,000110 |
-| 1.000 | 7 | 0,012564 | 0,004933 | 0,007025 | 0,009677 | 0,024819 | 0,000935 |
-| 1.000 | 22 | 0,009028 | 0,004894 | 0,004919 | 0,006058 | 0,016653 | 0,001412 |
-| 10.000 | 7 | 0,120993 | 0,083044 | 0,052829 | 0,096757 | 0,205292 | 0,013759 |
-| 10.000 | 22 | 0,137985 | 0,050121 | 0,053259 | 0,061021 | 0,196880 | 0,009470 |
+| 100 | 7 | 0,000772 | 0,000213 | 0,000125 | 0,000615 | 0,000855 | 0,000108 |
+| 100 | 22 | 0,000824 | 0,000482 | 0,000480 | 0,000560 | 0,001563 | 0,000144 |
+| 1.000 | 7 | 0,009128 | 0,004761 | 0,006421 | 0,008923 | 0,017856 | 0,000900 |
+| 1.000 | 22 | 0,008326 | 0,004792 | 0,005220 | 0,005771 | 0,016836 | 0,000918 |
+| 10.000 | 7 | 0,122742 | 0,060266 | 0,049378 | 0,084775 | 0,200901 | 0,009261 |
+| 10.000 | 22 | 0,088340 | 0,049386 | 0,053599 | 0,060815 | 0,181364 | 0,009297 |
 
 O kernel SoA isolado é mais rápido, mas gather e scatter tornam o caminho fim a fim mais lento que AoS nas seis combinações desta coleta. Os sete buffers tipados usam 4.500, 45.000 e 450.000 bytes, respectivamente. A comparação de heap após GC é ruidosa e não foi interpretada como economia. As alocações de pico não são instrumentadas.
 
