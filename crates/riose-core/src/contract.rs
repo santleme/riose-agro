@@ -39,7 +39,9 @@ impl Default for EngineMetadata {
     fn default() -> Self {
         Self {
             engine_version: NATIVE_ENGINE_VERSION.to_owned(),
-            build_id: option_env!("RIOSE_BUILD_ID").unwrap_or("unspecified").to_owned(),
+            build_id: option_env!("RIOSE_BUILD_ID")
+                .unwrap_or(concat!("riose-core@", env!("CARGO_PKG_VERSION")))
+                .to_owned(),
             model_status: MODEL_STATUS.to_owned(),
             provenance: "native-rust-core".to_owned(),
             validated: false,
@@ -125,6 +127,11 @@ mod tests {
         assert_eq!(result.engine.model_status, MODEL_STATUS);
         assert!(!result.engine.validated);
         assert!(!result.engine.engine_version.is_empty());
+        assert_eq!(
+            result.engine.build_id,
+            option_env!("RIOSE_BUILD_ID")
+                .unwrap_or(concat!("riose-core@", env!("CARGO_PKG_VERSION")))
+        );
         assert!(matches!(result.result, NativeScenarioResult::Baseline { .. }));
     }
 }

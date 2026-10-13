@@ -53,6 +53,12 @@ the decode error distinguishes malformed JSON from invalid snapshot contents.
 The scenario entry point returns descriptive `String` errors for unsupported
 request versions, invalid counts, hours, days, and configuration values.
 
+`engineVersion` identifies `riose-core/<crate-version>`. `buildId` uses the
+`RIOSE_BUILD_ID` compile-time value when supplied; otherwise it is the
+reproducible `riose-core@<crate-version>` identifier. The fallback identifies
+the crate version and does not claim a source commit. `provenance` identifies
+the native Rust implementation only; `validated` remains false.
+
 The snapshot top-level fields are `hour`, `animals`, `pastures`, `intake`,
 `config`, `cost`, `events`, `seed`, `initialSeed`, and `locomotionSeed`. Animal
 objects contain `id`, `name`, `weight`, `initialWeight`, `energy`, `thirst`,
@@ -74,8 +80,9 @@ fields are rejected at the request, configuration, snapshot, and nested snapshot
 DTO boundaries. The separate `heat` intervention, reduced-feed and limited-trough
 interventions, and observed scientific snapshots are unsupported.
 
-The seed is an unsigned 32-bit integer. The model and locomotion streams use the
-JS LCG recurrence `state = (state * 1664525 + 1013904223) mod 2^32`, with
+The seed is an explicit unsigned 32-bit integer, and baseline initialization
+allocates stable animal IDs in order, starting at 1. The model and locomotion
+streams use the JS LCG recurrence `state = (state * 1664525 + 1013904223) mod 2^32`, with
 `next_f64 = state / 2^32`. The model stream starts at `seed`; locomotion starts
 at the first LCG successor of `seed XOR 0x9e3779b9`. Initialization consumes
 one model draw for each animal weight and two locomotion draws per animal for
@@ -84,10 +91,15 @@ per animal, in animal order. The snapshot records both current stream states;
 legacy snapshots missing `initialSeed` or `locomotionSeed` use the current
 `seed` and the same locomotion derivation, respectively.
 
-This Rust surface is implemented but has not yet passed native compilation or
-tests in the current environment. The API and RNG contract above describe the
-implemented boundary; JS-side fixtures are useful for comparison but do not
-prove that the Rust code executes correctly.
+The Rust integration tests consume the official
+[`baseline-pasture`](../tests/scenario-goldens/baseline-pasture.json) and
+[`housing-comparison`](../tests/scenario-goldens/housing-comparison.json)
+fixtures. They assert exact JSON equality for the complete supported baseline
+snapshot and metrics, the complete 30-day comparison output, and the comparison
+endpoint projections including both RNG stream states. They also rerun each
+request to verify deterministic output. The Rust CI job runs formatting,
+workspace tests, and a release build; JavaScript remains the browser authority
+and executable fallback.
 
 Run Rust unit tests with `cargo test --workspace`. Run the local timing harness
 with `cargo run --release -p riose-core --bin bench-farm-core`.
