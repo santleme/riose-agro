@@ -74,6 +74,11 @@ test('map comparison freezes one snapshot, changes one configured factor only, a
   assert.match(ui.elements.get('results').innerHTML,/Diferença alternativa − base:/);
   assert.match(ui.elements.get('results').innerHTML,/relativa:/);
   assert.match(ui.elements.get('comparison-assumptions').innerHTML,/Sem calibração suficiente/);
+  assert.match(ui.elements.get('compareconfig').textContent,/Semente: 89/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/Identidade no snapshot executado · 5 animais/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/IDs e pesos abaixo são entradas do estado simulado/);
+  assert.match(ui.elements.get('comparison-variables').innerHTML,/sprites da fazenda são apenas representativos/);
+  for(const animal of snapshot.animals)assert.match(ui.elements.get('comparison-variables').innerHTML,new RegExp('>'+animal.id+'<'));
   assert.equal(result.validated,false);
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
