@@ -39,7 +39,6 @@ jobs:
         uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # pinned action revision
         with:
           toolchain: '1.95.0'
-          components: rustfmt
           targets: wasm32-unknown-unknown
 
       - name: Install JavaScript dependencies
@@ -92,6 +91,7 @@ jobs:
         uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # pinned action revision
         with:
           toolchain: '1.95.0'
+          components: rustfmt
 
       - name: Check Rust formatting
         run: cargo fmt --all -- --check
