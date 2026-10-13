@@ -1,10 +1,10 @@
 # Mendeley to Dryad pasture biomass evaluation
 
-**State:** preregistered; no model fitting or outcome-based candidate selection has occurred.
+**State:** preregistered and evaluated. The evaluation is in `experiments/biomass/`. The source wording below was amended on 2026-10-13 after checking the Mendeley repository description; this changed no candidate, threshold, fold, or result.
 
 ## Target and scope
 
-Estimate pre-grazing dry forage mass in kg DM/ha from pre-grazing mean sward height in cm. This protocol covers clipped-quadrat forage biomass only. It does not evaluate animal DMI, ADG, standing inventory, the full Riose engine, or tropical-pasture transport.
+Estimate measured dry forage yield in kg DM/ha from grass height in cm. The Mendeley source describes height and biomass collection at the same sample points in the November 2018 and March 2019 campaigns, but does not document their measurement sequence relative to clipping. Therefore the Brazilian development target is not labelled pre-grazing. The Dryad external source measures pre-grazing forage mass and height, making it a related but not strictly identical sampling estimand. This protocol covers clipped-quadrat forage biomass only. It does not evaluate animal DMI, ADG, standing inventory, the full Riose engine, or tropical-pasture transport.
 
 ## Development cohort and validation
 
@@ -12,7 +12,7 @@ Use the 234 Brazilian pasture sample rows in `data/mendeley-pasture-biomass/proc
 
 The structural feasibility check used feature and grouping columns only: all 234 rows are scoreable, 13 blocks are available, and buffered training folds retain 210–216 rows. Stop before model fitting if realized scoring coverage is below 70% or fewer than four blocks have non-empty test sets; do not reduce the buffer based on performance.
 
-Compare only the frozen candidates in the JSON protocol: training-fold target median, OLS, standardized Ridge (alpha 1), fixed Huber, and centered/scaled quadratic OLS. The primary score is equal-weight mean of per-block MAE. Secondary scores are pooled MAE, RMSE, signed bias, scored coverage, and prespecified farm/campaign/management groups. A challenger replaces OLS for the final external evaluation only if it lowers primary MAE by at least 10%, worsens pooled RMSE by no more than 5%, and does not worsen a subgroup with at least 20 scored spatial groups by more than 10%. Otherwise retain OLS as the fixed reference and report that no challenger met the rule. Do not search additional models or hyperparameters.
+Compare only the frozen candidates in the JSON protocol: training-fold target median, OLS, standardized Ridge (alpha 1), fixed Huber, and centered/scaled quadratic OLS. The primary score is equal-weight mean of per-block MAE. Secondary scores are pooled MAE, RMSE, signed bias, scored coverage, and prespecified farm/campaign/management groups. A challenger replaces OLS for the final external evaluation only if it lowers primary MAE by at least 10%, worsens pooled RMSE by no more than 5%, and does not worsen a subgroup with at least 20 scored spatial groups by more than 10%. Otherwise retain OLS as the fixed reference and report that no challenger met the rule. The quadratic candidate is development-only: applying a nonlinear function to mean paddock height is not equivalent to averaging its point-level predictions, so it cannot be selected for this mean-height external cohort. Do not search additional models or hyperparameters.
 
 Thirteen blocks are nested within two farms. Report block-level errors and avoid population-level confidence intervals or calibration claims.
 
@@ -22,7 +22,7 @@ Use the publicly downloadable, CC0 Dryad source `10.5061/dryad.79cnp5ht4`, downl
 
 Select the candidate and transformations using Mendeley buffered spatial CV only. Refit once on all 234 Mendeley rows and evaluate once on all 64 Dryad rows. Dryad outcomes cannot influence candidate, transform, or threshold selection. Report row-weighted MAE, RMSE, signed bias, paddock-macro MAE, each paddock group's error, and metrics by treatment, year, Julian day, and support status.
 
-Mendeley's observed height support is 2–56 cm. All Dryad rows are the primary external test; report in-support and above-support strata separately and mark the latter as extrapolation. Do not filter cases or clip features after seeing residuals. Eight paddock groups do not support a narrow confidence interval or calibrated prediction interval.
+Mendeley's observed height support is 2–56 cm. All Dryad rows are the primary external test; report in-support and above-support strata separately and mark the latter as extrapolation. The in-support set is only 40/64 Dryad rows, while just 51/234 Mendeley rows fall in this height range. All 24 above-support Dryad rows are MOB treatment, so support status is confounded with management and year; do not interpret the strata as a balanced transport comparison. Do not filter cases or clip features after seeing residuals. Eight paddock groups do not support a narrow confidence interval or calibrated prediction interval.
 
 This is an independent temperate pasture biomass evaluation. It cannot validate Brazilian tropical pasture performance, DMI, ADG, or the full engine.
 

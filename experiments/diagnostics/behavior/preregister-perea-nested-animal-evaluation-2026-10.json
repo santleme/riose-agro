@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_not_run",
+  "registeredAt": "2026-10-13",
+  "source": {
+    "doi": "10.6084/m9.figshare.28801181.v2",
+    "license": "CC BY 4.0",
+    "file": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "md5": "7cd143e8cccc79a5e159eaa83428529f",
+    "deduplicatedRows": 8864,
+    "animals": 24,
+    "breeds": ["AH", "BH", "BR", "RC"]
+  },
+  "scope": {
+    "module": "grazing behavior classification",
+    "labels": ["GR", "RE", "RU", "WA"],
+    "predictors": "current and past one-minute motion index (MI) only",
+    "prohibited": ["DMI", "ADG", "weight", "future MI", "current or prior behavior labels", "site/breed/animal identifiers as features", "XGain algorithm-produced counts as reference labels"],
+    "claimLimit": "Within-source unseen-animal classification among the sampled animals, sessions, breeds, and two ranches; not site-independent validation or full-day activity-budget validation."
+  },
+  "preprocessing": {
+    "sourceDuplicateRule": "Keep the existing audited rule: average MI for repeated same-label animal-minute rows and exclude every row in conflicting-label animal-minute keys.",
+    "temporalRows": "Sort by animal and timestamp; create [MI_t, MI_t-1, MI_t-2, MI_t-3, MI_t-4] only when all five observations are consecutive one-minute records for the same animal. Reset at every gap. No label-derived features.",
+    "commonTemporalRowsExpected": 5582,
+    "allRowsStaticDiagnostic": 8864,
+    "preprocessingFit": "Any scaling uses only the current training fold. No imputation."
+  },
+  "outerEvaluation": {
+    "design": "Six fixed animal-held-out folds; each test fold contains one animal from each breed. All rows for a Breed:ID animal stay in one test fold.",
+    "assignmentsFromFrozenExistingEvaluation": [
+      {"fold": 0, "testAnimals": ["AH:2003", "BH:4085", "BR:8073", "RC:2024"]},
+      {"fold": 1, "testAnimals": ["AH:2019", "BH:5111", "BR:8065", "RC:2061"]},
+      {"fold": 2, "testAnimals": ["AH:2008", "BH:4511", "BR:8071", "RC:35"]},
+      {"fold": 3, "testAnimals": ["AH:2004", "BH:6495", "BR:7001", "RC:1067"]},
+      {"fold": 4, "testAnimals": ["AH:2009", "BH:4071", "BR:8063", "RC:6"]},
+      {"fold": 5, "testAnimals": ["AH:2013", "BH:4589", "BR:8089", "RC:9012"]}
+    ],
+    "interpretation": "The six folds reuse both ranches and include every breed in train and test. They estimate only held-out-animal performance within this source. Ranch stress tests are excluded from model selection because ranch is perfectly confounded with breed and only two ranches exist."
+  },
+  "nestedSelection": {
+    "innerFolds": "Within each outer training set, sort remaining animal IDs within each breed and assign one animal per breed to each of five fixed inner folds. Each inner fold tests four animals and trains on the other sixteen.",
+    "fixedCandidates": [
+      {"id": "static_logistic", "features": "MI_t", "model": "multinomial logistic regression, L2=0.01, weighted standardization and fixed full-batch optimizer"},
+      {"id": "temporal_logistic_c_0_1", "features": "MI_t through MI_t-4", "model": "multinomial logistic regression, sklearn C=0.1; train-fold StandardScaler; fixed random-free solver"},
+      {"id": "temporal_logistic_c_1", "features": "MI_t through MI_t-4", "model": "multinomial logistic regression, sklearn C=1; train-fold StandardScaler; fixed random-free solver"},
+      {"id": "temporal_logistic_c_10", "features": "MI_t through MI_t-4", "model": "multinomial logistic regression, sklearn C=10; train-fold StandardScaler; fixed random-free solver"},
+      {"id": "cart_depth_2", "features": "MI_t through MI_t-4", "model": "DecisionTreeClassifier max_depth=2, min_samples_leaf=20, random_state=20261013"},
+      {"id": "cart_depth_3", "features": "MI_t through MI_t-4", "model": "DecisionTreeClassifier max_depth=3, min_samples_leaf=20, random_state=20261013"},
+      {"id": "cart_depth_4", "features": "MI_t through MI_t-4", "model": "DecisionTreeClassifier max_depth=4, min_samples_leaf=20, random_state=20261013"}
+    ],
+    "trainingWeights": "Within each training fold, give each animal equal total weight, then balance total class weight across GR/RE/RU/WA. Do not use validation labels to fit or weight models.",
+    "primaryMetric": "equal-animal mean of per-animal F1 for RE and RU, each class and animal equally weighted",
+    "tieBreakers": ["higher minimum of equal-animal RE and RU recall", "higher equal-animal four-class macro-F1", "simpler candidate: static logistic, temporal logistic, then shallower CART; lower C before higher C"],
+    "reference": "Training-fold majority class, reported descriptively and not eligible for selection."
+  },
+  "reporting": {
+    "metrics": ["equal-animal RE/RU F1 (primary)", "equal-animal RE recall", "equal-animal RU recall", "equal-animal four-class macro-F1", "observation-weighted accuracy", "confusion matrix", "per-animal metrics", "per-outer-fold metrics"],
+    "comparisonRows": "Every candidate uses the identical 5582-row temporally complete analysis set. Also report the frozen existing static-only six-fold baseline on all 8864 rows separately; do not compare its absolute score directly to the temporal common-set scores.",
+    "uncertainty": "Report six outer animal-group fold results without claiming site-level generalization or calibrated probabilities.",
+    "outputPaths": ["experiments/behavior/perea-nested-animal/"]
+  }
+}
