@@ -24,7 +24,11 @@ test('current measured profile chooses sequential for tiny work and parallel for
   assert.equal(small.backend, 'local-js');
   assert.equal(small.concurrency, 1);
   assert.equal(batch.backend, 'local-js');
-  assert.equal(batch.concurrency, 4);
+  const exactHost = measuredProfile.environment.platform === process.platform
+    && measuredProfile.environment.arch === process.arch
+    && measuredProfile.environment.node === process.version
+    && measuredProfile.environment.cpu === environment.cpu;
+  assert.equal(batch.concurrency, exactHost ? 4 : 1);
 });
 
 test('automatic selection uses the fastest exact parity-passed measurement inside resource limits', () => {

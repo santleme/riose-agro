@@ -17,7 +17,7 @@ const scenarioCount = Number(process.env.RIOSE_SCHEDULER_SCENARIO_COUNT ?? 6);
 const reportedAvailableParallelism = availableParallelism();
 const availableWorkers = Math.min(reportedAvailableParallelism, scenarioCount, 4);
 const requestedConcurrencyCases = process.env.RIOSE_SCHEDULER_CONCURRENCIES?.split(',').map(Number);
-const concurrencyCases = requestedConcurrencyCases ?? [1, Math.min(2, availableWorkers), availableWorkers];
+const concurrencyCases = requestedConcurrencyCases ?? [...new Set([1, Math.min(2, availableWorkers), availableWorkers])];
 if (!Number.isSafeInteger(scenarioCount) || scenarioCount < 1 || scenarioCount > 10_000
     || !Number.isSafeInteger(repetitions) || repetitions < 1
     || !Number.isSafeInteger(warmupRuns) || warmupRuns < 0
