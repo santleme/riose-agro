@@ -199,6 +199,7 @@ test('browser and graphics PoC adapters emit valid reports when Chromium is avai
   assertMeasurements(browser);
   assert.equal(browser.configuration.repetitions, 1);
   assert.ok(browser.results.worker.every(row => row.roundTrip24h.observationsMs?.length === 1));
+  assert.ok(browser.phases.engine.measurements.every(item => item.statistics.rawObservations?.length === 1));
   assert.ok(browser.phases.engine.measurements.some(item => item.population === 100_000));
 
   await t.test('graphics PoC adapter emits a report when its built bundle is served', async t => {

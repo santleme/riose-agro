@@ -311,17 +311,24 @@ for (const {run, result} of records) {
   const experimentPopulation = {count: recordCount, unit: 'experiment-run records', scope: 'serialized experiment batch'};
   const source = 'scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract';
   const phaseMeasurements = [];
-  const addSamples = (metric, unit, samples, population = experimentPopulation, method = source) => {
+  const addSamples = (metric, unit, samples, population = experimentPopulation, method = source, memoryType = undefined) => {
     phaseMeasurements.push(measurement('serialization', metric, unit, {
       ...summarizeSamples(samples),
       rawObservations: samples,
-    }, {population, source: method}));
+    }, {population, source: method, ...(memoryType ? {memoryType} : {})}));
   };
   const addMemorySamples = (format, operation, operationReport) => {
+    const memoryTypes = {
+      heapUsedBytes: 'js-heap',
+      rssProcessBytes: 'process-rss',
+      externalBytes: 'v8-external-memory',
+      arrayBuffersBytes: 'arraybuffer-memory',
+    };
     for (const memoryKey of ['heapUsedBytes', 'rssProcessBytes', 'externalBytes', 'arrayBuffersBytes']) {
       addSamples(`${format}-${operation}-${memoryKey}-delta`, 'bytes',
         operationReport.processMemorySamples.map(sample => sample.deltas[`${memoryKey}DeltaBytes`]),
-        experimentPopulation, `${source}; process.memoryUsage before and after each ${operation} operation`);
+        experimentPopulation, `${source}; process.memoryUsage before and after each ${operation} operation`,
+        memoryTypes[memoryKey]);
     }
   };
   for (const [format, result] of Object.entries(results)) {

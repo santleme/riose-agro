@@ -133,10 +133,10 @@ const kernel=await cdp.evaluate(`(async()=>{const {FarmEngine}=await import('/sr
   const phases={
     engine:{status:'measured',measurements:kernel.simulation.flatMap(row=>
       ['javascript','wasm','javascriptNoSnapshot','wasmNoSnapshot'].map(implementation=>
-        measurement('engine','tick24h','ms',row[implementation],{population:row.animals,scope:'FarmEngine',implementation})))
+        measurement('engine','tick24h','ms',row[implementation],{population:row.animals,scope:'FarmEngine',implementation,observations:row[implementation].observationsMs})))
       .concat(kernel.kernel.flatMap(row=>
         ['javascript','wasm'].map(implementation=>
-          measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals===100000?'numeric-kernel-only':null}))))},
+          measurement('engine','metabolismBatch','ms',row[implementation],{population:row.animals,scope:'numeric-kernel',implementation,limit:row.animals===100000?'numeric-kernel-only':null,observations:row[implementation].observationsMs}))))},
     worker:{status:'measured',measurements:worker.map(row=>measurement('worker','roundTrip24h','ms',row.roundTrip24h,{population:row.animals,implementation:row.implementation,median:row.roundTrip24h.medianMs,spread:{p95:row.roundTrip24h.p95Ms},memory:{jsHeapUsedBytes:row.heapUsedBytes,jsHeapDeltaBytes:row.heapDeltaBytes}}))},
     ui:{status:'measured',measurements:worker.map(row=>measurement('ui','scriptDurationPerTick','ms',{median:row.scriptDurationPerTickMs,spread:null},{population:row.animals,domNodes:row.domNodes,observations:[row.scriptDurationPerTickMs]}))},
     layout:{status:'measured',measurements:worker.map(row=>measurement('layout','layoutPerTick','ms',{median:row.layoutPerTickMs,spread:null},{population:row.animals,observations:[row.layoutPerTickMs]}))},
