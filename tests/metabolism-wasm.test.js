@@ -200,6 +200,33 @@ test('WASM batch accepts a 100000 animal numeric workload independent of rendere
   wasmKernel.dispose();
 });
 
+test('real WASM allocation growth and reuse match JavaScript through 100000 animals and after disposal',async t=>{
+  const kernel=await loadWasmMetabolism(new URL('http://local.test/wasm/riose_core.wasm'),async()=>
+    new Response(wasmBytes,{headers:{'content-type':'application/wasm'}}));
+  t.after(()=>kernel.dispose());
+
+  const assertMatchesJavaScript=count=>{
+    const input=new Float64Array(count*4);
+    for(let index=0;index<count;index++){
+      const offset=index*4;
+      input[offset]=180+(index%521);
+      input[offset+1]=index%101;
+      input[offset+2]=(index%37)/20;
+      input[offset+3]=index%2;
+    }
+    assert.deepEqual(Array.from(kernel(input)),Array.from(updateMetabolismJS(input)),
+      `real WASM output must match JavaScript for ${count} animals`);
+  };
+
+  // Exercise both sides of geometric capacity boundaries, then force a fresh
+  // allocator state and the largest supported allocation on the actual ABI.
+  for(const count of [1,2,3,5,17]) assertMatchesJavaScript(count);
+  kernel.dispose();
+  for(const count of [3,255,257,65_535,100_000,2]) assertMatchesJavaScript(count);
+  kernel.dispose();
+  assertMatchesJavaScript(1);
+});
+
 test('local server serves the compiled WASM module with its binary MIME type',async t=>{
   const server=createServer();
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
