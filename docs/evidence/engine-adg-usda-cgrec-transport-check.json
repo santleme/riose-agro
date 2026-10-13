@@ -9,7 +9,7 @@
     "md5": "650a892956aa1ab2d22eff26dbadb8d1",
     "totalRows": 4705,
     "eligibleSteerYearlings": 291,
-    "integrityAuditSha256": "8f18603d5a6274c0a254f0ca8322e082c6003353139d5d9237e3c367aa305513",
+    "integrityAuditSha256": "4c4a17bf847aaa30d773980c321dc6d9c5b698ed13e3f7c9014583b4fc9ef82b",
     "years": [
       1989,
       1994,
@@ -20,10 +20,11 @@
   },
   "transferFromCper": {
     "cperSourceDoi": "10.15482/USDA.ADC/1528520",
-    "cperEngineSha256": "e89971206a05c3a31f10b934be1150144a5d8c4ffe393954d3104ea1d9230569",
-    "engineSha256": "e89971206a05c3a31f10b934be1150144a5d8c4ffe393954d3104ea1d9230569",
+    "cperEngineSha256": "30ef6f2dc882cf4ba0719a2a9adc23dfa0111f20a5280785ecd579fddf48663d",
+    "engineSha256": "30ef6f2dc882cf4ba0719a2a9adc23dfa0111f20a5280785ecd579fddf48663d",
     "engineSourceFiles": [
       "engine.js",
+      "animal-view-state.js",
       "feeding-model.js",
       "environment-model.js",
       "metabolism-wasm.js"

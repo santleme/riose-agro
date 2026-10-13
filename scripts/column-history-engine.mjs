@@ -23,8 +23,8 @@ export class ColumnHistoryEngine extends FarmEngine {
   historyFor(animal) { return animal ? this.activityColumns.historyFor(animal.id) : []; }
 
   snapshot() {
-    const snapshot = structuredClone(this.state);
-    snapshot.animals.forEach((animal, index) => { animal.history = this.activityColumns.historyFor(index + 1); });
+    const snapshot = super.snapshot();
+    snapshot.animals.forEach(animal => { animal.history = this.activityColumns.historyFor(animal.id); });
     return snapshot;
   }
 }

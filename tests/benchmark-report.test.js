@@ -271,6 +271,8 @@ test('memory taxonomy, raw observations, units, and duration values are validate
     ['jsHeapBytes', 'js-heap'], ['retainedHeapBytes', 'retained-heap'], ['processRssBytes', 'process-rss'],
     ['serializedPayloadBytes', 'serialized-payload'], ['wasmLinearMemoryBytes', 'wasm-memory'], ['gpuMemoryBytes', 'gpu-memory'],
     ['externalMemoryBytes', 'v8-external-memory'], ['arrayBuffersBytes', 'arraybuffer-memory'],
+    ['postGcRetainedExternalDelta', 'v8-external-memory'], ['postGcRetainedExternalDeltaPerAnimal', 'v8-external-memory'],
+    ['postGcRetainedArrayBuffersDelta', 'arraybuffer-memory'], ['postGcRetainedArrayBuffersDeltaPerAnimal', 'arraybuffer-memory'],
   ]) {
     const typed = benchmarkReport({
       name: 'memory-type-fixture', workload: report.workload, configuration: report.configuration,

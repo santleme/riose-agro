@@ -123,7 +123,11 @@ function makeWorkerView(engine, selectedAnimalId = 1) {
   for (let index = 0; index < animals.length; index++) {
     const animal = animals[index], offset = index * 4;
     ids[index] = animal.id;
-    values[offset] = animal.x; values[offset + 1] = animal.y;
+    const position = engine.viewState.get(animal.id);
+    if (!position || !Number.isFinite(position.x) || !Number.isFinite(position.y)) {
+      throw new Error(`Missing finite view position for animal ${animal.id}`);
+    }
+    values[offset] = position.x; values[offset + 1] = position.y;
     values[offset + 2] = animal.weight; values[offset + 3] = animal.initialWeight;
     actions[index] = actionCodes[animal.action] ?? 0;
   }

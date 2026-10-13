@@ -27,9 +27,9 @@ function memoryTypeFor(metric, unit) {
   if (/wasm/.test(label)) return 'wasm-memory';
   if (/payload|snapshot-json|serialization|transferbuffer/.test(label)) return 'serialized-payload';
   if (/rss/.test(label)) return 'process-rss';
-  if (/retained|materialized/.test(label)) return 'retained-heap';
   if (/arraybuffers?/.test(label)) return 'arraybuffer-memory';
   if (/external/.test(label)) return 'v8-external-memory';
+  if (/retained|materialized/.test(label)) return 'retained-heap';
   if (/heap|memory/.test(label)) return 'js-heap';
   if (/bytes?/.test(unit)) return 'serialized-payload';
   return undefined;

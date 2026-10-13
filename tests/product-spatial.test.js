@@ -97,7 +97,7 @@ test('24 confined animals remain individually spaced inside the holding pen with
   const engine=new FarmEngine();
   engine.configure({housing:'barn'});
   engine.tick(1);
-  const source=engine.state.animals,before=structuredClone(engine.state.animals),zone=PRODUCT_BLOCKOUT.zones.find(item=>item.id==='working-pen');
+  const domain=engine.state.animals,before=structuredClone(domain),source=domain.map(animal=>({...animal,...engine.viewState.get(animal.id)})),zone=PRODUCT_BLOCKOUT.zones.find(item=>item.id==='working-pen');
   assert.ok(source.every(animal=>animal.x>=SIMULATOR_BARN_BOUNDS.x&&animal.x<=SIMULATOR_BARN_BOUNDS.x+SIMULATOR_BARN_BOUNDS.w&&animal.y>=SIMULATOR_BARN_BOUNDS.y&&animal.y<=SIMULATOR_BARN_BOUNDS.y+SIMULATOR_BARN_BOUNDS.h));
   const mapped=source.map(animal=>({animal,...animalWorldPosition(animal,undefined,'barn'),zone}));
   const positioned=separateAnimalVisuals(mapped);
@@ -111,7 +111,7 @@ test('24 confined animals remain individually spaced inside the holding pen with
     assert.ok(item.y>=zone.y+.5&&item.y<=zone.y+zone.h-.5);
     assert.equal(item.modelPosition.x,mapped[index].x);assert.equal(item.modelPosition.y,mapped[index].y);
   }
-  assert.deepEqual(source,before);
+  assert.deepEqual(engine.state.animals,before);
 });
 
 test('composition editor is a development-only tool and is not linked from the Product page',async()=>{

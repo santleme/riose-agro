@@ -13,6 +13,7 @@ import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js
 import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
 import {createViewLayout,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
+import {combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot} from '../src/client/animal-view-state.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],confirmValue=true){
@@ -23,7 +24,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
@@ -38,7 +39,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);
   vm.runInContext(source,context,{filename:'app.js'});
   const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:type==='view'?{...value,engineImplementation}:{data:value,engineImplementation})}});};
-  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
+  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),readViewState:()=>vm.runInContext('structuredClone(viewState)',context),fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
 }
 async function waitFor(check,timeout=5000){const deadline=Date.now()+timeout;while(!check()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(check(),'timed out waiting for the browser harness');}
 
@@ -77,7 +78,7 @@ test('map comparison freezes one snapshot, changes housing only, and never appli
   assert.equal(ui.fetches(),0);
 });
 
-test('worker view applies animal values by stable ID when the typed-array order changes',async()=>{
+test('worker view keeps motion outside scientific state and joins values by stable ID after reorder',async()=>{
   const ui=await openFarm(),snapshot=new FarmEngine(31,3).snapshot();
   ui.deliver('state',snapshot);
   const diet=ui.elements.get('diet');diet.value='balanced';diet.onchange({target:diet});
@@ -88,11 +89,29 @@ test('worker view applies animal values by stable ID when the typed-array order 
     config:{...snapshot.config,diet:'balanced'},events:snapshot.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,
     viewLayout:createViewLayout(animals.length),selectedAnimalId:1,selectedHistory:[]});
   const updated=ui.readState();
+  const positions=new Map(ui.readViewState().animals.map(animal=>[animal.id,animal]));
   for(const animal of updated.animals){
-    assert.deepEqual([animal.x,animal.y,animal.weight,animal.initialWeight],
+    assert.equal(Object.hasOwn(animal,'x'),false);
+    assert.equal(Object.hasOwn(animal,'y'),false);
+    assert.deepEqual([positions.get(animal.id).x,positions.get(animal.id).y,animal.weight,animal.initialWeight],
       [100+animal.id,200+animal.id,300+animal.id,400+animal.id]);
     assert.equal(animal.action,actionNames[animal.id%actionNames.length]);
   }
+});
+
+test('Worker view reordering preserves selected animal identity and Canvas hit testing',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(104,3).snapshot();
+  ui.deliver('state',snapshot);
+  ui.elements.get('animals').onclick({target:{closest:()=>({dataset:{animal:'2'}})}});
+  const ids=new Uint32Array([3,2,1]),values=new Float64Array([330,230,503,603,320,220,502,602,310,210,501,601]);
+  ui.deliver('view',{hour:snapshot.hour,pastures:snapshot.pastures,cost:snapshot.cost,intake:snapshot.intake,config:snapshot.config,events:snapshot.events,
+    animalIds:ids,animalValues:values,animalActions:new Uint8Array([0,1,2]),viewLayout:createViewLayout(3),selectedAnimalId:2,selectedHistory:[]});
+  assert.match(ui.elements.get('animalname').innerHTML,/#002/);
+  assert.equal(ui.elements.get('animalweight').textContent,'502,0 kg');
+  const map=ui.elements.get('map'),event={clientX:320,clientY:220,pointerId:1};
+  map.onpointerdown(event);map.onpointerup(event);
+  assert.equal(ui.messages.at(-1).type,'select');
+  assert.equal(ui.messages.at(-1).animalId,2);
 });
 
 test('connected snapshot selection persists real lot IDs through the existing comparison and return to farm',async()=>{
