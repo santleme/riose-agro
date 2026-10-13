@@ -88,7 +88,7 @@
         "baselineWeight",
         "scenarioWeight"
       ],
-      "compatibleIndependentEvidence": "Partial component evidence: USDA/CPER temporal holdout and CPER-to-CGRE external transfer; separate Zenodo adult-cow and other cohort diagnostics. New CPER 2009–2013 year-held-out comparison is internal development evidence only; no candidate passed its advancement rule and it is not independent transport validation. New pre-outcome candidate development on 320 CPER rows used nested year-block selection with initial weight only; the mean baseline was better than OLS and Ridge. It is one-site internal development and cannot support interval calibration.",
+      "compatibleIndependentEvidence": "Partial component evidence: USDA/CPER temporal holdout and CPER-to-CGRE external transfer; separate Zenodo adult-cow and other cohort diagnostics. New CPER 2009–2013 year-held-out comparison is internal development evidence only; no candidate passed its advancement rule and it is not independent transport validation. Expanded preregistered candidate development on the same 320 CPER rows used nested year-block selection with initial weight only; Huber and HGB were only slightly below the mean baseline on MAE, while OLS and Ridge were worse. It is one-site internal development and cannot support interval calibration.",
       "estimableNow": [
         "descriptive error and bias for the exact audited cohort and frozen component rule",
         "cluster-bootstrap stability of selected error metrics where animal IDs support it",
@@ -104,7 +104,7 @@
         "observational ADG is not the same estimand as all engine weight outputs",
         "empirical coverage varied across held-out site/year subsets",
         "The frozen internal CPER year-held-out comparison did not advance a candidate and has only five year blocks; no nominal interval coverage is justified.",
-        "The new 320-row CPER candidate comparison is internal development across five years at one station; no model beat the training-mean baseline and no independent calibration cohort exists."
+        "The expanded 320-row CPER comparison showed only a slight internal MAE improvement for Huber/HGB over the mean baseline across five years at one station; it is not independent calibration."
       ],
       "evidence": [
         "engine-adg-usda-cper-ltgi-check.json",
@@ -223,7 +223,7 @@
         "baselinePastureKgDM",
         "scenarioPastureKgDM"
       ],
-      "compatibleIndependentEvidence": "Some public sources report pasture or vegetation indicators at group, paddock, or remote-sensing level; they are not aligned to the engine's initial stock, daily growth, intake, and paddock transitions. New adjacent forage-biomass evidence includes an external Dryad comparison for sampled pre-grazing forage mass; it does not measure initial pasture stock or validate the engine stock state. A separate post-baseline nested spatial development comparison on Mendeley (13 blocks, 100 m buffer) selected OLS in all blocks; no new candidate advanced. This estimates clipped-quadrat biomass association only.",
+      "compatibleIndependentEvidence": "Some public sources report pasture or vegetation indicators at group, paddock, or remote-sensing level; they are not aligned to the engine's initial stock, daily growth, intake, and paddock transitions. New adjacent forage-biomass evidence includes an external Dryad comparison for sampled pre-grazing forage mass; it does not measure initial pasture stock or validate the engine stock state. A separate post-baseline nested spatial development comparison on Mendeley (13 blocks, 100 m buffer) selected OLS in all blocks; no new candidate advanced. This estimates clipped-quadrat biomass association only. A fixed farm-holdout stress check on the Mendeley biomass cohort produced MAEs of 1,039 and 1,079 kg DM/ha with opposite biases; campaign separation had zero coverage because all sampled coordinates repeat. This is development evidence, not calibrated stock uncertainty or independent farm validation.",
       "estimableNow": [
         "source-specific descriptive summaries when the reported unit and period are retained",
         "Source-specific error and bias for harvested quadrat forage mass predicted from matched height in the exact Mendeley and Dryad cohorts; not pasture-stock uncertainty."
@@ -238,7 +238,8 @@
         "complete aligned time series and management inputs are absent",
         "remote-sensing indicators are not direct stock measurements",
         "The Dryad biomass comparison is related but not an identical sampling estimand; 24/64 predictions exceed the 2–56 cm Mendeley height support, all in MOB treatment, so support is confounded with management/year.",
-        "The Mendeley nested spatial comparison is post-baseline exploratory development, uses only two farms, and does not validate pasture-stock uncertainty or new-farm transport."
+        "The Mendeley nested spatial comparison is post-baseline exploratory development, uses only two farms, and does not validate pasture-stock uncertainty or new-farm transport.",
+        "The Mendeley leave-one-farm-out diagnostics contain only two farm cases, with opposite bias; campaign holdout is not evaluable after removing repeated point identities."
       ],
       "evidence": [
         "usda-cper-ltgi-audit.json",
@@ -437,6 +438,9 @@
     "sdsu-engine-dmi-check.json",
     "grastech-dairy-grazing-dmi-engine-check.json",
     "../../experiments/diagnostics/adg/cper-internal-cv-2026-10.json",
-    "../../experiments/biomass/dryad-external/evaluation-report.json"
+    "../../experiments/biomass/dryad-external/evaluation-report.json",
+    "../../experiments/behavior/perea-tree-models-development/results.json",
+    "../../experiments/biomass/transport-stress-2026-10/evaluation-report.json",
+    "../../experiments/diagnostics/adg/cper-candidate-v2/evaluation.json"
   ]
 }

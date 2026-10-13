@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_before_fitting",
+  "registeredAt": "2026-10-13",
+  "analysis": "Mendeley-only biomass transport stress diagnostics; fixed OLS and fixed grouping, no model selection",
+  "epistemicStatus": {
+    "cohortPreviouslyReviewed": true,
+    "independentValidation": false,
+    "usesDryad": false,
+    "selectionOrTuning": false,
+    "interpretation": "All outcomes in this Mendeley cohort have been inspected in prior analyses. These are sensitivity and transport diagnostics on development data, not independent validation, and cannot promote a model or establish generalization beyond these two farms."
+  },
+  "input": {
+    "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+    "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+    "rows": 234,
+    "farms": [
+      "Poderosa",
+      "Santa Clara"
+    ],
+    "campaigns": [
+      "2018-11",
+      "2019-03"
+    ],
+    "target": {
+      "column": "dry_matter_yield_kg_dm_ha",
+      "unit": "kg DM/ha"
+    },
+    "feature": {
+      "column": "sward_height_cm",
+      "unit": "cm"
+    },
+    "grouping": "13 connected farm/field components; field aliases with any exact shared farm-coordinate are joined; repeat campaigns at each point stay together for spatial folds.",
+    "sourceParquetRows": 342,
+    "cohortFilter": "Retain rows with nonmissing sward_height_cm, target, farm, field_code, campaign, management_type, and coordinates; this yields the 234 height-complete rows in the already frozen biomass development cohort."
+  },
+  "analyses": {
+    "leaveOneFarmOut": {
+      "method": "Hold out each entire farm, train on the other farm; score both folds separately and pooled.",
+      "expectedFolds": 2,
+      "warning": "Only two farms. Results are descriptive case comparisons and do not support farm-population inference."
+    },
+    "leaveOneCampaignOut": {
+      "method": "For each campaign, test all rows from that campaign; train on the other campaign only after excluding every row whose (farm, exact latitude, exact longitude) occurs in the test campaign. This prevents spatial point identity crossing the split.",
+      "expectedFolds": 2,
+      "warning": "Only two campaigns and repeated locations. This estimates temporal/campaign transfer conditional on non-overlapping sampled points, not general year performance."
+    },
+    "spatialBufferSensitivity": {
+      "method": "Fixed LinearRegression with intercept, one predictor sward_height_cm, on the existing 13 leave-one-connected-spatial-component-out folds. For each held-out block, discard training coordinate groups closer than the fixed distance to any held-out coordinate.",
+      "distancesMeters": [
+        0,
+        25,
+        100,
+        250,
+        500,
+        1000
+      ],
+      "expectedBlocks": 13,
+      "noModelSelection": true,
+      "reportCoverage": true,
+      "zeroDistanceRule": "Other components are retained at distance >= 0; held-out component and its repeated campaign rows are always excluded."
+    },
+    "subgroupAndSupportDiagnostics": {
+      "method": "For farm, campaign, and management_type, report row count, spatial-block count where applicable, OOF MAE/RMSE/signed bias. Per fold report training and test height ranges, test rows outside training min-max support, and error for in-support versus out-of-support rows.",
+      "supportDefinition": "A test height is in support only if it lies within the minimum and maximum training height in that fold; this is a descriptive range check, not a causal explanation."
+    },
+    "blockBootstrap": {
+      "enabled": true,
+      "method": "10,000 bootstrap resamples with replacement of the 13 existing 100m spatial-block MAE scores, resampling whole blocks and never rows.",
+      "seed": 20261013,
+      "reportedQuantiles": [
+        0.025,
+        0.5,
+        0.975
+      ],
+      "warning": "Descriptive stability summary only. The 13 blocks are nested within only two farms; bootstrap quantiles are not a population confidence interval."
+    }
+  },
+  "estimator": {
+    "id": "fixed_ols",
+    "definition": "sklearn LinearRegression(fit_intercept=true), target kg DM/ha, predictor sward_height_cm only",
+    "featureProcessing": "No transformation, imputation, clipping, or scaling; each fold fit uses only its training rows."
+  },
+  "metrics": [
+    "row-weighted MAE",
+    "RMSE",
+    "signed bias (prediction minus observation)",
+    "scored row coverage",
+    "equal-spatial-block MAE"
+  ],
+  "runtime": "Record aggregate and per-fold CPU fit/predict wall time with perf_counter; report estimator and row counts. Timings are descriptive for this environment.",
+  "stopRules": [
+    "Abort on checksum mismatch, unexpected source or eligible cohort row/group counts, missing required grouping/target values, or non-finite feature/target values.",
+    "Do not alter field-component definitions, distance thresholds, candidate, or subgroup definitions after seeing target errors.",
+    "Keep every preregistered fold in outputs; if no usable training rows exist, report it as unscored and lower coverage rather than relaxing the split."
+  ],
+  "interpretationLimits": [
+    "Mendeley outcomes were already reviewed; none of these results are pristine validation.",
+    "The 13 spatial components are nested in two farms and the two campaigns; no population-level uncertainty is claimed.",
+    "Height and biomass are observed at the same sampling points, and measurement order relative to clipping is undocumented.",
+    "A train-range support flag does not isolate extrapolation from farm, campaign, or management shifts.",
+    "No Dryad rows, predictions, metrics, or outcomes may be read by this experiment."
+  ],
+  "outputs": [
+    "experiments/biomass/transport-stress-2026-10/predictions.csv",
+    "experiments/biomass/transport-stress-2026-10/evaluation-report.json",
+    "experiments/biomass/transport-stress-2026-10/evaluation-report.md"
+  ]
+}
