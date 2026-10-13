@@ -53,7 +53,7 @@ the decode error distinguishes malformed JSON from invalid snapshot contents.
 The scenario entry point returns descriptive `String` errors for unsupported
 request versions, invalid counts, hours, days, and configuration values.
 
-`engineVersion` identifies `riose-core/<crate-version>`. `buildId` uses the
+`engineVersion` is the crate's exact `CARGO_PKG_VERSION` value. `buildId` uses the
 `RIOSE_BUILD_ID` compile-time value when supplied; otherwise it is the
 reproducible `riose-core@<crate-version>` identifier. The fallback identifies
 the crate version and does not claim a source commit. `provenance` identifies

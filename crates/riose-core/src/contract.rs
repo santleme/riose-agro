@@ -6,7 +6,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 pub const NATIVE_SCENARIO_VERSION: u16 = 1;
-pub const NATIVE_ENGINE_VERSION: &str = concat!("riose-core/", env!("CARGO_PKG_VERSION"));
+pub const NATIVE_ENGINE_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const MODEL_STATUS: &str = "demonstrative_unvalidated";
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -138,7 +138,7 @@ mod tests {
         let result = run_native_scenario(request).unwrap();
         assert_eq!(result.engine.model_status, MODEL_STATUS);
         assert!(!result.engine.validated);
-        assert!(!result.engine.engine_version.is_empty());
+        assert_eq!(result.engine.engine_version, env!("CARGO_PKG_VERSION"));
         assert_eq!(
             result.engine.build_id,
             option_env!("RIOSE_BUILD_ID")
