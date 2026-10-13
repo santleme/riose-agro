@@ -1,0 +1,34 @@
+{
+  "format": "riose-br-corte-eq26-js-reference-vectors",
+  "version": 1,
+  "sourceImplementation": "scientific/br_corte_pasture_dmi.js",
+  "equation": "br-corte-2023-eq-2.6",
+  "comparisonToleranceKgDMPerDay": 1e-12,
+  "vectors": [
+    {
+      "id": "worked-example",
+      "inputs": {"bodyWeightKg": 300, "adgKgPerDay": 0.5, "supplementKgDMPerDay": 1.6},
+      "expected": {"totalDmiKgDMPerDay": 6.288853207863964, "supplementKgDMPerDay": 1.6, "residualForageDmiKgDMPerDay": 4.688853207863964, "inValidatedDomain": true, "evidenceStatus": "within-independent-validation-ranges", "adgRole": "input-assumption; not predicted by this equation"}
+    },
+    {
+      "id": "lower-domain-endpoints",
+      "inputs": {"bodyWeightKg": 133, "adgKgPerDay": -0.18, "supplementKgDMPerDay": 0},
+      "expected": {"totalDmiKgDMPerDay": 2.2651138203887142, "supplementKgDMPerDay": 0, "residualForageDmiKgDMPerDay": 2.2651138203887142, "inValidatedDomain": true, "evidenceStatus": "within-independent-validation-ranges", "adgRole": "input-assumption; not predicted by this equation"}
+    },
+    {
+      "id": "upper-domain-endpoints",
+      "inputs": {"bodyWeightKg": 474, "adgKgPerDay": 1.34, "supplementKgDMPerDay": 5.32},
+      "expected": {"totalDmiKgDMPerDay": 10.623926077719215, "supplementKgDMPerDay": 5.32, "residualForageDmiKgDMPerDay": 5.303926077719215, "inValidatedDomain": true, "evidenceStatus": "within-independent-validation-ranges", "adgRole": "input-assumption; not predicted by this equation"}
+    },
+    {
+      "id": "fractional-inputs",
+      "inputs": {"bodyWeightKg": 287.4, "adgKgPerDay": 0.73, "supplementKgDMPerDay": 2.15},
+      "expected": {"totalDmiKgDMPerDay": 6.47170945462402, "supplementKgDMPerDay": 2.15, "residualForageDmiKgDMPerDay": 4.3217094546240205, "inValidatedDomain": true, "evidenceStatus": "within-independent-validation-ranges", "adgRole": "input-assumption; not predicted by this equation"}
+    },
+    {
+      "id": "low-adg-and-zero-supplement",
+      "inputs": {"bodyWeightKg": 200.25, "adgKgPerDay": -0.1, "supplementKgDMPerDay": 0},
+      "expected": {"totalDmiKgDMPerDay": 3.392897517364292, "supplementKgDMPerDay": 0, "residualForageDmiKgDMPerDay": 3.392897517364292, "inValidatedDomain": true, "evidenceStatus": "within-independent-validation-ranges", "adgRole": "input-assumption; not predicted by this equation"}
+    }
+  ]
+}

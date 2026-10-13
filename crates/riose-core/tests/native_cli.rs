@@ -9,6 +9,8 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 const BASELINE: &str = r#"{"type":"baseline","version":1,"seed":417,"animalCount":3,"configuration":{"diet":"pasture","housing":"pasture","weather":"normal","supplement":0},"hours":24}"#;
 const HOUSING_GOLDEN: &str =
     include_str!("../../../tests/scenario-goldens/housing-comparison.json");
+const BR_CORTE_PARITY_VECTORS: &str =
+    include_str!("../../../tests/fixtures/br-corte-eq26-parity-v1.json");
 
 static NEXT_TEMP: AtomicUsize = AtomicUsize::new(0);
 
@@ -230,6 +232,123 @@ fn housing_comparison_uses_native_api_and_emits_deterministic_record() {
         &record["nativeResult"]["result"]["comparison"],
         &golden["output"],
     );
+}
+
+#[test]
+fn br_corte_scalar_cli_matches_javascript_reference_vectors_and_records_scope() {
+    let vectors: Value = serde_json::from_str(BR_CORTE_PARITY_VECTORS).unwrap();
+    for vector in vectors["vectors"].as_array().unwrap() {
+        let request = json!({
+            "type": "br-corte-pasture-dmi",
+            "version": 1,
+            "bodyWeightKg": vector["inputs"]["bodyWeightKg"],
+            "adgKgPerDay": vector["inputs"]["adgKgPerDay"],
+            "supplementKgDMPerDay": vector["inputs"]["supplementKgDMPerDay"]
+        });
+        let bytes = serde_json::to_vec(&request).unwrap();
+        let output = run_cli(&[], Some(&bytes));
+        assert_eq!(output.status.code(), Some(0), "{}", vector["id"]);
+        assert!(output.stderr.is_empty());
+        let record: Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(record["scenario"], "br-corte-pasture-dmi");
+        assert!(
+            record.get("seed").is_none(),
+            "scalar equation must not invent a seed"
+        );
+        assert_eq!(record["nativeResult"]["engine"]["validated"], false);
+        assert_eq!(
+            record["nativeResult"]["engine"]["modelStatus"],
+            "demonstrative_unvalidated"
+        );
+        let result = &record["nativeResult"]["result"];
+        assert_eq!(result["type"], "br-corte-pasture-dmi");
+        assert_eq!(result["metadata"]["modelId"], "br-corte-2023-eq-2.6");
+        assert_eq!(
+            result["metadata"]["productionSystem"],
+            "growing Zebu cattle grazing tropical pasture with supplementation"
+        );
+        assert_eq!(
+            result["metadata"]["rioseValidation"],
+            "not independently validated for Riose"
+        );
+        assert!(result["metadata"]["limitation"]
+            .as_str()
+            .unwrap()
+            .contains("not applicable to mature beef cows"));
+        assert_eq!(result["metadata"]["units"]["dmiKgDMPerDay"], "kg DM/day");
+        assert_eq!(
+            result["metadata"]["validatedDomain"]["bodyWeightKg"],
+            json!([133.0, 474.0])
+        );
+        let actual = &result["prediction"];
+        let expected = &vector["expected"];
+        for field in ["totalDmiKgDMPerDay", "residualForageDmiKgDMPerDay"] {
+            let delta = (actual[field].as_f64().unwrap() - expected[field].as_f64().unwrap()).abs();
+            assert!(
+                delta <= vectors["comparisonToleranceKgDMPerDay"].as_f64().unwrap(),
+                "{} {field} differs by {delta}",
+                vector["id"]
+            );
+        }
+        for field in ["inValidatedDomain", "evidenceStatus", "adgRole"] {
+            assert_eq!(actual[field], expected[field], "{} {field}", vector["id"]);
+        }
+        assert_eq!(
+            actual["supplementKgDMPerDay"].as_f64(),
+            expected["supplementKgDMPerDay"].as_f64(),
+            "{} supplementKgDMPerDay",
+            vector["id"]
+        );
+    }
+}
+
+#[test]
+fn br_corte_cli_rejects_missing_wrong_typed_out_of_domain_and_unknown_inputs() {
+    let mut missing = json!({"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1});
+    missing.as_object_mut().unwrap().remove("adgKgPerDay");
+    error_record(
+        &run_cli(&[], Some(&serde_json::to_vec(&missing).unwrap())),
+        5,
+        "INVALID_REQUEST",
+        Some("/adgKgPerDay"),
+    );
+
+    let mut wrong_type = json!({"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":"300","adgKgPerDay":0.5,"supplementKgDMPerDay":1});
+    error_record(
+        &run_cli(&[], Some(&serde_json::to_vec(&wrong_type).unwrap())),
+        5,
+        "INVALID_REQUEST",
+        Some("/bodyWeightKg"),
+    );
+    wrong_type["bodyWeightKg"] = json!(300);
+
+    for (field, value) in [
+        ("bodyWeightKg", json!(132.99)),
+        ("bodyWeightKg", json!(474.01)),
+        ("adgKgPerDay", json!(-0.181)),
+        ("adgKgPerDay", json!(1.341)),
+        ("supplementKgDMPerDay", json!(-0.001)),
+        ("supplementKgDMPerDay", json!(5.321)),
+    ] {
+        let request = json!({"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1});
+        let mut request = request;
+        request[field] = value;
+        error_record(
+            &run_cli(&[], Some(&serde_json::to_vec(&request).unwrap())),
+            5,
+            "VALIDATION_ERROR",
+            Some(&format!("/{field}")),
+        );
+    }
+
+    let mut unknown = json!({"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1,"animalCount":100});
+    error_record(
+        &run_cli(&[], Some(&serde_json::to_vec(&unknown).unwrap())),
+        6,
+        "UNSUPPORTED_FIELD",
+        Some("/animalCount"),
+    );
+    unknown.as_object_mut().unwrap().remove("animalCount");
 }
 
 #[test]

@@ -1,7 +1,9 @@
 //! Explicit input/output contract for native demonstrative scenario runs.
 
 use crate::{
-    compare_housing, FarmConfig, FarmEngine, FarmMetrics, FarmSnapshot, HousingComparison,
+    compare_housing, predict_pasture_dmi, BrCortePastureDmiInput, BrCortePastureDmiMetadata,
+    BrCortePastureDmiPrediction, FarmConfig, FarmEngine, FarmMetrics, FarmSnapshot,
+    HousingComparison,
 };
 use serde::{Deserialize, Serialize};
 
@@ -24,6 +26,15 @@ pub enum NativeScenarioRequest {
         version: u16,
         snapshot: FarmSnapshot,
         days: u32,
+    },
+    BrCortePastureDmi {
+        version: u16,
+        #[serde(rename = "bodyWeightKg")]
+        body_weight_kg: f64,
+        #[serde(rename = "adgKgPerDay")]
+        adg_kg_per_day: f64,
+        #[serde(rename = "supplementKgDMPerDay")]
+        supplement_kg_dm_per_day: f64,
     },
 }
 
@@ -61,6 +72,10 @@ pub enum NativeScenarioResult {
     HousingComparison {
         comparison: HousingComparison,
     },
+    BrCortePastureDmi {
+        metadata: BrCortePastureDmiMetadata,
+        prediction: BrCortePastureDmiPrediction,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -97,6 +112,22 @@ pub fn run_native_scenario(request: NativeScenarioRequest) -> Result<NativeRunRe
             validate_version(version)?;
             NativeScenarioResult::HousingComparison {
                 comparison: compare_housing(&snapshot, days)?,
+            }
+        }
+        NativeScenarioRequest::BrCortePastureDmi {
+            version,
+            body_weight_kg,
+            adg_kg_per_day,
+            supplement_kg_dm_per_day,
+        } => {
+            validate_version(version)?;
+            NativeScenarioResult::BrCortePastureDmi {
+                metadata: BrCortePastureDmiMetadata::default(),
+                prediction: predict_pasture_dmi(BrCortePastureDmiInput {
+                    body_weight_kg,
+                    adg_kg_per_day,
+                    supplement_kg_dm_per_day,
+                })?,
             }
         }
     };

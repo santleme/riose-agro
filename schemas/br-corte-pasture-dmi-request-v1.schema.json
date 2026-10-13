@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://santleme.github.io/riose-agro/schemas/br-corte-pasture-dmi-request-v1.schema.json",
+  "title": "BR-CORTE 2023 Eq. 2.6 scalar DMI request",
+  "description": "Scalar total dry matter intake equation for growing Zebu cattle grazing tropical pasture with supplementation. This does not validate Riose predictions and is not an adult beef cow model.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "bodyWeightKg", "adgKgPerDay", "supplementKgDMPerDay"],
+  "properties": {
+    "type": {"const": "br-corte-pasture-dmi"},
+    "version": {"const": 1},
+    "bodyWeightKg": {"type": "number", "minimum": 133, "maximum": 474, "description": "kg; inclusive published independent-validation range"},
+    "adgKgPerDay": {"type": "number", "minimum": -0.18, "maximum": 1.34, "description": "kg/day; supplied assumption, not predicted by Eq. 2.6"},
+    "supplementKgDMPerDay": {"type": "number", "minimum": 0, "maximum": 5.32, "description": "kg DM/day; inclusive published independent-validation range"}
+  }
+}

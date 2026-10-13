@@ -1,5 +1,6 @@
 //! Small deterministic numerical kernels shared by native and WebAssembly builds.
 
+mod br_corte;
 mod contract;
 mod environment;
 mod feeding;
@@ -7,6 +8,13 @@ mod runtime;
 mod simulation;
 mod snapshot;
 mod state;
+pub use br_corte::{
+    predict_pasture_dmi, BrCortePastureDmiDomain, BrCortePastureDmiInput,
+    BrCortePastureDmiMetadata, BrCortePastureDmiPrediction, BrCortePastureDmiUnits,
+    ADG_KG_PER_DAY_RANGE, BODY_WEIGHT_KG_RANGE, BR_CORTE_DMI_EQUATION, BR_CORTE_DMI_MODEL_ID,
+    BR_CORTE_DMI_MODEL_VERSION, BR_CORTE_DMI_PRODUCTION_SYSTEM, BR_CORTE_DMI_R_SQUARED,
+    BR_CORTE_DMI_SOURCE, BR_CORTE_DMI_VALIDATION_UNITS, SUPPLEMENT_KG_DM_PER_DAY_RANGE,
+};
 pub use contract::{
     run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
     NativeScenarioResult, MODEL_STATUS, NATIVE_ENGINE_VERSION, NATIVE_SCENARIO_VERSION,

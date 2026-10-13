@@ -1,6 +1,7 @@
 use riose_core::{
     run_native_scenario, EngineMetadata, NativeRunResult, NativeScenarioRequest,
-    NativeScenarioResult, NATIVE_SCENARIO_VERSION,
+    ADG_KG_PER_DAY_RANGE, BODY_WEIGHT_KG_RANGE, NATIVE_SCENARIO_VERSION,
+    SUPPLEMENT_KG_DM_PER_DAY_RANGE,
 };
 use serde::de::{self, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
@@ -68,7 +69,8 @@ struct SuccessRecord<'a> {
     version: u16,
     request_version: u16,
     scenario: &'static str,
-    seed: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    seed: Option<u32>,
     status: &'static str,
     run_id: String,
     input_sha256: String,
@@ -412,6 +414,13 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
             "hours",
         ],
         "housing-comparison" => &["type", "version", "snapshot", "days"],
+        "br-corte-pasture-dmi" => &[
+            "type",
+            "version",
+            "bodyWeightKg",
+            "adgKgPerDay",
+            "supplementKgDMPerDay",
+        ],
         _ => {
             return Err(CliError::at(
                 6,
@@ -425,6 +434,7 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
     match scenario {
         "baseline" => validate_baseline_fields(root)?,
         "housing-comparison" => validate_housing_fields(root)?,
+        "br-corte-pasture-dmi" => validate_br_corte_fields(root)?,
         _ => unreachable!(),
     }
     reject_unknown_fields(root, expected_fields, "")?;
@@ -433,10 +443,10 @@ fn validate_and_decode(value: &Value) -> Result<NativeScenarioRequest, CliError>
         CliError::at(
             5,
             "INVALID_REQUEST",
-            if scenario == "baseline" {
-                "/configuration"
-            } else {
-                "/snapshot"
+            match scenario {
+                "baseline" => "/configuration",
+                "housing-comparison" => "/snapshot",
+                _ => "/bodyWeightKg",
             },
             "request fields do not match the supported scenario schema.",
         )
@@ -489,6 +499,36 @@ fn validate_housing_fields(root: &Map<String, Value>) -> Result<(), CliError> {
     }
     let snapshot = required(root, "snapshot", "")?;
     validate_snapshot_unknown_fields(snapshot, "/snapshot")?;
+    Ok(())
+}
+
+fn validate_br_corte_fields(root: &Map<String, Value>) -> Result<(), CliError> {
+    for (field, range) in [
+        ("bodyWeightKg", BODY_WEIGHT_KG_RANGE),
+        ("adgKgPerDay", ADG_KG_PER_DAY_RANGE),
+        ("supplementKgDMPerDay", SUPPLEMENT_KG_DM_PER_DAY_RANGE),
+    ] {
+        let value = required(root, field, "")?.as_f64().ok_or_else(|| {
+            CliError::at(
+                5,
+                "INVALID_REQUEST",
+                pointer("", field),
+                "field must be a finite number.",
+            )
+        })?;
+        if !value.is_finite() || value < range[0] || value > range[1] {
+            return Err(CliError::at(
+                5,
+                "VALIDATION_ERROR",
+                pointer("", field),
+                match field {
+                    "bodyWeightKg" => "bodyWeightKg must be between 133 and 474 kg for BR-CORTE Eq. 2.6.",
+                    "adgKgPerDay" => "adgKgPerDay must be between -0.18 and 1.34 kg/day for BR-CORTE Eq. 2.6.",
+                    _ => "supplementKgDMPerDay must be between 0 and 5.32 kg DM/day for BR-CORTE Eq. 2.6.",
+                },
+            ));
+        }
+    }
     Ok(())
 }
 
@@ -826,12 +866,13 @@ fn pointer(path: &str, field: &str) -> String {
     }
 }
 
-fn request_identity(request: &NativeScenarioRequest) -> (&'static str, u32) {
+fn request_identity(request: &NativeScenarioRequest) -> (&'static str, Option<u32>) {
     match request {
-        NativeScenarioRequest::Baseline { seed, .. } => ("baseline", *seed),
+        NativeScenarioRequest::Baseline { seed, .. } => ("baseline", Some(*seed)),
         NativeScenarioRequest::HousingComparison { snapshot, .. } => {
-            ("housing-comparison", snapshot.initial_seed)
+            ("housing-comparison", Some(snapshot.initial_seed))
         }
+        NativeScenarioRequest::BrCortePastureDmi { .. } => ("br-corte-pasture-dmi", None),
     }
 }
 

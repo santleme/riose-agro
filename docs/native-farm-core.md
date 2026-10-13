@@ -6,8 +6,11 @@ oracle. Native output reports `modelStatus: demonstrative_unvalidated` and
 `validated: false`; its assumptions are illustrative and do not establish
 biological validity.
 
-The v1 input supports the baseline run and pasture-versus-barn housing
-comparison. It preserves the four-paddock model, the existing diet, housing,
+The v1 input supports the baseline run, pasture-versus-barn housing
+comparison, and the scalar BR-CORTE 2023 Eq. 2.6 calculation. The scalar
+equation is limited to growing Zebu cattle grazing tropical pasture with
+supplementation; it is not an adult-cow model and does not independently
+validate Riose predictions. It preserves the four-paddock model, the existing diet, housing,
 weather, and supplement values, stable animal order and IDs, both RNG states,
 activity and event ordering, and the snapshot fields currently emitted by
 `FarmEngine.snapshot()`. Serde DTOs reject unknown fields so an input that
@@ -41,10 +44,18 @@ The housing-comparison variant has the fields
 `{"type":"housing-comparison","version":1,"snapshot":<FarmSnapshot>,"days":30}`.
 A valid snapshot must contain 1–10,000 animals, exactly four paddock stocks,
 and all required fields.
+The scalar BR-CORTE variant is
+`{"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1.6}`.
+Its inclusive request ranges are 133–474 kg body weight, −0.18–1.34 kg/day
+assumed ADG, and 0–5.32 kg DM/day supplement. It returns the same scalar fields
+as `predictPastureDmi` in `scientific/br_corte_pasture_dmi.js` and identifies
+the source, units, production system, validation ranges, and Riose limitation.
+The scalar request has no seed because the equation is deterministic.
 The response has `{version, engine, result}`. `engine` contains `engineVersion`,
 `buildId`, `modelStatus`, `provenance`, and `validated`. The tagged `result` is
-either `{type:"baseline", snapshot, metrics}` or
-`{type:"housing-comparison", comparison}`. The baseline snapshot is also the
+either `{type:"baseline", snapshot, metrics}`,
+`{type:"housing-comparison", comparison}`, or
+`{type:"br-corte-pasture-dmi", metadata, prediction}`. The baseline snapshot is also the
 snapshot output format: current JS camel-case fields, including `initialSeed`,
 `locomotionSeed`, and `*KgDM` intake names. Snapshot JSON helpers are
 `encode_farm_snapshot(&FarmSnapshot) -> Result<String, serde_json::Error>` and
