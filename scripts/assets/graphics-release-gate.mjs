@@ -285,28 +285,62 @@ export function assertGraphicsReleaseInputsReady({semanticManifest, dairyManifes
   const sourceManifests = [semanticManifest, dairyManifest];
   validateSourceIdentityUniqueness(sourceManifests, errors);
   validateRendererManifest(rendererManifest, sourceManifests, releaseScenes, errors);
-  validateRuntimeManifest(runtimeManifest, errors);
+  validateRuntimeManifest(runtimeManifest, sourceManifests, rendererManifest, errors);
   if (errors.length) {
     throw new Error(`Graphics release blocked (${errors.length} manifest issue(s)):\n${errors.map(error => `- ${error}`).join('\n')}`);
   }
 }
 
-function validateRuntimeManifest(runtime, errors) {
+function validateRuntimeManifest(runtime, sourceManifests, renderer, errors) {
   check(runtime && Array.isArray(runtime.assets), 'runtime Composer manifest has no assets array', errors);
   if (!Array.isArray(runtime?.assets)) return;
   check(runtime.atlases && typeof runtime.atlases === 'object' && !Array.isArray(runtime.atlases)
     && Object.keys(runtime.atlases).length > 0, 'runtime Composer manifest has no atlas map', errors);
   uniqueBy(runtime.assets, 'id', 'runtime asset', errors);
+  const sources = sourceManifests.flatMap(manifest => manifest?.assets ?? []);
+  const rendererAssets = renderer?.assets ?? [];
   for (const asset of runtime.assets) {
     const id = asset?.id ?? '<unnamed runtime asset>';
+    const provenance = asset?.provenance;
     check(asset?.reviewStatus === 'RELEASED', `${id} runtime status ${String(asset?.reviewStatus ?? 'UNRESOLVED')} is not release eligible`, errors);
-    check(typeof asset?.provenance?.sourceFile === 'string' && asset.provenance.sourceFile.length > 0,
+    check(typeof provenance?.sourceFile === 'string' && provenance.sourceFile.length > 0,
       `${id} runtime asset has no source-file provenance`, errors);
-    check(typeof asset?.provenance?.sourceManifest === 'string' && asset.provenance.sourceManifest.length > 0,
+    check(typeof provenance?.sourceManifest === 'string' && provenance.sourceManifest.length > 0,
       `${id} runtime asset has no source-manifest provenance`, errors);
-    check(asset?.provenance?.rights?.licenseState === 'documented'
-      && typeof asset.provenance.rights.notes === 'string' && asset.provenance.rights.notes.trim().length > 0,
+    check(provenance?.rights?.licenseState === 'documented'
+      && typeof provenance.rights.notes === 'string' && provenance.rights.notes.trim().length > 0,
     `${id} runtime asset has no documented rights basis`, errors);
+
+    const matchingSources = sources.filter(source => source?.id === provenance?.sourceSemanticId
+      || source?.semanticId === provenance?.sourceSemanticId);
+    check(SEMANTIC_ID.test(provenance?.sourceSemanticId ?? '') && matchingSources.length === 1,
+      `${id} runtime provenance does not resolve to exactly one semantic source record`, errors);
+    const source = matchingSources.length === 1 ? matchingSources[0] : null;
+    if (source) {
+      const sourceFile = source.source?.sourceFile ?? source.sourceFile;
+      check(provenance.sourceFile === sourceFile,
+        `${id} runtime source file does not match its semantic source record`, errors);
+      check(provenance.sourceStatus === source.status && source.status === 'RELEASED',
+        `${id} runtime source status does not match a RELEASED semantic source`, errors);
+      check(source.review?.art === 'pass' && source.review?.technical === 'pass',
+        `${id} runtime semantic source is not explicitly approved`, errors);
+      check(provenance.rights?.licenseState === source.rights?.licenseState
+        && provenance.rights?.notes === source.rights?.notes,
+      `${id} runtime rights do not match its semantic source record`, errors);
+    }
+
+    const matchingRendererAssets = rendererAssets.filter(entry => entry?.assetId === id);
+    check(matchingRendererAssets.length === 1,
+      `${id} runtime asset does not resolve to exactly one renderer asset`, errors);
+    const rendererAsset = matchingRendererAssets.length === 1 ? matchingRendererAssets[0] : null;
+    if (rendererAsset) {
+      check(rendererAsset.sourceSemanticId === provenance?.sourceSemanticId,
+        `${id} runtime source identity does not match its renderer asset`, errors);
+      check(rendererAsset.sourceFile === provenance?.sourceFile,
+        `${id} runtime source file does not match its renderer asset`, errors);
+      check(rendererAsset.reviewStatus === asset.reviewStatus,
+        `${id} runtime status does not match its renderer asset`, errors);
+    }
     const frame = asset?.frame;
     check(frame && typeof frame.atlas === 'string' && Object.hasOwn(runtime.atlases ?? {}, frame.atlas),
       `${id} runtime frame has no declared atlas membership`, errors);

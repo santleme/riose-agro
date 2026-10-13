@@ -40,6 +40,7 @@
         "sourceSemanticId": "livestock.cattle.nelore.adult.v1",
         "sourceFile": "assets/approved/livestock/nelore-adult.png",
         "sourceManifest": "assets/manifests/manifest.json",
+        "sourceStatus": "RELEASED",
         "rights": {"licenseState": "documented", "notes": "Original project artwork."}
       },
       "frame": {"atlas": "livestock", "x": 2, "y": 3, "w": 4, "h": 5}

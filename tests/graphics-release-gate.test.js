@@ -128,6 +128,24 @@ test('runtime release gate requires declared atlas membership and finite positiv
   assert.throws(() => assertGraphicsReleaseInputsReady(nonFinite), /nelore-adult runtime frame has invalid coordinates/);
 });
 
+test('runtime release gate cross-checks source identity, rights and review against source and renderer manifests', () => {
+  const wrongSource = cloneFixture();
+  wrongSource.runtimeManifest.assets[0].provenance.sourceSemanticId = 'livestock.cattle.other.adult.v1';
+  assert.throws(() => assertGraphicsReleaseInputsReady(wrongSource), /nelore-adult runtime provenance does not resolve to exactly one semantic source record/);
+
+  const wrongRights = cloneFixture();
+  wrongRights.runtimeManifest.assets[0].provenance.rights.notes = 'Different, unreviewed rights claim.';
+  assert.throws(() => assertGraphicsReleaseInputsReady(wrongRights), /nelore-adult runtime rights do not match its semantic source record/);
+
+  const wrongReview = cloneFixture();
+  wrongReview.runtimeManifest.assets[0].provenance.sourceStatus = 'REVIEW';
+  assert.throws(() => assertGraphicsReleaseInputsReady(wrongReview), /nelore-adult runtime source status does not match a RELEASED semantic source/);
+
+  const missingRenderer = cloneFixture();
+  missingRenderer.rendererManifest.assets = [];
+  assert.throws(() => assertGraphicsReleaseInputsReady(missingRenderer), /nelore-adult runtime asset does not resolve to exactly one renderer asset/);
+});
+
 test('runtime provenance join preserves explicit source status, rights and unknowns without approving assets', () => {
   const runtimeManifest = {assets: [{id: 'source-approved'}, {id: 'source-review'}, {id: 'orphan'}, {id: 'renderer-review-conflict'}]};
   const semanticManifest = {assets: [
