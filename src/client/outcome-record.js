@@ -21,6 +21,9 @@ function isRecord(value) {
 }
 
 export function validateOutcomeRecord(record, archiveBytes, manifestBytes, snapshotBytes) {
+  if (record?.type !== 'agroville-outcome-record' || record.version !== 1) {
+    return {valid: false, errors: ['Tipo/versão do registro de desfecho não suportado.'], comparisons: []};
+  }
   const errors = [];
   const archiveRaw = Buffer.isBuffer(archiveBytes) ? archiveBytes : Buffer.from(archiveBytes);
   const manifestRaw = Buffer.isBuffer(manifestBytes) ? manifestBytes : Buffer.from(manifestBytes);

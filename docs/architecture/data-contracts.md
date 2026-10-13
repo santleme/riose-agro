@@ -20,6 +20,8 @@ The version below belongs to the serialized artifact, not to the biological mode
 
 This matrix describes the current persisted readers and writers. Any new version needs a valid fixture and an unsupported/malformed fixture at its reader boundary before it is advertised. There is no automatic migration of stored browser data or contract bytes.
 
+The shared JavaScript reader-boundary fixtures are table-driven in `tests/persisted-contract-compatibility.test.js`; that test covers the farm snapshot, both persisted comparison-manifest versions, comparison-result archive, outcome record and browser run-history envelope. The internal Rust checkpoint is covered at its decoder boundary by `snapshot_decoder_rejects_unknown_versions` and `snapshot_decoder_rejects_duplicate_ids_and_unversioned_components` in `crates/riose-core/src/runtime.rs`. Contract-specific tests remain responsible for deeper field and semantic invariants. The table test checks acceptance of a valid artifact and rejection of an unsupported version without rewriting or adapting the persisted bytes.
+
 ## Message categories
 
 | Contract | Initial encoding | Version / validation |
