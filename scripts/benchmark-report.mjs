@@ -13,7 +13,7 @@ const validateReport = new Ajv2020({allErrors: true, strict: false}).compile(ben
 
 function gitValue(args) {
   try {
-    return execFileSync('git', args, {cwd: repositoryRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim() || null;
+    return execFileSync('git', args, {cwd: repositoryRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim();
   } catch (error) {
     gitValue.lastError = error.stderr?.toString().trim() || error.message;
     return null;
