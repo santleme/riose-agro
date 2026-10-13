@@ -100,6 +100,18 @@ jobs:
           toolchain: '1.95.0'
           components: rustfmt
 
+      - name: Format Rust sources for validation
+        run: cargo fmt --all
+
+      - name: Upload formatted Rust sources for review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: riose-core-formatted-sources
+          path: |
+            crates/riose-core/src
+            crates/riose-core/tests
+          retention-days: 1
+
       - name: Check Rust formatting
         run: cargo fmt --all -- --check
 
