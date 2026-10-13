@@ -13,7 +13,7 @@ This is a separate descriptive analysis for the observed feedlot cohort. It does
 
 Observed mean: 11.5948 kg DM/animal/day; sample SD: 2.6050.
 
-The sums of squares below are added sequentially in this fixed order: treatment group, animal identity within treatment, calendar date after animal, then remaining animal-day residual. They are descriptive, order-dependent fixed-effect contributions, not estimated random-effect variances.
+The sums of squares below are added sequentially in this fixed order: treatment group, animal identity within treatment, calendar date after animal, then remaining animal-day residual. They are a descriptive, order-dependent fixed-effect partition, not estimates of random-effect variance components.
 
 | Component | Sum of squares | Share of centered total |
 |---|---:|---:|
@@ -41,6 +41,6 @@ Treatment-specific summaries are descriptive only:
 ## Reproduction
 
 ```bash
-python3 scripts/analyze_mendeley_nellore_dmi_variance.py
-python3 -m unittest tests.test_mendeley_nellore_dmi_variance -v
+python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py
+python3 -m unittest discover -s tests -p 'test_mendeley_nellore_dmi_sequential_partition.py' -v
 ```

@@ -5,13 +5,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from analyze_mendeley_nellore_dmi_variance import analyze, decompose  # noqa: E402
+from analyze_mendeley_nellore_dmi_sequential_partition import analyze, decompose  # noqa: E402
 
 
 class NelloreDmiObservedVarianceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.fixture = json.loads((ROOT / "tests/fixtures/mendeley-nellore-dmi-variance.json").read_text(encoding="utf-8"))
+        cls.fixture = json.loads((ROOT / "tests/fixtures/mendeley-nellore-dmi-sequential-partition.json").read_text(encoding="utf-8"))
 
     def test_fixture_is_deterministic_and_components_reconcile(self):
         first = decompose(self.fixture)

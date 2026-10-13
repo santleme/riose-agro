@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Descriptive fixed-effect decomposition of observed Nellore feedlot DMI.
+"""Descriptive sequential fixed-effect partition of observed Nellore feedlot DMI.
 
 This is a separate exploratory uncertainty artifact. It does not compare DMI
 with Riose's engine, estimate measurement error, or fit a predictor.
@@ -28,8 +28,8 @@ from audit_mendeley_nellore_feedlot import (  # noqa: E402
     _read_workbook,
 )
 
-REPORT_JSON = ROOT / "docs/evidence/issue-15-nellore-feedlot-dmi-observed-variance.json"
-REPORT_MD = ROOT / "docs/evidence/issue-15-nellore-feedlot-dmi-observed-variance.md"
+REPORT_JSON = ROOT / "docs/evidence/issue-15-nellore-feedlot-dmi-sequential-partition.json"
+REPORT_MD = ROOT / "docs/evidence/issue-15-nellore-feedlot-dmi-sequential-partition.md"
 
 
 def _date_label(serial: str) -> str:
@@ -221,7 +221,7 @@ def analyze(records: Iterable[dict], source: dict) -> dict:
             "No engine outputs, liveweight values, model predictions, parameter fitting, or motor-versus-DMI metrics are used.",
             "DMI contains 97 missing animal-day values; they are excluded without imputation.",
         ],
-        "reproduction": "python3 scripts/analyze_mendeley_nellore_dmi_variance.py",
+        "reproduction": "python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py",
     }
 
 
@@ -237,7 +237,7 @@ def render_markdown(report: dict) -> str:
         f"- Observed DMI: {analysis['nObservedAnimalDays']} animal-days, {analysis['nAnimals']} animals, {analysis['nCalendarDays']} dates; {report['source']['missingDmiValuesExcluded']} missing animal-days excluded without imputation.", "",
         "## Sequential descriptive decomposition", "",
         f"Observed mean: {analysis['meanDmiKgPerAnimalDay']:.4f} kg DM/animal/day; sample SD: {analysis['sampleSdDmiKgPerAnimalDay']:.4f}.", "",
-        "The sums of squares below are added sequentially in this fixed order: treatment group, animal identity within treatment, calendar date after animal, then remaining animal-day residual. They are descriptive, order-dependent fixed-effect contributions, not estimated random-effect variances.", "",
+        "The sums of squares below are added sequentially in this fixed order: treatment group, animal identity within treatment, calendar date after animal, then remaining animal-day residual. They are a descriptive, order-dependent fixed-effect partition, not estimates of random-effect variance components.", "",
         "| Component | Sum of squares | Share of centered total |", "|---|---:|---:|",
     ]
     for component in analysis["sequentialOls"]["components"]:
@@ -247,7 +247,7 @@ def render_markdown(report: dict) -> str:
         lines.append(f"- **{treatment}:** {values['nAnimalDays']} animal-days, {values['animals']} animals, mean {values['meanDmiKgPerAnimalDay']:.4f} kg DM/animal/day (SD {values['sampleSdDmiKgPerAnimalDay']:.4f}).")
     lines.extend(["", "## Interpretation and limits", ""])
     lines.extend(f"- {item}" for item in report["scientificLimitations"])
-    lines.extend(["", "## Reproduction", "", "```bash", report["reproduction"], "python3 -m unittest tests.test_mendeley_nellore_dmi_variance -v", "```", ""])
+    lines.extend(["", "## Reproduction", "", "```bash", report["reproduction"], "python3 -m unittest discover -s tests -p 'test_mendeley_nellore_dmi_sequential_partition.py' -v", "```", ""])
     return "\n".join(lines)
 
 
