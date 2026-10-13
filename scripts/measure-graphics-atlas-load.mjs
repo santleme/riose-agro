@@ -12,6 +12,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const ORIGIN = process.env.RIOSE_ATLAS_URL ?? 'http://127.0.0.1:8000';
 const REPEATS = Number(process.env.ATLAS_LOAD_REPEATS ?? 3);
 const OUTPUT = path.join(ROOT, 'docs/evidence/graphics-atlas-load-2026-10-12.json');
+const measuredAt = new Date().toISOString().slice(0, 10);
 const manifestPath = path.join(ROOT, 'graphics-poc/assets/main-composer-render-manifest.json');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 
@@ -131,7 +132,7 @@ try {
   }
 
   const details = {
-    measuredAt: '2026-10-12',
+    measuredAt,
     purpose: 'Atlas byte size and local browser fetch/decode evidence for the current graphics PoC manifest.',
     scope: 'Only atlases listed by graphics-poc/assets/main-composer-render-manifest.json; review/unresolved candidates remain unapproved. No renderer comparison was performed.',
     manifest: {path: 'graphics-poc/assets/main-composer-render-manifest.json', sourceRevision: manifest.sourceRevision},
