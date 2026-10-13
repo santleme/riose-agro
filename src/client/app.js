@@ -1,7 +1,7 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from './scenario-presets.js';
 import {renderSimulationReport} from './simulation-report.js';
-import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from './run-history.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES} from './run-history.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../../scientific/br_corte_pasture_dmi.js';
 import {encodeScenarioSnapshot,decodeScenarioSnapshot} from './scenario-storage.js';
 import {resolveLotSelection,formatLotArea} from './lot-selection.js';
@@ -341,15 +341,15 @@ let noticeTimer                              ;function notify(message       ){$(
 function renderRunHistory(){
   const select=$('run-history-select'),selected=select.value;select.replaceChildren(new Option('Execuções salvas',''));
   try{
-    const runs=listRuns(localStorage);
+    const runs=listRuns(localStorage),stats=getRunHistoryStats(localStorage);
     for(const run of runs){const compatibility=runCompatibility(run),label=run.status==='failed'?'falhou':compatibility.supported?'concluída':'incompatível';select.add(new Option(new Date(run.timestamp).toLocaleString('pt-BR')+' · '+label+' · '+run.id,run.id));}
     select.value=runs.some(run=>run.id===selected)?selected:(runs[0]?.id??'');
-    $('run-history-status').textContent=runs.length?runs.length+' execução(ões) guardada(s) neste navegador.':'Nenhuma execução salva neste navegador.';
+    $('run-history-status').textContent=`${runs.length}/${MAX_RUNS} execução(ões) · ${formatRunHistoryBytes(stats.bytes)} de ${formatRunHistoryBytes(MAX_RUN_HISTORY_BYTES)} do limite local.`;
   }catch(error){select.value='';$('run-history-status').textContent=error.message;}
   $('run-history-replay').disabled=!select.value||requestCompare||loadingScenario;
 }
 function persistRun(manifest,result,status,error){
-  try{const run=createRunRecord({manifest,result,status,error});if(pendingComparison?.lotContext)run.lotContext=structuredClone(pendingComparison.lotContext);if(pendingComparison?.environmentState)run.environmentState=structuredClone(pendingComparison.environmentState);recordRun(run,localStorage);renderRunHistory();}
+  try{const before=listRuns(localStorage),run=createRunRecord({manifest,result,status,error});if(pendingComparison?.lotContext)run.lotContext=structuredClone(pendingComparison.lotContext);if(pendingComparison?.environmentState)run.environmentState=structuredClone(pendingComparison.environmentState);recordRun(run,localStorage);const afterIds=new Set(listRuns(localStorage).map(item=>item.id)),removed=before.filter(item=>!afterIds.has(item.id)).length;renderRunHistory();if(removed)$('run-history-status').textContent+=` ${removed} registro(s) mais antigo(s) foram removidos para respeitar os limites; exporte o histórico antes de uma nova execução para manter uma cópia.`;}
   catch(storageError){$('run-history-status').textContent=storageError.message;notify(storageError.message);}
 }
 function failPendingRun(message){if(pendingComparison)persistRun(pendingComparison.manifest,undefined,'failed',message);pendingComparison=null;}
@@ -364,10 +364,13 @@ function replaySavedRun(){
 }
 $('run-history-select').onchange=()=>renderRunHistory();
 $('run-history-replay').onclick=replaySavedRun;
+$('run-history-export').onclick=()=>{try{downloadFile('agroville-historico-execucoes.json',exportRunHistory(localStorage),'application/json;charset=utf-8');notify('Cópia do histórico local exportada.');}catch(error){notify('Não foi possível exportar o histórico: '+error.message);}};
+$('run-history-clear').onclick=()=>{if(!confirm('Limpar todas as execuções salvas neste navegador? Exporte o histórico antes se quiser guardar uma cópia.'))return;try{clearRunHistory(localStorage);renderRunHistory();notify('Histórico local removido.');}catch(error){notify(error.message);}};
 $('manifest-export').onclick=()=>{if(requestCompare||loadingScenario)return;if(!comparisonManifest){notify('Faça ou importe uma comparação antes de exportar o manifesto.');return;}downloadFile('agroville-manifesto-demonstrativo.json',JSON.stringify(comparisonManifest,null,2),'application/json;charset=utf-8');};
 $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&&!loadingScenario)$('manifest-file').click();};
 $('manifest-file').onchange=async event=>{const file=event.target.files?.[0];event.target.value='';if(!file||requestCompare||loadingScenario)return;compareBusy(true);try{const manifest=JSON.parse(await file.text());validateComparisonManifest(manifest);setRunning(false);pendingComparison={snapshot:structuredClone(manifest.initialSnapshot),manifest,lotContext:null,environmentState:null};notify('Manifesto validado. Reproduzindo a comparação salva…');worker.postMessage({type:'replayComparison',manifest});}catch(error){pendingComparison=null;compareBusy(false);notify('Manifesto inválido: '+error.message);}};
 function downloadFile(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function formatRunHistoryBytes(bytes){if(bytes<1024)return `${bytes} B`;const unit=bytes<1024*1024?1024:1024*1024,label=unit===1024?'KiB':'MiB';return `${(bytes/unit).toLocaleString('pt-BR',{maximumFractionDigits:1})} ${label}`;}
 $('run-history-select').addEventListener('focus',()=>renderRunHistory());
 worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift();state=e.data.state;animalDrawOrderDirty=true;pending=false;$('engine-status').textContent=e.data.engineImplementation==='riose-core-wasm/0.1.0'?'MOTOR LOCAL · RUST/WASM':'MOTOR LOCAL · JAVASCRIPT';if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}buildTerrain(state.initialSeed??state.seed);updateUI();if(request==='snapshot')completeSnapshotAction();}else if(e.data.type==='view'){stateRequests.shift();pending=false;applyWorkerView(e.data);$('engine-status').textContent=e.data.engineImplementation==='riose-core-wasm/0.1.0'?'MOTOR LOCAL · RUST/WASM':'MOTOR LOCAL · JAVASCRIPT';updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingSnapshotAction=null;failPendingRun(e.data.message);pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
 worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;failPendingRun('Não foi possível iniciar o motor.');compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
