@@ -76,6 +76,16 @@ fn baseline_value() -> Value {
     serde_json::from_str(BASELINE).unwrap()
 }
 
+fn housing_request(snapshot: Value) -> Vec<u8> {
+    serde_json::to_vec(&json!({
+        "type": "housing-comparison",
+        "version": 1,
+        "snapshot": snapshot,
+        "days": 30
+    }))
+    .unwrap()
+}
+
 fn assert_json_exact(actual: &Value, expected: &Value) {
     match (actual, expected) {
         (Value::Number(actual), Value::Number(expected)) => {
@@ -374,6 +384,72 @@ fn unsupported_fields_and_values_are_rejected_at_nested_boundaries() {
         6,
         "UNSUPPORTED_FIELD",
         Some("/snapshot/unexpected"),
+    );
+}
+
+#[test]
+fn unknown_nested_snapshot_enums_are_unsupported_at_their_exact_pointers() {
+    let golden: Value = serde_json::from_str(HOUSING_GOLDEN).unwrap();
+    let baseline = golden["replayManifest"]["baseline"].clone();
+
+    let mut unknown_action = baseline.clone();
+    unknown_action["animals"][1]["action"] = json!("flying");
+    error_record(
+        &run_cli(&[], Some(&housing_request(unknown_action))),
+        6,
+        "UNSUPPORTED_SCENARIO",
+        Some("/snapshot/animals/1/action"),
+    );
+
+    let mut unknown_history_action = baseline.clone();
+    unknown_history_action["animals"][0]["history"][0]["action"] = json!("flying");
+    error_record(
+        &run_cli(&[], Some(&housing_request(unknown_history_action))),
+        6,
+        "UNSUPPORTED_SCENARIO",
+        Some("/snapshot/animals/0/history/0/action"),
+    );
+
+    let mut unknown_housing = baseline.clone();
+    unknown_housing["animals"][0]["history"][0]["observed"]["housing"] = json!("shed");
+    error_record(
+        &run_cli(&[], Some(&housing_request(unknown_housing))),
+        6,
+        "UNSUPPORTED_SCENARIO",
+        Some("/snapshot/animals/0/history/0/observed/housing"),
+    );
+
+    let mut unknown_reason = baseline;
+    unknown_reason["animals"][0]["history"][0]["reason"] = json!("unknown_reason");
+    error_record(
+        &run_cli(&[], Some(&housing_request(unknown_reason))),
+        6,
+        "UNSUPPORTED_SCENARIO",
+        Some("/snapshot/animals/0/history/0/reason"),
+    );
+}
+
+#[test]
+fn known_nested_snapshot_enums_remain_accepted() {
+    let golden: Value = serde_json::from_str(HOUSING_GOLDEN).unwrap();
+    let snapshot = golden["replayManifest"]["baseline"].clone();
+    let output = run_cli(&[], Some(&housing_request(snapshot)));
+    assert_eq!(output.status.code(), Some(0));
+    assert!(output.stderr.is_empty());
+    let record: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(record["status"], "success");
+}
+
+#[test]
+fn nested_snapshot_enum_with_wrong_type_remains_invalid_request() {
+    let golden: Value = serde_json::from_str(HOUSING_GOLDEN).unwrap();
+    let mut snapshot = golden["replayManifest"]["baseline"].clone();
+    snapshot["animals"][1]["action"] = json!(42);
+    error_record(
+        &run_cli(&[], Some(&housing_request(snapshot))),
+        5,
+        "INVALID_REQUEST",
+        Some("/snapshot/animals/1/action"),
     );
 }
 

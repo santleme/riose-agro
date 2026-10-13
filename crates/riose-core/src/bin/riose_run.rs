@@ -635,6 +635,12 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
                 ],
                 &animal_path,
             )?;
+            validate_enum_value(
+                animal,
+                "action",
+                &animal_path,
+                &["grazing", "feeding", "drinking", "resting"],
+            )?;
             if let Some(history) = animal.get("history").and_then(Value::as_array) {
                 for (history_index, record) in history.iter().enumerate() {
                     let record_path = format!("{animal_path}/history/{history_index}");
@@ -649,6 +655,23 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
                         &["hour", "action", "reason", "observed"],
                         &record_path,
                     )?;
+                    validate_enum_value(
+                        record,
+                        "action",
+                        &record_path,
+                        &["grazing", "feeding", "drinking", "resting"],
+                    )?;
+                    validate_enum_value(
+                        record,
+                        "reason",
+                        &record_path,
+                        &[
+                            "pasture_housing",
+                            "barn_housing",
+                            "thirst_threshold",
+                            "rest_window",
+                        ],
+                    )?;
                     if let Some(observed) = record.get("observed") {
                         let observed_path = pointer(&record_path, "observed");
                         let observed = object_at(observed, &observed_path)?;
@@ -657,6 +680,12 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
                             observed,
                             &["hour", "thirst", "housing"],
                             &observed_path,
+                        )?;
+                        validate_enum_value(
+                            observed,
+                            "housing",
+                            &observed_path,
+                            &["pasture", "barn"],
                         )?;
                     }
                 }
@@ -672,6 +701,32 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
         }
     }
     Ok(())
+}
+
+fn validate_enum_value(
+    object: &Map<String, Value>,
+    field: &str,
+    path: &str,
+    choices: &[&str],
+) -> Result<(), CliError> {
+    let Some(value) = object.get(field) else {
+        return Ok(());
+    };
+    match value.as_str() {
+        Some(value) if choices.contains(&value) => Ok(()),
+        Some(_) => Err(CliError::at(
+            6,
+            "UNSUPPORTED_SCENARIO",
+            pointer(path, field),
+            "enum value is not supported by the native core.",
+        )),
+        None => Err(CliError::at(
+            5,
+            "INVALID_REQUEST",
+            pointer(path, field),
+            "enum value has the wrong type.",
+        )),
+    }
 }
 
 fn object_at<'a>(value: &'a Value, path: &str) -> Result<&'a Map<String, Value>, CliError> {
@@ -1034,7 +1089,7 @@ fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use super::hex_digest;
+    use super::{classify_native_error, hex_digest};
 
     #[test]
     fn sha256_matches_standard_vectors() {
@@ -1050,5 +1105,13 @@ mod tests {
             hex_digest(&vec![b'a'; 1000]),
             "41edece42d63e8d9bf515a9ba6932e1c20cbc9f5a5d134645adb5db1b9737ea3"
         );
+    }
+
+    #[test]
+    fn unexpected_baseline_native_failure_keeps_its_execution_class() {
+        let error = classify_native_error("unexpected native failure".to_owned(), "baseline");
+        assert_eq!(error.exit_code, 7);
+        assert_eq!(error.code, "NATIVE_EXECUTION");
+        assert_eq!(error.field, None);
     }
 }
