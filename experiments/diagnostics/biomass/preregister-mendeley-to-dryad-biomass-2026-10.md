@@ -1,6 +1,6 @@
 # Mendeley to Dryad pasture biomass evaluation
 
-**State:** preregistered and evaluated. The evaluation is in `experiments/biomass/`. The source wording below was amended on 2026-10-13 after checking the Mendeley repository description; this changed no candidate, threshold, fold, or result.
+**State:** preregistered and evaluated. The evaluation is in `experiments/biomass/`. Source wording was amended on 2026-10-13 after checking the Mendeley repository description. A later audit corrected a support-count wording error: all 234 Mendeley heights lie in `[2,56]` cm; the count 51 refers to the narrower `[23.533,56]` cm overlap from the minimum Dryad height to the maximum Mendeley height. Neither amendment changed any candidate, threshold, fold, prediction, metric, or result.
 
 ## Target and scope
 
@@ -22,7 +22,7 @@ Use the publicly downloadable, CC0 Dryad source `10.5061/dryad.79cnp5ht4`, downl
 
 Select the candidate and transformations using Mendeley buffered spatial CV only. Refit once on all 234 Mendeley rows and evaluate once on all 64 Dryad rows. Dryad outcomes cannot influence candidate, transform, or threshold selection. Report row-weighted MAE, RMSE, signed bias, paddock-macro MAE, each paddock group's error, and metrics by treatment, year, Julian day, and support status.
 
-Mendeley's observed height support is 2–56 cm. All Dryad rows are the primary external test; report in-support and above-support strata separately and mark the latter as extrapolation. The in-support set is only 40/64 Dryad rows, while just 51/234 Mendeley rows fall in this height range. All 24 above-support Dryad rows are MOB treatment, so support status is confounded with management and year; do not interpret the strata as a balanced transport comparison. Do not filter cases or clip features after seeing residuals. Eight paddock groups do not support a narrow confidence interval or calibrated prediction interval.
+Mendeley's observed height support is 2–56 cm; all 234/234 development rows lie within it. All Dryad rows are the primary external test; report in-support and above-support strata separately and mark the latter as extrapolation. Forty of 64 Dryad rows fall within the Mendeley support. The narrower overlap from the minimum Dryad height (23.533 cm) through the Mendeley maximum (56 cm) contains only 51/234 Mendeley rows, showing that the in-support Dryad observations occupy the sparse upper part of Mendeley height coverage. All 24 above-support Dryad rows are MOB treatment, so support status is confounded with management and year; do not interpret the strata as a balanced transport comparison. Do not filter cases or clip features after seeing residuals. Eight paddock groups do not support a narrow confidence interval or calibrated prediction interval.
 
 This is an independent temperate pasture biomass evaluation. It cannot validate Brazilian tropical pasture performance, DMI, ADG, or the full engine.
 

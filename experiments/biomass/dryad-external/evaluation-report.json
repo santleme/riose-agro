@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "status": "completed_frozen_development_cv_and_single_external_cohort_evaluation",
   "protocol": "experiments/diagnostics/biomass/preregister-mendeley-to-dryad-biomass-2026-10.json",
-  "protocolSha256": "9d78d0edc7dae0a594ca915a91c3f4c2766dd9f5474e5e9f10f06d37ec94e1fe",
+  "protocolSha256": "bc3c20b9a040fbe0d90c104eda77d3eb7e5aab3bc9610bc2fbd0a6f7c7e8ab24",
   "inputs": {
     "mendeley": {
       "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
@@ -929,7 +929,7 @@
     "13 spatial blocks are nested in two Brazilian farms; development CV does not estimate new-farm performance.",
     "Mendeley confirms that height and biomass were measured at the same points in the later two campaigns, but does not specify the measurement order relative to clipping; its target is therefore not called pre-grazing.",
     "Dryad's pre-grazing outcome and height form a related but not strictly identical sampling estimand to Mendeley; the selected affine OLS model is compatible with the matched aggregate mean height.",
-    "Only 40/64 Dryad rows are within the 2–56 cm Mendeley support, and only 51/234 Mendeley rows lie in that interval. All 24 above-support Dryad rows are MOB, confounding support status with treatment and year.",
+    "All 234/234 Mendeley rows are within the stated 2–56 cm support. Forty of 64 Dryad rows are within that support. Only 51/234 Mendeley rows fall in the narrower [23.533,56] cm range from the minimum Dryad height through the maximum Mendeley height, so in-support Dryad cases occupy the sparse upper part of Mendeley coverage. All 24 above-support Dryad rows are MOB, confounding support status with treatment and year.",
     "Dryad is a distinct temperate US pasture cohort with only eight repeated paddock groups.",
     "This result concerns forage biomass only and does not validate DMI, ADG, animal behavior, pasture inventory, or the full engine.",
     "No confidence interval or calibrated prediction interval is claimed."

@@ -57,7 +57,7 @@
     "metrics": ["row-weighted MAE", "row-weighted RMSE", "signed bias", "paddock-macro MAE", "metrics by treatment, calendar year, Julian day, and support status"],
     "uncertainty": "Report each of the eight paddock-group errors and the distribution across groups. Do not present a narrow confidence interval or claim a calibrated prediction interval from eight paddocks.",
     "scopeLimit": "This is a distinct temperate pasture biomass evaluation against a related but not strictly identical sampling estimand. It cannot validate tropical Brazilian performance, animal DMI, ADG, or the complete engine.",
-    "supportComposition": "40 of 64 Dryad rows are within Mendeley numeric height support, but Mendeley has only 51 of 234 rows in this range; all 24 above-support Dryad rows are MOB treatment, so support status is confounded with grazing treatment and calendar year. This stratum is not a balanced transport comparison."
+    "supportComposition": "All 234 Mendeley development rows are within the stated 2-56 cm height support. Forty of 64 Dryad rows fall within that support. Only 51 of 234 Mendeley rows are at least the Dryad minimum observed height (23.533 cm) and no greater than 56 cm, so the in-support Dryad observations occupy the sparse upper part of Mendeley height coverage. All 24 above-support Dryad rows are MOB treatment, so support status is confounded with grazing treatment and calendar year. This stratum is not a balanced transport comparison."
   },
   "leakageAndReporting": {
     "neverPredictFrom": ["clipped sample weights", "observed biomass aliases", "plot/sample identifiers", "coordinates", "future measurements", "external outcomes"],
@@ -69,6 +69,11 @@
       "date": "2026-10-13",
       "reason": "Primary Mendeley repository description confirms that height and biomass were collected at the same points in the second and third campaigns but does not state measurement sequence relative to clipping.",
       "change": "Clarified the Mendeley estimand and feature timing as undocumented relative to clipping. No model, threshold, candidate, fold, or external outcome was changed based on Dryad results. The selected final model was affine OLS, for which applying it to the matched mean height is aggregation-compatible."
+    },
+    {
+      "date": "2026-10-13",
+      "reason": "Independent audit found that the previous support-composition sentence incorrectly described 51 of 234 Mendeley rows as lying in the full 2-56 cm support interval.",
+      "change": "Clarified that 234/234 Mendeley rows lie in [2,56] cm, while 51/234 are in the narrower interval [23.533,56] cm from the minimum Dryad height through the upper Mendeley support. No data, model, split, metric, or selection decision changed."
     }
   ]
 }
