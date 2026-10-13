@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import {FarmEngine,metrics,compare,createComparisonManifest,validateComparisonManifest,replayComparisonManifest} from '../src/client/engine.js';
 import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '../src/client/scenario-presets.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
-import {createRunRecord,recordRun,listRuns,getRun,runCompatibility} from '../src/client/run-history.js';
+import {createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,RUN_HISTORY_KEY} from '../src/client/run-history.js';
 import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../src/client/scenario-storage.js';
 import {resolveLotSelection,formatLotArea} from '../src/client/lot-selection.js';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
@@ -14,7 +14,7 @@ import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
-async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[]){
+async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],confirmValue=true){
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const elements=new Map(),messages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId],...seedStorage]);
   let scheduledFrame,mapDrawCalls=0;const drawing=new Proxy({}, {get:(_,key)=>key==='drawImage'?()=>mapDrawCalls++:()=>{}});
@@ -22,14 +22,14 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[]){
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
-    window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
+    window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
     Option:class {},URLSearchParams,Image:class {set src(value){this.onload?.();}},performance:{now:()=>0},requestAnimationFrame(callback){scheduledFrame=callback;},setTimeout(){return 1;},clearTimeout(){},
     URL:{createObjectURL(blob){downloads.push(blob);return 'blob:test';},revokeObjectURL(){}},
     fetch(url){if(String(url).startsWith('/api/')){fetches++;throw new Error('comparison must not invoke the LLM');}if(String(url)==='/assets/manifest.json')return Promise.resolve({ok:true,json:async()=>({atlases:{test:{image:'test.png'}},assets:['cow-beef','cow-dairy'].map(id=>({id,frame:{atlas:'test',x:0,y:0,w:1,h:1}}))})});return Promise.resolve({ok:false,json:async()=>({})});},
-    prompt:()=>promptValue,confirm:()=>true
+    prompt:()=>promptValue,confirm:()=>confirmValue
   });
   let source=(await readFile(new URL('../src/client/app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'');
   const workerStart=source.indexOf('const workerUrl=');
@@ -173,6 +173,28 @@ test('failed comparison is recorded without a stack trace',async()=>{
   assert.equal(saved[0].status,'failed');
   assert.equal(saved[0].error,'engine failed');
   assert.doesNotMatch(JSON.stringify(saved[0]),/stack|C:\\Users/);
+});
+
+test('run-history controls export the stored envelope and clear only run history',async()=>{
+  const manifest=createComparisonManifest(new FarmEngine(17,3).snapshot(),30),run=createRunRecord({manifest,result:compare(manifest.initialSnapshot,30),id:'history-copy'});
+  const raw=JSON.stringify({version:1,runs:[run]}),ui=await openFarm([],null,null,[[RUN_HISTORY_KEY,raw]]);
+  assert.match(ui.elements.get('run-history-status').textContent,/1\/20 execução/);
+  assert.match(ui.elements.get('run-history-status').textContent,/2 MiB do limite local/);
+
+  ui.elements.get('run-history-export').onclick();
+  assert.equal(ui.downloads.length,1);
+  assert.equal(await ui.downloads[0].text(),raw);
+
+  ui.elements.get('run-history-clear').onclick();
+  assert.equal(ui.storage.has(RUN_HISTORY_KEY),false);
+  assert.equal(ui.storage.has('agroville-scenarios-v1'),true);
+  assert.match(ui.elements.get('notice').textContent,/Histórico local removido/);
+});
+
+test('run-history cleanup leaves storage unchanged when confirmation is declined',async()=>{
+  const raw='malformed history',ui=await openFarm([],null,null,[[RUN_HISTORY_KEY,raw]],false);
+  ui.elements.get('run-history-clear').onclick();
+  assert.equal(ui.storage.get(RUN_HISTORY_KEY),raw);
 });
 
 test('large herds use a bounded accessible animal-list window',async()=>{
