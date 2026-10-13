@@ -1,3 +1,5 @@
+import {resolveScientificModel} from '../scientific/model-contract.js';
+
 const BLOCKED_STATUSES = new Set(['in-progress', 'review', 'unsupported', 'candidate-integration']);
 // The Worker owns numerical state and serialization too; every command is
 // gated so a stale Worker cannot answer after the UI switches to dairy.
@@ -8,8 +10,21 @@ function moduleModelIds(module) {
 }
 
 function isVersionedModelId(id) {
-  // Scientific model registrations use an immutable semantic version suffix.
-  return /^[a-z0-9][a-z0-9._-]*@\d+\.\d+\.\d+(?:-[a-z0-9.-]+)?(?:\+[a-z0-9.-]+)?$/i.test(id);
+  // The registry permits domain versions such as "2023" as well as semver;
+  // the exact resolver lookup below is the authority for whether it exists.
+  return /^[a-z0-9][a-z0-9._-]*@[^@\s]+$/i.test(id);
+}
+
+function isActuallyRegisteredModel(id) {
+  if (!isVersionedModelId(id)) return false;
+  const separator = id.lastIndexOf('@');
+  try {
+    resolveScientificModel(id.slice(0, separator), id.slice(separator + 1));
+    return true;
+  } catch (error) {
+    if (/Unknown scientific model version/.test(error?.message ?? '')) return false;
+    throw error;
+  }
 }
 
 /**
@@ -17,7 +32,7 @@ function isVersionedModelId(id) {
  * depend on this result. The existing beef engine remains explicitly labeled as
  * demonstrative; scientific modules need a validated status and registered IDs.
  */
-export function sceneExecutionAvailability(scene, registeredModelIds = []) {
+export function sceneExecutionAvailability(scene) {
   const module = scene?.domainModule;
   const productionSystem = scene?.simulation?.productionSystem;
   const status = module?.status ?? 'unsupported';
@@ -46,8 +61,7 @@ export function sceneExecutionAvailability(scene, registeredModelIds = []) {
     };
   }
 
-  const registered = new Set(registeredModelIds);
-  const allModelsRegistered = modelIds.length > 0 && modelIds.every(id => isVersionedModelId(id) && registered.has(id));
+  const allModelsRegistered = modelIds.length > 0 && modelIds.every(isActuallyRegisteredModel);
   if (status === 'validated' && allModelsRegistered) {
     return {
       available: true,
@@ -73,9 +87,9 @@ export function sceneExecutionAvailability(scene, registeredModelIds = []) {
   };
 }
 
-export function assertSceneCommandAllowed(scene, command, registeredModelIds = []) {
-  if (!WORKER_COMMANDS.has(command)) return sceneExecutionAvailability(scene, registeredModelIds);
-  const availability = sceneExecutionAvailability(scene, registeredModelIds);
+export function assertSceneCommandAllowed(scene, command) {
+  if (!WORKER_COMMANDS.has(command)) return sceneExecutionAvailability(scene);
+  const availability = sceneExecutionAvailability(scene);
   if (!availability.available) {
     throw new Error(`Execução numérica indisponível: ${availability.reason}`);
   }

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {assertSceneCommandAllowed, sceneExecutionAvailability, terminateNumericWorker, unavailableExecutionState} from '../graphics-poc/execution-eligibility.js';
+import {defineScientificModel, registerScientificModel} from '../scientific/model-contract.js';
 
 const dairyScene = {
   simulation: {productionSystem: 'dairy', scenarioId: 'riose-dairy-composer-v1'},
@@ -19,17 +20,32 @@ test('in-progress, review, unsupported and candidate modules stay visual-only', 
 });
 
 test('validated model execution requires a registered versioned model ID', () => {
-  const scene = {...dairyScene, domainModule: {...dairyScene.domainModule, status: 'validated', modelIds: ['dairy-lactation@1.0.0']}};
+  const scene = {...dairyScene, domainModule: {...dairyScene.domainModule, status: 'validated', modelIds: ['dairy-lactation@2023']}};
   assert.equal(sceneExecutionAvailability(scene).available, false);
-  assert.equal(sceneExecutionAvailability(scene, ['dairy-lactation@1.0.0']).available, true);
   assert.throws(() => assertSceneCommandAllowed(scene, 'compare'), /não registrado/);
-  assert.doesNotThrow(() => assertSceneCommandAllowed(scene, 'tick', ['dairy-lactation@1.0.0']));
+
+  const registered = registerScientificModel(defineScientificModel({
+    id: 'dairy-lactation',
+    version: '2023',
+    inputs: {days: 'integer'},
+    outputs: {milkKg: 'number'},
+    units: {days: 'day', milkKg: 'kg'},
+    evidence: {status: 'demonstrative'},
+    run: ({days}) => ({milkKg: days * 20})
+  }));
+  assert.equal(registered.id, 'dairy-lactation');
+  assert.equal(sceneExecutionAvailability(scene).available, true);
+  assert.doesNotThrow(() => assertSceneCommandAllowed(scene, 'tick'));
 
   const unversioned = {...scene, domainModule: {...scene.domainModule, modelIds: ['dairy-lactation']}};
-  const unavailable = sceneExecutionAvailability(unversioned, ['dairy-lactation']);
+  const unavailable = sceneExecutionAvailability(unversioned);
   assert.equal(unavailable.available, false);
   assert.match(unavailable.reason, /sem versão explícita/);
-  assert.throws(() => assertSceneCommandAllowed(unversioned, 'tick', ['dairy-lactation']), /sem versão explícita/);
+  assert.throws(() => assertSceneCommandAllowed(unversioned, 'tick'), /sem versão explícita/);
+
+  const forged = {...scene, domainModule: {...scene.domainModule, modelIds: ['dairy-fake@1.0.0']}};
+  assert.equal(sceneExecutionAvailability(forged).available, false,
+    'a version-looking string cannot stand in for a model contract registered with the resolver');
 });
 
 test('beef demo remains available but is explicitly classified as demonstrative', () => {

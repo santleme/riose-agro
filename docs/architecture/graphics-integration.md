@@ -67,7 +67,7 @@ The current results are exploratory, not a performance sign-off. With the import
 5. Let the existing Scenario Studio open or attach a scene layout without changing its scenario-comparison workflow.
 6. Run renderer parity and performance benchmarks with released assets and real camera/zoom workloads.
 7. If PixiJS wins on supported workloads, move one map surface at a time behind the renderer contract and retain Canvas as a fallback until regression coverage passes.
-8. Keep the dairy layout available as a visual/editor fixture while the module is `in-progress`; connect dairy simulation outputs only after its scientific model has an explicit version/status and validation status.
+8. Keep the dairy layout available as a visual/editor fixture while the module is `in-progress`; connect dairy simulation outputs only after its scientific model has an explicit version/status and validation status. Runtime eligibility resolves each declared `id@version` through `scientific/model-contract.js`; a version-shaped scene string alone cannot register or enable a model.
 
 ## Known gaps
 
