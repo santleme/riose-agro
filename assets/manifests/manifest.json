@@ -5,9 +5,13 @@
   "status": "library-in-progress",
   "semanticManifest": true,
   "referenceAuthority": {
-    "style": "docs/assets/pixel-art-urban-reference.png",
+    "composition": "docs/assets/pixel-art-urban-reference.png",
     "rural": "docs/assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png",
-    "livestock": "assets/approved/livestock/nelore-adult-idle-v1.png"
+    "terrain": "assets/previews/pilot-v2/ranch-pilot-terrain-v2.png",
+    "visual_anchor_farmhouse": "assets/approved/infrastructure/farmhouse-v2.png",
+    "visual_anchor_tree": "assets/approved/vegetation/shade-tree-v2.png",
+    "visual_anchor_tractor": "assets/approved/vehicles/tractor-v2.png",
+    "visual_anchor_livestock": "assets/approved/livestock/nelore-adult-idle-v1.png"
   },
   "assets": [
     {
@@ -108,15 +112,15 @@
       "name": "Nelore adulto caminhando",
       "category": "livestock",
       "family": "nelore-cattle",
-      "file": "assets/source/livestock/nelore-adult-walking-draft-v1.png",
+      "file": "assets/candidates/livestock/nelore-adult-walking-imagegen-v2.png",
       "source": {
-        "kind": "ai-generated",
+        "kind": "ai-assisted",
         "tool": "OpenAI ImageGen built-in",
         "modelVersion": null,
-        "sourceFile": "assets/source/livestock/nelore-adult-walking-draft-v1.png",
+        "sourceFile": "assets/source/livestock/nelore-adult-walking-edit-v2-raw.png",
         "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
-        "createdAt": "2026-10-11",
-        "sha256": "b040e3da9fe71a494029d17ccab1b6b39456c658e77dee444c65fbb71d822877"
+        "createdAt": "2026-10-12",
+        "sha256": "6531a0c0004fda72701f9123763d11533d5b65273b368e0616ad95ccd8ecb47d"
       },
       "dimensions": {
         "width": 1536,
@@ -150,7 +154,7 @@
         "precision-livestock"
       ],
       "styleVersion": "riose-livestock-v1-candidate",
-      "status": "REVIEW",
+      "status": "APPROVED",
       "references": [
         "urban-isometric-master-2026-10",
         "brazilian-farm-v7-approved-scene"
@@ -161,11 +165,11 @@
       },
       "atlas": null,
       "review": {
-        "art": "revise",
-        "technical": "fail",
-        "decisionNote": "Alpha is present; subject is cleanly isolated over checkerboard. Outline and broad soft-looking tone bands are heavier than the urban master. Technical fail: 397,942 partial-alpha pixels (25.3%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
       },
-      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "notes": "User approved the art in the 12-asset pilot kit and scene on 2026-10-13. PNG alpha and dimensions pass; sRGB ICC was assigned without RGB transformation and pixel equality was verified by scripts/assets/assign_srgb_profile.py.",
       "description": "Adult Nelore cattle in a walking pose.",
       "materials": [
         "off-white coat",
@@ -176,7 +180,7 @@
       "orientations": [
         "NE three-quarter; walking"
       ],
-      "assetVersion": "v1-draft",
+      "assetVersion": "v2-candidate",
       "regionalCompatibility": [
         "Brazil-general-candidate"
       ],
@@ -187,29 +191,49 @@
           "event": "created",
           "date": "2026-10-11",
           "detail": "Generated source preserved; review state recorded."
+        },
+        {
+          "event": "candidate-edited-and-alpha-normalized",
+          "date": "2026-10-12",
+          "detail": "Edited approved idle sprite for walking pose; source preserved; alpha normalized for review."
+        },
+        {
+          "event": "v1-draft-superseded",
+          "date": "2026-10-12",
+          "detail": "Original candidate source assets/source/livestock/nelore-adult-walking-draft-v1.png preserved in repository (sha256 b040e3da9fe71a494029d17ccab1b6b39456c658e77dee444c65fbb71d822877); replaced in pilot selection by an edit of the approved idle sprite."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        },
+        {
+          "event": "technical-review-passed-and-pilot-art-approved",
+          "date": "2026-10-13",
+          "detail": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
         }
       ],
-      "colorProfile": "unverified",
+      "colorProfile": "embedded-srgb",
       "technicalPolicy": {
         "alphaMode": "hard-edge-sprite",
         "paddingMinPx": 2
       },
-      "fileSha256": "b040e3da9fe71a494029d17ccab1b6b39456c658e77dee444c65fbb71d822877"
+      "fileSha256": "ac222ef29a7dae9ea5d414ee81806b4e8b086565c0162779eeba2a293b6bd5ee"
     },
     {
       "id": "livestock.nelore.adult.grazing.ne.v1",
       "name": "Nelore adulto pastando",
       "category": "livestock",
       "family": "nelore-cattle",
-      "file": "assets/source/livestock/nelore-adult-grazing-draft-v1.png",
+      "file": "assets/candidates/livestock/nelore-adult-grazing-imagegen-v2.png",
       "source": {
-        "kind": "ai-generated",
+        "kind": "ai-assisted",
         "tool": "OpenAI ImageGen built-in",
         "modelVersion": null,
-        "sourceFile": "assets/source/livestock/nelore-adult-grazing-draft-v1.png",
+        "sourceFile": "assets/source/livestock/nelore-adult-grazing-edit-v2-raw.png",
         "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
-        "createdAt": "2026-10-11",
-        "sha256": "71ea137d7a7fe7a9e09b3044265bfd969c27cc9997ea2030ae3407bcbc971782"
+        "createdAt": "2026-10-12",
+        "sha256": "c27bfc2551a52f2b8e2f4d905f1cc3207a669d7e2bfc365ac2c36fbd71eb1f99"
       },
       "dimensions": {
         "width": 1536,
@@ -243,7 +267,7 @@
         "precision-livestock"
       ],
       "styleVersion": "riose-livestock-v1-candidate",
-      "status": "REVIEW",
+      "status": "APPROVED",
       "references": [
         "urban-isometric-master-2026-10",
         "brazilian-farm-v7-approved-scene"
@@ -254,11 +278,11 @@
       },
       "atlas": null,
       "review": {
-        "art": "revise",
-        "technical": "fail",
-        "decisionNote": "Pose reads as grazing; outline and broad volumetric shade bands remain heavier than the urban master. Technical fail: 430,505 partial-alpha pixels (27.4%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
       },
-      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "notes": "User approved the art in the 12-asset pilot kit and scene on 2026-10-13. PNG alpha and dimensions pass; sRGB ICC was assigned without RGB transformation and pixel equality was verified by scripts/assets/assign_srgb_profile.py.",
       "description": "Adult Nelore cattle grazing with its head lowered.",
       "materials": [
         "off-white coat",
@@ -269,7 +293,7 @@
       "orientations": [
         "NE three-quarter; grazing"
       ],
-      "assetVersion": "v1-draft",
+      "assetVersion": "v2-candidate",
       "regionalCompatibility": [
         "Brazil-general-candidate"
       ],
@@ -280,29 +304,49 @@
           "event": "created",
           "date": "2026-10-11",
           "detail": "Generated source preserved; review state recorded."
+        },
+        {
+          "event": "v1-draft-superseded",
+          "date": "2026-10-12",
+          "detail": "Original candidate source assets/source/livestock/nelore-adult-grazing-draft-v1.png preserved in repository (sha256 71ea137d7a7fe7a9e09b3044265bfd969c27cc9997ea2030ae3407bcbc971782); replaced in pilot selection by an edit of the approved idle sprite."
+        },
+        {
+          "event": "candidate-edited-and-alpha-normalized",
+          "date": "2026-10-12",
+          "detail": "Edited approved idle sprite into a grazing pose; raw output preserved; alpha normalized for review."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        },
+        {
+          "event": "technical-review-passed-and-pilot-art-approved",
+          "date": "2026-10-13",
+          "detail": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
         }
       ],
-      "colorProfile": "unverified",
+      "colorProfile": "embedded-srgb",
       "technicalPolicy": {
         "alphaMode": "hard-edge-sprite",
         "paddingMinPx": 2
       },
-      "fileSha256": "71ea137d7a7fe7a9e09b3044265bfd969c27cc9997ea2030ae3407bcbc971782"
+      "fileSha256": "2fd0c7d932d9a8df85580458319b96422c100f66a79e2c649eff0d610c3ec0e0"
     },
     {
       "id": "livestock.nelore.calf.idle.ne.v1",
       "name": "Bezerro Nelore parado",
       "category": "livestock",
       "family": "nelore-cattle",
-      "file": "assets/source/livestock/nelore-calf-draft-v1.png",
+      "file": "assets/candidates/livestock/nelore-calf-imagegen-edit-v2.png",
       "source": {
-        "kind": "ai-generated",
+        "kind": "ai-assisted",
         "tool": "OpenAI ImageGen built-in",
         "modelVersion": null,
-        "sourceFile": "assets/source/livestock/nelore-calf-draft-v1.png",
+        "sourceFile": "assets/source/livestock/nelore-calf-edit-v2-raw.png",
         "promptFile": "assets/prompts/pilot-v1-generation-prompts.md",
-        "createdAt": "2026-10-11",
-        "sha256": "14cc9cb56c178976f173782fde373bf59425efd1422a26996856162b78561e89"
+        "createdAt": "2026-10-12",
+        "sha256": "d90923fed5f0238384b1c6ee42fbee1d7dcbe32abe7d7fbb66419c2080a5c41c"
       },
       "dimensions": {
         "width": 1536,
@@ -335,7 +379,7 @@
         "precision-livestock"
       ],
       "styleVersion": "riose-livestock-v1-candidate",
-      "status": "REVIEW",
+      "status": "APPROVED",
       "references": [
         "urban-isometric-master-2026-10",
         "brazilian-farm-v7-approved-scene"
@@ -346,11 +390,11 @@
       },
       "atlas": null,
       "review": {
-        "art": "revise",
-        "technical": "fail",
-        "decisionNote": "Calf proportions are readable; line weight and large shade clusters are still chunkier than the urban master. Technical fail: 322,433 partial-alpha pixels (20.5%); only 0 fully opaque pixels. Hard-edge opacity is not met; preserve source and re-author/export with clean RGBA."
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
       },
-      "notes": "Candidate pilot only. Not connected to runtime; this record does not imply visual approval or release.",
+      "notes": "User approved the art in the 12-asset pilot kit and scene on 2026-10-13. PNG alpha and dimensions pass; sRGB ICC was assigned without RGB transformation and pixel equality was verified by scripts/assets/assign_srgb_profile.py.",
       "description": "Young Nelore calf standing at rest.",
       "materials": [
         "off-white coat",
@@ -361,7 +405,7 @@
       "orientations": [
         "NE three-quarter; standing"
       ],
-      "assetVersion": "v1-draft",
+      "assetVersion": "v2-candidate",
       "regionalCompatibility": [
         "Brazil-general-candidate"
       ],
@@ -372,14 +416,34 @@
           "event": "created",
           "date": "2026-10-11",
           "detail": "Generated source preserved; review state recorded."
+        },
+        {
+          "event": "v1-draft-superseded",
+          "date": "2026-10-12",
+          "detail": "Original candidate source assets/source/livestock/nelore-calf-draft-v1.png preserved in repository (sha256 14cc9cb56c178976f173782fde373bf59425efd1422a26996856162b78561e89); replaced in pilot selection by an edit of the approved adult Nelore."
+        },
+        {
+          "event": "candidate-edited-and-alpha-normalized",
+          "date": "2026-10-12",
+          "detail": "Edited approved adult sprite into a smaller juvenile archetype; raw output preserved; alpha normalized for review."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        },
+        {
+          "event": "technical-review-passed-and-pilot-art-approved",
+          "date": "2026-10-13",
+          "detail": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
         }
       ],
-      "colorProfile": "unverified",
+      "colorProfile": "embedded-srgb",
       "technicalPolicy": {
         "alphaMode": "hard-edge-sprite",
         "paddingMinPx": 2
       },
-      "fileSha256": "14cc9cb56c178976f173782fde373bf59425efd1422a26996856162b78561e89"
+      "fileSha256": "2838ae6530d19fdc2dbaea8a38196ec4aeeb5ac52f1ef8e1c99ccc2ea88ea575"
     },
     {
       "id": "fence.wood.modular.straight.ne.v1",
@@ -1200,7 +1264,7 @@
       "review": {
         "art": "pass",
         "technical": "pass",
-        "decisionNote": "User-approved ImageGen Nelore. Original preserved under assets/source; runtime copy normalizes alpha to binary to remove the faint background vignette without changing RGB artwork."
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. User-approved ImageGen Nelore. Original preserved under assets/source; runtime copy normalizes alpha to binary to remove the faint background vignette without changing RGB artwork."
       },
       "notes": "First approved livestock visual asset. Integrated into the runtime atlas and farm demo scene.",
       "description": "Adult white Nelore bull standing in a calm three-quarter view, with characteristic shoulder hump and dewlap.",
@@ -1224,6 +1288,11 @@
           "event": "user-approved-and-integrated",
           "date": "2026-10-12",
           "detail": "User explicitly approved the direct ImageGen Nelore as the primary animal reference; alpha-only technical cleanup preserved the RGB artwork."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
         }
       ],
       "colorProfile": "embedded-srgb",
@@ -1806,7 +1875,7 @@
         "demo-premium"
       ],
       "styleVersion": "riose-livestock-v1-candidate",
-      "status": "REVIEW",
+      "status": "APPROVED",
       "references": [
         "urban-isometric-master-2026-10",
         "brazilian-farm-v7-approved-scene",
@@ -1818,9 +1887,9 @@
       },
       "atlas": null,
       "review": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
       },
       "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
       "description": "Curral de madeira",
@@ -1841,6 +1910,11 @@
           "event": "generated-and-packaged-for-review",
           "date": "2026-10-12",
           "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
         }
       ],
       "colorProfile": "embedded-srgb",
@@ -2150,7 +2224,7 @@
         "demo-premium"
       ],
       "styleVersion": "riose-livestock-v1-candidate",
-      "status": "REVIEW",
+      "status": "APPROVED",
       "references": [
         "urban-isometric-master-2026-10",
         "brazilian-farm-v7-approved-scene",
@@ -2162,9 +2236,9 @@
       },
       "atlas": null,
       "review": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
       },
       "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
       "description": "Cerca de arame e madeira",
@@ -2185,6 +2259,11 @@
           "event": "generated-and-packaged-for-review",
           "date": "2026-10-12",
           "detail": "Original retained; per-sprite PNG and category atlas produced for progressive integration."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
         }
       ],
       "colorProfile": "embedded-srgb",
@@ -4171,6 +4250,2618 @@
         "paddingMinPx": 2
       },
       "fileSha256": "f3e0ba044d9dd6c5657f031c400df54efc7f72767f222d63f3c4b066a7f146a5"
+    },
+    {
+      "id": "building.farmhouse.imagegen.v2",
+      "name": "Sede rural — referência urbana v2",
+      "category": "building",
+      "family": "building",
+      "file": "assets/approved/infrastructure/farmhouse-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/infrastructure/house-reference-v1-raw.png",
+        "promptFile": "assets/prompts/pilot-v2-farmhouse-generation.md",
+        "createdAt": "2026-10-12",
+        "sha256": "a9b6c6a314320ba807112baef5367e6cebf3d523db312588c212472fbc03236f"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        3,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.98,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "farmhouse",
+        "brazil",
+        "rural",
+        "pixel-art-calibration"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for internal review. Confirm applicable terms before public or commercial release. Asset-specific visual approval is recorded; verify applicable generation terms before external or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Usuário aprovou a casa e sua direção pixel-art; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Technical checks: RGBA PNG, binary alpha, 55px minimum clear padding; original RGB values verified unchanged. The generated source has no embedded profile; the approved export is tagged with standard sRGB ICC without RGB conversion. Overall library style lock remains provisional; this approval is limited to the individual asset."
+      },
+      "notes": "Farmhouse art direction approved by user; technical classification and production integration remain pending. This does not lock the full library style. Individually approved by the user; approval does not lock the full library style.",
+      "description": "Compact Brazilian farm headquarters with veranda and terracotta roof.",
+      "materials": [
+        "limewashed masonry",
+        "terracotta roof tiles",
+        "painted wood",
+        "potted vegetation"
+      ],
+      "orientations": [
+        "2:1 three-quarter isometric"
+      ],
+      "assetVersion": "v2-approved",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-alpha-normalized-for-review",
+          "date": "2026-10-12",
+          "detail": "Direct ImageGen output preserved; hard-edge alpha threshold 128 applied without changing visible RGB. Style and color profile remain unapproved."
+        },
+        {
+          "event": "user-approved-art-direction",
+          "date": "2026-10-12",
+          "detail": "User said “gostei!” after reviewing the V2 farmhouse direction. Approval applies to this farmhouse art candidate only; library style lock and other sprites remain under review."
+        },
+        {
+          "event": "user-approved-asset-and-srgb-tagged-export",
+          "date": "2026-10-12",
+          "detail": "Usuário aprovou a casa e sua direção pixel-art; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Source PNG remains under assets/source; approved PNG preserves visible RGB and adds an sRGB profile tag only."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "0f002de67513591b7b4ffc547b2257774d86835f9edb13aa8924e331d46276f9"
+    },
+    {
+      "id": "vegetation.tree.shade.imagegen.v2",
+      "name": "Árvore de sombra brasileira v2",
+      "category": "vegetation",
+      "family": "shade-tree",
+      "file": "assets/approved/vegetation/shade-tree-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/calibration-v2/tree-shade-v2-raw.png",
+        "promptFile": "assets/prompts/pilot-v2-calibration-prompts.md",
+        "createdAt": "2026-10-12",
+        "sha256": "affdab787e42cabcb4689468eb7547d542cffa908e67cb065aed799a2f5d2b4b"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "shade-tree",
+        "pixel-art-calibration",
+        "v2"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal candidate review using built-in ImageGen; verify applicable terms before external or commercial release. Asset-specific visual approval is recorded; verify applicable generation terms before external or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Usuário classificou a árvore como um dos assets aprovados junto à casa, trator e Nelore; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Technical checks: RGBA PNG, binary alpha, 65px minimum clear padding; original RGB values verified unchanged. The generated source has no embedded profile; the approved export is tagged with standard sRGB ICC without RGB conversion. Overall library style lock remains provisional; this approval is limited to the individual asset."
+      },
+      "notes": "Calibration candidate only; not production-approved or integrated into the runtime. Individually approved by the user; approval does not lock the full library style.",
+      "description": "Árvore de sombra brasileira v2",
+      "materials": [
+        "pixel-art illustration"
+      ],
+      "orientations": [
+        "three-quarter isometric"
+      ],
+      "assetVersion": "v2-approved",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-alpha-normalized-for-review",
+          "date": "2026-10-12",
+          "detail": "Original ImageGen source preserved. Hard alpha threshold 128 applied for review."
+        },
+        {
+          "event": "user-approved-asset-and-srgb-tagged-export",
+          "date": "2026-10-12",
+          "detail": "Usuário classificou a árvore como um dos assets aprovados junto à casa, trator e Nelore; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Source PNG remains under assets/source; approved PNG preserves visible RGB and adds an sRGB profile tag only."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "9e3b3c3888a832c851ca42dd3ae75e9bfe2dc067040a134fdf46a6faf558287b"
+    },
+    {
+      "id": "vehicle.tractor.imagegen.v2",
+      "name": "Trator rural brasileiro v2",
+      "category": "vehicle",
+      "family": "tractor",
+      "file": "assets/approved/vehicles/tractor-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/calibration-v2/tractor-v2-raw.png",
+        "promptFile": "assets/prompts/pilot-v2-calibration-prompts.md",
+        "createdAt": "2026-10-12",
+        "sha256": "e94c11e3bc151becabac2984b17165b47277f069d603ff4f913290fc256a6da9"
+      },
+      "dimensions": {
+        "width": 1536,
+        "height": 1024,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "tractor",
+        "pixel-art-calibration",
+        "v2"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal candidate review using built-in ImageGen; verify applicable terms before external or commercial release. Asset-specific visual approval is recorded; verify applicable generation terms before external or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Usuário classificou o trator como um dos assets aprovados junto à casa, árvore e Nelore; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Technical checks: RGBA PNG, binary alpha, 81px minimum clear padding; original RGB values verified unchanged. The generated source has no embedded profile; the approved export is tagged with standard sRGB ICC without RGB conversion. Overall library style lock remains provisional; this approval is limited to the individual asset."
+      },
+      "notes": "Calibration candidate only; not production-approved or integrated into the runtime. Individually approved by the user; approval does not lock the full library style.",
+      "description": "Trator rural brasileiro v2",
+      "materials": [
+        "pixel-art illustration"
+      ],
+      "orientations": [
+        "three-quarter isometric"
+      ],
+      "assetVersion": "v2-approved",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "infrastructure",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-alpha-normalized-for-review",
+          "date": "2026-10-12",
+          "detail": "Original ImageGen source preserved. Hard alpha threshold 128 applied for review."
+        },
+        {
+          "event": "user-approved-asset-and-srgb-tagged-export",
+          "date": "2026-10-12",
+          "detail": "Usuário classificou o trator como um dos assets aprovados junto à casa, árvore e Nelore; export técnico agora inclui perfil sRGB atribuído, sem transformar os valores RGB visíveis. Source PNG remains under assets/source; approved PNG preserves visible RGB and adds an sRGB profile tag only."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "92f7a3b445f673b02d86d035fe07e78ce9fa230ca54e4d8d6b6c69f0714c6562"
+    },
+    {
+      "id": "road.rural.dirt.imagegen.v2",
+      "name": "Trecho de estrada rural v2",
+      "category": "infrastructure",
+      "family": "rural-dirt-road",
+      "file": "assets/candidates/calibration-v2/road-tile-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/calibration-v2/road-tile-v2-raw.png",
+        "promptFile": "assets/prompts/pilot-v2-calibration-prompts.md",
+        "createdAt": "2026-10-12",
+        "sha256": "bc5b897f9e8c8a985460d2ca036220b0be1460ebf81b38a2b5b2a7093272370f"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "rural-dirt-road",
+        "pixel-art-calibration",
+        "v2"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal candidate review using built-in ImageGen; verify applicable terms before external or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha normalized at threshold 128 with visible RGB preserved and RGB under fully transparent pixels cleared. Color-profile classification and human review remain pending. Tile repeat review is pending; current 3×3 proof shows visible gaps."
+      },
+      "notes": "Calibration candidate only; not production-approved or integrated into the runtime.",
+      "description": "Trecho de estrada rural v2",
+      "materials": [
+        "pixel-art illustration"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-alpha-normalized-for-review",
+          "date": "2026-10-12",
+          "detail": "Original ImageGen source preserved. Hard alpha threshold 128 applied; 3×3 repeat proof reviewed for tiles and exposed gaps."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "76672e78436986cf73b1a7c28a53edeac09ed7ab786ed2f7515f5fecb6b4182b"
+    },
+    {
+      "id": "pasture.grass.medium.imagegen.v2",
+      "name": "Pastagem com vegetação v2",
+      "category": "pasture",
+      "family": "grass-medium",
+      "file": "assets/candidates/calibration-v2/pasture-tile-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/calibration-v2/pasture-tile-v2-raw.png",
+        "promptFile": "assets/prompts/pilot-v2-calibration-prompts.md",
+        "createdAt": "2026-10-12",
+        "sha256": "9eb4d14ee252a2ff30dcd17e24206c494af6c37a53f5120bcae03cc7688b9231"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "grass-medium",
+        "pixel-art-calibration",
+        "v2"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal candidate review using built-in ImageGen; verify applicable terms before external or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha normalized at threshold 128 with visible RGB preserved and RGB under fully transparent pixels cleared. Color-profile classification and human review remain pending. Tile repeat review is pending; current 3×3 proof shows visible gaps."
+      },
+      "notes": "Calibration candidate only; not production-approved or integrated into the runtime.",
+      "description": "Pastagem com vegetação v2",
+      "materials": [
+        "pixel-art illustration"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-alpha-normalized-for-review",
+          "date": "2026-10-12",
+          "detail": "Original ImageGen source preserved. Hard alpha threshold 128 applied; 3×3 repeat proof reviewed for tiles and exposed gaps."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "90c783c5d81ec58c6222f084bf2fc268ee3ad92c583bb1d0008f9968bc739a7c"
+    },
+    {
+      "id": "pasture.grass.premium.imagegen.v1",
+      "name": "Pasto premium em massas baixas v1",
+      "category": "pasture",
+      "family": "grass-medium-premium",
+      "file": "assets/candidates/calibration-v3/pasture-ground-premium-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/calibration-v3/pasture-ground-refined-v4-raw.png",
+        "promptFile": "assets/prompts/pasture-ground-premium-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "4d80eb7c330eb8363f566da6b943e84e961f15313fb61281b19cdac4fe3b3f63"
+      },
+      "dimensions": {
+        "width": 1538,
+        "height": 771,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        9,
+        9
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "pasture",
+        "grass",
+        "premium-diorama",
+        "ground-tile",
+        "v1"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "user-approved-farmhouse-v2-direction",
+        "approved-tree-tractor-riose-calibration"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal review using built-in ImageGen; verify terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Art candidate responds to user feedback by reducing flowers and scattered tufts and opening calm pasture areas. Source alpha was thresholded at 128; transparent matte was cleared; transparent edge crop was standardized to a 2:1 diamond with 2px padding. Repeat proof remains under review; visible seams still appear in the current preview, so this tile is not production-approved."
+      },
+      "notes": "Refined 9x9 logical ground surface at 128x64 cells when rendered at the preferred size. Keep candidate pending until 3x3 continuity and visual review pass.",
+      "description": "Muted isometric pasture base with broad low grass clusters and open ground.",
+      "materials": [
+        "muted pasture grass",
+        "olive turf",
+        "subdued earth patches"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-alpha-normalized-cropped-and-aspect-standardized",
+          "date": "2026-10-12",
+          "detail": "Generated as an edit of the previous pasture tile using approved Riose house/tree/tractor and urban style references. Alpha threshold 128, crop to visible art, exact 2:1 content geometry, 2px transparent padding. Repeated-tile preview still shows seams."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "58ba9ee36fba3cfd1c064a9ccc684b7db74b2477800ca046f9727ac0e33840e8",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 1152,
+          "height": 576
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "road.rural.dirt.imagegen.v3",
+      "name": "Estrada rural com transição orgânica v3",
+      "category": "infrastructure",
+      "family": "road-transition",
+      "file": "assets/candidates/terrain-family-v1/dirt-path-refined-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v1/dirt-path-refined-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "3b8eaeb9920d03c64ec31ed090915eecf9af1d7a1926456d478c1f0884082c09"
+      },
+      "dimensions": {
+        "width": 1534,
+        "height": 769,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "terrain-family-v1",
+        "2:1-ground",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "user-approved-farmhouse-v2-direction",
+        "pasture.grass.premium.imagegen.v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal terrain-family calibration; verify terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "revise",
+        "technical": "pending",
+        "decisionNote": "The full-diamond road tile matches the newer palette better, but its outer diamond reads as a hard slab when layered over the base. Retain as a draft; use the transparent path-only transition overlay for current scene composition."
+      },
+      "notes": "Superseded for compositing by terrain.road.dirt-overlay.imagegen.v1; retained as a review candidate, not production-ready.",
+      "description": "Dirt path in muted umber/clay with two faint wheel tracks and irregular grass tongues blending into the pasture; low-noise 2:1 isometric tile.",
+      "materials": [
+        "muted olive pasture",
+        "umber earth",
+        "pixel-art ground clusters"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-alpha-normalized-cropped-and-aspect-standardized",
+          "date": "2026-10-12",
+          "detail": "Generated with ImageGen using the refined pasture, approved farmhouse, and urban style master as references. Alpha threshold 128; visible art cropped and set to a 2:1 footprint with 2px clear padding."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "ecadaafc32b40e4711ea072d1548a5438698ebfb666c142fd57a79fd36c50612"
+    },
+    {
+      "id": "terrain.soil.worn.imagegen.v1",
+      "name": "Pasto pisoteado e seco v1",
+      "category": "pasture",
+      "family": "worn-ground",
+      "file": "assets/candidates/terrain-family-v1/worn-pasture-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v1/worn-pasture-v1-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "7b627e8dbe6ea45ca09ffbabc8be5f1a58c3f26ad2b8e3dd954bba1db1a1b3bf"
+      },
+      "dimensions": {
+        "width": 1620,
+        "height": 812,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "terrain-family-v1",
+        "2:1-ground",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "user-approved-farmhouse-v2-direction",
+        "pasture.grass.premium.imagegen.v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal terrain-family calibration; verify terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Candidate uses the V1 terrain palette and 2:1 tile footprint. Alpha thresholded at 128, hidden RGB cleared, visible art cropped to content and standardized to 2:1 with 2px transparent padding. Human art, profile, edge-repeat, and scene-fit reviews remain pending."
+      },
+      "notes": "Terrain-family calibration candidate only; not connected to runtime or promoted. Transition details are embedded in the surface boundary art.",
+      "description": "Alternate pasture state with broad irregular compacted-earth patches, flattened grass, muted olive ground, and broken green/earth transitions.",
+      "materials": [
+        "muted olive pasture",
+        "umber earth",
+        "pixel-art ground clusters"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-alpha-normalized-cropped-and-aspect-standardized",
+          "date": "2026-10-12",
+          "detail": "Generated with ImageGen using the refined pasture, approved farmhouse, and urban style master as references. Alpha threshold 128; visible art cropped and set to a 2:1 footprint with 2px clear padding."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "b3e407584890b7890628e5f7aaec4c7c9cea2a6efa274b5c920e306048404830"
+    },
+    {
+      "id": "terrain.soil.cultivated.imagegen.v1",
+      "name": "Solo cultivado discreto v1",
+      "category": "pasture",
+      "family": "cultivated-ground",
+      "file": "assets/candidates/terrain-family-v1/cultivated-soil-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v1/cultivated-soil-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "2f20d3ba81db1a6eeb6d096a8420e9182ff20bc2d0d50bc6111663a86663f0af"
+      },
+      "dimensions": {
+        "width": 1642,
+        "height": 823,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "terrain-family-v1",
+        "2:1-ground",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "user-approved-farmhouse-v2-direction",
+        "pasture.grass.premium.imagegen.v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal terrain-family calibration; verify terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Candidate uses the V1 terrain palette and 2:1 tile footprint. Alpha thresholded at 128, hidden RGB cleared, visible art cropped to content and standardized to 2:1 with 2px transparent padding. Human art, profile, edge-repeat, and scene-fit reviews remain pending."
+      },
+      "notes": "Terrain-family calibration candidate only; not connected to runtime or promoted. Transition details are embedded in the surface boundary art.",
+      "description": "Alternate soil tile with calm muted umber surface, very low-contrast broad furrows, and sparse irregular olive grass edging.",
+      "materials": [
+        "muted olive pasture",
+        "umber earth",
+        "pixel-art ground clusters"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-alpha-normalized-cropped-and-aspect-standardized",
+          "date": "2026-10-12",
+          "detail": "Generated with ImageGen using the refined pasture, approved farmhouse, and urban style master as references. Alpha threshold 128; visible art cropped and set to a 2:1 footprint with 2px clear padding."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "fb6a5f144903dd3326a758a650a64ddbbe753743deaefae63c5c80342c8f9167"
+    },
+    {
+      "id": "terrain.road.dirt-overlay.imagegen.v1",
+      "name": "Estrada em terra com transição orgânica v1",
+      "category": "infrastructure",
+      "family": "road-dirt-overlay",
+      "file": "assets/candidates/terrain-family-v1/dirt-path-transition-overlay-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v1/dirt-path-overlay-v1-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "2d7321632a8bcdb95ce92dc32ca0934d498c883c3ec47dc19152a7b9ac4505cd"
+      },
+      "dimensions": {
+        "width": 1667,
+        "height": 817,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        4,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "ground-center"
+      },
+      "tags": [
+        "terrain-family-v1",
+        "dirt-path",
+        "transition-overlay",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "road-active"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated for internal review using built-in ImageGen; verify terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Transparent path-only overlay with irregular grass/soil edge. Alpha thresholded at 128; cropped to visible art and padded. Scene-fit looks integrated; repeat/connector review and color-profile classification remain pending."
+      },
+      "notes": "Path overlay intended to sit over the pasture base; transparent pixels outside the path transition keep the rectangular/diamond tile edge from appearing as a hard block. Review candidate only.",
+      "description": "Muted umber road ribbon with broken grass tongues, low-contrast wheel wear, and transparent exterior.",
+      "materials": [
+        "dusty umber soil",
+        "muted olive grass",
+        "compressed path"
+      ],
+      "orientations": [
+        "2:1 isometric diagonal path overlay"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-alpha-normalized-and-cropped",
+          "date": "2026-10-12",
+          "detail": "ImageGen edit retained only the path and immediate transition fringe. Alpha threshold 128; transparent surroundings preserved; raw source retained."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "27386aef5d2a99bba9c43fef9e2ccf9303f1e11ca928f4a99bd91c74c514f2c2"
+    },
+    {
+      "id": "terrain.road.dirt-overlay.imagegen.v2",
+      "name": "Estrada rural com transição orgânica v2",
+      "category": "pasture",
+      "family": "terrain-family-v2",
+      "file": "assets/candidates/terrain-family-v2/dirt-path-transition-overlay-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v2/dirt-path-transition-overlay-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "42d871e7d1d096b480982be0bdae00a104e416914756680b28bcbf25ee0c60c7"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        4,
+        4
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "ground-center"
+      },
+      "tags": [
+        "terrain-family-v2",
+        "dirt-path",
+        "transition-overlay",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "road-active"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated internally with built-in OpenAI ImageGen; original retained; art remains under human review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha thresholded at 128 and isolated components removed; no visible illustration colors altered. Preferred 4x4 logical footprint; connectors and edge-repeat still require review."
+      },
+      "notes": "Candidate only. Do not use as production-approved terrain until scene-fit, repeat/transition and art review pass.",
+      "description": "Faixa de terra batida com bordas de grama intercaladas.",
+      "materials": [
+        "muted olive pasture",
+        "umber compacted earth",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-candidate-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Original preserved. Alpha thresholded at 128; isolated components below cleanup cutoff removed; RGB and visible illustration colors otherwise unchanged."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "819f98d248ea3b1bdfce55dddee7f9472d2f8b478457a0c113db34cc4192c207",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 512,
+          "height": 256
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.compacted-patch.imagegen.v2",
+      "name": "Mancha de terra compactada v2",
+      "category": "pasture",
+      "family": "terrain-family-v2",
+      "file": "assets/candidates/terrain-family-v2/compacted-ground-patch-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v2/compacted-ground-patch-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "e51939ab0b294ea700ef8948da479529034b503c59022935b66d764d4ccce1e0"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.55,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "terrain-family-v2",
+        "soil",
+        "compacted",
+        "grounding",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "worn"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated internally with built-in OpenAI ImageGen; original retained; art remains under human review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha limpo após remover apenas pixels isolados do recorte; revisão de escala, art e integração com sprites pendente."
+      },
+      "notes": "Candidate only. Do not use as production-approved terrain until scene-fit, repeat/transition and art review pass.",
+      "description": "Área compactada irregular para acesso, tráfego e agrupamento de animais.",
+      "materials": [
+        "muted olive pasture",
+        "umber compacted earth",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-candidate-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Original preserved. Alpha thresholded at 128; isolated components below cleanup cutoff removed; RGB and visible illustration colors otherwise unchanged."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f274402af83bc6f17f834e2b8c1039bd9a31812228f335a418717dacb6431536",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 256,
+          "height": 128
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.dry-patch.imagegen.v2",
+      "name": "Área de pasto seco v2",
+      "category": "pasture",
+      "family": "terrain-family-v2",
+      "file": "assets/candidates/terrain-family-v2/dry-pasture-patch-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v2/dry-pasture-patch-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "acf35dd8df6049fdf422925b95acd956ce58a922b0e6d905c887e8417b0331d0"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "terrain-family-v2",
+        "dry-pasture",
+        "state-overlay",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "dry"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated internally with built-in OpenAI ImageGen; original retained; art remains under human review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha thresholded at 128 and isolated components removed (largest connected component retained; 652162 px). No visible color changes. Scene-fit, scale, human art and grounding review remain pending."
+      },
+      "notes": "Candidate only; state overlay for sparse use on the pasture base, not a production tile.",
+      "description": "Dry and thinned pasture patch with dusty ochre/umber soil showing through muted grass.",
+      "materials": [
+        "muted olive pasture",
+        "earth state variation",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-candidate-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Original retained; alpha thresholded at 128; only largest connected alpha component kept. Visible RGB colors otherwise unchanged."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "fa5ed725db57ffe0e2a588eb90c2073f952c0c7fec6cc93919e9fccb90f16ca3",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 256,
+          "height": 128
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.mud-patch.imagegen.v2",
+      "name": "Área de lama pisoteada v2",
+      "category": "pasture",
+      "family": "terrain-family-v2",
+      "file": "assets/candidates/terrain-family-v2/muddy-ground-patch-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v2/muddy-ground-patch-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "79930ec346a0dcbc78561eaed17cf904fd2537467fd4bc56c7a80f18b5ecc14a"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "terrain-family-v2",
+        "mud-patch",
+        "state-overlay",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "muddy"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "user-approved-farmhouse-v2-direction"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated internally with built-in OpenAI ImageGen; original retained; art remains under human review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha thresholded at 128 and isolated components removed (largest connected component retained; 475833 px). No visible color changes. Scene-fit, scale, human art and grounding review remain pending."
+      },
+      "notes": "Candidate only; state overlay for sparse use on the pasture base, not a production tile.",
+      "description": "Localized muddy compacted patch with a few subdued damp highlights and hoof wear.",
+      "materials": [
+        "muted olive pasture",
+        "earth state variation",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-candidate-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Original retained; alpha thresholded at 128; only largest connected alpha component kept. Visible RGB colors otherwise unchanged."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "ae00f1159f72643c16a58b4f591f4bfe2bff34b849f0cff2080486f4ff3b31b0",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 256,
+          "height": 128
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.cultivated-patch.imagegen.v2",
+      "name": "Terra preparada com borda de pasto v2",
+      "category": "pasture",
+      "family": "terrain-family-v2",
+      "file": "assets/candidates/terrain-family-v2/cultivated-soil-patch-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v2/cultivated-soil-patch-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "a2bd0e92567b8cab35f2dcf506bf16cb35e2ebf871ed5134de1567581a080fd6"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        2
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "ground-center"
+      },
+      "tags": [
+        "terrain-family-v2",
+        "cultivated-soil",
+        "transition-overlay",
+        "pixel-art",
+        "candidate"
+      ],
+      "states": [
+        "cultivated"
+      ],
+      "scenarioCompatibility": [
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated internally with built-in OpenAI ImageGen; original retained; art remains under human review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha thresholded at 128, largest connected component retained (611484 px), no visible RGB changes. Scale, seam, transition, and human art review remain pending."
+      },
+      "notes": "Use as a sparse cultivated-ground overlay or patch, not a repeating full-field tile until connector review passes.",
+      "description": "Broad subdued cultivated earth with shallow isometric furrows and irregular grass transition.",
+      "materials": [
+        "muted olive pasture",
+        "umber cultivated soil",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-candidate-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Original retained; alpha thresholded at 128; only largest connected alpha component kept. Visible RGB colors otherwise unchanged."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "e1a05455424a78354d1b589c6e736928fd214913d465f63890252bed4ed54703",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 256,
+          "height": 128
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.grass.pasture-base.imagegen.v3",
+      "name": "Pasto premium contínuo V3",
+      "category": "pasture",
+      "family": "terrain-family-v3",
+      "file": "assets/candidates/terrain-family-v3/pasture-base-repeat-v3.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v3/pasture-base-repeat-v3-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v3.md",
+        "createdAt": "2026-10-12",
+        "sha256": "b77d18bbe09d4f0b69431d80be30514e2c1a86b5fe22180357e631ebbadcc989"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        9,
+        9
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "terrain-family-v3",
+        "pasture",
+        "grass",
+        "premium-diorama",
+        "ground-tile",
+        "repeat-candidate"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "pasture.grass.premium.imagegen.v1",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "ImageGen candidate for internal review; art and production approval remain pending."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "V3 ImageGen edit improves calm center and opens grass masses. 3x3 repeat proof must verify boundary closure; retain as candidate until tile joins and art are reviewed."
+      },
+      "notes": "Candidate replacement for visual review only. Do not switch production references until 3x3 proof and human art gate pass.",
+      "description": "Premium olive pasture base with quiet central area and sparse broad grass clusters, authored for 2:1 isometric repeat.",
+      "materials": [
+        "muted pasture grass",
+        "olive turf",
+        "subdued earth marks"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v3-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-repeat-tile-candidate-alpha-normalized",
+          "date": "2026-10-12",
+          "detail": "Generated as an edit of the refined pasture base; raw source retained. Candidate alpha thresholded at 128, preserving all visible RGB values. Seam proof pending."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 0
+      },
+      "fileSha256": "02980091be0b539bbbbecbc93f7ba9db3837dceba795664f88751dc5ddf97b3d",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 1152,
+          "height": 576
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.grass.pasture-base.imagegen.v4",
+      "name": "Pasto premium · placa de terreno V4",
+      "category": "pasture",
+      "family": "terrain-family-v3",
+      "file": "assets/candidates/terrain-family-v3/pasture-base-edge-clean-v4.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v3/pasture-base-edge-clean-v4-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v3.md",
+        "createdAt": "2026-10-12",
+        "sha256": "de3498620425a6a4f99bce421ccaaff32405e5f7be268263cde9c0dc5b6c10b8"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        9,
+        9
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "tile-center"
+      },
+      "tags": [
+        "terrain-family-v3",
+        "pasture",
+        "grass",
+        "premium-diorama",
+        "ground-tile",
+        "scene-ground-plate"
+      ],
+      "states": [
+        "medium"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "dairy",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "terrain.grass.pasture-base.imagegen.v3",
+        "brazilian-farm-v7-approved-scene"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "ImageGen edit candidate for internal review; human art and production approval pending."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual kit and composed scene on 2026-10-13. Technical pass: binary alpha (0/255), zero-alpha margins meet its 0px policy, ICC sRGB assigned with RGB preserved. The 3x3 proof shows tonal join lines, so this asset is approved only as a single ground plate and must not be auto-repeated. This limitation is recorded in assets/manifests/terrain-family.v3.json."
+      },
+      "notes": "Approved as one continuous ground plate for a compact scene; do not use as a repeated terrain tile. Repeat-proof limitation is intentional and remains visible in the terrain family manifest.",
+      "description": "Muted olive pasture image for a single continuous compact-diorama ground plate; not a seamless repeat tile.",
+      "materials": [
+        "muted pasture grass",
+        "olive turf",
+        "subdued earth marks"
+      ],
+      "orientations": [
+        "2:1 isometric ground tile"
+      ],
+      "assetVersion": "v4-approved-ground-plate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-edge-cleanup-candidate-alpha-normalized",
+          "date": "2026-10-12",
+          "detail": "Edited V3 to remove the tile rim and edge shadow. Raw source retained; hard alpha threshold applied to export; all visible RGB unchanged."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        },
+        {
+          "event": "technical-review-passed-and-pilot-art-approved",
+          "date": "2026-10-13",
+          "detail": "User approved the visual kit and composed scene on 2026-10-13. Technical pass: binary alpha (0/255), zero-alpha margins meet its 0px policy, ICC sRGB assigned with RGB preserved. The 3x3 proof shows tonal join lines, so this asset is approved only as a single ground plate and must not be auto-repeated. This limitation is recorded in assets/manifests/terrain-family.v3.json."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 0
+      },
+      "fileSha256": "148dabbdd5c00432cf02d5fba1d55aed321050d38ab4ae8001e4180bcc3e40e0",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 1152,
+          "height": 576
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.ranch.complete-ground.imagegen.v1",
+      "name": "Placa de terreno rural completa V1",
+      "category": "pasture",
+      "family": "terrain-family-v4",
+      "file": "assets/candidates/terrain-family-v4/rural-diorama-ground-v1.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v4/rural-diorama-ground-v1-raw.png",
+        "promptFile": null,
+        "createdAt": "2026-10-12",
+        "sha256": "c475cf63774c0978ca6271d7010908cb912a5c5f1bcd1e96cf0baee2e3209c85"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        14,
+        14
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "plate-center"
+      },
+      "tags": [
+        "rural-diorama",
+        "pasture",
+        "dirt-road",
+        "cultivated-ground",
+        "single-piece-plate",
+        "non-repeatable"
+      ],
+      "states": [
+        "mixed-rural-ground"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed-farm",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "riose-terrain-v2"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in ImageGen for internal review; keep raw source. Verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Single-use continuous scene plate. Export hardens alpha below 24 and clears hidden RGB; source preserved. ICC profile and human visual gate remain unverified. Not a repeating tile."
+      },
+      "notes": "Candidate plate used for the ranch-composition-v1 blockout and scene. Do not auto-tile or promote until human review.",
+      "description": "Single-piece isometric pasture plate combining muted grass, a curved dirt access road and a cultivated section with restrained edge transitions.",
+      "materials": [
+        "muted olive grass",
+        "sienna earth",
+        "cultivated soil"
+      ],
+      "orientations": [
+        "2:1 isometric ground plate"
+      ],
+      "assetVersion": "v1-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "registered-generated-ground-plate-and-alpha-cleanup",
+          "date": "2026-10-12",
+          "detail": "Raw ImageGen PNG preserved; candidate export hardens alpha below 24 and clears RGB under alpha zero; no visible RGB changed above the cutoff."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 0
+      },
+      "fileSha256": "009ee63e56111bd6ec954066c5199999fd70ef705bcecdb87c00ed8f6efed8d5",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 1792,
+          "height": 896
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.ranch.complete-ground.imagegen.v2",
+      "name": "Placa de terreno rural completa V2",
+      "category": "pasture",
+      "family": "terrain-family-v5",
+      "file": "assets/candidates/terrain-family-v5/rural-diorama-ground-v2.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v5/rural-diorama-ground-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v5/rural-diorama-ground-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "cff25bc9c2cae0ae00738b23394317b486aa52eb9760994e9d17e3d7189b0527"
+      },
+      "dimensions": {
+        "width": 1774,
+        "height": 887,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        14,
+        14
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5,
+        "meaning": "plate-center"
+      },
+      "tags": [
+        "rural-diorama",
+        "pasture",
+        "dirt-road",
+        "cultivated-ground",
+        "soil-edge",
+        "single-piece-plate",
+        "non-repeatable",
+        "pixel-art-candidate"
+      ],
+      "states": [
+        "mixed-rural-ground"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed-farm",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "riose-terrain-v2"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in ImageGen for internal review; retain source. Verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pending",
+        "decisionNote": "Alpha thresholded at 160; transparent RGB cleared; no color conversion, resizing or recoloring. Inspect ground edge and scene integration before any approval."
+      },
+      "notes": "Non-repeatable full-scene terrain plate candidate; used only in composition v3 test. Does not replace or promote terrain V1.",
+      "description": "2:1 isometric ranch surface with integrated pasture, compacted access road, cultivated field and thin soil slab edge.",
+      "materials": [
+        "muted olive pasture",
+        "sienna road earth",
+        "cultivated soil",
+        "dark reddish-brown soil edge"
+      ],
+      "orientations": [
+        "2:1 isometric ground plate"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-terrain-plate-and-alpha-export",
+          "date": "2026-10-12",
+          "detail": "Built-in ImageGen source preserved separately; export alpha thresholded at 160 and RGB cleared under transparent pixels. This hardens the outer silhouette to remove the red/yellow fringe visible in the raw source."
+        }
+      ],
+      "colorProfile": "unverified",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 0
+      },
+      "fileSha256": "d1735d623f0abceacbabe81a850fc1b1232f4202779100eac7bc049aa0a0457a",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 1792,
+          "height": 896
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.compacted-patch.imagegen.v3",
+      "name": "Mancha de terra compactada v3",
+      "category": "pasture",
+      "family": "terrain-family-v6",
+      "file": "assets/candidates/terrain-family-v6/compacted-grounding-v1-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v6/compacted-grounding-v1-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v6/compacted-grounding-patch-v1.md",
+        "createdAt": "2026-10-12",
+        "sha256": "b99848a02c364c1fb5e286318b4f78060b491edac498e4c86a57fc721473d682"
+      },
+      "dimensions": {
+        "width": 1396,
+        "height": 717,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.72,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "terrain-family-v6",
+        "soil",
+        "compacted",
+        "grounding",
+        "pixel-art-candidate",
+        "non-repeatable-overlay"
+      ],
+      "states": [
+        "worn"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "REVIEW",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "building.farmhouse.imagegen.v2",
+        "vegetation.tree.shade.imagegen.v2",
+        "riose-v2-terrain-treatment"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "ImageGen candidate for internal project review; retain original; verify applicable terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pending",
+        "technical": "pass",
+        "decisionNote": "Raw generation had soft halo alpha. Export thresholds alpha at 128, crops to visible bounds with 2px padding, clears RGB under alpha=0, and assigns an sRGB ICC tag with no RGB transform. Binary alpha, padding, dimensions, and visible pixel values verified. Art/style and scene-fit remain pending."
+      },
+      "notes": "Candidate grounding overlay; not a repeatable terrain tile and not production-approved. Await art and scene-fit review.",
+      "description": "Irregular Brazilian ranch wear patch: compacted sienna soil, muted olive edge grass, sparse hoof/wheel wear.",
+      "materials": [
+        "muted olive pasture",
+        "umber compacted earth",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v3-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-generated-alpha-cleaned-and-color-tagged",
+          "date": "2026-10-12",
+          "detail": "Original preserved under assets/source/terrain-family-v6. Alpha-only threshold 128, transparent edge crop with 2px padding, hidden RGB cleared; sRGB ICC assigned without changing RGB values."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "dc8f45b330883d9485de9ed4dbf0c1d9387bb983a7151d168e6098a1fdeda65e",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 320,
+          "height": 160
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "terrain.soil.compacted-patch.imagegen.v4",
+      "name": "Mancha de terra compactada v4",
+      "category": "pasture",
+      "family": "terrain-family-v6",
+      "file": "assets/candidates/terrain-family-v6/compacted-grounding-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/terrain-family-v6/compacted-grounding-v2-raw.png",
+        "promptFile": "assets/prompts/terrain-family-v6/compacted-grounding-patch-v2.md",
+        "createdAt": "2026-10-12",
+        "sha256": "19d26618b9d4034bad456df2c74918abc859a52a23d64f6bf9795f14e3046c6e"
+      },
+      "dimensions": {
+        "width": 1482,
+        "height": 770,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        3
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 0.72,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "terrain-family-v6",
+        "soil",
+        "compacted",
+        "grounding",
+        "pixel-art-candidate",
+        "non-repeatable-overlay"
+      ],
+      "states": [
+        "worn"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "building.farmhouse.imagegen.v2",
+        "vegetation.tree.shade.imagegen.v2",
+        "riose-v2-terrain-treatment"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "ImageGen candidate for internal project review; retain original; verify applicable terms before public or commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User selected this V2 over V1 with the feedback “V2 melhor!” on 2026-10-13. Approval is limited to this compacted-grounding overlay variant; it does not approve the complete terrain family or lock global art direction. Technical checks pass: alpha threshold 128, visible-bound crop with 2px padding, hidden RGB cleared, and sRGB ICC assigned without transforming RGB; binary alpha, padding and visible pixel preservation verified."
+      },
+      "notes": "User-approved preferred grounding overlay variant for pilot-scene use. It is a non-repeatable overlay, not a complete terrain-family approval.",
+      "description": "Irregular Brazilian ranch wear patch: compacted sienna soil, muted olive edge grass, sparse hoof/wheel wear.",
+      "materials": [
+        "muted olive pasture",
+        "umber compacted earth",
+        "controlled pixel clusters"
+      ],
+      "orientations": [
+        "2:1 isometric"
+      ],
+      "assetVersion": "v4-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "terrain-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "imagegen-edited-alpha-cleaned-and-color-tagged",
+          "date": "2026-10-12",
+          "detail": "V1 revision reduces peripheral grass tufts and ground noise. Source preserved; alpha threshold 128, 2px crop padding, sRGB profile tag added with no RGB transform."
+        },
+        {
+          "event": "user-selected-over-v1",
+          "date": "2026-10-13",
+          "detail": "User feedback: “V2 melhor!” Records V2 as the preferred compacted-grounding overlay over V1. This approval is limited to this asset variant; it does not approve the full terrain family or lock global art direction."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "9efc43ad2d4a12a936e231cacb8d1e6811f7d7fd89c3bc3493ebd7c141ab884f",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 320,
+          "height": 160
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "fence.gate.wood.imagegen.v2",
+      "name": "Porteira modular de madeira V2",
+      "category": "fence",
+      "family": "wood-gate",
+      "file": "assets/candidates/handling/modular-cattle-gate-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/modular-cattle-gate-v2-raw.png",
+        "promptFile": "assets/prompts/handling/modular-cattle-gate-v2.md",
+        "createdAt": "2026-10-13",
+        "sha256": "7ec0486dfd9d130c6644c00bc6269eee02f391a3bad496f9a8be7c7410ba8f5b"
+      },
+      "dimensions": {
+        "width": 803,
+        "height": 716,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "wood",
+        "gate",
+        "closed",
+        "modular",
+        "isometric",
+        "pixel-art-candidate"
+      ],
+      "states": [
+        "closed"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium",
+        "precision-livestock"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "building.farmhouse.imagegen.v2",
+        "vegetation.tree.shade.imagegen.v2",
+        "vehicle.tractor.imagegen.v2"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for internal Riose review; original retained; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated isolated V2 from supplied urban and approved Riose rural visual references. Alpha threshold 128 produced a binary silhouette; crop retains 2px transparent padding; hidden RGB cleared; sRGB ICC embedded without RGB transform. Alpha, dimensions, padding and file integrity pass. Art fit and scene connectors remain pending human review."
+      },
+      "notes": "New V2 candidate for the pilot gate slot. Retains original generated PNG and preview proof; do not promote until visual style and connector fit are reviewed.",
+      "description": "Closed modular Brazilian cattle gate between two hardwood posts with four rails, diagonal brace, iron hinges and latch.",
+      "materials": [
+        "warm hardwood rails and posts",
+        "dark steel hinges and latch"
+      ],
+      "orientations": [
+        "NE-SW isometric axis; closed"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "corral-core",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-isolated-from-approved-rural-and-urban-references",
+          "date": "2026-10-13",
+          "detail": "Raw ImageGen output preserved separately; generated as a clean gate-only sprite to replace a legacy haloed gate candidate."
+        },
+        {
+          "event": "alpha-normalized-and-color-tagged",
+          "date": "2026-10-13",
+          "detail": "Alpha threshold 128; visible-bound crop with 2px transparent padding; hidden RGB cleared; sRGB ICC assigned without transforming RGB."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "953f9ddd772482e61b5f6e9ca17040002b15c30867c13d4b3f1bd4a47e1674ac",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 192,
+          "height": 96
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "water.trough.cattle.galvanized.imagegen.v2",
+      "name": "Bebedouro retangular galvanizado V2",
+      "category": "water",
+      "family": "cattle-water-trough",
+      "file": "assets/candidates/handling/water-trough-cattle-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-assisted",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/water-trough-metal-v2-raw.png",
+        "promptFile": "assets/prompts/handling/water-trough-cattle-v2.md",
+        "createdAt": "2026-10-13",
+        "sha256": "a7e6553f58d21d74e61f6c29015225fd375706e08c39650c9d27bfad060475ad"
+      },
+      "dimensions": {
+        "width": 1207,
+        "height": 860,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        2,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "water",
+        "cattle",
+        "trough",
+        "galvanized",
+        "rectangular",
+        "isometric",
+        "pixel-art-candidate"
+      ],
+      "states": [
+        "filled",
+        "operational"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "building.farmhouse.imagegen.v2",
+        "vegetation.tree.shade.imagegen.v2",
+        "vehicle.tractor.imagegen.v2"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated with built-in OpenAI ImageGen for internal Riose review; sources retained; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Alpha threshold 128 created binary 0/255 transparency; visible bounds cropped with 2px clear padding; hidden RGB cleared; embedded sRGB profile assigned without RGB transform. Transparent-matte proof is clean. Art fit, water rendering, and scene scale remain pending human review."
+      },
+      "notes": "Candidate replacement for the legacy galvanized trough; a single edit was used to reduce glow and simplify the first output. No art approval implied.",
+      "description": "Rectangular galvanized-steel cattle drinking trough with four short legs, rolled lip, drain plug and restrained blue water.",
+      "materials": [
+        "galvanized steel",
+        "graphic blue water"
+      ],
+      "orientations": [
+        "NE-SW 2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "water-system",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-edited-for-riose",
+          "date": "2026-10-13",
+          "detail": "First direct generation retained as water-trough-metal-v1-raw; one edit retained as V2 to reduce the glow and flatten material shading."
+        },
+        {
+          "event": "alpha-normalized-and-color-tagged",
+          "date": "2026-10-13",
+          "detail": "Threshold 128, visible crop with 2px padding, hidden RGB cleared; sRGB ICC added with no RGB transform."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "ae6a0bb2de819167ae70b7488ac2084e83e290655b1112d1a9ccf01bc61e29fb",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 192,
+          "height": 96
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "feed.trough.hay.imagegen.v2",
+      "name": "Cocho de feno em madeira V2",
+      "category": "feed",
+      "family": "feed-trough",
+      "file": "assets/candidates/handling/feed-trough-hay-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-assisted",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/handling/feed-trough-hay-v2-raw.png",
+        "promptFile": "assets/prompts/handling/feed-trough-hay-v2.md",
+        "createdAt": "2026-10-13",
+        "sha256": "cacc8e95fee140f9f2a38bfdf3f16e5f0ef679341ff8ab4d52a8cb31062981f2"
+      },
+      "dimensions": {
+        "width": 1490,
+        "height": 891,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "feed",
+        "trough",
+        "wood",
+        "hay",
+        "cattle",
+        "isometric",
+        "pixel-art-candidate"
+      ],
+      "states": [
+        "filled",
+        "in-use"
+      ],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "building.farmhouse.imagegen.v2",
+        "vegetation.tree.shade.imagegen.v2",
+        "vehicle.tractor.imagegen.v2"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated and edited with built-in OpenAI ImageGen for internal Riose review; source retained; verify current terms before public/commercial release."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Alpha threshold 128 gives binary 0/255 transparency; visible crop retains 2px clear padding; hidden RGB cleared; embedded sRGB profile assigned without RGB transform. Matte proof is clean. Art fit, hay cluster style and scene scale remain pending human review."
+      },
+      "notes": "Refined candidate for the pilot feed-trough slot; one edit reduces the original scattered hay texture. No artistic approval implied.",
+      "description": "Long hardwood cattle feed trough with short support legs, iron corner plates and grouped hay.",
+      "materials": [
+        "hardwood",
+        "small iron plates",
+        "dry forage"
+      ],
+      "orientations": [
+        "NE-SW 2:1 isometric"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "feed-system",
+      "frames": [],
+      "history": [
+        {
+          "event": "edited-existing-feed-trough-to-reduce-texture-noise",
+          "date": "2026-10-13",
+          "detail": "Source V1 remains available in the manifest; V2 uses the previous sprite as functional shape reference and approved Riose assets as local visual anchors."
+        },
+        {
+          "event": "alpha-normalized-and-color-tagged",
+          "date": "2026-10-13",
+          "detail": "Alpha threshold 128, visible crop with 2px padding, hidden RGB cleared; sRGB ICC embedded without RGB transformation."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "f8cbb337576b52c86e2172d1fcb89a199f05568954bd59ea2f9f8b3a7bfe6ce2",
+      "scaleHints": {
+        "preferredRenderSizePx": {
+          "width": 128,
+          "height": 64
+        },
+        "logicalCellPx": {
+          "width": 64,
+          "height": 32
+        },
+        "fit": "uniform-scale-from-source"
+      }
+    },
+    {
+      "id": "technology.ear-tag.rfid.imagegen.v2",
+      "name": "Brinco inteligente RFID V2",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-ear-tag-rfid-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-generated",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/technology-ear-tag-rfid-v2-raw.png",
+        "promptFile": "assets/prompts/technology/technology-ear-tag-rfid-v2.md",
+        "createdAt": "2026-10-13",
+        "sha256": "29df2330a75f5b0c770a606aaf66ee8f3c158491db16c2f3b0ad3e7d13d9fd97"
+      },
+      "dimensions": {
+        "width": 512,
+        "height": 753,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "rfid",
+        "ear-tag",
+        "livestock"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated/edited with built-in OpenAI ImageGen for Riose internal asset development; raw source preserved; art pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. V2 candidate is an isolated wearable tag without the soil pedestal. Its small in-world render scale must be reviewed; art remains pending."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Brinco inteligente RFID",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-13",
+          "detail": "V2 candidate is an isolated wearable tag without the soil pedestal. Its small in-world render scale must be reviewed; art remains pending."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "c730d188cfd10e02410aec6a34471b74165b476dfbac282355ca8952abac29d9"
+    },
+    {
+      "id": "technology.monitor.station.imagegen.v2",
+      "name": "Estação de monitoramento V2",
+      "category": "technology",
+      "family": "technology",
+      "file": "assets/candidates/technology/technology-monitor-station-v2-hard-alpha.png",
+      "source": {
+        "kind": "ai-assisted",
+        "tool": "OpenAI ImageGen built-in",
+        "modelVersion": null,
+        "sourceFile": "assets/source/technology/technology-monitor-station-v2-raw.png",
+        "promptFile": "assets/prompts/technology/technology-monitor-station-v2.md",
+        "createdAt": "2026-10-13",
+        "sha256": "e36596afdaafe3097c42639265a0a6591e2355c60ab3cd738872d3fff20f3f0f"
+      },
+      "dimensions": {
+        "width": 748,
+        "height": 1348,
+        "format": "PNG",
+        "alpha": true
+      },
+      "footprint": [
+        1,
+        1
+      ],
+      "anchor": {
+        "x": 0.5,
+        "y": 1,
+        "meaning": "ground-contact"
+      },
+      "tags": [
+        "monitoring",
+        "station",
+        "weather"
+      ],
+      "states": [],
+      "scenarioCompatibility": [
+        "extensive-cattle",
+        "mixed",
+        "demo-premium"
+      ],
+      "styleVersion": "riose-livestock-v1-candidate",
+      "status": "APPROVED",
+      "references": [
+        "urban-isometric-master-2026-10",
+        "brazilian-farm-v7-approved-scene",
+        "approved-imagegen-nelore-v1"
+      ],
+      "rights": {
+        "licenseState": "project-generated-review",
+        "notes": "Generated/edited with built-in OpenAI ImageGen for Riose internal asset development; raw source preserved; art pending review."
+      },
+      "atlas": null,
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. V2 removes the display ground tile and preserves the station as a modular sprite; art remains pending."
+      },
+      "notes": "Candidate asset packed in the category review atlas; not yet art-approved.",
+      "description": "Estação de monitoramento",
+      "materials": [
+        "illustrated farm materials"
+      ],
+      "orientations": [
+        "three-quarter isometric view"
+      ],
+      "assetVersion": "v2-candidate",
+      "regionalCompatibility": [
+        "Brazil-general"
+      ],
+      "distributionPackage": "technology",
+      "frames": [],
+      "history": [
+        {
+          "event": "generated-and-packaged-for-review",
+          "date": "2026-10-13",
+          "detail": "V2 removes the display ground tile and preserves the station as a modular sprite; art remains pending."
+        },
+        {
+          "event": "user-approved-pilot-art",
+          "date": "2026-10-13",
+          "detail": "User explicitly approved the art of the 12-asset pilot kit and the composed scene. Art gate only; technical review and release rights remain independently gated."
+        }
+      ],
+      "colorProfile": "embedded-srgb",
+      "technicalPolicy": {
+        "alphaMode": "hard-edge-sprite",
+        "paddingMinPx": 2
+      },
+      "fileSha256": "4abf1bf9dfe228a7ec040d6f4798f26a130d64d4dbc8857557522931dff0b2a2"
     }
   ],
   "notes": "First user-approved ImageGen Nelore is integrated; additional generated assets are progressively packaged in category review atlases and remain art-pending until approved."

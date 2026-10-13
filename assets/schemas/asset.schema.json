@@ -538,6 +538,26 @@
         }
       },
       "additionalProperties": false
+    },
+    "scaleHints": {
+      "type": "object",
+      "properties": {
+        "preferredRenderSizePx": {
+          "$ref": "#/$defs/pixelSize"
+        },
+        "logicalCellPx": {
+          "$ref": "#/$defs/pixelSize",
+          "description": "Projected pixel step per logical isometric subcell (typically 64x32); ground tile is 2x2 subcells (128x64)."
+        },
+        "fit": {
+          "type": "string",
+          "enum": [
+            "uniform-scale-from-source"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "Optional scale contract for aligning high-resolution source PNGs to logical isometric subcells. The preferred render size is the 2:1 projection of the declared footprint."
     }
   },
   "additionalProperties": false,
@@ -585,5 +605,25 @@
         ]
       }
     }
-  ]
+  ],
+  "$defs": {
+    "pixelSize": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }

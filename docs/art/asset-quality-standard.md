@@ -6,7 +6,7 @@
 
 Todo asset usa um estado: `DRAFT`, `REVIEW`, `APPROVED`, `RELEASED` ou `REJECTED`. `APPROVED` exige revisão humana visual registrada; passar script, aparecer em cena ou ter transparência correta não basta. `RELEASED` é uma versão aprovada e publicada na biblioteca/atlas.
 
-Referências auditadas: [urbana original — guia de acabamento](../assets/pixel-art-urban-reference.png) (1257×850 RGBA; SHA-256 corresponde ao arquivo em Downloads). [Crop limpo para comparação](../assets/pixel-art-urban-reference-clean.png). [Fazenda brasileira completa V7 — referência aprovada de conteúdo/escala rural](../assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png) (1525×1031 RGB; byte-idêntica ao original gerado), conforme designação explícita do brief do usuário; [comparativo V7](../assets/review-farm-pixel/comparativo-referencia-urbana-fazenda-v7.png). A aprovação da V7 aplica-se à cena como guia rural, não a sprites individuais.
+Referências auditadas: [urbana original — gramática de composição](../assets/pixel-art-urban-reference.png) (1257×850 RGBA; SHA-256 corresponde ao arquivo em Downloads). [Crop limpo para comparação](../assets/pixel-art-urban-reference-clean.png). [Fazenda brasileira completa V7 — referência aprovada de conteúdo/escala rural](../assets/review-farm-pixel/fazenda-brasileira-completa-v7-candidata.png) (1525×1031 RGB; byte-idêntica ao original gerado), conforme designação explícita do brief do usuário; [comparativo V7](../assets/review-farm-pixel/comparativo-referencia-urbana-fazenda-v7.png). A aprovação da V7 aplica-se à cena como guia rural, não a sprites individuais.
 
 Falhas que devem ser mantidas no conjunto de comparação: [fazenda pecuária escala v2 — comparação](../assets/review-cattle-pixel/comparativo-referencia-urbana-fazenda-escala-v2.png) e [imagem reprovada](../assets/review-cattle-pixel/rejected/fazenda-pecuaria-escala-v2-reprovada.png). Também consultar o [histórico do gate](../assets/review-cattle-pixel/README.md). As imagens reprovadas são evidência do que evitar; não usar como style target ou fonte de sprites.
 
@@ -31,7 +31,7 @@ Não remover ruído, quantizar paleta, redesenhar clusters ou alterar alfa autom
 
 ## 3. Rubrica visual — gate obrigatório
 
-Revisar em quatro contextos: pixels nativos a 100%, zoom de mapa, zoom próximo e sobre mattes branco/carvão/quadriculado. Comparar lado a lado com a mesma região da referência urbana na mesma escala de exibição. Usar a fazenda V7 aprovada para conferir conteúdo e escala rural; ela não substitui a referência urbana para acabamento.
+Revisar em quatro contextos: pixels nativos a 100%, zoom de mapa, zoom próximo e sobre mattes branco/carvão/quadriculado. Comparar sprites com a família Riose aprovada e avaliar cenas lado a lado com a referência urbana para composição, a fazenda V7 para conteúdo/escala e Riose V2 para terreno/grounding. Nenhuma referência deve ser usada fora do seu papel.
 
 Pontuar cada dimensão de 0 a 2: `0 = reprovado`; `1 = revisar`; `2 = atende à referência`. Critérios abaixo são observáveis, não opinião genérica.
 
@@ -58,13 +58,13 @@ Pontuar cada dimensão de 0 a 2: `0 = reprovado`; `1 = revisar`; `2 = atende à 
 
 Antes do lote, auditar fontes e produzir uma prancha de quatro amostras nativas: casa, árvore, bovino, tile de pasto. A prancha deve incluir cada asset isolado e uma composição que use esses mesmos arquivos, além do comparativo lado a lado com as referências em tamanho equivalente. O teste precisa demonstrar:
 
-1. grade e projeção consistentes nos dois eixos, medidas contra o arquivo urbano original;
-2. peso de contorno e escala de pixel comparáveis à referência urbana;
-3. mais delicadeza arquitetônica e de terreno que as candidatas reprovadas, sem excesso de micro-ruído;
-4. relação rural de escala/conteúdo compatível com a fazenda V7 auditada;
+1. footprint, hierarquia e conectividade de cena coerentes com a gramática urbana;
+2. escala e distribuição rural compatíveis com a Fazenda V7;
+3. grama/terra e grounding coerentes com Riose V2;
+4. contorno, clusters, materiais e luz coerentes com os sprites Riose individualmente aprovados;
 5. integração sem halos, seams, objetos flutuando ou sombras divergentes.
 
-Registrar os valores medidos (pixels nativos por tile, espessura de linha observada, iluminação, paleta amostrada, escala relativa, densidade e zooms de inspeção) em revisão versionada da Art Bible. Usar o arquivo urbano original, não o crop, para a medição de acabamento; manter a V7 como guia aprovada para conteúdo/escala. Registrar as cores median-cut extraídas da imagem separadamente da atribuição semântica provisória por material. A paleta V7 é mais saturada e não governa as cores do estilo. Os thresholds permanecem provisórios até esta calibração, mesmo com proveniência das fontes já auditada.
+Registrar os valores medidos (pixels nativos por tile, espessura de linha observada, iluminação, paleta amostrada, escala relativa, densidade e zooms de inspeção) em revisão versionada da Art Bible. Usar o arquivo urbano original para avaliar composição, não como gabarito de acabamento de sprite; manter a V7 para conteúdo/escala e Riose V2 para terreno. Registrar as cores median-cut como dados descritivos da urbana, separadas de qualquer paleta semântica Riose, que deve ser medida nos assets aprovados. Os thresholds permanecem provisórios até esta calibração, mesmo com proveniência das fontes já auditada.
 
 ## 5. Registro mínimo por asset
 
