@@ -275,7 +275,8 @@ fn execute() -> Result<(), CliError> {
     let request = validate_and_decode(&json_value)?;
     let (scenario, seed) = request_identity(&request);
 
-    let native_result = run_native_scenario(request).map_err(classify_native_error)?;
+    let native_result =
+        run_native_scenario(request).map_err(|error| classify_native_error(error, scenario))?;
     let native_json = serde_json::to_value(&native_result).map_err(|_| {
         CliError::new(
             7,
@@ -779,7 +780,7 @@ fn request_identity(request: &NativeScenarioRequest) -> (&'static str, u32) {
     }
 }
 
-fn classify_native_error(error: String) -> CliError {
+fn classify_native_error(error: String, scenario: &'static str) -> CliError {
     if error == "tick hours must be between 1 and 8760" {
         return CliError::at(
             5,
@@ -788,7 +789,7 @@ fn classify_native_error(error: String) -> CliError {
             "hours must be between 1 and 8760.",
         );
     }
-    if error.contains("snapshot") || error.contains("animal count") || error.contains("paddock") {
+    if scenario == "housing-comparison" {
         return CliError::at(
             5,
             "VALIDATION_ERROR",
@@ -979,7 +980,7 @@ fn write_output_file(path: &Path, bytes: &[u8]) -> Result<(), CliError> {
             "could not write result output.",
         ));
     }
-    if fs::rename(&temporary_path, path).is_err() {
+    if replace_file(&temporary_path, path).is_err() {
         let _ = fs::remove_file(&temporary_path);
         return Err(CliError::new(
             8,
@@ -988,6 +989,47 @@ fn write_output_file(path: &Path, bytes: &[u8]) -> Result<(), CliError> {
         ));
     }
     Ok(())
+}
+
+#[cfg(not(windows))]
+fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
+    fs::rename(source, destination)
+}
+
+#[cfg(windows)]
+fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
+    use std::os::windows::ffi::OsStrExt;
+
+    const MOVEFILE_REPLACE_EXISTING: u32 = 0x1;
+
+    #[link(name = "kernel32")]
+    extern "system" {
+        fn MoveFileExW(
+            existing_file_name: *const u16,
+            new_file_name: *const u16,
+            flags: u32,
+        ) -> i32;
+    }
+
+    let source: Vec<u16> = source.as_os_str().encode_wide().chain(Some(0)).collect();
+    let destination: Vec<u16> = destination
+        .as_os_str()
+        .encode_wide()
+        .chain(Some(0))
+        .collect();
+    // SAFETY: both pointers refer to live, null-terminated UTF-16 buffers.
+    let result = unsafe {
+        MoveFileExW(
+            source.as_ptr(),
+            destination.as_ptr(),
+            MOVEFILE_REPLACE_EXISTING,
+        )
+    };
+    if result == 0 {
+        Err(io::Error::last_os_error())
+    } else {
+        Ok(())
+    }
 }
 
 #[cfg(test)]

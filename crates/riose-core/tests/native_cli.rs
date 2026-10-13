@@ -380,21 +380,48 @@ fn unsupported_fields_and_values_are_rejected_at_nested_boundaries() {
 #[test]
 fn invalid_snapshot_and_core_validation_error_use_validation_exit_code() {
     let golden: Value = serde_json::from_str(HOUSING_GOLDEN).unwrap();
-    let mut snapshot = golden["replayManifest"]["baseline"].clone();
-    snapshot["animals"] = json!([]);
-    let request = serde_json::to_vec(&json!({
-        "type": "housing-comparison",
-        "version": 1,
-        "snapshot": snapshot,
-        "days": 30
-    }))
-    .unwrap();
-    error_record(
-        &run_cli(&[], Some(&request)),
-        5,
-        "VALIDATION_ERROR",
-        Some("/snapshot"),
-    );
+    let baseline_snapshot = golden["replayManifest"]["baseline"].clone();
+    let mut empty_herd = baseline_snapshot.clone();
+    empty_herd["animals"] = json!([]);
+
+    let mut duplicate_ids = baseline_snapshot.clone();
+    let first_id = duplicate_ids["animals"][0]["id"].clone();
+    duplicate_ids["animals"][1]["id"] = first_id;
+
+    let mut unsupported_patch = baseline_snapshot.clone();
+    unsupported_patch["animals"][0]["patch"] = json!(4);
+
+    let mut oversized_history = baseline_snapshot;
+    oversized_history["animals"][0]["history"] = Value::Array(vec![
+        json!({
+            "hour": 1,
+            "action": "resting",
+            "reason": "recovery",
+            "observed": {"energy": 1.0, "thirst": 1.0}
+        });
+        41
+    ]);
+
+    for snapshot in [
+        empty_herd,
+        duplicate_ids,
+        unsupported_patch,
+        oversized_history,
+    ] {
+        let request = serde_json::to_vec(&json!({
+            "type": "housing-comparison",
+            "version": 1,
+            "snapshot": snapshot,
+            "days": 30
+        }))
+        .unwrap();
+        error_record(
+            &run_cli(&[], Some(&request)),
+            5,
+            "VALIDATION_ERROR",
+            Some("/snapshot"),
+        );
+    }
 
     let mut bad_hours = baseline_value();
     bad_hours["hours"] = json!(8761);
