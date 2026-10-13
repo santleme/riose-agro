@@ -188,16 +188,17 @@ def aggregate_pair(collar_path: Path, halter_path: Path, animal_id: int, writer:
     h = next(halter_iter, None)
     bucket: _SecondBucket | None = None
     batch: list[dict[str, Any]] = []
-    matched = collar_only = halter_only = paired_invalid = 0
-    seconds_written = incomplete = 0
+    matched_timestamp_groups = collar_only = halter_only = paired_invalid = 0
+    seconds_written = incomplete = tied_majority_seconds = 0
 
     def flush() -> None:
-        nonlocal seconds_written, incomplete, batch
+        nonlocal seconds_written, incomplete, tied_majority_seconds, batch
         if bucket is None:
             return
         record = bucket.record(animal_id, trial, split)
         seconds_written += 1
         incomplete += not record["is_complete_10hz_second"]
+        tied_majority_seconds += record["reference_majority_class"] is None and record["n_complete_sensor_label_samples"] > 0
         batch.append(record)
         if len(batch) >= batch_size:
             writer.write(batch)
@@ -214,7 +215,7 @@ def aggregate_pair(collar_path: Path, halter_path: Path, animal_id: int, writer:
             halter_only += 1
             h = next(halter_iter, None)
             continue
-        matched += 1
+        matched_timestamp_groups += 1
         second = ct.replace(microsecond=0)
         if bucket is None or second != bucket.second:
             flush()
@@ -235,13 +236,20 @@ def aggregate_pair(collar_path: Path, halter_path: Path, animal_id: int, writer:
         writer.write(batch)
 
     audit.update({
-        "exactTimestampRows": matched,
+        "exactTimestampGroups": matched_timestamp_groups,
+        # Retained as a compatibility alias; this counts unique coincident
+        # timestamp groups, not raw CSV rows or valid sensor/label samples.
+        "exactTimestampRows": matched_timestamp_groups,
         "collarOnlyTimestampRows": collar_only,
         "halterOnlyTimestampRows": halter_only,
         "exactPairsWithMissingOrInvalidFields": paired_invalid,
         "aggregatedSeconds": seconds_written,
-        "incompleteOrPartiallyMissingSeconds": incomplete,
         "complete10HzSeconds": seconds_written - incomplete,
+        "incompleteOrPartiallyMissingSeconds": incomplete,
+        "complete10HzFractionAmongEmittedSeconds": (seconds_written - incomplete) / seconds_written if seconds_written else None,
+        "tiedMajoritySeconds": tied_majority_seconds,
+        "tiedMajorityFractionAmongEmittedSeconds": tied_majority_seconds / seconds_written if seconds_written else None,
+        "temporalCoverageDenominator": "not estimated; seconds with no exact timestamp group are absent and no temporal coverage fraction is claimed",
         "rowsExcludedDueToDuplicateTimestamps": audit["collarDuplicateRows"] + audit["halterDuplicateRows"],
         "outcomeIsInstrumentReferenceOnly": True,
     })
@@ -306,6 +314,12 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def display_path(path: Path) -> str:
+    """Return repository-relative paths when possible, otherwise absolute paths."""
+    resolved = path.resolve()
+    return str(resolved.relative_to(ROOT.resolve())) if resolved.is_relative_to(ROOT.resolve()) else str(resolved)
+
+
 def load_verified_file_manifest(path: Path) -> dict[str, dict[str, Any]]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
     if manifest.get("source", {}).get("doi") != "10.5281/zenodo.4064802":
@@ -321,6 +335,9 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
     except ImportError as error:
         raise RuntimeError("Parquet output requires pyarrow; install requirements-format-parquet.txt") from error
     files = load_verified_file_manifest(manifest_path)
+    output_dir = output_dir.resolve()
+    quality_report_path = output_dir / "quality-report.json"
+    update_registry = output_dir == OUTPUT_DIR.resolve() and manifest_path.resolve() == MANIFEST_PATH.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     animal_reports = []
     for animal_id in EXPECTED_ANIMALS:
@@ -339,7 +356,7 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
             report = aggregate_pair(paths[0], paths[1], animal_id, writer)
         finally:
             writer.close()
-        report["outputPath"] = str(target.relative_to(ROOT)) if target.is_relative_to(ROOT) else str(target)
+        report["outputPath"] = display_path(target)
         animal_reports.append(report)
         print(f"processed animal={animal_id:02d} split={report['sourceSplit']} seconds={report['aggregatedSeconds']}", flush=True)
 
@@ -354,6 +371,15 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
         "timeBasis": "Source ISO 8601 naive wall clock retained as naive; README supplies no timezone.",
         "sensorTargetSeparation": "Only x/y/z collar accelerometer values enter sensor feature summaries. Halter classification is kept in separately named reference_* outcome columns.",
         "aggregationMethod": "Exact timestamp inner join, then floor to source second. For each second, per-axis arithmetic mean, population SD, minimum, and maximum; reference-label fractions and unique majority. Tied majority is null. No interpolation. Duplicate timestamp groups are excluded as ambiguous. Incomplete seconds are retained and flagged; complete means exactly 10 paired, valid 10 Hz samples.",
+        "coverageAccounting": {
+            "exactTimestampGroups": "Count of unique timestamps present in both files, including groups whose values are ambiguous or invalid; not raw rows and not necessarily usable samples.",
+            "emittedSeconds": "Seconds containing at least one exact timestamp group; seconds with no exact match are absent.",
+            "completeAndIncomplete": "Each emitted second is classified as complete only with exactly 10 exact groups and 10 complete sensor/reference pairs; all other emitted seconds are incomplete.",
+            "completeFractionDenominator": "Emitted seconds only.",
+            "temporalCoverageFraction": None,
+            "temporalCoverageReason": "No expected temporal denominator is inferred; the output does not represent seconds with zero exact matches.",
+            "tiedMajoritySeconds": "Counted separately among emitted seconds with at least one complete sensor/reference pair; tied labels remain null.",
+        },
         "limitations": [
             "Instrument-derived RumiWatch classifications are a reference proxy, not independent human-verified ground truth; drinking was merged into eating by the source.",
             "Housed finishing steers in the UK do not validate grazing behavior, DMI, ADG, pasture condition, or the Riose engine.",
@@ -363,11 +389,11 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
         "perAnimal": animal_reports,
         "outputs": [item["outputPath"] for item in animal_reports],
     }
-    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    aggregate["qualityReportPath"] = display_path(quality_report_path)
+    quality_report_path.parent.mkdir(parents=True, exist_ok=True)
     report_text = json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n"
-    REPORT_PATH.write_text(report_text, encoding="utf-8")
+    quality_report_path.write_text(report_text, encoding="utf-8")
 
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     processed_outputs = []
     for animal_report in animal_reports:
         output_path = Path(animal_report["outputPath"])
@@ -380,8 +406,6 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
             "format": "parquet",
             "compression": "zstd",
         })
-    manifest["processedOutputs"] = processed_outputs
-    manifest["processingReport"] = str(REGISTRY_REPORT_PATH.relative_to(ROOT))
     report_for_registry = {
         "sourceDoi": aggregate["sourceDoi"],
         "status": aggregate["status"],
@@ -395,6 +419,7 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
                 "sourceSplit": item["sourceSplit"],
                 "collarRowsRead": item["collarRowsRead"],
                 "halterRowsRead": item["halterRowsRead"],
+                "exactTimestampGroups": item["exactTimestampGroups"],
                 "exactTimestampRows": item["exactTimestampRows"],
                 "collarOnlyTimestampRows": item["collarOnlyTimestampRows"],
                 "halterOnlyTimestampRows": item["halterOnlyTimestampRows"],
@@ -409,16 +434,24 @@ def process_all(raw_dir: Path = RAW_DIR, output_dir: Path = OUTPUT_DIR, manifest
                 "aggregatedSeconds": item["aggregatedSeconds"],
                 "complete10HzSeconds": item["complete10HzSeconds"],
                 "incompleteOrPartiallyMissingSeconds": item["incompleteOrPartiallyMissingSeconds"],
+                "complete10HzFractionAmongEmittedSeconds": item["complete10HzFractionAmongEmittedSeconds"],
+                "tiedMajoritySeconds": item["tiedMajoritySeconds"],
+                "tiedMajorityFractionAmongEmittedSeconds": item["tiedMajorityFractionAmongEmittedSeconds"],
+                "temporalCoverageDenominator": item["temporalCoverageDenominator"],
             }
             for item in animal_reports
         ],
         "limitations": aggregate["limitations"],
-        "detailedReport": str(REPORT_PATH.relative_to(ROOT)),
+        "detailedReport": display_path(quality_report_path),
         "processedOutputs": processed_outputs,
     }
-    REGISTRY_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REGISTRY_REPORT_PATH.write_text(json.dumps(report_for_registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    if update_registry:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["processedOutputs"] = processed_outputs
+        manifest["processingReport"] = str(REGISTRY_REPORT_PATH.relative_to(ROOT))
+        REGISTRY_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        REGISTRY_REPORT_PATH.write_text(json.dumps(report_for_registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return aggregate
 
 
@@ -433,7 +466,7 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as error:
         print(f"processing failed: {error}", file=sys.stderr)
         return 1
-    print(json.dumps({"report": str(REPORT_PATH), "animals": report["animalCount"], "outputs": len(report["outputs"])}))
+    print(json.dumps({"report": report["qualityReportPath"], "animals": report["animalCount"], "outputs": len(report["outputs"])}))
     return 0
 
 
