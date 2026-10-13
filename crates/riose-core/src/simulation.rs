@@ -325,24 +325,14 @@ impl FarmEngine {
                     };
 
                     let bounds = bounds_for(config.housing, patch_index);
-                    let x_offset =
-                        js_multiply(self.locomotion_rng.next_f64(), bounds.w - 20.0);
-                    let y_offset =
-                        js_multiply(self.locomotion_rng.next_f64(), bounds.h - 20.0);
+                    let x_offset = js_multiply(self.locomotion_rng.next_f64(), bounds.w - 20.0);
+                    let y_offset = js_multiply(self.locomotion_rng.next_f64(), bounds.h - 20.0);
                     animal.target_x = bounds.x + 10.0 + x_offset;
                     animal.target_y = bounds.y + 10.0 + y_offset;
                     let x_step = js_multiply(animal.target_x - animal.x, 0.15);
                     let y_step = js_multiply(animal.target_y - animal.y, 0.15);
-                    animal.x = clamp(
-                        animal.x + x_step,
-                        bounds.x + 8.0,
-                        bounds.x + bounds.w - 8.0,
-                    );
-                    animal.y = clamp(
-                        animal.y + y_step,
-                        bounds.y + 8.0,
-                        bounds.y + bounds.h - 8.0,
-                    );
+                    animal.x = clamp(animal.x + x_step, bounds.x + 8.0, bounds.x + bounds.w - 8.0);
+                    animal.y = clamp(animal.y + y_step, bounds.y + 8.0, bounds.y + bounds.h - 8.0);
                     event
                 };
                 if let Some((text, animal_id)) = activity_event {
