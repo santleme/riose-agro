@@ -2,7 +2,7 @@
 
 ## Decision
 
-The existing CPER-to-CGREC evaluation is sufficient for the current, narrowly scoped ADG transport diagnostic. This work block does not add another holdout or fit another model because that would repeat an existing reproducible comparison. The result remains separate from mature-cow DMI and from full-engine validation.
+The existing CPER-to-CGREC evaluation remains the only external-site ADG transport diagnostic. A separate nested CPER development experiment has now compared pre-outcome candidates without using CGREC outcomes. It did not improve the baseline and does not create a new holdout. Both results remain separate from mature-cow DMI and full-engine validation.
 
 Reproduce source integrity and the evaluation with:
 
@@ -26,6 +26,12 @@ The comparison uses the frozen engine, its CPER development-set scale, and a sim
 | Frozen engine default | 0.540 | 0.574 | -0.500 |
 
 These are descriptive errors on one external station, not evidence that the engine outperforms a generalizable ML model. The scaled engine has slightly lower MAE but higher RMSE than the constant baseline in this holdout.
+
+## New internal candidate development
+
+The additional pre-registered CPER-only experiment uses the 320 yearling-steer observations from 2009–2013 and nested leave-one-year-out folds with repeated animal identity proxies purged from each training split. Only initial liveweight is used as a predictor. Realized grazing duration is excluded because it is not guaranteed to be available before prediction; treatment and pasture are excluded because they map one-to-one in these records.
+
+On the identical 320 outer OOF rows, the training mean baseline had MAE/RMSE/bias 0.221/0.298/+0.001 kg/head/day, OLS with initial weight had 0.234/0.309/+0.021, and nested Ridge had 0.233/0.308/+0.020. Ridge selected alpha 10 in all five outer years. No candidate improved the baseline. The result is internal development evidence from one site and five year blocks, not validation or evidence for mature-cow DMI. See the [pre-registration](../../experiments/diagnostics/adg/cper-preoutcome-candidate-v1/preregister.md), [evaluation](../../experiments/diagnostics/adg/cper-preoutcome-candidate-v1/evaluation.md), and [reproducible runner](../../scripts/evaluate_cper_preoutcome_adg_candidates.py).
 
 ## Limits and remaining gate
 
