@@ -132,6 +132,7 @@ class ReadinessFixtureTests(unittest.TestCase):
         expected = {
             "pasture-dmi-triage-ancp-nellore-1539056",
             "pasture-dmi-triage-teagasc-2019-williams",
+            "pasture-dmi-triage-soares-2026-holstein-gyr",
         }
         self.assertTrue(expected.issubset(records))
         for source_id in expected:
@@ -139,6 +140,9 @@ class ReadinessFixtureTests(unittest.TestCase):
                 source = records[source_id]
                 self.assertEqual(source["outcomes"]["dmi"]["status"], "ineligible")
                 self.assertFalse(source["outcomes"]["dmi"]["trainable"])
+                if source_id == "pasture-dmi-triage-soares-2026-holstein-gyr":
+                    self.assertIn("dairy cows are outside", source["outcomes"]["dmi"]["reason"])
+                    self.assertIn("total DMI including forage and supplement", source["outcomes"]["dmi"]["reason"])
                 self.assertIn(
                     "public-pasture-dmi-source-triage-2026-10.json#/sources/",
                     source["references"]["sourceAssessment"],

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "riose.supervised-readiness/v1",
   "decisionId": "adult-beef-pasture-dmi-2026-10",
-  "preparedOn": "2026-10-12",
+  "preparedOn": "2026-10-13",
   "decision": "no_go",
   "decisionScope": "Dataset readiness for supervised estimation of individual total dry matter intake (DMI), not validation of the simulation engine.",
   "estimand": {
@@ -34,10 +34,10 @@
   "reviewedMatrix": {
     "path": "docs/evidence/dmi-adg-readiness-v1.json",
     "schemaVersion": "riose.dmi-adg-readiness/v1",
-    "reviewedSourceCount": 22,
+    "reviewedSourceCount": 23,
     "eligibleSourcesForTarget": 0,
     "conditionalSourcesForTarget": 0,
-    "ineligibleOrUnavailableSourcesForTarget": 22
+    "ineligibleOrUnavailableSourcesForTarget": 23
   },
   "candidateEvidence": [
     {
@@ -148,7 +148,7 @@
     {
       "id": "dmi-adg-readiness-matrix",
       "source": "docs/evidence/dmi-adg-readiness-v1.json",
-      "decision": "The 22-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
+      "decision": "The 23-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
       "access": "mixed; assessed per source in the linked matrix",
       "license": "Assessed per source in the linked matrix and source manifests.",
       "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome. The SDSU beef-cow source is a hay-feeding experiment, not pasture DMI.",
@@ -161,7 +161,7 @@
     {
       "id": "dryad-dbrv15fg8-yearling-adg",
       "source": "docs/evidence/issue-15-dryad-yearling-eligibility.json",
-      "decision": "The public CC0 dataset is already represented in the 22-source DMI/ADG matrix. Its 154 yearling-steer rows include ADG and body weight, but no row-level experiment/site/year key, paired engine inputs, outcome horizon, or DMI; it is descriptive evidence only and is ineligible for ADG model training or engine validation.",
+      "decision": "The public CC0 dataset is already represented in the 23-source DMI/ADG matrix. Its 154 yearling-steer rows include ADG and body weight, but no row-level experiment/site/year key, paired engine inputs, outcome horizon, or DMI; it is descriptive evidence only and is ineligible for ADG model training or engine validation.",
       "access": "available_public_cc0",
       "license": "CC0-1.0 for the Dryad dataset.",
       "populationFit": "Ineligible for the mature beef-cow pasture target: the cohort consists of growing yearling steers.",
@@ -199,6 +199,20 @@
       "references": [
         "https://doi.org/10.1017/S1751731119001241",
         "https://t-stor.teagasc.ie/server/api/core/bitstreams/e4d35fbb-0eac-43e8-b22a-0d8f2832ec08/content"
+      ]
+    },
+    {
+      "id": "soares-2026-holstein-gyr-pasture-dmi",
+      "source": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+      "decision": "The 2026 Holstein × Gyr pasture study is a near-miss: it estimates pasture DMI per grazing cycle for ten dairy cows, but dairy cows are outside the mature beef-cow target and pasture DMI is not total DMI including supplement. Study data are available only from the corresponding author on reasonable request; no public individual rows or data-specific reuse terms were identified.",
+      "access": "unavailable_or_not_reusable",
+      "license": "The article is open access; underlying-data reuse terms were not established, and the data statement provides author-mediated access on reasonable request only.",
+      "populationFit": "The cows are lactating Holstein × Gyr dairy cows, outside the defined mature beef-cow population.",
+      "outcomeFit": "Ineligible: DMI is estimated for pasture intake per grazing cycle and does not provide the defined total DMI including forage and supplement in public reusable animal-period rows.",
+      "missingnessAndIdentity": "No public animal-period microdata are available to assess row-level missingness or study and animal keys; the article pools cow fecal samples within evaluation periods.",
+      "references": [
+        "https://doi.org/10.1007/s11250-026-05169-5",
+        "https://link.springer.com/article/10.1007/s11250-026-05169-5"
       ]
     }
   ],

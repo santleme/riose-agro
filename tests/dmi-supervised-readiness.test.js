@@ -17,10 +17,10 @@ test('supervised DMI readiness report validates its target, evidence links, and 
   assert.equal(report.decision, 'no_go');
   assert.equal(report.estimand.unitOfAnalysis, 'animal-period');
   assert.equal(report.eligibility.outcomeUnit, 'kg DM/animal/day');
-  assert.equal(report.reviewedMatrix.reviewedSourceCount, 22);
+  assert.equal(report.reviewedMatrix.reviewedSourceCount, 23);
   assert.equal(report.reviewedMatrix.eligibleSourcesForTarget, 0);
   assert.equal(report.reviewedMatrix.conditionalSourcesForTarget, 0);
-  assert.equal(report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget, 22);
+  assert.equal(report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget, 23);
   assert.equal(
     report.reviewedMatrix.eligibleSourcesForTarget + report.reviewedMatrix.conditionalSourcesForTarget + report.reviewedMatrix.ineligibleOrUnavailableSourcesForTarget,
     report.reviewedMatrix.reviewedSourceCount
@@ -31,6 +31,11 @@ test('supervised DMI readiness report validates its target, evidence links, and 
   assert.ok(report.blockers.some(reason => reason.includes('total-DMI estimand')));
   assert.ok(report.nextEvidenceRequired.some(requirement => requirement.includes('Project-owner signoff')));
   assert.equal(report.performance.modelTrainingPerformed, false);
+  const soares = report.candidateEvidence.find(candidate => candidate.id === 'soares-2026-holstein-gyr-pasture-dmi');
+  assert.ok(soares);
+  assert.match(soares.populationFit, /dairy cows/i);
+  assert.match(soares.outcomeFit, /total DMI/i);
+  assert.match(soares.access, /unavailable_or_not_reusable/);
   for (const candidate of report.candidateEvidence) {
     assert.equal(existsSync(new URL(`../${candidate.source}`, import.meta.url)), true, candidate.source);
     for (const reference of candidate.references) {

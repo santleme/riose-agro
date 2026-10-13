@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-12",
+  "reviewed": "2026-10-13",
   "purpose": "Identify publicly reusable individual dry-matter-intake data for adult beef cattle on pasture relevant to issue #6.",
   "sources": [
     {
@@ -147,6 +147,18 @@
       "individualDataRetrieved": false,
       "publicDataAssessment": "The article and institutional full-text copy report individual intake measurement/model results but no animal-period microdata, repository DOI, or data-specific reuse terms. The source reviewed here does not establish that the outcome is total DMI including supplement.",
       "decision": "Retain as a relevant grazing-cow measurement/model reference only. Do not use for supervised target training or validation without the underlying animal records, documented total-DMI outcome definition, and explicit reuse terms."
+    },
+    {
+      "title": "Canopy structure, dry matter intake and performance of Holstein × Gyr cows (Bos taurus taurus L. × Bos taurus indicus L.) under rotational stocking in Urochloa spp. pastures",
+      "doi": "10.1007/s11250-026-05169-5",
+      "url": "https://doi.org/10.1007/s11250-026-05169-5",
+      "openArticleUrl": "https://link.springer.com/article/10.1007/s11250-026-05169-5",
+      "publicationLicense": "Open-access article; the article states that study data are available from the corresponding author on reasonable request. No public individual-data deposit or separate data-specific reuse license was identified.",
+      "reportedPopulation": "Ten lactating Holstein × Gyr dairy cows (five per treatment) in a rotationally stocked Urochloa pasture study; DMI was estimated for each grazing cycle, with cow-level fecal samples pooled within each evaluation period.",
+      "dataAvailabilityStatement": "Data sets generated during the current study are available from the corresponding author on reasonable request.",
+      "individualDataRetrieved": false,
+      "publicDataAssessment": "The paper estimates daily pasture DMI using fecal output and pasture digestibility, with concentrate intake accounted for in the fecal-output calculation. No downloadable animal-period microdata were provided; the accessible DMI outcome is pasture DMI, not the target total DMI including forage and supplement.",
+      "decision": "Exclude as a near-miss from the issue #109 mature beef-cow target: the cohort consists of dairy cows, and the reported DMI is pasture DMI rather than total DMI including supplement. Individual source data are available only on reasonable request, with no public row-level file or data-specific reuse terms identified. Do not infer eligibility from the open article or its aggregate results."
     }
   ],
   "conclusion": "Across the reviewed public candidates, no downloadable, individually reusable adult beef-cattle pasture DMI file with documented data-specific reuse terms and suitable outcome inputs was available for this DMI-focused triage. A separate Dryad grazing-yearling dataset does contain ADG and BW under CC0 but no DMI, so it does not change this conclusion; it is documented in dryad-grazing-yearlings-audit.json and the source table.",

@@ -364,6 +364,16 @@ TRIAGE_CANDIDATES = [
         "adgReason": "No public individual ADG file with paired eligible predictors was retrieved.",
         "use": "Relevant grazing-cow methods reference only; require source rows, outcome definition, and explicit data reuse terms before reconsideration.",
     },
+    {
+        "id": "pasture-dmi-triage-soares-2026-holstein-gyr", "doi": "10.1007/s11250-026-05169-5",
+        "name": "Canopy Structure, DMI, and Performance of Holstein × Gyr Cows on Urochloa Pastures",
+        "license": "Open-access article; underlying study records are available only on reasonable request, with no public file or data-specific reuse license identified.",
+        "population": "Ten lactating Holstein × Gyr dairy cows (five per treatment) in rotationally stocked Urochloa pastures; not mature beef cows.",
+        "units": "Pasture DMI estimated per grazing cycle; cow fecal samples were pooled by cow within each evaluation period. No public individual rows retrieved.",
+        "dmiReason": "Ineligible for the frozen target: dairy cows are outside the mature beef-cow population, the reported outcome is pasture DMI rather than total DMI including forage and supplement, and the underlying rows are available only on reasonable request.",
+        "adgReason": "No individual ADG outcome file with paired eligible predictors was retrieved.",
+        "use": "Relevant tropical pasture-dairy methods reference only; do not use as target training or validation, or infer individual records from article summaries.",
+    },
 ]
 for candidate_index, candidate in enumerate(TRIAGE_CANDIDATES):
     SOURCES.append({

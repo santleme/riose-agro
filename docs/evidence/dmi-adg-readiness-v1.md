@@ -2,7 +2,7 @@
 
 Agregação determinística de manifestos e relatórios de auditoria existentes. Este índice referencia evidências; não replica linhas de dados. `trainable` indica elegibilidade de registros para treino dentro do escopo local indicado, não que houve treino.
 
-**Processamento:** `sourceCount` = 22; `inputFileCount` = 26; `elapsedSeconds` = 0.013562 s (tempo observado).
+**Processamento:** `sourceCount` = 23; `inputFileCount` = 26; `elapsedSeconds` = 0.017185 s (tempo observado).
 
 ## Matriz
 
@@ -92,6 +92,12 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 **Licença:** CC BY-NC-ND 4.0 article license; underlying data is available only by author inquiry. **Unidades animal-período/registro:** unknown
 **Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
 
+| Canopy Structure, DMI, and Performance of Holstein × Gyr Cows on Urochloa Pastures | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | Ten lactating Holstein × Gyr dairy cows (five per treatment) in rotationally stocked Urochloa pastures; not mature beef cows. Pasture DMI estimated per grazing cycle; cow fecal samples were pooled by cow within each evaluation period. No public individual rows retrieved. | Relevant tropical pasture-dairy methods reference only; do not use as target training or validation, or infer individual records from article summaries. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/13` |
+
+**pasture-dmi-triage-soares-2026-holstein-gyr — razões.** DMI: Ineligible for the frozen target: dairy cows are outside the mature beef-cow population, the reported outcome is pasture DMI rather than total DMI including forage and supplement, and the underlying rows are available only on reasonable request. Source is inaccessible or not reusable. ADG: No individual ADG outcome file with paired eligible predictors was retrieved. Source is inaccessible or not reusable.
+**Licença:** Open-access article; underlying study records are available only on reasonable request, with no public file or data-specific reuse license identified. **Unidades animal-período/registro:** unknown
+**Missingness:** Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source. **Métricas documentadas:** unknown
+
 | Developing and Validating a Model for DMI of Grazing Lactating Beef Cows | unavailable_or_not_reusable | unknown | unknown | unknown | ineligible (trainable: false) | ineligible (trainable: false) | 94 DMI measurements on 106 beef/beef-dairy crossbred cows, with model results also reported on a separate 60-cow lactating herd. Published model results only; no downloadable individual DMI rows or animal/trial keys retrieved. | Highly relevant methods/population reference only; published regression metrics cannot substitute for cow-level records. | `audit: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `decision: docs/evidence/public-pasture-dmi-source-triage-2026-10.json`, `sourceAssessment: docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/5` |
 
 **pasture-dmi-triage-teagasc-2019 — razões.** DMI: The institutional full-text and publisher abstract contain cohort metrics but no public microdata, row-level IDs, or data-specific reuse terms. Source is inaccessible or not reusable. ADG: No reusable individual ADG records and paired outcome inputs were retrieved. Source is inaccessible or not reusable.
@@ -154,6 +160,6 @@ Agregação determinística de manifestos e relatórios de auditoria existentes.
 
 ## Processamento
 
-`sourceCount` = 22; `inputFileCount` = 26; `elapsedSeconds` = 0.013562 s.
+`sourceCount` = 23; `inputFileCount` = 26; `elapsedSeconds` = 0.017185 s.
 
 Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.

@@ -2,13 +2,13 @@
 
 ## Captura completa mais recente (2026-10-13)
 
-JSON, JSONL e Parquet foram medidos com os mesmos 25 resultados e 31 repetições, na revisão limpa `ac0df1460c7129249b0be67988a20b0b86498735`. O relatório completo está em [`experiment-format-study-2026-10-13.json`](./experiment-format-study-2026-10-13.json). Parquet usou PyArrow 26.0.0 em um ambiente isolado com Python 3.12.3; essa dependência não foi adicionada ao runtime do app.
+JSON, JSONL e Parquet foram medidos com os mesmos 25 resultados e 31 repetições, na revisão limpa `4b422af08bfcf951c526ea91b3a66cdf50915bee`. O relatório completo está em [`experiment-format-study-2026-10-13.json`](./experiment-format-study-2026-10-13.json). Parquet usou PyArrow 26.0.0 em um ambiente isolado com Python 3.12.3; essa dependência não foi adicionada ao runtime do app.
 
 | Formato | Arquivo | Gravação mediana (ms) | Leitura completa (ms) | Leitura seletiva (ms) |
 | --- | ---: | ---: | ---: | ---: |
-| JSON | 44.273 bytes (gzip: 5.133) | 0,411 | 0,827 | 0,533 |
-| JSONL | 44.271 bytes (gzip: 5.133) | 0,472 | 1,159 | 0,683 |
-| Parquet + Zstandard | 25.856 bytes | 3,391 | 1,481 | 1,008 |
+| JSON | 44.273 bytes (gzip: 5.133) | 0,514 | 1,002 | 0,483 |
+| JSONL | 44.271 bytes (gzip: 5.133) | 0,525 | 1,246 | 0,572 |
+| Parquet + Zstandard | 25.856 bytes | 3,820 | 1,604 | 1,097 |
 
 Os três formatos passaram round-trip normalizado exato, incluindo unidades, proveniência nula, identidade/build do engine, digest e status; a projeção seletiva Parquet também passou igualdade exata. Nesta carga, Parquet foi mais lento nas três operações e seu arquivo Zstandard ficou cerca de 5× maior que JSON ou JSONL com gzip. O footprint instalado do PyArrow foi 168.197.888 bytes, excluindo Python e bibliotecas do sistema. Não há razão de desempenho para trocar JSON como formato padrão; JSONL continua útil para append/streaming quando simplifica o fluxo.
 
@@ -22,7 +22,7 @@ Reconsiderar Parquet se medições repetidas com a carga representativa mostrare
 
 O script [`research_experiment_format.mjs`](../../scripts/research_experiment_format.mjs) executa o runner atual sobre 25 cenários determinísticos com 100 animais e 24 horas por cenário, derivados do fixture `tests/scenarios/baseline-pasture.json` com seeds de 417 a 441. A comparação liga cada resultado ao manifesto de lote pelo `runId` e verifica unidades, valores nulos de proveniência, identidade/build do engine, digest do cenário e do resultado, seed e status.
 
-O lote ocupa 44.273 bytes como JSON e 44.271 bytes como JSONL; após gzip nível 6, ambos ocupam 5.133 bytes. Parquet + Zstandard ocupa 25.856 bytes. Foram feitas 31 repetições por operação após aquecimento de escrita/leitura completa. Tempos incluem serialização e IO local. JSONL lê linha a linha e retém apenas a projeção solicitada, mas ainda faz parse de cada linha completa. JSON lê e faz parse do array completo. Os três formatos preservaram todos os campos e passaram round-trip normalizado exato; SHA-256 do conteúdo normalizado nesta captura limpa: `161ad6c96d27b5063962c8e01bfe3cdca35ed2b546cd8686191b928365d04f0e`.
+O lote ocupa 44.273 bytes como JSON e 44.271 bytes como JSONL; após gzip nível 6, ambos ocupam 5.133 bytes. Parquet + Zstandard ocupa 25.856 bytes. Foram feitas 31 repetições por operação após uma execução de aquecimento para escrita, leitura completa e leitura seletiva em cada formato. Tempos incluem serialização e IO local. JSONL lê linha a linha e retém apenas a projeção solicitada, mas ainda faz parse de cada linha completa. JSON lê e faz parse do array completo. Os três formatos preservaram todos os campos e passaram round-trip normalizado exato; SHA-256 do conteúdo normalizado nesta captura limpa: `161ad6c96d27b5063962c8e01bfe3cdca35ed2b546cd8686191b928365d04f0e`.
 
 ## Resultados da captura anterior (revisão b70f25b)
 

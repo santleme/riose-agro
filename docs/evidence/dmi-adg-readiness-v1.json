@@ -856,6 +856,66 @@
       "permissibleUse": "Methods/benchmark context only; do not reproduce results from aggregate metrics as external validation."
     },
     {
+      "id": "pasture-dmi-triage-soares-2026-holstein-gyr",
+      "name": "Canopy Structure, DMI, and Performance of Holstein × Gyr Cows on Urochloa Pastures",
+      "references": {
+        "manifest": null,
+        "audit": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "decision": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json",
+        "sourceAssessment": "docs/evidence/public-pasture-dmi-source-triage-2026-10.json#/sources/13"
+      },
+      "sourceIdentity": {
+        "doi": "10.1007/s11250-026-05169-5",
+        "license": "Open-access article; underlying study records are available only on reasonable request, with no public file or data-specific reuse license identified."
+      },
+      "access": "unavailable_or_not_reusable",
+      "studyDesign": {
+        "value": null,
+        "definition": null,
+        "reference": null
+      },
+      "counts": {
+        "animals": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "animalObservationUnits": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        },
+        "trials": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "population": "Ten lactating Holstein × Gyr dairy cows (five per treatment) in rotationally stocked Urochloa pastures; not mature beef cows.",
+      "units": "Pasture DMI estimated per grazing cycle; cow fecal samples were pooled by cow within each evaluation period. No public individual rows retrieved.",
+      "missingness": {
+        "summary": "Individual observations are unavailable; row-level missingness cannot be computed from the reviewed source.",
+        "documentedMetrics": {
+          "value": null,
+          "definition": null,
+          "reference": null
+        }
+      },
+      "outcomes": {
+        "dmi": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "Ineligible for the frozen target: dairy cows are outside the mature beef-cow population, the reported outcome is pasture DMI rather than total DMI including forage and supplement, and the underlying rows are available only on reasonable request. Source is inaccessible or not reusable."
+        },
+        "adg": {
+          "status": "ineligible",
+          "trainable": false,
+          "reason": "No individual ADG outcome file with paired eligible predictors was retrieved. Source is inaccessible or not reusable."
+        }
+      },
+      "permissibleUse": "Relevant tropical pasture-dairy methods reference only; do not use as target training or validation, or infer individual records from article summaries."
+    },
+    {
       "id": "pasture-dmi-triage-teagasc-2019",
       "name": "Developing and Validating a Model for DMI of Grazing Lactating Beef Cows",
       "references": {
@@ -1339,9 +1399,9 @@
     }
   ],
   "processing": {
-    "sourceCount": 22,
+    "sourceCount": 23,
     "inputFileCount": 26,
-    "elapsedSeconds": 0.013562,
+    "elapsedSeconds": 0.017185,
     "elapsedTimeKind": "observed_wall_clock_seconds"
   }
 }
