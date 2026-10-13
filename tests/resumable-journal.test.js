@@ -109,3 +109,85 @@ test('completed result retention can be bounded without changing durable records
   assert.equal(result.completedRuns, 3);
   assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, 3);
 });
+
+test('bounded scheduler limits in-flight runs and commits journal rows in plan order', async t => {
+  const options = await setup(t, ['r1', 'r2', 'r3', 'r4']);
+  const started = [], active = new Set(), maxActive = {value: 0};
+  const result = await runResumableBatch({...options, concurrency: 2, executeRun: async run => {
+    started.push(run.runId); active.add(run.runId); maxActive.value = Math.max(maxActive.value, active.size);
+    await new Promise(resolve => setTimeout(resolve, run.runId === 'r1' ? 20 : 2));
+    active.delete(run.runId);
+    return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}};
+  }});
+  assert.equal(maxActive.value, 2);
+  assert.deepEqual(started, ['r1', 'r2', 'r3', 'r4']);
+  assert.deepEqual(result.manifest.runs.map(run => run.runId), ['r1', 'r2', 'r3', 'r4']);
+  assert.deepEqual((await readFile(options.resultsPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line).runId), ['r1', 'r2', 'r3', 'r4']);
+});
+
+test('abort stops launching new work and remaining planned runs resume safely', async t => {
+  const options = await setup(t, ['r1', 'r2', 'r3', 'r4']);
+  const controller = new AbortController();
+  const started = [];
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const running = runResumableBatch({...options, concurrency: 2, signal: controller.signal, executeRun: async run => {
+    started.push(run.runId);
+    await gate;
+    return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}};
+  }});
+  while (started.length < 2) await new Promise(resolve => setTimeout(resolve, 1));
+  controller.abort();
+  release();
+  const cancelled = await running;
+  assert.deepEqual(started, ['r1', 'r2']);
+  assert.deepEqual(cancelled.manifest.runs.map(run => run.status), ['completed', 'completed', 'planned', 'planned']);
+  const resumedCalls = [];
+  const resumed = await runResumableBatch({...options, concurrency: 2, executeRun: async run => {
+    resumedCalls.push(run.runId);
+    return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}};
+  }});
+  assert.deepEqual(resumedCalls, ['r3', 'r4']);
+  assert.deepEqual(resumed.manifest.runs.map(run => run.status), ['completed', 'completed', 'completed', 'completed']);
+});
+
+test('a failed concurrent run is isolated, keeps its plan index, and reruns on resume', async t => {
+  const options = await setup(t, ['r1', 'r2', 'r3']);
+  const first = await runResumableBatch({...options, concurrency: 2, executeRun: async run => {
+    if (run.runId === 'r2') throw new Error('worker failure');
+    return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}};
+  }});
+  assert.deepEqual(first.manifest.runs.map(run => run.status), ['completed', 'failed', 'completed']);
+  assert.deepEqual((await readFile(options.resultsPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line).runId), ['r1', 'r3']);
+  let retried = false;
+  const resumed = await runResumableBatch({...options, concurrency: 2, executeRun: async run => {
+    assert.equal(run.runId, 'r2'); retried = true;
+    return {gain: {value: 2, unit: 'kg/day'}};
+  }});
+  assert.equal(retried, true);
+  assert.deepEqual(resumed.manifest.runs.map(run => run.status), ['completed', 'completed', 'completed']);
+});
+
+test('abort between journal launch and execution leaves the run planned', async t => {
+  const options = await setup(t, ['r1', 'r2']);
+  const controller = new AbortController();
+  let executions = 0;
+  const cancelled = await runResumableBatch({...options, concurrency: 2, signal: controller.signal,
+    onProgress: ({status}) => { if (status === 'running') controller.abort(); },
+    executeRun: async () => { executions++; return {gain: {value: 1, unit: 'kg/day'}}; },
+  });
+  assert.equal(executions, 0);
+  assert.deepEqual(cancelled.manifest.runs.map(run => run.status), ['planned', 'planned']);
+});
+
+test('serial cancellation leaves unstarted runs planned', async t => {
+  const options = await setup(t, ['r1', 'r2']);
+  const controller = new AbortController();
+  const serial = await runResumableBatch({...options, signal: controller.signal,
+    executeRun: async run => {
+      if (run.runId === 'r1') controller.abort();
+      return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}};
+    },
+  });
+  assert.deepEqual(serial.manifest.runs.map(run => run.status), ['completed', 'planned']);
+});

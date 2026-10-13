@@ -103,10 +103,11 @@ function sameRunPlan(expected, actual) {
 }
 
 /** Run or resume one local batch. The supplied manifest is written before execution begins. */
-export async function runResumableBatch({manifestPath, resultsPath, errorsPath = `${resultsPath}.errors.jsonl`, manifest: inputManifest, executeRun, onProgress, verifyCompletedRun, maxRetainedResults = 100} = {}) {
+export async function runResumableBatch({manifestPath, resultsPath, errorsPath = `${resultsPath}.errors.jsonl`, manifest: inputManifest, executeRun, onProgress, verifyCompletedRun, maxRetainedResults = 100, concurrency = 1, signal} = {}) {
   if (typeof manifestPath !== 'string' || !manifestPath || typeof resultsPath !== 'string' || !resultsPath) throw new TypeError('manifestPath and resultsPath are required');
   if (typeof executeRun !== 'function') throw new TypeError('executeRun must be a function');
   if (!Number.isInteger(maxRetainedResults) || maxRetainedResults < 0) throw new RangeError('maxRetainedResults must be a non-negative integer');
+  if (!Number.isInteger(concurrency) || concurrency < 1) throw new RangeError('concurrency must be a positive integer');
   validateBatchExperimentManifest(inputManifest);
   const saved = await readManifest(manifestPath);
   if (saved && !sameRunPlan(inputManifest, saved)) throw new Error('Saved batch plan does not match the requested experiment');
@@ -123,19 +124,9 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
   manifest = seal(manifest, runs);
   await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
-  for (let index = 0; index < runs.length; index++) {
-    let run = runs[index];
-    if (validCompleted.has(run.runId)) {
-      await onProgress?.({runId: run.runId, status: 'skipped-verified', index, total: runs.length});
-      continue;
-    }
-    run = {...run, status: 'running', outputs: {}, outputDigest: null, resultRef: null};
-    runs[index] = run;
-    manifest = seal(manifest, runs);
-    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-    await onProgress?.({runId: run.runId, status: 'running', index, total: runs.length});
-    try {
-      const outputs = await executeRun(run);
+  const completeRun = async (index, run, execution) => {
+    if (execution.status === 'fulfilled') {
+      const outputs = execution.value;
       const result = createExperimentResultRecord({runId: run.runId, outputs});
       await appendFile(resultsPath, `${JSON.stringify(result)}\n`);
       validCompleted.add(run.runId);
@@ -150,14 +141,84 @@ export async function runResumableBatch({manifestPath, resultsPath, errorsPath =
       manifest = seal(manifest, runs);
       await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
       await onProgress?.({runId: run.runId, status: 'completed', index, total: runs.length});
-    } catch (error) {
-      runs[index] = {...run, outputs: {}, status: 'failed', outputDigest: null, resultRef: null};
+      return;
+    }
+    const error = execution.reason;
+    runs[index] = {...run, outputs: {}, status: 'failed', outputDigest: null, resultRef: null};
+    manifest = seal(manifest, runs);
+    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await mkdir(dirname(resolve(errorsPath)), {recursive: true});
+    await appendFile(errorsPath, `${JSON.stringify({runId: run.runId, occurredAt: new Date().toISOString(), message: String(error?.message ?? error)})}\n`);
+    await onProgress?.({runId: run.runId, status: 'failed', index, total: runs.length});
+  };
+
+  if (concurrency > 1) {
+    // Keep execution isolated behind executeRun, while serializing all journal writes.
+    // A completed out-of-order result occupies a slot until its index can be committed,
+    // bounding both active work and retained result memory by `concurrency`.
+    const slots = new Map();
+    let nextLaunch = 0;
+    for (let index = 0; index < runs.length; index++) {
+      if (validCompleted.has(runs[index].runId)) {
+        await onProgress?.({runId: runs[index].runId, status: 'skipped-verified', index, total: runs.length});
+      }
+    }
+    const launch = async index => {
+      const run = {...runs[index], status: 'running', outputs: {}, outputDigest: null, resultRef: null};
+      runs[index] = run;
       manifest = seal(manifest, runs);
       await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-      await mkdir(dirname(resolve(errorsPath)), {recursive: true});
-      await appendFile(errorsPath, `${JSON.stringify({runId: run.runId, occurredAt: new Date().toISOString(), message: String(error?.message ?? error)})}\n`);
-      await onProgress?.({runId: run.runId, status: 'failed', index, total: runs.length});
+      await onProgress?.({runId: run.runId, status: 'running', index, total: runs.length});
+      if (signal?.aborted) {
+        runs[index] = {...run, status: 'planned', outputs: {}, outputDigest: null, resultRef: null};
+        manifest = seal(manifest, runs);
+        await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+        return;
+      }
+      slots.set(index, {run, promise: Promise.resolve().then(() => executeRun(run)).then(
+        value => ({status: 'fulfilled', value}), reason => ({status: 'rejected', reason}),
+      )});
+    };
+    const fill = async () => {
+      while (!signal?.aborted && slots.size < concurrency && nextLaunch < runs.length) {
+        const index = nextLaunch++;
+        if (validCompleted.has(runs[index].runId)) continue;
+        await launch(index);
+      }
+    };
+    await fill();
+    for (let index = 0; index < runs.length; index++) {
+      if (validCompleted.has(runs[index].runId)) continue;
+      const slot = slots.get(index);
+      if (!slot) {
+        if (runs[index].status === 'running') {
+          runs[index] = {...runs[index], status: 'planned', outputs: {}, outputDigest: null, resultRef: null};
+          manifest = seal(manifest, runs);
+          await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+        }
+        continue;
+      }
+      const execution = await slot.promise;
+      slots.delete(index);
+      await completeRun(index, slot.run, execution);
+      await fill();
     }
+  } else for (let index = 0; index < runs.length; index++) {
+    if (signal?.aborted) break;
+    let run = runs[index];
+    if (validCompleted.has(run.runId)) {
+      await onProgress?.({runId: run.runId, status: 'skipped-verified', index, total: runs.length});
+      continue;
+    }
+    run = {...run, status: 'running', outputs: {}, outputDigest: null, resultRef: null};
+    runs[index] = run;
+    manifest = seal(manifest, runs);
+    await atomicWrite(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    await onProgress?.({runId: run.runId, status: 'running', index, total: runs.length});
+    const execution = await Promise.resolve().then(() => executeRun(run)).then(
+      value => ({status: 'fulfilled', value}), reason => ({status: 'rejected', reason}),
+    );
+    await completeRun(index, run, execution);
   }
 
   manifest = validateBatchExperimentManifest(JSON.parse(await readFile(manifestPath, 'utf8')));

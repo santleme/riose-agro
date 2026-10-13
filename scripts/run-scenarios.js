@@ -7,6 +7,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {FarmEngine} from '../src/client/engine.js';
 import {createBatchExperimentManifest, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
+import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 
 const schemaPath = fileURLToPath(new URL('../schemas/scenario.schema.json', import.meta.url));
 const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
@@ -133,7 +134,11 @@ function resultFileName(file) {
   return file.replace(/\.json$/i, '.result.json');
 }
 
-export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory) {
+export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, {concurrency = 1, workerMemoryLimitMb, signal, workerPool: suppliedWorkerPool} = {}) {
+  if (!Number.isInteger(concurrency) || concurrency < 1) throw new RangeError('concurrency must be a positive integer');
+  if (concurrency > 1 && (!Number.isInteger(workerMemoryLimitMb) || workerMemoryLimitMb < 16)) {
+    throw new RangeError('concurrent scenario execution requires workerMemoryLimitMb of at least 16');
+  }
   const scenarioFiles = (await readdir(scenarioDirectory, {withFileTypes: true}))
     .filter(entry => entry.isFile() && entry.name.endsWith('.json') && !entry.name.endsWith('.result.json'))
     .map(entry => entry.name).sort();
@@ -179,7 +184,13 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
     description: 'Resumable execution journal for scripts/run-scenarios.js',
     runs: plans,
   });
-  const journal = await runResumableBatch({manifestPath, resultsPath, manifest, maxRetainedResults: 100, verifyCompletedRun: async run => {
+  if (suppliedWorkerPool && (concurrency < 2 || typeof suppliedWorkerPool.execute !== 'function' || suppliedWorkerPool.size !== concurrency)) {
+    throw new TypeError('workerPool must be a matching ScenarioWorkerPool for concurrency greater than 1');
+  }
+  const ownsPool = concurrency > 1 && !suppliedWorkerPool;
+  const pool = concurrency > 1 ? suppliedWorkerPool ?? new ScenarioWorkerPool(concurrency, {maxOldGenerationSizeMb: workerMemoryLimitMb}) : null;
+  let journal;
+  try { journal = await runResumableBatch({manifestPath, resultsPath, manifest, maxRetainedResults: 100, concurrency, signal, verifyCompletedRun: async run => {
     const resultPath = resolve(resultDirectory, resultFileName(scenarioByRunId.get(run.runId).file));
     try {
       const result = JSON.parse(await readFile(resultPath, 'utf8'));
@@ -188,7 +199,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   }, executeRun: async run => {
     const {file, scenario, source} = scenarioByRunId.get(run.runId);
     if (!scenario) throw new Error(`Invalid JSON in ${file}`);
-    const result = executeScenario(scenario);
+    const result = pool ? await pool.execute(scenario) : executeScenario(scenario);
     const resultPath = resolve(resultDirectory, resultFileName(file));
     await atomicWrite(resultPath, `${JSON.stringify(result, null, 2)}\n`);
     const output = {
@@ -200,7 +211,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
     if (metrics && Number.isFinite(metrics.weight)) output.weight = {value: metrics.weight, unit: 'kg/animal'};
     if (metrics && Number.isFinite(metrics.gain)) output.gain = {value: metrics.gain, unit: 'kg/animal'};
     return output;
-  }});
+  }}); } finally { if (ownsPool) await pool.close(); }
   return Promise.all(journal.manifest.runs.map(async run => {
     const file = scenarioByRunId.get(run.runId).file;
     if (run.status === 'completed') {
