@@ -148,7 +148,7 @@
     {
       "id": "dmi-adg-readiness-matrix",
       "source": "docs/evidence/dmi-adg-readiness-v1.json",
-      "decision": "The 20-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
+      "decision": "The 22-source matrix reports no eligible DMI source for the defined mature beef-pasture cow target; conditional sources are dairy, feedlot, or hay-feeding component datasets and are outside the pasture population scope.",
       "access": "mixed; assessed per source in the linked matrix",
       "license": "Assessed per source in the linked matrix and source manifests.",
       "populationFit": "No listed DMI candidate both matches the target population and provides the specified outcome. The SDSU beef-cow source is a hay-feeding experiment, not pasture DMI.",

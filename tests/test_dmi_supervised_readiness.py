@@ -25,6 +25,13 @@ class SupervisedReadinessReportTests(unittest.TestCase):
         self.assertEqual(matrix["ineligibleOrUnavailableSourcesForTarget"], 22)
         VALIDATOR.validate(self.report)
 
+    def test_human_readable_gate_report_matches_the_current_source_count(self):
+        markdown = (ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.md").read_text(encoding="utf-8")
+        self.assertIn("matriz de 22 fontes", markdown)
+        self.assertIn("22 ineligíveis ou indisponíveis", markdown)
+        candidate = next(item for item in self.report["candidateEvidence"] if item["id"] == "dmi-adg-readiness-matrix")
+        self.assertIn("22-source matrix", candidate["decision"])
+
     def test_target_counts_must_classify_every_reviewed_source(self):
         self.report["reviewedMatrix"]["ineligibleOrUnavailableSourcesForTarget"] -= 1
         with self.assertRaisesRegex(ValueError, "classify every reviewed source exactly once"):
