@@ -1,4 +1,5 @@
 import {performance} from 'node:perf_hooks';
+import {Worker} from 'node:worker_threads';
 import {readFile} from 'node:fs/promises';
 import {FarmEngine} from '../src/client/engine.js';
 import {encodeScenarioSnapshot} from '../src/client/scenario-storage.js';
@@ -11,8 +12,10 @@ const herds = (process.env.BENCH_MEMORY_HERDS ?? '100,1000,10000,100000').split(
 const repetitions = Number(process.env.BENCH_MEMORY_REPETITIONS ?? 3);
 const seed = 20261012;
 const tickHours = 24;
+const rssPollIntervalMs = Number(process.env.BENCH_MEMORY_RSS_POLL_MS ?? 2);
 const wasmUrl = new URL('../wasm/riose_core.wasm', import.meta.url);
 if (!Number.isInteger(repetitions) || repetitions < 1) throw new RangeError('BENCH_MEMORY_REPETITIONS must be a positive integer');
+if (!Number.isFinite(rssPollIntervalMs) || rssPollIntervalMs < 1) throw new RangeError('BENCH_MEMORY_RSS_POLL_MS must be at least 1');
 const wasmBytesFile = await readFile(wasmUrl);
 
 function loadBenchmarkWasm() {
@@ -44,6 +47,23 @@ function collect() {
   if (typeof global.gc === 'function') global.gc();
 }
 
+function startRssMonitor() {
+  const worker = new Worker(new URL('./benchmark-rss-monitor.js', import.meta.url), {workerData: {intervalMs: rssPollIntervalMs}});
+  return new Promise((resolve, reject) => {
+    worker.once('message', message => {
+      if (message.type !== 'ready') return reject(new Error('RSS monitor failed to initialize'));
+      resolve({stop: () => new Promise((resolveStop, rejectStop) => {
+        worker.once('message', result => result.type === 'stopped'
+          ? resolveStop(result)
+          : rejectStop(new Error('RSS monitor returned an invalid result')));
+        worker.once('error', rejectStop);
+        worker.postMessage({type: 'stop'});
+      })});
+    });
+    worker.once('error', reject);
+  });
+}
+
 function delta(after, before) {
   return Object.fromEntries(Object.keys(after).map(key => [
     key,
@@ -53,29 +73,43 @@ function delta(after, before) {
 
 async function observe(action, wasmBytes = () => null) {
   collect();
+  const rssMonitor = await startRssMonitor();
   const before = memorySample(wasmBytes());
   const started = performance.now();
-  await action();
-  const elapsedMs = performance.now() - started;
-  const observedAfterOperation = memorySample(wasmBytes());
-  collect();
-  const after = memorySample(wasmBytes());
-  return {
-    elapsedMs,
-    memory: {
-      bestAvailablePeakProxy: {
-        processRssHighWaterBytes: observedAfterOperation.rssProcessHighWaterBytes,
-        processRssBytesImmediatelyAfterOperation: observedAfterOperation.rssProcessBytes,
-        jsHeapUsedBytesImmediatelyAfterOperation: observedAfterOperation.jsHeapUsedBytes,
-        jsHeapPeakBytes: null,
-        note: 'Cumulative process high-water RSS; synchronous transient heap peaks are not observable in this harness.',
+  try {
+    await action();
+    const elapsedMs = performance.now() - started;
+    const observedAfterOperation = memorySample(wasmBytes());
+    const rss = await rssMonitor.stop();
+    collect();
+    const after = memorySample(wasmBytes());
+    const phasePeakRssBytes = Math.max(rss.peakRssBytes, before.rssProcessBytes);
+    const peakIncreaseBytes = Math.max(0, phasePeakRssBytes - before.rssProcessBytes);
+    return {
+      elapsedMs,
+      memory: {
+        bestAvailablePeakProxy: {
+          processRssHighWaterBytes: observedAfterOperation.rssProcessHighWaterBytes,
+          processRssBytesImmediatelyAfterOperation: observedAfterOperation.rssProcessBytes,
+          jsHeapUsedBytesImmediatelyAfterOperation: observedAfterOperation.jsHeapUsedBytes,
+          jsHeapPeakBytes: null,
+          processRssPeakObservedBytes: phasePeakRssBytes,
+          processRssObservedPeakIncreaseBytes: peakIncreaseBytes,
+          processRssSamples: rss.samples,
+          processRssPollIntervalMs: rss.intervalMs,
+          processRssMaxObservedPollGapMs: Number(rss.maxObservedPollGapMs.toFixed(3)),
+          note: 'Sampled whole-process RSS peak during this phase; includes the monitor thread and other live process memory, and may miss transients between polls. JS heap peak is unavailable.',
+        },
+        postGcRetainedDelta: delta(after, before),
+        before,
+        observedAfterOperation,
+        after,
       },
-      postGcRetainedDelta: delta(after, before),
-      before,
-      observedAfterOperation,
-      after,
-    },
-  };
+    };
+  } catch (error) {
+    await rssMonitor.stop();
+    throw error;
+  }
 }
 
 function makeWorkerView(engine, selectedAnimalId = 1) {
@@ -222,6 +256,8 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
     ['postGcRetainedArrayBuffersDelta', row => row.memory.postGcRetainedDelta.arrayBuffersBytes, 'bytes', true, 'process.memoryUsage().arrayBuffers before and after the phase, with global.gc() when available'],
     ['postGcRetainedWasmLinearMemoryDelta', row => row.memory.postGcRetainedDelta.wasmLinearMemoryBytes, 'bytes', true, 'WASM wrapper memoryBytes() before and after the phase, with global.gc() when available'],
     ['processRssHighWaterCumulative', row => row.memory.bestAvailablePeakProxy.processRssHighWaterBytes, 'bytes', false, 'process.resourceUsage().maxRSS cumulative process high-water mark; Node-reported KiB converted to bytes', 'process'],
+    ['processRssPeakObservedDuringPhase', row => row.memory.bestAvailablePeakProxy.processRssPeakObservedBytes, 'bytes', false, `max sampled process.memoryUsage().rss during this run and phase; independent Worker poll interval ${rssPollIntervalMs}ms`, 'process'],
+    ['processRssObservedPeakIncreaseDuringPhase', row => row.memory.bestAvailablePeakProxy.processRssObservedPeakIncreaseBytes, 'bytes', false, `nonnegative max sampled process RSS minus immediate pre-phase RSS; includes all live process memory and is not attributable allocation`, 'process'],
     ['processRssImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.processRssBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().rss sampled immediately after the phase', 'process'],
     ['jsHeapUsedImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.jsHeapUsedBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().heapUsed sampled immediately after the phase', 'process'],
     ['operationDuration', row => row.elapsedMs, 'ms', false, 'performance.now() around the phase operation'],
@@ -245,6 +281,13 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
       method: rows.at(-1).method,
     }));
   }
+  const peakIncreaseValues = rows.map(row => row.memory.bestAvailablePeakProxy.processRssObservedPeakIncreaseBytes).filter(Number.isFinite);
+  measurements[phase].push(measurement(phase, 'processRssObservedPeakIncreaseDuringPhasePerAnimal', 'bytes/animal', summarizeSamples(peakIncreaseValues.map(value => value / population)), {
+    population: measurementPopulation, scope,
+    source: `scripts/benchmark-memory.mjs sampled process RSS peak increase over each run's pre-phase baseline divided by ${population} animals; process-wide lower-bound proxy, not attributable memory`,
+    observations: peakIncreaseValues.map(value => value / population), normalizedFrom: 'processRssObservedPeakIncreaseDuringPhase',
+    method: rows.at(-1).method,
+  }));
   const payloadFields = Object.keys(rows.at(-1).payloadBytes ?? {});
   for (const field of payloadFields) {
     const values = rows.map(row => row.payloadBytes?.[field]).filter(Number.isFinite);
@@ -287,16 +330,16 @@ console.log(JSON.stringify(benchmarkReport({
   configuration: {warmupRuns: 0, repetitions, gc: typeof global.gc === 'function' ? 'forced before/after phase' : 'unavailable; run with --expose-gc'},
   phases: Object.fromEntries(phaseNames.map(phase => [phase, {status: measurements[phase].length ? 'measured' : 'not-measured', measurements: measurements[phase]}])),
   timingBoundaries:[
-    {phase:'startup',timed:['FarmEngine construction.'],notTimed:['Worker/browser startup.']},
-    {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['Full snapshot and renderer.']},
-    {phase:'snapshot',timed:['Full FarmEngine snapshot clone.'],notTimed:['JSON serialization and compression.']},
-    {phase:'serialization',timed:['Existing gzip-plus-base64 encoder and a representative single-scenario localStorage JSON envelope serialization.'],notTimed:['Actual browser localStorage writes and quota measurement.']},
-    {phase:'worker',timed:['Node-side construction of the packed Worker view projection.'],notTimed:['Actual browser Worker transport, renderer and GPU work.']},
+    {phase:'startup',timed:['FarmEngine construction.'],notTimed:['RSS monitor Worker startup and shutdown; browser startup.']},
+    {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['RSS monitor Worker startup and shutdown; full snapshot and renderer.']},
+    {phase:'snapshot',timed:['Full FarmEngine snapshot clone.'],notTimed:['RSS monitor Worker startup and shutdown; JSON serialization and compression.']},
+    {phase:'serialization',timed:['Existing gzip-plus-base64 encoder and a representative single-scenario localStorage JSON envelope serialization.'],notTimed:['RSS monitor Worker startup and shutdown; actual browser localStorage writes and quota measurement.']},
+    {phase:'worker',timed:['Node-side construction of the packed Worker view projection.'],notTimed:['RSS monitor Worker startup and shutdown; actual browser Worker transport, renderer and GPU work.']},
   ],
   results: {samples: allResults, memoryFields: ['jsHeapUsedBytes', 'externalBytes', 'arrayBuffersBytes', 'rssProcessBytes', 'rssProcessHighWaterBytes', 'wasmLinearMemoryBytes', 'gpuMemoryBytes']},
   limitations: [
     'RSS is a process-level measurement and is not attributed to FarmEngine, WASM, or an individual herd phase.',
-    'process.resourceUsage().maxRSS is a cumulative process high-water mark, not a per-phase peak; synchronous transient JS heap peaks and allocation counts are unavailable here.',
+    `process.resourceUsage().maxRSS remains a cumulative process high-water mark. A separate Worker samples whole-process RSS every ${rssPollIntervalMs}ms during each phase and records per-run peak and increase over that phase's pre-operation baseline. It includes the monitor thread and all live process memory and can miss short transients between polls; synchronous transient JS-heap peaks and allocation counts are unavailable here.`,
     'Post-GC retained deltas are measured after forced GC when available; without --expose-gc they are observational deltas, not retained-memory estimates.',
     'WASM linear memory is reported separately from JS ArrayBuffer and heap fields; GPU memory is null because this Node harness has no GPU memory instrumentation.',
     'Worker view reports the current packed projection and transferable payload sizes in Node; it does not measure browser Worker transport, renderer, or GPU allocations.',

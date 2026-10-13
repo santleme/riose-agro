@@ -114,6 +114,13 @@ test('incomplete runs and invalid output envelopes are handled explicitly', () =
   assert.throws(() => summarizeReplicates([{runId: 'r1', status: 'completed', outputs: {weight: {value: 2}}}], {outputs: ['weight']}), /value and unit/);
 });
 
+test('grouping rejects non-JSON values that could collapse to the same provenance key', () => {
+  assert.throws(() => summarizeReplicates([
+    {runId: 'empty-array', status: 'completed', inputs: {site: {value: [], unit: 'category'}}, outputs: {}},
+    {runId: 'undefined-array-item', status: 'completed', inputs: {site: {value: [undefined], unit: 'category'}}, outputs: {}},
+  ], {groupBy: ['site']}), /Canonical JSON cannot encode undefined/);
+});
+
 test('manifest linked summaries verify digests and aggregate only completed numeric outputs', () => {
   const outputs = {weight: {value: 400, unit: 'kg/animal'}, passed: {value: true, unit: 'boolean'}};
   const completed = {

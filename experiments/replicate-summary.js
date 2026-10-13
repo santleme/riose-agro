@@ -1,8 +1,4 @@
-const canonical = value => {
-  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
-  if (value && typeof value === 'object') return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`;
-  return JSON.stringify(value);
-};
+import {canonicalJson} from './batch-manifest.js';
 
 function outputValue(record, name) {
   const value = record.outputs?.[name];
@@ -111,7 +107,10 @@ export function summarizeReplicates(records, {groupBy = [], outputs} = {}) {
     if (runIds.has(record.runId)) throw new TypeError(`Duplicate runId ${record.runId}`);
     runIds.add(record.runId);
     const grouping = Object.fromEntries(groupBy.map(field => [field, record.inputs?.[field] ?? null]));
-    const key = canonical(grouping);
+    // Group identity must use the same strict canonical JSON rules as the
+    // manifest and result digests. Permissive JSON.stringify-style encoding
+    // can collapse distinct non-JSON values (for example [] and [undefined]).
+    const key = canonicalJson(grouping);
     let group = groups.get(key);
     if (!group) {
       group = {grouping, rows: [], failedIds: [], incompleteIds: []};
