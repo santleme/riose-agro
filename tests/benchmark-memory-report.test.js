@@ -81,4 +81,13 @@ test('memory harness emits schema-valid repeated phase peak evidence for a small
   assert.deepEqual(engineMetric.observations, herd.runs.map(run => run.engine.memory.bestAvailablePeakProxy.processRssObservedPeakIncreaseBytes / 100));
   assert.equal(report.results.memoryFields.includes('gpuMemoryBytes'), true);
   assert.equal(report.hardware.gpuMemoryBytes, null);
+  for (const [metric, memoryType] of [
+    ['postGcRetainedExternalDelta', 'v8-external-memory'],
+    ['postGcRetainedExternalDeltaPerAnimal', 'v8-external-memory'],
+    ['postGcRetainedArrayBuffersDelta', 'arraybuffer-memory'],
+    ['postGcRetainedArrayBuffersDeltaPerAnimal', 'arraybuffer-memory'],
+  ]) {
+    const measurement = Object.values(report.phases).flatMap(phase => phase.measurements).find(item => item.metric === metric);
+    assert.equal(measurement?.memoryType, memoryType);
+  }
 });

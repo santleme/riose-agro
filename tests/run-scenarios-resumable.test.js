@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {digestResultRecordBytes} from '../experiments/batch-manifest.js';
+import {digestResultRecordBytes, sha256Digest} from '../experiments/batch-manifest.js';
 import {runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
 import {executeScenario} from '../scripts/run-scenarios.js';
 import {ScenarioWorkerPool} from '../scripts/scenario-worker-pool.js';
+import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
 
 test('scenario directory runner resumes verified records and reruns a corrupt per-scenario result', async t => {
   const root = await mkdtemp(join(tmpdir(), 'riose-scenario-resume-'));
@@ -27,10 +28,14 @@ test('scenario directory runner resumes verified records and reruns a corrupt pe
   const manifestPath = join(results, 'batch-manifest.json');
   const resultJournalPath = join(results, 'batch-results.jsonl');
   const manifestBefore = JSON.parse(await readFile(manifestPath, 'utf8'));
+  const engineSources = Object.fromEntries(await Promise.all(ENGINE_SOURCE_FILES.map(async name => [
+    name, await readFile(new URL(`../src/client/${name}`, import.meta.url), 'utf8'),
+  ])));
   assert.equal(manifestBefore.runs[0].scenarioFormat, 'riose-scenario-harness');
   assert.equal(manifestBefore.runs[0].scenarioVersion, 1);
   assert.equal(manifestBefore.runs[0].scenarioId, 'baseline-pasture');
   assert.equal(manifestBefore.runs[0].scenarioRef, 'baseline.json');
+  assert.equal(manifestBefore.runs[0].engine.buildDigest, sha256Digest(engineSources));
   assert.deepEqual(manifestBefore.runs[0].models, []);
   assert.equal(manifestBefore.runs[0].resultDigest, digestResultRecordBytes((await readFile(resultJournalPath, 'utf8')).split('\n')[0]));
   await runScenarioDirectoryResumable(scenarios, results);

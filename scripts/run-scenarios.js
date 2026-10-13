@@ -5,6 +5,7 @@ import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {FarmEngine} from '../src/client/engine.js';
+import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
 import {createBatchExperimentManifest, sha256Digest} from '../experiments/batch-manifest.js';
 import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
 import {runResumableBatch} from '../experiments/resumable-journal.js';
@@ -145,7 +146,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
     .map(entry => entry.name).sort();
   if (scenarioFiles.length === 0) throw new Error(`No scenario JSON files found in ${scenarioDirectory}`);
   await mkdir(resultDirectory, {recursive: true});
-  const engineSourceFiles = ['engine.js', 'metabolism-wasm.js', 'environment-model.js', 'feeding-model.js'];
+  const engineSourceFiles = ENGINE_SOURCE_FILES;
   const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
     name, await readFile(fileURLToPath(new URL(`../src/client/${name}`, import.meta.url)), 'utf8'),
   ])));

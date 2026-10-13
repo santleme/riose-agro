@@ -22,9 +22,8 @@ function oneRun() {
   const tickStarted = performance.now(); engine.tick(hours, undefined, false); const tickMs = performance.now() - tickStarted;
   collect(); const retained = sampleMemory();
   const snapshotStarted = performance.now(), rawSnapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
-  // Compare domain state only: FarmEngine keeps compatibility coordinates in its
-  // legacy snapshot, while ColumnHistoryEngine already exposes separated state.
-  const snapshot = variant === 'objectRing' ? separateLegacySnapshot(rawSnapshot).state : rawSnapshot;
+  // Both engines expose the legacy snapshot shape; compare domain state only.
+  const snapshot = separateLegacySnapshot(rawSnapshot).state;
   const digest = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
   const historyEntries = snapshot.animals.reduce((sum, animal) => sum + animal.history.length, 0);
   collect(); const materialized = sampleMemory();
