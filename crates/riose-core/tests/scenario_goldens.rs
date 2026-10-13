@@ -42,9 +42,10 @@ fn native_baseline_matches_the_official_seed_417_24_hour_golden_exactly() {
         &golden["output"]["state"],
         "baseline state",
     );
-    assert_eq!(
-        serde_json::to_value(metrics).unwrap(),
-        golden["output"]["metrics"]
+    assert_exact_json(
+        &serde_json::to_value(metrics).unwrap(),
+        &golden["output"]["metrics"],
+        "baseline metrics",
     );
 }
 
@@ -93,9 +94,10 @@ fn native_housing_comparison_matches_the_official_seed_2026_30_day_golden_exactl
         engine.configure(config).unwrap();
         engine.tick(days_in_hours).unwrap();
         let actual = endpoint_projection(&engine);
-        assert_eq!(
-            actual, golden["endpoints"][arm],
-            "{arm} endpoint must match the official golden"
+        assert_exact_json(
+            &actual,
+            &golden["endpoints"][arm],
+            &format!("{arm} endpoint"),
         );
     }
 }
