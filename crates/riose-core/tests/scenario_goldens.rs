@@ -150,9 +150,7 @@ fn endpoint_projection(engine: &FarmEngine) -> Value {
 
 fn assert_exact_json(actual: &Value, expected: &Value, path: &str) {
     if actual == expected
-        || (actual.is_number()
-            && expected.is_number()
-            && actual.as_f64() == expected.as_f64())
+        || (actual.is_number() && expected.is_number() && actual.as_f64() == expected.as_f64())
     {
         return;
     }

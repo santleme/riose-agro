@@ -50,6 +50,13 @@ jobs:
       - name: Build WASM from Rust sources
         run: npm run build:wasm
 
+      - name: Capture rebuilt WASM for parity review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: riose-core-wasm
+          path: wasm/riose_core.wasm
+          retention-days: 1
+
       - name: Check committed WASM artifact freshness
         run: git diff --exit-code -- wasm/riose_core.wasm
 
