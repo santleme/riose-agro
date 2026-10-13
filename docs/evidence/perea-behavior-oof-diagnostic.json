@@ -1,0 +1,2237 @@
+{
+  "kind": "diagnostic_only_existing_oof_no_model_fit",
+  "source": {
+    "datasetDoi": "10.6084/m9.figshare.28801181.v2",
+    "datasetUrl": "https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181",
+    "articleDoi": "10.1016/j.atech.2025.101002",
+    "feature": "single 1-minute scalar motion index MI; raw X/Y/Z accelerometer axes are not in this source table",
+    "target": "human-reviewed GR, RE, RU, WA behavior labels",
+    "classLabelProtocol": "One-minute labels; class assigned at >=30 seconds, otherwise previous label carried forward.",
+    "citations": [
+      "https://doi.org/10.6084/m9.figshare.28801181.v2",
+      "https://doi.org/10.1016/j.atech.2025.101002"
+    ]
+  },
+  "oofCoverage": {
+    "rows": 8864,
+    "animals": 24,
+    "folds": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "modelColumn": "behavior_oof_logistic",
+    "labelColumn": "behavior_observed",
+    "note": "This file is the frozen grouped-by-animal OOF output; this diagnostic does not retrain, tune, or change its predictions."
+  },
+  "classFailureRates": {
+    "perClass": {
+      "GR": {
+        "support": 3828,
+        "correct": 3171,
+        "errors": 657,
+        "errorRate": 0.17163009404388715,
+        "precision": 0.9207317073170732,
+        "recall": 0.8283699059561128,
+        "f1": 0.8721122112211221,
+        "predictedAs": {
+          "GR": 3171,
+          "RE": 347,
+          "RU": 2,
+          "WA": 308
+        }
+      },
+      "RE": {
+        "support": 1898,
+        "correct": 484,
+        "errors": 1414,
+        "errorRate": 0.7449947312961012,
+        "precision": 0.506806282722513,
+        "recall": 0.25500526870389884,
+        "f1": 0.33929197336137396,
+        "predictedAs": {
+          "GR": 151,
+          "RE": 484,
+          "RU": 1258,
+          "WA": 5
+        }
+      },
+      "RU": {
+        "support": 921,
+        "correct": 773,
+        "errors": 148,
+        "errorRate": 0.16069489685124863,
+        "precision": 0.38022626660108216,
+        "recall": 0.8393051031487514,
+        "f1": 0.5233581584292485,
+        "predictedAs": {
+          "GR": 24,
+          "RE": 124,
+          "RU": 773,
+          "WA": 0
+        }
+      },
+      "WA": {
+        "support": 2217,
+        "correct": 2119,
+        "errors": 98,
+        "errorRate": 0.04420387911592242,
+        "precision": 0.8712993421052632,
+        "recall": 0.9557961208840776,
+        "f1": 0.9115938911593892,
+        "predictedAs": {
+          "GR": 98,
+          "RE": 0,
+          "RU": 0,
+          "WA": 2119
+        }
+      }
+    },
+    "matrixActualRowsPredictedColumns": {
+      "GR": {
+        "GR": 3171,
+        "RE": 347,
+        "WA": 308,
+        "RU": 2
+      },
+      "RE": {
+        "RU": 1258,
+        "RE": 484,
+        "GR": 151,
+        "WA": 5
+      },
+      "RU": {
+        "RU": 773,
+        "RE": 124,
+        "GR": 24
+      },
+      "WA": {
+        "WA": 2119,
+        "GR": 98
+      }
+    }
+  },
+  "byBreed": {
+    "AH": {
+      "records": 2206,
+      "perClass": {
+        "GR": {
+          "support": 924,
+          "correct": 741,
+          "errors": 183,
+          "errorRate": 0.19805194805194806,
+          "precision": 0.9227895392278954,
+          "recall": 0.801948051948052,
+          "f1": 0.8581354950781702,
+          "predictedAs": {
+            "GR": 741,
+            "RE": 172,
+            "RU": 0,
+            "WA": 11
+          }
+        },
+        "RE": {
+          "support": 571,
+          "correct": 171,
+          "errors": 400,
+          "errorRate": 0.7005253940455342,
+          "precision": 0.4697802197802198,
+          "recall": 0.29947460595446584,
+          "f1": 0.3657754010695187,
+          "predictedAs": {
+            "GR": 34,
+            "RE": 171,
+            "RU": 366,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 218,
+          "correct": 197,
+          "errors": 21,
+          "errorRate": 0.0963302752293578,
+          "precision": 0.34991119005328597,
+          "recall": 0.9036697247706422,
+          "f1": 0.5044814340588989,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 21,
+            "RU": 197,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 493,
+          "correct": 465,
+          "errors": 28,
+          "errorRate": 0.056795131845841784,
+          "precision": 0.976890756302521,
+          "recall": 0.9432048681541582,
+          "f1": 0.959752321981424,
+          "predictedAs": {
+            "GR": 28,
+            "RE": 0,
+            "RU": 0,
+            "WA": 465
+          }
+        }
+      },
+      "matrixActualRowsPredictedColumns": {
+        "GR": {
+          "GR": 741,
+          "RE": 172,
+          "WA": 11
+        },
+        "RE": {
+          "RU": 366,
+          "RE": 171,
+          "GR": 34
+        },
+        "RU": {
+          "RU": 197,
+          "RE": 21
+        },
+        "WA": {
+          "WA": 465,
+          "GR": 28
+        }
+      }
+    },
+    "BH": {
+      "records": 1980,
+      "perClass": {
+        "GR": {
+          "support": 862,
+          "correct": 777,
+          "errors": 85,
+          "errorRate": 0.09860788863109049,
+          "precision": 0.9688279301745636,
+          "recall": 0.9013921113689095,
+          "f1": 0.9338942307692307,
+          "predictedAs": {
+            "GR": 777,
+            "RE": 56,
+            "RU": 0,
+            "WA": 29
+          }
+        },
+        "RE": {
+          "support": 354,
+          "correct": 101,
+          "errors": 253,
+          "errorRate": 0.7146892655367232,
+          "precision": 0.517948717948718,
+          "recall": 0.2853107344632768,
+          "f1": 0.36794171220400734,
+          "predictedAs": {
+            "GR": 11,
+            "RE": 101,
+            "RU": 242,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 192,
+          "correct": 140,
+          "errors": 52,
+          "errorRate": 0.2708333333333333,
+          "precision": 0.36649214659685864,
+          "recall": 0.7291666666666666,
+          "f1": 0.4878048780487805,
+          "predictedAs": {
+            "GR": 14,
+            "RE": 38,
+            "RU": 140,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 572,
+          "correct": 572,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9517470881863561,
+          "recall": 1.0,
+          "f1": 0.9752770673486786,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 572
+          }
+        }
+      },
+      "matrixActualRowsPredictedColumns": {
+        "GR": {
+          "GR": 777,
+          "WA": 29,
+          "RE": 56
+        },
+        "RE": {
+          "RE": 101,
+          "GR": 11,
+          "RU": 242
+        },
+        "RU": {
+          "RU": 140,
+          "RE": 38,
+          "GR": 14
+        },
+        "WA": {
+          "WA": 572
+        }
+      }
+    },
+    "BR": {
+      "records": 2118,
+      "perClass": {
+        "GR": {
+          "support": 908,
+          "correct": 770,
+          "errors": 138,
+          "errorRate": 0.15198237885462554,
+          "precision": 0.8641975308641975,
+          "recall": 0.8480176211453745,
+          "f1": 0.8560311284046691,
+          "predictedAs": {
+            "GR": 770,
+            "RE": 93,
+            "RU": 1,
+            "WA": 44
+          }
+        },
+        "RE": {
+          "support": 473,
+          "correct": 96,
+          "errors": 377,
+          "errorRate": 0.7970401691331924,
+          "precision": 0.4192139737991266,
+          "recall": 0.2029598308668076,
+          "f1": 0.27350427350427353,
+          "predictedAs": {
+            "GR": 72,
+            "RE": 96,
+            "RU": 304,
+            "WA": 1
+          }
+        },
+        "RU": {
+          "support": 276,
+          "correct": 230,
+          "errors": 46,
+          "errorRate": 0.16666666666666666,
+          "precision": 0.42990654205607476,
+          "recall": 0.8333333333333334,
+          "f1": 0.5672009864364982,
+          "predictedAs": {
+            "GR": 6,
+            "RE": 40,
+            "RU": 230,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 461,
+          "correct": 418,
+          "errors": 43,
+          "errorRate": 0.09327548806941431,
+          "precision": 0.9028077753779697,
+          "recall": 0.9067245119305857,
+          "f1": 0.9047619047619047,
+          "predictedAs": {
+            "GR": 43,
+            "RE": 0,
+            "RU": 0,
+            "WA": 418
+          }
+        }
+      },
+      "matrixActualRowsPredictedColumns": {
+        "GR": {
+          "GR": 770,
+          "WA": 44,
+          "RE": 93,
+          "RU": 1
+        },
+        "RE": {
+          "RU": 304,
+          "RE": 96,
+          "GR": 72,
+          "WA": 1
+        },
+        "RU": {
+          "RU": 230,
+          "GR": 6,
+          "RE": 40
+        },
+        "WA": {
+          "WA": 418,
+          "GR": 43
+        }
+      }
+    },
+    "RC": {
+      "records": 2560,
+      "perClass": {
+        "GR": {
+          "support": 1134,
+          "correct": 883,
+          "errors": 251,
+          "errorRate": 0.22134038800705466,
+          "precision": 0.9314345991561181,
+          "recall": 0.7786596119929453,
+          "f1": 0.8482228626320847,
+          "predictedAs": {
+            "GR": 883,
+            "RE": 26,
+            "RU": 1,
+            "WA": 224
+          }
+        },
+        "RE": {
+          "support": 500,
+          "correct": 116,
+          "errors": 384,
+          "errorRate": 0.768,
+          "precision": 0.6946107784431138,
+          "recall": 0.232,
+          "f1": 0.34782608695652173,
+          "predictedAs": {
+            "GR": 34,
+            "RE": 116,
+            "RU": 346,
+            "WA": 4
+          }
+        },
+        "RU": {
+          "support": 235,
+          "correct": 206,
+          "errors": 29,
+          "errorRate": 0.12340425531914893,
+          "precision": 0.37251356238698013,
+          "recall": 0.8765957446808511,
+          "f1": 0.5228426395939088,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 25,
+            "RU": 206,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 691,
+          "correct": 664,
+          "errors": 27,
+          "errorRate": 0.03907380607814761,
+          "precision": 0.7443946188340808,
+          "recall": 0.9609261939218524,
+          "f1": 0.8389134554643083,
+          "predictedAs": {
+            "GR": 27,
+            "RE": 0,
+            "RU": 0,
+            "WA": 664
+          }
+        }
+      },
+      "matrixActualRowsPredictedColumns": {
+        "GR": {
+          "GR": 883,
+          "RE": 26,
+          "WA": 224,
+          "RU": 1
+        },
+        "RE": {
+          "GR": 34,
+          "RE": 116,
+          "WA": 4,
+          "RU": 346
+        },
+        "RU": {
+          "RU": 206,
+          "RE": 25,
+          "GR": 4
+        },
+        "WA": {
+          "WA": 664,
+          "GR": 27
+        }
+      }
+    }
+  },
+  "byAnimal": {
+    "AH:2003": {
+      "records": 441,
+      "recordAccuracy": 0.7233560090702947,
+      "classMetrics": {
+        "GR": {
+          "support": 191,
+          "correct": 152,
+          "errors": 39,
+          "errorRate": 0.20418848167539266,
+          "precision": 0.9743589743589743,
+          "recall": 0.7958115183246073,
+          "f1": 0.8760806916426511,
+          "predictedAs": {
+            "GR": 152,
+            "RE": 36,
+            "RU": 0,
+            "WA": 3
+          }
+        },
+        "RE": {
+          "support": 133,
+          "correct": 54,
+          "errors": 79,
+          "errorRate": 0.5939849624060151,
+          "precision": 0.6,
+          "recall": 0.40601503759398494,
+          "f1": 0.48430493273542596,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 54,
+            "RU": 79,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 48,
+          "correct": 48,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.3779527559055118,
+          "recall": 1.0,
+          "f1": 0.5485714285714286,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 48,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 69,
+          "correct": 65,
+          "errors": 4,
+          "errorRate": 0.057971014492753624,
+          "precision": 0.9558823529411765,
+          "recall": 0.9420289855072463,
+          "f1": 0.9489051094890512,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 0,
+            "RU": 0,
+            "WA": 65
+          }
+        }
+      }
+    },
+    "AH:2004": {
+      "records": 359,
+      "recordAccuracy": 0.6991643454038997,
+      "classMetrics": {
+        "GR": {
+          "support": 189,
+          "correct": 145,
+          "errors": 44,
+          "errorRate": 0.2328042328042328,
+          "precision": 0.9415584415584416,
+          "recall": 0.7671957671957672,
+          "f1": 0.8454810495626822,
+          "predictedAs": {
+            "GR": 145,
+            "RE": 44,
+            "RU": 0,
+            "WA": 0
+          }
+        },
+        "RE": {
+          "support": 93,
+          "correct": 40,
+          "errors": 53,
+          "errorRate": 0.5698924731182796,
+          "precision": 0.45977011494252873,
+          "recall": 0.43010752688172044,
+          "f1": 0.4444444444444445,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 40,
+            "RU": 52,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 16,
+          "correct": 13,
+          "errors": 3,
+          "errorRate": 0.1875,
+          "precision": 0.2,
+          "recall": 0.8125,
+          "f1": 0.3209876543209877,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 3,
+            "RU": 13,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 61,
+          "correct": 53,
+          "errors": 8,
+          "errorRate": 0.13114754098360656,
+          "precision": 1.0,
+          "recall": 0.8688524590163934,
+          "f1": 0.9298245614035088,
+          "predictedAs": {
+            "GR": 8,
+            "RE": 0,
+            "RU": 0,
+            "WA": 53
+          }
+        }
+      }
+    },
+    "AH:2008": {
+      "records": 311,
+      "recordAccuracy": 0.707395498392283,
+      "classMetrics": {
+        "GR": {
+          "support": 150,
+          "correct": 118,
+          "errors": 32,
+          "errorRate": 0.21333333333333335,
+          "precision": 0.8740740740740741,
+          "recall": 0.7866666666666666,
+          "f1": 0.8280701754385965,
+          "predictedAs": {
+            "GR": 118,
+            "RE": 31,
+            "RU": 0,
+            "WA": 1
+          }
+        },
+        "RE": {
+          "support": 75,
+          "correct": 22,
+          "errors": 53,
+          "errorRate": 0.7066666666666667,
+          "precision": 0.38596491228070173,
+          "recall": 0.29333333333333333,
+          "f1": 0.3333333333333333,
+          "predictedAs": {
+            "GR": 15,
+            "RE": 22,
+            "RU": 38,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 17,
+          "correct": 13,
+          "errors": 4,
+          "errorRate": 0.23529411764705882,
+          "precision": 0.2549019607843137,
+          "recall": 0.7647058823529411,
+          "f1": 0.38235294117647056,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 4,
+            "RU": 13,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 69,
+          "correct": 67,
+          "errors": 2,
+          "errorRate": 0.028985507246376812,
+          "precision": 0.9852941176470589,
+          "recall": 0.9710144927536232,
+          "f1": 0.9781021897810219,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 0,
+            "RU": 0,
+            "WA": 67
+          }
+        }
+      }
+    },
+    "AH:2009": {
+      "records": 382,
+      "recordAccuracy": 0.6989528795811518,
+      "classMetrics": {
+        "GR": {
+          "support": 134,
+          "correct": 125,
+          "errors": 9,
+          "errorRate": 0.06716417910447761,
+          "precision": 0.8992805755395683,
+          "recall": 0.9328358208955224,
+          "f1": 0.9157509157509158,
+          "predictedAs": {
+            "GR": 125,
+            "RE": 5,
+            "RU": 0,
+            "WA": 4
+          }
+        },
+        "RE": {
+          "support": 127,
+          "correct": 29,
+          "errors": 98,
+          "errorRate": 0.7716535433070866,
+          "precision": 0.7435897435897436,
+          "recall": 0.2283464566929134,
+          "f1": 0.3493975903614458,
+          "predictedAs": {
+            "GR": 11,
+            "RE": 29,
+            "RU": 87,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 50,
+          "correct": 45,
+          "errors": 5,
+          "errorRate": 0.1,
+          "precision": 0.3409090909090909,
+          "recall": 0.9,
+          "f1": 0.49450549450549447,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 5,
+            "RU": 45,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 71,
+          "correct": 68,
+          "errors": 3,
+          "errorRate": 0.04225352112676056,
+          "precision": 0.9444444444444444,
+          "recall": 0.9577464788732394,
+          "f1": 0.951048951048951,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 0,
+            "RU": 0,
+            "WA": 68
+          }
+        }
+      }
+    },
+    "AH:2013": {
+      "records": 333,
+      "recordAccuracy": 0.6636636636636637,
+      "classMetrics": {
+        "GR": {
+          "support": 137,
+          "correct": 90,
+          "errors": 47,
+          "errorRate": 0.34306569343065696,
+          "precision": 0.9183673469387755,
+          "recall": 0.656934306569343,
+          "f1": 0.7659574468085106,
+          "predictedAs": {
+            "GR": 90,
+            "RE": 46,
+            "RU": 0,
+            "WA": 1
+          }
+        },
+        "RE": {
+          "support": 76,
+          "correct": 21,
+          "errors": 55,
+          "errorRate": 0.7236842105263158,
+          "precision": 0.2876712328767123,
+          "recall": 0.27631578947368424,
+          "f1": 0.2818791946308725,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 21,
+            "RU": 51,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 41,
+          "correct": 35,
+          "errors": 6,
+          "errorRate": 0.14634146341463414,
+          "precision": 0.4069767441860465,
+          "recall": 0.8536585365853658,
+          "f1": 0.5511811023622047,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 6,
+            "RU": 35,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 79,
+          "correct": 75,
+          "errors": 4,
+          "errorRate": 0.05063291139240506,
+          "precision": 0.9868421052631579,
+          "recall": 0.9493670886075949,
+          "f1": 0.967741935483871,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 0,
+            "RU": 0,
+            "WA": 75
+          }
+        }
+      }
+    },
+    "AH:2019": {
+      "records": 380,
+      "recordAccuracy": 0.7789473684210526,
+      "classMetrics": {
+        "GR": {
+          "support": 123,
+          "correct": 111,
+          "errors": 12,
+          "errorRate": 0.0975609756097561,
+          "precision": 0.9173553719008265,
+          "recall": 0.9024390243902439,
+          "f1": 0.9098360655737705,
+          "predictedAs": {
+            "GR": 111,
+            "RE": 10,
+            "RU": 0,
+            "WA": 2
+          }
+        },
+        "RE": {
+          "support": 67,
+          "correct": 5,
+          "errors": 62,
+          "errorRate": 0.9253731343283582,
+          "precision": 0.2777777777777778,
+          "recall": 0.07462686567164178,
+          "f1": 0.11764705882352941,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 5,
+            "RU": 59,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 46,
+          "correct": 43,
+          "errors": 3,
+          "errorRate": 0.06521739130434782,
+          "precision": 0.4215686274509804,
+          "recall": 0.9347826086956522,
+          "f1": 0.581081081081081,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 3,
+            "RU": 43,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 144,
+          "correct": 137,
+          "errors": 7,
+          "errorRate": 0.04861111111111111,
+          "precision": 0.9856115107913669,
+          "recall": 0.9513888888888888,
+          "f1": 0.9681978798586571,
+          "predictedAs": {
+            "GR": 7,
+            "RE": 0,
+            "RU": 0,
+            "WA": 137
+          }
+        }
+      }
+    },
+    "BH:4071": {
+      "records": 349,
+      "recordAccuracy": 0.7621776504297995,
+      "classMetrics": {
+        "GR": {
+          "support": 159,
+          "correct": 143,
+          "errors": 16,
+          "errorRate": 0.10062893081761007,
+          "precision": 0.959731543624161,
+          "recall": 0.89937106918239,
+          "f1": 0.9285714285714286,
+          "predictedAs": {
+            "GR": 143,
+            "RE": 6,
+            "RU": 0,
+            "WA": 10
+          }
+        },
+        "RE": {
+          "support": 65,
+          "correct": 7,
+          "errors": 58,
+          "errorRate": 0.8923076923076924,
+          "precision": 0.3684210526315789,
+          "recall": 0.1076923076923077,
+          "f1": 0.16666666666666669,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 7,
+            "RU": 55,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 32,
+          "correct": 23,
+          "errors": 9,
+          "errorRate": 0.28125,
+          "precision": 0.2948717948717949,
+          "recall": 0.71875,
+          "f1": 0.41818181818181815,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 6,
+            "RU": 23,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 93,
+          "correct": 93,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9029126213592233,
+          "recall": 1.0,
+          "f1": 0.9489795918367347,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 93
+          }
+        }
+      }
+    },
+    "BH:4085": {
+      "records": 365,
+      "recordAccuracy": 0.8356164383561644,
+      "classMetrics": {
+        "GR": {
+          "support": 198,
+          "correct": 171,
+          "errors": 27,
+          "errorRate": 0.13636363636363635,
+          "precision": 0.9771428571428571,
+          "recall": 0.8636363636363636,
+          "f1": 0.9168900804289544,
+          "predictedAs": {
+            "GR": 171,
+            "RE": 24,
+            "RU": 0,
+            "WA": 3
+          }
+        },
+        "RE": {
+          "support": 42,
+          "correct": 11,
+          "errors": 31,
+          "errorRate": 0.7380952380952381,
+          "precision": 0.2972972972972973,
+          "recall": 0.2619047619047619,
+          "f1": 0.27848101265822783,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 11,
+            "RU": 27,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 31,
+          "correct": 29,
+          "errors": 2,
+          "errorRate": 0.06451612903225806,
+          "precision": 0.5178571428571429,
+          "recall": 0.9354838709677419,
+          "f1": 0.6666666666666666,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 2,
+            "RU": 29,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 94,
+          "correct": 94,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9690721649484536,
+          "recall": 1.0,
+          "f1": 0.9842931937172774,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 94
+          }
+        }
+      }
+    },
+    "BH:4511": {
+      "records": 298,
+      "recordAccuracy": 0.7818791946308725,
+      "classMetrics": {
+        "GR": {
+          "support": 112,
+          "correct": 101,
+          "errors": 11,
+          "errorRate": 0.09821428571428571,
+          "precision": 0.9351851851851852,
+          "recall": 0.9017857142857143,
+          "f1": 0.9181818181818182,
+          "predictedAs": {
+            "GR": 101,
+            "RE": 7,
+            "RU": 0,
+            "WA": 4
+          }
+        },
+        "RE": {
+          "support": 51,
+          "correct": 14,
+          "errors": 37,
+          "errorRate": 0.7254901960784313,
+          "precision": 0.45161290322580644,
+          "recall": 0.27450980392156865,
+          "f1": 0.34146341463414637,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 14,
+            "RU": 37,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 39,
+          "correct": 22,
+          "errors": 17,
+          "errorRate": 0.4358974358974359,
+          "precision": 0.3728813559322034,
+          "recall": 0.5641025641025641,
+          "f1": 0.4489795918367347,
+          "predictedAs": {
+            "GR": 7,
+            "RE": 10,
+            "RU": 22,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 96,
+          "correct": 96,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.96,
+          "recall": 1.0,
+          "f1": 0.9795918367346939,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 96
+          }
+        }
+      }
+    },
+    "BH:4589": {
+      "records": 285,
+      "recordAccuracy": 0.7824561403508772,
+      "classMetrics": {
+        "GR": {
+          "support": 93,
+          "correct": 83,
+          "errors": 10,
+          "errorRate": 0.10752688172043011,
+          "precision": 0.9651162790697675,
+          "recall": 0.8924731182795699,
+          "f1": 0.9273743016759777,
+          "predictedAs": {
+            "GR": 83,
+            "RE": 8,
+            "RU": 0,
+            "WA": 2
+          }
+        },
+        "RE": {
+          "support": 54,
+          "correct": 13,
+          "errors": 41,
+          "errorRate": 0.7592592592592593,
+          "precision": 0.4482758620689655,
+          "recall": 0.24074074074074073,
+          "f1": 0.3132530120481928,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 13,
+            "RU": 41,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 46,
+          "correct": 35,
+          "errors": 11,
+          "errorRate": 0.2391304347826087,
+          "precision": 0.4605263157894737,
+          "recall": 0.7608695652173914,
+          "f1": 0.5737704918032787,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 8,
+            "RU": 35,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 92,
+          "correct": 92,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9787234042553191,
+          "recall": 1.0,
+          "f1": 0.989247311827957,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 92
+          }
+        }
+      }
+    },
+    "BH:5111": {
+      "records": 391,
+      "recordAccuracy": 0.8158567774936062,
+      "classMetrics": {
+        "GR": {
+          "support": 185,
+          "correct": 176,
+          "errors": 9,
+          "errorRate": 0.04864864864864865,
+          "precision": 0.9887640449438202,
+          "recall": 0.9513513513513514,
+          "f1": 0.9696969696969697,
+          "predictedAs": {
+            "GR": 176,
+            "RE": 1,
+            "RU": 0,
+            "WA": 8
+          }
+        },
+        "RE": {
+          "support": 97,
+          "correct": 36,
+          "errors": 61,
+          "errorRate": 0.6288659793814433,
+          "precision": 0.9230769230769231,
+          "recall": 0.3711340206185567,
+          "f1": 0.5294117647058824,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 36,
+            "RU": 59,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 13,
+          "correct": 11,
+          "errors": 2,
+          "errorRate": 0.15384615384615385,
+          "precision": 0.15714285714285714,
+          "recall": 0.8461538461538461,
+          "f1": 0.26506024096385544,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 2,
+            "RU": 11,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 96,
+          "correct": 96,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9230769230769231,
+          "recall": 1.0,
+          "f1": 0.9600000000000001,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 96
+          }
+        }
+      }
+    },
+    "BH:6495": {
+      "records": 292,
+      "recordAccuracy": 0.8356164383561644,
+      "classMetrics": {
+        "GR": {
+          "support": 115,
+          "correct": 103,
+          "errors": 12,
+          "errorRate": 0.10434782608695652,
+          "precision": 0.9716981132075472,
+          "recall": 0.8956521739130435,
+          "f1": 0.9321266968325792,
+          "predictedAs": {
+            "GR": 103,
+            "RE": 10,
+            "RU": 0,
+            "WA": 2
+          }
+        },
+        "RE": {
+          "support": 45,
+          "correct": 20,
+          "errors": 25,
+          "errorRate": 0.5555555555555556,
+          "precision": 0.5,
+          "recall": 0.4444444444444444,
+          "f1": 0.47058823529411764,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 20,
+            "RU": 23,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 31,
+          "correct": 20,
+          "errors": 11,
+          "errorRate": 0.3548387096774194,
+          "precision": 0.46511627906976744,
+          "recall": 0.6451612903225806,
+          "f1": 0.5405405405405406,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 10,
+            "RU": 20,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 101,
+          "correct": 101,
+          "errors": 0,
+          "errorRate": 0.0,
+          "precision": 0.9805825242718447,
+          "recall": 1.0,
+          "f1": 0.9901960784313726,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 0,
+            "RU": 0,
+            "WA": 101
+          }
+        }
+      }
+    },
+    "BR:7001": {
+      "records": 308,
+      "recordAccuracy": 0.7662337662337663,
+      "classMetrics": {
+        "GR": {
+          "support": 120,
+          "correct": 112,
+          "errors": 8,
+          "errorRate": 0.06666666666666667,
+          "precision": 0.9572649572649573,
+          "recall": 0.9333333333333333,
+          "f1": 0.9451476793248945,
+          "predictedAs": {
+            "GR": 112,
+            "RE": 6,
+            "RU": 0,
+            "WA": 2
+          }
+        },
+        "RE": {
+          "support": 70,
+          "correct": 25,
+          "errors": 45,
+          "errorRate": 0.6428571428571429,
+          "precision": 0.5319148936170213,
+          "recall": 0.35714285714285715,
+          "f1": 0.42735042735042733,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 25,
+            "RU": 43,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 57,
+          "correct": 40,
+          "errors": 17,
+          "errorRate": 0.2982456140350877,
+          "precision": 0.4819277108433735,
+          "recall": 0.7017543859649122,
+          "f1": 0.5714285714285715,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 16,
+            "RU": 40,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 61,
+          "correct": 59,
+          "errors": 2,
+          "errorRate": 0.03278688524590164,
+          "precision": 0.9672131147540983,
+          "recall": 0.9672131147540983,
+          "f1": 0.9672131147540983,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 0,
+            "RU": 0,
+            "WA": 59
+          }
+        }
+      }
+    },
+    "BR:8063": {
+      "records": 410,
+      "recordAccuracy": 0.7585365853658537,
+      "classMetrics": {
+        "GR": {
+          "support": 208,
+          "correct": 184,
+          "errors": 24,
+          "errorRate": 0.11538461538461539,
+          "precision": 0.8975609756097561,
+          "recall": 0.8846153846153846,
+          "f1": 0.891041162227603,
+          "predictedAs": {
+            "GR": 184,
+            "RE": 3,
+            "RU": 0,
+            "WA": 21
+          }
+        },
+        "RE": {
+          "support": 68,
+          "correct": 11,
+          "errors": 57,
+          "errorRate": 0.8382352941176471,
+          "precision": 0.5789473684210527,
+          "recall": 0.16176470588235295,
+          "f1": 0.25287356321839083,
+          "predictedAs": {
+            "GR": 8,
+            "RE": 11,
+            "RU": 48,
+            "WA": 1
+          }
+        },
+        "RU": {
+          "support": 49,
+          "correct": 40,
+          "errors": 9,
+          "errorRate": 0.1836734693877551,
+          "precision": 0.45454545454545453,
+          "recall": 0.8163265306122449,
+          "f1": 0.583941605839416,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 5,
+            "RU": 40,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 85,
+          "correct": 76,
+          "errors": 9,
+          "errorRate": 0.10588235294117647,
+          "precision": 0.7755102040816326,
+          "recall": 0.8941176470588236,
+          "f1": 0.8306010928961749,
+          "predictedAs": {
+            "GR": 9,
+            "RE": 0,
+            "RU": 0,
+            "WA": 76
+          }
+        }
+      }
+    },
+    "BR:8065": {
+      "records": 306,
+      "recordAccuracy": 0.6797385620915033,
+      "classMetrics": {
+        "GR": {
+          "support": 105,
+          "correct": 100,
+          "errors": 5,
+          "errorRate": 0.047619047619047616,
+          "precision": 0.6993006993006993,
+          "recall": 0.9523809523809523,
+          "f1": 0.8064516129032258,
+          "predictedAs": {
+            "GR": 100,
+            "RE": 3,
+            "RU": 0,
+            "WA": 2
+          }
+        },
+        "RE": {
+          "support": 89,
+          "correct": 13,
+          "errors": 76,
+          "errorRate": 0.8539325842696629,
+          "precision": 0.6842105263157895,
+          "recall": 0.14606741573033707,
+          "f1": 0.24074074074074076,
+          "predictedAs": {
+            "GR": 29,
+            "RE": 13,
+            "RU": 47,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 36,
+          "correct": 33,
+          "errors": 3,
+          "errorRate": 0.08333333333333333,
+          "precision": 0.4125,
+          "recall": 0.9166666666666666,
+          "f1": 0.5689655172413793,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 3,
+            "RU": 33,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 76,
+          "correct": 62,
+          "errors": 14,
+          "errorRate": 0.18421052631578946,
+          "precision": 0.96875,
+          "recall": 0.8157894736842105,
+          "f1": 0.8857142857142857,
+          "predictedAs": {
+            "GR": 14,
+            "RE": 0,
+            "RU": 0,
+            "WA": 62
+          }
+        }
+      }
+    },
+    "BR:8071": {
+      "records": 283,
+      "recordAccuracy": 0.7243816254416962,
+      "classMetrics": {
+        "GR": {
+          "support": 101,
+          "correct": 97,
+          "errors": 4,
+          "errorRate": 0.039603960396039604,
+          "precision": 0.8362068965517241,
+          "recall": 0.9603960396039604,
+          "f1": 0.8940092165898617,
+          "predictedAs": {
+            "GR": 97,
+            "RE": 3,
+            "RU": 0,
+            "WA": 1
+          }
+        },
+        "RE": {
+          "support": 87,
+          "correct": 17,
+          "errors": 70,
+          "errorRate": 0.8045977011494253,
+          "precision": 0.7727272727272727,
+          "recall": 0.19540229885057472,
+          "f1": 0.3119266055045872,
+          "predictedAs": {
+            "GR": 17,
+            "RE": 17,
+            "RU": 53,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 42,
+          "correct": 40,
+          "errors": 2,
+          "errorRate": 0.047619047619047616,
+          "precision": 0.43010752688172044,
+          "recall": 0.9523809523809523,
+          "f1": 0.5925925925925926,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 2,
+            "RU": 40,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 53,
+          "correct": 51,
+          "errors": 2,
+          "errorRate": 0.03773584905660377,
+          "precision": 0.9807692307692307,
+          "recall": 0.9622641509433962,
+          "f1": 0.9714285714285713,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 0,
+            "RU": 0,
+            "WA": 51
+          }
+        }
+      }
+    },
+    "BR:8073": {
+      "records": 396,
+      "recordAccuracy": 0.7171717171717171,
+      "classMetrics": {
+        "GR": {
+          "support": 192,
+          "correct": 143,
+          "errors": 49,
+          "errorRate": 0.2552083333333333,
+          "precision": 0.9225806451612903,
+          "recall": 0.7447916666666666,
+          "f1": 0.824207492795389,
+          "predictedAs": {
+            "GR": 143,
+            "RE": 37,
+            "RU": 1,
+            "WA": 11
+          }
+        },
+        "RE": {
+          "support": 52,
+          "correct": 4,
+          "errors": 48,
+          "errorRate": 0.9230769230769231,
+          "precision": 0.0851063829787234,
+          "recall": 0.07692307692307693,
+          "f1": 0.0808080808080808,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 4,
+            "RU": 45,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 56,
+          "correct": 50,
+          "errors": 6,
+          "errorRate": 0.10714285714285714,
+          "precision": 0.5208333333333334,
+          "recall": 0.8928571428571429,
+          "f1": 0.6578947368421053,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 6,
+            "RU": 50,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 96,
+          "correct": 87,
+          "errors": 9,
+          "errorRate": 0.09375,
+          "precision": 0.8877551020408163,
+          "recall": 0.90625,
+          "f1": 0.8969072164948454,
+          "predictedAs": {
+            "GR": 9,
+            "RE": 0,
+            "RU": 0,
+            "WA": 87
+          }
+        }
+      }
+    },
+    "BR:8089": {
+      "records": 415,
+      "recordAccuracy": 0.6506024096385542,
+      "classMetrics": {
+        "GR": {
+          "support": 182,
+          "correct": 134,
+          "errors": 48,
+          "errorRate": 0.26373626373626374,
+          "precision": 0.864516129032258,
+          "recall": 0.7362637362637363,
+          "f1": 0.7952522255192879,
+          "predictedAs": {
+            "GR": 134,
+            "RE": 41,
+            "RU": 0,
+            "WA": 7
+          }
+        },
+        "RE": {
+          "support": 107,
+          "correct": 26,
+          "errors": 81,
+          "errorRate": 0.7570093457943925,
+          "precision": 0.3466666666666667,
+          "recall": 0.24299065420560748,
+          "f1": 0.2857142857142857,
+          "predictedAs": {
+            "GR": 13,
+            "RE": 26,
+            "RU": 68,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 36,
+          "correct": 27,
+          "errors": 9,
+          "errorRate": 0.25,
+          "precision": 0.28421052631578947,
+          "recall": 0.75,
+          "f1": 0.4122137404580153,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 8,
+            "RU": 27,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 90,
+          "correct": 83,
+          "errors": 7,
+          "errorRate": 0.07777777777777778,
+          "precision": 0.9222222222222223,
+          "recall": 0.9222222222222223,
+          "f1": 0.9222222222222223,
+          "predictedAs": {
+            "GR": 7,
+            "RE": 0,
+            "RU": 0,
+            "WA": 83
+          }
+        }
+      }
+    },
+    "RC:1067": {
+      "records": 427,
+      "recordAccuracy": 0.8243559718969555,
+      "classMetrics": {
+        "GR": {
+          "support": 231,
+          "correct": 219,
+          "errors": 12,
+          "errorRate": 0.05194805194805195,
+          "precision": 0.9125,
+          "recall": 0.948051948051948,
+          "f1": 0.929936305732484,
+          "predictedAs": {
+            "GR": 219,
+            "RE": 5,
+            "RU": 0,
+            "WA": 7
+          }
+        },
+        "RE": {
+          "support": 60,
+          "correct": 13,
+          "errors": 47,
+          "errorRate": 0.7833333333333333,
+          "precision": 0.5416666666666666,
+          "recall": 0.21666666666666667,
+          "f1": 0.30952380952380953,
+          "predictedAs": {
+            "GR": 11,
+            "RE": 13,
+            "RU": 34,
+            "WA": 2
+          }
+        },
+        "RU": {
+          "support": 44,
+          "correct": 37,
+          "errors": 7,
+          "errorRate": 0.1590909090909091,
+          "precision": 0.5211267605633803,
+          "recall": 0.8409090909090909,
+          "f1": 0.6434782608695652,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 6,
+            "RU": 37,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 92,
+          "correct": 83,
+          "errors": 9,
+          "errorRate": 0.09782608695652174,
+          "precision": 0.9021739130434783,
+          "recall": 0.9021739130434783,
+          "f1": 0.9021739130434784,
+          "predictedAs": {
+            "GR": 9,
+            "RE": 0,
+            "RU": 0,
+            "WA": 83
+          }
+        }
+      }
+    },
+    "RC:2024": {
+      "records": 525,
+      "recordAccuracy": 0.7733333333333333,
+      "classMetrics": {
+        "GR": {
+          "support": 212,
+          "correct": 164,
+          "errors": 48,
+          "errorRate": 0.22641509433962265,
+          "precision": 0.9425287356321839,
+          "recall": 0.7735849056603774,
+          "f1": 0.8497409326424871,
+          "predictedAs": {
+            "GR": 164,
+            "RE": 1,
+            "RU": 0,
+            "WA": 47
+          }
+        },
+        "RE": {
+          "support": 81,
+          "correct": 17,
+          "errors": 64,
+          "errorRate": 0.7901234567901234,
+          "precision": 0.8095238095238095,
+          "recall": 0.20987654320987653,
+          "f1": 0.3333333333333333,
+          "predictedAs": {
+            "GR": 6,
+            "RE": 17,
+            "RU": 58,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 69,
+          "correct": 65,
+          "errors": 4,
+          "errorRate": 0.057971014492753624,
+          "precision": 0.5284552845528455,
+          "recall": 0.9420289855072463,
+          "f1": 0.6770833333333333,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 3,
+            "RU": 65,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 163,
+          "correct": 160,
+          "errors": 3,
+          "errorRate": 0.018404907975460124,
+          "precision": 0.7729468599033816,
+          "recall": 0.9815950920245399,
+          "f1": 0.8648648648648649,
+          "predictedAs": {
+            "GR": 3,
+            "RE": 0,
+            "RU": 0,
+            "WA": 160
+          }
+        }
+      }
+    },
+    "RC:2061": {
+      "records": 373,
+      "recordAccuracy": 0.7640750670241286,
+      "classMetrics": {
+        "GR": {
+          "support": 135,
+          "correct": 129,
+          "errors": 6,
+          "errorRate": 0.044444444444444446,
+          "precision": 0.9847328244274809,
+          "recall": 0.9555555555555556,
+          "f1": 0.9699248120300753,
+          "predictedAs": {
+            "GR": 129,
+            "RE": 1,
+            "RU": 0,
+            "WA": 5
+          }
+        },
+        "RE": {
+          "support": 95,
+          "correct": 17,
+          "errors": 78,
+          "errorRate": 0.8210526315789474,
+          "precision": 0.8095238095238095,
+          "recall": 0.17894736842105263,
+          "f1": 0.2931034482758621,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 17,
+            "RU": 77,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 24,
+          "correct": 21,
+          "errors": 3,
+          "errorRate": 0.125,
+          "precision": 0.21428571428571427,
+          "recall": 0.875,
+          "f1": 0.34426229508196726,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 3,
+            "RU": 21,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 119,
+          "correct": 118,
+          "errors": 1,
+          "errorRate": 0.008403361344537815,
+          "precision": 0.959349593495935,
+          "recall": 0.9915966386554622,
+          "f1": 0.9752066115702479,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 0,
+            "RU": 0,
+            "WA": 118
+          }
+        }
+      }
+    },
+    "RC:35": {
+      "records": 341,
+      "recordAccuracy": 0.718475073313783,
+      "classMetrics": {
+        "GR": {
+          "support": 132,
+          "correct": 109,
+          "errors": 23,
+          "errorRate": 0.17424242424242425,
+          "precision": 0.9008264462809917,
+          "recall": 0.8257575757575758,
+          "f1": 0.8616600790513834,
+          "predictedAs": {
+            "GR": 109,
+            "RE": 14,
+            "RU": 0,
+            "WA": 9
+          }
+        },
+        "RE": {
+          "support": 87,
+          "correct": 24,
+          "errors": 63,
+          "errorRate": 0.7241379310344828,
+          "precision": 0.6,
+          "recall": 0.27586206896551724,
+          "f1": 0.3779527559055118,
+          "predictedAs": {
+            "GR": 4,
+            "RE": 24,
+            "RU": 59,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 17,
+          "correct": 15,
+          "errors": 2,
+          "errorRate": 0.11764705882352941,
+          "precision": 0.20270270270270271,
+          "recall": 0.8823529411764706,
+          "f1": 0.3296703296703297,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 2,
+            "RU": 15,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 105,
+          "correct": 97,
+          "errors": 8,
+          "errorRate": 0.0761904761904762,
+          "precision": 0.9150943396226415,
+          "recall": 0.9238095238095239,
+          "f1": 0.9194312796208531,
+          "predictedAs": {
+            "GR": 8,
+            "RE": 0,
+            "RU": 0,
+            "WA": 97
+          }
+        }
+      }
+    },
+    "RC:6": {
+      "records": 519,
+      "recordAccuracy": 0.5838150289017341,
+      "classMetrics": {
+        "GR": {
+          "support": 247,
+          "correct": 108,
+          "errors": 139,
+          "errorRate": 0.562753036437247,
+          "precision": 0.9310344827586207,
+          "recall": 0.43724696356275305,
+          "f1": 0.5950413223140496,
+          "predictedAs": {
+            "GR": 108,
+            "RE": 0,
+            "RU": 1,
+            "WA": 138
+          }
+        },
+        "RE": {
+          "support": 94,
+          "correct": 29,
+          "errors": 65,
+          "errorRate": 0.6914893617021277,
+          "precision": 0.7631578947368421,
+          "recall": 0.30851063829787234,
+          "f1": 0.4393939393939394,
+          "predictedAs": {
+            "GR": 5,
+            "RE": 29,
+            "RU": 58,
+            "WA": 2
+          }
+        },
+        "RU": {
+          "support": 59,
+          "correct": 48,
+          "errors": 11,
+          "errorRate": 0.1864406779661017,
+          "precision": 0.4485981308411215,
+          "recall": 0.8135593220338984,
+          "f1": 0.5783132530120482,
+          "predictedAs": {
+            "GR": 2,
+            "RE": 9,
+            "RU": 48,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 119,
+          "correct": 118,
+          "errors": 1,
+          "errorRate": 0.008403361344537815,
+          "precision": 0.4573643410852713,
+          "recall": 0.9915966386554622,
+          "f1": 0.6259946949602122,
+          "predictedAs": {
+            "GR": 1,
+            "RE": 0,
+            "RU": 0,
+            "WA": 118
+          }
+        }
+      }
+    },
+    "RC:9012": {
+      "records": 375,
+      "recordAccuracy": 0.7413333333333333,
+      "classMetrics": {
+        "GR": {
+          "support": 177,
+          "correct": 154,
+          "errors": 23,
+          "errorRate": 0.12994350282485875,
+          "precision": 0.927710843373494,
+          "recall": 0.8700564971751412,
+          "f1": 0.8979591836734694,
+          "predictedAs": {
+            "GR": 154,
+            "RE": 5,
+            "RU": 0,
+            "WA": 18
+          }
+        },
+        "RE": {
+          "support": 83,
+          "correct": 16,
+          "errors": 67,
+          "errorRate": 0.8072289156626506,
+          "precision": 0.6956521739130435,
+          "recall": 0.1927710843373494,
+          "f1": 0.30188679245283023,
+          "predictedAs": {
+            "GR": 7,
+            "RE": 16,
+            "RU": 60,
+            "WA": 0
+          }
+        },
+        "RU": {
+          "support": 22,
+          "correct": 20,
+          "errors": 2,
+          "errorRate": 0.09090909090909091,
+          "precision": 0.25,
+          "recall": 0.9090909090909091,
+          "f1": 0.392156862745098,
+          "predictedAs": {
+            "GR": 0,
+            "RE": 2,
+            "RU": 20,
+            "WA": 0
+          }
+        },
+        "WA": {
+          "support": 93,
+          "correct": 88,
+          "errors": 5,
+          "errorRate": 0.053763440860215055,
+          "precision": 0.8301886792452831,
+          "recall": 0.946236559139785,
+          "f1": 0.8844221105527639,
+          "predictedAs": {
+            "GR": 5,
+            "RE": 0,
+            "RU": 0,
+            "WA": 88
+          }
+        }
+      }
+    }
+  },
+  "animalErrorSummary": {
+    "accuracyMin": 0.5838150289017341,
+    "accuracyMedian": 0.7585365853658537,
+    "accuracyMax": 0.8356164383561644,
+    "worstFiveAnimalsByAccuracy": [
+      {
+        "animal": "RC:6",
+        "accuracy": 0.5838150289017341,
+        "records": 519
+      },
+      {
+        "animal": "BR:8089",
+        "accuracy": 0.6506024096385542,
+        "records": 415
+      },
+      {
+        "animal": "AH:2013",
+        "accuracy": 0.6636636636636637,
+        "records": 333
+      },
+      {
+        "animal": "BR:8065",
+        "accuracy": 0.6797385620915033,
+        "records": 306
+      },
+      {
+        "animal": "AH:2009",
+        "accuracy": 0.6989528795811518,
+        "records": 382
+      }
+    ]
+  },
+  "duplicateTimestampAudit": {
+    "publishedRows": 9222,
+    "uniqueAnimalMinuteKeys": 8918,
+    "repeatedAnimalMinuteKeys": 290,
+    "extraRowsAtRepeatedKeys": 304,
+    "exactDuplicateExtraRows": 34,
+    "sameLabelRepeatedKeys": 236,
+    "conflictingLabelKeys": 54,
+    "rowsInConflictingLabelKeys": 121,
+    "conflictLabelPairs": {
+      "GR/RE": 33,
+      "GR/WA": 2,
+      "RE/RU": 13,
+      "RE/WA": 6
+    },
+    "handlingInFrozenOof": "Same-label repeats collapsed to one animal-minute by mean MI; all rows at conflicting-label keys excluded."
+  },
+  "temporalDependence": {
+    "exactlyAdjacentAnimalMinutePairs": 7559,
+    "contiguousOneMinuteSegments": 1305,
+    "observedLabelPersistence": 0.9306786611985712,
+    "predictionPersistence": 0.7500992194734754,
+    "correctnessStatusPersistence": 0.7944172509591215,
+    "currentAccuracyGivenPreviousCorrect": 0.861578947368421,
+    "currentAccuracyGivenPreviousError": 0.4115115653577192,
+    "adjacentPairsBothWrong": 1094,
+    "longestConsecutiveErrorRunByAnimal": {
+      "AH:2003": 10,
+      "AH:2004": 6,
+      "AH:2008": 8,
+      "AH:2009": 9,
+      "AH:2013": 7,
+      "AH:2019": 13,
+      "BH:4071": 8,
+      "BH:4085": 7,
+      "BH:4511": 5,
+      "BH:4589": 7,
+      "BH:5111": 12,
+      "BH:6495": 4,
+      "BR:7001": 17,
+      "BR:8063": 8,
+      "BR:8065": 15,
+      "BR:8071": 12,
+      "BR:8073": 8,
+      "BR:8089": 19,
+      "RC:1067": 7,
+      "RC:2024": 10,
+      "RC:2061": 8,
+      "RC:35": 7,
+      "RC:6": 9,
+      "RC:9012": 7
+    },
+    "longestConsecutiveErrorRunSummary": {
+      "min": 4,
+      "median": 8,
+      "max": 19,
+      "animalsWithAnyErrorRunAtLeast5": 23
+    },
+    "interpretation": "Pairs are only exact one-minute timestamp neighbors; gaps break temporal continuity. The source label protocol carries the prior label forward when a behavior lasts under 30 seconds, so label persistence is partly protocol-induced."
+  },
+  "ranchProvenance": {
+    "ranchColumnInCsv": false,
+    "ranchMappingAvailable": true,
+    "mappingBasis": "Primary Figshare record's dataset description maps AH and RC herds to Jornada Experimental Range (USDA), and BR and BH herds to Chihuahuan Desert Rangeland Research Center (NMSU). The CSV contains Breed, ID, timestamp, MI, State, Behavior, but no ranch field.",
+    "ranchByBreed": {
+      "AH": "Jornada Experimental Range (USDA)",
+      "RC": "Jornada Experimental Range (USDA)",
+      "BR": "Chihuahuan Desert Rangeland Research Center (NMSU)",
+      "BH": "Chihuahuan Desert Rangeland Research Center (NMSU)"
+    },
+    "animalsByRanch": {
+      "Jornada Experimental Range (USDA)": [
+        "AH:2003",
+        "AH:2004",
+        "AH:2008",
+        "AH:2009",
+        "AH:2013",
+        "AH:2019",
+        "RC:1067",
+        "RC:2024",
+        "RC:2061",
+        "RC:35",
+        "RC:6",
+        "RC:9012"
+      ],
+      "Chihuahuan Desert Rangeland Research Center (NMSU)": [
+        "BH:4071",
+        "BH:4085",
+        "BH:4511",
+        "BH:4589",
+        "BH:5111",
+        "BH:6495",
+        "BR:7001",
+        "BR:8063",
+        "BR:8065",
+        "BR:8071",
+        "BR:8073",
+        "BR:8089"
+      ]
+    },
+    "leaveOneRanchOutPossible": true,
+    "leaveOneRanchOutLimitation": "Only two sites; breed is fully nested within site (AH/RC only at Jornada, BR/BH only at CDRRC), so site shift is confounded with breed and two outer folds cannot establish general cross-ranch transportability."
+  },
+  "failureDiagnosis": [
+    "Resting (RE) is the main weak class: it is most often predicted as rumination (RU), a biologically plausible but task-relevant error because the target labels distinguish those behaviors.",
+    "A single scalar MI discards direction/axis and fine-grained head/jaw motion; source documentation describes RU and RE as both static and the article summary reports no detected MI difference between them.",
+    "Temporal records are not independent: labels and errors persist across adjacent minutes, while the source annotation protocol explicitly carries previous labels forward for sub-30-second behaviors.",
+    "The current grouped split prevents animal-ID leakage, but has the same ranch/date/sensor context in train and test; it cannot demonstrate new-ranch transfer."
+  ],
+  "preregisteredNextEvaluation": {
+    "status": "proposal_only_not_run",
+    "freezeBeforeRun": [
+      "Freeze the source file checksum, class definitions, the already used duplicate policy, class order, two site assignments from primary source provenance, and the exact outer/inner fold memberships before any new fit.",
+      "Keep the four original labels as the primary endpoint. Do not merge RE/RU after inspecting outer results; a 3-class or 2-state endpoint must be predeclared as a separate analysis.",
+      "Use only causal sensor features. No future MI and no ground-truth behavior lags are allowed; reset temporal windows at time gaps."
+    ],
+    "outerCV": "Six fixed grouped folds over 24 animals, one animal per breed per fold (the current balanced animal split), with all observations from each animal held together.",
+    "innerCV": "Within each 20-animal outer-training partition, five grouped folds, each holding one animal per breed. Fit scaling, thresholds, class weights, and all hyperparameters using inner-training animals only.",
+    "candidateFamilies": [
+      {
+        "family": "univariate threshold/rule",
+        "limit": "One pre-specified hierarchical set of MI cutpoints for the four classes; all cutpoints selected only in inner folds."
+      },
+      {
+        "family": "multinomial logistic",
+        "limit": "MI only; fixed small L2 grid [0.1, 1, 10] expressed as inverse regularization C; preprocessing and equal-animal/class weights fitted on inner training only."
+      },
+      {
+        "family": "shallow CART",
+        "limit": "MI only; depth [2, 3, 4] and minimum leaf [30, 60] candidate grid; no post-hoc pruning based on outer metrics."
+      },
+      {
+        "family": "causal temporal logistic",
+        "limit": "Current MI, prior 1/2/4-minute MI lags and causal 3/5-minute trailing mean; no future values or label-history features; evaluate all candidate families on identical rows with complete causal history."
+      }
+    ],
+    "selectionCriterion": {
+      "primary": "Maximize equal-animal-weighted mean of per-class F1 for RE and RU on inner grouped OOF predictions.",
+      "tieBreakers": [
+        "Higher minimum of RE and RU recall.",
+        "Higher equal-animal-weighted four-class macro-F1.",
+        "Lower model complexity (threshold/rule, then logistic, then shallower tree, then temporal model)."
+      ],
+      "outerReporting": "After one model family/hyperparameter setting is selected inside each outer training partition, report outer OOF confusion, per-class precision/recall/F1, equal-animal-weighted metrics, per-animal metrics, and fold-specific results. No candidate is selected using outer outcomes.",
+      "sameCases": "For temporal comparisons, compare every candidate on the same rows with complete prior-window history; separately state the omitted startup/gap rows."
+    },
+    "crossRanchStressTest": "Because primary Figshare provenance maps AH/RC to Jornada and BR/BH to CDRRC, a supplementary two-fold leave-one-ranch-out evaluation is possible by grouping the 12 cows at each site. Keep this separate from the 6-fold nested animal CV; breed and site are perfectly confounded, only two sites exist, and the result cannot estimate broad ranch-to-ranch transportability.",
+    "reportingGuardrail": "If RE/RU weak-class F1 remains low, report four-class behavior classification as not ready; do not use overall accuracy or merge labels post hoc to claim success."
+  },
+  "scopeGuardrails": [
+    "No candidates were fitted or tuned in this diagnostic step.",
+    "The existing Perea OOF behavior scores are not evidence for DMI, ADG, forage intake, BR-CORTE, or the Riose engine.",
+    "CPER and Grazing Ingestive Behavior remain separate cohorts with different grains and targets."
+  ]
+}

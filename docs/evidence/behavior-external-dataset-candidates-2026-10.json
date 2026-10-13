@@ -1,0 +1,94 @@
+{
+  "title": "Open cattle behavior dataset candidates for independent evaluation",
+  "audited_at": "2026-10-13",
+  "scope": "Metadata, archive inspection, and rights audit; XGain public archive was downloaded and normalized; no model fitted.",
+  "candidates": [
+    {
+      "name": "Precision Beef - Animal Behaviour Classification",
+      "doi": "10.5281/zenodo.4064802",
+      "official_record": "https://zenodo.org/records/4064802",
+      "metadata_api": "https://zenodo.org/api/records/4064802",
+      "access": "Open; public direct file download via Zenodo API.",
+      "license": "CC BY 4.0",
+      "files": {
+        "count": 37,
+        "total_record_size_bytes_approx": 8200000000,
+        "kinds": [
+          "18 per-animal 10 Hz triaxial accelerometer CSVs",
+          "18 per-animal 10 Hz Rumiwatch behavior/pressure CSVs",
+          "README"
+        ],
+        "readme_direct": "https://zenodo.org/api/records/4064802/files/Readme.md/content",
+        "largest_file_bytes": 577338664,
+        "note": "The complete record is about 8.2 GB; no data file was fetched."
+      },
+      "population": "18 Limousin-cross steers, three farm trials at Easter Howgate Farm, Edinburgh, UK; housed indoors on straw and fed total mixed ration ad libitum.",
+      "labels_and_measurement": "Eating, rumination, other. Neck collar has raw 3-axis acceleration at 10 Hz; Rumiwatch halter measures jaw pressure and supplies behavior classifications at 10 Hz. The paper describes 3,460 hours and alignment checks between devices; analysis segments data into 90-second blocks.",
+      "groups_and_grain": "Animal identifiers 01-18 are present in filenames, allowing animal-grouped evaluation. Trial membership is not apparent from the Zenodo metadata or filenames; trial-held-out evaluation needs README/data inspection. Samples are high-frequency time series and the paper's analysis uses 90-second labeled windows.",
+      "best_riose_module": "Behavior classification, restricted to eating/rumination/other in housed beef steers. Can support a separate rumination/eating classifier evaluation; cannot validate pasture grazing, walking/resting, DMI, or the Riose pasture behavior ontology as a whole.",
+      "decision": "CONDITIONAL",
+      "decision_reason": "Open CC-BY data with useful labels and animal IDs, but the population/system and label ontology differ from free-grazing behavior. A group-by-animal independent evaluation of compatible feeding/rumination classes is plausible after README/schema and trial mapping audit. Full download is large.",
+      "external_validation": "Potentially feasible for a separately scoped feeding/rumination behavior task using animal-level holdout. Not an external validation of grazing behavior. No result can be claimed without downloading, auditing fields, and freezing a group split before fitting.",
+      "evidence": [
+        "https://zenodo.org/records/4064802",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8951529/",
+        "https://pureportal.strath.ac.uk/en/projects/precisionbeef/datasets/"
+      ]
+    },
+    {
+      "name": "IoT sensor data XGain UC6",
+      "doi": "10.5281/zenodo.15600573",
+      "official_record": "https://zenodo.org/records/15600573",
+      "metadata_api": "https://zenodo.org/api/records/15600573",
+      "access": "Public anonymous ZIP download succeeded; Zenodo metadata gives CC BY 4.0 but the included README states CC BY-NC, so reuse remains conditional.",
+      "license": "Zenodo record API declares CC BY 4.0, but README embedded in the downloaded archive declares CC BY-NC; commercial reuse is not cleared.",
+      "files": {
+        "count": 1,
+        "filename": "WP5_T5.7_IoT sensor data_v1_EV ILVO_dataset.zip",
+        "size_bytes": 221938,
+        "direct_download": "https://zenodo.org/api/records/15600573/files/WP5_T5.7_IoT%20sensor%20data_v1_EV%20ILVO_dataset.zip/content",
+        "note": "Archive downloaded and inspected; normalized summary counts are in data/xgain-cattle-behavior/processed/ and the source ZIP checksum is verified.",
+        "archive_downloaded": true,
+        "archive_sha256": "a1e418f97e3c11b96f5fd6d7f7106688750083a00d6660f01f41f5ecc6471b16",
+        "normalized_parquet": "data/xgain-cattle-behavior/processed/xgain-hourly-behavior-counts-v1.parquet",
+        "normalized_records": 5760,
+        "archive_inspection": "Ten files, each 576 hourly rows; four class-count columns per hour sum to 60. No raw IMU or human-reference event labels in the archive."
+      },
+      "population": "10 multiparous Holstein cows at ILVO, Melle, Belgium; neck-mounted Axivity AX3 sensors; metadata says pasture access from 07:30-14:00. Archive timestamp coverage is 2024-05-31 00:00 through 2024-06-23 23:00.",
+      "labels_and_measurement": "Published ZIP contains only processed hourly counts of grazing, rumination, resting, and other activity. The README says labels were produced by a supervised decision tree, and separately describes observer labels used to train/validate; no raw sensor values or independent observer-reference labels are distributed. Counts are 1-minute outputs aggregated hourly.",
+      "groups_and_grain": "Archive has 10 separate workbook files named with ear-tag IDs; each contains 576 hourly records. Animal-hour grouping is explicit after filename parsing.",
+      "best_riose_module": "Behavioral monitoring exploration for pasture grazing and rumination; potentially edge/low-cost classifier work.",
+      "decision": "CONDITIONAL",
+      "decision_reason": "Conditional for descriptive profiles and ingestion tests only. Class counts are classifier outputs rather than independent reference labels, raw sensor values are absent, and official CC BY metadata conflicts with a CC BY-NC statement in the embedded README. Not cleared for commercial training or validation.",
+      "external_validation": "Ineligible as external validation because released outcomes are model-generated aggregates, not independent human ground truth. Not suitable for DMI or ADG.",
+      "evidence": [
+        "https://zenodo.org/records/15600573",
+        "https://zenodo.org/api/records/15600573",
+        "https://pureportal.ilvo.be/en/datasets/iot-sensor-data-xgain-uc6/",
+        "https://pureportal.ilvo.be/en/publications/computer-vision-and-deep-learning-for-remote-cattle-behavior-trac/",
+        "data/xgain-cattle-behavior/manifest.json"
+      ]
+    },
+    {
+      "name": "IoT Collar IMU Dataset - free-grazing dairy cows in southern Chile",
+      "doi": "10.3389/fvets.2025.1630083",
+      "official_record": "https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2025.1630083/full",
+      "repository": "https://github.com/WASP-lab/db-cow-walking",
+      "repository_api": "https://api.github.com/repos/WASP-lab/db-cow-walking",
+      "access": "Public GitHub repository; 442 tracked files including README and 441 event CSV files; approximately 55,084,878 bytes in the default-branch tree.",
+      "license": "No repository license file or GitHub-detected SPDX license. The article is CC BY, but that does not explicitly license the repository data. Treat commercial reuse permission as unverified.",
+      "population": "10 dairy cows monitored at Maquehue Experimental Farm, Universidad de La Frontera, Temuco, Chile, on open pasture over about five months (May 10-October 8, 2024). The farm herd is Holstein Friesian; only 10 individuals contributed labeled events.",
+      "labels_and_measurement": "441 manually video-inspected events totaling 7 h 34 min 2 s, with 11 behaviors grouped into walking (217), grazing (105), resting (10), miscellaneous (109). Labels reviewed by two research assistants with veterinarian support. Event CSVs contain time series from collar IMUs at 10 Hz, including BNO055 acceleration in body/world frames, gyroscope, orientation, and MPU9250 acceleration/gyroscope. Events have variable duration; resting labels cover 3 h 11 min despite only 10 events.",
+      "groups_and_grain": "Individual cow ID, behavior, date, and start time are encoded in CSV filenames. Each file is one labeled behavior event. Cow-grouped splitting is possible; temporal windows within an event must stay together. The paper reports a random 80/20 split, which is not an independent-animal evaluation.",
+      "best_riose_module": "Pasture behavior classification (grazing/walking/resting) and exploratory IMU feature validation; no direct lameness labels and no production outcomes.",
+      "decision": "CONDITIONAL",
+      "decision_reason": "Best ontology and system match among these candidates, publicly downloadable in a modest-size repository, and animal IDs plus human-reviewed behavior labels are documented. However, the data repository has no explicit reuse license, and only ten cows/441 event labels are available with marked class/event imbalance. Do not use in a commercial training/evaluation track until license status is explicitly resolved from the repository owner or another authoritative grant; the instruction forbids contacting researchers, so it remains conditional.",
+      "external_validation": "Scientifically promising for a separately documented Chilean pasture behavior holdout if use permission is established. A leave-cow-out split is feasible from filenames. It cannot validate DMI, ADG, lameness, or general cattle populations; severe scarcity of resting events limits stable per-class metrics.",
+      "evidence": [
+        "https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2025.1630083/full",
+        "https://github.com/WASP-lab/db-cow-walking",
+        "https://api.github.com/repos/WASP-lab/db-cow-walking"
+      ]
+    }
+  ]
+}

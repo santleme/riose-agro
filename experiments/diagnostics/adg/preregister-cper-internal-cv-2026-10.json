@@ -1,0 +1,77 @@
+{
+  "status": "preregistered_not_run",
+  "analysisType": "diagnosis_and_internal_cv_protocol_only",
+  "historicalCgrecRole": "already_consulted_external_site_diagnostic_not_a_new_final_test",
+  "dmiOrFullEngineValidation": false,
+  "cohort": {
+    "sourceDoi": "10.15482/USDA.ADC/1528520",
+    "developmentYears": [2009, 2010, 2011, 2012, 2013],
+    "population": "CPER yearling steers",
+    "rawAdgFormula": "(final weight - initial weight) / grazing days",
+    "targetUnit": "kg/head/day",
+    "trainRowsBeforeIdentityPurge": 320,
+    "trainRowsAfterExistingIdentityPurge": 302,
+    "identityProxy": ["Owner", "Tag.Color", "Tag"]
+  },
+  "folds": {
+    "method": "leave_one_year_out",
+    "groups": [2009, 2010, 2011, 2012, 2013],
+    "purgeMatchingAnimalIdentityProxyFromTraining": true,
+    "randomRowSplit": false,
+    "reportPooledAndYearMacroMetrics": true,
+    "metrics": ["MAE", "RMSE", "mean_signed_error"]
+  },
+  "candidates": [
+    {
+      "id": "M0",
+      "name": "fold_training_mean",
+      "inputs": [],
+      "fit": "mean raw ADG on training rows only"
+    },
+    {
+      "id": "M1",
+      "name": "fixed_ols",
+      "inputs": ["initial_weight_kg", "season_days", "treatment_one_hot"],
+      "fit": "ordinary least squares; any standardization fitted inside training fold; no interactions or tuning"
+    },
+    {
+      "id": "M2",
+      "name": "frozen_engine_default",
+      "inputs": ["initial_weight_kg", "season_days"],
+      "fit": "none; fixed historical engine configuration"
+    },
+    {
+      "id": "M3",
+      "name": "frozen_engine_fold_local_scale",
+      "inputs": ["initial_weight_kg", "season_days"],
+      "fit": "one non-negative multiplicative scalar on training rows only"
+    }
+  ],
+  "excludedPredictors": [
+    "final_weight",
+    "weight_gain",
+    "any_target_derived_ADG",
+    "year",
+    "pasture_id",
+    "source_qc_flag",
+    "heldout_or_external_outcomes"
+  ],
+  "operationalAdvancementRule": {
+    "reference": "M0",
+    "pooledMaeReductionAtLeast": 0.10,
+    "yearMacroMaeMustImprove": true,
+    "absolutePooledBiasMustNotExceedM0": true,
+    "maxAllowedYearMaeWorseningKgPerHeadDay": 0.10,
+    "interpretation": "internal CPER development gate only; not validation or transport evidence"
+  },
+  "reservedData": {
+    "CGREC_1989_2015": "already consulted; do not use for model selection or call it an untouched final test",
+    "CPER_2014_2019": "previously consulted in existing diagnostics; not an untouched final test"
+  },
+  "limitations": [
+    "Only five year blocks; uncertainty estimates or nominal interval coverage are not justified by this CV alone.",
+    "CPER has one remaining pasture replicate per treatment.",
+    "Current engine predictors omit observed forage, biomass, weather, treatment, breed, and supplementation.",
+    "ADG cohort is yearling steers and does not validate mature-cow DMI or the full engine."
+  ]
+}

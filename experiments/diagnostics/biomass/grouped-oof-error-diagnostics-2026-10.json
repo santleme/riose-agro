@@ -1,0 +1,952 @@
+{
+  "title": "Existing biomass GroupKFold OOF error and spatial-support diagnosis",
+  "analysisDate": "2026-10-13",
+  "scope": "Diagnosis only. Reads the existing baseline OOF predictions; fits no models, changes no predictions, and does no tuning.",
+  "inputs": {
+    "docs/evidence/mendeley-pasture-biomass-grouped-oof-2026-10.csv": {
+      "sha256": "925704dfee357e0d9d268301e63bd32c3c0a5096d85d25df2d096938219e6244",
+      "bytes": 23657
+    },
+    "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet": {
+      "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+      "bytes": 25476
+    },
+    "docs/evidence/mendeley-pasture-biomass-prediction-readiness-2026-10.json": {
+      "sha256": "0ebe38662da06f918ac692102518d8ab3d55a9cd8b1f9c614195bf707fcbc79b",
+      "bytes": 18806
+    }
+  },
+  "cohort": {
+    "oofRows": 234,
+    "uniqueSpatialGroups": 135,
+    "repeatedSpatialGroupsAcrossCampaigns": 99,
+    "campaigns": [
+      "2018-11",
+      "2019-03"
+    ],
+    "farms": [
+      "Poderosa",
+      "Santa Clara"
+    ],
+    "managementCounts": [
+      {
+        "farm": "Poderosa",
+        "managementType": 1,
+        "rows": 18
+      },
+      {
+        "farm": "Poderosa",
+        "managementType": 2,
+        "rows": 36
+      },
+      {
+        "farm": "Santa Clara",
+        "managementType": 1,
+        "rows": 90
+      },
+      {
+        "farm": "Santa Clara",
+        "managementType": 2,
+        "rows": 90
+      }
+    ],
+    "managementClass3InOof": false
+  },
+  "errorMetricsByFarm": [
+    {
+      "farm": "Poderosa",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 54,
+          "maeKgDmHa": 1559.2444444444448,
+          "rmseKgDmHa": 1964.6071536437375,
+          "biasPredictedMinusObservedKgDmHa": -1510.2814814814817,
+          "medianErrorKgDmHa": -1338.6,
+          "p90AbsoluteErrorKgDmHa": 3080.4799999999996,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 54,
+          "maeKgDmHa": 945.5114678179627,
+          "rmseKgDmHa": 1235.5168406933633,
+          "biasPredictedMinusObservedKgDmHa": -578.7724580149999,
+          "medianErrorKgDmHa": -549.0239864299999,
+          "p90AbsoluteErrorKgDmHa": 1896.402826761,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    },
+    {
+      "farm": "Santa Clara",
+      "spatialGroups": 108,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 180,
+          "maeKgDmHa": 758.6911111111111,
+          "rmseKgDmHa": 966.001080744737,
+          "biasPredictedMinusObservedKgDmHa": 48.126666666666644,
+          "medianErrorKgDmHa": 252.0,
+          "p90AbsoluteErrorKgDmHa": 1406.72,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 180,
+          "maeKgDmHa": 540.5535423937222,
+          "rmseKgDmHa": 727.0827634915902,
+          "biasPredictedMinusObservedKgDmHa": 175.0493409189444,
+          "medianErrorKgDmHa": 223.22658442499994,
+          "p90AbsoluteErrorKgDmHa": 1143.4619174909997,
+          "maxAbsoluteErrorKgDmHa": 2715.91986431
+        }
+      }
+    }
+  ],
+  "errorMetricsByCampaign": [
+    {
+      "campaign": "2018-11",
+      "spatialGroups": 117,
+      "campaigns": [
+        "2018-11"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 117,
+          "maeKgDmHa": 987.1316239316241,
+          "rmseKgDmHa": 1290.2763851537663,
+          "biasPredictedMinusObservedKgDmHa": -361.723076923077,
+          "medianErrorKgDmHa": -124.0,
+          "p90AbsoluteErrorKgDmHa": 1919.7600000000002,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 117,
+          "maeKgDmHa": 554.1831228553846,
+          "rmseKgDmHa": 779.7535370032081,
+          "biasPredictedMinusObservedKgDmHa": -97.22924882666666,
+          "medianErrorKgDmHa": 21.625895350000064,
+          "p90AbsoluteErrorKgDmHa": 1218.6486723579999,
+          "maxAbsoluteErrorKgDmHa": 2715.91986431
+        }
+      }
+    },
+    {
+      "campaign": "2019-03",
+      "spatialGroups": 117,
+      "campaigns": [
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 117,
+          "maeKgDmHa": 899.7367521367521,
+          "rmseKgDmHa": 1245.8756086129756,
+          "biasPredictedMinusObservedKgDmHa": -261.28888888888883,
+          "medianErrorKgDmHa": 42.40000000000009,
+          "p90AbsoluteErrorKgDmHa": 1808.2400000000005,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 117,
+          "maeKgDmHa": 713.8276198201708,
+          "rmseKgDmHa": 953.8503172791372,
+          "biasPredictedMinusObservedKgDmHa": 99.41017731042731,
+          "medianErrorKgDmHa": 255.57037005999973,
+          "p90AbsoluteErrorKgDmHa": 1342.461314664001,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    }
+  ],
+  "errorMetricsByFarmAndCampaign": [
+    {
+      "farm": "Poderosa",
+      "campaign": "2018-11",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 27,
+          "maeKgDmHa": 1543.0074074074073,
+          "rmseKgDmHa": 1854.3307324167351,
+          "biasPredictedMinusObservedKgDmHa": -1451.5703703703703,
+          "medianErrorKgDmHa": -1346.3999999999999,
+          "p90AbsoluteErrorKgDmHa": 3046.8799999999997,
+          "maxAbsoluteErrorKgDmHa": 3987.6000000000004
+        },
+        "heightLinearRegression": {
+          "rows": 27,
+          "maeKgDmHa": 867.1849461296296,
+          "rmseKgDmHa": 1040.9903316204736,
+          "biasPredictedMinusObservedKgDmHa": -167.31836902296297,
+          "medianErrorKgDmHa": -319.35330153999985,
+          "p90AbsoluteErrorKgDmHa": 1720.0510318500005,
+          "maxAbsoluteErrorKgDmHa": 2384.5982730299997
+        }
+      }
+    },
+    {
+      "farm": "Poderosa",
+      "campaign": "2019-03",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 27,
+          "maeKgDmHa": 1575.481481481482,
+          "rmseKgDmHa": 2069.0142752313504,
+          "biasPredictedMinusObservedKgDmHa": -1568.992592592593,
+          "medianErrorKgDmHa": -1330.8,
+          "p90AbsoluteErrorKgDmHa": 3137.8400000000006,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 27,
+          "maeKgDmHa": 1023.8379895062963,
+          "rmseKgDmHa": 1403.3327676451213,
+          "biasPredictedMinusObservedKgDmHa": -990.226547007037,
+          "medianErrorKgDmHa": -661.72048933,
+          "p90AbsoluteErrorKgDmHa": 2022.5605792980007,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    },
+    {
+      "farm": "Santa Clara",
+      "campaign": "2018-11",
+      "spatialGroups": 90,
+      "campaigns": [
+        "2018-11"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 90,
+          "maeKgDmHa": 820.3688888888888,
+          "rmseKgDmHa": 1064.2811449779404,
+          "biasPredictedMinusObservedKgDmHa": -34.768888888888895,
+          "medianErrorKgDmHa": 246.39999999999998,
+          "p90AbsoluteErrorKgDmHa": 1382.2400000000007,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 90,
+          "maeKgDmHa": 460.28257587311117,
+          "rmseKgDmHa": 682.1451391394107,
+          "biasPredictedMinusObservedKgDmHa": -76.20251276777779,
+          "medianErrorKgDmHa": 43.929198929999984,
+          "p90AbsoluteErrorKgDmHa": 993.8655942540005,
+          "maxAbsoluteErrorKgDmHa": 2715.91986431
+        }
+      }
+    },
+    {
+      "farm": "Santa Clara",
+      "campaign": "2019-03",
+      "spatialGroups": 90,
+      "campaigns": [
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 90,
+          "maeKgDmHa": 697.0133333333334,
+          "rmseKgDmHa": 856.5172621987513,
+          "biasPredictedMinusObservedKgDmHa": 131.02222222222218,
+          "medianErrorKgDmHa": 273.4,
+          "p90AbsoluteErrorKgDmHa": 1409.8400000000006,
+          "maxAbsoluteErrorKgDmHa": 2064.3999999999996
+        },
+        "heightLinearRegression": {
+          "rows": 90,
+          "maeKgDmHa": 620.8245089143334,
+          "rmseKgDmHa": 769.4002203545363,
+          "biasPredictedMinusObservedKgDmHa": 426.30119460566664,
+          "medianErrorKgDmHa": 412.37030777999996,
+          "p90AbsoluteErrorKgDmHa": 1173.7832533800004,
+          "maxAbsoluteErrorKgDmHa": 2230.18280661
+        }
+      }
+    }
+  ],
+  "errorMetricsByManagement": [
+    {
+      "management_type": "1",
+      "spatialGroups": 63,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 108,
+          "maeKgDmHa": 1028.3370370370371,
+          "rmseKgDmHa": 1402.191683942862,
+          "biasPredictedMinusObservedKgDmHa": -90.99629629629632,
+          "medianErrorKgDmHa": 456.20000000000005,
+          "p90AbsoluteErrorKgDmHa": 2167.519999999999,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 108,
+          "maeKgDmHa": 657.3195953655554,
+          "rmseKgDmHa": 992.0597117203205,
+          "biasPredictedMinusObservedKgDmHa": -9.05143142907408,
+          "medianErrorKgDmHa": 179.58604928499994,
+          "p90AbsoluteErrorKgDmHa": 1828.018270239,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    },
+    {
+      "management_type": "2",
+      "spatialGroups": 72,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 126,
+          "maeKgDmHa": 870.6603174603174,
+          "rmseKgDmHa": 1141.038097106148,
+          "biasPredictedMinusObservedKgDmHa": -500.5142857142858,
+          "medianErrorKgDmHa": -451.0,
+          "p90AbsoluteErrorKgDmHa": 1717.0000000000002,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 126,
+          "maeKgDmHa": 614.0217507425397,
+          "rmseKgDmHa": 752.2256700585057,
+          "biasPredictedMinusObservedKgDmHa": 9.783517674126987,
+          "medianErrorKgDmHa": 36.70757169000012,
+          "p90AbsoluteErrorKgDmHa": 1182.9098769500001,
+          "maxAbsoluteErrorKgDmHa": 2376.5435875799994
+        }
+      }
+    }
+  ],
+  "errorMetricsByFarmAndManagement": [
+    {
+      "farm": "Poderosa",
+      "management_type": "1",
+      "spatialGroups": 9,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 18,
+          "maeKgDmHa": 2600.844444444445,
+          "rmseKgDmHa": 2861.5425770028305,
+          "biasPredictedMinusObservedKgDmHa": -2600.844444444445,
+          "medianErrorKgDmHa": -2623.2,
+          "p90AbsoluteErrorKgDmHa": 3926.56,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 18,
+          "maeKgDmHa": 1537.9122763799999,
+          "rmseKgDmHa": 1851.1452506647356,
+          "biasPredictedMinusObservedKgDmHa": -824.3868953177779,
+          "medianErrorKgDmHa": -956.026854665,
+          "p90AbsoluteErrorKgDmHa": 2554.9577986890004,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    },
+    {
+      "farm": "Poderosa",
+      "management_type": "2",
+      "spatialGroups": 18,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 36,
+          "maeKgDmHa": 1038.4444444444446,
+          "rmseKgDmHa": 1302.0402997688752,
+          "biasPredictedMinusObservedKgDmHa": -965.0,
+          "medianErrorKgDmHa": -834.8000000000001,
+          "p90AbsoluteErrorKgDmHa": 1900.2,
+          "maxAbsoluteErrorKgDmHa": 3095.5999999999995
+        },
+        "heightLinearRegression": {
+          "rows": 36,
+          "maeKgDmHa": 649.3110635369443,
+          "rmseKgDmHa": 759.1992004250671,
+          "biasPredictedMinusObservedKgDmHa": -455.96523936361103,
+          "medianErrorKgDmHa": -541.5851050649999,
+          "p90AbsoluteErrorKgDmHa": 1112.7189989799997,
+          "maxAbsoluteErrorKgDmHa": 2022.9475643599994
+        }
+      }
+    },
+    {
+      "farm": "Santa Clara",
+      "management_type": "1",
+      "spatialGroups": 54,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 90,
+          "maeKgDmHa": 713.8355555555555,
+          "rmseKgDmHa": 849.5202400309378,
+          "biasPredictedMinusObservedKgDmHa": 410.9733333333333,
+          "medianErrorKgDmHa": 585.8,
+          "p90AbsoluteErrorKgDmHa": 1241.6000000000001,
+          "maxAbsoluteErrorKgDmHa": 2494.7999999999997
+        },
+        "heightLinearRegression": {
+          "rows": 90,
+          "maeKgDmHa": 481.2010591626667,
+          "rmseKgDmHa": 704.0392163300313,
+          "biasPredictedMinusObservedKgDmHa": 154.01566134866664,
+          "medianErrorKgDmHa": 223.22658442499994,
+          "p90AbsoluteErrorKgDmHa": 1106.3672540860002,
+          "maxAbsoluteErrorKgDmHa": 2715.91986431
+        }
+      }
+    },
+    {
+      "farm": "Santa Clara",
+      "management_type": "2",
+      "spatialGroups": 54,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 90,
+          "maeKgDmHa": 803.5466666666666,
+          "rmseKgDmHa": 1069.8745430085614,
+          "biasPredictedMinusObservedKgDmHa": -314.7200000000001,
+          "medianErrorKgDmHa": -326.6,
+          "p90AbsoluteErrorKgDmHa": 1474.0800000000002,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 90,
+          "maeKgDmHa": 599.9060256247777,
+          "rmseKgDmHa": 749.4180887879144,
+          "biasPredictedMinusObservedKgDmHa": 196.08302048922224,
+          "medianErrorKgDmHa": 244.65453280999998,
+          "p90AbsoluteErrorKgDmHa": 1199.8682158360002,
+          "maxAbsoluteErrorKgDmHa": 2376.5435875799994
+        }
+      }
+    }
+  ],
+  "errorMetricsByFold": [
+    {
+      "fold": "1",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 47,
+          "maeKgDmHa": 862.7744680851062,
+          "rmseKgDmHa": 1170.9457519640068,
+          "biasPredictedMinusObservedKgDmHa": -243.14893617021272,
+          "medianErrorKgDmHa": 196.4000000000001,
+          "p90AbsoluteErrorKgDmHa": 1554.5599999999997,
+          "maxAbsoluteErrorKgDmHa": 3900.3999999999996
+        },
+        "heightLinearRegression": {
+          "rows": 47,
+          "maeKgDmHa": 594.3967382659573,
+          "rmseKgDmHa": 855.0874313436973,
+          "biasPredictedMinusObservedKgDmHa": -73.14322657999999,
+          "medianErrorKgDmHa": 42.87155591999999,
+          "p90AbsoluteErrorKgDmHa": 1234.213415574,
+          "maxAbsoluteErrorKgDmHa": 2952.46335856
+        }
+      }
+    },
+    {
+      "fold": "2",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 47,
+          "maeKgDmHa": 889.8808510638297,
+          "rmseKgDmHa": 1122.7289595426603,
+          "biasPredictedMinusObservedKgDmHa": -230.10212765957448,
+          "medianErrorKgDmHa": -124.0,
+          "p90AbsoluteErrorKgDmHa": 1511.12,
+          "maxAbsoluteErrorKgDmHa": 3095.5999999999995
+        },
+        "heightLinearRegression": {
+          "rows": 47,
+          "maeKgDmHa": 635.7291078321276,
+          "rmseKgDmHa": 772.3670940655254,
+          "biasPredictedMinusObservedKgDmHa": -8.830218952553164,
+          "medianErrorKgDmHa": 87.22326565000003,
+          "p90AbsoluteErrorKgDmHa": 1111.449868804,
+          "maxAbsoluteErrorKgDmHa": 2022.9475643599994
+        }
+      }
+    },
+    {
+      "fold": "3",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 47,
+          "maeKgDmHa": 1095.2,
+          "rmseKgDmHa": 1538.3431639958512,
+          "biasPredictedMinusObservedKgDmHa": -582.2468085106383,
+          "medianErrorKgDmHa": -337.20000000000005,
+          "p90AbsoluteErrorKgDmHa": 2152.0,
+          "maxAbsoluteErrorKgDmHa": 5772.8
+        },
+        "heightLinearRegression": {
+          "rows": 47,
+          "maeKgDmHa": 624.1142381895745,
+          "rmseKgDmHa": 943.8621121343,
+          "biasPredictedMinusObservedKgDmHa": -110.51266775680855,
+          "medianErrorKgDmHa": -22.486080790000187,
+          "p90AbsoluteErrorKgDmHa": 1165.0198353879998,
+          "maxAbsoluteErrorKgDmHa": 4569.80440445
+        }
+      }
+    },
+    {
+      "fold": "4",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 47,
+          "maeKgDmHa": 1002.2297872340423,
+          "rmseKgDmHa": 1325.567723897311,
+          "biasPredictedMinusObservedKgDmHa": -301.7702127659575,
+          "medianErrorKgDmHa": 78.39999999999986,
+          "p90AbsoluteErrorKgDmHa": 1733.0400000000002,
+          "maxAbsoluteErrorKgDmHa": 5291.6
+        },
+        "heightLinearRegression": {
+          "rows": 47,
+          "maeKgDmHa": 627.5208827689362,
+          "rmseKgDmHa": 857.0760992938461,
+          "biasPredictedMinusObservedKgDmHa": -38.24021572340429,
+          "medianErrorKgDmHa": 146.45159149999972,
+          "p90AbsoluteErrorKgDmHa": 1467.552690134,
+          "maxAbsoluteErrorKgDmHa": 2715.91986431
+        }
+      }
+    },
+    {
+      "fold": "5",
+      "spatialGroups": 27,
+      "campaigns": [
+        "2018-11",
+        "2019-03"
+      ],
+      "models": {
+        "trainingMedian": {
+          "rows": 46,
+          "maeKgDmHa": 865.4260869565215,
+          "rmseKgDmHa": 1131.5038857548218,
+          "biasPredictedMinusObservedKgDmHa": -197.84347826086952,
+          "medianErrorKgDmHa": 33.000000000000114,
+          "p90AbsoluteErrorKgDmHa": 1920.4,
+          "maxAbsoluteErrorKgDmHa": 3276.8
+        },
+        "heightLinearRegression": {
+          "rows": 46,
+          "maeKgDmHa": 689.4454661169566,
+          "rmseKgDmHa": 918.2745627956723,
+          "biasPredictedMinusObservedKgDmHa": 241.28926296086956,
+          "medianErrorKgDmHa": 300.98597723,
+          "p90AbsoluteErrorKgDmHa": 1656.78309485,
+          "maxAbsoluteErrorKgDmHa": 2246.61402277
+        }
+      }
+    }
+  ],
+  "spatialGroupMeanResidualMetrics": {
+    "trainingMedian": {
+      "spatialGroups": 135,
+      "maeKgDmHa": 870.6992592592593,
+      "rmseKgDmHa": 1173.8666924125394,
+      "biasPredictedMinusObservedKgDmHa": -308.62222222222226,
+      "medianErrorKgDmHa": -165.80000000000018,
+      "p90AbsoluteErrorKgDmHa": 1820.2000000000016,
+      "maxAbsoluteErrorKgDmHa": 5291.6
+    },
+    "heightLinearRegression": {
+      "spatialGroups": 135,
+      "maeKgDmHa": 473.23138036670366,
+      "rmseKgDmHa": 638.3337331492329,
+      "biasPredictedMinusObservedKgDmHa": 33.24104991137036,
+      "medianErrorKgDmHa": 98.76474862499981,
+      "p90AbsoluteErrorKgDmHa": 992.7545505200005,
+      "maxAbsoluteErrorKgDmHa": 2668.5308157950003
+    }
+  },
+  "largestAbsoluteSpatialGroupErrors": [
+    {
+      "spatialGroupId": "Poderosa|A2_T1_P1|1|1",
+      "farm": "Poderosa",
+      "rows": 2,
+      "observedMeanKgDmHa": 5643.6,
+      "predictedMeanKgDmHa": 2975.069184205,
+      "meanResidualKgDmHa": -2668.5308157950003,
+      "absoluteMeanResidualKgDmHa": 2668.5308157950003
+    },
+    {
+      "spatialGroupId": "Santa Clara|A1a_T3_P17|17|1",
+      "farm": "Santa Clara",
+      "rows": 1,
+      "observedMeanKgDmHa": 7237.2,
+      "predictedMeanKgDmHa": 4860.65641242,
+      "meanResidualKgDmHa": -2376.5435875799994,
+      "absoluteMeanResidualKgDmHa": 2376.5435875799994
+    },
+    {
+      "spatialGroupId": "Poderosa|A2_T1_P1|1|3",
+      "farm": "Poderosa",
+      "rows": 2,
+      "observedMeanKgDmHa": 5474.8,
+      "predictedMeanKgDmHa": 3989.8804456499997,
+      "meanResidualKgDmHa": -1484.9195543500005,
+      "absoluteMeanResidualKgDmHa": 1484.9195543500005
+    },
+    {
+      "spatialGroupId": "Santa Clara|A1b_T8_P1|1|8",
+      "farm": "Santa Clara",
+      "rows": 2,
+      "observedMeanKgDmHa": 803.8,
+      "predictedMeanKgDmHa": 2139.8795106750003,
+      "meanResidualKgDmHa": 1336.0795106750004,
+      "absoluteMeanResidualKgDmHa": 1336.0795106750004
+    },
+    {
+      "spatialGroupId": "Poderosa|A2_T3_P1|1|2",
+      "farm": "Poderosa",
+      "rows": 2,
+      "observedMeanKgDmHa": 3808.6,
+      "predictedMeanKgDmHa": 2479.70868066,
+      "meanResidualKgDmHa": -1328.8913193399999,
+      "absoluteMeanResidualKgDmHa": 1328.8913193399999
+    },
+    {
+      "spatialGroupId": "Santa Clara|A1b_T3_P17|17|8",
+      "farm": "Santa Clara",
+      "rows": 1,
+      "observedMeanKgDmHa": 1868.4,
+      "predictedMeanKgDmHa": 3144.64669846,
+      "meanResidualKgDmHa": 1276.24669846,
+      "absoluteMeanResidualKgDmHa": 1276.24669846
+    },
+    {
+      "spatialGroupId": "Poderosa|A2_T3_P2|2|2",
+      "farm": "Poderosa",
+      "rows": 2,
+      "observedMeanKgDmHa": 3448.8,
+      "predictedMeanKgDmHa": 2254.364748625,
+      "meanResidualKgDmHa": -1194.435251375,
+      "absoluteMeanResidualKgDmHa": 1194.435251375
+    },
+    {
+      "spatialGroupId": "Poderosa|A2_T1_P1|1|4",
+      "farm": "Poderosa",
+      "rows": 2,
+      "observedMeanKgDmHa": 4095.2,
+      "predictedMeanKgDmHa": 2904.49514314,
+      "meanResidualKgDmHa": -1190.7048568599998,
+      "absoluteMeanResidualKgDmHa": 1190.7048568599998
+    },
+    {
+      "spatialGroupId": "Santa Clara|A1b_T3_P17|17|1",
+      "farm": "Santa Clara",
+      "rows": 1,
+      "observedMeanKgDmHa": 2489.6,
+      "predictedMeanKgDmHa": 3657.78295073,
+      "meanResidualKgDmHa": 1168.18295073,
+      "absoluteMeanResidualKgDmHa": 1168.18295073
+    },
+    {
+      "spatialGroupId": "Santa Clara|A1b_T2_P2|2|9",
+      "farm": "Santa Clara",
+      "rows": 2,
+      "observedMeanKgDmHa": 1237.4,
+      "predictedMeanKgDmHa": 2364.184968395,
+      "meanResidualKgDmHa": 1126.7849683949999,
+      "absoluteMeanResidualKgDmHa": 1126.7849683949999
+    }
+  ],
+  "spatialLeakageDiagnosis": {
+    "fullKeyOverlapAcrossFolds": 0,
+    "distinctOofSpatialGroups": 135,
+    "distinctExactCoordinatePairs": 117,
+    "coordinatePairsWithMultipleSpatialGroupIds": 18,
+    "coordinatePairsSplitAcrossFolds": 15,
+    "spatialGroupsAtCoordinatesSplitAcrossFolds": 30,
+    "nearestTrainDistanceByScope": [
+      {
+        "scope": "all_train",
+        "locations": 135,
+        "nearestTrainDistanceMetersQuantiles": {
+          "0": 0.0,
+          "0.1": 0.0,
+          "0.25": 59.7618099403424,
+          "0.5": 59.7886608123868,
+          "0.75": 59.79288853339079,
+          "0.9": 59.79659006028092,
+          "1": 61.57213353456192
+        },
+        "nearestTrainWithinMeters": {
+          "25": {
+            "locations": 30,
+            "fraction": 0.2222222222222222
+          },
+          "50": {
+            "locations": 30,
+            "fraction": 0.2222222222222222
+          },
+          "100": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "250": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "500": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "1000": {
+            "locations": 135,
+            "fraction": 1.0
+          }
+        },
+        "scoredByFold": {
+          "1": 27,
+          "2": 27,
+          "3": 27,
+          "4": 27,
+          "5": 27
+        }
+      },
+      {
+        "scope": "same_farm",
+        "locations": 135,
+        "nearestTrainDistanceMetersQuantiles": {
+          "0": 0.0,
+          "0.1": 0.0,
+          "0.25": 59.7618099403424,
+          "0.5": 59.7886608123868,
+          "0.75": 59.79288853339079,
+          "0.9": 59.79659006028092,
+          "1": 61.57213353456192
+        },
+        "nearestTrainWithinMeters": {
+          "25": {
+            "locations": 30,
+            "fraction": 0.2222222222222222
+          },
+          "50": {
+            "locations": 30,
+            "fraction": 0.2222222222222222
+          },
+          "100": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "250": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "500": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "1000": {
+            "locations": 135,
+            "fraction": 1.0
+          }
+        },
+        "scoredByFold": {
+          "1": 27,
+          "2": 27,
+          "3": 27,
+          "4": 27,
+          "5": 27
+        }
+      },
+      {
+        "scope": "same_field",
+        "locations": 135,
+        "nearestTrainDistanceMetersQuantiles": {
+          "0": 0.0,
+          "0.1": 59.76180993929484,
+          "0.25": 59.76539178760007,
+          "0.5": 59.788896269575936,
+          "0.75": 59.79300622444896,
+          "0.9": 59.799204877383985,
+          "1": 61.57213353456192
+        },
+        "nearestTrainWithinMeters": {
+          "25": {
+            "locations": 12,
+            "fraction": 0.08888888888888889
+          },
+          "50": {
+            "locations": 12,
+            "fraction": 0.08888888888888889
+          },
+          "100": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "250": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "500": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "1000": {
+            "locations": 135,
+            "fraction": 1.0
+          }
+        },
+        "scoredByFold": {
+          "1": 27,
+          "2": 27,
+          "3": 27,
+          "4": 27,
+          "5": 27
+        }
+      },
+      {
+        "scope": "same_pixel",
+        "locations": 135,
+        "nearestTrainDistanceMetersQuantiles": {
+          "0": 59.76180993510459,
+          "0.1": 59.76471867797996,
+          "0.25": 59.78777482964311,
+          "0.5": 59.78978214805094,
+          "0.75": 59.79598122959247,
+          "0.9": 59.79929899419896,
+          "1": 61.57213353456192
+        },
+        "nearestTrainWithinMeters": {
+          "25": {
+            "locations": 0,
+            "fraction": 0.0
+          },
+          "50": {
+            "locations": 0,
+            "fraction": 0.0
+          },
+          "100": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "250": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "500": {
+            "locations": 135,
+            "fraction": 1.0
+          },
+          "1000": {
+            "locations": 135,
+            "fraction": 1.0
+          }
+        },
+        "scoredByFold": {
+          "1": 27,
+          "2": 27,
+          "3": 27,
+          "4": 27,
+          "5": 27
+        }
+      }
+    ],
+    "interpretation": "The full farm/field/pixel/point key stays in one fold, but distinct keys share exact coordinates: several coordinate pairs are divided across folds. Additionally, all held-out locations have a training location within 100 m. Thus the existing OOF has no full-key overlap but does not provide spatially independent validation; error estimates may be optimistic under spatial autocorrelation."
+  },
+  "diagnosticInterpretation": [
+    "Poderosa errors and negative bias are substantially larger than Santa Clara; the height-only OOF model underpredicts Poderosa by an average of about 579 kg DM/ha.",
+    "March errors exceed November errors for the height-only model, with positive bias in March; campaign differences remain visible despite both campaigns appearing in every fold.",
+    "Management class 3 is absent from OOF because all its observations are from June, where height is missing. OOF cannot support claims for that management level.",
+    "Point-weighted rows include repeated locations. The macro summary averaged over spatial groups is included to show the effect of giving each location equal weight.",
+    "The evaluation remains internal to two farms and two campaigns; exact-coordinate aliases across folds and close neighbors further limit its independence."
+  ],
+  "preregisteredCandidateProtocol": {
+    "status": "PROPOSED_NOT_RUN",
+    "estimand": "dry_matter_yield_kg_dm_ha for clipped quadrat forage biomass, using sward_height_cm recorded before clipping; no DMI, ADG, standing inventory, or farm-level transport claim",
+    "inputBoundary": "First comparison uses height alone, measured at prediction time. Exclude target aliases, all clipped-sample weights, coordinates/IDs as predictors, and fields whose timing relative to outcome is undocumented.",
+    "validation": "Before model comparison, block by contiguous field/spatial region; unite exact-coordinate aliases and preserve all campaigns per location in one block. Use a predeclared 100 m training exclusion buffer around held-out blocks (chosen above the observed ~60 m nearest-neighbor spacing). Report scored coverage. Require at least 70% of eligible observations and at least four independent held-out blocks; otherwise issue NO-GO for model ranking. A third farm remains necessary for external transfer claims.",
+    "fixedCandidates": [
+      {
+        "name": "training-median baseline",
+        "specification": "median target in training data only"
+      },
+      {
+        "name": "OLS height-only",
+        "specification": "ordinary least squares with intercept; current diagnostic reference"
+      },
+      {
+        "name": "Ridge height-only",
+        "specification": "standardize height using training fold only; Ridge alpha=1.0 fixed in advance"
+      },
+      {
+        "name": "Huber height-only",
+        "specification": "HuberRegressor epsilon=1.35, alpha=0.0, max_iter=1000; fixed in advance"
+      },
+      {
+        "name": "quadratic height-only (optional, single nonlinear candidate)",
+        "specification": "degree-2 polynomial in centered/scaled height, scaling learned within training fold; included only as a fixed curvature check, no degree or knot search"
+      }
+    ],
+    "primaryMetric": "spatial-block-macro MAE: average absolute error across observations in each held-out contiguous block (after joining exact-coordinate aliases and repeated visits), then average equally over held-out blocks",
+    "secondaryMetrics": [
+      "row-weighted MAE",
+      "row-weighted RMSE",
+      "signed bias",
+      "farm/campaign/management subgroup MAE and bias",
+      "coverage and scored-group counts"
+    ],
+    "retentionRule": "Retain a challenger only if it reduces primary spatial-group-macro MAE by at least 10% versus OLS on identical held-out groups, row-weighted RMSE does not worsen by more than 5%, and no farm or campaign subgroup with at least 20 scored groups has MAE worsened by more than 10%. Otherwise retain OLS as reference or report no demonstrated improvement. These are practical preregistered thresholds, not significance tests; do not tune on these folds."
+  }
+}
