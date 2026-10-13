@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {FarmEngine} from '../src/client/engine.js';
+import {separateLegacySnapshot} from '../src/client/animal-view-state.js';
 import {ColumnHistoryEngine} from './column-history-engine.mjs';
 
 const [variant, countText, hoursText, repetitionsText] = process.argv.slice(2);
@@ -7,7 +8,8 @@ const Engine = variant === 'typedColumns' ? ColumnHistoryEngine : FarmEngine;
 const count = Number(countText), hours = Number(hoursText), repetitions = Number(repetitionsText);
 const collect = () => global.gc?.();
 const sampleMemory = () => { const memory = process.memoryUsage(); return {heapUsedBytes: memory.heapUsed, arrayBuffersBytes: memory.arrayBuffers, rssBytes: memory.rss}; };
-const median = values => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
+const median = values => { const sorted = [...values].sort((a, b) => a - b); return sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2; };
+const summarizeSamples = values => { const sorted = [...values].sort((a, b) => a - b); return {sampleCount: sorted.length, median: median(sorted), spread: {min: sorted[0], max: sorted.at(-1), range: sorted.at(-1) - sorted[0]}, rawObservations: [...values]}; };
 
 {
   const warmup = new Engine(20261012, count);
@@ -19,7 +21,9 @@ function oneRun() {
   collect(); const baseline = sampleMemory(), engine = new Engine(20261012, count);
   const tickStarted = performance.now(); engine.tick(hours, undefined, false); const tickMs = performance.now() - tickStarted;
   collect(); const retained = sampleMemory();
-  const snapshotStarted = performance.now(), snapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
+  const snapshotStarted = performance.now(), rawSnapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
+  // Both engines expose the legacy snapshot shape; compare domain state only.
+  const snapshot = separateLegacySnapshot(rawSnapshot).state;
   const digest = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
   const historyEntries = snapshot.animals.reduce((sum, animal) => sum + animal.history.length, 0);
   collect(); const materialized = sampleMemory();
@@ -29,14 +33,20 @@ function oneRun() {
 const rows = Array.from({length: repetitions}, oneRun);
 const summarize = field => ({
   tickMedianMs: median(rows.map(row => row.tickMs)),
+  tickStatistics: summarizeSamples(rows.map(row => row.tickMs)),
   snapshotMedianMs: median(rows.map(row => row.snapshotMs)),
+  snapshotStatistics: summarizeSamples(rows.map(row => row.snapshotMs)),
   baselineRssBytesMedian: median(rows.map(row => row.baselineRssBytes)),
   retainedHeapDeltaBytesMedian: median(rows.map(row => row.retained.heapUsedBytes)),
+  retainedHeapDeltaBytesSamples: rows.map(row => row.retained.heapUsedBytes),
   retainedArrayBuffersDeltaBytesMedian: median(rows.map(row => row.retained.arrayBuffersBytes)),
   retainedRssBytesMedian: median(rows.map(row => row.retained.rssBytes)),
+  retainedRssBytesSamples: rows.map(row => row.retained.rssBytes),
   materializedHeapDeltaBytesMedian: median(rows.map(row => row.materialized.heapUsedBytes)),
+  materializedHeapDeltaBytesSamples: rows.map(row => row.materialized.heapUsedBytes),
   materializedArrayBuffersDeltaBytesMedian: median(rows.map(row => row.materialized.arrayBuffersBytes)),
   materializedRssBytesMedian: median(rows.map(row => row.materialized.rssBytes)),
+  materializedRssBytesSamples: rows.map(row => row.materialized.rssBytes),
   historyEntries: rows.at(-1).historyEntries,
   snapshotDigest: rows.at(-1).digest,
   variant: field

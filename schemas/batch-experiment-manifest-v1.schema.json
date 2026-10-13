@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://santleme.github.io/riose-agro/schemas/batch-experiment-manifest-v1.schema.json",
+  "title": "Riose batch experiment manifest v1",
+  "description": "Additive reproducibility contract for a batch of independent scenario runs; separate from scenario v2 and farm snapshots.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "experimentId", "createdAt", "manifestDigest", "runs"],
+  "properties": {
+    "type": {"const": "riose-batch-experiment"},
+    "version": {"const": 1},
+    "experimentId": {"type": "string", "minLength": 1},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "description": {"type": "string"},
+    "manifestDigest": {"$ref": "#/$defs/digest"},
+    "runs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/run"}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "unitValue": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {"value": {}, "unit": {"type": "string", "minLength": 1}}
+    },
+    "reference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status"],
+      "properties": {
+        "id": {"type": ["string", "null"]},
+        "digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "uri": {"type": ["string", "null"]},
+        "status": {"enum": ["provided", "missing", "not-applicable", "unverified"]}
+      }
+    },
+    "run": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runId", "scenarioFormat", "scenarioVersion", "scenarioId", "scenarioRef", "scenarioDigest", "seed", "engine", "models", "datasets", "evidence", "inputs", "outputs", "status", "outputDigest", "resultDigest", "resultRef"],
+      "properties": {
+        "runId": {"type": "string", "minLength": 1},
+        "scenarioFormat": {"enum": ["agroville-comparison", "riose-scenario-harness", "baseline", "housing-comparison"]},
+        "scenarioVersion": {"type": "integer", "minimum": 1},
+        "scenarioId": {"type": ["string", "null"]},
+        "scenarioRef": {"type": "string", "minLength": 1},
+        "scenarioDigest": {"$ref": "#/$defs/digest"},
+        "seed": {"anyOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}]},
+        "engine": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "version", "buildDigest", "status"],
+          "properties": {
+            "id": {"type": ["string", "null"]},
+            "version": {"type": ["string", "null"]},
+            "buildDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+            "status": {"enum": ["provided", "missing", "unverified"]}
+          }
+        },
+        "models": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "version", "implementationDigest", "status"], "properties": {"id": {"type": ["string", "null"]}, "version": {"type": ["string", "null"]}, "implementationDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}, "status": {"enum": ["provided", "missing", "unverified"]}}}},
+        "datasets": {"type": "array", "items": {"$ref": "#/$defs/reference"}},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/reference"}},
+        "inputs": {"type": "object", "additionalProperties": {"$ref": "#/$defs/unitValue"}},
+        "outputs": {"type": "object", "additionalProperties": {"$ref": "#/$defs/unitValue"}},
+        "status": {"enum": ["planned", "running", "completed", "failed"]},
+        "outputDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "resultDigest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "resultRef": {"type": ["string", "null"], "minLength": 1, "pattern": "^[^/\\\\:#?]+\\.jsonl#[^/\\\\:#?]+$"}
+      }
+    }
+  }
+}

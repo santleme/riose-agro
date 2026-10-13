@@ -176,6 +176,20 @@ def _project_commit() -> str | None:
     return completed.stdout.strip() or None
 
 
+def _project_dirty() -> bool:
+    try:
+        completed = subprocess.run(
+            ["git", "-c", "safe.directory=*", "status", "--porcelain"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return bool(completed.stdout.strip())
+
+
 def _amd_reason_message(reason: str | None) -> str:
     return {
         "pytorch_unavailable": "PyTorch is not installed or could not be imported.",
@@ -332,7 +346,7 @@ def run_benchmark(
 
     now = timestamp_utc or datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     cpu_name = platform.processor() or None
-    return {
+    legacy_report = {
         "schema_version": 1,
         "timestamp_utc": now,
         "project_commit": project_commit if project_commit is not None else _project_commit(),
@@ -372,6 +386,115 @@ def run_benchmark(
             "Benchmark de software/hardware não implica validação científica do modelo.",
         ],
     }
+    def phase_statistics(statistics: dict[str, Any] | None, raw_observations: list[float] | None) -> dict[str, Any]:
+        if statistics is None:
+            return {"sampleCount": 0, "median": None, "spread": None, "rawObservations": []}
+        minimum, maximum = statistics["min_ms"], statistics["max_ms"]
+        return {
+            "sampleCount": statistics["runs"],
+            "median": statistics["median_ms"],
+            "spread": {"min": minimum, "max": maximum, "range": maximum - minimum},
+            "rawObservations": raw_observations or [],
+        }
+
+    compute_measurements = [{
+        "phase": "engine",
+        "metric": "scale_vector",
+        "unit": "ms",
+        "statistics": phase_statistics(cpu_statistics, cpu_timings),
+        "population": {"count": len(values), "unit": "numeric-vector-elements", "scope": "numeric-kernel-only"},
+        "source": "compute_service scale_vector CPU operation; input vector preconstructed",
+        "scope": "numeric-vector-elements",
+        "elements": len(values),
+        "backend": "cpu",
+        "memory": None,
+    }]
+    if amd_statistics is not None:
+        compute_measurements.append({
+            "phase": "engine",
+            "metric": "scale_vector",
+            "unit": "ms",
+            "statistics": phase_statistics(amd_statistics, amd_timings),
+            "population": {"count": len(values), "unit": "numeric-vector-elements", "scope": "numeric-kernel-only"},
+            "source": "compute_service scale_vector AMD ROCm operation; input vector preconstructed",
+            "scope": "numeric-vector-elements",
+            "elements": len(values),
+            "backend": "amd_rocm",
+            "memory": None,
+        })
+    not_measured = {"status": "not-measured", "measurements": []}
+    cpu_name = platform.processor() or None
+    report = {
+        # Keep legacy AMD report fields, including their original workload and
+        # configuration members, while adding required camelCase envelope keys.
+        **legacy_report,
+        "schemaVersion": 2,
+        "benchmark": {
+            "name": "compute-service-scale-vector",
+            "source": {"revision": legacy_report["project_commit"], "dirty": _project_dirty()},
+        },
+        "runtime": {"platform": sys.platform, "python": platform.python_version()},
+        "hardware": {
+            "os": platform.system(),
+            "architecture": platform.machine(),
+            "cpu": cpu_name,
+            "gpuMemoryBytes": None,
+        },
+        "workload": {
+            **legacy_report["workload"],
+            "seed": "deterministic-vector-no-rng",
+            "populations": [{
+                "count": len(values),
+                "unit": "numeric-vector-elements",
+                "scope": "numeric-kernel-only",
+            }],
+            "numericWorkload": {"elements": len(values), "operation": "scale_vector"},
+        },
+        "configuration": {**legacy_report["configuration"], "warmupRuns": warmup_runs, "repetitions": repetitions},
+        "limits": {
+            "farmEngineMaxAnimals": None,
+            "rendererMaxAnimals": None,
+            "numericKernelMaxAnimalsMeasured": None,
+        },
+        "phases": {
+            "engine": {"status": "measured", "measurements": compute_measurements},
+            "snapshot": not_measured,
+            "serialization": not_measured,
+            "worker": not_measured,
+            "ui": not_measured,
+            "layout": not_measured,
+            "render": not_measured,
+            "startup": not_measured,
+            "coldStartup": not_measured,
+            "warmStartup": not_measured,
+            "bridgeMarshaling": not_measured,
+            "fullScenario": not_measured,
+            "uiEndToEnd": not_measured,
+            "memory": not_measured,
+        },
+        "timingBoundaries": [{
+            "phase": "engine",
+            "timed": ["scale_vector operation over the prepared numeric input, separately for CPU and AMD backends."],
+            "notTimed": ["Input construction, correctness verification, Worker/UI/rendering, and GPU memory measurement."],
+            "whatIsTimed": ["scale_vector operation over the prepared numeric input, separately for CPU and AMD backends."],
+            "whatIsNotTimed": ["Input construction, correctness verification, Worker/UI/rendering, and GPU memory measurement."],
+        }],
+        "results": legacy_report,
+        "limitations": legacy_report["limitations"],
+    }
+    validator = ROOT / "scripts" / "validate-benchmark-report.mjs"
+    try:
+        subprocess.run(
+            ["node", str(validator)],
+            input=json.dumps(report, allow_nan=False),
+            text=True,
+            check=True,
+            capture_output=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as error:
+        detail = error.stderr.strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
+        raise ValueError(f"shared_benchmark_report_schema_validation_failed: {detail}") from error
+    return report
 
 
 def _positive_env_int(name: str, default: int, *, allow_zero: bool = False) -> int:

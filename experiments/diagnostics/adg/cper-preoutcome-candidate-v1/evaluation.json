@@ -1,0 +1,1168 @@
+{
+  "schemaVersion": "1.0.0",
+  "experimentId": "cper-preoutcome-adg-candidates-v1",
+  "classification": "internal_cper_yearling_steer_adg_nested_year_cv_development_only_not_validation",
+  "status": "completed_internal_development_only",
+  "protocol": {
+    "path": "experiments/diagnostics/adg/cper-preoutcome-candidate-v1/preregister.json",
+    "sha256": "f87839a234328d5380d0789ad3865622555b5095f3f895ad887290d246a745e0"
+  },
+  "source": {
+    "sha256": "533929668b59bc9b6f67bf202c87a746634871419972db126e6c94b2f83eac14",
+    "bytes": 168901,
+    "doi": "10.15482/USDA.ADC/1528520",
+    "license": "U.S. Public Domain",
+    "path": "data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv"
+  },
+  "code": {
+    "commit": "2c8464cec442a0fdb32310ab303fc7f5e2258c88",
+    "script": "scripts/evaluate_cper_preoutcome_adg_candidates.py"
+  },
+  "execution": {
+    "completedAtUtc": "2026-10-13T16:22:10.761710+00:00",
+    "wallSeconds": 0.013116170999637689,
+    "runtime": "Python standard library only; deterministic closed-form one-feature OLS/Ridge; no random seed used"
+  },
+  "cohort": {
+    "rowCount": 320,
+    "population": "CPER yearling steers, 2009-2013; all eligible rows including source Use.Flag outliers retained.",
+    "byYear": {
+      "2009": 62,
+      "2010": 65,
+      "2011": 64,
+      "2012": 65,
+      "2013": 64
+    },
+    "useFlagCounts": {
+      "0": 309,
+      "outlier": 11
+    },
+    "initialWeightKgRange": [
+      186.88005644,
+      344.7302012
+    ],
+    "seasonDaysRangeDescriptiveOnly": [
+      120.0,
+      137.0
+    ],
+    "identitiesBeforePurge": 312
+  },
+  "featureAudit": {
+    "included": [
+      "on_Weight converted to kg"
+    ],
+    "excluded": [
+      "off_Weight, gain and all ADG-derived fields",
+      "Season.Days because it is realized duration, not guaranteed known before outcome",
+      "Treatment and Pasture because the development data map each treatment one-to-one to a single remaining pasture",
+      "Year, animal/group identifiers, source Use.Flag, shrink variables, post-outcome dates/fields"
+    ],
+    "treatmentPastureAlias": {
+      "treatmentToPastures": {
+        "heavy": [
+          "23E"
+        ],
+        "light": [
+          "23W"
+        ],
+        "moderate": [
+          "15E"
+        ]
+      },
+      "pastureToTreatments": {
+        "15E": [
+          "moderate"
+        ],
+        "23E": [
+          "heavy"
+        ],
+        "23W": [
+          "light"
+        ]
+      },
+      "rowCountsByPair": {
+        "heavy|23E": 148,
+        "light|23W": 73,
+        "moderate|15E": 99
+      },
+      "perfectOneToOneAlias": true,
+      "decision": "Treatment and pasture are excluded as predictors: each treatment is represented by exactly one remaining pasture, so the data cannot distinguish treatment from pasture or support extrapolation to a new pasture."
+    }
+  },
+  "evaluation": {
+    "models": {
+      "M0": {
+        "pooled": {
+          "n": 320,
+          "maeKgPerHeadDay": 0.22092262449947714,
+          "rmseKgPerHeadDay": 0.2983399581116549,
+          "biasPredictedMinusObservedKgPerHeadDay": 0.001367633108507707
+        },
+        "yearMacro": {
+          "maeKgPerHeadDay": 0.21999154065610807,
+          "rmseKgPerHeadDay": 0.2640952714015936,
+          "biasPredictedMinusObservedKgPerHeadDay": -0.0005444620623943762
+        },
+        "byYear": {
+          "2009": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.13044684887240027,
+            "rmseKgPerHeadDay": 0.17369135138958028,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.10056750856150601
+          },
+          "2010": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.12284637111281095,
+            "rmseKgPerHeadDay": 0.15624486244333763,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.017273608045489507
+          },
+          "2011": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12045699508613966,
+            "rmseKgPerHeadDay": 0.1532064728077755,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.0341157265985676
+          },
+          "2012": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4359941565100861,
+            "rmseKgPerHeadDay": 0.4995334317396772,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.42800904561114356
+          },
+          "2013": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.2902133316991034,
+            "rmseKgPerHeadDay": 0.33780023862759745,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.2787745127175523
+          }
+        },
+        "byUseFlagDescriptiveOnly": {
+          "0": {
+            "n": 309,
+            "maeKgPerHeadDay": 0.2145723235156716,
+            "rmseKgPerHeadDay": 0.29005327618728205,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.004779843477420276
+          },
+          "outlier": {
+            "n": 11,
+            "maeKgPerHeadDay": 0.399308352135469,
+            "rmseKgPerHeadDay": 0.4753663428064514,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.09448445816367262
+          }
+        }
+      },
+      "M1": {
+        "pooled": {
+          "n": 320,
+          "maeKgPerHeadDay": 0.23360479373140244,
+          "rmseKgPerHeadDay": 0.309009570399685,
+          "biasPredictedMinusObservedKgPerHeadDay": 0.020700702455730708
+        },
+        "yearMacro": {
+          "maeKgPerHeadDay": 0.23282560014806175,
+          "rmseKgPerHeadDay": 0.27569983884548244,
+          "biasPredictedMinusObservedKgPerHeadDay": 0.019516526788895615
+        },
+        "byYear": {
+          "2009": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.16125673982925343,
+            "rmseKgPerHeadDay": 0.19891668267140789,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.013773348086515485
+          },
+          "2010": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.1282386569665502,
+            "rmseKgPerHeadDay": 0.15984951001089573,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03048338633652409
+          },
+          "2011": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12391058145154114,
+            "rmseKgPerHeadDay": 0.15580480812050834,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03115591981888538
+          },
+          "2012": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4436167693609812,
+            "rmseKgPerHeadDay": 0.508298921951039,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.43696629589678343
+          },
+          "2013": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.30710525313198267,
+            "rmseKgPerHeadDay": 0.3556292714735613,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.29151770388341136
+          }
+        },
+        "byUseFlagDescriptiveOnly": {
+          "0": {
+            "n": 309,
+            "maeKgPerHeadDay": 0.22797175120941024,
+            "rmseKgPerHeadDay": 0.3013792420485225,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.02324226275229491
+          },
+          "outlier": {
+            "n": 11,
+            "maeKgPerHeadDay": 0.3918420791219109,
+            "rmseKgPerHeadDay": 0.4757303841452703,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.05069403678411828
+          }
+        }
+      },
+      "M2": {
+        "pooled": {
+          "n": 320,
+          "maeKgPerHeadDay": 0.23259689791452712,
+          "rmseKgPerHeadDay": 0.3082364676112686,
+          "biasPredictedMinusObservedKgPerHeadDay": 0.019967681174310328
+        },
+        "yearMacro": {
+          "maeKgPerHeadDay": 0.23179907710077968,
+          "rmseKgPerHeadDay": 0.2746992776924927,
+          "biasPredictedMinusObservedKgPerHeadDay": 0.018755963357269825
+        },
+        "byYear": {
+          "2009": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.15791100925225143,
+            "rmseKgPerHeadDay": 0.19594316512850102,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.009442255031666187
+          },
+          "2010": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.1278033596532066,
+            "rmseKgPerHeadDay": 0.1594332089918297,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.029984904136862427
+          },
+          "2011": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12366895188871015,
+            "rmseKgPerHeadDay": 0.15544763705428685,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03126719075045238
+          },
+          "2012": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4433213192504814,
+            "rmseKgPerHeadDay": 0.5079561082613376,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.436619115653154
+          },
+          "2013": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.30629074545924867,
+            "rmseKgPerHeadDay": 0.35471626902650844,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.29102945901115623
+          }
+        },
+        "byUseFlagDescriptiveOnly": {
+          "0": {
+            "n": 309,
+            "maeKgPerHeadDay": 0.22691792592204657,
+            "rmseKgPerHeadDay": 0.30057647004270927,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.02254234560715876
+          },
+          "outlier": {
+            "n": 11,
+            "maeKgPerHeadDay": 0.3921243838851176,
+            "rmseKgPerHeadDay": 0.4754070176615658,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.05235698334843202
+          }
+        }
+      }
+    },
+    "folds": [
+      {
+        "outerTestYear": 2009,
+        "outerTrainN": 254,
+        "outerTestN": 62,
+        "outerPurgedIdentityProxyCount": 4,
+        "innerTrainingYears": [
+          2010,
+          2011,
+          2012,
+          2013
+        ],
+        "m2SelectedAlpha": 10.0,
+        "m2InnerScores": {
+          "0.01": {
+            "yearMacroMaeKgPerHeadDay": 0.2542005320690317,
+            "byYear": [
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.13568133093358198,
+                "rmseKgPerHeadDay": 0.1673323808283998,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.03128368077517715
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.12828557683074754,
+                "rmseKgPerHeadDay": 0.1626517739868927,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.02206694695852999
+              },
+              {
+                "year": 2012,
+                "n": 62,
+                "maeKgPerHeadDay": 0.43223858855167524,
+                "rmseKgPerHeadDay": 0.49229490365170414,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4224388707115027
+              },
+              {
+                "year": 2013,
+                "n": 63,
+                "maeKgPerHeadDay": 0.3205966319601221,
+                "rmseKgPerHeadDay": 0.3704318396169715,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.3021619671875018
+              }
+            ]
+          },
+          "0.1": {
+            "yearMacroMaeKgPerHeadDay": 0.2541960043100285,
+            "byYear": [
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.1356728975275867,
+                "rmseKgPerHeadDay": 0.1673210643830517,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.03128890275767635
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.1282754810282272,
+                "rmseKgPerHeadDay": 0.16264071862350327,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.022084961477115528
+              },
+              {
+                "year": 2012,
+                "n": 62,
+                "maeKgPerHeadDay": 0.4322413794064531,
+                "rmseKgPerHeadDay": 0.49229834051906207,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4224423877865017
+              },
+              {
+                "year": 2013,
+                "n": 63,
+                "maeKgPerHeadDay": 0.320594259277847,
+                "rmseKgPerHeadDay": 0.37042708233153576,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.30216984933602786
+              }
+            ]
+          },
+          "1.0": {
+            "yearMacroMaeKgPerHeadDay": 0.2541509620879799,
+            "byYear": [
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.1355890028924725,
+                "rmseKgPerHeadDay": 0.16720888011162394,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.031340850489895926
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.12817504629331136,
+                "rmseKgPerHeadDay": 0.16253122773925582,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.022264172926143737
+              },
+              {
+                "year": 2012,
+                "n": 62,
+                "maeKgPerHeadDay": 0.4322691417666002,
+                "rmseKgPerHeadDay": 0.4923325318628623,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.42247737430875393
+              },
+              {
+                "year": 2013,
+                "n": 63,
+                "maeKgPerHeadDay": 0.32057065739953544,
+                "rmseKgPerHeadDay": 0.3703800476077435,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.3022482557507009
+              }
+            ]
+          },
+          "10.0": {
+            "yearMacroMaeKgPerHeadDay": 0.2537697664651727,
+            "byYear": [
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.1347917930683474,
+                "rmseKgPerHeadDay": 0.1661785128608849,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.031834484467922156
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.12740788914552575,
+                "rmseKgPerHeadDay": 0.1615352626403828,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.023967577749156782
+              },
+              {
+                "year": 2012,
+                "n": 62,
+                "maeKgPerHeadDay": 0.4325328841879981,
+                "rmseKgPerHeadDay": 0.4926575938652377,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.42280974627015006
+              },
+              {
+                "year": 2013,
+                "n": 63,
+                "maeKgPerHeadDay": 0.32034649945881943,
+                "rmseKgPerHeadDay": 0.3699594268439949,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.3029929176890427
+              }
+            ]
+          }
+        },
+        "testUseFlagCounts": {
+          "0": 57,
+          "outlier": 5
+        },
+        "testTreatmentCounts": {
+          "heavy": 29,
+          "light": 14,
+          "moderate": 19
+        },
+        "metrics": {
+          "M0": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.13044684887240027,
+            "rmseKgPerHeadDay": 0.17369135138958028,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.10056750856150601
+          },
+          "M1": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.16125673982925343,
+            "rmseKgPerHeadDay": 0.19891668267140789,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.013773348086515485
+          },
+          "M2": {
+            "n": 62,
+            "maeKgPerHeadDay": 0.15791100925225143,
+            "rmseKgPerHeadDay": 0.19594316512850102,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.009442255031666187
+          }
+        }
+      },
+      {
+        "outerTestYear": 2010,
+        "outerTrainN": 255,
+        "outerTestN": 65,
+        "outerPurgedIdentityProxyCount": 0,
+        "innerTrainingYears": [
+          2009,
+          2011,
+          2012,
+          2013
+        ],
+        "m2SelectedAlpha": 10.0,
+        "m2InnerScores": {
+          "0.01": {
+            "yearMacroMaeKgPerHeadDay": 0.27953654281979307,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.17197998470031742,
+                "rmseKgPerHeadDay": 0.21030505009451206,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.02232350262206605
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.1260404711744878,
+                "rmseKgPerHeadDay": 0.15927672183608946,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04155083156848492
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.4836310881761615,
+                "rmseKgPerHeadDay": 0.5498668265156326,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.48217462442136794
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.33649462722820556,
+                "rmseKgPerHeadDay": 0.38430672319959636,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.323130620869958
+              }
+            ]
+          },
+          "0.1": {
+            "yearMacroMaeKgPerHeadDay": 0.2795161762871645,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.17193151458370948,
+                "rmseKgPerHeadDay": 0.2102576155594751,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.022259867499082334
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.12603545011817865,
+                "rmseKgPerHeadDay": 0.15927072304762435,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04155062966898857
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.48361791845456,
+                "rmseKgPerHeadDay": 0.5498524876816068,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4821603982896498
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.3364798219922099,
+                "rmseKgPerHeadDay": 0.38428971281172347,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32312024257414845
+              }
+            ]
+          },
+          "1.0": {
+            "yearMacroMaeKgPerHeadDay": 0.2793135801712015,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.17144933896581102,
+                "rmseKgPerHeadDay": 0.20978693120859887,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.02162683199407433
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.125985498453303,
+                "rmseKgPerHeadDay": 0.15921123618220837,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04154862108446784
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.48348692982682717,
+                "rmseKgPerHeadDay": 0.5497098861029213,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4820189024002078
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.3363325534388648,
+                "rmseKgPerHeadDay": 0.3841206920654778,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32301700905524316
+              }
+            ]
+          },
+          "10.0": {
+            "yearMacroMaeKgPerHeadDay": 0.2773988530685843,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.16686745909924836,
+                "rmseKgPerHeadDay": 0.20542470030034926,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.015611404155028399
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.12552368533346572,
+                "rmseKgPerHeadDay": 0.1586631374219628,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04152952454208423
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.48227001428936656,
+                "rmseKgPerHeadDay": 0.5483584025099115,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.480676524298817
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.33493425355225664,
+                "rmseKgPerHeadDay": 0.38253246635014704,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32203681732727013
+              }
+            ]
+          }
+        },
+        "testUseFlagCounts": {
+          "0": 63,
+          "outlier": 2
+        },
+        "testTreatmentCounts": {
+          "heavy": 30,
+          "light": 15,
+          "moderate": 20
+        },
+        "metrics": {
+          "M0": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.12284637111281095,
+            "rmseKgPerHeadDay": 0.15624486244333763,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.017273608045489507
+          },
+          "M1": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.1282386569665502,
+            "rmseKgPerHeadDay": 0.15984951001089573,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03048338633652409
+          },
+          "M2": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.1278033596532066,
+            "rmseKgPerHeadDay": 0.1594332089918297,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.029984904136862427
+          }
+        }
+      },
+      {
+        "outerTestYear": 2011,
+        "outerTrainN": 256,
+        "outerTestN": 64,
+        "outerPurgedIdentityProxyCount": 0,
+        "innerTrainingYears": [
+          2009,
+          2010,
+          2012,
+          2013
+        ],
+        "m2SelectedAlpha": 10.0,
+        "m2InnerScores": {
+          "0.01": {
+            "yearMacroMaeKgPerHeadDay": 0.27655315790496443,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.1722801767269609,
+                "rmseKgPerHeadDay": 0.21024936096149743,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.024340635819030374
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.132203756964022,
+                "rmseKgPerHeadDay": 0.16328290964296435,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04208433617043968
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.4683876083440847,
+                "rmseKgPerHeadDay": 0.5340748018024469,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4655654237350463
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.3333410895847901,
+                "rmseKgPerHeadDay": 0.3809762598555843,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32028236712924524
+              }
+            ]
+          },
+          "0.1": {
+            "yearMacroMaeKgPerHeadDay": 0.2765339456482689,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.17223128991071657,
+                "rmseKgPerHeadDay": 0.21020143141467038,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.024274328454196685
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.1321949912518345,
+                "rmseKgPerHeadDay": 0.1632760982578868,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04207751205141292
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.46837987134927417,
+                "rmseKgPerHeadDay": 0.5340662109262743,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4655568385968148
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.3333296300812503,
+                "rmseKgPerHeadDay": 0.3809629854214557,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32027541400811393
+              }
+            ]
+          },
+          "1.0": {
+            "yearMacroMaeKgPerHeadDay": 0.2763428239294073,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.1717449556722569,
+                "rmseKgPerHeadDay": 0.2097258757237112,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.023614691679744147
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.13210778611199414,
+                "rmseKgPerHeadDay": 0.1632085376260661,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04200962272978269
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.46830291543494523,
+                "rmseKgPerHeadDay": 0.5339807686093059,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4654714466354104
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.3332156384984329,
+                "rmseKgPerHeadDay": 0.38083110714235313,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.32020624894520133
+              }
+            ]
+          },
+          "10.0": {
+            "yearMacroMaeKgPerHeadDay": 0.27452666765593753,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 62,
+                "maeKgPerHeadDay": 0.16712234873569737,
+                "rmseKgPerHeadDay": 0.20532239397300134,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.017344844138572388
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.13127868649888513,
+                "rmseKgPerHeadDay": 0.16258462437165805,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04136416753756686
+              },
+              {
+                "year": 2012,
+                "n": 65,
+                "maeKgPerHeadDay": 0.4675726276087621,
+                "rmseKgPerHeadDay": 0.533170556012605,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.4646611033315683
+              },
+              {
+                "year": 2013,
+                "n": 64,
+                "maeKgPerHeadDay": 0.33213300778040555,
+                "rmseKgPerHeadDay": 0.37959378577228853,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.3195493563933761
+              }
+            ]
+          }
+        },
+        "testUseFlagCounts": {
+          "0": 63,
+          "outlier": 1
+        },
+        "testTreatmentCounts": {
+          "heavy": 30,
+          "light": 14,
+          "moderate": 20
+        },
+        "metrics": {
+          "M0": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12045699508613966,
+            "rmseKgPerHeadDay": 0.1532064728077755,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.0341157265985676
+          },
+          "M1": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12391058145154114,
+            "rmseKgPerHeadDay": 0.15580480812050834,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03115591981888538
+          },
+          "M2": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.12366895188871015,
+            "rmseKgPerHeadDay": 0.15544763705428685,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.03126719075045238
+          }
+        }
+      },
+      {
+        "outerTestYear": 2012,
+        "outerTrainN": 248,
+        "outerTestN": 65,
+        "outerPurgedIdentityProxyCount": 7,
+        "innerTrainingYears": [
+          2009,
+          2010,
+          2011,
+          2013
+        ],
+        "m2SelectedAlpha": 10.0,
+        "m2InnerScores": {
+          "0.01": {
+            "yearMacroMaeKgPerHeadDay": 0.15772076293261167,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 59,
+                "maeKgPerHeadDay": 0.11628374950736184,
+                "rmseKgPerHeadDay": 0.1486536866323868,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.012432175160805711
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.15917045610516098,
+                "rmseKgPerHeadDay": 0.1929140466079457,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.10925581511570139
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.1395449236555823,
+                "rmseKgPerHeadDay": 0.17147330433458266,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.08113313798090115
+              },
+              {
+                "year": 2013,
+                "n": 60,
+                "maeKgPerHeadDay": 0.21588392246234162,
+                "rmseKgPerHeadDay": 0.2687995742611746,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.18592662735692084
+              }
+            ]
+          },
+          "0.1": {
+            "yearMacroMaeKgPerHeadDay": 0.1577181917486172,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 59,
+                "maeKgPerHeadDay": 0.11628064449219007,
+                "rmseKgPerHeadDay": 0.14865074706277032,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.012426488585367969
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.15916571932477697,
+                "rmseKgPerHeadDay": 0.19290841750360052,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.1092494157232429
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.1395433973432281,
+                "rmseKgPerHeadDay": 0.17147148606609655,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.08113135239780662
+              },
+              {
+                "year": 2013,
+                "n": 60,
+                "maeKgPerHeadDay": 0.21588300583427372,
+                "rmseKgPerHeadDay": 0.26879886529002134,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.18592569112102716
+              }
+            ]
+          },
+          "1.0": {
+            "yearMacroMaeKgPerHeadDay": 0.1576926167713256,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 59,
+                "maeKgPerHeadDay": 0.11624975698412458,
+                "rmseKgPerHeadDay": 0.14862152529410347,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.012369920699227698
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.15911860638031633,
+                "rmseKgPerHeadDay": 0.19285245983864957,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.10918576611379584
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.13952821589802272,
+                "rmseKgPerHeadDay": 0.1714534136052342,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.08111359211968647
+              },
+              {
+                "year": 2013,
+                "n": 60,
+                "maeKgPerHeadDay": 0.2158738878228387,
+                "rmseKgPerHeadDay": 0.2687918140307823,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.18591637806387426
+              }
+            ]
+          },
+          "10.0": {
+            "yearMacroMaeKgPerHeadDay": 0.15744985196785677,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 59,
+                "maeKgPerHeadDay": 0.11595632565750222,
+                "rmseKgPerHeadDay": 0.1483457304970388,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.01183252578089517
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.15867164367924153,
+                "rmseKgPerHeadDay": 0.1923243533415057,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.10858191930085478
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.13938414867831617,
+                "rmseKgPerHeadDay": 0.1712830816467767,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.08094505257319562
+              },
+              {
+                "year": 2013,
+                "n": 60,
+                "maeKgPerHeadDay": 0.2157872898563671,
+                "rmseKgPerHeadDay": 0.26872494629052296,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.18582792765812256
+              }
+            ]
+          }
+        },
+        "testUseFlagCounts": {
+          "0": 63,
+          "outlier": 2
+        },
+        "testTreatmentCounts": {
+          "heavy": 30,
+          "light": 15,
+          "moderate": 20
+        },
+        "metrics": {
+          "M0": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4359941565100861,
+            "rmseKgPerHeadDay": 0.4995334317396772,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.42800904561114356
+          },
+          "M1": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4436167693609812,
+            "rmseKgPerHeadDay": 0.508298921951039,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.43696629589678343
+          },
+          "M2": {
+            "n": 65,
+            "maeKgPerHeadDay": 0.4433213192504814,
+            "rmseKgPerHeadDay": 0.5079561082613376,
+            "biasPredictedMinusObservedKgPerHeadDay": 0.436619115653154
+          }
+        }
+      },
+      {
+        "outerTestYear": 2013,
+        "outerTrainN": 251,
+        "outerTestN": 64,
+        "outerPurgedIdentityProxyCount": 5,
+        "innerTrainingYears": [
+          2009,
+          2010,
+          2011,
+          2012
+        ],
+        "m2SelectedAlpha": 10.0,
+        "m2InnerScores": {
+          "0.01": {
+            "yearMacroMaeKgPerHeadDay": 0.21791917223898277,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 61,
+                "maeKgPerHeadDay": 0.1624292480263121,
+                "rmseKgPerHeadDay": 0.21338557330913852,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04082079142959147
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.16664811475518146,
+                "rmseKgPerHeadDay": 0.19711763967396498,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.11366209868956273
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.15085739532806958,
+                "rmseKgPerHeadDay": 0.18978488922464815,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.10753721515727441
+              },
+              {
+                "year": 2012,
+                "n": 61,
+                "maeKgPerHeadDay": 0.391741930846368,
+                "rmseKgPerHeadDay": 0.456574095577459,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.3740343349868872
+              }
+            ]
+          },
+          "0.1": {
+            "yearMacroMaeKgPerHeadDay": 0.21790592448487428,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 61,
+                "maeKgPerHeadDay": 0.16239768306270633,
+                "rmseKgPerHeadDay": 0.21335784004221034,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.040885106427037674
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.16663185509834164,
+                "rmseKgPerHeadDay": 0.19710313718363592,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.1136498885124405
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.15085023658894006,
+                "rmseKgPerHeadDay": 0.18977703508359625,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.10753652325638383
+              },
+              {
+                "year": 2012,
+                "n": 61,
+                "maeKgPerHeadDay": 0.39174392318950907,
+                "rmseKgPerHeadDay": 0.4565763914127713,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.37403678471606555
+              }
+            ]
+          },
+          "1.0": {
+            "yearMacroMaeKgPerHeadDay": 0.21777414570957127,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 61,
+                "maeKgPerHeadDay": 0.16208369562419997,
+                "rmseKgPerHeadDay": 0.2130835406830248,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04152486960110199
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.1664701193353055,
+                "rmseKgPerHeadDay": 0.1969591387129482,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.11352843316235992
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.1507790261738009,
+                "rmseKgPerHeadDay": 0.18969913836500507,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.10752964068268438
+              },
+              {
+                "year": 2012,
+                "n": 61,
+                "maeKgPerHeadDay": 0.39176374170497863,
+                "rmseKgPerHeadDay": 0.45659922959172394,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.3740611530061521
+              }
+            ]
+          },
+          "10.0": {
+            "yearMacroMaeKgPerHeadDay": 0.21652576772617688,
+            "byYear": [
+              {
+                "year": 2009,
+                "n": 61,
+                "maeKgPerHeadDay": 0.15911394086756958,
+                "rmseKgPerHeadDay": 0.21062280269249445,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.04760099599031188
+              },
+              {
+                "year": 2010,
+                "n": 65,
+                "maeKgPerHeadDay": 0.16493445476892657,
+                "rmseKgPerHeadDay": 0.1956154890618976,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.1123752270067478
+              },
+              {
+                "year": 2011,
+                "n": 64,
+                "maeKgPerHeadDay": 0.15010270796707306,
+                "rmseKgPerHeadDay": 0.18898034302824365,
+                "biasPredictedMinusObservedKgPerHeadDay": -0.10746427370100076
+              },
+              {
+                "year": 2012,
+                "n": 61,
+                "maeKgPerHeadDay": 0.39195196730113824,
+                "rmseKgPerHeadDay": 0.4568161998390896,
+                "biasPredictedMinusObservedKgPerHeadDay": 0.374292589913523
+              }
+            ]
+          }
+        },
+        "testUseFlagCounts": {
+          "0": 63,
+          "outlier": 1
+        },
+        "testTreatmentCounts": {
+          "heavy": 29,
+          "light": 15,
+          "moderate": 20
+        },
+        "metrics": {
+          "M0": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.2902133316991034,
+            "rmseKgPerHeadDay": 0.33780023862759745,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.2787745127175523
+          },
+          "M1": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.30710525313198267,
+            "rmseKgPerHeadDay": 0.3556292714735613,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.29151770388341136
+          },
+          "M2": {
+            "n": 64,
+            "maeKgPerHeadDay": 0.30629074545924867,
+            "rmseKgPerHeadDay": 0.35471626902650844,
+            "biasPredictedMinusObservedKgPerHeadDay": -0.29102945901115623
+          }
+        }
+      }
+    ],
+    "oofRowCount": 320
+  },
+  "interpretation": [
+    "This is internal model development within one CPER site and five annual blocks, not external or prospective validation.",
+    "The model feature set contains initial weight only; realized season duration, treatment and pasture are excluded.",
+    "Treatment and pasture are perfectly aliased in this cohort; a treatment coefficient cannot be separated from a pasture effect, and transport to unseen pastures is unsupported.",
+    "Only five outer year blocks are available, so no inferential confidence interval or robust stability claim is made.",
+    "The small univariate candidate set did not use CGREC or any previously reported external metrics for fitting, tuning or selection.",
+    "Results do not validate mature cows, DMI, causal treatment effects, new sites, or the complete simulator."
+  ],
+  "validated": false,
+  "externallyValidated": false,
+  "cgrecOutcomesUsed": false,
+  "promoted": false
+}

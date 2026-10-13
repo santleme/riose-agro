@@ -109,6 +109,25 @@ São associações descritivas pequenas; não calculamos p-valores. A GPS cobre 
 
 ## Registro do parecer
 
+### Escopo adicional de prontidão para DMI (#109)
+
+A revisão também precisa avaliar separadamente a proposta de estimação supervisionada descrita em [`dmi-supervised-readiness-2026-10.md`](evidence/dmi-supervised-readiness-2026-10.md). Esse gate define vacas de corte biologicamente maduras em pastagem e DMI total individual (forragem mais suplemento), em kg MS/animal/dia. Não é o mesmo estimando da trilha CPER de ADG em novilhos *yearling*; nenhuma conclusão sobre uma população deve ser transferida para a outra.
+
+Solicita-se ao(à) especialista:
+
+1. Avaliar se a definição operacional de maturidade, classe produtiva, unidade animal-período e DMI total é adequada para uma futura avaliação supervisionada.
+2. Revisar se a triagem de fontes sustenta o no-go preparatório: não foi localizada uma coorte com microdados individuais reutilizáveis que reúna população, outcome e chaves de animal/ensaio exigidos. A triagem registra, por exemplo, Soares et al. (2026) como near-miss de dez vacas leiteiras Holstein × Gyr, com estimativa de DMI de pastagem por ciclo e dados disponibilizados somente mediante solicitação razoável ([DOI 10.1007/s11250-026-05169-5](https://doi.org/10.1007/s11250-026-05169-5)); não é fonte elegível para este alvo.
+3. Indicar quais critérios de população, protocolo de medição, direitos de reutilização e validação por estudo/ensaio devem ser satisfeitos antes de reconsiderar o gate.
+
+Esta solicitação não constitui parecer, aprovação do estimando ou signoff do responsável pelo projeto. O estado de revisão e signoff permanece pendente até que pessoas identificadas e qualificadas registrem suas avaliações e atribuições.
+
+- Revisor(a) do estimando DMI (se diferente):
+- Credencial/formação relevante:
+- Data e conflito de interesse declarado:
+- Avaliação da definição de população/outcome:
+- Avaliação da evidência de no-go e condições para reabertura:
+- Fundamentação e referências adicionais:
+
 - Nome e credencial/formação do(a) revisor(a):
 - Vínculo institucional e experiência relevante:
 - Data:

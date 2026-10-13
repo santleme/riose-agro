@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "issue": 15,
+  "reviewedOn": "2026-10-13",
+  "candidateId": "dryad-dbrv15fg8",
+  "decision": "not-eligible-for-issue-15-calibration",
+  "source": {
+    "title": "Gas flux determination and prediction of methane emissions in yearling steers under grazing conditions",
+    "datasetDoi": "10.5061/dryad.dbrv15fg8",
+    "datasetUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.dbrv15fg8",
+    "datasetApiUrl": "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.dbrv15fg8",
+    "primaryArticleDoi": "10.1071/AN26172",
+    "primaryArticleUrl": "https://doi.org/10.1071/AN26172",
+    "version": 1,
+    "publishedOn": "2026-08-31",
+    "license": "CC0-1.0",
+    "access": "Public Dryad download; no account or author request required",
+    "localManifest": "../../data/dryad-grazing-yearlings/manifest.json",
+    "localAudit": "dryad-grazing-yearlings-audit.json"
+  },
+  "populationAndDesign": {
+    "population": "Growing Bos taurus crossbred yearling steers under grazing",
+    "animalRecordsWithAdgAndBodyWeight": 154,
+    "uniqueAnimalIds": 154,
+    "additionalRepeatedGasRecords": {
+      "animals": 141,
+      "rows": 2820,
+      "intervalsPerAnimal": 20,
+      "outcome": "cumulative automated-head-chamber gas summaries, not repeated ADG"
+    },
+    "independentExperimentsInPrimarySource": 4,
+    "experimentContexts": [
+      {"site": "CSU ARDEC improved pasture", "year": 2022},
+      {"site": "CSU ARDEC improved pasture", "year": 2023},
+      {"site": "USDA-ARS CPER native shortgrass steppe", "year": 2023},
+      {"site": "USDA-ARS CPER native shortgrass steppe", "year": 2024}
+    ],
+    "groupingAvailableInModelFile": false,
+    "groupingEvidence": "The paper describes four experiments and their site/year contexts, but Database_Model.csv has no experiment, site, or year field. Animal IDs support keeping each animal in one partition, but cannot assign animals to independent experiment/site/year clusters."
+  },
+  "outcomeCompatibility": {
+    "observedOutcomes": ["ADG (kg/day)", "body weight (kg)", "CO2 (g/day)", "CH4 (g/day)", "O2 (g/day)"],
+    "modelFileColumns": ["ID", "CO2", "CH4", "O2", "ADG", "BW"],
+    "requiredForFrozenEngineAdgEvaluationButAbsent": [
+      "animal-specific initial body weight",
+      "animal-specific final body weight and measurement dates or elapsed days",
+      "engine-aligned dry-matter/energy intake and resting or activity inputs",
+      "animal-to-experiment/site/year grouping key"
+    ],
+    "reason": "The published ADG is derived from beginning and final weights divided by elapsed days, but the model CSV contains only ADG and one BW value. Current engine gain depends on intake and resting/activity state; those paired inputs and the animal-level horizon are not present. Thus this cohort cannot yield a frozen engine prediction residual or an interval-coverage score without fabricating inputs."
+  },
+  "issue15Assessment": {
+    "separateCohortFromPrimary2019To2020CPERDataset": true,
+    "independentAcrossTargetSite": false,
+    "compatibleForEngineUncertaintyCalibration": false,
+    "canSupportDescriptiveCohortStatistics": true,
+    "canSupportAnimalGroupedMetricBootstrapOnlyIfAValidPredictionExists": true,
+    "canSupportExperimentOrSiteHeldOutEvaluation": false,
+    "eligibleForCalibration": false,
+    "eligibleForFinalHoldout": false,
+    "reasons": [
+      "No model-ready paired engine inputs and output horizon exist for ADG.",
+      "No experiment/site/year key exists in the row-level model file, despite four experiment clusters in the paper.",
+      "The two 2023-2024 experiments at CPER share the target site's location; the dataset cannot be separated by experiment from its row-level model file.",
+      "The gas-visit rows are repeated cumulative summaries for methane-method evaluation, not repeated ADG outcomes or independent animal trials."
+    ],
+    "remainingExternalDependency": "A reusable, openly licensed row-level cohort for the frozen target outcome with stable animal IDs, observed engine-aligned inputs and outcome horizon, and site/experiment/year grouping keys; plus enough independent clusters to reserve calibration and final evaluation partitions. For full-engine intervals, the same source must also pair the other outcome-specific inputs and outputs required by the readiness inventory."
+  },
+  "provenance": {
+    "datasetRecord": "https://datadryad.org/dataset/doi:10.5061/dryad.dbrv15fg8",
+    "datasetMetadataApi": "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.dbrv15fg8",
+    "primaryPaper": "https://doi.org/10.1071/AN26172",
+    "localFileHashesVerifiedBy": "npm run audit:dryad-grazing-yearlings",
+    "localAuditEvidence": "dryad-grazing-yearlings-audit.json"
+  }
+}

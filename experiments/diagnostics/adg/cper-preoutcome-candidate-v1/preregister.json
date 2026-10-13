@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_before_execution",
+  "experimentId": "cper-preoutcome-adg-candidates-v1",
+  "classification": "internal_cper_yearling_steer_adg_nested_year_cv_development_only_not_validation",
+  "source": {
+    "doi": "10.15482/USDA.ADC/1528520",
+    "file": "data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv",
+    "manifest": "data/usda-cper-ltgi-2000-2019/manifest.json"
+  },
+  "population": "CPER yearling steers, 2009-2013; all eligible rows including source Use.Flag outliers retained.",
+  "target": {
+    "definition": "(off_Weight - on_Weight) * 0.45359237 / Season.Days",
+    "unit": "kg/head/day",
+    "note": "Raw endpoint ADG; no source-reported/shrunk ADG used as target."
+  },
+  "features": {
+    "included": ["on_Weight converted to kg"],
+    "excluded": [
+      "off_Weight, gain and all ADG-derived fields",
+      "Season.Days because it is realized duration, not guaranteed known before outcome",
+      "Treatment and Pasture because the development data map each treatment one-to-one to a single remaining pasture",
+      "Year, animal/group identifiers, source Use.Flag, shrink variables, post-outcome dates/fields"
+    ],
+    "availability": "Initial weight is measured before the grazing outcome. This experiment estimates only the local relationship conditional on initial weight and does not claim to capture planned duration, grazing treatment, forage or weather effects."
+  },
+  "groups": {
+    "outer": "Leave one calendar year out across 2009-2013; all rows from held-out year are test rows.",
+    "inner": "Within each outer training partition, leave one of its remaining years out for each Ridge alpha candidate; select alpha by lowest equally weighted inner-year MAE.",
+    "identityPurge": "Purge from every fold's training rows any row sharing Owner|Tag.Color|Tag with the held-out year. This is a conservative proxy, not a permanent-ID guarantee.",
+    "seed": null,
+    "independentUnits": "calendar year blocks for CV summaries; only five outer blocks are available."
+  },
+  "candidates": [
+    {
+      "id": "M0",
+      "name": "training_years_mean",
+      "features": [],
+      "fit": "Arithmetic mean raw ADG on outer training rows only."
+    },
+    {
+      "id": "M1",
+      "name": "ordinary_least_squares_initial_weight",
+      "features": ["initial_weight_kg"],
+      "fit": "Intercept plus one linear slope, fit on outer training rows only; centering/scaling uses outer training rows only."
+    },
+    {
+      "id": "M2",
+      "name": "ridge_initial_weight_inner_year_selected",
+      "features": ["initial_weight_kg"],
+      "fit": "Select alpha from the fixed grid [0.01, 0.1, 1, 10] by equally weighted inner-year MAE, then refit on all outer training rows. Ridge penalty applies to the standardized slope; intercept is unpenalized. Ties select the smaller alpha."
+    }
+  ],
+  "primaryMetric": "pooled out-of-fold MAE, with pooled RMSE and signed bias also reported",
+  "reporting": [
+    "pooled and equally weighted outer-year macro MAE/RMSE/bias",
+    "metrics by held-out year and source Use.Flag, descriptive only",
+    "outer fold counts and purged identity-proxy counts",
+    "selected alpha per outer fold and all inner validation scores"
+  ],
+  "selectionRule": "This experiment is development-only. M2 alpha is selected only inside each outer training partition. No model is promoted or called generally superior; the five-year outer OOF estimates are descriptive internal development results, not a new validation claim.",
+  "prohibitions": [
+    "Do not read, fit, tune, select or compare using CGREC outcomes.",
+    "Do not use this CPER cohort as evidence for DMI, mature cows, other sites, treatment causality, or full-engine validity.",
+    "Do not use the prior CGREC transport artifact as a validation outcome in candidate selection.",
+    "Do not change the frozen CPER/CGREC baseline reports or their source data."
+  ]
+}

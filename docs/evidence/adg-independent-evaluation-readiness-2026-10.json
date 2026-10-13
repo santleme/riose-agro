@@ -1,0 +1,68 @@
+{
+  "status": "existing_external_site_adg_component_evaluation_sufficient_for_current_readiness",
+  "classification": "separate_yearling_steer_adg_transport_diagnostic_not_dmi_or_full_engine_validation",
+  "decision": "Do not add another ADG holdout/model run in this work block: the existing CPER-to-CGREC transport report already provides a reproducible external-site evaluation, a simple development-set mean baseline, prediction errors, bias, and explicit limits. Preserve the DMI target gate as NO-GO.",
+  "existingEvaluation": {
+    "command": "npm run audit:engine-adg-cgrec-transport",
+    "script": "scripts/audit_engine_adg_usda_cgrec_external.js",
+    "integrityCommand": "npm run audit:usda-cgrec-longterm",
+    "integrityScript": "scripts/audit_usda_cgrec_longterm.py",
+    "report": "docs/evidence/engine-adg-usda-cgrec-transport-check.json",
+    "integrityReport": "docs/evidence/usda-cgrec-longterm-audit.json",
+    "source": {
+      "doi": "10.15482/USDA.ADC/1524719",
+      "license": "U.S. Public Domain",
+      "sha256": "e4143fab462ef20c700ad50750769a7b09dda2632969de164cdb196fd4b66b67",
+      "eligibleRows": 291,
+      "population": "Yearling steers at the Central Grasslands Research Extension Center, North Dakota",
+      "years": [1989, 1994, 2015],
+      "animalAndTrialKeys": ["sourceRecordId", "tag", "year", "pasture", "treatment"]
+    },
+    "development": {
+      "sourceDoi": "10.15482/USDA.ADC/1528520",
+      "site": "USDA-ARS Central Plains Experimental Range, Colorado",
+      "years": [2009, 2010, 2011, 2012, 2013],
+      "rows": 302,
+      "cgrecOutcomesUsedForFitting": false
+    },
+    "target": "Raw endpoint ADG derived as (final weight - initial weight) / ADG_DAYS, converted from lb/day to kg/day",
+    "models": {
+      "simple_development_mean_baseline": {
+        "n": 291,
+        "meanPredictionKgPerHeadDay": 0.922010251784171,
+        "meanErrorKgPerHeadDay": -0.13227812016120155,
+        "maeKgPerHeadDay": 0.2419336232354963,
+        "rmseKgPerHeadDay": 0.301434428375991
+      },
+      "frozen_engine_times_development_scale": {
+        "n": 291,
+        "meanPredictionKgPerHeadDay": 0.9962065692606049,
+        "meanErrorKgPerHeadDay": -0.05808180268476757,
+        "maeKgPerHeadDay": 0.2221192500940076,
+        "rmseKgPerHeadDay": 0.31038183412236975
+      },
+      "frozen_engine_default": {
+        "n": 291,
+        "meanPredictionKgPerHeadDay": 0.5542721425884117,
+        "meanErrorKgPerHeadDay": -0.500016229356961,
+        "maeKgPerHeadDay": 0.5396938859151102,
+        "rmseKgPerHeadDay": 0.5743125841792478
+      }
+    }
+  },
+  "separation": {
+    "adultMatureCowPastureDmi": "not evaluated; no eligible observed DMI source",
+    "dmiValidation": false,
+    "fullEngineValidation": false,
+    "causalManagementEffect": false,
+    "uncertaintyCalibration": false,
+    "populationMayBeMixedWithAdultCowCohorts": false
+  },
+  "limitations": [
+    "This is an ADG-only component transport diagnostic across two sites, not a supervised ML benchmark and not validation of the DMI equation or full engine.",
+    "CGREC holdout is one site with steer records from only 1989, 1994, and 2015; the 2015 subset is 200 of 291 records.",
+    "The frozen engine uses observed starting weight and duration but illustrative default pasture configuration; observed biomass, weather, forage quality, stocking group, and supplementation are not aligned as model inputs.",
+    "CGREC outcomes are not used to fit or select the CPER scale or development-mean baseline.",
+    "Reported row-level metrics are not a calibrated prediction interval and do not quantify full uncertainty or transport to Brazil."
+  ]
+}

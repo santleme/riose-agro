@@ -1,0 +1,305 @@
+{
+  "title": "Biomass spatial CV structural feasibility check",
+  "analysisDate": "2026-10-13",
+  "scope": "Pre-fit structural check only. Reads projected design/feature columns and does not read biomass target values, OOF predictions, or fit models.",
+  "input": {
+    "path": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+    "sha256FromRegistryManifest": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+    "sourceColumnsRead": [
+      "campaign",
+      "farm",
+      "field_code",
+      "pixel_id",
+      "sampling_point_id",
+      "sward_height_cm",
+      "latitude_deg",
+      "longitude_deg"
+    ],
+    "outcomeOrPredictionColumnsRead": []
+  },
+  "design": {
+    "blockDefinition": "Leave-one-out by connected component of farm+field codes, where fields sharing an exact latitude/longitude are joined; all campaigns for each block remain together.",
+    "bufferMeters": 100.0,
+    "bufferRule": "For each held-out block, remove every candidate training coordinate whose nearest great-circle distance to any held-out coordinate is less than 100 m.",
+    "scoreableDefinition": "A held-out row is structurally scoreable when its fold retains at least one training row after buffering. This is only a coverage/count criterion, not a claim that sample size or dependence is scientifically adequate.",
+    "eligibleFeatureRows": 234,
+    "distinctFieldsBeforeCoordinateUnion": 14,
+    "coordinateDeduplicatedBlocks": 13,
+    "uniqueCoordinateGroupsAfterDeduplication": 117,
+    "repeatedCampaignVisitsPreserved": true,
+    "scoredRowsUnderNonemptyTrainingCriterion": 234,
+    "scoredCoverage": 1.0,
+    "heldOutBlocksWithNonemptyTraining": 13,
+    "minimumRequiredCoverage": 0.7,
+    "minimumRequiredHeldOutBlocks": 4,
+    "coverageThresholdStructurallyMet": true,
+    "blockThresholdStructurallyMet": true,
+    "trainingRowsAfterBufferMin": 210,
+    "trainingRowsAfterBufferMedian": 216.0,
+    "trainingRowsAfterBufferMax": 216,
+    "folds": [
+      {
+        "heldOutBlock": "Poderosa/A2_T1_P1",
+        "fields": [
+          "A2_T1_P1"
+        ],
+        "farms": [
+          "Poderosa"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 652.4661376926366,
+        "nearestCandidateTrainingDistanceMetersMedian": 7461.149035042192,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Poderosa/A2_T3_P1",
+        "fields": [
+          "A2_T3_P1"
+        ],
+        "farms": [
+          "Poderosa"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 210,
+        "trainingCoordinateGroupsAfter100mBuffer": 105,
+        "nearestCandidateTrainingDistanceMetersMin": 52.70719647845744,
+        "nearestCandidateTrainingDistanceMetersMedian": 6686.123098919603,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Poderosa/A2_T3_P2",
+        "fields": [
+          "A2_T3_P2"
+        ],
+        "farms": [
+          "Poderosa"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 210,
+        "trainingCoordinateGroupsAfter100mBuffer": 105,
+        "nearestCandidateTrainingDistanceMetersMin": 52.70719647845744,
+        "nearestCandidateTrainingDistanceMetersMedian": 6515.3770530809215,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1a_T1_P6",
+        "fields": [
+          "A1a_T1_P6"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 1910.2324051195699,
+        "nearestCandidateTrainingDistanceMetersMedian": 3224.211110214459,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1a_T3_P17",
+        "fields": [
+          "A1a_T3_P17",
+          "A1b_T3_P17"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 138.6872698467237,
+        "nearestCandidateTrainingDistanceMetersMedian": 3010.432504379628,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1a_T7_P7b",
+        "fields": [
+          "A1a_T7_P7b"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 123.049370748865,
+        "nearestCandidateTrainingDistanceMetersMedian": 2783.381658234963,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1a_T7_P8",
+        "fields": [
+          "A1a_T7_P8"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 123.049370748865,
+        "nearestCandidateTrainingDistanceMetersMedian": 2639.6568632430926,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T2_P2",
+        "fields": [
+          "A1b_T2_P2"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 124.08865783946406,
+        "nearestCandidateTrainingDistanceMetersMedian": 2353.659358591074,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T2_P5",
+        "fields": [
+          "A1b_T2_P5"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 133.707056898659,
+        "nearestCandidateTrainingDistanceMetersMedian": 2391.8276338877295,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T2_PA",
+        "fields": [
+          "A1b_T2_PA"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 124.08865783946406,
+        "nearestCandidateTrainingDistanceMetersMedian": 2414.302902059593,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T2_PD",
+        "fields": [
+          "A1b_T2_PD"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 178.8570362846032,
+        "nearestCandidateTrainingDistanceMetersMedian": 2394.5708144380114,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T3_P13",
+        "fields": [
+          "A1b_T3_P13"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 138.6872698467237,
+        "nearestCandidateTrainingDistanceMetersMedian": 3005.529836560854,
+        "scorableByNonemptyTrainingSet": true
+      },
+      {
+        "heldOutBlock": "Santa Clara/A1b_T8_P1",
+        "fields": [
+          "A1b_T8_P1"
+        ],
+        "farms": [
+          "Santa Clara"
+        ],
+        "testRows": 18,
+        "testCoordinateGroups": 9,
+        "campaigns": [
+          "2018-11",
+          "2019-03"
+        ],
+        "trainingRowsAfter100mBuffer": 216,
+        "trainingCoordinateGroupsAfter100mBuffer": 108,
+        "nearestCandidateTrainingDistanceMetersMin": 3174.4775184433256,
+        "nearestCandidateTrainingDistanceMetersMedian": 4155.580297688153,
+        "scorableByNonemptyTrainingSet": true
+      }
+    ]
+  },
+  "interpretation": "The proposed row-coverage and block-count gates are structurally feasible under this exact leave-one-coordinate-deduplicated-field-component-out design: all feature-complete rows are scoreable by the nonempty-training criterion and 13 blocks are available. Each fold retains 210–216 feature rows across 105–108 unique coordinates after the 100 m exclusion. This establishes only design feasibility; it does not establish statistical independence, target quality, external farm validation, or predictive performance. The 13 blocks are nested in only two farms."
+}

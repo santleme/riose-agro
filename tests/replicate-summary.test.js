@@ -1,0 +1,172 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {summarizeExperimentReplicates, summarizeReplicates, summarizeReplicatesAsync} from '../experiments/replicate-summary.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
+
+const record = (runId, status, supplement, weight) => ({
+  runId, status,
+  inputs: {supplement: {value: supplement, unit: 'kg/day'}},
+  ...(weight === undefined ? {} : {outputs: {weight: {value: weight, unit: 'kg'}, gain: {value: weight - 400, unit: 'kg'}}}),
+});
+
+test('replicate summaries are order-independent and label spread as descriptive', () => {
+  const records = [record('r3', 'completed', 1, 410), record('r1', 'completed', 1, 390), record('r2', 'completed', 1, 400)];
+  const options = {groupBy: ['supplement']};
+  const forward = summarizeReplicates(records, options);
+  const reverse = summarizeReplicates([...records].reverse(), options);
+  assert.deepEqual(forward, reverse);
+  assert.deepEqual(forward[0].outputs.weight, {
+    unit: 'kg', missingRuns: 0,
+    provenance: {includedRunIds: ['r1', 'r2', 'r3'], missingRunIds: []},
+    n: 3, mean: 400, standardDeviation: 10,
+    quantiles: {p05: 391, p25: 395, p50: 400, p75: 405, p95: 409},
+    label: 'descriptive replicate variability; quantiles are not confidence intervals',
+  });
+  assert.deepEqual(forward[0].provenance, {
+    runIds: ['r1', 'r2', 'r3'], completedRunIds: ['r1', 'r2', 'r3'], failedRunIds: [], incompleteRunIds: [],
+  });
+});
+
+test('synchronous and asynchronous iterables reduce incrementally to the same summary', async () => {
+  const records = [record('a', 'completed', 1, 2), record('b', 'completed', 1), record('c', 'failed', 1)];
+  const syncStream = function* () { yield* records; };
+  const asyncStream = async function* () { for (const item of records) yield item; };
+  const expected = summarizeReplicates(records, {groupBy: ['supplement'], outputs: ['weight', 'gain']});
+  assert.deepEqual(summarizeReplicates(syncStream(), {groupBy: ['supplement'], outputs: ['weight', 'gain']}), expected);
+  assert.deepEqual(await summarizeReplicatesAsync(asyncStream(), {groupBy: ['supplement'], outputs: ['weight', 'gain']}), expected);
+  await assert.rejects(summarizeReplicatesAsync(records), /async iterable/);
+});
+
+test('auto-discovered outputs keep a consistent shape across groups', () => {
+  const result = summarizeReplicates([
+    record('beef', 'completed', 'beef', 400),
+    {...record('dairy', 'completed', 'dairy'), outputs: {}},
+  ], {groupBy: ['supplement']});
+  assert.deepEqual(Object.keys(result[0].outputs), ['gain', 'weight']);
+  assert.equal(result[1].outputs.weight.missingRuns, 1);
+  assert.deepEqual(result[1].outputs.weight.provenance.missingRunIds, ['dairy']);
+});
+
+test('floating-point summaries are permutation-stable and use compensated accumulation', () => {
+  const records = [1e16, 1, -1e16].map((value, index) => record(`r${index}`, 'completed', 1, value));
+  const forward = summarizeReplicates(records, {groupBy: ['supplement']});
+  const shuffled = summarizeReplicates([records[2], records[0], records[1]], {groupBy: ['supplement']});
+  assert.deepEqual(forward, shuffled);
+  assert.equal(forward[0].outputs.weight.mean, 1 / 3);
+});
+
+test('finite extreme outputs retain representable means, SDs, and quantiles', () => {
+  const result = summarizeReplicates([
+    record('large-a', 'completed', 1, 1e308),
+    record('large-b', 'completed', 1, 1e308),
+    record('negative', 'completed', 1, -1e308),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(result.mean, 1e308 / 3);
+  assert.ok(Math.abs(result.standardDeviation / (1e308 * Math.sqrt(4 / 3)) - 1) < 1e-15);
+  assert.ok(Number.isFinite(result.quantiles.p50));
+  assert.equal(result.quantiles.p50, 1e308);
+  assert.ok(Number.isFinite(result.quantiles.p05));
+});
+
+test('statistics that exceed the finite numeric range fail explicitly', () => {
+  assert.throws(() => summarizeReplicates([
+    record('negative-max', 'completed', 1, -Number.MAX_VALUE),
+    record('positive-max', 'completed', 1, Number.MAX_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight.standardDeviation, /outside the finite numeric range/);
+});
+
+test('small but representable replicate spread is not lost to variance underflow', () => {
+  const result = summarizeReplicates([
+    record('zero', 'completed', 1, 0),
+    record('small', 'completed', 1, 1e-200),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.ok(result.standardDeviation > 0);
+  assert.ok(Math.abs(result.standardDeviation / (1e-200 / Math.sqrt(2)) - 1) < 1e-15);
+
+  const subnormal = summarizeReplicates([
+    record('zero-subnormal', 'completed', 1, 0),
+    record('small-subnormal', 'completed', 1, 2 * Number.MIN_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(subnormal.standardDeviation, Number.MIN_VALUE);
+
+  const constantSubnormal = summarizeReplicates([
+    record('constant-subnormal-a', 'completed', 1, Number.MIN_VALUE),
+    record('constant-subnormal-b', 'completed', 1, Number.MIN_VALUE),
+  ], {groupBy: ['supplement']})[0].outputs.weight;
+  assert.equal(constantSubnormal.mean, Number.MIN_VALUE);
+  assert.equal(constantSubnormal.standardDeviation, 0);
+});
+
+test('failed runs and completed runs missing an output remain visible in counts', () => {
+  const result = summarizeReplicates([
+    record('r1', 'completed', 1, 390), record('r2', 'completed', 1), record('r3', 'failed', 1),
+  ], {groupBy: ['supplement'], outputs: ['weight', 'cost']})[0];
+  assert.equal(result.completedRuns, 2);
+  assert.equal(result.failedRuns, 1);
+  assert.equal(result.outputs.weight.n, 1);
+  assert.equal(result.outputs.weight.missingRuns, 1);
+  assert.equal(result.outputs.cost.n, 0);
+  assert.equal(result.outputs.cost.missingRuns, 2);
+  assert.equal(result.outputs.cost.mean, null);
+  assert.deepEqual(result.provenance, {
+    runIds: ['r1', 'r2', 'r3'], completedRunIds: ['r1', 'r2'], failedRunIds: ['r3'], incompleteRunIds: [],
+  });
+  assert.deepEqual(result.outputs.weight.provenance, {includedRunIds: ['r1'], missingRunIds: ['r2']});
+});
+
+test('incompatible output units are rejected', () => {
+  assert.throws(() => summarizeReplicates([
+    record('r1', 'completed', 1, 390),
+    {...record('r2', 'completed', 1, 400), outputs: {weight: {value: 400, unit: 'lb'}}},
+  ]), /incompatible units/);
+});
+
+test('output units must stay consistent across independently grouped runs', () => {
+  assert.throws(() => summarizeReplicates([
+    record('beef', 'completed', 1, 390),
+    {...record('dairy', 'completed', 1, 400), inputs: {system: {value: 'dairy', unit: 'category'}},
+      outputs: {weight: {value: 400, unit: 'lb'}}},
+  ], {groupBy: ['system']}), /Output weight has incompatible units: kg and lb/);
+});
+
+test('incomplete runs and invalid output envelopes are handled explicitly', () => {
+  assert.equal(summarizeReplicates([{runId: 'r1', status: 'running'}])[0].incompleteRuns, 1);
+  assert.throws(() => summarizeReplicates([{runId: 'r1', status: 'completed', outputs: {weight: {value: 2}}}], {outputs: ['weight']}), /value and unit/);
+});
+
+test('grouping rejects non-JSON values that could collapse to the same provenance key', () => {
+  assert.throws(() => summarizeReplicates([
+    {runId: 'empty-array', status: 'completed', inputs: {site: {value: [], unit: 'category'}}, outputs: {}},
+    {runId: 'undefined-array-item', status: 'completed', inputs: {site: {value: [undefined], unit: 'category'}}, outputs: {}},
+  ], {groupBy: ['site']}), /Canonical JSON cannot encode undefined/);
+});
+
+test('manifest linked summaries verify digests and aggregate only completed numeric outputs', () => {
+  const outputs = {weight: {value: 400, unit: 'kg/animal'}, passed: {value: true, unit: 'boolean'}};
+  const completed = {
+    runId: 'done', scenarioFormat: 'riose-scenario-harness', scenarioVersion: 1, scenarioId: 'done', scenarioRef: 'scenarios/done.json', scenarioDigest: digestScenario({scenarioId: 'done'}), seed: 1,
+    engine: {id: 'engine', version: '1', buildDigest: sha256Digest('engine'), status: 'provided'},
+    models: [], datasets: [], evidence: [], inputs: {system: {value: 'beef', unit: 'category'}},
+    outputs, status: 'completed', outputDigest: sha256Digest(outputs), resultDigest: sha256Digest('persisted record'), resultRef: 'results.jsonl#done',
+  };
+  const incomplete = {...completed, runId: 'pending', scenarioId: 'pending', scenarioRef: 'scenarios/pending.json', scenarioDigest: digestScenario({scenarioId: 'pending'}), outputs: {}, status: 'planned', outputDigest: null, resultDigest: null, resultRef: null};
+  const failed = {...incomplete, runId: 'failed', scenarioId: 'failed', scenarioDigest: digestScenario({scenarioId: 'failed'}), status: 'failed'};
+  const manifest = createBatchExperimentManifest({experimentId: 'summary', runs: [completed, incomplete, failed]});
+  const record = createExperimentResultRecord({runId: 'done', outputs});
+  const summary = summarizeExperimentReplicates(manifest, [record], {groupBy: ['system']});
+  assert.deepEqual(Object.keys(summary[0].outputs), ['weight']);
+  assert.equal(summary[0].outputs.weight.mean, 400);
+  assert.equal(summary[0].completedRuns, 1);
+  assert.equal(summary[0].incompleteRuns, 1);
+  assert.equal(summary[0].failedRuns, 1);
+  assert.equal(summary[0].provenance.experimentId, 'summary');
+  assert.equal(summary[0].provenance.manifestDigest, manifest.manifestDigest);
+  assert.deepEqual(summary[0].provenance.resultRecordDigests, [{runId: 'done', outputDigest: record.outputDigest}]);
+  assert.throws(() => summarizeExperimentReplicates(manifest, [{...record, outputDigest: sha256Digest({weight: {value: 1, unit: 'kg'}})}]), /Output digest mismatch/);
+});
+
+test('duplicate generic run identities are rejected to protect provenance', () => {
+  assert.throws(() => summarizeReplicates([
+    record('same', 'completed', 1, 390), record('same', 'failed', 1),
+  ]), /Duplicate runId same/);
+});

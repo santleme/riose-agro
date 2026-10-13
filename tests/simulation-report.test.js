@@ -5,6 +5,8 @@ import vm from 'node:vm';
 import {FarmEngine, compare, createComparisonManifest} from '../src/client/engine.js';
 import {renderSimulationReport} from '../src/client/simulation-report.js';
 import {createServer} from '../src/server/server.js';
+import {BR_CORTE_PASTURE_DMI_MODEL} from '../scientific/br_corte_dmi_adapter.js';
+import {runRegisteredScientificModel} from '../scientific/model-contract.js';
 
 test('renders a deterministic report using the engine result and manifest',()=>{
   const snapshot=new FarmEngine(42,2).snapshot();
@@ -26,6 +28,26 @@ test('renders a deterministic report using the engine result and manifest',()=>{
   assert.match(report,/demonstrativo; não validado/);
   assert.match(report,/não constitui recomendação, prescrição ou previsão validada/);
   assert.doesNotMatch(report,/diferença alternativa|%|NaN|Infinity|undefined/);
+});
+
+test('renders registered scientific model identity, units, evidence status, and implementation hash',()=>{
+  const snapshot=new FarmEngine(42,2).snapshot();
+  const manifest=createComparisonManifest(snapshot,1);
+  const modelResult=runRegisteredScientificModel({
+    id:BR_CORTE_PASTURE_DMI_MODEL.id,
+    version:BR_CORTE_PASTURE_DMI_MODEL.version,
+    inputs:{bodyWeightKg:400,adgKgPerDay:0.5,supplementKgDMPerDay:1.6}
+  });
+  const result={...compare(snapshot,1),scientificProvenance:modelResult.scientificProvenance};
+  const report=renderSimulationReport(result,manifest);
+
+  assert.match(report,/## Proveniência de modelos científicos/);
+  assert.match(report,/Modelo: br-corte-2023-eq-2\.6@2023/);
+  assert.match(report,/bodyWeightKg=400 kg/);
+  assert.match(report,/supplementKgDMPerDay=1\.6 kg DM\/day/);
+  assert.match(report,/https:\/\/brcorte\.com\.br\/assets\/book2023\/br\/02\.pdf \[demonstrative\]; estado: demonstrative/);
+  assert.match(report,/Hash da implementação: sha256:[a-f0-9]{64}/);
+  assert.match(report,/a resolução não promove evidência nem valida o modelo/);
 });
 
 test('keeps missing and non-finite values explicit without substituting zero',()=>{

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "registered_before_model_fit",
+  "registeredAt": "2026-10-13",
+  "purpose": "Reproducible exploratory agreement diagnostic for collar accelerometer features against the source's RumiWatch instrument classifications; not human-observed behavior validation or independent external validation.",
+  "source": {
+    "doi": "10.5281/zenodo.4064802",
+    "primaryArticleDoi": "10.3390/s22062323",
+    "license": "CC BY 4.0 (Zenodo record metadata)",
+    "population": "18 Limousin cross-breed steers in indoor straw housing with ad libitum TMR across three UK farm trials; exact ages are not reported.",
+    "sourceSplit": "README marks animals 04, 10, and 11 as test animals; the remaining 15 animals are training animals. The primary article has already reported a test result using these source-test animals, so this can reproduce a source split but is not a new literature-independent holdout."
+  },
+  "analysisCohort": {
+    "timeUnit": "one source-naive wall-clock second per animal",
+    "alignment": "exact timestamp equality only; no time shifting, nearest-neighbor match, interpolation, or resampling",
+    "eligibleRows": "Retain a second only when it contains exactly 10 exact-timestamp collar/halter pairs, every required collar axis and reference label is valid, and the reference-label majority is unique. Exclude tied reference labels from fitting and scoring, and report their count and fraction.",
+    "features": ["x_mean_mg", "x_std_population_mg", "x_min_mg", "x_max_mg", "y_mean_mg", "y_std_population_mg", "y_min_mg", "y_max_mg", "z_mean_mg", "z_std_population_mg", "z_min_mg", "z_max_mg"],
+    "target": "Unique per-second majority of source RumiWatch class codes: 0 other, 1 rumination, 2 eating-or-drinking.",
+    "leakageControls": "Reference label fields, animal ID, trial ID, timestamp, and split are never model predictors. No second or animal crosses a grouped training/test boundary. Feature generation uses collar values only; target aggregation uses halter values only."
+  },
+  "models": [
+    {
+      "id": "training_majority_baseline",
+      "model": "Predict the eligible source-train class with the greatest total equal-animal-weighted mass for every source-test second; resolve weighted-mass ties by the smaller numeric class code."
+    },
+    {
+      "id": "random_forest_fixed",
+      "model": "RandomForestClassifier(n_estimators=200, max_depth=12, min_samples_leaf=10, max_features='sqrt', class_weight='balanced_subsample', n_jobs=1, random_state=20261013).",
+      "trainingWeights": "Equal total sample weight per source-train animal; within an animal, each eligible second receives weight 1 / number of that animal's eligible seconds."
+    }
+  ],
+  "evaluation": {
+    "development": "For the fixed Random Forest only, run leave-one-animal-out predictions over the 15 source-train animals. This is descriptive model development and cannot change features, labels, model parameters, or the final source-test protocol.",
+    "finalTest": "Fit each fixed prediction rule using all 15 source-train animals, then evaluate once on source-test animals 04, 10, and 11. Preserve the test outputs and report each animal separately as well as pooled rows.",
+    "primaryMetric": "Pooled source-test macro-F1 over the three fixed classes, accompanied by class support and the confusion matrix.",
+    "requiredMetrics": ["pooled macro-F1", "balanced accuracy", "accuracy", "per-class precision/recall/F1/support", "per-animal accuracy and macro-F1 when all classes are present", "per-animal confusion matrices", "complete-second and tied-label coverage by animal", "CPU fit and inference time"],
+    "uncertainty": "Report results for the three source-test animals individually. Do not bootstrap seconds as if independent; do not infer population-level coverage, confidence, calibration, farm transfer, or trial transfer from three animals."
+  },
+  "interpretationLimits": [
+    "RumiWatch labels are instrument-derived reference classifications, not human-video-confirmed ground truth in the downloaded package.",
+    "The source merges drinking into eating, so those activities cannot be distinguished.",
+    "The source-test animals were already used for testing in the primary article; the Riose analysis may preserve them untouched but cannot call them a new independent literature holdout.",
+    "One test animal per trial does not support a held-out trial or farm generalization claim.",
+    "This housed finishing-steer sensor-to-instrument agreement task does not validate grazing behavior, mature-cow behavior, DMI, ADG, forage biomass, uncertainty calibration, or the Riose simulation engine."
+  ],
+  "reproducibility": {
+    "python": "3.12",
+    "seed": 20261013,
+    "noParameterSearch": "No parameter search, feature selection, or test-set adaptation is allowed.",
+    "software": ["numpy==2.2.6", "pandas==2.2.3", "scikit-learn==1.5.2", "pyarrow==26.0.0"]
+  }
+}

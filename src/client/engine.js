@@ -15,6 +15,7 @@ import {calculateFeeding} from './feeding-model.js';
 // All constants are illustrative assumptions, not fitted animal nutrition equations.
 export const ASSUMPTIONS = {baseDemandKgDM:8,dailyPastureGrowthKgDM:35,initialPastureKgDM:1800,supplementPrice:1.8,balancedPrice:1.6,concentratePrice:2.1,maintenanceKgDM:METABOLISM_MAINTENANCE_KG_DM,gainFactor:METABOLISM_GAIN_FACTOR};
 export const DEFAULT_CONFIG        = {diet:'pasture',housing:'pasture',weather:DEFAULT_WEATHER,supplement:0};
+export const FARM_ENGINE_VERSION='agroville-engine/1';
 const names=['Aurora','Bento','Cacau','Dália','Estrela','Figo','Gaia','Hugo','Íris','Joca','Kiara','Luna','Milo','Nina','Oliva','Pingo','Quinoa','Rubi','Sol','Teca','Uva','Vento','Wally','Zara'];
 const clamp=(v       ,min       ,max       )=>Math.max(min,Math.min(max,v));
 const patchBounds = [{x:35,y:45,w:135,h:100},{x:200,y:45,w:135,h:100},{x:35,y:180,w:135,h:100},{x:200,y:180,w:135,h:100}];
@@ -193,4 +194,79 @@ export function validateComparisonManifest(manifest){
 export function replayComparisonManifest(manifest,metabolismKernel=updateMetabolismJS){
   validateComparisonManifest(manifest);
   return compare(manifest.initialSnapshot,manifest.periodDays,metabolismKernel);
+}
+
+// This additive API keeps the legacy housing-only comparison contract intact.
+// A configured comparison always starts both arms from the same immutable
+// snapshot (including both random streams) and changes exactly one config key.
+const CONFIGURED_MANIFEST_TYPE='riose-configured-comparison';
+const CONFIG_KEYS=['diet','housing','supplement','weather'];
+function configuredDifference(referenceConfig,scenarioConfig){
+  assertConfig(referenceConfig);assertConfig(scenarioConfig);
+  const differences=CONFIG_KEYS.filter(key=>referenceConfig[key]!==scenarioConfig[key]);
+  if(differences.length!==1)throw new Error('Os cenários devem diferir em exatamente um fator configurável');
+  return differences[0];
+}
+function configuredComparisonOptions(options){
+  if(!options||typeof options!=='object'||Array.isArray(options))throw new Error('Opções de comparação configurada inválidas');
+  const {referenceConfig,scenarioConfig,days=30}=options;
+  const factor=configuredDifference(referenceConfig,scenarioConfig);
+  if(!Number.isInteger(days)||days<1||days>365)throw new Error('Período deve ser de 1–365 dias');
+  return {referenceConfig:{...referenceConfig},scenarioConfig:{...scenarioConfig},factor,days};
+}
+export function compareConfiguredScenarios(snapshot,options,metabolismKernel=updateMetabolismJS){
+  assertSnapshot(snapshot);
+  const {referenceConfig,scenarioConfig,factor,days}=configuredComparisonOptions(options);
+  const reference=FarmEngine.from(snapshot),scenario=FarmEngine.from(snapshot);
+  reference.configure(referenceConfig);scenario.configure(scenarioConfig);
+  const startMetrics=metrics(snapshot),baseCost=snapshot.cost,rows=[];
+  const intakeDelta=current=>({
+    pastureKgDM:current.pastureKgDM-startMetrics.intake.pastureKgDM,
+    barnBaseKgDM:current.barnBaseKgDM-startMetrics.intake.barnBaseKgDM,
+    supplementKgDM:current.supplementKgDM-startMetrics.intake.supplementKgDM,
+    dietExtraKgDM:current.dietExtraKgDM-startMetrics.intake.dietExtraKgDM,
+    totalKgDM:current.totalKgDM-startMetrics.intake.totalKgDM
+  });
+  for(let day=0;day<=days;day++){
+    if(day){reference.tick(24,metabolismKernel);scenario.tick(24,metabolismKernel);}
+    const referenceMetrics=reference.metrics(),scenarioMetrics=scenario.metrics();
+    const referenceIntake=intakeDelta(referenceMetrics.intake),scenarioIntake=intakeDelta(scenarioMetrics.intake);
+    rows.push({day,referenceWeight:referenceMetrics.weight,scenarioWeight:scenarioMetrics.weight,
+      referenceCost:referenceMetrics.cost-baseCost,scenarioCost:scenarioMetrics.cost-baseCost,
+      referenceConsumptionKgDM:referenceIntake.totalKgDM,scenarioConsumptionKgDM:scenarioIntake.totalKgDM,
+      referenceIntakeBySourceKgDM:referenceIntake,scenarioIntakeBySourceKgDM:scenarioIntake,
+      referencePastureKgDM:referenceMetrics.pasture,scenarioPastureKgDM:scenarioMetrics.pasture,
+      referencePastureByPaddock:referenceMetrics.pastureByPaddock,scenarioPastureByPaddock:scenarioMetrics.pastureByPaddock});
+  }
+  return {engineVersion:FARM_ENGINE_VERSION,days,startWeight:startMetrics.weight,initialConfig:{...snapshot.config},herdSize:snapshot.animals.length,
+    initialPastureByPaddock:[...snapshot.pastures],comparisonFactor:factor,seed:Number.isInteger(snapshot.initialSeed)?snapshot.initialSeed:snapshot.seed,
+    referenceConfig,scenarioConfig,rows,reference:reference.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
+}
+export function createConfiguredComparisonManifest(snapshot,options){
+  assertSnapshot(snapshot);
+  const {referenceConfig,scenarioConfig,factor,days}=configuredComparisonOptions(options);
+  return {type:CONFIGURED_MANIFEST_TYPE,version:1,engineVersion:FARM_ENGINE_VERSION,seed:Number.isInteger(snapshot.initialSeed)?snapshot.initialSeed:snapshot.seed,
+    initialSnapshot:structuredClone(snapshot),periodDays:days,factor,
+    scenarios:{reference:referenceConfig,scenario:scenarioConfig},validated:false};
+}
+export function validateConfiguredComparisonManifest(manifest){
+  if(!manifest||manifest.type!==CONFIGURED_MANIFEST_TYPE||manifest.version!==1)throw new Error('Tipo ou versão de manifesto configurado não suportado');
+  const expectedKeys=['type','version','engineVersion','seed','initialSnapshot','periodDays','factor','scenarios','validated'];
+  if(Object.keys(manifest).length!==expectedKeys.length||expectedKeys.some(key=>!Object.hasOwn(manifest,key)))throw new Error('Manifesto configurado contém campos ausentes ou não suportados');
+  if(manifest.engineVersion!==FARM_ENGINE_VERSION)throw new Error('Versão do motor do manifesto configurado não suportada');
+  if(manifest.validated!==false)throw new Error('Manifesto deve preservar o estado demonstrativo não validado do motor');
+  assertSnapshot(manifest.initialSnapshot);
+  const expectedSeed=Number.isInteger(manifest.initialSnapshot.initialSeed)?manifest.initialSnapshot.initialSeed:manifest.initialSnapshot.seed;
+  if(!Number.isInteger(manifest.seed)||manifest.seed<0||manifest.seed>0xffffffff||manifest.seed!==expectedSeed)throw new Error('Semente do manifesto não corresponde ao snapshot inicial');
+  if(!Number.isInteger(manifest.periodDays)||manifest.periodDays<1||manifest.periodDays>365)throw new Error('Período do manifesto deve ser de 1–365 dias');
+  if(!manifest.scenarios||typeof manifest.scenarios!=='object'||Array.isArray(manifest.scenarios)||Object.keys(manifest.scenarios).length!==2||!Object.hasOwn(manifest.scenarios,'reference')||!Object.hasOwn(manifest.scenarios,'scenario'))throw new Error('Manifesto deve conter somente as configurações de referência e alternativa');
+  const {reference,scenario}=manifest.scenarios;
+  const factor=configuredDifference(reference,scenario);
+  if(manifest.factor!==factor)throw new Error('O fator declarado deve ser a única diferença entre configurações');
+  return true;
+}
+export function replayConfiguredComparisonManifest(manifest,metabolismKernel=updateMetabolismJS){
+  validateConfiguredComparisonManifest(manifest);
+  return compareConfiguredScenarios(manifest.initialSnapshot,{days:manifest.periodDays,
+    referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario},metabolismKernel);
 }

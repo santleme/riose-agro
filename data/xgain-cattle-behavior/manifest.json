@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "title": "IoT sensor data XGain UC6",
+    "publisher": "Zenodo",
+    "doi": "10.5281/zenodo.15600573",
+    "officialUrl": "https://zenodo.org/records/15600573",
+    "apiUrl": "https://zenodo.org/api/records/15600573",
+    "downloadUrl": "https://zenodo.org/api/records/15600573/files/WP5_T5.7_IoT%20sensor%20data_v1_EV%20ILVO_dataset.zip/content",
+    "version": 1,
+    "published": "2025-06-05",
+    "retrievedOn": "2026-10-13",
+    "access": "public; direct anonymous HTTP download succeeded",
+    "license": "CC BY 4.0 in Zenodo record; attached README states CC BY-NC, creating a rights conflict",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseStatus": "CONDITIONAL; not cleared for commercial training because the deposited README says CC BY-NC",
+    "rightsEvidence": [
+      "Zenodo record API declares cc-by-4.0.",
+      "README_IoT sensor data.txt embedded in the downloaded archive states CC BY-NC.",
+      "Conservative use gate: descriptive exploration only until the rights conflict is resolved from the record itself; no contact or permission request made."
+    ],
+    "archive": {
+      "path": "data/raw/zenodo-15600573/WP5_T5.7_IoT sensor data_v1_EV ILVO_dataset.zip",
+      "bytes": 221938,
+      "md5": "8941ddd707e1a353649bf2b43a3bcd20",
+      "sha256": "a1e418f97e3c11b96f5fd6d7f7106688750083a00d6660f01f41f5ecc6471b16"
+    }
+  },
+  "population": {
+    "species": "Bos taurus",
+    "breed": "Holstein",
+    "ageOrPhysiologicalClass": "10 multiparous adult dairy cows",
+    "location": "ILVO, Melle, Flanders, Belgium",
+    "system": "pasture access; metadata says 07:30–14:00 daily for approximately three weeks",
+    "animalsObserved": true,
+    "animalCategory": "adult lactating dairy cows",
+    "animalIdentifiers": "10 ear-tag IDs embedded in workbook filenames; retained as opaque string IDs",
+    "unitOfObservation": "animal-hour with counts of one-minute class outputs",
+    "timeRangeInFiles": "2024-05-31 00:00 through 2024-06-23 23:00",
+    "timeZone": "not specified in source; timestamps are preserved as naive local time",
+    "groups": ["animal_id", "timestamp"]
+  },
+  "measurement": {
+    "publishedSensor": "Axivity AX3 collar accelerometer, 12.5 Hz",
+    "releasedMeasurement": "processed hourly behavior class counts, not raw accelerometer signals",
+    "targetProvenance": "The record says a supervised decision tree produced labels. The README says observers provided ground truth during model training/validation, but no human-reference labels or raw sensor trace are included in this download.",
+    "outcomes": ["grazing", "ruminating", "resting", "other_activity"],
+    "unit": "count of one-minute class predictions per hour; each row sums to 60",
+    "frequency": "hourly aggregate"
+  },
+  "quality": {
+    "processedRecords": 5760,
+    "animals": 10,
+    "recordsPerAnimal": 576,
+    "missingValues": 0,
+    "duplicateAnimalHourKeys": 0,
+    "invalidCountRows": 0,
+    "limitations": [
+      "Class counts are classifier outputs, not independent human-reference labels.",
+      "Raw IMU and event-level timestamps are not present in the published ZIP.",
+      "Zenodo record and embedded README declare conflicting reuse licenses.",
+      "The files contain 24-hour timestamps despite metadata describing daily pasture access from 07:30 to 14:00; verify with the data package authors only if the record is revised publicly (do not contact them)."
+    ]
+  },
+  "eligibility": {
+    "decision": "CONDITIONAL",
+    "technicalAvailability": "ELIGIBLE; complete 221,938-byte ZIP downloaded anonymously and MD5 verified",
+    "reusePermissions": "CONDITIONAL; CC BY record conflicts with CC BY-NC README; exclude from commercial training",
+    "zootechnicalCompatibility": "CONDITIONAL; pasture adult-cow behavior summaries, but not individual raw sensor events",
+    "statisticalSufficiency": "INELIGIBLE for classifier validation; only 10 cows and no independent reference outcomes in the distributed files",
+    "eligibleUses": ["descriptive hourly behavior profiles", "schema and ingestion tests"],
+    "ineligibleUses": ["classifier training pending rights clarification", "external behavior-classifier validation", "DMI or ADG evaluation", "full-engine validation"]
+  },
+  "processed": {
+    "parquet": "data/xgain-cattle-behavior/processed/xgain-hourly-behavior-counts-v1.parquet",
+    "sha256": "27884dcaba0e074b4c33fc500ac3035f45189475eb3b2684ee89d2e25c6a49b3",
+    "pipeline": "scripts/process_xgain_hourly_behavior.py",
+    "qualityReport": "docs/evidence/xgain-hourly-behavior-quality-2026-10.json"
+  }
+}

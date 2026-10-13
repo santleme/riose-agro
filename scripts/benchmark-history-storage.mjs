@@ -1,5 +1,6 @@
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 const child = fileURLToPath(new URL('./benchmark-history-storage-child.mjs', import.meta.url));
 const herds = (process.env.BENCH_HISTORY_HERDS ?? '1000,10000').split(',').map(Number);
@@ -16,5 +17,29 @@ for (const count of herds) {
   const {snapshotDigest: columnsDigest, ...typedColumns} = results.typedColumns;
   const snapshotsIdentical = objectDigest === columnsDigest && objectRing.historyEntries === typedColumns.historyEntries;
   if (!snapshotsIdentical) throw new Error(`History representations diverged for ${count} animals`);
-  console.log(JSON.stringify({animals: count, hours, repetitions, historyEntries: objectRing.historyEntries, snapshotsIdentical, objectRing, typedColumns}));
+  const benchmarkResults={animals:count,hours,repetitions,historyEntries:objectRing.historyEntries,snapshotsIdentical,objectRing,typedColumns};
+  const phases={
+    memory:{status:'measured',measurements:['objectRing','typedColumns'].flatMap(implementation=>{
+      const row=results[implementation];
+      return [
+        measurement('memory','retainedHeapDeltaAfterGc','bytes',summarizeSamples(row.retainedHeapDeltaBytesSamples),{population:count,implementation,observations:row.retainedHeapDeltaBytesSamples,source:'process.memoryUsage().heapUsed delta after forced GC versus pre-run baseline'}),
+        measurement('memory','retainedProcessRssAfterGc','bytes',summarizeSamples(row.retainedRssBytesSamples),{population:{count:1,unit:'process',scope:'whole process'},implementation,observations:row.retainedRssBytesSamples,source:'whole-process RSS point samples after forced GC; not attributed to an individual herd'}),
+        measurement('memory','materializedRetainedHeapDeltaAfterGc','bytes',summarizeSamples(row.materializedHeapDeltaBytesSamples),{population:count,implementation,observations:row.materializedHeapDeltaBytesSamples,source:'process.memoryUsage().heapUsed delta after snapshot materialization and forced GC versus pre-run baseline'}),
+        measurement('memory','materializedProcessRssAfterGc','bytes',summarizeSamples(row.materializedRssBytesSamples),{population:{count:1,unit:'process',scope:'whole process'},implementation,observations:row.materializedRssBytesSamples,source:'whole-process RSS point samples after snapshot materialization and forced GC; not attributable allocation'}),
+      ];
+    })},
+    engine:{status:'measured',measurements:[
+      measurement('engine','tick','ms',objectRing.tickStatistics,{population:count,implementation:'objectRing',memory:{retainedHeapDeltaBytesMedian:objectRing.retainedHeapDeltaBytesMedian,retainedArrayBuffersDeltaBytesMedian:objectRing.retainedArrayBuffersDeltaBytesMedian,retainedRssBytesMedian:objectRing.retainedRssBytesMedian}}),
+      measurement('engine','tick','ms',typedColumns.tickStatistics,{population:count,implementation:'typedColumns',memory:{retainedHeapDeltaBytesMedian:typedColumns.retainedHeapDeltaBytesMedian,retainedArrayBuffersDeltaBytesMedian:typedColumns.retainedArrayBuffersDeltaBytesMedian,retainedRssBytesMedian:typedColumns.retainedRssBytesMedian}}),
+    ]},
+    snapshot:{status:'measured',measurements:[
+      measurement('snapshot','materialize','ms',objectRing.snapshotStatistics,{population:count,implementation:'objectRing',memory:{materializedHeapDeltaBytesMedian:objectRing.materializedHeapDeltaBytesMedian,materializedArrayBuffersDeltaBytesMedian:objectRing.materializedArrayBuffersDeltaBytesMedian,materializedRssBytesMedian:objectRing.materializedRssBytesMedian}}),
+      measurement('snapshot','materialize','ms',typedColumns.snapshotStatistics,{population:count,implementation:'typedColumns',memory:{materializedHeapDeltaBytesMedian:typedColumns.materializedHeapDeltaBytesMedian,materializedArrayBuffersDeltaBytesMedian:typedColumns.materializedArrayBuffersDeltaBytesMedian,materializedRssBytesMedian:typedColumns.materializedRssBytesMedian}}),
+    ]},
+  };
+  console.log(JSON.stringify(benchmarkReport({name:'history-storage-comparison',workload:{seed:20261012,populations:[{animals:count,scope:'FarmEngine',limit:'FarmEngine maximum 10000'}],hours},configuration:{warmupRuns:1,repetitions},phases,timingBoundaries:[
+    {phase:'engine',timed:['720-hour scenario engine run, including history recording for selected storage representation.'],notTimed:['Child-process startup and input setup.','Full snapshot materialization.']},
+    {phase:'snapshot',timed:['Full snapshot materialization from retained history representation.'],notTimed:['720-hour simulation run.']},
+    {phase:'memory',timed:['Post-GC retained heap deltas and whole-process RSS point samples after run and snapshot materialization.'],notTimed:['ArrayBuffer/external allocation attribution and GPU memory.']},
+  ],results:benchmarkResults})));
 }

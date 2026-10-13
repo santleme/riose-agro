@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "cattle-metabolism-cpu-rocm",
+    "source": {
+      "revision": "9ce1e536c2fc5f8b054ccd2dfc13be90c5318f46",
+      "dirty": true
+    }
+  },
+  "runtime": {
+    "platform": "linux",
+    "python": "3.12.3",
+    "torch": null,
+    "rocm": null
+  },
+  "hardware": {
+    "os": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "architecture": "x86_64",
+    "cpu": "x86_64",
+    "gpuMemoryBytes": null,
+    "accelerator": {
+      "available": false,
+      "reason": "pytorch_unavailable",
+      "detail": "No module named 'torch'",
+      "setupMs": 0.09378200047649443
+    },
+    "deviceNodeProbe": {
+      "/dev/kfd": false,
+      "/dev/dri": false
+    },
+    "toolProbe": {
+      "rocminfo": null,
+      "rocm-smi": null,
+      "hipcc": null,
+      "nvidia-smi": null
+    }
+  },
+  "workload": {
+    "seed": "deterministic-animal-state-index-v1",
+    "populations": [
+      {
+        "animals": 100,
+        "scope": "numeric-kernel-only"
+      },
+      {
+        "animals": 1000,
+        "scope": "numeric-kernel-only"
+      },
+      {
+        "animals": 10000,
+        "scope": "numeric-kernel-only"
+      },
+      {
+        "animals": 100000,
+        "scope": "numeric-kernel-only",
+        "limit": "isolated kernel only; not FarmEngine or renderer"
+      }
+    ],
+    "inputLayout": [
+      "weightKg",
+      "energyPercent",
+      "intakeKgDMPerDay",
+      "restingFlag"
+    ],
+    "outputLayout": [
+      "weightKg",
+      "energyPercent"
+    ]
+  },
+  "configuration": {
+    "warmupRuns": 3,
+    "repetitions": 21,
+    "dtype": "float64",
+    "correctnessTolerance": {
+      "relative": 1e-12,
+      "absolute": 1e-12
+    }
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "cpu_steady_state",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 0.0011610027286224067,
+            "spread": {
+              "min": 0.0011160009307786822,
+              "max": 0.0016920021153055131,
+              "range": 0.0005760011845268309
+            },
+            "samples": [
+              0.0016920021153055131,
+              0.0014130055205896497,
+              0.0013230019249022007,
+              0.0011610027286224067,
+              0.0011880038073286414,
+              0.0011789961718022823,
+              0.0011790034477598965,
+              0.0012510063243098557,
+              0.0011890006135217845,
+              0.0011339943739585578,
+              0.0011610027286224067,
+              0.0011160009307786822,
+              0.001143002009484917,
+              0.0011339943739585578,
+              0.0011610027286224067,
+              0.0011160009307786822,
+              0.0011520023690536618,
+              0.0011250012903474271,
+              0.0011610027286224067,
+              0.001134001649916172,
+              0.0011519950930960476
+            ]
+          },
+          "population": 100,
+          "source": "riose_core::update_metabolism via C ABI; preallocated host buffers"
+        },
+        {
+          "phase": "cpu_reference",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 0.0011610027286224067,
+            "spread": {
+              "min": 0.0011610027286224067,
+              "max": 0.0011610027286224067,
+              "range": 0.0
+            },
+            "samples": [
+              0.0011610027286224067
+            ]
+          },
+          "population": 100,
+          "source": "same cattle input used for accelerator comparison"
+        },
+        {
+          "phase": "cpu_steady_state",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 0.002043001586571336,
+            "spread": {
+              "min": 0.002007000148296356,
+              "max": 0.00579599873162806,
+              "range": 0.003788998583331704
+            },
+            "samples": [
+              0.002105996827594936,
+              0.002034001227002591,
+              0.0020610023057088256,
+              0.0020520019461400807,
+              0.0020610023057088256,
+              0.002043001586571336,
+              0.00579599873162806,
+              0.0020700026652775705,
+              0.002024993591476232,
+              0.0020520019461400807,
+              0.0020610023057088256,
+              0.002034001227002591,
+              0.002007000148296356,
+              0.002025000867433846,
+              0.002034998033195734,
+              0.002043001586571336,
+              0.002034001227002591,
+              0.0020339939510449767,
+              0.0020520019461400807,
+              0.002016000507865101,
+              0.002034001227002591
+            ]
+          },
+          "population": 1000,
+          "source": "riose_core::update_metabolism via C ABI; preallocated host buffers"
+        },
+        {
+          "phase": "cpu_reference",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 0.002043001586571336,
+            "spread": {
+              "min": 0.002043001586571336,
+              "max": 0.002043001586571336,
+              "range": 0.0
+            },
+            "samples": [
+              0.002043001586571336
+            ]
+          },
+          "population": 1000,
+          "source": "same cattle input used for accelerator comparison"
+        },
+        {
+          "phase": "cpu_steady_state",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 0.010449002729728818,
+            "spread": {
+              "min": 0.010386000212747604,
+              "max": 0.035603996366262436,
+              "range": 0.025217996153514832
+            },
+            "samples": [
+              0.035603996366262436,
+              0.012519994925241917,
+              0.010700998245738447,
+              0.010655996447894722,
+              0.010511997970752418,
+              0.01052200241247192,
+              0.010449002729728818,
+              0.010404000931885093,
+              0.010386000212747604,
+              0.010395000572316349,
+              0.010413998097646981,
+              0.010538999049458653,
+              0.010431002010591328,
+              0.010458003089297563,
+              0.010413001291453838,
+              0.010431998816784471,
+              0.010475996532477438,
+              0.010529998689889908,
+              0.010431002010591328,
+              0.010404997738078237,
+              0.010413001291453838
+            ]
+          },
+          "population": 10000,
+          "source": "riose_core::update_metabolism via C ABI; preallocated host buffers"
+        },
+        {
+          "phase": "cpu_reference",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 0.010449002729728818,
+            "spread": {
+              "min": 0.010449002729728818,
+              "max": 0.010449002729728818,
+              "range": 0.0
+            },
+            "samples": [
+              0.010449002729728818
+            ]
+          },
+          "population": 10000,
+          "source": "same cattle input used for accelerator comparison"
+        },
+        {
+          "phase": "cpu_steady_state",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 21,
+            "median": 0.09409700578544289,
+            "spread": {
+              "min": 0.09356599912280217,
+              "max": 0.11074700159952044,
+              "range": 0.017181002476718277
+            },
+            "samples": [
+              0.11074700159952044,
+              0.09497900464339182,
+              0.09436700202059001,
+              0.09435800166102126,
+              0.09440299618290737,
+              0.0942859987844713,
+              0.09414099622517824,
+              0.10842600022442639,
+              0.09772399789653718,
+              0.09409699850948527,
+              0.09369100007461384,
+              0.09386300371261314,
+              0.09409699850948527,
+              0.09409700578544289,
+              0.09356599912280217,
+              0.09370099724037573,
+              0.09362900163978338,
+              0.0972380003076978,
+              0.09388099715579301,
+              0.09360200056107715,
+              0.09367299935547635
+            ]
+          },
+          "population": 100000,
+          "source": "riose_core::update_metabolism via C ABI; preallocated host buffers"
+        },
+        {
+          "phase": "cpu_reference",
+          "metric": "nativeMetabolismBatch",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 0.09409700578544289,
+            "spread": {
+              "min": 0.09409700578544289,
+              "max": 0.09409700578544289,
+              "range": 0.0
+            },
+            "samples": [
+              0.09409700578544289
+            ]
+          },
+          "population": 100000,
+          "source": "same cattle input used for accelerator comparison"
+        }
+      ]
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "unavailable",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "engine",
+      "timed": [
+        "Native Rust metabolism kernel; optional actual ROCm tensor kernel, with setup and transfers separately recorded."
+      ],
+      "notTimed": [
+        "FarmEngine orchestration, feeding, weather, snapshot, worker scheduling, UI and rendering."
+      ]
+    }
+  ],
+  "results": {
+    "decision": "no-go",
+    "reason": "pytorch_unavailable",
+    "rows": [
+      {
+        "animals": 100,
+        "cpu": {
+          "backend": "native_rust",
+          "steadyState": {
+            "sampleCount": 21,
+            "median": 0.0011610027286224067,
+            "spread": {
+              "min": 0.0011160009307786822,
+              "max": 0.0016920021153055131,
+              "range": 0.0005760011845268309
+            },
+            "samples": [
+              0.0016920021153055131,
+              0.0014130055205896497,
+              0.0013230019249022007,
+              0.0011610027286224067,
+              0.0011880038073286414,
+              0.0011789961718022823,
+              0.0011790034477598965,
+              0.0012510063243098557,
+              0.0011890006135217845,
+              0.0011339943739585578,
+              0.0011610027286224067,
+              0.0011160009307786822,
+              0.001143002009484917,
+              0.0011339943739585578,
+              0.0011610027286224067,
+              0.0011160009307786822,
+              0.0011520023690536618,
+              0.0011250012903474271,
+              0.0011610027286224067,
+              0.001134001649916172,
+              0.0011519950930960476
+            ]
+          }
+        },
+        "accelerator": {
+          "backend": null,
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "setupMs": 0.09378200047649443,
+          "steadyState": null,
+          "hostToDeviceMs": null,
+          "deviceToHostMs": null,
+          "totalRunMedianMs": null,
+          "correctness": {
+            "status": "not-measured",
+            "reason": "no actual ROCm device"
+          },
+          "speedupSteadyState": null,
+          "speedupEndToEnd": null
+        }
+      },
+      {
+        "animals": 1000,
+        "cpu": {
+          "backend": "native_rust",
+          "steadyState": {
+            "sampleCount": 21,
+            "median": 0.002043001586571336,
+            "spread": {
+              "min": 0.002007000148296356,
+              "max": 0.00579599873162806,
+              "range": 0.003788998583331704
+            },
+            "samples": [
+              0.002105996827594936,
+              0.002034001227002591,
+              0.0020610023057088256,
+              0.0020520019461400807,
+              0.0020610023057088256,
+              0.002043001586571336,
+              0.00579599873162806,
+              0.0020700026652775705,
+              0.002024993591476232,
+              0.0020520019461400807,
+              0.0020610023057088256,
+              0.002034001227002591,
+              0.002007000148296356,
+              0.002025000867433846,
+              0.002034998033195734,
+              0.002043001586571336,
+              0.002034001227002591,
+              0.0020339939510449767,
+              0.0020520019461400807,
+              0.002016000507865101,
+              0.002034001227002591
+            ]
+          }
+        },
+        "accelerator": {
+          "backend": null,
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "setupMs": 0.09378200047649443,
+          "steadyState": null,
+          "hostToDeviceMs": null,
+          "deviceToHostMs": null,
+          "totalRunMedianMs": null,
+          "correctness": {
+            "status": "not-measured",
+            "reason": "no actual ROCm device"
+          },
+          "speedupSteadyState": null,
+          "speedupEndToEnd": null
+        }
+      },
+      {
+        "animals": 10000,
+        "cpu": {
+          "backend": "native_rust",
+          "steadyState": {
+            "sampleCount": 21,
+            "median": 0.010449002729728818,
+            "spread": {
+              "min": 0.010386000212747604,
+              "max": 0.035603996366262436,
+              "range": 0.025217996153514832
+            },
+            "samples": [
+              0.035603996366262436,
+              0.012519994925241917,
+              0.010700998245738447,
+              0.010655996447894722,
+              0.010511997970752418,
+              0.01052200241247192,
+              0.010449002729728818,
+              0.010404000931885093,
+              0.010386000212747604,
+              0.010395000572316349,
+              0.010413998097646981,
+              0.010538999049458653,
+              0.010431002010591328,
+              0.010458003089297563,
+              0.010413001291453838,
+              0.010431998816784471,
+              0.010475996532477438,
+              0.010529998689889908,
+              0.010431002010591328,
+              0.010404997738078237,
+              0.010413001291453838
+            ]
+          }
+        },
+        "accelerator": {
+          "backend": null,
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "setupMs": 0.09378200047649443,
+          "steadyState": null,
+          "hostToDeviceMs": null,
+          "deviceToHostMs": null,
+          "totalRunMedianMs": null,
+          "correctness": {
+            "status": "not-measured",
+            "reason": "no actual ROCm device"
+          },
+          "speedupSteadyState": null,
+          "speedupEndToEnd": null
+        }
+      },
+      {
+        "animals": 100000,
+        "cpu": {
+          "backend": "native_rust",
+          "steadyState": {
+            "sampleCount": 21,
+            "median": 0.09409700578544289,
+            "spread": {
+              "min": 0.09356599912280217,
+              "max": 0.11074700159952044,
+              "range": 0.017181002476718277
+            },
+            "samples": [
+              0.11074700159952044,
+              0.09497900464339182,
+              0.09436700202059001,
+              0.09435800166102126,
+              0.09440299618290737,
+              0.0942859987844713,
+              0.09414099622517824,
+              0.10842600022442639,
+              0.09772399789653718,
+              0.09409699850948527,
+              0.09369100007461384,
+              0.09386300371261314,
+              0.09409699850948527,
+              0.09409700578544289,
+              0.09356599912280217,
+              0.09370099724037573,
+              0.09362900163978338,
+              0.0972380003076978,
+              0.09388099715579301,
+              0.09360200056107715,
+              0.09367299935547635
+            ]
+          }
+        },
+        "accelerator": {
+          "backend": null,
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "setupMs": 0.09378200047649443,
+          "steadyState": null,
+          "hostToDeviceMs": null,
+          "deviceToHostMs": null,
+          "totalRunMedianMs": null,
+          "correctness": {
+            "status": "not-measured",
+            "reason": "no actual ROCm device"
+          },
+          "speedupSteadyState": null,
+          "speedupEndToEnd": null
+        }
+      }
+    ],
+    "correctness": {
+      "status": "not-measured",
+      "reason": "accelerator unavailable; no CPU fallback is counted as accelerator"
+    },
+    "speedupReportedOnlyAfterActualROCmAndCorrectness": true
+  },
+  "limitations": [
+    "This profiles the exact packed numeric metabolism kernel called by FarmEngine, not a full farm simulation.",
+    "A CPU-only environment is an explicit no-go; CPU measurements are never labeled as GPU results.",
+    "The PyTorch HIP implementation evaluates the same formula but is not integrated into production."
+  ]
+}

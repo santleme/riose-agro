@@ -1,0 +1,227 @@
+import {canonicalJson} from './batch-manifest.js';
+
+function outputValue(record, name) {
+  const value = record.outputs?.[name];
+  if (value === undefined || value === null) return null;
+  if (!value || typeof value !== 'object' || !Object.hasOwn(value, 'value') || typeof value.unit !== 'string' || !value.unit.trim()) {
+    throw new TypeError(`Run ${record.runId} output ${name} must include a value and unit`);
+  }
+  if (typeof value.value !== 'number' || !Number.isFinite(value.value)) throw new TypeError(`Run ${record.runId} output ${name} must be finite numeric data`);
+  return value;
+}
+
+function quantile(sortedValues, probability) {
+  if (sortedValues.length === 0) return null;
+  const index = (sortedValues.length - 1) * probability;
+  const lower = Math.floor(index), upper = Math.ceil(index);
+  const fraction = index - lower;
+  // Weighted interpolation avoids overflowing the difference for opposite,
+  // finite endpoints such as -1e308 and 1e308.
+  const value = sortedValues[lower] * (1 - fraction) + sortedValues[upper] * fraction;
+  if (!Number.isFinite(value)) throw new RangeError('Quantile is outside the finite numeric range');
+  return value;
+}
+
+function stableSum(values) {
+  let sum = 0;
+  let correction = 0;
+  for (const value of values) {
+    const next = sum + value;
+    correction += Math.abs(sum) >= Math.abs(value) ? (sum - next) + value : (value - next) + sum;
+    sum = next;
+  }
+  return sum + correction;
+}
+
+function describe(values) {
+  // Sort before every reduction so permuting result rows cannot change the
+  // floating-point accumulation order (which would make summaries drift).
+  const sorted = [...values].sort((a, b) => a - b);
+  const n = sorted.length;
+  // Divide before summing so a finite mean does not overflow just because
+  // the unscaled sum exceeds Number.MAX_VALUE.
+  let mean = n ? stableSum(sorted.map(value => value / n)) : null;
+  if (n) {
+    const magnitude = sorted.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), 0);
+    const minimumNormal = 2 ** -1022;
+    if (magnitude > 0 && magnitude < minimumNormal) {
+      // Dividing subnormal values before summing can round every term to zero
+      // (for example, the mean of two Number.MIN_VALUE observations). Normalize
+      // only an all-subnormal group so small terms in mixed-scale data retain
+      // the compensated sum path above.
+      mean = magnitude * (stableSum(sorted.map(value => value / magnitude)) / n);
+    }
+  }
+  if (mean !== null && !Number.isFinite(mean)) throw new RangeError('Mean is outside the finite numeric range');
+  let standardDeviation = null;
+  if (n > 1) {
+    // Scale deviations before squaring. This preserves tiny but representable
+    // spreads; if subtraction overflows for opposite-sign extremes, normalize
+    // the observations first and subtract in the normalized range.
+    const differences = sorted.map(value => value - mean);
+    let deviationScale = differences.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), 0);
+    let normalizedDifferences;
+    if (differences.every(Number.isFinite)) {
+      normalizedDifferences = deviationScale === 0 ? differences : differences.map(value => value / deviationScale);
+    } else {
+      const valueScale = sorted.reduce((maximum, value) => Math.max(maximum, Math.abs(value)), Math.abs(mean));
+      if (valueScale === 0) {
+        deviationScale = 0;
+        normalizedDifferences = differences;
+      } else {
+        const scaledMean = mean / valueScale;
+        normalizedDifferences = sorted.map(value => value / valueScale - scaledMean);
+        deviationScale = valueScale;
+      }
+    }
+    if (deviationScale === 0) standardDeviation = 0;
+    else {
+      const scaledSquares = stableSum(normalizedDifferences.map(value => value ** 2));
+      const scaledSd = Math.sqrt(scaledSquares / (n - 1));
+      if (scaledSd > Number.MAX_VALUE / deviationScale) throw new RangeError('Sample standard deviation is outside the finite numeric range');
+      standardDeviation = deviationScale * scaledSd;
+      if (!Number.isFinite(standardDeviation)) throw new RangeError('Sample standard deviation is outside the finite numeric range');
+    }
+  }
+  return {
+    n,
+    mean,
+    standardDeviation,
+    quantiles: {p05: quantile(sorted, .05), p25: quantile(sorted, .25), p50: quantile(sorted, .5), p75: quantile(sorted, .75), p95: quantile(sorted, .95)},
+    label: 'descriptive replicate variability; quantiles are not confidence intervals',
+  };
+}
+
+function createReplicateReducer({groupBy = [], outputs} = {}) {
+  if (!Array.isArray(groupBy) || groupBy.some(field => typeof field !== 'string' || !field)) throw new TypeError('groupBy must contain input field names');
+  const selectedOutputNames = outputs ? [...new Set(outputs)] : null;
+  if (selectedOutputNames && selectedOutputNames.some(name => typeof name !== 'string' || !name)) throw new TypeError('outputs must contain output names');
+  const groups = new Map();
+  const runIds = new Set();
+  const outputUnits = new Map();
+  const discoveredOutputs = new Set(selectedOutputNames ?? []);
+
+  const addRecord = record => {
+    if (!record || typeof record.runId !== 'string' || !record.runId) throw new TypeError('Each run record requires a runId');
+    if (runIds.has(record.runId)) throw new TypeError(`Duplicate runId ${record.runId}`);
+    runIds.add(record.runId);
+    if (!selectedOutputNames) {
+      for (const [name, value] of Object.entries(record.outputs ?? [])) {
+        if (typeof value?.value === 'number' && Number.isFinite(value.value)) discoveredOutputs.add(name);
+      }
+    }
+    const grouping = Object.fromEntries(groupBy.map(field => [field, record.inputs?.[field] ?? null]));
+    // Group identity must use the same strict canonical JSON rules as the
+    // manifest and result digests. Permissive JSON.stringify-style encoding
+    // can collapse distinct non-JSON values (for example [] and [undefined]).
+    const key = canonicalJson(grouping);
+    let group = groups.get(key);
+    if (!group) {
+      group = {grouping, completedIds: [], failedIds: [], incompleteIds: [], outputs: new Map()};
+      groups.set(key, group);
+    }
+    if (record.status === 'failed') group.failedIds.push(record.runId);
+    else if (record.status === 'completed') {
+      group.completedIds.push(record.runId);
+      const names = selectedOutputNames ?? Object.entries(record.outputs ?? [])
+        .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name);
+      for (const name of names) {
+        let summary = group.outputs.get(name);
+        if (!summary) {
+          summary = {unit: null, values: [], includedRunIds: []};
+          group.outputs.set(name, summary);
+        }
+        const item = outputValue(record, name);
+        if (!item) continue;
+        const knownUnit = outputUnits.get(name);
+        if (knownUnit !== undefined && knownUnit !== item.unit) {
+          throw new TypeError(`Output ${name} has incompatible units: ${knownUnit} and ${item.unit}`);
+        }
+        outputUnits.set(name, item.unit);
+        if (summary.unit === null) summary.unit = item.unit;
+        else if (summary.unit !== item.unit) throw new TypeError(`Output ${name} has incompatible units: ${summary.unit} and ${item.unit}`);
+        summary.values.push(item.value);
+        summary.includedRunIds.push(record.runId);
+      }
+    }
+    else if (record.status === 'planned' || record.status === 'running') group.incompleteIds.push(record.runId);
+    else throw new TypeError(`Run ${record.runId} has unsupported status ${record.status}`);
+  };
+
+  const finish = () => [...groups.entries()].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, group]) => ({
+    grouping: group.grouping,
+    completedRuns: group.completedIds.length,
+    failedRuns: group.failedIds.length,
+    incompleteRuns: group.incompleteIds.length,
+    provenance: {
+      runIds: [...group.completedIds, ...group.failedIds, ...group.incompleteIds].sort(),
+      completedRunIds: [...group.completedIds].sort(),
+      failedRunIds: [...group.failedIds].sort(),
+      incompleteRunIds: [...group.incompleteIds].sort(),
+    },
+    outputs: Object.fromEntries([...discoveredOutputs].sort((a, b) => a < b ? -1 : a > b ? 1 : 0).map(name => {
+      const summary = group.outputs.get(name) ?? {unit: null, values: [], includedRunIds: []};
+      const includedIds = new Set(summary.includedRunIds);
+      return [name, {
+        unit: summary.unit, missingRuns: group.completedIds.length - summary.values.length,
+        provenance: {
+          includedRunIds: [...summary.includedRunIds].sort(),
+          missingRunIds: group.completedIds.filter(runId => !includedIds.has(runId)).sort(),
+        },
+        ...describe(summary.values),
+      }];
+    })),
+  }));
+  return {addRecord, finish};
+}
+
+/** Summarize an iterable of completed replicate records without interpreting spread as calibrated uncertainty. */
+export function summarizeReplicates(records, options = {}) {
+  if (!records || typeof records[Symbol.iterator] !== 'function' || typeof records === 'string') throw new TypeError('records must be an iterable of run records');
+  // Arrays can cheaply preserve the legacy global output-name discovery and
+  // validation behavior. A one-shot stream instead discovers names as rows
+  // arrive; callers with a fixed schema can pass `outputs` explicitly.
+  if (Array.isArray(records) && options.outputs === undefined) {
+    const names = [...new Set(records.flatMap(record => Object.entries(record.outputs ?? [])
+      .filter(([, value]) => typeof value?.value === 'number' && Number.isFinite(value.value)).map(([name]) => name)))].sort();
+    options = {...options, outputs: names};
+  }
+  const reducer = createReplicateReducer(options);
+  for (const record of records) reducer.addRecord(record);
+  return reducer.finish();
+}
+
+/** Summarize an async stream of replicate records without buffering the input records. */
+export async function summarizeReplicatesAsync(records, options = {}) {
+  if (!records || typeof records[Symbol.asyncIterator] !== 'function') throw new TypeError('records must be an async iterable of run records');
+  const reducer = createReplicateReducer(options);
+  for await (const record of records) reducer.addRecord(record);
+  return reducer.finish();
+}
+import {verifyExperimentResults} from './batch-manifest.js';
+
+
+/** Verify the v1 manifest/result links before aggregating only completed numeric outputs. */
+export function summarizeExperimentReplicates(manifest, resultRecords, options = {}) {
+  verifyExperimentResults(manifest, resultRecords);
+  const resultsByRunId = new Map(resultRecords.map(record => [record.runId, record]));
+  const records = manifest.runs.map(run => ({
+    runId: run.runId,
+    status: run.status,
+    inputs: run.inputs,
+    outputs: run.status === 'completed' ? resultsByRunId.get(run.runId).outputs : {},
+  }));
+  const summary = summarizeReplicates(records, options);
+  return summary.map(group => ({
+    ...group,
+    provenance: {
+      ...group.provenance,
+      experimentId: manifest.experimentId,
+      manifestDigest: manifest.manifestDigest,
+      resultRecordCount: resultRecords.length,
+      resultRecordDigests: resultRecords.filter(record => group.provenance.completedRunIds.includes(record.runId))
+        .map(record => ({runId: record.runId, outputDigest: record.outputDigest}))
+        .sort((a, b) => a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0),
+    },
+  }));
+}

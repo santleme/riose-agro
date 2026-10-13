@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "title": "Data from: Mob and rotational grazing influence pasture biomass, nutritive value, and species composition",
+    "publisher": "Dryad",
+    "doi": "10.5061/dryad.79cnp5ht4",
+    "officialUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.79cnp5ht4",
+    "apiUrl": "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.79cnp5ht4",
+    "versionApiUrl": "https://datadryad.org/api/v2/versions/173784",
+    "downloadUrl": "https://datadryad.org/api/v2/versions/173784/download",
+    "version": 6,
+    "published": "2022-04-25",
+    "retrievedOn": "2026-10-13",
+    "access": "public; anonymous version ZIP download returned HTTP 200 without credentials",
+    "license": "CC0 1.0, as declared by the Dryad public API",
+    "licenseUrl": "https://spdx.org/licenses/CC0-1.0.html",
+    "rawArchive": {
+      "path": "data/raw/dryad-79cnp5ht4/version-6.zip",
+      "bytes": 115041,
+      "sha256": "45b972894f876a653b0205d01959861bdc4e4ff7c14eacc8b8fa4bc893c161d6"
+    },
+    "rawFiles": [
+      {
+        "pathInArchive": "Mob_&_Rotational_Study_Data_Summary.xlsx",
+        "bytes": 98007,
+        "sha256": "47c2aaf50572c8a46b8ab5e3dccd532d36c67fe04fd0f942c5c4f818d281b03b"
+      },
+      {
+        "pathInArchive": "README_Mob_Rotational_Grazing.docx",
+        "bytes": 16584,
+        "sha256": "cf1215c422a74c17bfd48d0a26c46d6647964a44b50b253091edf618a7a0086e"
+      }
+    ]
+  },
+  "population": {
+    "species": "cool-season grass-legume pasture",
+    "breed": null,
+    "ageOrPhysiologicalClass": "not applicable to the reported forage observations; study pasture was grazed by yearling beef cattle",
+    "location": "Hawbecker Research Farm, northeastern United States",
+    "system": "four-year mob versus rotational grazing comparison, 2015-2018",
+    "animalsObserved": false,
+    "unitOfObservation": "plot-level forage sample nested within treatment, replicate/paddock, year, and harvest time",
+    "groups": ["treatment", "replicate/paddock", "calendar year", "Julian day"],
+    "repeatedMeasures": "same eight treatment x replicate paddocks over multiple years and harvest times; retain paddock grouping"
+  },
+  "measurement": {
+    "target": "pre-grazing forage mass (PGFM)",
+    "targetUnitAsReported": "kg/ha",
+    "dryMatterInterpretation": "study and article describe dry matter mass; the source column header itself says kg/ha",
+    "targetMethod": "published methods describe ten 0.1 m2 pre-grazing quadrat clippings per paddock to 2.5 cm, averaged to paddock mean",
+    "predictor": "mean pre-grazing sward height at paddock/replicate level",
+    "predictorUnit": "cm",
+    "sourcePredictorGranularity": "paddock/replicate mean; not point-matched to each biomass quadrat",
+    "outcomeGrainAfterAggregation": "treatment x replicate/paddock x study year x Julian day"
+  },
+  "processing": {
+    "pipeline": "scripts/process_dryad_mob_rotational_biomass.py",
+    "rowLevelParquet": "data/dryad-mob-rotational-biomass/processed/dryad-per-harvest-biomass-samples-v1.parquet",
+    "rowLevelSha256": "39791095abb52e71a05f2474ffb0f5bac5651acd5050c6358da186a67e2d1d8a",
+    "rowLevelRows": 623,
+    "missingTargetSlots": 17,
+    "missingTargetsImputed": false,
+    "aggregatedParquet": "data/dryad-mob-rotational-biomass/processed/dryad-paddock-biomass-height-v1.parquet",
+    "aggregatedSha256": "d07291469e00136f54ed6f51d96afcee11ad0d5c27b665556f915afdb8de08d3",
+    "aggregatedRows": 64,
+    "paddockGroups": 8,
+    "qualityReport": "docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json"
+  },
+  "eligibility": {
+    "decision": "CONDITIONAL",
+    "technicalAvailability": "ELIGIBLE; complete public archive obtained and internal file checksums verified",
+    "reusePermissions": "ELIGIBLE under public CC0 1.0 metadata",
+    "zootechnicalCompatibility": "CONDITIONAL for a separate pasture forage biomass module; not an animal intake or performance cohort",
+    "statisticalSufficiency": "CONDITIONAL; 64 repeated measurements across only eight paddocks, requiring group-preserving analysis",
+    "eligibleUses": ["separate external forage biomass evaluation after estimand and measurement-grain review", "descriptive pasture management analysis"],
+    "ineligibleUses": ["DMI validation", "ADG validation", "full-engine validation", "row-random train/test splits"],
+    "limitations": [
+      "Height is paddock-level and biomass samples are plot-level; only the declared paddock-time aggregation aligns them.",
+      "Only eight paddock groups are available and they recur over time.",
+      "The study is a temperate northeastern-US grass-legume system and does not establish calibration for Brazilian tropical pastures.",
+      "The associated study did not collect animal performance outcomes."
+    ]
+  }
+}

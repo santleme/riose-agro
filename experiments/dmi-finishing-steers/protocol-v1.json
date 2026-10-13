@@ -1,0 +1,58 @@
+{
+  "protocolVersion": "1.0.0",
+  "status": "pre-registered-before-fit",
+  "estimand": "Exploratory prediction error for finishing-phase DMI summaries of beef steers from a new experiment represented by this source; not mature beef cows on pasture.",
+  "source": {
+    "doi": "10.5061/dryad.qnk98sfsn",
+    "manifest": "data/dryad-finishing-steers/manifest.json",
+    "audit": "docs/evidence/dryad-finishing-steers-audit.json",
+    "target": "DMI_Fin",
+    "targetUnit": "kg DM/animal/day",
+    "rowGrain": "animal-by-experiment finishing summary",
+    "animalKey": ["Project", "Animal"],
+    "trialKey": "Project",
+    "license": "CC0-1.0"
+  },
+  "populationBoundary": "Finishing/feedlot beef steers. This experiment cannot satisfy or replace the #109 mature-beef-cow pasture DMI gate or the original #110 target.",
+  "features": [
+    "Breed",
+    "ADG_Fin",
+    "SMBW_Fin",
+    "CP_%",
+    "NDF_%",
+    "Hem_%",
+    "ADF_%",
+    "Lig_%",
+    "Cel_%",
+    "NFC_%",
+    "Sta_%",
+    "EE_%",
+    "Ash_%",
+    "Forage_%",
+    "TDN_%",
+    "NEm_Mcalkg",
+    "NEg_Mcalkg",
+    "GE_Mcalkg"
+  ],
+  "excludedFeatures": ["DMI_Fin", "CO2_Fin", "CH4_g_Fin", "CH4_MJ_Fin", "O2_Fin", "Project", "Animal"],
+  "models": [
+    "training-fold mean baseline",
+    "Ridge(alpha=1.0) with fold-local numeric standardization and fold-local breed one-hot encoding",
+    "RandomForestRegressor(n_estimators=300, min_samples_leaf=3, max_features=1.0, random_state=20261013, n_jobs=1) with fold-local breed one-hot encoding"
+  ],
+  "evaluation": {
+    "split": "Leave-one-Project-out grouped cross-validation; Project is the five-experiment identifier, and Project+Animal is the animal identifier.",
+    "preprocessing": "Fit all encoders and scalers within each training fold only.",
+    "metrics": ["MAE", "RMSE", "bias_prediction_minus_observed"],
+    "reporting": "Pooled out-of-fold metrics and metrics/counts for each held-out Project; compare all models on identical cases.",
+    "tuning": "None. Hyperparameters are fixed before evaluation.",
+    "uncertainty": "No calibrated confidence or prediction intervals will be reported.",
+    "limits": [
+      "Only five independent experiments are available; the effective independent sample size is five trials, not 446 animals.",
+      "This is internal cross-experiment evaluation on one deposited source, not independent external validation.",
+      "ADG is a contemporaneous outcome and makes this a retrospective component prediction, not a prospective deployment model.",
+      "No mechanistic comparator is reported because the reviewed BR-CORTE equation targets growing Zebu cattle on tropical pasture, not finishing feedlot steers."
+    ]
+  },
+  "randomSeed": 20261013
+}

@@ -1,9 +1,15 @@
 #!/usr/bin/env node
-import {readdir, readFile, mkdir, writeFile} from 'node:fs/promises';
-import {basename, resolve} from 'node:path';
+import {readdir, readFile, mkdir, writeFile, rename, rm} from 'node:fs/promises';
+import {basename, dirname, resolve} from 'node:path';
+import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {FarmEngine} from '../src/client/engine.js';
+import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
+import {createBatchExperimentManifest, sha256Digest} from '../experiments/batch-manifest.js';
+import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
+import {runResumableBatch} from '../experiments/resumable-journal.js';
+import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 
 const schemaPath = fileURLToPath(new URL('../schemas/scenario.schema.json', import.meta.url));
 const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
@@ -114,17 +120,130 @@ export async function runScenarioDirectory(scenarioDirectory, resultDirectory) {
   return results;
 }
 
+async function atomicWrite(path, text) {
+  await mkdir(dirname(path), {recursive: true});
+  const temporary = `${path}.${process.pid}.${randomUUID()}.tmp`;
+  try {
+    await writeFile(temporary, text, {flag: 'wx'});
+    await rename(temporary, path);
+  } catch (error) {
+    await rm(temporary, {force: true});
+    throw error;
+  }
+}
+
+function resultFileName(file) {
+  return file.replace(/\.json$/i, '.result.json');
+}
+
+export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, {concurrency = 1, workerMemoryLimitMb, signal, workerPool: suppliedWorkerPool} = {}) {
+  if (!Number.isInteger(concurrency) || concurrency < 1) throw new RangeError('concurrency must be a positive integer');
+  if (concurrency > 1 && (!Number.isInteger(workerMemoryLimitMb) || workerMemoryLimitMb < 16)) {
+    throw new RangeError('concurrent scenario execution requires workerMemoryLimitMb of at least 16');
+  }
+  const scenarioFiles = (await readdir(scenarioDirectory, {withFileTypes: true}))
+    .filter(entry => entry.isFile() && entry.name.endsWith('.json') && !entry.name.endsWith('.result.json'))
+    .map(entry => entry.name).sort();
+  if (scenarioFiles.length === 0) throw new Error(`No scenario JSON files found in ${scenarioDirectory}`);
+  await mkdir(resultDirectory, {recursive: true});
+  const engineSourceFiles = ENGINE_SOURCE_FILES;
+  const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
+    name, await readFile(fileURLToPath(new URL(`../src/client/${name}`, import.meta.url)), 'utf8'),
+  ])));
+  const engineDigest = sha256Digest(engineSources);
+  const plans = [];
+  const scenarioByRunId = new Map();
+  for (const file of scenarioFiles) {
+    const source = await readFile(resolve(scenarioDirectory, file), 'utf8');
+    let scenario;
+    try { scenario = JSON.parse(source); }
+    catch (error) { throw new Error(`Invalid JSON in ${file}: ${error.message}`); }
+    const runId = file;
+    const validation = validateScenario(scenario);
+    if (!validation.valid) throw new Error(`Invalid scenario ${file}: ${validation.errors.join('; ')}`);
+    const identity = validateScenarioIdentity({scenarioFormat: HARNESS_FORMAT, scenarioVersion: 1, scenarioId: scenario.scenarioId, scenarioRef: file, seed: scenario.engine.seed, scenario});
+    scenarioByRunId.set(runId, {file, scenario});
+    const configuration = scenario.configuration ?? {};
+    plans.push({
+      runId,
+      scenarioFormat: identity.scenarioFormat,
+      scenarioVersion: identity.scenarioVersion,
+      scenarioId: identity.scenarioId,
+      scenarioRef: identity.scenarioRef,
+      scenarioDigest: identity.scenarioDigest,
+      seed: identity.seed,
+      engine: {id: 'riose-agro/FarmEngine', version: `source-bundle-${engineDigest.slice(7, 23)}`, buildDigest: engineDigest, status: 'provided'},
+      models: [],
+      datasets: [{id: null, digest: null, uri: null, status: 'missing'}],
+      evidence: [{id: null, digest: null, uri: null, status: 'missing'}],
+      inputs: {
+        animalCount: {value: Number.isInteger(scenario?.engine?.animalCount) ? scenario.engine.animalCount : null, unit: 'head'},
+        duration: {value: Number.isInteger(scenario?.run?.hours) ? scenario.run.hours : null, unit: 'h'},
+        configuration: {value: configuration, unit: 'engine-configuration-v1'},
+      },
+      outputs: {}, status: 'planned', outputDigest: null, resultDigest: null, resultRef: null,
+    });
+  }
+  const manifestPath = resolve(resultDirectory, 'batch-manifest.json');
+  const resultsPath = resolve(resultDirectory, 'batch-results.jsonl');
+  const manifest = createBatchExperimentManifest({
+    experimentId: `scenario-directory:${basename(resolve(scenarioDirectory))}`,
+    description: 'Resumable execution journal for scripts/run-scenarios.js',
+    runs: plans,
+  });
+  if (suppliedWorkerPool && (concurrency < 2 || typeof suppliedWorkerPool.execute !== 'function' || suppliedWorkerPool.size !== concurrency)) {
+    throw new TypeError('workerPool must be a matching ScenarioWorkerPool for concurrency greater than 1');
+  }
+  const ownsPool = concurrency > 1 && !suppliedWorkerPool;
+  const pool = concurrency > 1 ? suppliedWorkerPool ?? new ScenarioWorkerPool(concurrency, {maxOldGenerationSizeMb: workerMemoryLimitMb}) : null;
+  let journal;
+  try { journal = await runResumableBatch({manifestPath, resultsPath, manifest, maxRetainedResults: 100, concurrency, signal, verifyCompletedRun: async (run, record) => {
+    const resultPath = resolve(resultDirectory, resultFileName(scenarioByRunId.get(run.runId).file));
+    try {
+      const result = JSON.parse(await readFile(resultPath, 'utf8'));
+      return sha256Digest(result) === record.outputs.scenarioResultDigest?.value;
+    } catch { return false; }
+  }, executeRun: async run => {
+    const {file, scenario, source} = scenarioByRunId.get(run.runId);
+    if (!scenario) throw new Error(`Invalid JSON in ${file}`);
+    const result = pool ? await pool.execute(scenario) : executeScenario(scenario);
+    const resultPath = resolve(resultDirectory, resultFileName(file));
+    await atomicWrite(resultPath, `${JSON.stringify(result, null, 2)}\n`);
+    const output = {
+      scenarioResultRef: {value: basename(resultPath), unit: 'path'},
+      scenarioResultDigest: {value: sha256Digest(result), unit: 'sha256'},
+      passed: {value: result.passed, unit: 'boolean'},
+    };
+    const metrics = result.result?.metrics;
+    if (metrics && Number.isFinite(metrics.weight)) output.weight = {value: metrics.weight, unit: 'kg/animal'};
+    if (metrics && Number.isFinite(metrics.gain)) output.gain = {value: metrics.gain, unit: 'kg/animal'};
+    return output;
+  }}); } finally { if (ownsPool) await pool.close(); }
+  return Promise.all(journal.manifest.runs.map(async run => {
+    const file = scenarioByRunId.get(run.runId).file;
+    if (run.status === 'completed') {
+      try { return {file, ...JSON.parse(await readFile(resolve(resultDirectory, resultFileName(file)), 'utf8'))}; }
+      catch (error) { return {file, ...failedResult(null, [`${file}: verified result file unavailable: ${error.message}`])}; }
+    }
+    return {file, ...failedResult(null, [`${file}: batch run status ${run.status}; see batch-results.jsonl.errors.jsonl`])};
+  }));
+}
+
 async function main() {
-  const [scenarioArgument, resultArgument] = process.argv.slice(2);
+  const arguments_ = process.argv.slice(2);
+  const resumable = arguments_.includes('--resume');
+  const [scenarioArgument, resultArgument] = arguments_.filter(argument => argument !== '--resume');
   const scenarioDirectory = resolve(scenarioArgument ?? defaultScenarioDirectory);
   const resultDirectory = resolve(resultArgument ?? defaultResultDirectory);
   try {
-    const results = await runScenarioDirectory(scenarioDirectory, resultDirectory);
+    const results = resumable
+      ? await runScenarioDirectoryResumable(scenarioDirectory, resultDirectory)
+      : await runScenarioDirectory(scenarioDirectory, resultDirectory);
     for (const result of results) {
       const label = result.passed ? 'PASS' : 'FAIL';
       process.stdout.write(`${label} ${result.file}${result.errors.length ? `: ${result.errors.join('; ')}` : ''}\n`);
     }
-    process.stdout.write(`Results: ${resultDirectory}\n`);
+    process.stdout.write(`Results: ${resultDirectory}${resumable ? ' (resumable batch manifest and JSONL journal)' : ''}\n`);
     if (results.some(result => !result.passed)) process.exitCode = 1;
   } catch (error) {
     process.stderr.write(`${error.message}\n`);

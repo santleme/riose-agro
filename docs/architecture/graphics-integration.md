@@ -25,6 +25,8 @@ The scene schema intentionally has no Canvas/Pixi names, atlas rectangles, textu
 
 ## Composer behavior in the PoC
 
+`scene-adapter-v1.js` is the authored-preservation adapter for `visual-scene` v1: it retains source identity and authored zones, placements, and source JSON for deterministic restoration. Its `representationRole` is `authored-preservation`. `main-composer-adapter.js` remains a runtime-presentation helper used by the Graphics PoC build; it may derive paddocks, fences, or representative positions and labels its output `runtime-presentation`. Those outputs share the v1 scene schema, but are not interchangeable fidelity or round-trip contracts. Consumers that need authored fidelity must use the preservation adapter.
+
 - Isometric projection is 2:1 and exactly invertible for grid snapping.
 - Beef and dairy layouts are reproducible adapters of the committed main Scenario Composer exports. The pinned source snapshots live under `graphics-poc/source/main-composer-v1/`; `scripts/build-composer-scenes.mjs` writes both scenes using `main-composer-adapter.js`.
 - Both layouts preserve their 36×24 grid, 864 individually assigned terrain tiles and Composer provenance. Beef retains its source zones and 219 expanded prefab placements. The dairy adapter subdivides the two source pasture areas into four editable visual paddocks, adds 18 internal fence segments and two gates, and emits 247 prefab placements. Its 14 visual representatives remain linked to groups totaling 200 animals; beef keeps its Worker population as the sole operational animal source.
@@ -52,6 +54,10 @@ The source assets are pinned to committed main revision `2a360cd60bfd3f98d598e12
 
 Run `npm run bench:graphics-poc` with the local app server available at `http://127.0.0.1:8000/`. It builds the bundle, opens local Chromium with WebGL enabled, starts a fresh Worker and seed per page, and measures Canvas 2D and PixiJS at 100, 1,000 and 10,000 simulated animals. Each renderer uses the same zoom, scene, visible area, culling rule and atlas frames. The report records frame interval mean FPS/p95, scene update/culling/sort time, render submission time, simulated and bounds-visible animals, LOD draw units and clusters, post-GC JS heap, one-hour Worker round-trip, asset load time and Pixi initialization time. Browser GPU memory is not exposed by the harness and is not inferred from JS heap.
 
+To measure only atlas bytes and browser fetch/decode time, start the local server with `npm start`, then run `npm run bench:graphics-atlas-load` in another terminal. It checks SHA-256 against the current renderer manifest and makes three cache-disabled sequential loads per atlas in local Chromium. The versioned benchmark report records seven atlases totaling 17,309,191 bytes (16.507 MiB); per-atlas raw fetch/decode samples and review statuses are in [`docs/evidence/graphics-atlas-load-2026-10-12.json`](../evidence/graphics-atlas-load-2026-10-12.json). This loopback measurement is a development-host baseline, not a CDN/device estimate. The current `REVIEW` and `UNRESOLVED` assets remain unapproved, and the measurement does not compare renderers.
+
+The synthetic culling/LOD/grouping microbenchmark is recorded in the shared report [`herd-visual-model-benchmark-2026-10.json`](../evidence/herd-visual-model-benchmark-2026-10.json). Its `layout` timings exclude FarmEngine, Canvas/Pixi, GPU draw, and asset work; they are not end-to-end renderer measurements.
+
 The current results are exploratory, not a performance sign-off. With the imported 36×24 scene at map-fit zoom 0.28 and 10,000 simulated animals, a two-repeat headless run accounted for all 10,000 as visible and reduced them to 325 animal draw units (40 far clusters). It measured median 83.7 FPS Canvas / 60.0 FPS Pixi, 33.4 ms / 16.7 ms frame p95, 2.7 MB / 7.2 MB post-GC JS heap, and 43.0 ms / 53.8 ms Worker round-trip. A separate close-up run centers on stable animal #1; at zoom 3.2 it showed 771 of 10,000 animals, culled 9,229 and represented the visible set in 435 draw units. LOD distance is measured from the viewport center in screen pixels, so camera panning does not change an animal's tier by itself. Both are short headless samples; repeat with 30+ samples and released assets on target devices before a production renderer decision. PixiJS batching and GPU rendering may help fill-bound scenes, while per-object culling, scene-graph mutation and depth sorting can increase CPU work.
 
 ## Integration sequence
@@ -63,7 +69,7 @@ The current results are exploratory, not a performance sign-off. With the import
 5. Let the existing Scenario Studio open or attach a scene layout without changing its scenario-comparison workflow.
 6. Run renderer parity and performance benchmarks with released assets and real camera/zoom workloads.
 7. If PixiJS wins on supported workloads, move one map surface at a time behind the renderer contract and retain Canvas as a fallback until regression coverage passes.
-8. Keep the dairy layout available as a visual/editor fixture while the module is `in-progress`; connect dairy simulation outputs only after its scientific model has an explicit version/status and validation status.
+8. Keep the dairy layout available as a visual/editor fixture while the module is `in-progress`; connect dairy simulation outputs only after its scientific model has an explicit version/status and validation status. Runtime eligibility resolves each declared `id@version` through `scientific/model-contract.js`; a version-shaped scene string alone cannot register or enable a model.
 
 ## Known gaps
 

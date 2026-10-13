@@ -1,0 +1,468 @@
+{
+  "schemaVersion": "1.0.0",
+  "reviewedOn": "2026-10-13",
+  "objective": "Audit open, downloadable scientific sources for Riose DMI, ADG, grazing behavior, and forage biomass modules; preserve population and outcome boundaries.",
+  "searchCoverage": {
+    "platforms": [
+      "Dryad",
+      "Zenodo",
+      "Figshare",
+      "DataCite",
+      "OpenAlex/Crossref discovery",
+      "USDA Ag Data Commons / ARS / Data.gov",
+      "Embrapa / REDAPE",
+      "Hugging Face Datasets",
+      "Kaggle",
+      "Mendeley Data",
+      "Harvard and university Dataverse",
+      "OSF",
+      "public GitHub",
+      "CSIRO"
+    ],
+    "languages": [
+      "English",
+      "Portuguese",
+      "Spanish"
+    ],
+    "terms": [
+      "individual dry matter intake grazing beef cattle",
+      "mature beef cows pasture DMI",
+      "measured forage intake cattle",
+      "grazing cattle individual intake dataset",
+      "cow calf nutrition longitudinal data",
+      "forage biomass and grazing behavior",
+      "cattle liveweight gain longitudinal observations",
+      "animal performance pasture management",
+      "beef cattle feed efficiency open data",
+      "tropical pasture intake Brazil",
+      "consumo individual de matéria seca bovinos a pasto",
+      "ingestão de forragem Nelore",
+      "ganho de peso bovinos pastejo dados abertos"
+    ],
+    "summary": "No new public record in this search met the complete mature beef-cow pasture total-DMI gate. One new Brazilian pasture-biomass cohort was downloaded and processed for a separate forage module."
+  },
+  "candidates": [
+    {
+      "id": "dryad-mezzalira-short-term-intake",
+      "doi": "10.5061/dryad.9ds7r",
+      "officialUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.9ds7r",
+      "license": "CC0-1.0",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_http_200",
+        "fileBytesRetrieved": false,
+        "downloadEndpoint": "HTTP 401 (bearer token required); direct file stream returned HTTP 403",
+        "localData": false
+      },
+      "population": "Six Jersey heifers and three Angus×Brahman heifers in two Brazilian grazing experiments.",
+      "target": "Observed short-term dry-matter intake rate (STIR), not daily total DMI.",
+      "measurementMethod": "Double weighing before and after grazing sessions, corrected for dry matter; source article describes intake rate per session.",
+      "units": "g DM/min for intake rate; forage/sward covariates also reported.",
+      "grainAndGroups": "Individual/session according to source article; animal and experiment keys require confirmation in CSV, which was not obtained.",
+      "period": "Two experiments; approximately 45-minute sessions.",
+      "decision": "INELIGIBLE_FOR_CURRENT_DATA_PIPELINE",
+      "decisionReason": "The source would support a distinct intake-rate cohort, but the source bytes are unavailable through the unauthenticated download route in this environment; the target is not total daily DMI in mature beef cows.",
+      "bestSeparateUse": "Short-term intake-rate cohort if data bytes become directly downloadable without restricted authentication."
+    },
+    {
+      "id": "dryad-ucdavis-finishing-steers-behavior",
+      "doi": "10.5061/dryad.zw3r228h5",
+      "officialUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.zw3r228h5",
+      "license": "CC0-1.0",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_http_200",
+        "fileBytesRetrieved": false,
+        "downloadEndpoint": "HTTP 401 (bearer token required); direct file stream returned HTTP 403",
+        "localData": false
+      },
+      "population": "Finishing steers on high-concentrate ad-libitum feedlot diets; approximately 18 animals, 17 analyzed.",
+      "target": "Individual daily feed intake plus feeding behavior and rumen pH; feedlot cohort only.",
+      "measurementMethod": "Automated feed-bin records and rumen bolus; details in source README/article.",
+      "units": "DMI reported as kg/24 h; repeated animal-day records with missing values represented as NA.",
+      "grainAndGroups": "Animal ID and date; one finishing trial, repeated days per animal.",
+      "period": "Approximately 11.5 days per analyzed animal.",
+      "decision": "INELIGIBLE_FOR_CURRENT_DATA_PIPELINE",
+      "decisionReason": "Would be a separate feedlot-DMI candidate, but bytes are unavailable through the unauthenticated download route in this environment and population is not the #109 pasture target.",
+      "bestSeparateUse": "Feedlot behavior/intake exploration if the file is obtainable through an unprotected public download route."
+    },
+    {
+      "id": "dryad-ucdavis-alfalfa-feedlot-motivation",
+      "doi": "10.25338/B8HW7R",
+      "officialUrl": "https://datadryad.org/dataset/doi:10.25338/B8HW7R",
+      "license": "CC0-1.0",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_http_200",
+        "fileBytesRetrieved": false,
+        "downloadEndpoint": "HTTP 401 (bearer token required); direct file stream returned HTTP 403",
+        "localData": false
+      },
+      "population": "Thirteen-month-old feedlot steers on high-concentrate diets; 24 enrolled, 17 in final analyses.",
+      "target": "Daily intake from primary/treatment bins and feeding behavior/preference; not pasture forage intake.",
+      "measurementMethod": "Feeder intake and video-coded behavior during aversive-barrier treatment; intake sources and time windows differ by file.",
+      "units": "Files include kg/24 h for primary-bin intake, g/24 h for treatment intake, and 24/48-hour behavioral summaries.",
+      "grainAndGroups": "Animal ID by 24-hour or 48-hour interval; 17 animals in analysis and some rows removed for technical failure.",
+      "period": "Feedlot treatment phases across repeated 24/48-hour periods.",
+      "decision": "INELIGIBLE_FOR_CURRENT_DATA_PIPELINE",
+      "decisionReason": "The useful separate feedlot behavior/preference target is not the #109 target; source bytes are not obtainable without the bearer-token API endpoint during this audit.",
+      "bestSeparateUse": "Feedlot feeding motivation/behavior exploration if publicly retrievable without restricted authentication."
+    },
+    {
+      "id": "dryad-dairy-heifer-palatability-dmi",
+      "doi": "10.5061/dryad.sn02v6xbd",
+      "officialUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.sn02v6xbd",
+      "license": "CC0-1.0",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_http_200",
+        "fileBytesRetrieved": false,
+        "downloadEndpoint": "HTTP 401 (bearer token required); direct file stream returned HTTP 403",
+        "localData": false
+      },
+      "population": "Twelve dairy heifers offered paired mixed-grass-legume silages.",
+      "target": "Feed-specific intake after 30 minutes and 3 hours, for palatability/preference; not total daily DMI.",
+      "measurementMethod": "Feed offered and refused during paired preference trials.",
+      "units": "kg feed DM after 30 minutes and 3 hours.",
+      "grainAndGroups": "144 rows at heifer × feed × day grain; cow ID, date, feed type and position are described.",
+      "period": "Six trial days in summer 2021.",
+      "decision": "INELIGIBLE_FOR_CURRENT_DATA_PIPELINE",
+      "decisionReason": "Palatability data are not daily total DMI or beef pasture data, and file bytes were not retrievable through the unauthenticated endpoint during audit.",
+      "bestSeparateUse": "Dairy feed-preference analysis if direct public file download becomes available."
+    },
+    {
+      "id": "usda-cper-1524788",
+      "doi": "10.15482/USDA.ADC/1524788",
+      "officialUrl": "https://catalog.data.gov/dataset/data-from-can-measurements-of-foraging-behaviour-predict-variation-in-weight-gains-of-free",
+      "license": "U.S. Public Domain",
+      "technicalAccess": {
+        "metadataAndFileListing": "public",
+        "fileBytesRetrieved": true,
+        "localManifest": "data/usda-cper/manifest.json",
+        "checksumRecorded": true
+      },
+      "population": "Yearling steers at CPER shortgrass rangeland, Colorado, 2019–2020.",
+      "target": "Measured period ADG and grazing behavior; satellite-derived standing biomass. No DMI.",
+      "measurementMethod": "Period weights and animal-borne GPS/accelerometer behavior; biomass from remote sensing.",
+      "units": "ADG kg/head/day; behavior daily/5-minute GPS and 4-second accelerometry; biomass kg DM/ha estimate.",
+      "grainAndGroups": "Animal, RFID/eartag, pasture, date, year, deployment and study period.",
+      "period": "2019–2020.",
+      "decision": "ELIGIBLE_FOR_SEPARATE_GRAZING_BEHAVIOR_AND_BOUNDED_ADG_COHORT",
+      "decisionReason": "Existing public data and checksums are in the repository; outcomes do not include individual DMI and the population is not mature cows.",
+      "bestSeparateUse": "Behavior and observational ADG component diagnostics; no causal claim or full-engine validation."
+    },
+    {
+      "id": "usda-cgrec-1524719",
+      "doi": "10.15482/USDA.ADC/1524719",
+      "officialUrl": "https://agdatacommons.nal.usda.gov/articles/dataset/27_years_of_livestock_production_data_under_different_stocking_rate_levels_at_the_Central_Grasslands_Research_Extension_Center_near_Streeter_North_Dakota/24855519",
+      "license": "U.S. Public Domain",
+      "technicalAccess": {
+        "metadataAndFileListing": "public",
+        "fileBytesRetrieved": true,
+        "localManifest": "data/usda-cgrec-longterm/manifest.json",
+        "checksumRecorded": true
+      },
+      "population": "Mostly yearling heifers and steers in long-term North Dakota grazing trials.",
+      "target": "Animal weights and ADG, grazing duration, stocking treatment and economics; no individual DMI. AUM is a management assumption.",
+      "measurementMethod": "Initial/final liveweights and grazing records across pasture management treatments.",
+      "units": "4,705 animal-season rows; weight/ADG source units converted explicitly in existing audits.",
+      "grainAndGroups": "Animal TAG, year, pasture/treatment and trial.",
+      "period": "1989–2015.",
+      "decision": "ELIGIBLE_FOR_SEPARATE_ADG_AND_GRAZING_MANAGEMENT_COHORT",
+      "decisionReason": "Longitudinal public performance data are present, but this is not DMI and one site cannot provide geographic independent validation by itself.",
+      "bestSeparateUse": "Grouped ADG/performance and management association analysis, not DMI or mature-cow validation."
+    },
+    {
+      "id": "kaggle-csiro-image2biomass",
+      "doi": null,
+      "officialUrl": "https://www.kaggle.com/competitions/csiro-biomass/data",
+      "license": "CC BY-SA 4.0 reported on the competition dataset page; competition access rules also apply.",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_page",
+        "fileBytesRetrieved": false,
+        "downloadRequires": "Kaggle account, authentication/token, and acceptance of competition rules",
+        "localData": false
+      },
+      "population": "Australian temperate pasture quadrats; 19 sites across four states, 2014–2017.",
+      "target": "Laboratory-measured pasture biomass fractions and total dry biomass; no animals or DMI.",
+      "measurementMethod": "Quadrat harvest and laboratory dry-matter measurement, paired with images/metadata.",
+      "units": "Grams per quadrat/image; 357 training images × five targets in long format according to the official competition record.",
+      "grainAndGroups": "Image/quadrat, site, sampling date, species mixture and state; repeated images/measurements must be grouped spatially/temporally.",
+      "period": "28 sampling dates, January–November 2015.",
+      "decision": "INELIGIBLE_UNDER_NO_RESTRICTED_AUTHENTICATION_RULE",
+      "decisionReason": "Biomass target is relevant to another module, but download requires an authenticated Kaggle account and acceptance of competition rules, which the mission excludes.",
+      "bestSeparateUse": "No download or training in this mission; use only if a public direct source without the restricted access gate is identified."
+    },
+    {
+      "id": "zenodo-irish-grass-clover",
+      "doi": "10.5281/zenodo.14191859",
+      "officialUrl": "https://zenodo.org/records/14191859",
+      "license": "Record API says CC BY 4.0; embedded README says CC BY-NC-SA 4.0. Terms conflict.",
+      "technicalAccess": {
+        "metadataAndFiles": "public direct download",
+        "listedPackageSizeBytes": 10300000000,
+        "fileBytesRetrieved": false,
+        "localData": false
+      },
+      "population": "Irish pasture quadrats and 23 paddocks; herbage images collected 2020 and drone images 2021.",
+      "target": "Herbage dry mass, composition percentages and height; no animal DMI.",
+      "measurementMethod": "Some labels from harvested biomass oven-dried at 16 h; drone paddock labels mix visual expert estimates and strip-cut/dry sampling.",
+      "units": "kg DM/ha, component percentages, and post-cutting height in cm.",
+      "grainAndGroups": "Image, shared quadrat, plot or paddock; camera/phone pairs share labels and must be grouped by location to avoid leakage.",
+      "period": "Camera/phone campaign in 2020; drone extension in late autumn 2021.",
+      "decision": "CONDITIONAL_NONCOMMERCIAL_EXPLORATION_ONLY; INELIGIBLE_FOR_COMMERCIAL_TRAINING",
+      "decisionReason": "Useful biomass labels exist, but source metadata conflicts with the README license; no commercial training without unambiguous terms. Large image archives were not downloaded.",
+      "bestSeparateUse": "Noncommercial-only biomass research after source license scope is resolved from existing public terms; do not use for commercial training in current state."
+    },
+    {
+      "id": "mendeley-brazil-pasture-biomass",
+      "doi": "10.17632/nj72kmdj77.1",
+      "officialUrl": "https://data.mendeley.com/datasets/nj72kmdj77/1",
+      "license": "CC BY 4.0",
+      "technicalAccess": {
+        "metadataAndFileListing": "public_api",
+        "fileBytesRetrieved": true,
+        "downloadMethod": "Mendeley public API file URLs, no authentication",
+        "selectedFilesRetrieved": 20,
+        "largePhotoArchivesRetrieved": false,
+        "localManifest": "data/mendeley-pasture-biomass/manifest.json"
+      },
+      "population": "Forage samples from two cattle farms in western São Paulo State; pasture vegetation, not animal records.",
+      "target": "Dry matter yield from harvested pasture biomass; also source tables for height, fresh biomass and soil properties.",
+      "measurementMethod": "0.25 m² samples harvested; dry weight recorded after oven drying 65 °C for 72 hours; source yield validated against dry g × 40 kg/ha.",
+      "units": "0.25 m² sample dry weight in g; source yield in tonnes/ha; processed target in kg DM/ha.",
+      "grainAndGroups": "Sampling point within farm, field, MODIS pixel and campaign; 342 rows, 162 spatial sample groups, 108 observed in multiple campaigns.",
+      "period": "June 2018, November 2018, March 2019; soil subset from June 2018 and March 2019.",
+      "decision": "ELIGIBLE_FOR_SEPARATE_FORAGE_BIOMASS_MODULE; INELIGIBLE_FOR_DMI",
+      "decisionReason": "Open CC BY source tables were downloaded and checksummed; processing confirmed 342 unique sampling rows, no within-campaign duplicates, expected missingness, spatial repeats and unit arithmetic.",
+      "bestSeparateUse": "Forage biomass and pasture productivity module; grouped temporal/spatial evaluation only.",
+      "processedData": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+      "qualityReport": "data/mendeley-pasture-biomass/processed/quality-report-v1.json"
+    },
+    {
+      "id": "dryad-mob-rotational-biomass",
+      "doi": "10.5061/dryad.79cnp5ht4",
+      "officialUrl": "https://datadryad.org/dataset/doi:10.5061/dryad.79cnp5ht4",
+      "license": "CC0-1.0 (Dryad API record)",
+      "technicalAccess": {
+        "metadataAndFileListing": "public",
+        "fileBytesRetrieved": true,
+        "downloadMethod": "anonymous version ZIP, no authentication",
+        "localManifest": "data/dryad-mob-rotational-biomass/manifest.json",
+        "checksumRecorded": true
+      },
+      "population": "Cool-season grass-legume pasture grazed by yearling beef cattle at one northeastern-US research farm; no animal records in this dataset.",
+      "target": "Pre-grazing forage mass and paddock-level height; 623 available quadrat records, aggregated to 64 paddock-time means with 17 missing quadrat target slots retained as missing.",
+      "measurementMethod": "Forage quadrat clipping/dry matter and pre-grazing sward height, paired at paddock-time level.",
+      "units": "kg DM/ha and cm.",
+      "grainAndGroups": "Quadrat nested in treatment and replicate paddock; eight repeated paddocks across calendar years and Julian days.",
+      "period": "2015–2018.",
+      "decision": "ELIGIBLE_FOR_SEPARATE_BIOMASS_ANALYSIS; CONDITIONAL_FOR_CROSS_COHORT_EVALUATION",
+      "decisionReason": "Open CC0 row-level biomass data were downloaded and checksummed. A single-cohort external evaluation against Brazilian Mendeley data exists, but the sampling estimands and production systems differ and performance was poor; this does not validate the Riose engine.",
+      "bestSeparateUse": "Forage biomass module evaluation with paddock-grouped splits; not animal DMI or ADG."
+    },
+    {
+      "id": "perea-rangeland-behavior",
+      "doi": "10.6084/m9.figshare.28801181.v2",
+      "officialUrl": "https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181",
+      "license": "CC BY 4.0",
+      "technicalAccess": {
+        "metadataAndFiles": "public direct download",
+        "fileBytesRetrieved": true,
+        "localAudit": "docs/evidence/perea-rangeland-behavior-audit.json"
+      },
+      "population": "24 beef cattle across four breeds at two New Mexico ranches; sampled daylight sessions in summer/fall 2022.",
+      "target": "Human-reviewed minute-level grazing, resting, rumination, and walking labels from motion index; common temporal subset has 5,582 observations across all 24 animals.",
+      "measurementMethod": "Wearable sensor plus human-reviewed behavior labels; animal-grouped nested evaluation prevents same-animal overlap between train and outer test.",
+      "units": "One labeled observation per animal-minute within sampled sessions.",
+      "grainAndGroups": "animal_id, sampled session, animal-minute; breed is confounded with ranch/site.",
+      "period": "Summer/fall 2022.",
+      "decision": "ELIGIBLE_FOR_SEPARATE_BEHAVIOR_CLASSIFICATION_DIAGNOSTIC",
+      "decisionReason": "Public CC BY data support behavior classification diagnostics only. Nested OOF macro-F1 averaged equally by animal for resting/rumination was 0.403; recall was 0.308 for resting and 0.727 for rumination. This does not validate DMI, ADG, or full-day behavior budgets.",
+      "bestSeparateUse": "Behavior classification module diagnostic, with animal-grouped evaluation and low resting recall clearly reported."
+    },
+    {
+      "id": "zenodo-xgain-hourly-behavior",
+      "doi": "10.5281/zenodo.15600573",
+      "officialUrl": "https://zenodo.org/records/15600573",
+      "license": "Zenodo metadata says CC BY 4.0; embedded README says CC BY-NC (conflict)",
+      "technicalAccess": {
+        "metadataAndFiles": "public anonymous ZIP",
+        "fileBytesRetrieved": true,
+        "localManifest": "data/xgain-cattle-behavior/manifest.json",
+        "checksumRecorded": true
+      },
+      "population": "10 adult lactating Holstein cows with pasture access at ILVO, Belgium.",
+      "target": "Hourly counts of grazing, ruminating, resting, and other activity predictions from an embedded classifier, not human reference labels.",
+      "measurementMethod": "Released counts aggregate one-minute decision-tree classifications; raw IMU and independent human-reference outcomes are absent.",
+      "units": "Counts per animal-hour; 5,760 animal-hour rows, 576 hours per animal.",
+      "grainAndGroups": "animal_id × hour.",
+      "period": "576 hours per animal; source timezone unspecified.",
+      "decision": "CONDITIONAL_FOR_DESCRIPTIVE_PROFILES; INELIGIBLE_FOR_COMMERCIAL_TRAINING_PENDING_LICENSE_CONFLICT",
+      "decisionReason": "Data are public and checksummed, but the embedded outputs are classifier predictions and license statements conflict. Commercial reuse is not cleared and no independent predictive evaluation is possible from the archive.",
+      "bestSeparateUse": "Descriptive hourly activity profiles only; do not treat as independent behavior labels or DMI evidence."
+    }
+  ],
+  "moduleReadinessMatrix": [
+    {
+      "sourceId": "dryad-mezzalira-short-term-intake",
+      "status": "INELIGIBLE",
+      "technicalAvailability": "metadata is public; file bytes require bearer-authenticated API and were not obtained",
+      "reusePermission": "CC0-1.0",
+      "populationCompatibility": "heifers grazing; not verified mature beef cows",
+      "outcomeUnitsMethod": "observed short-term intake rate, g DM/min, double weighing per grazing session; not daily total DMI",
+      "periodGrainAndGroups": "two experiments, animal/session; CSV animal keys not inspected",
+      "missingnessDuplicates": "not assessable because source bytes unavailable",
+      "independentEvaluation": "not feasible until records/group keys are obtained; two experiment groups would be limited",
+      "reason": "Current public download route requires bearer authentication, excluded by this mission; target is a separate intake-rate cohort."
+    },
+    {
+      "sourceId": "dryad-ucdavis-finishing-steers-behavior",
+      "status": "INELIGIBLE",
+      "technicalAvailability": "metadata is public; file bytes require bearer-authenticated API and were not obtained",
+      "reusePermission": "CC0-1.0",
+      "populationCompatibility": "finishing/feedlot steers; incompatible with mature cows on pasture",
+      "outcomeUnitsMethod": "individual feedlot intake, kg/24 h, automated feed-bin records; not pasture DMI",
+      "periodGrainAndGroups": "repeated animal-day records in one trial, animal ID/date documented",
+      "missingnessDuplicates": "README reports NA values; raw duplicate audit not possible without bytes",
+      "independentEvaluation": "one trial only; no independent study holdout",
+      "reason": "The downloaded-file gate fails in this environment and population is a distinct feedlot cohort."
+    },
+    {
+      "sourceId": "dryad-ucdavis-alfalfa-feedlot-motivation",
+      "status": "INELIGIBLE",
+      "technicalAvailability": "metadata is public; file bytes require bearer-authenticated API and were not obtained",
+      "reusePermission": "CC0-1.0",
+      "populationCompatibility": "young finishing steers in feedlot; not target population",
+      "outcomeUnitsMethod": "bin-specific intake and feeding behavior over 24/48 h; no pasture forage DMI",
+      "periodGrainAndGroups": "animal by 24/48-hour period; one trial",
+      "missingnessDuplicates": "source summary reports technical failures/exclusions; raw audit blocked",
+      "independentEvaluation": "one trial, 17 analyzed animals; limited even for separate behavior work",
+      "reason": "No usable bytes were obtained through the unauthenticated route; target is separate feedlot behavior/intake."
+    },
+    {
+      "sourceId": "dryad-dairy-heifer-palatability-dmi",
+      "status": "INELIGIBLE",
+      "technicalAvailability": "metadata is public; file bytes require bearer-authenticated API and were not obtained",
+      "reusePermission": "CC0-1.0",
+      "populationCompatibility": "dairy heifers; not mature beef cows grazing pasture",
+      "outcomeUnitsMethod": "feed-specific DMI at 30-minute and 3-hour windows, kg; preference target, not total daily DMI",
+      "periodGrainAndGroups": "12 heifers, 144 animal/feed/day rows, six trial days; cow IDs documented",
+      "missingnessDuplicates": "README reports no missing observations; row duplicate audit blocked",
+      "independentEvaluation": "single short experiment; suitable only for its preference estimand",
+      "reason": "Incompatible population/outcome and no data bytes obtained through the public unauthenticated route."
+    },
+    {
+      "sourceId": "usda-cper-1524788",
+      "status": "CONDITIONAL",
+      "technicalAvailability": "downloaded locally; public domain; checksums recorded",
+      "reusePermission": "U.S. Public Domain",
+      "populationCompatibility": "yearling steers on Colorado rangeland; compatible only with separate behavior/ADG cohorts",
+      "outcomeUnitsMethod": "period ADG kg/head/day, grazing behavior, satellite biomass estimate; no DMI",
+      "periodGrainAndGroups": "2019–2020; animal/eartag, pasture, date, year, deployment and period keys",
+      "missingnessDuplicates": "source audit preserves repeated animal-period keys; see docs/evidence/usda-cper-association.json",
+      "independentEvaluation": "single site and 36 animal-period summaries; grouped exploratory assessment only",
+      "reason": "Useful observed behavior/ADG data, but one-site yearling cohort cannot validate mature-cow DMI or support broad transport claims."
+    },
+    {
+      "sourceId": "usda-cgrec-1524719",
+      "status": "CONDITIONAL",
+      "technicalAvailability": "downloaded locally; public domain; SHA-256 and MD5 recorded",
+      "reusePermission": "U.S. Public Domain",
+      "populationCompatibility": "mixed mostly-yearling heifers/steers; separate ADG/management cohort only",
+      "outcomeUnitsMethod": "weights and ADG, grazing duration and stocking treatment; AUM is a management assumption, not measured DMI",
+      "periodGrainAndGroups": "4,705 animal-season rows, 1989–2015; TAG/year/pasture/treatment keys",
+      "missingnessDuplicates": "audit covers missing tags and repeated seasonal groups; see docs/evidence/usda-cgrec-longterm-audit.json",
+      "independentEvaluation": "single research center; can hold out years/treatments but not provide geographic external validation",
+      "reason": "Strong longitudinal ADG/management evidence, but no individual DMI and no independent geographic site."
+    },
+    {
+      "sourceId": "kaggle-csiro-image2biomass",
+      "status": "INELIGIBLE",
+      "technicalAvailability": "download requires Kaggle account/token and acceptance of competition rules",
+      "reusePermission": "CC BY-SA 4.0 reported; additional competition terms apply",
+      "populationCompatibility": "pasture quadrat biomass module only; no animal outcomes",
+      "outcomeUnitsMethod": "laboratory dry biomass fractions in grams per image/quadrat",
+      "periodGrainAndGroups": "357 train images across sites, species mixes and dates; must group paired views/location/date",
+      "missingnessDuplicates": "raw data not downloaded; image-level duplicate and location audit not performed",
+      "independentEvaluation": "official competition split exists, but inaccessible under the mission's no-restricted-authentication rule",
+      "reason": "Data access requires authenticated competition registration and terms acceptance, so the candidate is excluded despite biomass relevance."
+    },
+    {
+      "sourceId": "zenodo-irish-grass-clover",
+      "status": "CONDITIONAL",
+      "technicalAvailability": "public Zenodo direct files; 10.3 GB listed; no files downloaded",
+      "reusePermission": "Record API CC BY 4.0 conflicts with README CC BY-NC-SA 4.0",
+      "populationCompatibility": "forage biomass/composition module; no DMI or animal intake",
+      "outcomeUnitsMethod": "herbage mass kg DM/ha, grass/clover/weed composition, height; cut/dry and visual labels are mixed",
+      "periodGrainAndGroups": "2020 camera/phone quadrats and 2021 drone paddocks; shared labels require quadrat/paddock grouping",
+      "missingnessDuplicates": "multiple views share labels; exact duplicate-location matrix requires archive processing",
+      "independentEvaluation": "train/validation labels exist, but location-level leakage must be checked before evaluation",
+      "reason": "Not used for commercial training while source rights conflict; large image package remains unprocessed."
+    },
+    {
+      "sourceId": "mendeley-brazil-pasture-biomass",
+      "status": "CONDITIONAL",
+      "technicalAvailability": "20 selected raw workbooks/spatial files directly downloaded and checksum-verified; large photo archives omitted",
+      "reusePermission": "CC BY 4.0 with attribution; tables and small spatial layers only",
+      "populationCompatibility": "forage/soil sample points on two Brazilian cattle farms; not animal DMI",
+      "outcomeUnitsMethod": "harvested dry-matter yield; source tonnes/ha converted to kg DM/ha and checked against g from 0.25 m²",
+      "periodGrainAndGroups": "342 points across three campaigns; 162 spatial groups, 108 repeated across campaigns; group by farm/field/pixel/point",
+      "missingnessDuplicates": "zero within-campaign duplicate keys; expected missing height/wet biomass in June; complete target for all 342 rows",
+      "independentEvaluation": "only two farms and three campaigns; suitable for spatial/temporal biomass diagnostic, not broad external validation",
+      "reason": "Eligible for a separate forage-biomass module; statistical and geographic coverage remain limited."
+    }
+  ],
+  "matureBeefCowPastureTotalDmiGapMatrix": {
+    "population": {
+      "required": "biologically mature beef cows on pasture",
+      "status": "unmet",
+      "reason": "No newly discovered source provides a verified individual cohort matching this population."
+    },
+    "outcome": {
+      "required": "individual total DMI including forage plus supplement",
+      "status": "unmet",
+      "reason": "New Dryad candidates are inaccessible at the download endpoint or have incompatible feedlot/dairy or short-term rate targets."
+    },
+    "units": {
+      "required": "kg DM/head/day, aligned to intake period",
+      "status": "unmet",
+      "reason": "No new target-compatible source with observed total daily intake and verified units was downloaded."
+    },
+    "measurementMethod": {
+      "required": "documented individual intake measurement or transparent source derivation",
+      "status": "unmet",
+      "reason": "No new target-compatible mature-cow pasture intake protocol with local microdata."
+    },
+    "timeAndGrain": {
+      "required": "animal-period records with aligned outcome window",
+      "status": "unmet",
+      "reason": "Potential candidates are either not retrieved or have distinct grains/targets."
+    },
+    "animalAndTrialIdentity": {
+      "required": "animal and study/trial/pasture keys sufficient for grouped holdout",
+      "status": "unmet",
+      "reason": "No new source has an obtained target-compatible dataset and verified grouping keys."
+    },
+    "licenseAndAccess": {
+      "required": "unambiguously public, direct downloadable rights compatible with intended use",
+      "status": "unmet",
+      "reason": "Dryad bytes require bearer-authenticated API in this environment; Kaggle requires token/rules; Irish license scope conflicts. Existing qualifying terms do not overcome population/outcome mismatch."
+    },
+    "independentEvaluation": {
+      "required": "multiple independent clusters sufficient for grouped evaluation",
+      "status": "unmet",
+      "reason": "No compatible mature-cow pasture cohort is available for an independent holdout."
+    },
+    "overall": "NO_GO"
+  },
+  "issueActions": {
+    "15": "No calibration or interval evidence is created by these sources; keep uncertainty claims outcome-specific and unavailable where no independent matching cohort exists.",
+    "96": "This discovery registry adds module-specific access, license, population, outcome, measurement, period, grouping, and evaluation decisions. The separate DMI/ADG matrix remains 28 sources because the new Mendeley cohort is forage biomass, not a DMI/ADG outcome.",
+    "109": "NO_GO remains; no source passes mature beef-cow pasture total-DMI gate.",
+    "110": "The original target remains untrained; a separate finishing-steer experiment is documented under docs/evidence/dmi-finishing-steers-experiment-v1.json."
+  },
+  "limitations": [
+    "Searches are broad platform queries, not proof that no qualifying data exists anywhere.",
+    "Dryad metadata is readable, but each file download endpoint returned HTTP 401 requiring a bearer token; no Dryad file bytes were used in this acquisition increment.",
+    "The source license on Irish Grass Clover is internally inconsistent between record metadata and README; commercial reuse is excluded until source terms are unambiguous.",
+    "No contacts, private files, purchased datasets, or restricted data were used."
+  ],
+  "summary": "No public record in this search met the complete mature beef-cow pasture total-DMI gate. Separate open cohorts now support biomass, behavior-classification diagnostics, and descriptive dairy behavior profiles, each with explicit outcome boundaries."
+}

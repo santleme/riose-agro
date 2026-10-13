@@ -6,6 +6,8 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import {createServer} from '../src/server/server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
+import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
+import {enrichRendererManifest} from '../scripts/assets/runtime-asset-provenance.mjs';
 import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, paintZoneTerrainTiles, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
@@ -272,9 +274,19 @@ test('terrain render order follows isometric depth and preserves authored source
 });
 
 test('checked-in beef and dairy scenes are reproducible adaptations of pinned Composer exports', async () => {
-  const [beefSource, dairySource] = await Promise.all(['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)));
-  assert.deepEqual(adaptMainComposerScene(beefSource, renderManifest), scene);
-  assert.deepEqual(adaptMainComposerScene(dairySource, renderManifest), dairyScene);
+  const [beefSource, dairySource, semanticManifest, dairyManifest] = await Promise.all([
+    ...['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)),
+    readFile(new URL('../assets/manifests/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+    readFile(new URL('../public/assets/modules/livestock-dairy/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+  ]);
+  const enrichedRendererManifest = enrichRendererManifest(renderManifest, {semanticManifest, dairyManifest});
+  assert.deepEqual(adaptMainComposerScene(beefSource, enrichedRendererManifest), scene);
+  assert.deepEqual(adaptMainComposerScene(dairySource, enrichedRendererManifest), dairyScene);
+  const authoredDairy = adaptComposerDocument(dairySource, enrichedRendererManifest).scene;
+  assert.equal(authoredDairy.representationRole, 'authored-preservation');
+  assert.equal(dairyScene.representationRole, 'runtime-presentation');
+  assert.equal(authoredDairy.zones.length, dairySource.scene.zones.length, 'preservation keeps source zones one-to-one');
+  assert.notEqual(dairyScene.zones.length, authoredDairy.zones.length, 'runtime presentation may derive paddock zones');
 });
 
 test('scene edits resolve canonical asset references and preserve review status in the shared manifest contract', () => {
@@ -364,4 +376,8 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
     assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.assetId);
   }
   assert.equal((await fetch(origin + '/graphics-poc/app.js')).status, 404, 'source modules remain outside the static allowlist');
+  let bundleBuilt = true;
+  try { await readFile(new URL('../graphics-poc/dist/app.js', import.meta.url)); } catch { bundleBuilt = false; }
+  assert.equal((await fetch(origin + '/graphics-poc/dist/app.js')).status, bundleBuilt ? 200 : 404,
+    'the generated bundle is served only when a local build exists');
 });

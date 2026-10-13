@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose-agro.local/schemas/benchmark-report-v2.json",
+  "title": "Riose benchmark report",
+  "type": "object",
+  "required": ["schemaVersion", "benchmark", "runtime", "hardware", "workload", "configuration", "limits", "phases", "timingBoundaries", "results", "limitations"],
+  "properties": {
+    "schemaVersion": {"enum": [1, 2]},
+    "benchmark": {
+      "type": "object",
+      "required": ["name", "source"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "source": {
+          "type": "object",
+          "required": ["revision", "dirty"],
+          "properties": {
+            "revision": {"type": ["string", "null"]},
+            "dirty": {"type": "boolean"}
+          },
+          "allOf": [{
+            "if": {"properties": {"dirty": {"const": false}}, "required": ["dirty"]},
+            "then": {"properties": {"revision": {"type": "string", "pattern": "^[0-9a-fA-F]{7,64}$"}}}
+          }],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime": {"type": "object", "required": ["platform"], "properties": {"platform": {"type": "string"}, "node": {"type": "string"}}, "additionalProperties": true},
+    "hardware": {
+      "type": "object",
+      "required": ["os", "architecture", "cpu", "gpuMemoryBytes"],
+      "properties": {"os": {"type": ["string", "null"]}, "architecture": {"type": ["string", "null"]}, "cpu": {"type": ["string", "null"]}, "gpuMemoryBytes": {"type": ["integer", "null"], "minimum": 0}},
+      "additionalProperties": true
+    },
+    "workload": {
+      "type": "object",
+      "required": ["seed", "populations"],
+      "properties": {
+        "seed": {"type": ["integer", "string"], "minLength": 1},
+        "populations": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["scope"], "properties": {"animals": {"type": "integer", "minimum": 0}, "count": {"type": "integer", "minimum": 0}, "unit": {"type": "string", "minLength": 1}, "scope": {"type": "string", "minLength": 1}, "limit": {"type": ["string", "null"]}}, "anyOf": [{"required": ["animals"]}, {"required": ["count", "unit"]}], "allOf": [{"if": {"properties": {"animals": {"minimum": 100000}}, "required": ["animals"]}, "then": {"properties": {"scope": {"const": "numeric-kernel-only"}, "animals": {"maximum": 100000}}}}, {"if": {"properties": {"scope": {"pattern": "[Ff][Aa][Rr][Mm][Ee][Nn][Gg][Ii][Nn][Ee]|[Rr][Ee][Nn][Dd][Ee][Rr][Ee][Rr]"}}, "required": ["scope"]}, "then": {"properties": {"animals": {"maximum": 10000}}}}], "additionalProperties": true}}
+      },
+      "additionalProperties": true
+    },
+    "configuration": {
+      "type": "object",
+      "required": ["warmupRuns", "repetitions"],
+      "properties": {
+        "warmupRuns": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0},
+            {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 0}}
+          ]
+        },
+        "repetitions": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": true
+    },
+    "limits": {"type": "object", "required": ["farmEngineMaxAnimals", "rendererMaxAnimals", "numericKernelMaxAnimalsMeasured"], "properties": {"farmEngineMaxAnimals": {"type": ["integer", "null"]}, "rendererMaxAnimals": {"type": ["integer", "null"]}, "numericKernelMaxAnimalsMeasured": {"type": ["integer", "null"]}}, "additionalProperties": true},
+    "phases": {
+      "type": "object",
+      "required": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup"],
+      "properties": {
+        "engine": {"$ref": "#/$defs/phase"}, "snapshot": {"$ref": "#/$defs/phase"}, "serialization": {"$ref": "#/$defs/phase"}, "worker": {"$ref": "#/$defs/phase"},
+        "ui": {"$ref": "#/$defs/phase"}, "layout": {"$ref": "#/$defs/phase"}, "render": {"$ref": "#/$defs/phase"}, "startup": {"$ref": "#/$defs/phase"},
+        "coldStartup": {"$ref": "#/$defs/phase"}, "warmStartup": {"$ref": "#/$defs/phase"}, "bridgeMarshaling": {"$ref": "#/$defs/phase"},
+        "fullScenario": {"$ref": "#/$defs/phase"}, "uiEndToEnd": {"$ref": "#/$defs/phase"}, "memory": {"$ref": "#/$defs/phase"}
+      },
+      "additionalProperties": false
+    },
+    "timingBoundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["phase", "timed", "notTimed"],
+        "properties": {
+          "phase": {"enum": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup", "coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"]},
+          "timed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "notTimed": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "whatIsTimed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "whatIsNotTimed": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "results": {"type": ["object", "array"]},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [{
+    "if": {"properties": {"schemaVersion": {"const": 2}}, "required": ["schemaVersion"]},
+    "then": {"properties": {"phases": {"required": ["coldStartup", "warmStartup", "bridgeMarshaling", "fullScenario", "uiEndToEnd", "memory"]}, "timingBoundaries": {"items": {"required": ["whatIsTimed", "whatIsNotTimed"]}}}}
+  }, {
+    "if": {"properties": {"benchmark": {"properties": {"name": {"const": "scenario-scheduler-concurrency"}}, "required": ["name"]}}, "required": ["benchmark"]},
+    "then": {"properties": {"results": {"$ref": "#/$defs/scenarioSchedulerResults"}}}
+  }],
+  "$defs": {
+    "scenarioSchedulerResults": {
+      "type": "object",
+      "required": ["environment", "workload", "measurement", "rows"],
+      "properties": {
+        "environment": {"type": "object", "required": ["reportedAvailableParallelism", "workloadAvailableWorkers"], "properties": {"reportedAvailableParallelism": {"type": "integer", "minimum": 1}, "workloadAvailableWorkers": {"type": "integer", "minimum": 1}}},
+        "workload": {"type": "object", "required": ["scenarios", "hours", "seeds"], "properties": {"scenarios": {"type": "integer", "minimum": 1}, "hours": {"type": "integer", "minimum": 1}, "seeds": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}}}},
+        "measurement": {"type": "object"},
+        "rows": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["concurrency", "samples", "medianCpuUtilizationOneCoreEquivalentPercent", "medianCpuUtilizationHostNormalizedPercent"],
+            "properties": {
+              "concurrency": {"type": "integer", "minimum": 1},
+              "samples": {
+                "type": "array", "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["wallMs", "processCpuMs", "cpuUtilization"],
+                  "properties": {
+                    "wallMs": {"type": "number", "exclusiveMinimum": 0},
+                    "processCpuMs": {"type": "object", "required": ["user", "system", "total"], "properties": {"user": {"type": "number", "minimum": 0}, "system": {"type": "number", "minimum": 0}, "total": {"type": "number", "minimum": 0}}},
+                    "cpuUtilization": {
+                      "type": "object", "required": ["oneCoreEquivalentPercent", "hostNormalizedPercent", "normalizationCores"],
+                      "properties": {
+                        "oneCoreEquivalentPercent": {"type": "number", "minimum": 0},
+                        "hostNormalizedPercent": {"type": "number", "minimum": 0},
+                        "normalizationCores": {"type": "integer", "minimum": 1}
+                      }
+                    }
+                  }
+                }
+              },
+              "medianCpuUtilizationOneCoreEquivalentPercent": {"type": "number", "minimum": 0},
+              "medianCpuUtilizationHostNormalizedPercent": {"type": "number", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "required": ["status", "measurements"],
+      "properties": {"status": {"enum": ["measured", "not-measured", "unavailable"]}, "measurements": {"type": "array", "items": {"type": "object", "required": ["phase", "metric", "unit", "statistics", "population", "source"], "properties": {"phase": {"type": "string"}, "metric": {"type": "string"}, "unit": {"type": "string", "minLength": 1}, "memoryType": {"enum": ["js-heap", "retained-heap", "process-rss", "serialized-payload", "wasm-memory", "gpu-memory", "v8-external-memory", "arraybuffer-memory"]}, "statistics": {"type": "object"}, "population": {"oneOf": [{"type": "integer", "minimum": 0}, {"type": "string", "minLength": 1}, {"type": "object", "minProperties": 1}]}, "source": {"type": "string", "minLength": 1}}, "additionalProperties": true}}},
+      "allOf": [{
+        "if": {"properties": {"status": {"const": "measured"}}, "required": ["status"]},
+        "then": {
+          "properties": {
+            "measurements": {
+              "items": {
+                "properties": {
+                  "statistics": {"$ref": "#/$defs/measurementStatistics"}
+                }
+              }
+            }
+          }
+        }
+      }],
+      "additionalProperties": false
+    },
+    "measurementStatistics": {
+      "type": "object",
+      "oneOf": [
+        {
+          "required": ["sampleCount", "median", "spread"],
+          "properties": {
+            "sampleCount": {"type": "integer", "minimum": 1},
+            "median": {"type": "number"},
+            "spread": {
+              "type": "object",
+              "required": ["min", "max", "range"],
+              "properties": {
+                "min": {"type": "number"},
+                "max": {"type": "number"},
+                "range": {"type": "number", "minimum": 0}
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        {
+          "required": ["sampleCount", "median", "spread"],
+          "properties": {
+            "sampleCount": {"const": 0},
+            "median": {"type": "null"},
+            "spread": {"type": "null"}
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

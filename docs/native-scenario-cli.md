@@ -20,14 +20,42 @@ to stdout.
 
 The input is the strict, versioned `NativeScenarioRequest` from the
 [`native-farm-core` contract](native-farm-core.md). Its supported variants are
-`baseline` and `housing-comparison`. The core defines the accepted fields,
+`baseline`, `housing-comparison`, `configured-comparison`, and `br-corte-pasture-dmi`. The core defines the accepted fields,
 configuration values, and snapshot requirements. Unknown fields, duplicate
 JSON keys, unsupported enum values, and unsupported scenario types are rejected.
+
+The scalar equation request is:
+
+```json
+{"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1.6}
+```
+
+It applies BR-CORTE 2023 Eq. 2.6 only inside the inclusive published ranges
+133–474 kg body weight, −0.18–1.34 kg/day supplied ADG, and 0–5.32 kg DM/day
+supplement. Inputs are kg, kg/day, and kg DM/day; total DMI and residual forage
+DMI are kg DM/day. The model metadata identifies growing Zebu cattle grazing
+tropical pasture with supplementation, source, equation, units and validation
+domain. ADG is an input assumption, not an equation output. `validated` remains
+false for Riose; the endpoint is not an adult beef cow model and does not claim
+independent validation of Riose predictions. This scalar request has no random
+state, so its success record omits `seed` rather than inventing one.
+
+The configured comparison uses request version 2 and the schema at
+[`configured-comparison-request-v2.schema.json`](../schemas/configured-comparison-request-v2.schema.json):
+
+```json
+{"type":"configured-comparison","version":2,"snapshot":<FarmSnapshot>,"days":2,"referenceConfig":{"diet":"pasture","housing":"pasture","weather":"normal","supplement":0},"scenarioConfig":{"diet":"balanced","housing":"pasture","weather":"normal","supplement":0}}
+```
+
+It runs both configurations from the same snapshot and requires exactly one
+changed factor. Days must be 1–365. The result preserves the JS comparison
+shape, reports the input snapshot's seed, and remains demonstrative with
+`validated: false`; it is not a scientific validation result.
 
 ## Result record
 
 Successful runs emit compact UTF-8 JSON followed by one LF. The record is
-ordered as `type`, `version`, `requestVersion`, `scenario`, `seed`, `status`,
+ordered as `type`, `version`, `requestVersion`, `scenario`, optional `seed`, `status`,
 `runId`, `inputSha256`, `nativeResult`. The `nativeResult` value is the typed
 `NativeRunResult` from #84 and includes the native engine metadata. For a
 housing comparison, `seed` is the snapshot's `initialSeed`; the complete

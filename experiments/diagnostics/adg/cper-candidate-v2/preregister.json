@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_before_execution",
+  "experimentId": "cper-adg-candidate-comparison-v2",
+  "classification": "internal_cper_yearling_steer_adg_nested_year_development_diagnostic_not_validation",
+  "purpose": "Compare a small fixed set of pre-outcome ADG predictors on identical nested leave-one-year-out rows, preserving v1 and the historical CGREC holdout unchanged.",
+  "source": {
+    "doi": "10.15482/USDA.ADC/1528520",
+    "file": "data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv",
+    "manifest": "data/usda-cper-ltgi-2000-2019/manifest.json",
+    "allowedYears": [2009, 2010, 2011, 2012, 2013],
+    "population": "CPER yearling steers only; retain all source Use.Flag categories."
+  },
+  "target": {
+    "definition": "(off_Weight - on_Weight) * 0.45359237 / Season.Days",
+    "unit": "kg/head/day",
+    "prohibitions": ["Do not use source-reported ADG fields as predictors or targets.", "Do not use any CGREC outcomes."]
+  },
+  "features": {
+    "included": ["initial weight in kg, measured at the beginning of the season"],
+    "excluded": [
+      "exit weight, gain, derived ADG, and any post-outcome field",
+      "realized Season.Days: its availability at prediction time is not established",
+      "Treatment and Pasture: each treatment is represented by one remaining pasture, so these are aliased",
+      "Year, identity, source Use.Flag, and all group identifiers"
+    ]
+  },
+  "groups": {
+    "outer": "Leave one of the five calendar years out; test all eligible rows in that year.",
+    "inner": "Within each outer training partition, leave each remaining year out in turn for fixed candidate hyperparameter selection.",
+    "identityPurge": "Within every split, exclude from training any row sharing Owner|Tag.Color|Tag with a test row. This is an identity proxy, not a verified permanent ID.",
+    "comparisonRows": "Every predictive candidate must emit exactly one prediction for each of the same 320 outer OOF source rows."
+  },
+  "candidates": [
+    {"id": "M0", "name": "training_mean", "features": [], "tuning": "none", "fit": "Arithmetic mean target in the current training partition."},
+    {"id": "M1", "name": "OLS_initial_weight", "features": ["initial_weight_kg"], "tuning": "none", "fit": "StandardScaler fitted on training rows then ordinary least squares."},
+    {"id": "M2", "name": "Ridge_initial_weight", "features": ["initial_weight_kg"], "tuning": "Select alpha in [0.01, 0.1, 1, 10] by equally weighted inner-year MAE; ties use smaller alpha."},
+    {"id": "M3", "name": "Huber_initial_weight", "features": ["initial_weight_kg"], "tuning": "Pipeline StandardScaler + HuberRegressor; select (epsilon, alpha) by equally weighted inner-year MAE over epsilon [1.1, 1.35, 1.5] x alpha [0.0001, 0.01]; ties use smaller epsilon then alpha."},
+    {"id": "M4", "name": "shallow_random_forest_initial_weight", "features": ["initial_weight_kg"], "tuning": "Select max_depth [2, 3] and min_samples_leaf [5, 10] by equally weighted inner-year MAE; 200 trees, bootstrap, random_state 20261013, n_jobs=1; ties use shallower depth then larger leaf."},
+    {"id": "M5", "name": "shallow_hist_gradient_boosting_initial_weight", "features": ["initial_weight_kg"], "tuning": "Select max_leaf_nodes [3, 5] and l2_regularization [1, 10] by equally weighted inner-year MAE; max_iter=50, learning_rate=0.05, min_samples_leaf=10, random_state 20261013; ties use fewer leaves then larger regularization."}
+  ],
+  "mechanisticBenchmark": {
+    "candidate": "FarmEngine pasture/default setup with initial weight and each row's observed season duration",
+    "use": "Descriptive benchmark only: actual Season.Days is an outcome-period quantity and prediction-time planned horizon is not established. It cannot enter hyperparameter tuning, candidate selection, or advancement decisions.",
+    "scaledVariant": "For each outer fold, fit a non-negative zero-intercept multiplier on engine predictions for outer-training rows only, then report the held-year result; descriptive only and excluded from selection.",
+    "rowMapping": "Use source row initial weight and that same row's observed duration; preserve row identity. Confirm exact 320-row one-to-one mapping and fixed simulator configuration."
+  },
+  "metrics": ["pooled MAE", "pooled RMSE", "signed bias", "equally weighted outer-year macro metrics", "per-year metrics", "descriptive Use.Flag and treatment subgroups"],
+  "selectionRule": "Development-only comparison. Report any candidate with lower pooled and year-macro MAE than M0, but make no promotion or external-validity claim; the outer folds have been examined in prior CPER diagnostics.",
+  "execution": {
+    "python": "3.12",
+    "scikitLearn": "1.5.2",
+    "randomSeeds": {"randomForest": 20261013, "histGradientBoosting": 20261013},
+    "measureCpu": "Record aggregate fit and predict wall-clock seconds per candidate across inner tuning and outer refits; timings are descriptive and not expected to reproduce exactly."
+  },
+  "prohibitions": [
+    "Do not open, read, fit, tune, select, or report against CGREC outcomes.",
+    "Do not alter CPER candidate v1 or the frozen historical CGREC holdout.",
+    "Do not use realized duration, treatment, pasture, identity, year, or post-outcome values as ML features.",
+    "Do not interpret this single-site five-year internal development as validation or as evidence for mature cows, DMI, causal treatment effects, unseen pastures, or the complete simulator."
+  ]
+}

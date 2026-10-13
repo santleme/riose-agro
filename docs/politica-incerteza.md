@@ -2,6 +2,8 @@
 
 Estado: a comparação exibe `Sem calibração suficiente`; ainda não há intervalos probabilísticos calibrados no Agroville. O motor mantém `validated: false`; os resultados atuais são determinísticos e demonstrativos. A exportação CSV preserva isso em cada linha com `status_modelo=demonstrativo_nao_validado` e `intervalo_probabilistico=nao_disponivel_sem_calibracao`.
 
+O inventário estruturado por desfecho da issue #15 está em [`uncertainty-readiness-issue-15.json`](evidence/uncertainty-readiness-issue-15.json). Valide as referências, os requisitos de avaliação independente e o estado não calibrado com `node scripts/validate-uncertainty-readiness.mjs`.
+
 ## Fontes de incerteza
 
 | Fonte | Como poderia ser quantificada | Situação atual |
@@ -63,6 +65,8 @@ A cobertura de 68/68 **não** confirma uma faixa de confiança: deriva de um ún
 | Reportar cobertura e erro das faixas por desfecho e subgrupo | **Parcial, só para o ADG de steers CPER**: a tabela acima reporta cobertura, MAE, RMSE e viés no holdout de 2019 por lotação e `Use.Flag`; a transferência ao CGREC evidencia cobertura instável. Insuficiente para o produto, outros desfechos ou a população de vacas adultas. O limiar em blocos de 90% não é finito com cinco anos. |
 | Mostrar “sem calibração suficiente” quando evidência é insuficiente | **Implementado** na comparação e nos metadados/CSV; projeções permanecem demonstrativas. |
 | Não usar aleatoriedade arbitrária ou LLM como distribuição | **Implementado como regra**; sem ruído artificial, personas ou texto de IA nas faixas. |
+
+**Triagem adicional do candidato Dryad dbrv15fg8 (13/10/2026):** o depósito primário é público e CC0-1.0; traz 154 novilhos yearling com ADG e peso corporal, e o artigo associado descreve quatro experimentos independentes (ARDEC 2022/2023 e CPER 2023/2024). É uma coorte distinta que pode apoiar estatísticas descritivas, mas não é elegível para calibrar ou avaliar intervalos do ADG do motor: o CSV não fornece peso inicial/final e dias por animal, entradas compatíveis de ingestão/atividade, nem chave de experimento/site/ano para a separação de clusters que o próprio estudo declara. As 2.820 linhas adicionais de gás são médias cumulativas por visita, não medidas repetidas de ADG. Não inferir entradas ausentes nem dividir por animal e chamar isso de avaliação independente por experimento. A dependência que resta é um depósito reutilizável com desfecho e entradas do motor pareados, IDs de animal e cluster, e clusters suficientes para reservar calibração e avaliação final; para intervalos do motor completo, os dados precisam cobrir também os demais inputs/outputs por desfecho. Registro de licença, arquivos, campos ausentes e decisão: [`issue-15-dryad-yearling-eligibility.json`](evidence/issue-15-dryad-yearling-eligibility.json); fonte primária [Dryad CC0](https://datadryad.org/dataset/doi:10.5061/dryad.dbrv15fg8) e artigo [Vargas et al. (2026)](https://doi.org/10.1071/AN26172).
 
 **Conclusão para #15:** os gates e a mensagem de insuficiência estão implementados; a análise determinística de sensibilidade do módulo BR-CORTE está registrada como entregue na [#21](https://github.com/santleme/riose-agro/issues/21), mas não é calibração. A calibração probabilística requerida ainda não é possível com as fontes públicas compatíveis localizadas. Manter a #15 aberta até haver dados alinhados suficientes para medir cobertura externa por desfecho/subgrupo; a definição de escopo da #1 já está concluída.
 

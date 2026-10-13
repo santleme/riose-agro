@@ -1,0 +1,366 @@
+{
+  "benchmark": {
+    "name": "rust-cpp-metabolism-prototype",
+    "source": {
+      "dirty": false,
+      "revision": "ba757d598d1509199f165be2716fc6ba59400aac"
+    }
+  },
+  "configuration": {
+    "cppOptimization": "-O3 -fno-fast-math -ffp-contract=off",
+    "precision": "f64 / IEEE-754 binary64",
+    "repetitions": 31,
+    "rustOptimization": "--release (Cargo default target CPU)",
+    "warmupRuns": 3
+  },
+  "hardware": {
+    "architecture": "x86_64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null,
+    "os": "linux"
+  },
+  "limitations": [
+    "Only finite deterministic fixture data is covered; malformed and NaN inputs are outside the model-state domain.",
+    "The pure kernel is profile-identified as the first deterministic scalar boundary in current-system-audit.md, but this benchmark does not establish a FarmEngine-level gain.",
+    "C++ is an isolated experiment; benchmark build and link path is not a supported production package.",
+    "Times are host-specific; compare only measurements with identical configuration and fixture."
+  ],
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000,
+    "rendererMaxAnimals": 10000
+  },
+  "phases": {
+    "engine": {
+      "measurements": [
+        {
+          "implementation": "rust-native",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 1000,
+          "scope": "preallocated-kernel",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.000936,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.001008,
+              "min": 0.000927,
+              "range": 0.00008100000000000002
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-c-abi",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 1000,
+          "scope": "preallocated-kernel-plus-ffi",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.001557,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.001629,
+              "min": 0.001539,
+              "range": 0.00009000000000000002
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "rust-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 1000,
+          "scope": "allocate-fill-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.002808,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.022654,
+              "min": 0.002799,
+              "range": 0.019855
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 1000,
+          "scope": "allocate-fill-c-abi-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.003708,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.023274,
+              "min": 0.0036,
+              "range": 0.019674
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "rust-native",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 10000,
+          "scope": "preallocated-kernel",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.009216,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.013859999999999999,
+              "min": 0.009089999999999999,
+              "range": 0.00477
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-c-abi",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 10000,
+          "scope": "preallocated-kernel-plus-ffi",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.01575,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.019513000000000003,
+              "min": 0.015246,
+              "range": 0.004267000000000003
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "rust-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 10000,
+          "scope": "allocate-fill-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.039637,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.205312,
+              "min": 0.038359000000000004,
+              "range": 0.166953
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 10000,
+          "scope": "allocate-fill-c-abi-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.18473799999999999,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.27314700000000003,
+              "min": 0.18024600000000002,
+              "range": 0.09290100000000001
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "rust-native",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 100000,
+          "scope": "preallocated-kernel",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.128442,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.25421900000000003,
+              "min": 0.09245,
+              "range": 0.16176900000000002
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-c-abi",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 100000,
+          "scope": "preallocated-kernel-plus-ffi",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.16743,
+            "sampleCount": 31,
+            "spread": {
+              "max": 0.245858,
+              "min": 0.156738,
+              "range": 0.08912
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "rust-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 100000,
+          "scope": "allocate-fill-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 0.909216,
+            "sampleCount": 31,
+            "spread": {
+              "max": 2.1654880000000003,
+              "min": 0.7804319999999999,
+              "range": 1.3850560000000005
+            }
+          },
+          "unit": "ms"
+        },
+        {
+          "implementation": "cpp-owned",
+          "memory": null,
+          "metric": "metabolismBatch",
+          "phase": "engine",
+          "population": 100000,
+          "scope": "allocate-fill-c-abi-kernel-free",
+          "source": "experiments/cpp-metabolism/src/main.rs",
+          "statistics": {
+            "median": 2.132332,
+            "sampleCount": 31,
+            "spread": {
+              "max": 2.891227,
+              "min": 1.9614099999999999,
+              "range": 0.9298170000000003
+            }
+          },
+          "unit": "ms"
+        }
+      ],
+      "status": "measured"
+    },
+    "layout": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "render": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "serialization": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "snapshot": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "startup": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "ui": {
+      "measurements": [],
+      "status": "not-measured"
+    },
+    "worker": {
+      "measurements": [],
+      "status": "not-measured"
+    }
+  },
+  "results": {
+    "buildAndPackaging": {
+      "cpp": "benchmark-only C++ translation unit compiled and archived by Cargo build.rs; no production dependency or runtime library",
+      "ffi": "one C ABI call per batch; caller owns buffers; separately measured allocation/ownership path uses C++ new[]/delete[]",
+      "measuredReleaseBuildMs": 4903.461186
+    },
+    "decision": "no-go for production C++: this prototype does not establish a material workload-level advantage; retain Rust as the single kernel implementation pending application-level evidence",
+    "fixture": "same deterministic vectors for both implementations",
+    "measurements": "phase.engine.measurements; kernel and allocation/ownership measurements use matched scopes",
+    "parity": [
+      {
+        "animals": 1000,
+        "bitwiseEqual": true,
+        "maxAbsoluteDifference": 0.0
+      },
+      {
+        "animals": 10000,
+        "bitwiseEqual": true,
+        "maxAbsoluteDifference": 0.0
+      },
+      {
+        "animals": 100000,
+        "bitwiseEqual": true,
+        "maxAbsoluteDifference": 0.0
+      }
+    ]
+  },
+  "runtime": {
+    "cxx": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cxxFlags": [
+      "-std=c++20",
+      "-O3",
+      "-fno-fast-math",
+      "-ffp-contract=off"
+    ],
+    "platform": "linux",
+    "rust": "rustc 1.95.0 (59807616e 2026-04-14)"
+  },
+  "schemaVersion": 1,
+  "timingBoundaries": [
+    {
+      "notTimed": [
+        "Process startup and compilation; those are reported separately as build/setup considerations.",
+        "FarmEngine orchestration, worker messaging, UI, rendering."
+      ],
+      "phase": "engine",
+      "timed": [
+        "Rust native update_metabolism call over preallocated slices.",
+        "C++ kernel via one C ABI call over the same caller-owned preallocated buffers.",
+        "Allocation/fill/kernel/release for each language using corresponding owned buffers."
+      ]
+    }
+  ],
+  "workload": {
+    "populations": [
+      {
+        "animals": 1000,
+        "scope": "numeric-kernel-only"
+      },
+      {
+        "animals": 10000,
+        "scope": "numeric-kernel-only"
+      },
+      {
+        "animals": 100000,
+        "scope": "numeric-kernel-only"
+      }
+    ],
+    "seed": "deterministic-index-fixture-v1"
+  }
+}

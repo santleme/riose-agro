@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "benchmark": {
+    "name": "graphics-herd-visual-model",
+    "source": {
+      "revision": "311f91b6c1a27e56f196f74c057a7163b5abe1b2",
+      "dirty": true
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": "deterministic-synthetic-herd",
+    "populations": [
+      {
+        "animals": 100,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      },
+      {
+        "animals": 1000,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      },
+      {
+        "animals": 10000,
+        "scope": "graphics-visual-model-only",
+        "limit": "Synthetic visual workload; does not instantiate FarmEngine or draw through a renderer"
+      }
+    ]
+  },
+  "configuration": {
+    "warmupRuns": 2,
+    "repetitions": 9,
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    }
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "screen-space culling",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 0.03345399999999188,
+            "spread": {
+              "min": 0.004743000000004827,
+              "max": 0.18133500000000424,
+              "range": 0.17659199999999942
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "screen-space bounding-box intersection for each simulated animal"
+        },
+        {
+          "phase": "layout",
+          "metric": "LOD classification, grouping, membership assertion",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 1.7028339999999957,
+            "spread": {
+              "min": 0.11705700000000263,
+              "max": 15.044745000000006,
+              "range": 14.927688000000003
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation"
+        },
+        {
+          "phase": "layout",
+          "metric": "draw-unit descriptor preparation",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 27,
+            "median": 0.027531999999993673,
+            "spread": {
+              "min": 0.0016019999999912216,
+              "max": 0.07548399999996036,
+              "range": 0.07388199999996914
+            }
+          },
+          "population": "all configured synthetic herd sizes",
+          "source": "prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work"
+        }
+      ]
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "layout",
+      "timed": [
+        "synthetic input array processing",
+        "screen-space culling",
+        "LOD classification",
+        "far-animal grouping",
+        "membership conservation assertion",
+        "draw-unit descriptor construction"
+      ],
+      "notTimed": [
+        "FarmEngine simulation",
+        "Canvas/Pixi/GPU rendering",
+        "asset loading",
+        "browser frame scheduling"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "simulatedAnimals": 100,
+      "visibleAnimals": 97,
+      "culledAnimals": 3,
+      "visibleGroups": 13,
+      "visibleIndividuals": 38,
+      "drawUnits": 51,
+      "accountedAnimalIds": 97,
+      "culling": {
+        "medianMs": 0.0055629999999951,
+        "p95Ms": 0.006929999999996994,
+        "samplesMs": [
+          0.005679000000000656,
+          0.006929999999996994,
+          0.005111999999996897,
+          0.004743000000004827,
+          0.009368999999992411,
+          0.005193000000005554,
+          0.0055629999999951,
+          0.006858000000008246,
+          0.005192999999991343
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 0.1316190000000006,
+        "p95Ms": 0.26652200000000903,
+        "samplesMs": [
+          0.1316190000000006,
+          0.12031399999999337,
+          0.11705700000000263,
+          0.1902460000000019,
+          0.27914899999998966,
+          0.12311400000000106,
+          0.1183070000000015,
+          0.26652200000000903,
+          0.14437199999998995
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.0018180000000000973,
+        "p95Ms": 0.002105999999997721,
+        "samplesMs": [
+          0.009270000000000778,
+          0.002105999999997721,
+          0.0019259999999974298,
+          0.0016379999999998063,
+          0.0016019999999912216,
+          0.0019080000000002428,
+          0.001700999999997066,
+          0.001665000000002692,
+          0.0018180000000000973
+        ]
+      }
+    },
+    {
+      "simulatedAnimals": 1000,
+      "visibleAnimals": 978,
+      "culledAnimals": 22,
+      "visibleGroups": 154,
+      "visibleIndividuals": 162,
+      "drawUnits": 316,
+      "accountedAnimalIds": 978,
+      "culling": {
+        "medianMs": 0.03345399999999188,
+        "p95Ms": 0.0345879999999994,
+        "samplesMs": [
+          0.03456099999999651,
+          0.0345879999999994,
+          0.03278699999999901,
+          0.03345399999999188,
+          0.034533999999993625,
+          0.03938399999999831,
+          0.025920999999996752,
+          0.026181000000008225,
+          0.0103419999999943
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 1.7028339999999957,
+        "p95Ms": 1.9293729999999982,
+        "samplesMs": [
+          1.271613000000002,
+          1.9293729999999982,
+          1.6901259999999922,
+          1.7101520000000079,
+          1.7028339999999957,
+          1.7776340000000062,
+          1.0343369999999936,
+          1.69237600000001,
+          1.9567930000000047
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.027531999999993673,
+        "p95Ms": 0.04556799999998873,
+        "samplesMs": [
+          0.046153000000003885,
+          0.04556799999998873,
+          0.03551399999999205,
+          0.025722999999999274,
+          0.027072000000003982,
+          0.026100999999997043,
+          0.03214900000000398,
+          0.02659500000000037,
+          0.027531999999993673
+        ]
+      }
+    },
+    {
+      "simulatedAnimals": 10000,
+      "visibleAnimals": 7793,
+      "culledAnimals": 2207,
+      "visibleGroups": 204,
+      "visibleIndividuals": 1402,
+      "drawUnits": 1606,
+      "accountedAnimalIds": 7793,
+      "culling": {
+        "medianMs": 0.09785000000000821,
+        "p95Ms": 0.13088100000000225,
+        "samplesMs": [
+          0.18133500000000424,
+          0.13088100000000225,
+          0.09733699999999601,
+          0.09611300000000256,
+          0.09785000000000821,
+          0.11556199999999706,
+          0.09748100000000193,
+          0.09679699999999514,
+          0.11156699999999375
+        ]
+      },
+      "visualUpdateAndGrouping": {
+        "medianMs": 11.592547999999994,
+        "p95Ms": 13.898734000000019,
+        "samplesMs": [
+          11.963921999999997,
+          15.044745000000006,
+          13.898734000000019,
+          10.796839000000006,
+          11.285843,
+          11.592547999999994,
+          10.889119999999991,
+          11.13982999999999,
+          12.114799999999974
+        ]
+      },
+      "drawUnitPreparation": {
+        "medianMs": 0.05725000000001046,
+        "p95Ms": 0.07512400000001662,
+        "samplesMs": [
+          0.07512400000001662,
+          0.06822199999999157,
+          0.07548399999996036,
+          0.05725000000001046,
+          0.07163300000001982,
+          0.03343499999999722,
+          0.03155500000002576,
+          0.0377470000000244,
+          0.041121999999973013
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic coordinates and animal counts are a graphics-model microbenchmark, not a representative farm workload.",
+    "No renderer, browser, GPU, asset, or FarmEngine work is included."
+  ],
+  "study": "graphics-herd-visual-model-benchmark",
+  "generatedAt": "2026-10-13T02:03:26.552Z",
+  "environment": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "methodology": {
+    "repeats": 9,
+    "warmups": 2,
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "culling": "screen-space bounding-box intersection for each simulated animal",
+    "visualUpdateAndGrouping": "classify visible animals by LOD, group far animals using scene-space bins, and assert membership conservation",
+    "drawUnitPreparation": "prepare individual/group render-unit descriptors; excludes Canvas/Pixi/GPU draw and asset work"
+  }
+}

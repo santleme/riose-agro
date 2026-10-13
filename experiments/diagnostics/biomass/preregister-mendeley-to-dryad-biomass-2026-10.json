@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "preregistered_and_evaluation_completed",
+  "registeredAt": "2026-10-13",
+  "analysis": "spatially blocked development comparison followed by a single untouched external-cohort evaluation",
+  "target": {
+    "estimand": "measured dry forage yield in kg DM/ha from clipped quadrat samples; Mendeley measurement timing relative to clipping is not documented",
+    "feature": "grass height in cm measured at the sampling points in the same Mendeley campaigns; measurement timing relative to clipping is not documented",
+    "prohibitedClaims": ["animal DMI", "ADG", "standing inventory", "full-engine validation", "Brazilian tropical-pasture transport"]
+  },
+  "developmentCohort": {
+    "sourceDoi": "10.17632/nj72kmdj77.1",
+    "population": "forage samples from two managed-pasture farms in western São Paulo, Brazil",
+    "rows": 234,
+    "targetColumn": "dry_matter_yield_kg_dm_ha",
+    "featureColumn": "sward_height_cm",
+    "targetUnit": "kg DM/ha",
+    "featureUnit": "cm",
+    "sourceParquet": "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet",
+    "sha256": "ccc626011de7445769efc72a1168fea99a7b1db6e2c4d87b8fdd9f2f987e4fc7",
+    "heightSupportCm": [2.0, 56.0]
+  },
+  "developmentValidation": {
+    "protocolSource": "experiments/diagnostics/biomass/grouped-oof-error-diagnostics-2026-10.json#/preregisteredCandidateProtocol",
+    "foldConstruction": "Leave one connected farm/field component out; connect field components that contain exact-coordinate aliases; preserve all campaigns and same-coordinate observations in one held-out block.",
+    "trainingBufferMeters": 100,
+    "featureOnlyFeasibilityArtifact": "experiments/diagnostics/biomass/buffered-cv-feasibility-2026-10.json",
+    "expectedBlocks": 13,
+    "minimumScoredCoverage": 0.70,
+    "minimumNonemptyHeldOutBlocks": 4,
+    "coverageGate": "Before fitting, fail the model comparison if realized coverage or nonempty held-out blocks falls below the fixed threshold; do not reduce the buffer after inspecting target errors.",
+    "primaryMetric": "equal-weight mean of within-block MAE (kg DM/ha)",
+    "secondaryMetrics": ["row-weighted MAE", "row-weighted RMSE", "signed bias", "coverage", "farm/campaign/management subgroup metrics"],
+    "fixedCandidates": [
+      {"id": "M0", "name": "training median", "predictors": [], "fit": "training-fold target median only"},
+      {"id": "M1", "name": "OLS height-only", "predictors": ["sward_height_cm"], "fit": "ordinary least squares with intercept"},
+      {"id": "M2", "name": "Ridge height-only", "predictors": ["sward_height_cm"], "fit": "standardize on training fold only, Ridge alpha=1.0"},
+      {"id": "M3", "name": "Huber height-only", "predictors": ["sward_height_cm"], "fit": "HuberRegressor epsilon=1.35, alpha=0.0, max_iter=1000"},
+      {"id": "M4", "name": "quadratic height-only", "predictors": ["sward_height_cm"], "fit": "degree-2 polynomial after training-fold centering/scaling; no degree or knot search"}
+    ],
+    "selectionAndRetention": "Select no challenger using the external cohort. Retain a challenger to OLS only if primary block-macro MAE is at least 10% lower on identical rows, row-weighted RMSE worsens by no more than 5%, and no farm/campaign subgroup with at least 20 scored spatial groups worsens by more than 10%; otherwise use OLS as the fixed reference or report no improvement. The quadratic model is development-only for the aggregated external outcome because applying a nonlinear model to paddock mean height is not algebraically equivalent to averaging point-level predictions.",
+    "uncertainty": "Do not interpret 13 spatial blocks nested in two farms as a population-level confidence interval. Report block-level results and coverage; no nominal prediction-interval or calibration claim."
+  },
+  "externalEvaluation": {
+    "sourceDoi": "10.5061/dryad.79cnp5ht4",
+    "population": "cool-season grass-legume pasture under mob and rotational grazing, northeastern United States, 2015-2018",
+    "sourceArchive": "data/raw/dryad-79cnp5ht4/version-6.zip",
+    "sourceSha256": "45b972894f876a653b0205d01959861bdc4e4ff7c14eacc8b8fa4bc893c161d6",
+    "analysisParquet": "data/dryad-mob-rotational-biomass/processed/dryad-paddock-biomass-height-v1.parquet",
+    "analysisSha256": "d07291469e00136f54ed6f51d96afcee11ad0d5c27b665556f915afdb8de08d3",
+    "rows": 64,
+    "independentPaddockGroups": 8,
+    "target": "mean PGFM in kg/ha, aggregating available plot-level quadrat yields within treatment x replicate x study year x Julian day; do not impute missing quadrats",
+    "feature": "published pre-grazing mean sward height in cm at the same treatment x replicate x study year x Julian day level",
+    "modelFreeze": "Select the final candidate and all hyperparameters from Mendeley spatial-block CV only; refit that fixed candidate once on all 234 Mendeley rows, then evaluate once on the 64 Dryad rows. Dryad outcomes must not alter candidate, transform, or threshold choices.",
+    "supportAnalysis": "Mendeley height support is 2-56 cm. Report all Dryad rows as the primary external test and separate metrics for the predeclared in-support and above-support rows; mark out-of-support predictions explicitly as extrapolation. Do not clip features or filter out-of-support cases after seeing residuals.",
+    "metrics": ["row-weighted MAE", "row-weighted RMSE", "signed bias", "paddock-macro MAE", "metrics by treatment, calendar year, Julian day, and support status"],
+    "uncertainty": "Report each of the eight paddock-group errors and the distribution across groups. Do not present a narrow confidence interval or claim a calibrated prediction interval from eight paddocks.",
+    "scopeLimit": "This is a distinct temperate pasture biomass evaluation against a related but not strictly identical sampling estimand. It cannot validate tropical Brazilian performance, animal DMI, ADG, or the complete engine.",
+    "supportComposition": "All 234 Mendeley development rows are within the stated 2-56 cm height support. Forty of 64 Dryad rows fall within that support. Only 51 of 234 Mendeley rows are at least the Dryad minimum observed height (23.533 cm) and no greater than 56 cm, so the in-support Dryad observations occupy the sparse upper part of Mendeley height coverage. All 24 above-support Dryad rows are MOB treatment, so support status is confounded with grazing treatment and calendar year. This stratum is not a balanced transport comparison."
+  },
+  "leakageAndReporting": {
+    "neverPredictFrom": ["clipped sample weights", "observed biomass aliases", "plot/sample identifiers", "coordinates", "future measurements", "external outcomes"],
+    "preserveGroups": ["coordinate aliases", "campaign per spatial block", "paddock across all years and harvest dates"],
+    "outputPaths": ["experiments/biomass/mendeley-spatial-cv/", "experiments/biomass/dryad-external/"]
+  },
+  "amendments": [
+    {
+      "date": "2026-10-13",
+      "reason": "Primary Mendeley repository description confirms that height and biomass were collected at the same points in the second and third campaigns but does not state measurement sequence relative to clipping.",
+      "change": "Clarified the Mendeley estimand and feature timing as undocumented relative to clipping. No model, threshold, candidate, fold, or external outcome was changed based on Dryad results. The selected final model was affine OLS, for which applying it to the matched mean height is aggregation-compatible."
+    },
+    {
+      "date": "2026-10-13",
+      "reason": "Independent audit found that the previous support-composition sentence incorrectly described 51 of 234 Mendeley rows as lying in the full 2-56 cm support interval.",
+      "change": "Clarified that 234/234 Mendeley rows lie in [2,56] cm, while 51/234 are in the narrower interval [23.533,56] cm from the minimum Dryad height through the upper Mendeley support. No data, model, split, metric, or selection decision changed."
+    }
+  ]
+}

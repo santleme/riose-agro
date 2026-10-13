@@ -596,6 +596,50 @@ pub struct HousingComparison {
     pub validated: bool,
 }
 
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ConfiguredComparisonRow {
+    pub day: u32,
+    pub reference_weight: f64,
+    pub scenario_weight: f64,
+    pub reference_cost: f64,
+    pub scenario_cost: f64,
+    #[serde(rename = "referenceConsumptionKgDM")]
+    pub reference_consumption_kg_dm: f64,
+    #[serde(rename = "scenarioConsumptionKgDM")]
+    pub scenario_consumption_kg_dm: f64,
+    #[serde(rename = "referenceIntakeBySourceKgDM")]
+    pub reference_intake_by_source_kg_dm: IntakeMetrics,
+    #[serde(rename = "scenarioIntakeBySourceKgDM")]
+    pub scenario_intake_by_source_kg_dm: IntakeMetrics,
+    #[serde(rename = "referencePastureKgDM")]
+    pub reference_pasture_kg_dm: f64,
+    #[serde(rename = "scenarioPastureKgDM")]
+    pub scenario_pasture_kg_dm: f64,
+    pub reference_pasture_by_paddock: Vec<f64>,
+    pub scenario_pasture_by_paddock: Vec<f64>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ConfiguredComparison {
+    pub engine_version: String,
+    pub days: u32,
+    pub start_weight: f64,
+    pub initial_config: FarmConfig,
+    pub herd_size: usize,
+    pub initial_pasture_by_paddock: Vec<f64>,
+    pub comparison_factor: String,
+    pub seed: u32,
+    pub reference_config: FarmConfig,
+    pub scenario_config: FarmConfig,
+    pub rows: Vec<ConfiguredComparisonRow>,
+    pub reference: FarmMetrics,
+    pub scenario: FarmMetrics,
+    pub assumptions: ModelAssumptions,
+    pub validated: bool,
+}
+
 fn intake_difference(current: &FarmMetrics, start: &FarmMetrics) -> IntakeMetrics {
     IntakeMetrics {
         pasture_kg_dm: current.intake.pasture_kg_dm - start.intake.pasture_kg_dm,
@@ -659,6 +703,94 @@ pub fn compare_housing(snapshot: &FarmSnapshot, days: u32) -> Result<HousingComp
         scenario_config: scenario.state.config,
         rows,
         baseline: baseline.metrics(),
+        scenario: scenario.metrics(),
+        assumptions: ModelAssumptions::default(),
+        validated: false,
+    })
+}
+
+/// Run a single-factor comparison from two copies of the same validated
+/// snapshot. This adds no biological relationships beyond the existing engine.
+pub fn compare_configured(
+    snapshot: &FarmSnapshot,
+    reference_config: FarmConfig,
+    scenario_config: FarmConfig,
+    days: u32,
+) -> Result<ConfiguredComparison, String> {
+    if !(1..=365).contains(&days) {
+        return Err("forecast days must be between 1 and 365".into());
+    }
+    snapshot.validate()?;
+    reference_config.validate()?;
+    scenario_config.validate()?;
+
+    let mut changed_factors = Vec::with_capacity(4);
+    if reference_config.diet != scenario_config.diet {
+        changed_factors.push("diet");
+    }
+    if reference_config.housing != scenario_config.housing {
+        changed_factors.push("housing");
+    }
+    if reference_config.weather != scenario_config.weather {
+        changed_factors.push("weather");
+    }
+    if reference_config.supplement != scenario_config.supplement {
+        changed_factors.push("supplement");
+    }
+    if changed_factors.len() != 1 {
+        return Err(
+            "reference and scenario configurations must differ in exactly one supported factor"
+                .into(),
+        );
+    }
+
+    let mut reference = FarmEngine::from_snapshot(snapshot.clone())?;
+    let mut scenario = FarmEngine::from_snapshot(snapshot.clone())?;
+    reference.configure(reference_config)?;
+    scenario.configure(scenario_config)?;
+
+    let base_cost = snapshot.cost;
+    let start_metrics = metrics(snapshot);
+    let mut rows = Vec::with_capacity(days as usize + 1);
+    for day in 0..=days {
+        if day > 0 {
+            reference.tick(24)?;
+            scenario.tick(24)?;
+        }
+        let reference_metrics = reference.metrics();
+        let scenario_metrics = scenario.metrics();
+        let reference_intake = intake_difference(&reference_metrics, &start_metrics);
+        let scenario_intake = intake_difference(&scenario_metrics, &start_metrics);
+        rows.push(ConfiguredComparisonRow {
+            day,
+            reference_weight: reference_metrics.weight,
+            scenario_weight: scenario_metrics.weight,
+            reference_cost: reference_metrics.cost - base_cost,
+            scenario_cost: scenario_metrics.cost - base_cost,
+            reference_consumption_kg_dm: reference_intake.total_kg_dm,
+            scenario_consumption_kg_dm: scenario_intake.total_kg_dm,
+            reference_intake_by_source_kg_dm: reference_intake,
+            scenario_intake_by_source_kg_dm: scenario_intake,
+            reference_pasture_kg_dm: reference_metrics.pasture,
+            scenario_pasture_kg_dm: scenario_metrics.pasture,
+            reference_pasture_by_paddock: reference_metrics.pasture_by_paddock,
+            scenario_pasture_by_paddock: scenario_metrics.pasture_by_paddock,
+        });
+    }
+
+    Ok(ConfiguredComparison {
+        engine_version: "agroville-engine/1".to_owned(),
+        days,
+        start_weight: start_metrics.weight,
+        initial_config: snapshot.config,
+        herd_size: snapshot.animals.len(),
+        initial_pasture_by_paddock: snapshot.pastures.clone(),
+        comparison_factor: changed_factors[0].to_owned(),
+        seed: snapshot.initial_seed,
+        reference_config,
+        scenario_config,
+        rows,
+        reference: reference.metrics(),
         scenario: scenario.metrics(),
         assumptions: ModelAssumptions::default(),
         validated: false,
