@@ -206,6 +206,17 @@ function validateSourceIdentityUniqueness(sourceManifests, errors) {
   }
 }
 
+function expectedSourceManifestPath(source, sourceManifests) {
+  const ownerIndex = sourceManifests.findIndex(manifest => (manifest?.assets ?? []).includes(source));
+  if (ownerIndex === 0) return 'assets/manifests/manifest.json';
+  if (ownerIndex === 1) return 'assets/modules/livestock-dairy/manifest.json';
+  return null;
+}
+
+function normalizeManifestPath(reference) {
+  return typeof reference === 'string' ? reference.replace(/^\/+/, '') : null;
+}
+
 function validateRendererManifest(renderer, sourceManifests, releaseScenes, errors) {
   const atlases = renderer?.atlases ?? {};
   const assets = Array.isArray(renderer?.assets) ? renderer.assets : [];
@@ -318,8 +329,11 @@ function validateRuntimeManifest(runtime, sourceManifests, renderer, errors) {
     const source = matchingSources.length === 1 ? matchingSources[0] : null;
     if (source) {
       const sourceFile = source.source?.sourceFile ?? source.sourceFile;
+      const expectedManifest = expectedSourceManifestPath(source, sourceManifests);
       check(provenance.sourceFile === sourceFile,
         `${id} runtime source file does not match its semantic source record`, errors);
+      check(expectedManifest !== null && normalizeManifestPath(provenance.sourceManifest) === expectedManifest,
+        `${id} runtime source manifest does not match its semantic source record`, errors);
       check(provenance.sourceStatus === source.status && source.status === 'RELEASED',
         `${id} runtime source status does not match a RELEASED semantic source`, errors);
       check(source.review?.art === 'pass' && source.review?.technical === 'pass',

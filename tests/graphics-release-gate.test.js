@@ -146,6 +146,15 @@ test('runtime release gate cross-checks source identity, rights and review again
   assert.throws(() => assertGraphicsReleaseInputsReady(missingRenderer), /nelore-adult runtime asset does not resolve to exactly one renderer asset/);
 });
 
+test('runtime release gate rejects a source-manifest path that does not own the resolved source record', () => {
+  const fixture = cloneFixture();
+  fixture.runtimeManifest.assets[0].provenance.sourceManifest = 'public/assets/manifest.json';
+  assert.throws(
+    () => assertGraphicsReleaseInputsReady(fixture),
+    /nelore-adult runtime source manifest does not match its semantic source record/
+  );
+});
+
 test('runtime provenance join preserves explicit source status, rights and unknowns without approving assets', () => {
   const runtimeManifest = {assets: [{id: 'source-approved'}, {id: 'source-review'}, {id: 'orphan'}, {id: 'renderer-review-conflict'}]};
   const semanticManifest = {assets: [
