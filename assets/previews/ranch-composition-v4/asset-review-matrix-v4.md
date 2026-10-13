@@ -1,8 +1,10 @@
 # Matriz de revisão do piloto V4
 
-Assets únicos referenciados: **28** (4 APPROVED; 24 REVIEW). A aprovação da composição não muda o status individual.
+> **Escopo histórico:** esta tabela registra a triagem do conjunto candidato da composição V4 antes da decisão do piloto cattle-ranch-v1. Seus estados e notas de revisão não refletem as aprovações registradas depois no manifesto canônico. Consulte `assets/manifests/manifest.json` para o estado atual por ID e `assets/pilots/cattle-ranch-v1/pilot.json` para o escopo das 12 aprovações do piloto. A aprovação da composição não promove todos os assets que ela referencia.
 
-A triagem abaixo é derivada do manifesto e dos PNGs atuais. Alpha fracionário é sinal para inspeção em mattes, não rejeição automática. A matriz não substitui a revisão artística humana.
+No snapshot V4 original, havia **28** assets únicos (4 APPROVED; 24 REVIEW). Os campos de estado e revisão abaixo são históricos; as medições de PNG descrevem os arquivos examinados naquele snapshot e não substituem a validação técnica atual.
+
+Alpha fracionário era sinal para inspeção em mattes, não rejeição automática. A matriz não substitui a revisão artística humana.
 
 | Asset ID | Estado | Arte / técnica | PNG | Alpha fracionário | Padding mínimo | ICC |
 |---|---|---|---:|---:|---:|---|
@@ -35,7 +37,7 @@ A triagem abaixo é derivada do manifesto e dos PNGs atuais. Alpha fracionário 
 | `water.reservoir.imagegen.v1` | REVIEW | pending / pass | 437×321 | 4,692 | 6px | sRGB |
 | `water.trough.round.imagegen.v1` | REVIEW | pending / pass | 462×237 | 8,208 | 4px | sRGB |
 
-## Gate atual
+## Gate registrado no snapshot V4
 
 - Composição e distribuição das zonas da cena V4: aprovada pelo usuário.
 - Assets aprovados individualmente: casa, árvore, trator e Nelore adulto parado.

@@ -2814,15 +2814,15 @@
         "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
         "sourceManifest": "/assets/manifests/manifest.json",
         "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
-        "sourceStatus": "REVIEW",
+        "sourceStatus": "APPROVED",
         "rights": {
           "licenseState": "project-generated-review",
           "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
         },
         "review": {
-          "art": "pending",
+          "art": "pass",
           "technical": "pass",
-          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+          "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
         }
       }
     },
@@ -3102,15 +3102,15 @@
         "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
         "sourceManifest": "/assets/manifests/manifest.json",
         "sourceSha256": "93a97630c1101f28d6a645ec2c4705e89e03b1ee4e0c4dcbb204a96bf663379f",
-        "sourceStatus": "REVIEW",
+        "sourceStatus": "APPROVED",
         "rights": {
           "licenseState": "project-generated-review",
           "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
         },
         "review": {
-          "art": "pending",
+          "art": "pass",
           "technical": "pass",
-          "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+          "decisionNote": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
         }
       }
     },
