@@ -3,9 +3,10 @@ const OUTPUT_WIDTH = 2;
 export const METABOLISM_MAINTENANCE_KG_DM = 5.3;
 export const METABOLISM_GAIN_FACTOR = 0.22;
 
-export function updateMetabolismJS(input, count = input.length / INPUT_WIDTH, output = new Float64Array(count * OUTPUT_WIDTH)) {
+export function updateMetabolismJS(input, count = input.length / INPUT_WIDTH, output) {
   if (!Number.isInteger(count) || count < 0 || count > 100_000) throw new RangeError('invalid metabolism animal count');
   if (input.length < count * INPUT_WIDTH) throw new RangeError('metabolism input buffer is too small');
+  output ??= new Float64Array(count * OUTPUT_WIDTH);
   if (output.length < count * OUTPUT_WIDTH) throw new RangeError('metabolism output buffer is too small');
   for (let index = 0; index < count; index++) {
     const offset = index * INPUT_WIDTH;
@@ -34,9 +35,10 @@ export async function loadWasmMetabolism(url = new URL('../../wasm/riose_core.wa
   let capacity = 0;
   let inputPointer = 0;
   let outputPointer = 0;
-  const kernel = (values, count = values.length / INPUT_WIDTH, output = new Float64Array(count * OUTPUT_WIDTH)) => {
+  const kernel = (values, count = values.length / INPUT_WIDTH, output) => {
     if (!Number.isInteger(count) || count < 0 || count > 100_000) throw new RangeError('invalid metabolism animal count');
     if (values.length < count * INPUT_WIDTH) throw new RangeError('metabolism input buffer is too small');
+    output ??= new Float64Array(count * OUTPUT_WIDTH);
     if (output.length < count * OUTPUT_WIDTH) throw new RangeError('metabolism output buffer is too small');
     if (count === 0) return output.subarray(0,0);
     if (count > capacity) {

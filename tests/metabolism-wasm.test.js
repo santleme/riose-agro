@@ -68,9 +68,13 @@ test('WASM validates counts and output capacity before calling the ABI or changi
     const kernel=await loadWasmMetabolism('http://local.test/kernel.wasm',async()=>({ok:true}));
     const output=new Float64Array([71,72,73]);
     assert.throws(()=>kernel(new Float64Array(4),-1,output),/invalid metabolism animal count/);
+    assert.throws(()=>kernel(new Float64Array(4),-1),/invalid metabolism animal count/,
+      'default output allocation must not mask invalid counts');
     assert.throws(()=>kernel(new Float64Array(4),1.5,output),/invalid metabolism animal count/);
     assert.throws(()=>kernel(new Float64Array(4),100_001,output),/invalid metabolism animal count/);
     assert.throws(()=>kernel(new Float64Array(3),1,output),/input buffer is too small/);
+    assert.throws(()=>kernel(new Float64Array(3),1),/input buffer is too small/,
+      'default output allocation must follow input validation');
     const shortOutput=new Float64Array([99]);
     assert.throws(()=>kernel(new Float64Array(4),1,shortOutput),/output buffer is too small/);
     assert.deepEqual(Array.from(shortOutput),[99]);
@@ -78,6 +82,7 @@ test('WASM validates counts and output capacity before calling the ABI or changi
     assert.equal(fixture.allocations.length,0);
     kernel.dispose();
   });
+  assert.throws(()=>updateMetabolismJS(new Float64Array(4),-1),/invalid metabolism animal count/);
 });
 
 test('WASM capacity grows geometrically, reuses buffers, and recovers after dispose',async()=>{
