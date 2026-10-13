@@ -10,6 +10,8 @@ use crate::state::{
 };
 use crate::{update_metabolism, EntityId, EntityIdAllocator, Housing, SeedStreams, SeededRng};
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "history-ring")]
+use std::collections::VecDeque;
 
 const NAMES: [&str; 24] = [
     "Aurora", "Bento", "Cacau", "Dália", "Estrela", "Figo", "Gaia", "Hugo", "Íris", "Joca",
@@ -62,6 +64,8 @@ pub struct FarmEngine {
     state: FarmSnapshot,
     model_rng: SeededRng,
     locomotion_rng: SeededRng,
+    #[cfg(feature = "history-ring")]
+    history_rings: Vec<VecDeque<ActivityRecord>>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -133,7 +137,7 @@ impl FarmEngine {
                 target_y: y,
                 history: Vec::new(),
             };
-            record_activity(
+            record_activity_vec(
                 &mut animal,
                 6,
                 ActivityReason::PastureHousing,
@@ -142,6 +146,7 @@ impl FarmEngine {
             );
             animals.push(animal);
         }
+        #[allow(unused_mut)]
         let mut engine = Self {
             state: FarmSnapshot {
                 hour: 6,
@@ -161,7 +166,13 @@ impl FarmEngine {
             },
             model_rng: streams.model,
             locomotion_rng: streams.locomotion,
+            #[cfg(feature = "history-ring")]
+            history_rings: Vec::new(),
         };
+        #[cfg(feature = "history-ring")]
+        {
+            engine.history_rings = take_history_rings(&mut engine.state.animals);
+        }
         engine.sync_rng_states();
         Ok(engine)
     }
@@ -170,15 +181,27 @@ impl FarmEngine {
         snapshot.validate()?;
         let model_rng = SeededRng::new(snapshot.seed);
         let locomotion_rng = SeededRng::new(snapshot.locomotion_seed);
-        Ok(Self {
+        #[allow(unused_mut)]
+        let mut engine = Self {
             state: snapshot,
             model_rng,
             locomotion_rng,
-        })
+            #[cfg(feature = "history-ring")]
+            history_rings: Vec::new(),
+        };
+        #[cfg(feature = "history-ring")]
+        {
+            engine.history_rings = take_history_rings(&mut engine.state.animals);
+        }
+        Ok(engine)
     }
 
     pub fn snapshot(&self) -> FarmSnapshot {
         let mut result = self.state.clone();
+        #[cfg(feature = "history-ring")]
+        for (animal, ring) in result.animals.iter_mut().zip(&self.history_rings) {
+            animal.history = ring.iter().cloned().collect();
+        }
         result.seed = self.model_rng.state();
         result.locomotion_seed = self.locomotion_rng.state();
         result
@@ -307,6 +330,16 @@ impl FarmEngine {
                     };
 
                     let event = if animal.action != previous_action {
+                        #[cfg(feature = "history-ring")]
+                        record_activity_ring(
+                            &mut self.history_rings[animal_index],
+                            self.state.hour,
+                            reason,
+                            observed_thirst,
+                            config.housing,
+                            animal.action,
+                        );
+                        #[cfg(not(feature = "history-ring"))]
                         record_activity(
                             animal,
                             self.state.hour,
@@ -417,7 +450,7 @@ fn activity_label(activity: Activity) -> &'static str {
     }
 }
 
-fn record_activity(
+fn record_activity_vec(
     animal: &mut AnimalState,
     hour: u64,
     reason: ActivityReason,
@@ -437,6 +470,53 @@ fn record_activity(
     if animal.history.len() > 40 {
         animal.history.remove(0);
     }
+}
+
+#[cfg(not(feature = "history-ring"))]
+fn record_activity(
+    animal: &mut AnimalState,
+    hour: u64,
+    reason: ActivityReason,
+    observed_thirst: f64,
+    housing: Housing,
+) {
+    record_activity_vec(animal, hour, reason, observed_thirst, housing);
+}
+
+#[cfg(feature = "history-ring")]
+fn take_history_rings(animals: &mut [AnimalState]) -> Vec<VecDeque<ActivityRecord>> {
+    animals
+        .iter_mut()
+        .map(|animal| {
+            let mut ring = VecDeque::with_capacity(40);
+            ring.extend(std::mem::take(&mut animal.history));
+            ring
+        })
+        .collect()
+}
+
+#[cfg(feature = "history-ring")]
+fn record_activity_ring(
+    history: &mut VecDeque<ActivityRecord>,
+    hour: u64,
+    reason: ActivityReason,
+    observed_thirst: f64,
+    housing: Housing,
+    action: Activity,
+) {
+    if history.len() == 40 {
+        history.pop_front();
+    }
+    history.push_back(ActivityRecord {
+        hour,
+        action,
+        reason,
+        observed: ObservedActivityState {
+            hour: (hour % 24) as u8,
+            thirst: observed_thirst,
+            housing,
+        },
+    });
 }
 
 pub fn metrics(snapshot: &FarmSnapshot) -> FarmMetrics {

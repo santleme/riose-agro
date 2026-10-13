@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "worktreeBranch": "codex/rea-research",
+  "sourceRevision": "16fa6ec",
+  "runtime": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x86_64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "rustc": "1.95.0",
+    "profile": "release, thin LTO, codegen-units=1, panic=abort"
+  },
+  "workload": {
+    "seed": 2026,
+    "animalCount": 10000,
+    "days": 30,
+    "scenario": "two-arm pasture vs barn comparison",
+    "requestSha256": "fe46a5af5895a37f5e84311df534f597f556980c5c1b45a55cbba9546ec6e51d"
+  },
+  "historicalBaseline": {
+    "medianMs": 666.2404740000056,
+    "p95Ms": 726.3088920000009,
+    "samplesMs": [
+      726.3088920000009,
+      666.2404740000056,
+      641.3544540000003,
+      665.2678989999986,
+      688.585619999998
+    ],
+    "sourceRevision": "a6293fd",
+    "measurement": "rust.processEndToEnd from prior benchmark artifact; different revision/harness"
+  },
+  "inProcessBenchmark": {
+    "warmups": 3,
+    "repetitions": 21,
+    "scope": "initial state creation, 30-day comparison, and result JSON serialization; excludes process start and input JSON parsing",
+    "sequential": {
+      "medianMs": 701.758,
+      "p95Ms": 926.84,
+      "samplesMs": [
+        659.4, 671.665, 676.874, 681.216, 682.011, 688.705, 689.596,
+        691.9, 692.731, 699.347, 701.758, 702.215, 706.31, 712.122,
+        715.12, 719.51, 726.738, 727.129, 920.731, 926.84, 1062.079
+      ]
+    },
+    "historyRing": {
+      "medianMs": 337.498,
+      "p95Ms": 343.28,
+      "samplesMs": [
+        331.457, 332.737, 332.838, 333.319, 333.892, 335.346, 335.661,
+        336.003, 336.2, 336.517, 337.498, 337.71, 338.134, 338.18,
+        338.512, 339.201, 340.044, 340.126, 340.514, 343.28, 361.818
+      ]
+    },
+    "comparisonJsonSha256Both": "1727a3d2383aec8f4f889bae4983426ce191aa8c261101847b5e96c555cbb862",
+    "finalTwoSnapshotJsonSha256Both": "21d16df787976d2f199e238e880e138dfd93ea87b80c084fac1bc4d148cedba4"
+  },
+  "processBenchmark": {
+    "warmupsPerRunner": 1,
+    "repetitions": 5,
+    "order": "alternating sequential then history-ring for every measured pair",
+    "scope": "subprocess launch, stdin, input parsing, comparison, output serialization, stdout and JSON validation",
+    "sequential": {
+      "medianMs": 779.433,
+      "p95Ms": 789.3,
+      "samplesMs": [762.053, 781.28, 789.3, 779.433, 714.915]
+    },
+    "historyRing": {
+      "medianMs": 483.643,
+      "p95Ms": 493.572,
+      "samplesMs": [493.572, 483.643, 483.168, 484.505, 472.188]
+    },
+    "scientificResultParity": "exact for all five paired outputs",
+    "fullEnvelopeParity": "exact for all five paired outputs"
+  },
+  "reaElfInspection": {
+    "toolVersion": "6.4.0",
+    "provider": "pwntools@4.15.0;pyelftools@0.33;unicorn@2.1.2",
+    "sequential": {
+      "evidenceId": "ev_f29940bfe88f3ea879ba3575782d0dbf2561c774e8763e420d02d7d57a25561c",
+      "sha256": "ba4b2f882ca0c4cf23e5e9595805bbf6452205477a50e8694234c9c2db94c515",
+      "bytes": 830944,
+      "neededLibraries": ["libgcc_s.so.1", "libc.so.6"],
+      "sections": 35,
+      "segments": 12,
+      "symbols": 1265,
+      "relocations": 1025
+    },
+    "historyRing": {
+      "evidenceId": "ev_d9824e73ad965891bcd27aa35d08e88eb4caed8841fc77f93682549bc51306d1",
+      "sha256": "0df794cb90ae0644b4531fa2974b4244f7020741c6ad78a20df1330260e65184",
+      "bytes": 834112,
+      "neededLibraries": ["libgcc_s.so.1", "libc.so.6"],
+      "sections": 35,
+      "segments": 12,
+      "symbols": 1269,
+      "relocations": 1026
+    },
+    "limitations": [
+      "Static ELF evidence only; no profiling or target execution.",
+      "Runtime load base and library paths unknown.",
+      "Relocation and GOT/PLT map completeness unknown.",
+      "Ghidra/Hopper unavailable; no decompilation or pseudocode."
+    ]
+  }
+}
