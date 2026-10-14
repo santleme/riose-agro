@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {compareConfiguredScenarios,createConfiguredComparisonManifest} from '../src/client/engine.js';
+import {FarmEngine,compareConfiguredScenarios,createConfiguredComparisonManifest} from '../src/client/engine.js';
+import {createLotComparisonManifest,createLotScopedSnapshot,addLotComparisonContext} from '../src/client/lot-comparison.js';
 import {normalizeWorkerResponse} from '../src/client/worker-protocol.js';
 import {createRunRecord,runCompatibility} from '../src/client/run-history.js';
 
@@ -48,5 +49,30 @@ test('configured Worker falls back to JavaScript and marks a native execution fa
     assert.equal(response.execution.backend,'local-js');
     assert.equal(response.execution.fallbackUsed,true);
     assert.equal(response.execution.fallbackReason,'native_runner_failed');
+  });
+});
+
+test('lot Worker sends only the selected lot to Rust and preserves execution provenance',async t=>{
+  const base=new FarmEngine(20261013,24).snapshot(),manifest=createLotComparisonManifest(base,{patchIndex:2,domainZoneId:'paddock-3',periodDays:3,alternativeSupplementKgDMPerAnimalPerDay:0.5});
+  const scoped=createLotScopedSnapshot(base,manifest.lot),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
+  const expected=addLotComparisonContext(manifest,compareConfiguredScenarios(scoped,options));let received;
+  const fetchImpl=async(_url,request)=>request?{ok:true,json:async()=>{received=JSON.parse(request.body);return {comparison:compareConfiguredScenarios(received.snapshot,options),
+    engine:{engineVersion:'0.1.0',buildId:'native-lot-build',modelStatus:'demonstrative_unvalidated',validated:false},
+    runId:'sha256:'+'c'.repeat(64),inputSha256:'sha256:'+'c'.repeat(64)};}}:{ok:true,json:async()=>({available:true,backend:'local-rust'})};
+  await withWorker(t,fetchImpl,async worker=>{
+    await worker.onmessage({data:{protocolVersion:1,type:'compareLotConfigured',manifest}});
+    const response=normalizeWorkerResponse(worker.messages.at(-1));
+    assert.deepEqual(received.snapshot.animals.map(animal=>animal.id),manifest.lot.animalIds);
+    assert.equal(received.snapshot.animals.length,manifest.lot.animalIds.length);
+    assert.equal(response.engineImplementation,'riose-core-native/0.1.0');
+    assert.equal(response.execution.backend,'local-rust');
+    assert.equal(response.execution.fallbackUsed,false);
+    assert.deepEqual(response.data,expected);
+    assert.equal(response.data.herdSize,manifest.lot.animalIds.length);
+    const run=createRunRecord({manifest,result:response.data,execution:response.execution,id:'native-lot-history'});
+    assert.equal(run.execution.buildId,'native-lot-build');
+    assert.equal(run.executor.engineImplementation,'riose-core-native/0.1.0');
+    assert.equal(runCompatibility(run).supported,true);
+    assert.deepEqual(manifest.lot.unaffectedAnimalIds,base.animals.filter(animal=>animal.patch!==manifest.lot.patchIndex).map(animal=>animal.id));
   });
 });

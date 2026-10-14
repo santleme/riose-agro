@@ -11,6 +11,7 @@ import {resolveLotSelection,formatLotArea} from '../src/client/lot-selection.js'
 import {assessLotSimulationReadiness} from '../src/client/lot-simulation-readiness.js';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
 import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js';
+import {createLotComparisonManifest,createLotScopedSnapshot,compareLotConfiguredScenarios,replayLotComparisonManifest,validateLotComparisonManifest,LOT_COMPARISON_MANIFEST_TYPE} from '../src/client/lot-comparison.js';
 import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {initialEnvironmentState,updateEnvironmentInput,environmentDiffRows} from '../src/client/environment-inputs.js';
 import {createViewLayout,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
@@ -25,7 +26,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element());
   let worker,fetches=0,lastState=null;
   const context=vm.createContext({
-    metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,assessLotSimulationReadiness,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
+    metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,createLotComparisonManifest,createLotScopedSnapshot,compareLotConfiguredScenarios,replayLotComparisonManifest,validateLotComparisonManifest,LOT_COMPARISON_MANIFEST_TYPE,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,assessLotSimulationReadiness,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
@@ -40,7 +41,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);
   vm.runInContext(source,context,{filename:'app.js'});
   const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:type==='view'?{...value,engineImplementation}:{data:value,engineImplementation})}});};
-  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),readViewState:()=>vm.runInContext('structuredClone(viewState)',context),fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
+  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),readViewState:()=>vm.runInContext('structuredClone(viewState)',context),selectPaddock(index){vm.runInContext(`selectPaddock(${index})`,context);},fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
 }
 async function waitFor(check,timeout=5000){const deadline=Date.now()+timeout;while(!check()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(check(),'timed out waiting for the browser harness');}
 
@@ -83,6 +84,43 @@ test('map comparison freezes one snapshot, changes one configured factor only, a
   assert.deepEqual(farm.snapshot(),snapshot);
   assert.equal(ui.messages.some(message=>message.type==='configure'),false);
   assert.equal(ui.fetches(),0);
+});
+
+test('farm map lot flow runs, scopes, persists and replays the selected synthetic lot',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(3501,24),initial=farm.snapshot();
+  ui.deliver('state',initial);
+  ui.selectPaddock(1);
+  assert.match(ui.elements.get('lot-selection-status').textContent,/piquete B/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/Lote B/);
+  assert.match(ui.elements.get('lot-selection-details').innerHTML,/simulada · IDs estáveis/);
+  assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-2',lotId:'demo-lot-02'});
+  ui.elements.set('lot-supplement-alt',{value:'0.5'});
+  const selectedLot=initial.animals.filter(animal=>animal.patch===1).map(animal=>animal.id);
+  const others=initial.animals.filter(animal=>animal.patch!==1).map(animal=>animal.id);
+  ui.elements.get('lot-compare').onclick();
+  const request=ui.messages.at(-1);
+  assert.equal(request.type,'compareLotConfigured');
+  const manifest=request.manifest;
+  assert.equal(manifest.type,LOT_COMPARISON_MANIFEST_TYPE);
+  assert.deepEqual(manifest.lot.animalIds,selectedLot);
+  assert.deepEqual(manifest.lot.unaffectedAnimalIds,others);
+  assert.deepEqual(Object.keys(manifest.scenarios.reference).filter(key=>manifest.scenarios.reference[key]!==manifest.scenarios.scenario[key]),['supplement']);
+  const result=compareLotConfiguredScenarios(manifest);
+  ui.deliver('comparison',result);
+  assert.match(ui.elements.get('compareconfig').textContent,/demo-lot-02/);
+  assert.match(ui.elements.get('lot-comparison-context').innerHTML,/demo-lot-02/);
+  assert.match(ui.elements.get('comparison-coverage').innerHTML,/somente o lote sintético/);
+  assert.doesNotMatch(ui.elements.get('pasture-summary').innerHTML,/Piquete A|Piquete C|Piquete D/);
+  const history=JSON.parse(ui.storage.get('agroville-run-history-v1'));
+  assert.equal(history.runs.length,1);
+  assert.equal(history.runs[0].manifest.lot.lotId,'demo-lot-02');
+  assert.equal(history.runs[0].executor.engineImplementation,'javascript-fallback');
+  ui.elements.get('run-history-select').value=history.runs[0].id;
+  ui.elements.get('run-history-replay').onclick();
+  assert.equal(ui.messages.at(-1).type,'replayLotConfigured');
+  assert.equal(ui.messages.at(-1).manifest.lot.lotId,'demo-lot-02');
+  ui.deliver('comparison',replayLotComparisonManifest(history.runs[0].manifest));
+  assert.equal(JSON.parse(ui.storage.get('agroville-run-history-v1')).runs.length,2);
 });
 
 test('configured comparison captures one snapshot, sends two configs differing only by the selected factor, and labels its outputs demonstrative',async()=>{

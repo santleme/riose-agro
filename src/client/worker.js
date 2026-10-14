@@ -1,4 +1,5 @@
 import {FarmEngine,compare,compareConfiguredScenarios,replayComparisonManifest,validateConfiguredComparisonManifest} from './engine.js';
+import {addLotComparisonContext,createLotScopedSnapshot,validateLotComparisonManifest} from './lot-comparison.js';
 import {loadWasmMetabolism,updateMetabolismJS} from './metabolism-wasm.js';
 import {createViewLayout,createWorkerError,createWorkerResponse,decodeWorkerCommand,normalizeWorkerResponse} from './worker-protocol.js';
 
@@ -27,7 +28,7 @@ async function configuredComparison(snapshot,options){
       if(!response.ok)throw new Error(`native_http_${response.status}`);
       const native=await response.json(),metadata=native.engine;
       if(!metadata||metadata.validated!==false||typeof metadata.engineVersion!=='string'||typeof metadata.buildId!=='string')throw new Error('native_metadata_invalid');
-      const execution={backend:'local-rust',engineVersion:metadata.engineVersion,buildId:metadata.buildId,
+      const execution={backend:'local-rust',engineVersion:metadata.engineVersion,engineImplementation:`riose-core-native/${metadata.engineVersion}`,buildId:metadata.buildId,
         modelStatus:metadata.modelStatus,runId:native.runId,inputSha256:native.inputSha256,fallbackUsed:false};
       const result={data:native.comparison,execution,engineImplementation:`riose-core-native/${metadata.engineVersion}`};
       normalizeWorkerResponse(createWorkerResponse('comparison',result,result.engineImplementation));
@@ -70,8 +71,10 @@ scope.onmessage=async(event)=>{await wasmReady;let command;try{
   else if(m.type==='tick'){engine.tick(m.hours??1,metabolismKernel,false);postUpdate();return;}
   else if(m.type==='compare'){scope.postMessage(createWorkerResponse('comparison',{data:compare(m.snapshot??engine.snapshot(),m.days??30,metabolismKernel)},engineImplementation));return;}
   else if(m.type==='compareConfigured'){const result=await configuredComparison(m.snapshot,{referenceConfig:m.referenceConfig,scenarioConfig:m.scenarioConfig,days:m.days??30});scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
+  else if(m.type==='compareLotConfigured'){validateLotComparisonManifest(m.manifest);const snapshot=createLotScopedSnapshot(m.manifest.initialSnapshot,m.manifest.lot);const result=await configuredComparison(snapshot,{referenceConfig:m.manifest.scenarios.reference,scenarioConfig:m.manifest.scenarios.scenario,days:m.manifest.periodDays});result.data=addLotComparisonContext(m.manifest,result.data);scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
   else if(m.type==='replayComparison'){scope.postMessage(createWorkerResponse('comparison',{data:replayComparisonManifest(m.manifest,metabolismKernel)},engineImplementation));return;}
   else if(m.type==='replayConfigured'){const result=await replayConfiguredComparison(m.manifest);scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
+  else if(m.type==='replayLotConfigured'){validateLotComparisonManifest(m.manifest);const snapshot=createLotScopedSnapshot(m.manifest.initialSnapshot,m.manifest.lot);const result=await configuredComparison(snapshot,{referenceConfig:m.manifest.scenarios.reference,scenarioConfig:m.manifest.scenarios.scenario,days:m.manifest.periodDays});result.data=addLotComparisonContext(m.manifest,result.data);scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
   else if(m.type==='snapshot'){postSnapshot();return;}
   else throw new Error(`Unknown Worker command: ${m.type}.`);
   postSnapshot();
