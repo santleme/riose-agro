@@ -11,9 +11,14 @@ import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
 import {createRunRecord,runCompatibility} from '../src/client/run-history.js';
 import {validateReproducibilityManifest,replayScenarioContract} from '../src/client/scenario-contract.js';
 import {decodeWorkerCommand,normalizeWorkerResponse} from '../src/client/worker-protocol.js';
+import {createDemoLotContext,createDemoLotManifestEnvelope,isolateDemoLotSnapshot,resolveDemoLot,validateDemoLotManifestEnvelope} from '../src/client/lot-selection.js';
 
 const schema=JSON.parse(readFileSync(new URL('../schemas/configured-comparison-manifest-v1.schema.json',import.meta.url),'utf8'));
-const validateSchema=new Ajv2020({allErrors:true,strict:false}).compile(schema);
+const ajv=new Ajv2020({allErrors:true,strict:false});
+ajv.addSchema(schema);
+const validateSchema=ajv.compile(schema);
+const envelopeSchema=JSON.parse(readFileSync(new URL('../schemas/demo-lot-comparison-envelope-v1.schema.json',import.meta.url),'utf8'));
+const validateEnvelopeSchema=ajv.compile(envelopeSchema);
 const snapshot=new FarmEngine(981,4).snapshot();
 const referenceConfig={...snapshot.config,diet:'pasture'};
 const scenarioConfig={...snapshot.config,diet:'concentrate'};
@@ -28,6 +33,20 @@ test('configured manifest is versioned, schema-valid, and replayable through the
   assert.equal(archive.manifestReference.type,'riose-configured-comparison');
   assert.equal(archive.comparison.comparisonFactor,'diet');
   assert.equal(archive.comparison.validated,false);
+});
+
+test('demo lot provenance is schema-valid, replayable and rejects observed-data substitution',()=>{
+  const lot=resolveDemoLot(snapshot,0),isolated=isolateDemoLotSnapshot(snapshot,lot);
+  const context=createDemoLotContext(lot,'diet',referenceConfig,scenarioConfig);
+  const manifest=createConfiguredComparisonManifest(isolated,{referenceConfig,scenarioConfig,days:2});
+  const envelope=createDemoLotManifestEnvelope(manifest,context);
+  assert.equal(validateEnvelopeSchema(envelope),true,JSON.stringify(validateEnvelopeSchema.errors));
+  assert.equal(validateDemoLotManifestEnvelope(envelope),true);
+  assert.equal(validateConfiguredComparisonManifest(envelope.manifest),true);
+  assert.equal(validateReproducibilityManifest(envelope.manifest),true);
+  assert.equal(runCompatibility(createRunRecord({manifest:envelope.manifest,result:compareConfiguredScenarios(isolated,{referenceConfig,scenarioConfig,days:2})})).supported,true);
+  const observed=structuredClone(envelope);observed.lotContext.source='observed-study-slice';
+  assert.throws(()=>validateDemoLotManifestEnvelope(observed),/Contexto de lote/);
 });
 
 test('run history preserves and validates the configured intervention for future replay',()=>{

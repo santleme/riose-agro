@@ -7,7 +7,7 @@ import {SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot} from '.
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../scientific/br_corte_pasture_dmi.js';
 import {createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,RUN_HISTORY_KEY} from '../src/client/run-history.js';
 import {encodeScenarioSnapshot,decodeScenarioSnapshot} from '../src/client/scenario-storage.js';
-import {resolveLotSelection,formatLotArea} from '../src/client/lot-selection.js';
+import {resolveLotSelection,formatLotArea,resolveDemoLot,isolateDemoLotSnapshot,createDemoLotContext,validateDemoLotContext,createDemoLotManifestEnvelope,validateDemoLotManifestEnvelope,DEMO_LOT_MODEL} from '../src/client/lot-selection.js';
 import {assessLotSimulationReadiness} from '../src/client/lot-simulation-readiness.js';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
 import {calculateLotMetrics,findPaddockField} from '../src/client/lot-metrics.js';
@@ -27,6 +27,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   const context=vm.createContext({
     metrics,createComparisonManifest,validateComparisonManifest,createConfiguredComparisonManifest,validateConfiguredComparisonManifest,simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI,SCENARIO_PRESETS,getScenarioPreset,createScenarioPresetSnapshot,createRunRecord,recordRun,listRuns,getRun,runCompatibility,getRunHistoryStats,exportRunHistory,clearRunHistory,MAX_RUNS,MAX_RUN_HISTORY_BYTES,encodeScenarioSnapshot,decodeScenarioSnapshot,resolveLotSelection,formatLotArea,assessLotSimulationReadiness,validateFarmSnapshot,calculateLotMetrics,findPaddockField,calculateThi,THI_SOURCE,initialEnvironmentState,updateEnvironmentInput,environmentDiffRows,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION,combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot,structuredClone,Blob,
     Worker:class {constructor(){worker=this;}postMessage(message){workerMessages.push(structuredClone(message));if(message.type==='snapshot'){if(lastState&&worker.onmessage)worker.onmessage({data:{type:'state',state:structuredClone(lastState),engineImplementation:'javascript-fallback'}});return;}messages.push(structuredClone(message));}},
+    resolveDemoLot,isolateDemoLotSnapshot,createDemoLotContext,validateDemoLotContext,createDemoLotManifestEnvelope,validateDemoLotManifestEnvelope,DEMO_LOT_MODEL,
     document:{getElementById:id=>elements.get(id),createElement:()=>element(),querySelectorAll:()=>[],addEventListener(){}},
     window:{addEventListener(){}},location:{search:''},localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},
     Option:class {},URLSearchParams,Image:class {set src(value){this.onload?.();}},performance:{now:()=>0},requestAnimationFrame(callback){scheduledFrame=callback;},setTimeout(){return 1;},clearTimeout(){},
@@ -203,10 +204,54 @@ test('connected observed lot stays descriptive and is never attributed to the de
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/Não informada/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/não definem uma intervenção pareada/);
-  assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:farmSnapshot.lots[0].id});
+  assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:farmSnapshot.lots[0].id,demoLotId:'demo-paddock-1'});
   assert.equal(ui.messages.some(message=>message.type==='compareConfigured'),false);
   assert.equal(ui.storage.has('agroville-last-lot-comparison-v1'),false);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/eartag-242/);
+});
+
+test('the map runs, records and replays a one-factor comparison for only its registered demo lot',async()=>{
+  const ui=await openFarm(),farm=new FarmEngine(812,8),baseline=farm.snapshot();ui.deliver('state',baseline);
+  const patch={x:28,y:38,w:148,h:104};let point;
+  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(baseline.animals.filter(animal=>animal.patch===0).every(animal=>Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
+  assert.ok(point,'selected paddock has an open map point');
+  const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
+  assert.equal(ui.elements.get('demo-lot-compare').disabled,false);
+  assert.equal(ui.elements.get('lot-compare').disabled,true,'observed data stays blocked');
+  assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-1',lotId:null,demoLotId:'demo-paddock-1'});
+  ui.elements.get('lot-demo-intervention').value='diet';ui.elements.get('lot-demo-intervention').onchange();
+  ui.elements.get('demo-lot-compare').onclick();
+  const request=ui.messages.at(-1),lotSnapshot=request.snapshot;
+  assert.equal(request.type,'compareConfigured');
+  assert.ok(lotSnapshot.animals.length>0);
+  assert.ok(lotSnapshot.animals.every(animal=>animal.patch===0));
+  assert.deepEqual(Object.keys(request.referenceConfig).filter(key=>request.referenceConfig[key]!==request.scenarioConfig[key]),['diet']);
+  assert.equal(request.referenceConfig.diet,baseline.config.diet);
+  assert.equal(lotSnapshot.initialSeed,baseline.initialSeed);
+  assert.deepEqual(farm.snapshot(),baseline,'the whole-farm simulator state is not mutated');
+  const demoContext=createDemoLotContext(resolveDemoLot(baseline,0),'diet',request.referenceConfig,request.scenarioConfig);
+  const demoManifest=createDemoLotManifestEnvelope(createConfiguredComparisonManifest(lotSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days}),demoContext);
+  assert.equal(validateDemoLotManifestEnvelope(demoManifest),true);
+  validateConfiguredComparisonManifest(demoManifest.manifest);
+  const result=compareConfiguredScenarios(lotSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
+  ui.deliver('comparison',result);
+  const history=listRuns({getItem:key=>ui.storage.get(key)??null});
+  assert.equal(history.length,1);
+  assert.equal(history[0].lotContext.lotId,'demo-paddock-1');
+  assert.equal(history[0].lotContext.model.status,'demonstrative_unvalidated');
+  assert.deepEqual(history[0].lotContext.animalIds,lotSnapshot.animals.map(animal=>animal.id));
+  assert.match(ui.elements.get('lot-comparison-context').innerHTML,/demo-paddock-1/);
+  ui.elements.get('manifest-export').onclick();
+  assert.equal(JSON.parse(await ui.downloads.at(-1).text()).lotContext.lotId,'demo-paddock-1');
+  const exported=await ui.downloads.at(-1).text();
+  await ui.elements.get('manifest-file').onchange({target:{files:[{text:async()=>exported}]}});
+  assert.equal(ui.messages.at(-1).type,'replayConfigured');
+  assert.deepEqual(ui.readState(),separateLegacySnapshot(baseline).state);
+  ui.elements.get('run-history-select').value=history[0].id;ui.elements.get('run-history-replay').onclick();
+  assert.equal(ui.messages.at(-1).type,'replayConfigured');
+  assert.deepEqual(ui.messages.at(-1).manifest,history[0].manifest);
+  assert.equal(ui.elements.get('demo-lot-status').textContent.includes('não validado'),true);
+  assert.equal(DEMO_LOT_MODEL.status,'demonstrative_unvalidated');
 });
 
 test('lot metrics, environmental edits, THI and linked selection persist through the existing comparison and reload',async()=>{

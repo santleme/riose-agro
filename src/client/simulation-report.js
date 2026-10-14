@@ -42,7 +42,7 @@ function renderModelProvenance(models) {
   ].join('\n');
 }
 
-export function renderSimulationReport(result, manifest) {
+export function renderSimulationReport(result, manifest, {lotContext} = {}) {
   if (!result || typeof result !== 'object' || !Array.isArray(result.rows)) {
     throw new Error('Resultado inválido: informe um resultado de comparação do motor com uma série de linhas.');
   }
@@ -70,6 +70,14 @@ export function renderSimulationReport(result, manifest) {
     metricRow('Custo acumulado no período (R$/lote)', 'Cost', lastRow)
   ].join('\n');
   const modelProvenance = renderModelProvenance(result.scientificProvenance);
+  const lotDetails=lotContext?[
+    '## Lote demonstrativo',
+    `- ID estável: ${valueText(lotContext.lotId)}`,
+    `- IDs de animais simulados: ${Array.isArray(lotContext.animalIds)?lotContext.animalIds.join(', '):unavailable}`,
+    `- Modelo: ${valueText(lotContext.model?.id)}@${valueText(lotContext.model?.version)}; estado: ${valueText(lotContext.model?.status)}`,
+    `- Intervenção única: ${valueText(lotContext.intervention?.factor)} ${valueText(lotContext.intervention?.referenceValue)} → ${valueText(lotContext.intervention?.scenarioValue)}`,
+    '- Dados de snapshots observados não foram usados como estado inicial.'
+  ].join('\n'):null;
 
   return [
     '# Relatório da simulação',
@@ -86,6 +94,7 @@ export function renderSimulationReport(result, manifest) {
     '',
     '### Intervenção',
     configText(manifest?.scenarios?.scenario ?? result.scenarioConfig),
+    ...(lotDetails?['',lotDetails]:[]),
     '',
     '## Principais resultados e diferenças',
     'Valores apresentados lado a lado diretamente da linha final do resultado do motor; não são recalculados pelo relatório.',

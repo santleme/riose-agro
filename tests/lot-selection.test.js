@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {resolveLotSelection, formatLotArea} from '../src/client/lot-selection.js';
+import {resolveLotSelection, formatLotArea, resolveDemoLot, isolateDemoLotSnapshot} from '../src/client/lot-selection.js';
+import {FarmEngine} from '../src/client/engine.js';
 
 const example = JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
 
@@ -50,4 +51,19 @@ test('a valid lot-specific area takes priority over the containing paddock area'
   assert.equal(selection.lots[0].area.value,24000);
   assert.equal(selection.lots[0].area.unit,'m²');
   assert.equal(selection.lots[0].area.sourceLocator,'lot survey');
+});
+
+test('registered demo lot IDs are stable and isolation preserves the shared snapshot without other paddock animals',()=>{
+  const snapshot=new FarmEngine(88,12).snapshot(),before=structuredClone(snapshot);
+  const lot=resolveDemoLot(snapshot,2),again=resolveDemoLot(snapshot,2);
+  assert.equal(lot.lotId,'demo-paddock-3');
+  assert.deepEqual(lot,again);
+  assert.ok(lot.animalIds.length>0);
+  const isolated=isolateDemoLotSnapshot(snapshot,lot);
+  assert.deepEqual(isolated.animals.map(animal=>animal.id),lot.animalIds);
+  assert.ok(isolated.animals.every(animal=>animal.patch===2));
+  assert.equal(isolated.initialSeed,snapshot.initialSeed);
+  assert.deepEqual(snapshot,before);
+  assert.equal(resolveDemoLot(snapshot,9),null);
+  assert.throws(()=>isolateDemoLotSnapshot(snapshot,{...lot,animalIds:[...lot.animalIds,999]}),/não correspondem/);
 });
