@@ -65,7 +65,7 @@ const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
 for (const file of [
   'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
   'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json',
-  'graphics-poc/asset-sources.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
+  'graphics-poc/asset-sources.json', 'graphics-poc/benchmark-approved-scene.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
   'graphics-poc/assets/handling-review-atlas-v1.png', 'graphics-poc/assets/dairy/dairy-holstein-cow.png',
   'graphics-poc/assets/dairy/dairy-girolando-cow.png', 'graphics-poc/assets/dairy/dairy-heifer.png',
   'graphics-poc/assets/dairy/dairy-heifer-calf.png', 'graphics-poc/assets/dairy/dairy-barn.png',

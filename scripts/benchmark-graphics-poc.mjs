@@ -1,6 +1,6 @@
 import {spawn} from 'node:child_process';
-import {access,mkdtemp,readFile,readdir,rm} from 'node:fs/promises';
-import {homedir,tmpdir} from 'node:os';
+import {access,mkdtemp,readFile,readdir,rm,writeFile} from 'node:fs/promises';
+import {arch,cpus,homedir,platform,release,tmpdir,totalmem} from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
 import crypto from 'node:crypto';
@@ -8,15 +8,17 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 const origin = process.env.RIOSE_GRAPHICS_URL ?? 'http://127.0.0.1:8000/graphics-poc/index.html';
-const counts = (process.env.BENCH_HERDS ?? '100,1000,10000').split(',').map(Number);
+const counts = (process.env.BENCH_HERDS ?? '1000,10000').split(',').map(Number);
 const durationMs = Number(process.env.BENCH_DURATION_MS ?? 2500), warmupMs = Number(process.env.BENCH_WARMUP_MS ?? 700);
-const cameraZoom = Number(process.env.BENCH_CAMERA_ZOOM ?? 3.2);
-const repeats = Number(process.env.BENCH_REPEATS ?? 2);
+const cameraZoom = Number(process.env.BENCH_CAMERA_ZOOM ?? 2);
+const repeats = Number(process.env.BENCH_REPEATS ?? 5);
 const graphicsReadyTimeoutMs = Number(process.env.RIOSE_GRAPHICS_READY_TIMEOUT_MS ?? 30_000);
 const gpuMode = process.env.BENCH_GPU_MODE ?? 'software';
 const deviceProfile = process.env.BENCH_DEVICE_PROFILE ?? null;
 if (!['software', 'hardware'].includes(gpuMode)) throw new TypeError('BENCH_GPU_MODE must be software or hardware.');
 if (gpuMode === 'hardware' && !deviceProfile) throw new TypeError('BENCH_DEVICE_PROFILE is required when BENCH_GPU_MODE=hardware (for example, laptop-amd-radeon).');
+const benchmarkUrl = new URL(origin);
+benchmarkUrl.searchParams.set('benchmark-fixture', 'approved-livestock-v1');
 
 async function chromePath() {
   const candidates = [process.env.CHROME_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
@@ -98,87 +100,71 @@ const waitPage = async () => {
   throw new Error(`Graphics PoC did not signal ready within ${graphicsReadyTimeoutMs} ms (${diagnostic}). Check npm run build:graphics-poc and the local server.`);
 };
 
+function assertPhysicalGpuAdapter(adapter, context) {
+  if (!adapter?.available || !adapter.unmasked || adapter.softwareFallback || !adapter.identifiesGtx1060) {
+    throw new Error(`Physical GTX 1060 confirmation failed in ${context}: ${JSON.stringify(adapter)}`);
+  }
+}
+
 try {
   let active = '';
   for (let i = 0; i < 100; i++) { try { active = await readFile(path.join(userData, 'DevToolsActivePort'), 'utf8'); break; } catch { await delay(100); } }
   if (!active) throw new Error('Chromium did not expose a DevTools port.');
   const port = Number(active.split('\n')[0]);
-  const targetResponse = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(origin)}`, {method: 'PUT'});
+  const targetResponse = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(benchmarkUrl)}`, {method: 'PUT'});
   if (!targetResponse.ok) throw new Error(`Chrome DevTools HTTP ${targetResponse.status}; is the Riose server running?`);
   const target = await targetResponse.json(); cdp = new DevTools(target.webSocketDebuggerUrl);
-  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Performance.enable'); await cdp.send('HeapProfiler.enable'); await cdp.send('Page.navigate', {url: origin}); await waitPage();
+  await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Page.navigate', {url: benchmarkUrl.href}); await waitPage();
   const browserInfo = await cdp.send('Browser.getVersion');
-  let browserSystemInfo = null;
-  try {
-    const browserEndpoint = await fetch(`http://127.0.0.1:${port}/json/version`).then(response => response.json());
-    const browserCdp = new DevTools(browserEndpoint.webSocketDebuggerUrl);
-    try { browserSystemInfo = await browserCdp.send('SystemInfo.getInfo'); }
-    finally { browserCdp.close(); }
-  } catch {}
-  const gpu = await cdp.evaluate(`(() => {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    if (!gl) return {available: false, vendor: null, renderer: null, version: null, shadingLanguageVersion: null, maxTextureSize: null, maxViewportDimensions: null, softwareRenderer: null};
-    const debug = gl.getExtension('WEBGL_debug_renderer_info');
-    const vendor = debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
-    const renderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
-    return {
-      available: true,
-      vendor,
-      renderer,
-      version: gl.getParameter(gl.VERSION),
-      shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION),
-      maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
-      maxViewportDimensions: Array.from(gl.getParameter(gl.MAX_VIEWPORT_DIMS)),
-      debugRendererInfoExposed: Boolean(debug),
-      softwareRenderer: /swiftshader|llvmpipe|softpipe|software rasterizer|software rendering/i.test(renderer),
-    };
-  })()`);
-  if (gpuMode === 'hardware' && (!gpu.available || !gpu.debugRendererInfoExposed || gpu.softwareRenderer)) {
-    throw new Error(`Hardware GPU mode requested, but Chromium did not expose a verifiable physical GPU renderer: ${JSON.stringify(gpu)}. Run on the target device with hardware acceleration and WEBGL_debug_renderer_info enabled.`);
-  }
+  const gpu = await cdp.evaluate('window.__graphicsControl.fixture()?.gpuInfo ?? null');
+  if (gpuMode === 'hardware') assertPhysicalGpuAdapter(gpu, 'preflight page');
   const results = [], rendererLoads = [];
   for (let repeat = 1; repeat <= repeats; repeat++) {
     for (const renderer of ['canvas', 'pixi']) {
       await cdp.evaluate('window.__graphicsReady = false');
-      await cdp.send('Page.navigate', {url: origin}); await waitPage();
+      await cdp.send('Page.navigate', {url: benchmarkUrl.href}); await waitPage();
       await cdp.evaluate(`window.__graphicsControl.setRenderer('${renderer}')`);
       await cdp.evaluate('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');
+      const rendererGpu = await cdp.evaluate('window.__graphicsControl.fixture()?.gpuInfo ?? null');
+      if (gpuMode === 'hardware') assertPhysicalGpuAdapter(rendererGpu, `${renderer} page on repeat ${repeat}`);
       rendererLoads.push({repeat, renderer, ...await cdp.evaluate('window.__graphicsControl.load()')});
       for (const count of counts) {
         await cdp.evaluate(`window.__graphicsControl.reset(${count})`);
         await cdp.evaluate(`window.__graphicsControl.setCameraZoom(${cameraZoom})`);
         const focusReady = await cdp.evaluate('window.__graphicsControl.focusAnimal(1)');
         if (!focusReady) throw new Error(`Could not focus benchmark camera on animal #1 for ${count} animals.`);
+        await cdp.evaluate('window.__graphicsControl.selectAnimal(1)');
         await delay(warmupMs);
-        await cdp.send('HeapProfiler.collectGarbage');
         await cdp.evaluate('window.__graphicsControl.clearStats()');
-        const before = Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map(metric => [metric.name, metric.value]));
+        const heapBeforeBytes = await cdp.evaluate('performance.memory?.usedJSHeapSize ?? null');
         await delay(durationMs);
         const stats = await cdp.evaluate('window.__graphicsControl.stats()');
-        const after = Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map(metric => [metric.name, metric.value]));
-        await cdp.send('HeapProfiler.collectGarbage');
-        const heap = Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.map(metric => [metric.name, metric.value]));
+        const heapAfterBytes = await cdp.evaluate('performance.memory?.usedJSHeapSize ?? null');
         const worker = await cdp.evaluate('window.__graphicsControl.tick()');
-        if (stats.simulatedAnimals > 0 && (stats.visibleAnimals + stats.culledAnimals !== stats.simulatedAnimals || stats.accountedAnimals !== stats.visibleAnimals)) {
+        const visibleIds = new Set(stats.visibleAnimalIds), culledIds = new Set(stats.culledAnimalIds);
+        const idsPartitioned = visibleIds.size === stats.visibleAnimals && culledIds.size === stats.culledAnimals
+          && stats.accountedAnimals === stats.visibleAnimals && [...visibleIds].every(id => !culledIds.has(id))
+          && new Set([...visibleIds, ...culledIds]).size === count;
+        if (stats.simulatedAnimals > 0 && (stats.visibleAnimals + stats.culledAnimals !== stats.simulatedAnimals || !idsPartitioned)) {
           throw new Error(`Visibility accounting failed for ${renderer} at ${count}: ${stats.visibleAnimals} visible + ${stats.culledAnimals} culled of ${stats.simulatedAnimals}; ${stats.accountedAnimals} represented.`);
         }
+        if (stats.simulatedAnimals > 0 && (stats.selectedAnimalIds.length !== 1 || stats.selectedAnimalIds[0] !== 1)) throw new Error(`Stable selection failed for ${renderer} at ${count}.`);
         if (stats.simulatedAnimals > 0 && stats.visibleAnimals === 0) throw new Error(`Culling workload has no visible animals for ${renderer} at ${count}; benchmark camera did not reach the herd.`);
-        results.push({repeat, renderer, count, workerRoundTripMs: worker.roundTripMs, engineImplementation: worker.implementation, frameMeanFps: stats.meanFps, frameP95Ms: stats.p95FrameMs, renderSubmissionMedianMs: stats.medianPaintMs, renderSubmissionP95Ms: stats.p95PaintMs, sceneUpdateMedianMs: stats.medianSceneUpdateMs, sceneUpdateP95Ms: stats.p95SceneUpdateMs, motionUpdateMedianMs: stats.medianMotionUpdateMs, meanLodVisualUpdates: stats.meanLodVisualUpdates, simulatedAnimals: stats.simulatedAnimals, visibleAnimals: stats.visibleAnimals, culledAnimals: stats.culledAnimals, visibleByLod: stats.visibleByLod, accountedAnimals: stats.accountedAnimals, animalRenderUnits: stats.animalRenderUnits, herdClusters: stats.herdClusters, visibleSprites: stats.visibleSprites, viewportWidth: stats.viewportWidth, viewportHeight: stats.viewportHeight, cameraZoom: stats.cameraZoom, jsHeapBeforeBytes: before.JSHeapUsedSize, jsHeapAfterBytes: heap.JSHeapUsedSize, layoutDeltaMs: (after.LayoutDuration - before.LayoutDuration) * 1000});
+        results.push({repeat, renderer, count, gpu: rendererGpu, workerRoundTripMs: worker.roundTripMs, engineImplementation: worker.implementation, frameMeanFps: stats.meanFps, frameMedianMs: stats.medianFrameMs, frameP95Ms: stats.p95FrameMs, renderSubmissionMedianMs: stats.medianPaintMs, renderSubmissionP95Ms: stats.p95PaintMs, sceneUpdateMedianMs: stats.medianSceneUpdateMs, sceneUpdateP95Ms: stats.p95SceneUpdateMs, cullingMedianMs: stats.medianCullingMs, cullingP95Ms: stats.p95CullingMs, motionUpdateMedianMs: stats.medianMotionUpdateMs, meanLodVisualUpdates: stats.meanLodVisualUpdates, simulatedAnimals: stats.simulatedAnimals, visibleAnimals: stats.visibleAnimals, culledAnimals: stats.culledAnimals, visibleByLod: stats.visibleByLod, accountedAnimals: stats.accountedAnimals, visibleAnimalIds: stats.visibleAnimalIds, culledAnimalIds: stats.culledAnimalIds, selectedAnimalIds: stats.selectedAnimalIds, animalRenderUnits: stats.animalRenderUnits, herdClusters: stats.herdClusters, visibleSprites: stats.visibleSprites, viewportWidth: stats.viewportWidth, viewportHeight: stats.viewportHeight, devicePixelRatio: stats.devicePixelRatio, renderResolution: stats.renderResolution, cameraZoom: stats.cameraZoom, jsHeapBeforeBytes: heapBeforeBytes, jsHeapAfterBytes: heapAfterBytes, raw: {frameIntervalsMs: stats.frameIntervalsMs, renderSubmissionMs: stats.renderSubmissionSamplesMs, sceneUpdateMs: stats.sceneUpdateSamplesMs, cullingMs: stats.cullingSamplesMs}});
       }
     }
   }
   const median = values => { const sorted = [...values].sort((a, b) => a - b), middle = Math.floor(sorted.length / 2); return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2; };
   const summary = ['canvas', 'pixi'].flatMap(renderer => counts.map(count => {
     const rows = results.filter(row => row.renderer === renderer && row.count === count);
-    return {renderer, count, repeats: rows.length, frameMeanFpsMedian: median(rows.map(row => row.frameMeanFps)), frameP95MsMedian: median(rows.map(row => row.frameP95Ms)), renderSubmissionMedianMs: median(rows.map(row => row.renderSubmissionMedianMs)), sceneUpdateMedianMs: median(rows.map(row => row.sceneUpdateMedianMs)), motionUpdateMedianMs: median(rows.map(row => row.motionUpdateMedianMs)), meanLodVisualUpdatesMedian: median(rows.map(row => row.meanLodVisualUpdates)), jsHeapAfterBytesMedian: median(rows.map(row => row.jsHeapAfterBytes)), workerRoundTripMsMedian: median(rows.map(row => row.workerRoundTripMs)), simulatedAnimals: rows[0]?.simulatedAnimals, visibleAnimals: rows[0]?.visibleAnimals, culledAnimals: rows[0]?.culledAnimals, visibleByLod: rows[0]?.visibleByLod, accountedAnimals: rows[0]?.accountedAnimals, animalRenderUnits: rows[0]?.animalRenderUnits, herdClusters: rows[0]?.herdClusters, visibleSprites: rows[0]?.visibleSprites};
+    return {renderer, count, repeats: rows.length, frameMeanFpsMedian: median(rows.map(row => row.frameMeanFps)), frameMedianMsMedian: median(rows.map(row => row.frameMedianMs)), frameP95MsMedian: median(rows.map(row => row.frameP95Ms)), renderSubmissionMedianMs: median(rows.map(row => row.renderSubmissionMedianMs)), sceneUpdateMedianMs: median(rows.map(row => row.sceneUpdateMedianMs)), cullingMedianMs: median(rows.map(row => row.cullingMedianMs)), motionUpdateMedianMs: median(rows.map(row => row.motionUpdateMedianMs)), meanLodVisualUpdatesMedian: median(rows.map(row => row.meanLodVisualUpdates)), jsHeapAfterBytesMedian: median(rows.map(row => row.jsHeapAfterBytes)), workerRoundTripMsMedian: median(rows.map(row => row.workerRoundTripMs)), simulatedAnimals: rows[0]?.simulatedAnimals, visibleAnimals: rows[0]?.visibleAnimals, culledAnimals: rows[0]?.culledAnimals, visibleByLod: rows[0]?.visibleByLod, accountedAnimals: rows[0]?.accountedAnimals, animalRenderUnits: rows[0]?.animalRenderUnits, herdClusters: rows[0]?.herdClusters, visibleSprites: rows[0]?.visibleSprites};
   }));
-  const measurementNotes = ['Each renderer/repeat starts with a fresh page and Worker; assets use the same browser cache after the first load.', 'Same source scene, atlas images, Worker model, camera zoom and culling bounds for both renderers; close-up camera is centered on stable simulation animal #1.', 'Frame p95 is RAF interval; render submission timing is JavaScript call time and does not wait for the GPU.', 'JS heap is post-GC Chrome Performance.getMetrics for the isolated renderer page; GPU texture memory is unavailable and is not inferred.', 'One-hour Worker round-trip is reported separately from renderer frame samples.'];
+  const measurementNotes = ['Each renderer/repeat starts on a fresh page and Worker; Canvas and Pixi use the same approved-livestock-v1 scene and one approved Nelore image, with low-resolution LOD derived at runtime.', 'Both renderers share the seeded FarmEngine Worker population, projection, camera zoom, visibility bounds, LOD thresholds, herd clustering, stable IDs, and selection behavior.', 'Frame median and p95 are RAF intervals; renderer submission timing measures JavaScript paint/render call duration and does not wait for GPU completion.', 'Culling time is the viewport visibility-filter loop and is reported separately from full scene-update time.', 'JS heap uses window.performance.memory only when exposed, without forced garbage collection; GPU utilization and GPU texture memory are unavailable and are not inferred.', 'One-hour Worker round-trip is reported separately from renderer frame samples.'];
   const grouped=(renderer,count)=>results.filter(row=>row.renderer===renderer&&row.count===count);
   const report = benchmarkReport({
     name:'graphics-poc',runtime:{browser:browserInfo.product,browserRevision:browserInfo.revision,userAgent:browserInfo.userAgent},
-    hardware:{gpuMode,deviceProfile,gpu,browserSystemGpu:browserSystemInfo?.gpu ?? null},
-    workload:{populations:counts.map(animals=>({animals,scope:'FarmEngine and renderer',limit:'FarmEngine and renderer maximum 10000'})),seed:20261012},
+    hardware:{gpuMode,deviceProfile,gpu},
+    workload:{fixtureId:'approved-livestock-v1',assets:['nelore-adult'],populations:counts.map(animals=>({animals,scope:'FarmEngine and renderer',limit:'FarmEngine and renderer maximum 10000'})),seed:20261012},
     configuration:{warmupRuns:1,repetitions:repeats,measurementDurationMs:durationMs},
     limits:{numericKernelMaxAnimalsMeasured:null},
     phases:{
@@ -186,27 +172,30 @@ try {
       ui:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.flatMap(count=>{const rows=grouped(renderer,count);return [
         measurement('ui','sceneUpdate','ms',summarizeSamples(rows.map(row=>row.sceneUpdateMedianMs)),{population:count,renderer}),
         measurement('ui','motionUpdate','ms',summarizeSamples(rows.map(row=>row.motionUpdateMedianMs)),{population:count,renderer}),
+        measurement('ui','culling','ms',summarizeSamples(rows.map(row=>row.cullingMedianMs)),{population:count,renderer}),
       ];}))},
-      layout:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.map(count=>{const rows=grouped(renderer,count);return measurement('layout','layoutDelta','ms',summarizeSamples(rows.map(row=>row.layoutDeltaMs)),{population:count,renderer});}))},
       render:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.flatMap(count=>{const rows=grouped(renderer,count);return [
         measurement('render','frameIntervalP95','ms',summarizeSamples(rows.map(row=>row.frameP95Ms)),{population:count,renderer}),
+        measurement('render','frameIntervalMedian','ms',summarizeSamples(rows.map(row=>row.frameMedianMs)),{population:count,renderer}),
         measurement('render','submissionMedian','ms',summarizeSamples(rows.map(row=>row.renderSubmissionMedianMs)),{population:count,renderer,memory:{jsHeapBeforeBytes:summarizeSamples(rows.map(row=>row.jsHeapBeforeBytes)).median,jsHeapAfterBytes:summarizeSamples(rows.map(row=>row.jsHeapAfterBytes)).median,gpuMemoryBytes:null}}),
       ];}))},
       startup:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>{const rows=rendererLoads.filter(row=>row.renderer===renderer);const metric=renderer==='pixi'?'pixiInitMs':'assetsMs';return [measurement('startup',renderer==='pixi'?'rendererInitialization':'assetLoad','ms',summarizeSamples(rows.map(row=>row[metric])),{renderer})];})},
-      memory:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.map(count=>{const rows=grouped(renderer,count);const observations=rows.map(row=>row.jsHeapAfterBytes).filter(Number.isFinite);return measurement('memory','jsHeapUsedAfterGc','bytes',summarizeSamples(observations),{population:count,renderer,observations,source:'Chrome Performance.getMetrics JSHeapUsedSize after forced GC; GPU allocation is unavailable'});}))},
+      memory:{status:'measured',measurements:['canvas','pixi'].flatMap(renderer=>counts.map(count=>{const rows=grouped(renderer,count);const observations=rows.map(row=>row.jsHeapAfterBytes).filter(Number.isFinite);return measurement('memory','jsHeapUsed','bytes',summarizeSamples(observations),{population:count,renderer,observations,source:'window.performance.memory.usedJSHeapSize; no forced GC; GPU allocation is unavailable'});}))},
     },
     timingBoundaries:[
       {phase:'worker',timed:['One-hour Worker request and reply round-trip.'],notTimed:['Renderer frame sampling and browser startup.']},
       {phase:'ui',timed:['Scene and motion update JavaScript phase measurements.'],notTimed:['GPU completion and Worker round-trip.']},
-      {phase:'layout',timed:['Whole-page layout duration delta across the workload.'],notTimed:['GPU rendering time.']},
       {phase:'render',timed:['RAF frame intervals and JavaScript render-submission call duration.'],notTimed:['GPU completion, texture memory and Worker request/reply.']},
       {phase:'startup',timed:['Canvas asset loading or Pixi renderer initialization as reported.'],notTimed:['Simulation ticks and steady-state frame loop.']},
-      {phase:'memory',timed:['JavaScript heap after forced garbage collection, sampled per renderer and population.'],notTimed:['GPU allocation, process RSS and retained per-object attribution.']},
+      {phase:'memory',timed:['window.performance.memory JS heap observations before and after each measured case, when exposed.'],notTimed:['Forced garbage collection, GPU allocation, process RSS and retained per-object attribution.']},
     ],
-    results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},gpu:{mode:gpuMode,deviceProfile, ...gpu, browserSystemInfo:browserSystemInfo?.gpu ?? null},url:origin,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
+    results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},gpu:{mode:gpuMode,deviceProfile, ...gpu},url:benchmarkUrl.href,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
     limitations:[...measurementNotes, ...(gpuMode === 'software' ? ['Software mode is for harness smoke checks only and cannot qualify Canvas versus Pixi on supported physical GPUs.'] : ['A hardware capture describes one device profile only; repeat on every supported GPU/browser profile before making a renderer decision.'])],
   });
-  console.log(JSON.stringify(report, null, 2));
+  report.results.environment = {os: `${platform()} ${release()}`, architecture: arch(), cpuModel: cpus()[0]?.model ?? null, logicalCores: cpus().length, systemMemoryBytes: totalmem(), gpuDriverVersion: process.env.BENCH_GPU_DRIVER_VERSION ?? null};
+  const reportJson = JSON.stringify(report, null, 2);
+  if (process.env.BENCH_OUTPUT_PATH) await writeFile(path.resolve(process.env.BENCH_OUTPUT_PATH), reportJson);
+  console.log(reportJson);
 } finally {
   if (cdp) { await cdp.send('Browser.close').catch(() => {}); cdp.close(); }
   if (browser.exitCode === null) { browser.kill('SIGTERM'); await Promise.race([new Promise(resolve => browser.once('exit', resolve)), delay(1000)]); if (browser.exitCode === null) browser.kill('SIGKILL'); }
