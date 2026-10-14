@@ -16,11 +16,14 @@ import {combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot} f
 
 const $=                                   (id       )=>document.getElementById(id)     ;
 if(new URLSearchParams(location.search).has('scenePreview'))document.body.classList.add('scene-preview');
+const benchmarkRenderMode=new URLSearchParams(location.search).has('benchRender');
+if(benchmarkRenderMode){window.__rioseBenchmarkReady=false;window.__rioseBenchmarkStateReady=false;window.__rioseBenchmarkAssetsReady=false;window.__rioseBenchmarkDrawProbe={completed:0};}
+function updateBenchmarkRenderReady(){if(benchmarkRenderMode&&window.__rioseBenchmarkStateReady&&window.__rioseBenchmarkAssetsReady)window.__rioseBenchmarkReady=true;}
 const wasmSelected=/(?:^|[?&])engine=wasm(?:&|$)/.test(location.search);
 const workerUrl=new URL('./worker.js',import.meta.url);
 if(wasmSelected)workerUrl.searchParams.set('engine','wasm');
 const worker=new Worker(workerUrl,{type:'module'});
-let state,viewState,snapshotViewState,selected=1,running=true,speed=1,pending=false,lastTick=0,comparison,requestCompare=false,comparisonSnapshot,comparisonManifest,comparisonEnvironmentState=null,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false,pendingSnapshotAction=null;
+let state,viewState,snapshotViewState,selected=1,running=!benchmarkRenderMode,speed=1,pending=false,lastTick=0,comparison,requestCompare=false,comparisonSnapshot,comparisonManifest,comparisonEnvironmentState=null,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false,pendingSnapshotAction=null;
 const stateRequests=[];
 function postWorkerMessage(message){worker.postMessage({...message,protocolVersion:WORKER_PROTOCOL_VERSION});}
 function requestState(message){stateRequests.push(message.type);postWorkerMessage(message);}
@@ -132,8 +135,8 @@ function buildTerrain(seed=9){
 }
 fetch('/assets/manifest.json').then(response=>{if(!response.ok)throw new Error('manifest');return response.json();}).then(manifest=>{
   let loaded=0,failed=false;const atlases=Object.entries(manifest.atlases);
-  for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length&&!failed){for(const asset of manifest.assets)assetFrames[asset.id]=asset.frame;assetReady=true;buildTerrain();}};atlas.onerror=()=>{failed=true;buildTerrain();};atlas.src=definition.image;}
-}).catch(()=>buildTerrain());
+  for(const [id,definition] of atlases){const atlas=new Image();assetAtlases[id]=atlas;atlas.onload=()=>{loaded++;if(loaded===atlases.length&&!failed){for(const asset of manifest.assets)assetFrames[asset.id]=asset.frame;assetReady=true;buildTerrain();if(benchmarkRenderMode){window.__rioseBenchmarkAssetsReady=true;updateBenchmarkRenderReady();}}};atlas.onerror=()=>{failed=true;buildTerrain();if(benchmarkRenderMode){window.__rioseBenchmarkAssetsReady=true;updateBenchmarkRenderReady();}};atlas.src=definition.image;}
+}).catch(()=>{buildTerrain();if(benchmarkRenderMode){window.__rioseBenchmarkAssetsReady=true;updateBenchmarkRenderReady();}});
 const worldScenarioSelect=$('world-scenario');
 if(worldScenarioSelect)worldScenarioSelect.addEventListener('change',()=>{worldScenarioId=worldScenarioSelect.value;const scenario=worldScenarioData?.scenarios.find(item=>item.id===worldScenarioId);if(scenario&&$('world-title'))$('world-title').textContent=scenario.name;terrainVisualKey='';buildTerrain(state?.initialSeed??state?.seed??9);});
 fetch('/assets/scenarios.json').then(response=>{if(!response.ok)throw new Error('scenarios');return response.json();}).then(data=>{worldScenarioData=data;if(worldScenarioSelect){worldScenarioSelect.replaceChildren(...data.scenarios.map(scenario=>new Option(scenario.name,scenario.id)));worldScenarioSelect.value=worldScenarioId;}const scenario=data.scenarios.find(item=>item.id===worldScenarioId);if(scenario&&$('world-title'))$('world-title').textContent=scenario.name;terrainVisualKey='';buildTerrain(state?.initialSeed??state?.seed??9);}).catch(()=>{});
@@ -163,9 +166,18 @@ function draw(time       ){
     const hour=state.hour%24;if(hour>=20||hour<6)rect(ctx,0,0,576,336,'#183c4c70');
   }
   ctx.restore();
+  if(benchmarkRenderMode)window.__rioseBenchmarkDrawProbe.completed++;
   if(running&&!pending&&!loadingScenario&&time-lastTick>1000/speed){requestState({type:'tick',hours:1});pending=true;lastTick=time;}
   requestAnimationFrame(draw);
 }
+if(benchmarkRenderMode)window.__rioseBenchmarkApplySnapshot=snapshot=>{
+  if(!snapshot||!Array.isArray(snapshot.animals)||!snapshot.config)throw new Error('Benchmark snapshot is invalid');
+  const separated=separateLegacySnapshot(snapshot);
+  state=separated.state;snapshotViewState=separated.viewState;viewState=createAnimalViewStateDTO(state.animals,snapshotViewState);
+  selected=state.animals[0]?.id??1;running=false;pending=false;animalDrawOrderDirty=true;positions.clear();terrainVisualKey='';
+  buildTerrain(state.initialSeed??state.seed??9);updateUI();renderLotSelection();
+  return {animals:state.animals.length,drawFrames:window.__rioseBenchmarkDrawProbe.completed,domNodes:document.getElementsByTagName('*').length,animalRows:$('animals').querySelectorAll('[data-animal]').length};
+};
 function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=288-(288-panX)*next/zoom;panY=168-(168-panY)*next/zoom;zoom=next;limitPan();}
 function limitPan(){panX=Math.max(576-576*zoom,Math.min(0,panX));panY=Math.max(336-336*zoom,Math.min(0,panY));}
 function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.left)*576/b.width,y:(e.clientY-b.top)*336/b.height};}
@@ -462,7 +474,7 @@ worker.onmessage=e=>{
   try{response=normalizeWorkerResponse(e.data);}catch(error){rejectWorkerResponse(error.message);return;}
   if(response.type==='state'){
     if(!['reset','load','snapshot'].includes(stateRequests[0])){reportUnexpectedWorkerResponse(`Unexpected state response for request "${stateRequests[0]??'none'}".`);return;}
-    const request=stateRequests.shift(),separated=separateLegacySnapshot(response.state);state=separated.state;snapshotViewState=separated.viewState;viewState=createAnimalViewStateDTO(state.animals,snapshotViewState);animalDrawOrderDirty=true;pending=false;
+    const request=stateRequests.shift(),separated=separateLegacySnapshot(response.state);state=separated.state;snapshotViewState=separated.viewState;viewState=createAnimalViewStateDTO(state.animals,snapshotViewState);animalDrawOrderDirty=true;pending=false;if(benchmarkRenderMode){window.__rioseBenchmarkStateReady=true;updateBenchmarkRenderReady();}
     $('engine-status').textContent=response.engineImplementation==='riose-core-wasm/0.1.0'?'MOTOR LOCAL · RUST/WASM':'MOTOR LOCAL · JAVASCRIPT';
     if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}
     buildTerrain(state.initialSeed??state.seed);updateUI();renderLotSelection();if(request==='snapshot')completeSnapshotAction();
