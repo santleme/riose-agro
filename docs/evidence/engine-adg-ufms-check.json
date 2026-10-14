@@ -15,7 +15,7 @@
       "environment-model.js",
       "metabolism-wasm.js"
     ],
-    "sha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
+    "sha256": "85e02f542c5f0b3df0fa7a38ca2f11b2ca9d3b71c1bb8e9324980b1489758170",
     "fitted": false,
     "seed": 20261012,
     "configuration": {

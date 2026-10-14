@@ -21,7 +21,7 @@
   "transferFromCper": {
     "cperSourceDoi": "10.15482/USDA.ADC/1528520",
     "cperEngineSha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
-    "engineSha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
+    "engineSha256": "85e02f542c5f0b3df0fa7a38ca2f11b2ca9d3b71c1bb8e9324980b1489758170",
     "engineSourceFiles": [
       "engine.js",
       "animal-view-state.js",
