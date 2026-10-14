@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "id": "livestock.nelore.adult.walk.imagegen.v1",
+  "category": "livestock",
+  "state": "walk",
+  "direction": "three-quarter-front-left",
+  "sourceFile": "assets/source/livestock/nelore-walk-cycle-4f-source.png",
+  "file": "assets/candidates/livestock/animation-v1/nelore-walk-cycle-4f.png",
+  "sourceTool": "OpenAI ImageGen; source art based on project Nelore sprite",
+  "license": {
+    "state": "project-generated-review",
+    "notes": "Verify current generation terms before public or commercial release."
+  },
+  "review": {
+    "status": "REVIEW",
+    "art": "unreviewed",
+    "technical": "alpha-cleaned-and-frame-normalized"
+  },
+  "frameCount": 4,
+  "frameSize": {
+    "width": 566,
+    "height": 458
+  },
+  "resolution": "source pixels; no runtime scaling baked in",
+  "footprint": [
+    1,
+    1
+  ],
+  "collision": {
+    "shape": "ellipse",
+    "width": 0.72,
+    "height": 0.3
+  },
+  "placements": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "width": 566,
+      "height": 458,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 26,
+        "y": 17,
+        "width": 514,
+        "height": 429
+      }
+    },
+    {
+      "frame": 1,
+      "x": 566,
+      "y": 0,
+      "width": 566,
+      "height": 458,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 578,
+        "y": 12,
+        "width": 542,
+        "height": 434
+      }
+    },
+    {
+      "frame": 2,
+      "x": 1132,
+      "y": 0,
+      "width": 566,
+      "height": 458,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1149,
+        "y": 13,
+        "width": 531,
+        "height": 433
+      }
+    },
+    {
+      "frame": 3,
+      "x": 1698,
+      "y": 0,
+      "width": 566,
+      "height": 458,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1715,
+        "y": 12,
+        "width": 532,
+        "height": 434
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "sourceSceneId": "rural-diorama-composition-v4-grounding-v2-gate-v2-water-v2-feed-v2-review",
+  "seed": 84018,
+  "terrainProposal": "homestead-high-ground",
+  "selection": "pending-visual-review",
+  "proposals": [
+    {
+      "id": "proposal-homestead-hub",
+      "label": "Sede central · manejo no primeiro plano",
+      "description": "Composição piloto preservada como referência de leitura.",
+      "scene": "graphics-poc/generated/terrain-v5/composition-proposals/proposal-homestead-hub.json",
+      "map": "terrain-homestead-hub"
+    },
+    {
+      "id": "proposal-service-corridor",
+      "label": "Corredor de serviço compacto",
+      "description": "Aproxima galpão, manejo e água de apoio ao eixo de circulação.",
+      "scene": "graphics-poc/generated/terrain-v5/composition-proposals/proposal-service-corridor.json",
+      "map": "terrain-service-corridor"
+    },
+    {
+      "id": "proposal-north-yard",
+      "label": "Sede no alto · pátio de serviço ao centro",
+      "description": "Leva a sede para o ombro norte e organiza galpão, manejo e água em uma sequência central.",
+      "scene": "graphics-poc/generated/terrain-v5/composition-proposals/proposal-north-yard.json",
+      "map": "terrain-north-yard"
+    }
+  ]
+}

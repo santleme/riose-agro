@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RIOSE · Fazenda brasileira V4</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./ranch-v4.css">
+  </head>
+  <body>
+    <main class="presentation">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">R</span><div><strong>RIOSE AGRO</strong><small>WORLD BUILDER · PILOTO DE CORTE</small></div></div>
+        <div class="scene-title"><span class="eyebrow">COMPOSIÇÃO SEMÂNTICA · V4</span><h1>Fazenda brasileira</h1></div>
+        <div class="toolbar" aria-label="Controles da câmera">
+          <button id="zoom-out" aria-label="Diminuir zoom">−</button><button id="zoom-home" aria-label="Enquadrar cena">Enquadrar</button><button id="zoom-in" aria-label="Aumentar zoom">+</button>
+        </div>
+      </header>
+      <section id="stage" class="stage" aria-label="Cena isométrica da fazenda">
+        <div class="stage-vignette"></div>
+        <div class="caption"><span class="live-dot"></span> CORTE · 3 PIQUETES · CURRAL · RESERVATÓRIO <span id="asset-count"></span></div>
+        <output id="scene-error" hidden></output>
+      </section>
+      <footer class="footer"><span>ARRASTE PARA EXPLORAR</span><span>SPRITES REAIS · PIXIJS 8 · PROJEÇÃO ISOMÉTRICA 2:1</span><span id="scene-seed">SEED VISUAL —</span></footer>
+    </main>
+    <script type="module" src="./dist/ranch-v4.js"></script>
+  </body>
+</html>

@@ -31,6 +31,7 @@
     "prefabs": {"type": "array", "items": {"$ref": "#/$defs/prefab"}},
     "terrainTiles": {"type": "array", "items": {"$ref": "#/$defs/terrainTile"}},
     "visualGroups": {"type": "array", "items": {"$ref": "#/$defs/visualGroup"}},
+    "visualVariant": {"$ref": "#/$defs/visualVariant"},
     "layerOrder": {"type": "array", "items": {"enum": ["terrain", "infrastructure", "livestock", "overlays"]}, "uniqueItems": true},
     "events": {"type": "array", "items": {"$ref": "#/$defs/eventEnvelope"}}
   },
@@ -41,7 +42,7 @@
       "required": ["x", "y", "unit"],
       "properties": {
         "x": {"type": "number"}, "y": {"type": "number"},
-        "unit": {"enum": ["grid-cell", "world-meter"]},
+        "unit": {"enum": ["grid-cell", "world-cell", "world-meter"]},
         "z": {"type": "number", "default": 0}
       }
     },
@@ -49,6 +50,21 @@
       "type": "object", "additionalProperties": false,
       "required": ["columns", "rows"],
       "properties": {"columns": {"type": "number", "exclusiveMinimum": 0}, "rows": {"type": "number", "exclusiveMinimum": 0}}
+    },
+    "spatialGeometry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reviewRequired", "units", "groundContactAnchor", "collisionPolygon", "visualHeightCells"],
+      "properties": {
+        "status": {"enum": ["measured", "inferred-review-required", "annotated", "missing-source"]},
+        "reviewRequired": {"type": "boolean"},
+        "units": {"const": "world-cell"},
+        "groundContactAnchor": {"type": "object", "additionalProperties": false, "required": ["x", "y", "units"], "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "units": {"const": "normalized-sprite"}}},
+        "collisionPolygon": {"type": "array", "minItems": 3, "items": {"type": "object", "additionalProperties": false, "required": ["x", "y"], "properties": {"x": {"type": "number"}, "y": {"type": "number"}}}},
+        "visualBoundingBoxPx": {"type": "object", "additionalProperties": false, "required": ["x", "y", "width", "height"], "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "width": {"type": "number"}, "height": {"type": "number"}}},
+        "visualHeightCells": {"type": "number", "exclusiveMinimum": 0},
+        "clearanceCells": {"type": "number", "minimum": 0},
+        "supportedOrientations": {"type": "array", "items": {"type": "integer", "multipleOf": 90}, "uniqueItems": true}
+      }
     },
     "visualState": {
       "type": "object", "additionalProperties": false,
@@ -117,6 +133,7 @@
         "assetId": {"$ref": "#/$defs/id"},
         "position": {"$ref": "#/$defs/position"},
         "footprint": {"$ref": "#/$defs/footprint"},
+        "spatialGeometry": {"$ref": "#/$defs/spatialGeometry"},
         "layer": {"enum": ["infrastructure", "livestock", "overlays"]},
         "state": {"$ref": "#/$defs/visualState"},
         "blocking": {"type": "boolean", "default": true},
@@ -156,6 +173,18 @@
         "mode": {"enum": ["sampled-miniature", "operational"]},
         "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
         "visualEntityIds": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}
+      }
+    },
+    "visualVariant": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "classification", "label", "seed", "rule"],
+      "properties": {
+        "schemaVersion": {"const": 1},
+        "classification": {"enum": ["visual-only-unvalidated"]},
+        "label": {"type": "string", "minLength": 1},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "dryCoverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "rule": {"$ref": "#/$defs/id"}
       }
     },
     "eventEnvelope": {

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RIOSE · Anotação de geometria de assets</title>
+    <link rel="stylesheet" href="./asset-geometry-annotator.css">
+  </head>
+  <body>
+    <header>
+      <div><strong>RIOSE AGRO</strong><small>ANOTAÇÃO ESPACIAL DE ASSETS</small></div>
+      <label>Asset<select id="asset"></select></label>
+      <label>Revisão<select id="review"><option value="draft">Rascunho · revisão pendente</option><option value="reviewed">Revisado</option></select></label>
+      <label>Revisor visual<input id="reviewer" placeholder="Obrigatório ao marcar revisado"></label>
+      <button id="undo" type="button">Desfazer ponto</button>
+      <button id="clear" type="button">Limpar polígono</button>
+      <button id="download" type="button">Baixar anotações JSON</button>
+      <label class="import">Importar JSON<input id="import" type="file" accept="application/json,.json"></label>
+      <span id="status">Carregando catálogo…</span>
+    </header>
+    <main>
+      <section class="canvas-panel">
+        <canvas id="canvas" width="1000" height="720" aria-label="Sprite selecionado com polígonos espaciais"></canvas>
+        <p>Clique nos cantos aparentes do contato do objeto com o chão, em ordem ao redor da base. Evite telhados, beirais, sombras e folhagem. O polígono usa o pivô e a escala Pixi do catálogo em world-cell. A anotação é uma estimativa visual; ela não comprova o footprint físico.</p>
+      </section>
+      <aside>
+        <h1>Geometria espacial</h1>
+        <p><span class="swatch trace"></span>Traço alfa inferior usado como candidato conservador de colisão.</p>
+        <p><span class="swatch support"></span>Silhueta de suporte mais ampla, somente evidência visual.</p>
+        <p><span class="swatch annotation"></span>Polígono que será exportado como anotação.</p>
+        <pre id="details">Selecione um asset e anote a base.</pre>
+      </aside>
+    </main>
+    <script type="module" src="./asset-geometry-annotator.js"></script>
+  </body>
+</html>

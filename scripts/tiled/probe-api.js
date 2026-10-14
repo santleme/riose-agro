@@ -1,0 +1,1 @@
+tiled.log(JSON.stringify({version: tiled.version, mapFormats: tiled.mapFormats, tilesetFormats: tiled.tilesetFormats, tileMap: typeof TileMap, tileLayer: typeof TileLayer, imageLayer: typeof ImageLayer, objectGroup: typeof ObjectGroup, mapObject: typeof MapObject, tileset: typeof Tileset, textFile: typeof TextFile}));

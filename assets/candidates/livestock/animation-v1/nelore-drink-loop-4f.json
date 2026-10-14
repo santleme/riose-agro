@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "id": "livestock.nelore.adult.drink.imagegen.v1",
+  "category": "livestock",
+  "state": "drink",
+  "direction": "three-quarter-front-left",
+  "sourceFile": "assets/source/livestock/nelore-drink-loop-4f-source.png",
+  "file": "assets/candidates/livestock/animation-v1/nelore-drink-loop-4f.png",
+  "sourceTool": "OpenAI ImageGen; source art based on project Nelore sprite",
+  "license": {
+    "state": "project-generated-review",
+    "notes": "Verify current generation terms before public or commercial release."
+  },
+  "review": {
+    "status": "REVIEW",
+    "art": "unreviewed",
+    "technical": "alpha-cleaned-and-frame-normalized"
+  },
+  "frameCount": 4,
+  "frameSize": {
+    "width": 567,
+    "height": 476
+  },
+  "resolution": "source pixels; no runtime scaling baked in",
+  "footprint": [
+    1,
+    1
+  ],
+  "collision": {
+    "shape": "ellipse",
+    "width": 0.72,
+    "height": 0.3
+  },
+  "placements": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "width": 567,
+      "height": 476,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 17,
+        "y": 17,
+        "width": 532,
+        "height": 447
+      }
+    },
+    {
+      "frame": 1,
+      "x": 567,
+      "y": 0,
+      "width": 567,
+      "height": 476,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 579,
+        "y": 16,
+        "width": 543,
+        "height": 448
+      }
+    },
+    {
+      "frame": 2,
+      "x": 1134,
+      "y": 0,
+      "width": 567,
+      "height": 476,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1146,
+        "y": 16,
+        "width": 543,
+        "height": 448
+      }
+    },
+    {
+      "frame": 3,
+      "x": 1701,
+      "y": 0,
+      "width": 567,
+      "height": 476,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1714,
+        "y": 12,
+        "width": 541,
+        "height": 452
+      }
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import compiledGeometry from './asset-geometry-v1.json' with {type: 'json'};
+
 const LAYER_ORDER = ['terrain', 'infrastructure', 'livestock', 'overlays'];
 const VISUAL_STATES = new Set(['default', 'idle', 'grazing', 'walking', 'feeding', 'drinking', 'resting', 'milking', 'waiting', 'parked', 'connected', 'stocked', 'seasonal']);
 
@@ -168,17 +170,34 @@ export function adaptMainComposerScene(source, rendererManifest) {
       });
       continue;
     }
-    const footprint = asset.footprint ?? [1, 1];
+    const geometry = asset.spatialGeometry ?? compiledGeometry.assets[placement.assetId];
+    if (!geometry || geometry.geometryStatus === 'missing-source' || geometry.units !== 'world-cell') {
+      throw new TypeError(`Asset ${placement.assetId} has no compiled world-cell geometry`);
+    }
+    const footprint = geometry.groundFootprintCandidate;
+    if (!footprint || !Number.isFinite(footprint.columns) || !Number.isFinite(footprint.rows)) {
+      throw new TypeError(`Asset ${placement.assetId} has no measurable ground footprint candidate`);
+    }
     const category = asset.category;
-    const isNonBlocking = ['fence', 'road', 'vegetation', 'technology'].includes(category);
     prefabs.push({
       prefabId: `composer-${placement.id}`,
       assetId: placement.assetId,
-      position: {x: col, y: row, unit: 'grid-cell'},
-      footprint: {columns: footprint[0], rows: footprint[1]},
+      position: {x: col, y: row, unit: 'world-cell'},
+      footprint: {columns: footprint.columns, rows: footprint.rows},
+      spatialGeometry: {
+        status: geometry.geometryStatus,
+        reviewRequired: geometry.reviewRequired,
+        units: geometry.units,
+        groundContactAnchor: geometry.groundContactAnchor,
+        collisionPolygon: geometry.collisionPolygonCandidate,
+        visualBoundingBoxPx: geometry.visualBoundingBoxPx,
+        visualHeightCells: geometry.visualHeightCells,
+        clearanceCells: geometry.clearanceCells,
+        supportedOrientations: geometry.supportedOrientations,
+      },
       layer: 'infrastructure',
       state: {stateId: stateId(placement)},
-      blocking: !isNonBlocking && asset.blocking,
+      blocking: geometry.collisionPolicy === 'blocking',
       ...(placement.properties?.prefabInstanceId ? {compositionId: placement.properties.prefabInstanceId} : {}),
       ...(placement.properties?.prefabId ? {sourcePrefabId: placement.properties.prefabId} : {}),
       rotationDegrees: ((placement.rotation ?? 0) % 360 + 360) % 360,

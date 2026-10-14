@@ -83,15 +83,34 @@ function orientedFootprint(prefab) {
 }
 
 export function placementValidation(prefab, position, columns, rows, others = [], zones = []) {
-  const footprint = orientedFootprint(prefab), width = footprint.columns, height = footprint.rows;
-  if (position.x < 0 || position.y < 0 || position.x + width > columns || position.y + height > rows) return {valid: false, reason: 'out-of-bounds'};
-  const overlaps = prefab.blocking !== false && others.some(other => {
-    if (other.prefabId === prefab.prefabId || other.blocking === false) return false;
-    const a = {x: position.x, y: position.y, w: width, h: height};
-    const otherFootprint = orientedFootprint(other);
-    const b = {x: other.position.x, y: other.position.y, w: otherFootprint.columns, h: otherFootprint.rows};
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-  });
+  if (!prefab?.footprint || ![prefab.footprint.columns, prefab.footprint.rows].every(value => Number.isFinite(value) && value > 0)) {
+    return {valid: false, reason: 'geometry-missing'};
+  }
+  const dimensions = orientedFootprint(prefab), width = dimensions.columns, height = dimensions.rows;
+  const polygonFor = (item, at = item.position) => {
+    const source = item.spatialGeometry?.collisionPolygon;
+    const turns = Number.isFinite(item.rotationDegrees) ? item.rotationDegrees : (item.rotationSteps ?? 0) * 90;
+    const radians = turns * Math.PI / 180;
+    const cos = Math.cos(radians), sin = Math.sin(radians);
+    if (Array.isArray(source) && source.length >= 3) return source.map(point => ({x: at.x + point.x * cos - point.y * sin, y: at.y + point.x * sin + point.y * cos}));
+    const size = orientedFootprint(item);
+    return [{x: at.x, y: at.y}, {x: at.x + size.columns, y: at.y}, {x: at.x + size.columns, y: at.y + size.rows}, {x: at.x, y: at.y + size.rows}];
+  };
+  const boundsOf = polygon => ({minX: Math.min(...polygon.map(point => point.x)), maxX: Math.max(...polygon.map(point => point.x)), minY: Math.min(...polygon.map(point => point.y)), maxY: Math.max(...polygon.map(point => point.y))});
+  const collision = (first, second) => {
+    const a = polygonFor(first), b = polygonFor(second);
+    for (const polygon of [a, b]) for (let index = 0; index < polygon.length; index++) {
+      const start = polygon[index], end = polygon[(index + 1) % polygon.length];
+      const axis = {x: -(end.y - start.y), y: end.x - start.x};
+      const project = points => points.map(point => point.x * axis.x + point.y * axis.y);
+      const pa = project(a), pb = project(b);
+      if (Math.max(...pa) <= Math.min(...pb) || Math.max(...pb) <= Math.min(...pa)) return false;
+    }
+    return true;
+  };
+  const polygon = polygonFor(prefab, position), bounds = boundsOf(polygon);
+  if (bounds.minX < 0 || bounds.minY < 0 || bounds.maxX > columns || bounds.maxY > rows) return {valid: false, reason: 'out-of-bounds'};
+  const overlaps = prefab.blocking !== false && others.some(other => other.prefabId !== prefab.prefabId && other.blocking !== false && collision({...prefab, position}, other));
   if (overlaps) return {valid: false, reason: 'collision'};
   const rules = prefab.placementRules ?? {};
   if (rules.allowedZoneKinds?.length) {

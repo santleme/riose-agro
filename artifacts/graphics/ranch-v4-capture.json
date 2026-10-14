@@ -1,0 +1,57 @@
+{
+  "browser": "/home/lucas_coimbra/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome",
+  "sceneId": "rural-diorama-composition-v4-grounding-v2-gate-v2-water-v2-feed-v2-review",
+  "mapSceneId": "rural-diorama-composition-v4-grounding-v2-gate-v2-water-v2-feed-v2-review-proposal-homestead-hub",
+  "mapSource": "Tiled TMJ 1.12.2",
+  "terrainProposal": "homestead-high-ground",
+  "terrainSeed": 84018,
+  "surfaceMaterialGrammar": "pasture-ground-grammar-v1",
+  "surfaceMaterialZones": 7,
+  "surfaceMaterialTypes": [
+    "dry-pasture",
+    "compacted-ground",
+    "muddy-ground"
+  ],
+  "placements": 82,
+  "uniqueAssets": 28,
+  "animatedCattle": 4,
+  "animationState": "graze",
+  "animationFrames": 4,
+  "errors": [],
+  "navigation": {
+    "source": "visual-presentation-only",
+    "unit": "world-cell",
+    "agentId": "v4-placement-054",
+    "routeCells": 12,
+    "blockedStructureEnvelopes": 7,
+    "fenceSegments": 8,
+    "simulationState": null,
+    "position": {
+      "x": 7.5,
+      "y": 6.271805585508696
+    },
+    "animationState": "walk",
+    "animationStateSource": "visual-demonstration",
+    "walkFramesAdvance": true,
+    "isTranslating": true,
+    "finished": false
+  },
+  "cameraZoom": 0.7858624577226607,
+  "terrainWidthOccupancy": 91,
+  "viewport": {
+    "width": 1600,
+    "height": 1000
+  },
+  "canvas": {
+    "width": 1532,
+    "height": 869
+  },
+  "performance": {
+    "sampledFrames": 120,
+    "medianFrameMs": 16.7,
+    "p95FrameMs": 16.7,
+    "medianFps": 59.9,
+    "loadEventMs": 77.9,
+    "transferredResourceBytes": 16520448
+  }
+}

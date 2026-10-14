@@ -7,14 +7,26 @@ import {createServer} from '../src/server/server.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from '../graphics-poc/asset-contract.js';
 import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
 import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
+import {assembleFarmMacrostructure, occupiedWorldCells} from '../graphics-poc/assembly-specs-v6.js';
+import {buildFenceLoop, buildModularCorralPrefab, compileFenceNetwork, compileRoadNetwork, socketsConnect, solveMacroPlacement} from '../graphics-poc/spatial-assembly-v6.js';
 import {enrichRendererManifest} from '../scripts/assets/runtime-asset-provenance.mjs';
+import {buildAssetRegistry, validateAssetRegistry} from '../graphics-poc/asset-registry.js';
+import {createWaterStressVisualVariant} from '../graphics-poc/visual-scenario-variants.js';
+import {assertSceneCommandAllowed, sceneExecutionAvailability} from '../graphics-poc/execution-eligibility.js';
 import {clusterFarAnimals, composePrefabs, distanceToViewportCenter, distributePrefab, farmPositionToGrid, intersectsViewport, paintZoneTerrainTiles, placementFits, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from '../graphics-poc/contract.js';
 
 const scene = JSON.parse(await readFile(new URL('../graphics-poc/scene.json', import.meta.url), 'utf8'));
 const dairyScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/dairy.json', import.meta.url), 'utf8'));
+const waterStressScene = JSON.parse(await readFile(new URL('../graphics-poc/scenes/water-stress-visual.json', import.meta.url), 'utf8'));
 const schema = JSON.parse(await readFile(new URL('../schemas/visual-scene.schema.json', import.meta.url), 'utf8'));
 const renderManifest = JSON.parse(await readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8'));
 const assetSourceManifest = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
+const assetRegistry = JSON.parse(await readFile(new URL('../graphics-poc/asset-registry.json', import.meta.url), 'utf8'));
+const compiledAssetGeometry = JSON.parse(await readFile(new URL('../graphics-poc/asset-geometry-v1.json', import.meta.url), 'utf8'));
+const macroProposalManifest = JSON.parse(await readFile(new URL('../graphics-poc/generated/terrain-v5/composition-proposals/proposals.json', import.meta.url), 'utf8'));
+const macroProposalSelection = JSON.parse(await readFile(new URL('../graphics-poc/generated/terrain-v5/composition-proposals/selection.json', import.meta.url), 'utf8'));
+const terrainMaterialManifest = JSON.parse(await readFile(new URL('../graphics-poc/generated/terrain-v5/proposals.json', import.meta.url), 'utf8'));
+const spatialV6TiledMap = JSON.parse(await readFile(new URL('../graphics-poc/generated/spatial-v6-beef-84018.tmj', import.meta.url), 'utf8'));
 const validate = new Ajv2020({allErrors: true, strict: true, strictRequired: false}).compile(schema);
 
 test('shared Composer tools remain available in both production-system scenes', () => {
@@ -22,6 +34,278 @@ test('shared Composer tools remain available in both production-system scenes', 
   assert.equal(toolAvailableInSystem('both', 'dairy'), true);
   assert.equal(toolAvailableInSystem('beef', 'dairy'), false);
   assert.equal(toolAvailableInSystem('dairy', 'beef'), false);
+});
+
+test('asset registry is reproducible and provides spatial metadata for every render-manifest sprite', () => {
+  assert.deepEqual(validateAssetRegistry(assetRegistry), []);
+  assert.deepEqual(assetRegistry, buildAssetRegistry(renderManifest, assetSourceManifest));
+  const byId = new Map(assetRegistry.assets.map(asset => [asset.assetId, asset]));
+  assert.equal(byId.size, renderManifest.assets.length);
+  for (const candidate of [scene, dairyScene]) {
+    for (const prefab of candidate.prefabs) {
+      const asset = byId.get(prefab.assetId);
+      assert.ok(asset, `${prefab.prefabId} references a registered asset`);
+      assert.ok(asset.footprintCells.columns > 0 && asset.footprintCells.rows > 0);
+      assert.ok(Number.isFinite(asset.pivot.x) && Number.isFinite(asset.pivot.y));
+    }
+  }
+  assert.ok(assetRegistry.assets.some(asset => asset.reviewStatus === 'UNRESOLVED'));
+  assert.ok(assetRegistry.assets.every(asset => asset.animations.length === 0), 'the registry does not invent animation clips absent from source manifests');
+});
+
+test('asset geometry compiler measures source alpha and flags uncertain physical dimensions for review', () => {
+  assert.equal(compiledAssetGeometry.schemaVersion, '1.0.0');
+  assert.equal(Object.keys(compiledAssetGeometry.assets).length, renderManifest.assets.length);
+  for (const asset of assetRegistry.assets) {
+    const geometry = asset.spatialGeometry;
+    assert.equal(geometry.units, 'world-cell', `${asset.assetId} uses the shared world unit`);
+    assert.ok(geometry.visualBoundingBoxPx?.width > 0 && geometry.visualBoundingBoxPx?.height > 0, `${asset.assetId} has measured alpha bounds`);
+    assert.ok(geometry.collisionPolygonCandidate.length >= 3, `${asset.assetId} has a ground-contact candidate polygon`);
+    if (geometry.geometryStatus === 'inferred-review-required') assert.equal(geometry.reviewRequired, true, `${asset.assetId} does not claim physical certainty from pixels alone`);
+    else assert.equal(geometry.geometryStatus, 'annotated', `${asset.assetId} uses an explicit tilemap geometry contract`);
+  }
+  const farmhouse = assetRegistry.assets.find(asset => asset.assetId === 'building-farmhouse-imagegen-v1');
+  assert.notDeepEqual(farmhouse.spatialGeometry.groundFootprintCandidate, {columns: 1, rows: 1}, 'the rendered building no longer inherits its one-cell image tag as physical geometry');
+  assert.ok(farmhouse.spatialGeometry.supportRegionFootprintCandidate.columns > farmhouse.spatialGeometry.groundFootprintCandidate.columns,
+    'the broad support silhouette is kept separately from the narrow contact trace');
+  assert.equal(farmhouse.spatialGeometry.evidence.supportRegionIsPhysicalFootprintProof, false,
+    'alpha support evidence is not silently promoted to a confirmed physical footprint');
+  assert.equal(farmhouse.spatialGeometry.evidence.collisionCandidateIsPhysicalFootprintProof, false,
+    'an unannotated alpha trace is not reported as a physical collision proof');
+  assert.ok(farmhouse.spatialGeometry.supportRegionPolygonCandidate.length >= 3,
+    'the browser annotator has broad support geometry available for visual comparison');
+});
+
+test('placement solver uses compiled collision polygons and rejects missing spatial geometry', () => {
+  const triangleA = {prefabId: 'triangle-a', footprint: {columns: 2, rows: 2}, blocking: true,
+    spatialGeometry: {units: 'world-cell', collisionPolygon: [{x: 0, y: 0}, {x: 2, y: 0}, {x: 0, y: 2}]}};
+  const triangleB = {prefabId: 'triangle-b', position: {x: 1, y: 1}, footprint: {columns: 2, rows: 2}, blocking: true,
+    spatialGeometry: {units: 'world-cell', collisionPolygon: [{x: 0, y: 2}, {x: 2, y: 2}, {x: 2, y: 0}]}};
+  assert.equal(placementValidation(triangleA, {x: 1, y: 1}, 8, 8, [triangleB]).valid, true, 'touching diagonal boundaries do not count as physical overlap');
+  assert.equal(placementValidation(triangleA, {x: 1, y: 1}, 8, 8, [{...triangleB, position: {x: 0.5, y: 1}}]).reason, 'collision');
+  assert.equal(placementValidation({prefabId: 'unknown'}, {x: 1, y: 1}, 8, 8).reason, 'geometry-missing');
+});
+
+test('V6 assembly is seeded, connects macro destinations, composes a closed boundary and supports dairy grammar', () => {
+  const first = assembleFarmMacrostructure({system: 'beef', seed: 84201});
+  const same = assembleFarmMacrostructure({system: 'beef', seed: 84201});
+  const other = assembleFarmMacrostructure({system: 'beef', seed: 84202});
+  const dairy = assembleFarmMacrostructure({system: 'dairy', seed: 84201});
+  assert.deepEqual(first, same, 'the same seed serializes identically');
+  assert.notDeepEqual(first.placements.map(item => item.position), other.placements.map(item => item.position), 'seed changes macro placements');
+  assert.ok(first.roadPaths.length >= 3 && first.roadPaths.every(path => path.cells.length >= 2));
+  assert.equal(first.roadNetwork.valid, true, 'A* routes compile into one socket-checked topological graph');
+  assert.equal(first.roadNetwork.connectedComponentCount, 1);
+  assert.ok(first.roadNetwork.modules.some(module => module.kind === 't-junction' || module.kind === 'x-junction'));
+  assert.ok(first.roadNetwork.edges.every(edge => edge.connected && edge.render.assetId === null), 'topology is ready for rendering without promoting unreviewed road art');
+  assert.ok(first.fence.length > 4 && first.fence.every(edge => edge.connected), 'the property boundary is assembled from connected fence modules');
+  assert.equal(first.fence.filter(edge => edge.piece === 'gate').length, 1);
+  assert.ok(first.paddocks.length >= 2 && first.paddocks.every(paddock => paddock.fence.closed && paddock.fence.gateCount === 1
+    && paddock.fence.segments.every(segment => segment.connected) && paddock.connections.every(connection => connection.connected)),
+  'paddocks compile into closed fence loops with one connected entrance each');
+  assert.equal(first.corralPrefab.valid, true);
+  assert.equal(first.corralPrefab.sourcePlacementId, 'handling-yard');
+  assert.equal(first.fenceNetwork.valid, true);
+  assert.equal(first.fenceNetwork.segments.length, new Set(first.fenceNetwork.segments.map(segment => segment.networkSegmentId)).size);
+  assert.ok(first.fenceNetwork.sharedSegments.length > 0, 'the generated paddock grammar contains shared fence boundaries');
+  assert.ok(first.paddocks.some(paddock => paddock.neighbors.length > 0), 'paddock adjacency is explicit in the semantic graph');
+  assert.ok(first.paddocks.every(paddock => paddock.neighbors.every(neighbor => first.paddocks.find(other => other.zoneId === neighbor)?.neighbors.includes(paddock.zoneId))), 'paddock adjacency is reciprocal');
+  assert.ok(first.paddocks.every(paddock => !paddock.sharedEdgeIndexes.includes(paddock.gate.edgeIndex)), 'paddock gates stay off shared partitions');
+  assert.ok(first.vegetation.length > 0 && first.vegetation.every(item => item.reviewRequired));
+  assert.ok(dairy.placements.some(item => item.id === 'milking-parlor'));
+  assert.ok(dairy.specification.structures.every(item => item.reviewRequired), 'the solver preserves asset geometry review state');
+});
+
+test('V6 occupancy grid excludes semantic non-blocking fixtures from path obstacles', () => {
+  const cells = occupiedWorldCells([
+    {id: 'shed', worldPolygon: [{x: 1, y: 1}, {x: 3, y: 1}, {x: 3, y: 3}, {x: 1, y: 3}]},
+    {id: 'water-point', blocking: false, worldPolygon: [{x: 4, y: 1}, {x: 6, y: 1}, {x: 6, y: 3}, {x: 4, y: 3}]},
+  ]);
+  assert.ok(cells.some(cell => cell.x === 1 && cell.y === 1 && cell.ownerId === 'shed'));
+  assert.equal(cells.some(cell => cell.ownerId === 'water-point'), false);
+});
+
+test('macro placement evaluates terrain slope across the full physical candidate footprint', () => {
+  const result = solveMacroPlacement({terrain: {columns: 8, rows: 8, slopeAt: x => x > 2.5 ? 0.4 : 0}, structures: [
+    {id: 'wide-building', assetId: 'wide-building', collisionPolygon: [{x: 0, y: 0}, {x: 2, y: 0}, {x: 2, y: 2}, {x: 0, y: 2}],
+      zone: {left: 1, right: 6, top: 1, bottom: 6}, maxSlope: 0.12},
+  ]}, {seed: 3, maxExpansions: 200});
+  assert.equal(result.valid, false, 'no candidate footprint can overlap the steep terrain strip');
+  assert.equal(result.reason, 'no-feasible-layout');
+});
+
+test('V6 connection sockets enforce reciprocal types, orientation and positional tolerance', () => {
+  const road = {type: 'road', x: 4, y: 8, orientation: 0, tolerance: 0.1};
+  assert.equal(socketsConnect(road, {type: 'driveway', x: 4.05, y: 8, orientation: 180, tolerance: 0.1}), true);
+  assert.equal(socketsConnect(road, {type: 'driveway', x: 4.5, y: 8, orientation: 180, tolerance: 0.1}), false);
+  assert.equal(socketsConnect(road, {type: 'fence', x: 4, y: 8, orientation: 180, tolerance: 0.1}), false);
+});
+
+test('V6 modular corral prefab has typed entrance sockets, nested functional regions and a connected fence loop', () => {
+  const prefab = buildModularCorralPrefab({origin: {x: 10, y: 7}, width: 8, height: 5, gateEdge: 3});
+  assert.equal(prefab.valid, true);
+  assert.equal(prefab.unit, 'world-cell');
+  assert.deepEqual(prefab.children.map(child => child.kind), ['livestock-pen', 'sorting-pen', 'handling-lane']);
+  assert.equal(prefab.boundary.gateCount, 1);
+  assert.equal(prefab.boundary.closed, true);
+  assert.ok(prefab.interiorRails.length > 4 && prefab.interiorRails.every(rail => rail.connected));
+  assert.ok(prefab.connections.length >= prefab.interiorRails.length);
+  assert.ok(prefab.connections.every(connection => connection.connected), 'rail segments, boundary tie-ins, gate access and the T-junction use checked socket pairs');
+  assert.deepEqual(new Set(prefab.connections.map(connection => connection.kind)), new Set(['continuous-rail', 'boundary-anchor', 'gate-to-alley', 'rail-junction']));
+  assert.equal(prefab.junctions.length, 3);
+  assert.ok(prefab.junctions.every(junction => junction.connections.length >= 1 && junction.connections.every(connection => connection.connected)));
+  assert.equal(prefab.gateCenter.x, prefab.origin.x);
+  assert.equal(prefab.gateCenter.y, prefab.origin.y + prefab.footprint.height / 2);
+  assert.equal(prefab.renderModules.length, prefab.boundary.segments.length + prefab.interiorRails.length);
+  assert.ok(prefab.renderModules.every(module => module.assetId && module.worldAnchor && module.enabledByDefault === false && module.arbitraryRotationApproved === false));
+  assert.equal(socketsConnect(prefab.sockets[0], prefab.sockets[1]), true);
+  assert.throws(() => buildModularCorralPrefab({width: 2, height: 2}), /requires width/);
+  assert.throws(() => buildModularCorralPrefab({gateEdge: 0}), /west boundary/);
+});
+
+test('V6 fence network shares coincident paddock boundaries as one owner-tagged module set', () => {
+  const west = buildFenceLoop([{x: 0, y: 0}, {x: 4, y: 0}, {x: 4, y: 3}, {x: 0, y: 3}]);
+  const east = buildFenceLoop([{x: 4, y: 0}, {x: 8, y: 0}, {x: 8, y: 3}, {x: 4, y: 3}]);
+  const network = compileFenceNetwork([{ownerId: 'west', segments: west.segments}, {ownerId: 'east', segments: east.segments}]);
+  assert.equal(network.valid, true);
+  assert.equal(network.sharedSegments.length, 3);
+  assert.ok(network.sharedSegments.every(segment => segment.owners.includes('west') && segment.owners.includes('east')));
+  assert.equal(network.segments.length, west.segments.length + east.segments.length - 3);
+  assert.equal(network.owners.length, 2);
+});
+
+test('V6 road compiler deduplicates shared A* edges, classifies typed entrances and validates a T junction', () => {
+  const routes = [
+    {routeId: 'farm-yard', from: 'farm', to: 'yard', cells: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}]},
+    {routeId: 'water-yard', from: 'water', to: 'yard', cells: [{x: 1, y: -1}, {x: 1, y: 0}, {x: 2, y: 0}]},
+  ];
+  const network = compileRoadNetwork(routes);
+  assert.equal(network.valid, true);
+  assert.equal(network.connectedComponentCount, 1);
+  assert.equal(network.summary.uniqueEdgeCount, 3);
+  assert.equal(network.summary.sharedEdgeCount, 1);
+  assert.equal(network.nodes.find(node => node.position.x === 1 && node.position.y === 0).kind, 't-junction');
+  assert.equal(network.nodes.find(node => node.position.x === 2 && node.position.y === 0).kind, 'entrance');
+  assert.ok(network.nodes.every(node => node.connections.every(connection => connection.connected)));
+  assert.ok(network.edges.every(edge => edge.connected && edge.owners.length >= 1));
+  assert.deepEqual(network.edges.find(edge => edge.owners.length === 2).owners.map(owner => owner.routeId), ['farm-yard', 'water-yard']);
+  assert.ok(network.modules.some(module => module.kind === 't-junction'));
+  assert.ok(network.modules.every(module => module.render.enabledByDefault === false && module.render.assetId === null));
+});
+
+test('V6 road compiler is order-independent, detects X and turn modules, and rejects invalid or disconnected routes', () => {
+  const horizontal = {routeId: 'east-west', from: 'west-gate', to: 'east-gate', fromKind: 'entrance', toKind: 'entrance',
+    cells: [{x: -1, y: 0}, {x: 0, y: 0}, {x: 1, y: 0}]};
+  const vertical = {routeId: 'north-south', from: 'north-gate', to: 'south-gate', fromKind: 'entrance', toKind: 'entrance',
+    cells: [{x: 0, y: -1}, {x: 0, y: 0}, {x: 0, y: 1}]};
+  const first = compileRoadNetwork([horizontal, vertical]);
+  const reordered = compileRoadNetwork([vertical, horizontal]);
+  assert.equal(first.valid, true);
+  assert.deepEqual(first, reordered);
+  assert.equal(first.nodes.find(node => node.position.x === 0 && node.position.y === 0).kind, 'x-junction');
+  const turn = compileRoadNetwork([{routeId: 'turn', cells: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 1, y: 1}]}]);
+  assert.equal(turn.valid, true);
+  assert.equal(turn.nodes.find(node => node.position.x === 1 && node.position.y === 0).kind, 'turn');
+  assert.equal(compileRoadNetwork([{routeId: 'bad-step', cells: [{x: 0, y: 0}, {x: 2, y: 2}]}]).valid, false);
+  const disconnected = compileRoadNetwork([
+    {routeId: 'one', cells: [{x: 0, y: 0}, {x: 1, y: 0}]},
+    {routeId: 'two', cells: [{x: 5, y: 5}, {x: 6, y: 5}]},
+  ]);
+  assert.equal(disconnected.valid, false);
+  assert.ok(disconnected.violations.some(violation => violation.type === 'disconnected-road-components'));
+});
+
+test('V6 CP-SAT scene export is a valid Tiled map with semantic route, fence, and asset layers', () => {
+  assert.equal(spatialV6TiledMap.orientation, 'isometric');
+  assert.deepEqual([spatialV6TiledMap.tilewidth, spatialV6TiledMap.tileheight], [96, 48]);
+  const layers = Object.fromEntries(spatialV6TiledMap.layers.map(layer => [layer.name, layer]));
+  assert.equal(layers['Macro structures'].objects.length, 5);
+  assert.equal(layers.Vegetation.objects.length, 14);
+  assert.ok(layers['Road graph'].objects.length >= 5);
+  assert.ok(layers['Road modules'].objects.length > layers['Road graph'].objects.length);
+  const roadModuleKinds = layers['Road modules'].objects.map(object => Object.fromEntries(object.properties.map(property => [property.name, property.value])));
+  assert.ok(roadModuleKinds.some(module => module.moduleKind === 't-junction'));
+  assert.ok(roadModuleKinds.every(module => module.artReviewStatus === 'UNASSIGNED' && module.renderAssetId === ''));
+  assert.ok(layers['Fence network'].objects.length > 100);
+  const properties = Object.fromEntries(spatialV6TiledMap.properties.map(property => [property.name, property.value]));
+  assert.equal(properties.sceneSchemaVersion, 'riose-compiled-farm-scene-v6');
+  assert.equal(properties.solverEngine, 'ortools-cp-sat');
+  assert.equal(properties.solverStatus, 'OPTIMAL');
+  assert.ok(JSON.parse(properties.fenceNetworkJSON).sharedSegments.length > 0);
+  const roadNetwork = JSON.parse(properties.roadNetworkJSON);
+  assert.equal(roadNetwork.valid, true);
+  assert.ok(roadNetwork.modules.some(module => module.kind === 't-junction'));
+});
+
+test('three terrain-backed macro proposals compile to distinct Tiled scenes and the reviewed choice is the main build', async () => {
+  assert.equal(macroProposalManifest.proposals.length, 3);
+  assert.equal(macroProposalManifest.seed, 84018);
+  assert.equal(macroProposalSelection.selectedProposal, 'proposal-homestead-hub');
+  const coordinateSets = [];
+  for (const proposal of macroProposalManifest.proposals) {
+    const scene = JSON.parse(await readFile(new URL(`../${proposal.scene}`, import.meta.url), 'utf8'));
+    const map = JSON.parse(await readFile(new URL(`../graphics-poc/generated/${proposal.map}.tmj`, import.meta.url), 'utf8'));
+    const placements = map.layers.filter(layer => layer.type === 'objectgroup').flatMap(layer => layer.objects ?? []).filter(object => object.gid);
+    assert.equal(scene.placements.length, 82, `${proposal.id} preserves the semantic block inventory`);
+    assert.equal(placements.length, 82, `${proposal.id} compiles every object through Tiled`);
+    assert.equal(map.orientation, 'isometric');
+    assert.ok(map.layers.some(layer => layer.type === 'imagelayer' && layer.image === 'terrain-v5/homestead-high-ground.png'));
+    coordinateSets.push(new Set(placements.map(object => `${object.x},${object.y}`)));
+  }
+  assert.ok(coordinateSets[0].size > 30);
+  assert.ok(coordinateSets.some(set => [...set].some(point => !coordinateSets[0].has(point))), 'macro alternatives change spatial placement, not only the seed');
+  const selectedScene = JSON.parse(await readFile(new URL(`../${macroProposalSelection.selectedScene}`, import.meta.url), 'utf8'));
+  const mainMap = JSON.parse(await readFile(new URL('../graphics-poc/generated/ranch-v4.tmj', import.meta.url), 'utf8'));
+  const mainSceneId = mainMap.properties.find(property => property.name === 'sceneId').value;
+  assert.equal(mainSceneId, selectedScene.sceneId, 'the default Tiled build uses the visually reviewed composition');
+});
+
+test('terrain surface materials use seeded organic zones sourced from existing art assets', async () => {
+  assert.equal(terrainMaterialManifest.seed, 84018);
+  assert.equal(terrainMaterialManifest.generator, 'riose-terrain-heightfield-v2');
+  assert.equal(terrainMaterialManifest.cliffMaterial, 'assets/candidates/terrain-family-v7/ranch-cliff-side-material-v1.png');
+  assert.equal(terrainMaterialManifest.surfaceMaterialZones.length, 7);
+  assert.deepEqual(new Set(terrainMaterialManifest.surfaceMaterialZones.map(zone => zone.material)), new Set(['dry-pasture', 'compacted-ground', 'muddy-ground']));
+  for (const zone of terrainMaterialManifest.surfaceMaterialZones) {
+    assert.equal(zone.transition, 'seeded-multiscale-organic-mask');
+    assert.ok(zone.source.startsWith('assets/candidates/terrain-family-v2/'));
+    assert.ok(Number.isFinite(zone.world[0]) && Number.isFinite(zone.world[1]));
+    await readFile(new URL(`../${zone.source}`, import.meta.url));
+  }
+  const image = await readFile(new URL('../assets/candidates/terrain-family-v7/ranch-top-surface-material-v1.png', import.meta.url));
+  assert.ok(image.byteLength > 500_000, 'the composed surface image is present as a renderer input');
+  const cliff = await readFile(new URL(`../${terrainMaterialManifest.cliffMaterial}`, import.meta.url));
+  assert.ok(cliff.byteLength > 500, 'the side material is extracted from the source plate for Blender UV mapping');
+  const map = JSON.parse(await readFile(new URL('../graphics-poc/generated/ranch-v4.tmj', import.meta.url), 'utf8'));
+  const properties = Object.fromEntries(map.properties.map(property => [property.name, property.value]));
+  assert.equal(properties.surfaceMaterialGrammar, 'pasture-ground-grammar-v1');
+  assert.deepEqual(JSON.parse(properties.surfaceMaterialZones), terrainMaterialManifest.surfaceMaterialZones, 'Tiled carries the same semantic material zones into Pixi');
+});
+
+test('all generated heightfields obey the slope constraint while retaining real elevation range', async () => {
+  for (const proposal of ['homestead-high-ground', 'cross-ridge-saddle', 'pasture-terraces']) {
+    const terrain = JSON.parse(await readFile(new URL(`../graphics-poc/generated/terrain-v5/${proposal}.json`, import.meta.url), 'utf8'));
+    const rows = terrain.heightmap;
+    let maxNeighborDelta = 0;
+    for (let row = 0; row < rows.length; row++) for (let column = 0; column < rows[row].length; column++) {
+      if (row + 1 < rows.length) maxNeighborDelta = Math.max(maxNeighborDelta, Math.abs(rows[row + 1][column] - rows[row][column]));
+      if (column + 1 < rows[row].length) maxNeighborDelta = Math.max(maxNeighborDelta, Math.abs(rows[row][column + 1] - rows[row][column]));
+    }
+    assert.ok(terrain.heightLevels.length >= 3, `${proposal} retains multiple height bands`);
+    assert.ok(terrain.heightLevels.at(-1) - terrain.heightLevels[0] >= 0.16, `${proposal} retains a visible elevation range`);
+    assert.ok(maxNeighborDelta <= terrain.grid.stepWorldUnits + 1e-8, `${proposal} stays slope-graded (max delta ${maxNeighborDelta})`);
+  }
+});
+
+test('dry pasture is a deterministic visual-only variant and cannot issue simulation commands', () => {
+  assert.equal(validate(waterStressScene), true, JSON.stringify(validate.errors));
+  const reproduced = createWaterStressVisualVariant(scene, {rendererManifest: renderManifest, sourceManifest: assetSourceManifest});
+  assert.deepEqual(waterStressScene, reproduced);
+  assert.equal(waterStressScene.visualVariant.classification, 'visual-only-unvalidated');
+  assert.ok(waterStressScene.terrainTiles.filter(tile => tile.assetId === 'soil-dry').length > 400);
+  assert.equal(waterStressScene.entities.filter(entity => entity.kind === 'animal').length, 8);
+  assert.equal(sceneExecutionAvailability(waterStressScene).available, false);
+  assert.throws(() => assertSceneCommandAllowed(waterStressScene, 'tick'), /Execução numérica indisponível/);
 });
 
 test('screen-space LOD distance is measured from the viewport center, not camera translation', () => {
@@ -344,9 +628,11 @@ test('the Graphics Lab serves both editable schema-valid scenes and dairy source
   const server = createServer(); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
-  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/graphics-poc/assets/main-composer-render-manifest.json', '/schemas/visual-scene.schema.json']) {
+  for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/graphics-poc/scenes/water-stress-visual.json', '/graphics-poc/assets/main-composer-render-manifest.json', '/graphics-poc/asset-registry.json', '/graphics-poc/asset-geometry-v1.json', '/graphics-poc/asset-spatial-annotations-v1.json', '/graphics-poc/spatial-debug.html', '/graphics-poc/dist/spatial-debug.js', '/graphics-poc/asset-geometry-annotator.html', '/graphics-poc/asset-geometry-annotator.css', '/graphics-poc/asset-geometry-annotator.js', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
+  const treeSource = assetRegistry.assets.find(asset => asset.assetId === 'vegetation-tree-shade-imagegen-v1').source.file;
+  assert.equal((await fetch(`${origin}/${treeSource}`)).status, 200, 'the V6 inspection view receives the registered source sprite');
   assert.match(await (await fetch(origin + '/graphics-poc/index.html')).text(), /id="rotate-selection"/, 'the composer exposes a selected-prefab rotation action');
   const image = await fetch(origin + '/graphics-poc/assets/nelore-adult-idle-v1.png');
   assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');

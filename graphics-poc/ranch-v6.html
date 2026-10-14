@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#24372b">
+    <title>RIOSE AGRO · Montagem espacial V6</title>
+    <link rel="stylesheet" href="./ranch-v6.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="toolbar">
+        <a class="brand" href="./ranch-v6.html"><span class="brand-icon">R</span><span><strong>RIOSE AGRO</strong><small>ASSEMBLY ENGINE · V6</small></span></a>
+        <div class="scene-label"><span class="eyebrow">CENA COMPILADA · <span id="scene-seed">—</span></span><h1>Fazenda de corte</h1></div>
+        <div class="controls">
+          <label class="select-label" for="scene-select">Composição</label>
+          <select id="scene-select" aria-label="Cena compilada">
+            <option value="beef-84018">Corte · seed 84018</option>
+            <option value="beef-84019">Corte · seed 84019</option>
+            <option value="beef-84020">Corte · seed 84020</option>
+            <option value="dairy-84018">Leiteira · seed 84018</option>
+          </select>
+          <button id="camera-fit" type="button">Enquadrar</button>
+          <label class="debug-toggle"><input id="topology-toggle" type="checkbox"><span>Traçado diagnóstico</span></label>
+        </div>
+      </header>
+      <section id="stage" class="stage" aria-label="Diorama isométrico gerado a partir da montagem espacial V6">
+        <div class="scene-chip"><span class="live-dot"></span><span id="scene-summary">Carregando cena semântica…</span></div>
+        <div class="provenance">ARTE CANDIDATA · ASSETS REVIEW/PROPOSAL</div>
+        <output id="scene-error" hidden></output>
+      </section>
+      <footer class="footer"><span>ARRASTE PARA EXPLORAR · RODA DO MOUSE PARA ZOOM</span><span>ANIMAÇÃO VISUAL DEMONSTRATIVA · SEM ESCRITA NA SIMULAÇÃO</span><span id="asset-status">—</span></footer>
+    </main>
+    <script type="module" src="./dist/ranch-v6.js"></script>
+  </body>
+</html>

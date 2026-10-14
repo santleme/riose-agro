@@ -10,4 +10,24 @@ await build({
   target: ['es2022'],
   legalComments: 'none',
 });
-console.log('Built graphics-poc/dist/app.js');
+await build({
+  entryPoints: ['graphics-poc/ranch-v4.js'],
+  outfile: 'graphics-poc/dist/ranch-v4.js',
+  bundle: true,
+  minify: true,
+  sourcemap: false,
+  format: 'esm',
+  target: ['es2022'],
+  legalComments: 'none',
+});
+await build({
+  entryPoints: ['graphics-poc/spatial-debug.js'],
+  outfile: 'graphics-poc/dist/spatial-debug.js',
+  bundle: true,
+  minify: true,
+  sourcemap: false,
+  format: 'esm',
+  target: ['es2022'],
+  legalComments: 'none',
+});
+console.log('Built graphics-poc/dist/app.js, graphics-poc/dist/ranch-v4.js, and graphics-poc/dist/spatial-debug.js');

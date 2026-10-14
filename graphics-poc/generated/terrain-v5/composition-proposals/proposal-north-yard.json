@@ -1,0 +1,2658 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "rural-diorama-composition-v4-grounding-v2-gate-v2-water-v2-feed-v2-review-proposal-north-yard",
+  "projection": "isometric-2:1",
+  "footprintPx": [
+    1774,
+    887
+  ],
+  "terrainPlate": "assets/candidates/terrain-family-v5/rural-diorama-ground-v2.png",
+  "terrainAssetId": "terrain.ranch.complete-ground.imagegen.v2",
+  "terrainMode": "unified-grass-dirt-crop-plate-with-local-grounding-overlays",
+  "referenceRoles": {
+    "urban": "composição, hierarquia, ritmo visual, footprint e coesão entre zonas",
+    "fazendaV7": "conteúdo rural, organização, escala e densidade do território",
+    "rioseV2": "transições do solo, grounding, uso localizado e vegetação controlada"
+  },
+  "visualAnimalBudget": {
+    "mode": "sampled-miniature",
+    "visibleCount": 16,
+    "populationBinding": "none; deterministic lot-level visual sample, never scientific individual identities"
+  },
+  "visualAnimalLots": [
+    {
+      "id": "lot-west",
+      "realPopulation": null,
+      "populationSource": "runtime-provided; not specified in this visual scene",
+      "zoneId": "piquete-oeste",
+      "operationalState": "grazing",
+      "maxSprites": 5,
+      "representationMode": "grouped",
+      "placementIds": [
+        "v4-placement-052",
+        "v4-placement-053",
+        "v4-placement-054",
+        "v4-placement-055",
+        "v4-placement-056"
+      ]
+    },
+    {
+      "id": "lot-north",
+      "realPopulation": null,
+      "populationSource": "runtime-provided; not specified in this visual scene",
+      "zoneId": "pasto-norte",
+      "operationalState": "grazing",
+      "maxSprites": 5,
+      "representationMode": "sampled-miniature",
+      "placementIds": [
+        "v4-placement-057",
+        "v4-placement-058",
+        "v4-placement-059",
+        "v4-placement-060",
+        "v4-placement-061"
+      ]
+    },
+    {
+      "id": "lot-east",
+      "realPopulation": null,
+      "populationSource": "runtime-provided; not specified in this visual scene",
+      "zoneId": "piquete-leste",
+      "operationalState": "grazing",
+      "maxSprites": 4,
+      "representationMode": "grouped",
+      "placementIds": [
+        "v4-placement-062",
+        "v4-placement-063",
+        "v4-placement-064",
+        "v4-placement-065"
+      ]
+    },
+    {
+      "id": "lot-handling",
+      "realPopulation": null,
+      "populationSource": "runtime-provided; not specified in this visual scene",
+      "zoneId": "manejo",
+      "operationalState": "handling",
+      "maxSprites": 2,
+      "representationMode": "operational",
+      "placementIds": [
+        "v4-placement-066",
+        "v4-placement-067"
+      ]
+    }
+  ],
+  "compositionBlocks": [
+    "homestead-block",
+    "cultivation-block",
+    "service-yard-block",
+    "handling-block",
+    "water-block",
+    "west-paddock-prefab",
+    "north-pasture-prefab",
+    "east-paddock-prefab",
+    "tree-belt-prefab",
+    "monitoring-prefab"
+  ],
+  "zones": [
+    {
+      "id": "cultivo",
+      "label": "CULTIVO",
+      "polygon": [
+        [
+          168,
+          482
+        ],
+        [
+          458,
+          326
+        ],
+        [
+          760,
+          482
+        ],
+        [
+          458,
+          638
+        ]
+      ]
+    },
+    {
+      "id": "casa-sede",
+      "label": "CASA-SEDE",
+      "polygon": [
+        [
+          795,
+          285
+        ],
+        [
+          890,
+          240
+        ],
+        [
+          985,
+          285
+        ],
+        [
+          890,
+          330
+        ]
+      ]
+    },
+    {
+      "id": "infraestrutura",
+      "label": "GALPÃO / SERVIÇOS",
+      "polygon": [
+        [
+          942,
+          447
+        ],
+        [
+          1064,
+          389
+        ],
+        [
+          1186,
+          447
+        ],
+        [
+          1064,
+          505
+        ]
+      ]
+    },
+    {
+      "id": "manejo",
+      "label": "CURRAL / MANEJO",
+      "polygon": [
+        [
+          900,
+          520
+        ],
+        [
+          994,
+          476
+        ],
+        [
+          1088,
+          520
+        ],
+        [
+          994,
+          564
+        ]
+      ]
+    },
+    {
+      "id": "agua",
+      "label": "ÁGUA",
+      "polygon": [
+        [
+          627,
+          600
+        ],
+        [
+          704,
+          564
+        ],
+        [
+          781,
+          600
+        ],
+        [
+          704,
+          636
+        ]
+      ]
+    },
+    {
+      "id": "piquete-oeste",
+      "label": "PIQUETE OESTE",
+      "polygon": [
+        [
+          390,
+          300
+        ],
+        [
+          535,
+          228
+        ],
+        [
+          680,
+          300
+        ],
+        [
+          535,
+          372
+        ]
+      ]
+    },
+    {
+      "id": "pasto-norte",
+      "label": "PASTO NORTE",
+      "polygon": [
+        [
+          977,
+          300
+        ],
+        [
+          1089,
+          248
+        ],
+        [
+          1201,
+          300
+        ],
+        [
+          1089,
+          352
+        ]
+      ]
+    },
+    {
+      "id": "piquete-leste",
+      "label": "PIQUETE LESTE",
+      "polygon": [
+        [
+          1225,
+          520
+        ],
+        [
+          1365,
+          450
+        ],
+        [
+          1505,
+          520
+        ],
+        [
+          1365,
+          590
+        ]
+      ]
+    },
+    {
+      "id": "borda-verde",
+      "label": "BORDA VERDE",
+      "polygon": [
+        [
+          576,
+          216
+        ],
+        [
+          685,
+          165
+        ],
+        [
+          794,
+          216
+        ],
+        [
+          685,
+          267
+        ]
+      ]
+    },
+    {
+      "id": "monitoramento",
+      "label": "MONITORAMENTO",
+      "polygon": [
+        [
+          1018,
+          607
+        ],
+        [
+          1111,
+          564
+        ],
+        [
+          1204,
+          607
+        ],
+        [
+          1111,
+          650
+        ]
+      ]
+    }
+  ],
+  "groundingOverlays": [
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        855,
+        399
+      ],
+      "renderSizePx": [
+        181,
+        88
+      ],
+      "opacity": 48,
+      "layer": "grounding"
+    },
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        1261,
+        454
+      ],
+      "renderSizePx": [
+        210,
+        97
+      ],
+      "opacity": 54,
+      "layer": "grounding"
+    },
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        931,
+        600
+      ],
+      "renderSizePx": [
+        241,
+        105
+      ],
+      "opacity": 65,
+      "layer": "grounding"
+    },
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        523,
+        579
+      ],
+      "renderSizePx": [
+        151,
+        68
+      ],
+      "opacity": 43,
+      "layer": "grounding"
+    },
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        1460,
+        538
+      ],
+      "renderSizePx": [
+        142,
+        65
+      ],
+      "opacity": 43,
+      "layer": "grounding"
+    },
+    {
+      "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+      "centerPx": [
+        721,
+        683
+      ],
+      "renderSizePx": [
+        132,
+        66
+      ],
+      "opacity": 36,
+      "layer": "grounding"
+    }
+  ],
+  "prefabs": [
+    {
+      "id": "homestead-block",
+      "zoneIds": [
+        "casa-sede"
+      ],
+      "originPx": [
+        885,
+        304
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-001",
+          "offsetPx": [
+            -3,
+            0
+          ]
+        },
+        {
+          "placementId": "v4-placement-002",
+          "offsetPx": [
+            152,
+            54
+          ]
+        },
+        {
+          "placementId": "v4-placement-003",
+          "offsetPx": [
+            -95,
+            37
+          ]
+        },
+        {
+          "placementId": "v4-placement-004",
+          "offsetPx": [
+            -100,
+            -11
+          ]
+        },
+        {
+          "placementId": "v4-placement-005",
+          "offsetPx": [
+            154,
+            -27
+          ]
+        },
+        {
+          "placementId": "v4-placement-006",
+          "offsetPx": [
+            188,
+            32
+          ]
+        },
+        {
+          "placementId": "v4-placement-007",
+          "offsetPx": [
+            -98,
+            83
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cultivation-block",
+      "zoneIds": [
+        "cultivo"
+      ],
+      "originPx": [
+        524,
+        577
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-008",
+          "offsetPx": [
+            0,
+            0
+          ]
+        },
+        {
+          "placementId": "v4-placement-009",
+          "offsetPx": [
+            -332,
+            -44
+          ]
+        },
+        {
+          "placementId": "v4-placement-010",
+          "offsetPx": [
+            -174,
+            13
+          ]
+        },
+        {
+          "placementId": "v4-placement-011",
+          "offsetPx": [
+            187,
+            55
+          ]
+        },
+        {
+          "placementId": "v4-placement-012",
+          "offsetPx": [
+            92,
+            -66
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service-yard-block",
+      "zoneIds": [
+        "infraestrutura"
+      ],
+      "originPx": [
+        1066,
+        420
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-013",
+          "offsetPx": [
+            0,
+            0
+          ]
+        },
+        {
+          "placementId": "v4-placement-014",
+          "offsetPx": [
+            -167,
+            56
+          ]
+        },
+        {
+          "placementId": "v4-placement-015",
+          "offsetPx": [
+            -231,
+            121
+          ]
+        },
+        {
+          "placementId": "v4-placement-016",
+          "offsetPx": [
+            164,
+            49
+          ]
+        },
+        {
+          "placementId": "v4-placement-017",
+          "offsetPx": [
+            115,
+            -40
+          ]
+        }
+      ]
+    },
+    {
+      "id": "handling-block",
+      "zoneIds": [
+        "manejo"
+      ],
+      "originPx": [
+        994,
+        520
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-018",
+          "offsetPx": [
+            -37,
+            -7
+          ]
+        },
+        {
+          "placementId": "v4-placement-019",
+          "offsetPx": [
+            -62,
+            15
+          ]
+        },
+        {
+          "placementId": "v4-placement-020",
+          "offsetPx": [
+            74,
+            4
+          ]
+        },
+        {
+          "placementId": "v4-placement-021",
+          "offsetPx": [
+            61,
+            -2
+          ]
+        },
+        {
+          "placementId": "v4-placement-022",
+          "offsetPx": [
+            76,
+            -5
+          ]
+        },
+        {
+          "placementId": "v4-placement-023",
+          "offsetPx": [
+            -197,
+            17
+          ]
+        },
+        {
+          "placementId": "v4-placement-024",
+          "offsetPx": [
+            -251,
+            -15
+          ]
+        },
+        {
+          "placementId": "v4-placement-066",
+          "offsetPx": [
+            -8,
+            -64
+          ]
+        },
+        {
+          "placementId": "v4-placement-067",
+          "offsetPx": [
+            37,
+            -45
+          ]
+        }
+      ]
+    },
+    {
+      "id": "water-block",
+      "zoneIds": [
+        "agua"
+      ],
+      "originPx": [
+        697,
+        596
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-025",
+          "offsetPx": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "west-paddock-prefab",
+      "zoneIds": [
+        "piquete-oeste"
+      ],
+      "originPx": [
+        535,
+        300
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-026",
+          "offsetPx": [
+            -97,
+            -24
+          ]
+        },
+        {
+          "placementId": "v4-placement-027",
+          "offsetPx": [
+            -49,
+            -48
+          ]
+        },
+        {
+          "placementId": "v4-placement-028",
+          "offsetPx": [
+            49,
+            -48
+          ]
+        },
+        {
+          "placementId": "v4-placement-029",
+          "offsetPx": [
+            97,
+            -24
+          ]
+        },
+        {
+          "placementId": "v4-placement-030",
+          "offsetPx": [
+            97,
+            24
+          ]
+        },
+        {
+          "placementId": "v4-placement-031",
+          "offsetPx": [
+            49,
+            48
+          ]
+        },
+        {
+          "placementId": "v4-placement-032",
+          "offsetPx": [
+            -49,
+            48
+          ]
+        },
+        {
+          "placementId": "v4-placement-033",
+          "offsetPx": [
+            -97,
+            24
+          ]
+        },
+        {
+          "placementId": "v4-placement-034",
+          "offsetPx": [
+            -145,
+            22
+          ]
+        },
+        {
+          "placementId": "v4-placement-035",
+          "offsetPx": [
+            23,
+            18
+          ]
+        },
+        {
+          "placementId": "v4-placement-036",
+          "offsetPx": [
+            67,
+            52
+          ]
+        },
+        {
+          "placementId": "v4-placement-052",
+          "offsetPx": [
+            -35,
+            5
+          ]
+        },
+        {
+          "placementId": "v4-placement-053",
+          "offsetPx": [
+            19,
+            -12
+          ]
+        },
+        {
+          "placementId": "v4-placement-054",
+          "offsetPx": [
+            53,
+            20
+          ]
+        },
+        {
+          "placementId": "v4-placement-055",
+          "offsetPx": [
+            -12,
+            48
+          ]
+        },
+        {
+          "placementId": "v4-placement-056",
+          "offsetPx": [
+            39,
+            57
+          ]
+        }
+      ]
+    },
+    {
+      "id": "north-pasture-prefab",
+      "zoneIds": [
+        "pasto-norte"
+      ],
+      "originPx": [
+        1089,
+        300
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-037",
+          "offsetPx": [
+            27,
+            -8
+          ]
+        },
+        {
+          "placementId": "v4-placement-057",
+          "offsetPx": [
+            -50,
+            -22
+          ]
+        },
+        {
+          "placementId": "v4-placement-058",
+          "offsetPx": [
+            1,
+            -44
+          ]
+        },
+        {
+          "placementId": "v4-placement-059",
+          "offsetPx": [
+            59,
+            -21
+          ]
+        },
+        {
+          "placementId": "v4-placement-060",
+          "offsetPx": [
+            -28,
+            16
+          ]
+        },
+        {
+          "placementId": "v4-placement-061",
+          "offsetPx": [
+            44,
+            25
+          ]
+        }
+      ]
+    },
+    {
+      "id": "east-paddock-prefab",
+      "zoneIds": [
+        "piquete-leste"
+      ],
+      "originPx": [
+        1365,
+        520
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-038",
+          "offsetPx": [
+            -93,
+            -24
+          ]
+        },
+        {
+          "placementId": "v4-placement-039",
+          "offsetPx": [
+            -46,
+            -48
+          ]
+        },
+        {
+          "placementId": "v4-placement-040",
+          "offsetPx": [
+            47,
+            -48
+          ]
+        },
+        {
+          "placementId": "v4-placement-041",
+          "offsetPx": [
+            94,
+            -24
+          ]
+        },
+        {
+          "placementId": "v4-placement-042",
+          "offsetPx": [
+            94,
+            24
+          ]
+        },
+        {
+          "placementId": "v4-placement-043",
+          "offsetPx": [
+            47,
+            48
+          ]
+        },
+        {
+          "placementId": "v4-placement-044",
+          "offsetPx": [
+            -46,
+            48
+          ]
+        },
+        {
+          "placementId": "v4-placement-045",
+          "offsetPx": [
+            -93,
+            24
+          ]
+        },
+        {
+          "placementId": "v4-placement-046",
+          "offsetPx": [
+            -140,
+            22
+          ]
+        },
+        {
+          "placementId": "v4-placement-047",
+          "offsetPx": [
+            61,
+            -15
+          ]
+        },
+        {
+          "placementId": "v4-placement-062",
+          "offsetPx": [
+            -13,
+            -25
+          ]
+        },
+        {
+          "placementId": "v4-placement-063",
+          "offsetPx": [
+            41,
+            -41
+          ]
+        },
+        {
+          "placementId": "v4-placement-064",
+          "offsetPx": [
+            85,
+            -11
+          ]
+        },
+        {
+          "placementId": "v4-placement-065",
+          "offsetPx": [
+            -1,
+            17
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tree-belt-prefab",
+      "zoneIds": [
+        "borda-verde"
+      ],
+      "originPx": [
+        887,
+        430
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-068",
+          "offsetPx": [
+            -248,
+            -219
+          ]
+        },
+        {
+          "placementId": "v4-placement-069",
+          "offsetPx": [
+            -183,
+            -238
+          ]
+        },
+        {
+          "placementId": "v4-placement-070",
+          "offsetPx": [
+            -118,
+            -219
+          ]
+        },
+        {
+          "placementId": "v4-placement-071",
+          "offsetPx": [
+            356,
+            -210
+          ]
+        },
+        {
+          "placementId": "v4-placement-072",
+          "offsetPx": [
+            340,
+            -189
+          ]
+        },
+        {
+          "placementId": "v4-placement-073",
+          "offsetPx": [
+            -776,
+            40
+          ]
+        },
+        {
+          "placementId": "v4-placement-074",
+          "offsetPx": [
+            -651,
+            -48
+          ]
+        },
+        {
+          "placementId": "v4-placement-075",
+          "offsetPx": [
+            -617,
+            71
+          ]
+        },
+        {
+          "placementId": "v4-placement-076",
+          "offsetPx": [
+            -127,
+            270
+          ]
+        },
+        {
+          "placementId": "v4-placement-077",
+          "offsetPx": [
+            -47,
+            310
+          ]
+        },
+        {
+          "placementId": "v4-placement-078",
+          "offsetPx": [
+            402,
+            212
+          ]
+        },
+        {
+          "placementId": "v4-placement-079",
+          "offsetPx": [
+            323,
+            247
+          ]
+        },
+        {
+          "placementId": "v4-placement-080",
+          "offsetPx": [
+            -69,
+            -161
+          ]
+        },
+        {
+          "placementId": "v4-placement-081",
+          "offsetPx": [
+            -6,
+            -182
+          ]
+        },
+        {
+          "placementId": "v4-placement-082",
+          "offsetPx": [
+            45,
+            -162
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitoring-prefab",
+      "zoneIds": [
+        "monitoramento"
+      ],
+      "originPx": [
+        1111,
+        607
+      ],
+      "reusable": true,
+      "placements": [
+        {
+          "placementId": "v4-placement-048",
+          "offsetPx": [
+            124,
+            -122
+          ]
+        },
+        {
+          "placementId": "v4-placement-049",
+          "offsetPx": [
+            -7,
+            -40
+          ]
+        },
+        {
+          "placementId": "v4-placement-050",
+          "offsetPx": [
+            -95,
+            -66
+          ]
+        },
+        {
+          "placementId": "v4-placement-051",
+          "offsetPx": [
+            -53,
+            -32
+          ]
+        }
+      ]
+    }
+  ],
+  "placements": [
+    {
+      "placementId": "v4-placement-001",
+      "assetId": "building.farmhouse.imagegen.v2",
+      "anchorPx": [
+        882,
+        304
+      ],
+      "requestedSizePx": [
+        250,
+        174
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 304,
+      "block": "homestead"
+    },
+    {
+      "placementId": "v4-placement-002",
+      "assetId": "vehicle.pickup.rural.imagegen.v1",
+      "anchorPx": [
+        1037,
+        358
+      ],
+      "requestedSizePx": [
+        91,
+        63
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 358,
+      "block": "homestead-yard"
+    },
+    {
+      "placementId": "v4-placement-003",
+      "assetId": "water.reservoir.imagegen.v1",
+      "anchorPx": [
+        790,
+        341
+      ],
+      "requestedSizePx": [
+        67,
+        57
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 341,
+      "block": "homestead-water"
+    },
+    {
+      "placementId": "v4-placement-004",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        785,
+        293
+      ],
+      "requestedSizePx": [
+        69,
+        83
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 293,
+      "block": "homestead-grove"
+    },
+    {
+      "placementId": "v4-placement-005",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1039,
+        277
+      ],
+      "requestedSizePx": [
+        67,
+        81
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 277,
+      "block": "homestead-grove"
+    },
+    {
+      "placementId": "v4-placement-006",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1073,
+        336
+      ],
+      "requestedSizePx": [
+        63,
+        77
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 336,
+      "block": "homestead-grove"
+    },
+    {
+      "placementId": "v4-placement-007",
+      "assetId": "feed.salt.roofed.imagegen.v1",
+      "anchorPx": [
+        787,
+        387
+      ],
+      "requestedSizePx": [
+        51,
+        56
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 387,
+      "block": "homestead-yard"
+    },
+    {
+      "placementId": "v4-placement-008",
+      "assetId": "vehicle.tractor.imagegen.v2",
+      "anchorPx": [
+        524,
+        577
+      ],
+      "requestedSizePx": [
+        110,
+        86
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 577,
+      "block": "cultivation"
+    },
+    {
+      "placementId": "v4-placement-009",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        192,
+        533
+      ],
+      "requestedSizePx": [
+        68,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 533,
+      "block": "crop-edge"
+    },
+    {
+      "placementId": "v4-placement-010",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        350,
+        590
+      ],
+      "requestedSizePx": [
+        67,
+        81
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 590,
+      "block": "crop-edge"
+    },
+    {
+      "placementId": "v4-placement-011",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        711,
+        632
+      ],
+      "requestedSizePx": [
+        63,
+        77
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 632,
+      "block": "crop-edge"
+    },
+    {
+      "placementId": "v4-placement-012",
+      "assetId": "feed.trough.hay.imagegen.v2",
+      "anchorPx": [
+        616,
+        511
+      ],
+      "requestedSizePx": [
+        82,
+        49
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 511,
+      "block": "cultivation-support"
+    },
+    {
+      "placementId": "v4-placement-013",
+      "assetId": "building.shed.imagegen.v1",
+      "anchorPx": [
+        1066,
+        420
+      ],
+      "requestedSizePx": [
+        207,
+        151
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 420,
+      "block": "service-yard"
+    },
+    {
+      "placementId": "v4-placement-014",
+      "assetId": "building.workshop.imagegen.v1",
+      "anchorPx": [
+        899,
+        476
+      ],
+      "requestedSizePx": [
+        144,
+        112
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 476,
+      "block": "service-yard"
+    },
+    {
+      "placementId": "v4-placement-015",
+      "assetId": "vehicle.livestock-truck.imagegen.v1",
+      "anchorPx": [
+        835,
+        541
+      ],
+      "requestedSizePx": [
+        114,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 541,
+      "block": "service-access"
+    },
+    {
+      "placementId": "v4-placement-016",
+      "assetId": "water.reservoir.imagegen.v1",
+      "anchorPx": [
+        1230,
+        469
+      ],
+      "requestedSizePx": [
+        64,
+        56
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 469,
+      "block": "service-water"
+    },
+    {
+      "placementId": "v4-placement-017",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1181,
+        380
+      ],
+      "requestedSizePx": [
+        68,
+        83
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 380,
+      "block": "service-grove"
+    },
+    {
+      "placementId": "v4-placement-018",
+      "assetId": "corral.wood.standard.imagegen.v1",
+      "anchorPx": [
+        957,
+        513
+      ],
+      "requestedSizePx": [
+        177,
+        128
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 513,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-019",
+      "assetId": "fence.gate.wood.imagegen.v2",
+      "anchorPx": [
+        932,
+        535
+      ],
+      "requestedSizePx": [
+        64,
+        49
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 535,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-020",
+      "assetId": "handling.alley.cattle.imagegen.v1",
+      "anchorPx": [
+        1068,
+        524
+      ],
+      "requestedSizePx": [
+        105,
+        78
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 524,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-021",
+      "assetId": "handling.chute.cattle.imagegen.v1",
+      "anchorPx": [
+        1055,
+        518
+      ],
+      "requestedSizePx": [
+        68,
+        65
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 518,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-022",
+      "assetId": "technology.scale.electronic.full.imagegen.v1",
+      "anchorPx": [
+        1070,
+        515
+      ],
+      "requestedSizePx": [
+        70,
+        57
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 515,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-023",
+      "assetId": "feed.trough.hay.imagegen.v2",
+      "anchorPx": [
+        797,
+        537
+      ],
+      "requestedSizePx": [
+        88,
+        52
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 537,
+      "block": "handling-support"
+    },
+    {
+      "placementId": "v4-placement-024",
+      "assetId": "water.trough.cattle.galvanized.imagegen.v2",
+      "anchorPx": [
+        743,
+        505
+      ],
+      "requestedSizePx": [
+        67,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 505,
+      "block": "handling-support"
+    },
+    {
+      "placementId": "v4-placement-025",
+      "assetId": "water.pond.imagegen.v1",
+      "anchorPx": [
+        697,
+        596
+      ],
+      "requestedSizePx": [
+        105,
+        76
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 596,
+      "block": "water-block"
+    },
+    {
+      "placementId": "v4-placement-026",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        438,
+        276
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 276,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-027",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        486,
+        252
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 252,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-028",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        584,
+        252
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 252,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-029",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        632,
+        276
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 276,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-030",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        632,
+        324
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 324,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-031",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        584,
+        348
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 348,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-032",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        486,
+        348
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 348,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-033",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        438,
+        324
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 324,
+      "block": "west-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-034",
+      "assetId": "fence.gate.wood.imagegen.v2",
+      "anchorPx": [
+        390,
+        322
+      ],
+      "requestedSizePx": [
+        62,
+        48
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 322,
+      "block": "west-paddock-gate"
+    },
+    {
+      "placementId": "v4-placement-035",
+      "assetId": "water.trough.cattle.galvanized.imagegen.v2",
+      "anchorPx": [
+        558,
+        318
+      ],
+      "requestedSizePx": [
+        62,
+        41
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 318,
+      "block": "west-paddock-water"
+    },
+    {
+      "placementId": "v4-placement-036",
+      "assetId": "feed.salt.roofed.imagegen.v1",
+      "anchorPx": [
+        602,
+        352
+      ],
+      "requestedSizePx": [
+        47,
+        52
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 352,
+      "block": "west-paddock-feed"
+    },
+    {
+      "placementId": "v4-placement-037",
+      "assetId": "water.trough.cattle.galvanized.imagegen.v2",
+      "anchorPx": [
+        1116,
+        292
+      ],
+      "requestedSizePx": [
+        61,
+        40
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 292,
+      "block": "north-paddock-water"
+    },
+    {
+      "placementId": "v4-placement-038",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1272,
+        496
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 496,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-039",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1319,
+        472
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 472,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-040",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1412,
+        472
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 472,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-041",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1459,
+        496
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 496,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-042",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1459,
+        544
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 544,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-043",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1412,
+        568
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 568,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-044",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1319,
+        568
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 568,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-045",
+      "assetId": "fence.wire.wood-post.imagegen.v1",
+      "anchorPx": [
+        1272,
+        544
+      ],
+      "requestedSizePx": [
+        106,
+        68
+      ],
+      "transform": {
+        "flip": "v",
+        "rotationDegreesCCW": 180
+      },
+      "depthKey": 544,
+      "block": "east-paddock-boundary"
+    },
+    {
+      "placementId": "v4-placement-046",
+      "assetId": "fence.gate.wood.imagegen.v2",
+      "anchorPx": [
+        1225,
+        542
+      ],
+      "requestedSizePx": [
+        60,
+        46
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 542,
+      "block": "east-paddock-gate"
+    },
+    {
+      "placementId": "v4-placement-047",
+      "assetId": "water.trough.cattle.galvanized.imagegen.v2",
+      "anchorPx": [
+        1426,
+        505
+      ],
+      "requestedSizePx": [
+        62,
+        41
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 505,
+      "block": "east-paddock-water"
+    },
+    {
+      "placementId": "v4-placement-048",
+      "assetId": "technology.gateway.antenna.imagegen.v1",
+      "anchorPx": [
+        1235,
+        485
+      ],
+      "requestedSizePx": [
+        47,
+        74
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 485,
+      "block": "monitoring-node"
+    },
+    {
+      "placementId": "v4-placement-049",
+      "assetId": "technology.monitor.station.imagegen.v2",
+      "anchorPx": [
+        1104,
+        567
+      ],
+      "requestedSizePx": [
+        43,
+        67
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 567,
+      "block": "monitoring-node"
+    },
+    {
+      "placementId": "v4-placement-050",
+      "assetId": "technology.traceability.system.imagegen.v1",
+      "anchorPx": [
+        1016,
+        541
+      ],
+      "requestedSizePx": [
+        49,
+        52
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 541,
+      "block": "monitoring-node"
+    },
+    {
+      "placementId": "v4-placement-051",
+      "assetId": "technology.reader.handheld.imagegen.v1",
+      "anchorPx": [
+        1058,
+        575
+      ],
+      "requestedSizePx": [
+        35,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 575,
+      "block": "monitoring-node"
+    },
+    {
+      "placementId": "v4-placement-052",
+      "assetId": "livestock.nelore.adult.grazing.ne.v1",
+      "anchorPx": [
+        500,
+        305
+      ],
+      "requestedSizePx": [
+        53,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 305,
+      "block": "west-pasture"
+    },
+    {
+      "placementId": "v4-placement-053",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        554,
+        288
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 288,
+      "block": "west-pasture"
+    },
+    {
+      "placementId": "v4-placement-054",
+      "assetId": "livestock.nelore.adult.walking.ne.v1",
+      "anchorPx": [
+        588,
+        320
+      ],
+      "requestedSizePx": [
+        52,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 320,
+      "block": "west-pasture"
+    },
+    {
+      "placementId": "v4-placement-055",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        523,
+        348
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 348,
+      "block": "west-pasture"
+    },
+    {
+      "placementId": "v4-placement-056",
+      "assetId": "livestock.nelore.calf.idle.ne.v1",
+      "anchorPx": [
+        574,
+        357
+      ],
+      "requestedSizePx": [
+        40,
+        35
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 357,
+      "block": "west-pasture"
+    },
+    {
+      "placementId": "v4-placement-057",
+      "assetId": "livestock.nelore.adult.grazing.ne.v1",
+      "anchorPx": [
+        1039,
+        278
+      ],
+      "requestedSizePx": [
+        52,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 278,
+      "block": "north-pasture"
+    },
+    {
+      "placementId": "v4-placement-058",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        1090,
+        256
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 256,
+      "block": "north-pasture"
+    },
+    {
+      "placementId": "v4-placement-059",
+      "assetId": "livestock.nelore.adult.walking.ne.v1",
+      "anchorPx": [
+        1148,
+        279
+      ],
+      "requestedSizePx": [
+        52,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 279,
+      "block": "north-pasture"
+    },
+    {
+      "placementId": "v4-placement-060",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        1061,
+        316
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 316,
+      "block": "north-pasture"
+    },
+    {
+      "placementId": "v4-placement-061",
+      "assetId": "livestock.nelore.calf.idle.ne.v1",
+      "anchorPx": [
+        1133,
+        325
+      ],
+      "requestedSizePx": [
+        40,
+        35
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 325,
+      "block": "north-pasture"
+    },
+    {
+      "placementId": "v4-placement-062",
+      "assetId": "livestock.nelore.adult.grazing.ne.v1",
+      "anchorPx": [
+        1352,
+        495
+      ],
+      "requestedSizePx": [
+        52,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 495,
+      "block": "east-pasture"
+    },
+    {
+      "placementId": "v4-placement-063",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        1406,
+        479
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 479,
+      "block": "east-pasture"
+    },
+    {
+      "placementId": "v4-placement-064",
+      "assetId": "livestock.nelore.adult.walking.ne.v1",
+      "anchorPx": [
+        1450,
+        509
+      ],
+      "requestedSizePx": [
+        52,
+        44
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 509,
+      "block": "east-pasture"
+    },
+    {
+      "placementId": "v4-placement-065",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        1364,
+        537
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 537,
+      "block": "east-pasture"
+    },
+    {
+      "placementId": "v4-placement-066",
+      "assetId": "livestock.nelore.adult.idle.imagegen.v1",
+      "anchorPx": [
+        986,
+        456
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 456,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-067",
+      "assetId": "livestock.nelore.adult.walking.ne.v1",
+      "anchorPx": [
+        1031,
+        475
+      ],
+      "requestedSizePx": [
+        51,
+        43
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 475,
+      "block": "handling-core"
+    },
+    {
+      "placementId": "v4-placement-068",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        639,
+        211
+      ],
+      "requestedSizePx": [
+        69,
+        84
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 211,
+      "block": "north-edge"
+    },
+    {
+      "placementId": "v4-placement-069",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        704,
+        192
+      ],
+      "requestedSizePx": [
+        67,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 192,
+      "block": "north-edge"
+    },
+    {
+      "placementId": "v4-placement-070",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        769,
+        211
+      ],
+      "requestedSizePx": [
+        68,
+        83
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 211,
+      "block": "north-edge"
+    },
+    {
+      "placementId": "v4-placement-071",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1243,
+        220
+      ],
+      "requestedSizePx": [
+        69,
+        84
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 220,
+      "block": "north-edge"
+    },
+    {
+      "placementId": "v4-placement-072",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1227,
+        241
+      ],
+      "requestedSizePx": [
+        67,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 241,
+      "block": "north-edge"
+    },
+    {
+      "placementId": "v4-placement-073",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        111,
+        470
+      ],
+      "requestedSizePx": [
+        70,
+        85
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 470,
+      "block": "west-edge"
+    },
+    {
+      "placementId": "v4-placement-074",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        236,
+        382
+      ],
+      "requestedSizePx": [
+        65,
+        80
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 382,
+      "block": "west-edge"
+    },
+    {
+      "placementId": "v4-placement-075",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        270,
+        501
+      ],
+      "requestedSizePx": [
+        67,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 501,
+      "block": "west-edge"
+    },
+    {
+      "placementId": "v4-placement-076",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        760,
+        700
+      ],
+      "requestedSizePx": [
+        67,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 700,
+      "block": "south-edge"
+    },
+    {
+      "placementId": "v4-placement-077",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        840,
+        740
+      ],
+      "requestedSizePx": [
+        67,
+        82
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 740,
+      "block": "south-edge"
+    },
+    {
+      "placementId": "v4-placement-078",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1289,
+        642
+      ],
+      "requestedSizePx": [
+        70,
+        85
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 642,
+      "block": "south-edge"
+    },
+    {
+      "placementId": "v4-placement-079",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        1210,
+        677
+      ],
+      "requestedSizePx": [
+        68,
+        83
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 677,
+      "block": "south-edge"
+    },
+    {
+      "placementId": "v4-placement-080",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        818,
+        269
+      ],
+      "requestedSizePx": [
+        65,
+        80
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 269,
+      "block": "grove"
+    },
+    {
+      "placementId": "v4-placement-081",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        881,
+        248
+      ],
+      "requestedSizePx": [
+        66,
+        81
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 248,
+      "block": "grove"
+    },
+    {
+      "placementId": "v4-placement-082",
+      "assetId": "vegetation.tree.shade.imagegen.v2",
+      "anchorPx": [
+        932,
+        268
+      ],
+      "requestedSizePx": [
+        65,
+        80
+      ],
+      "transform": {
+        "flip": null,
+        "rotationDegreesCCW": 0
+      },
+      "depthKey": 268,
+      "block": "grove"
+    }
+  ],
+  "renderSettings": {
+    "scale": 1,
+    "frameMarginX": 60,
+    "frameMarginTop": 112,
+    "frameBottomMargin": 76,
+    "backgroundRGB": [
+      246,
+      245,
+      239
+    ],
+    "title": "RIOSE · FAZENDA PECUÁRIA BRASILEIRA",
+    "subtitle": "Composição V4 · kit de 12 sprites aprovado para o piloto · 2026-10-13",
+    "footer": "APROVADO PELO USUÁRIO · cena e assets do piloto; sem liberação pública/comercial"
+  },
+  "compositionReview": {
+    "status": "APPROVED",
+    "scope": "zone layout and composition of the ranch pilot only",
+    "reviewer": "user",
+    "date": "2026-10-12",
+    "evidence": "Explicit user reply: \"sim!\" to approval of composition V4 as the pilot base."
+  },
+  "assetReview": {
+    "status": "APPROVED",
+    "scope": "Visual appearance of all 12 selected pilot assets and the composed scene.",
+    "reviewer": "user",
+    "date": "2026-10-13",
+    "evidence": "Explicit user reply: \"aprovo\" to the presented 12-asset kit and composed scene. Technical states remain authoritative in assets/manifests/manifest.json."
+  },
+  "groundingReview": {
+    "status": "USER_SELECTED_VARIANT",
+    "assetId": "terrain.soil.compacted-patch.imagegen.v4",
+    "reviewer": "user",
+    "date": "2026-10-13",
+    "evidence": "Explicit user feedback: “V2 melhor!”; applies to the V2 grounding overlay selection over V1 only.",
+    "scope": "Selected overlay integrated into a review render. The approved V4 composition JSON remains unchanged; this does not lock the full terrain family or global art direction."
+  },
+  "gateReview": {
+    "status": "APPROVED",
+    "assetId": "fence.gate.wood.imagegen.v2",
+    "scope": "Gate asset only; preserves V4 composition and selected V2 grounding overlay.",
+    "placementCount": 3,
+    "note": "Included in the user-approved 12-asset pilot kit and composed scene.",
+    "reviewer": "user",
+    "date": "2026-10-13"
+  },
+  "troughReview": {
+    "status": "APPROVED",
+    "assetId": "water.trough.cattle.galvanized.imagegen.v2",
+    "placementCount": 4,
+    "scope": "Four trough placements in the user-approved composed pilot scene.",
+    "reviewer": "user",
+    "date": "2026-10-13"
+  },
+  "feedTroughReview": {
+    "status": "APPROVED",
+    "assetId": "feed.trough.hay.imagegen.v2",
+    "placementCount": 2,
+    "scope": "Two feed-trough placements in the user-approved composed pilot scene.",
+    "reviewer": "user",
+    "date": "2026-10-13"
+  },
+  "sceneArtReview": {
+    "status": "APPROVED",
+    "reviewer": "user",
+    "date": "2026-10-13",
+    "scope": "This composed ranch pilot scene and its selected 12-asset visual kit.",
+    "evidence": "Explicit user approval after viewing the pilot approval comparison.",
+    "exclusions": "Does not establish global style lock or public/commercial release."
+  },
+  "proposal": {
+    "id": "proposal-north-yard",
+    "label": "Sede no alto · pátio de serviço ao centro",
+    "description": "Leva a sede para o ombro norte e organiza galpão, manejo e água em uma sequência central.",
+    "seed": 84018,
+    "terrainProposal": "homestead-high-ground"
+  }
+}

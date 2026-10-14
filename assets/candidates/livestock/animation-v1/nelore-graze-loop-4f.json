@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "id": "livestock.nelore.adult.graze.imagegen.v1",
+  "category": "livestock",
+  "state": "graze",
+  "direction": "three-quarter-front-left",
+  "sourceFile": "assets/source/livestock/nelore-graze-loop-4f-source.png",
+  "file": "assets/candidates/livestock/animation-v1/nelore-graze-loop-4f.png",
+  "sourceTool": "OpenAI ImageGen; source art based on project Nelore sprite",
+  "license": {
+    "state": "project-generated-review",
+    "notes": "Verify current generation terms before public or commercial release."
+  },
+  "review": {
+    "status": "REVIEW",
+    "art": "unreviewed",
+    "technical": "alpha-cleaned-and-frame-normalized"
+  },
+  "frameCount": 4,
+  "frameSize": {
+    "width": 554,
+    "height": 406
+  },
+  "resolution": "source pixels; no runtime scaling baked in",
+  "footprint": [
+    1,
+    1
+  ],
+  "collision": {
+    "shape": "ellipse",
+    "width": 0.72,
+    "height": 0.3
+  },
+  "placements": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "width": 554,
+      "height": 406,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 12,
+        "y": 12,
+        "width": 530,
+        "height": 382
+      }
+    },
+    {
+      "frame": 1,
+      "x": 554,
+      "y": 0,
+      "width": 554,
+      "height": 406,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 567,
+        "y": 12,
+        "width": 528,
+        "height": 382
+      }
+    },
+    {
+      "frame": 2,
+      "x": 1108,
+      "y": 0,
+      "width": 554,
+      "height": 406,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1120,
+        "y": 12,
+        "width": 530,
+        "height": 382
+      }
+    },
+    {
+      "frame": 3,
+      "x": 1662,
+      "y": 0,
+      "width": 554,
+      "height": 406,
+      "pivot": {
+        "x": 0.5,
+        "y": 1.0
+      },
+      "contactBounds": {
+        "x": 1675,
+        "y": 12,
+        "width": 528,
+        "height": 382
+      }
+    }
+  ]
+}

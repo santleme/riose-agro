@@ -1,0 +1,4967 @@
+{
+  "schemaVersion": "1.0.0",
+  "projection": {
+    "type": "isometric-2to1",
+    "cellWidth": 96.0,
+    "cellHeight": 48.0
+  },
+  "compiler": "compile_asset_geometry.py",
+  "assets": {
+    "building-farmhouse-imagegen-v1": {
+      "assetId": "building-farmhouse-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 547,
+        "height": 414
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 531,
+        "height": 399
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.953,
+        "rows": 0.973
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.945,
+          "y": -0.072
+        },
+        {
+          "x": 0.002,
+          "y": -1.019
+        },
+        {
+          "x": 0.008,
+          "y": -0.936
+        },
+        {
+          "x": 0.008,
+          "y": -0.897
+        },
+        {
+          "x": -0.005,
+          "y": -0.433
+        },
+        {
+          "x": -0.018,
+          "y": -0.124
+        },
+        {
+          "x": -0.024,
+          "y": -0.092
+        },
+        {
+          "x": -0.089,
+          "y": -0.053
+        },
+        {
+          "x": -0.172,
+          "y": -0.047
+        },
+        {
+          "x": -0.417,
+          "y": -0.047
+        },
+        {
+          "x": -0.903,
+          "y": -0.063
+        },
+        {
+          "x": -0.939,
+          "y": -0.066
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.921,
+          "y": -0.23
+        },
+        {
+          "x": -0.198,
+          "y": -1.876
+        },
+        {
+          "x": -0.127,
+          "y": -1.831
+        },
+        {
+          "x": -0.066,
+          "y": -1.763
+        },
+        {
+          "x": 0.008,
+          "y": -1.361
+        },
+        {
+          "x": 0.008,
+          "y": -0.897
+        },
+        {
+          "x": -0.011,
+          "y": -0.233
+        },
+        {
+          "x": -0.06,
+          "y": -0.056
+        },
+        {
+          "x": -0.417,
+          "y": -0.047
+        },
+        {
+          "x": -1.702,
+          "y": -0.089
+        },
+        {
+          "x": -1.802,
+          "y": -0.105
+        },
+        {
+          "x": -1.892,
+          "y": -0.182
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.929,
+        "rows": 1.829
+      },
+      "visualHeightCells": 2.57,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.57
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 142,
+        "supportPointCount": 318,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "building-shed-imagegen-v1": {
+      "assetId": "building-shed-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 505,
+        "height": 407
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 7,
+        "width": 490,
+        "height": 393
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1.048,
+        "rows": 1.081
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -1.161,
+          "y": 0.139
+        },
+        {
+          "x": -0.113,
+          "y": -0.909
+        },
+        {
+          "x": -0.129,
+          "y": -0.355
+        },
+        {
+          "x": -0.139,
+          "y": -0.149
+        },
+        {
+          "x": -0.152,
+          "y": -0.031
+        },
+        {
+          "x": -0.198,
+          "y": 0.08
+        },
+        {
+          "x": -0.247,
+          "y": 0.129
+        },
+        {
+          "x": -0.349,
+          "y": 0.165
+        },
+        {
+          "x": -0.378,
+          "y": 0.169
+        },
+        {
+          "x": -0.434,
+          "y": 0.172
+        },
+        {
+          "x": -0.729,
+          "y": 0.165
+        },
+        {
+          "x": -1.076,
+          "y": 0.146
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.836,
+          "y": -0.326
+        },
+        {
+          "x": -0.12,
+          "y": -1.715
+        },
+        {
+          "x": -0.093,
+          "y": -1.676
+        },
+        {
+          "x": -0.08,
+          "y": -1.623
+        },
+        {
+          "x": -0.129,
+          "y": -0.355
+        },
+        {
+          "x": -0.152,
+          "y": -0.031
+        },
+        {
+          "x": -0.247,
+          "y": 0.129
+        },
+        {
+          "x": -0.349,
+          "y": 0.165
+        },
+        {
+          "x": -0.46,
+          "y": 0.172
+        },
+        {
+          "x": -1.45,
+          "y": 0.126
+        },
+        {
+          "x": -1.469,
+          "y": 0.12
+        },
+        {
+          "x": -1.535,
+          "y": 0.067
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.756,
+        "rows": 1.887
+      },
+      "visualHeightCells": 2.575,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.575
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 140,
+        "supportPointCount": 314,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "building-workshop-imagegen-v1": {
+      "assetId": "building-workshop-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 485,
+        "height": 392
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 469,
+        "height": 377
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1.02,
+        "rows": 1.061
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.869,
+          "y": -0.151
+        },
+        {
+          "x": 0.151,
+          "y": -1.172
+        },
+        {
+          "x": 0.121,
+          "y": -0.42
+        },
+        {
+          "x": 0.117,
+          "y": -0.376
+        },
+        {
+          "x": 0.111,
+          "y": -0.301
+        },
+        {
+          "x": 0.087,
+          "y": -0.209
+        },
+        {
+          "x": -0.053,
+          "y": -0.124
+        },
+        {
+          "x": -0.087,
+          "y": -0.117
+        },
+        {
+          "x": -0.189,
+          "y": -0.111
+        },
+        {
+          "x": -0.41,
+          "y": -0.121
+        },
+        {
+          "x": -0.604,
+          "y": -0.131
+        },
+        {
+          "x": -0.821,
+          "y": -0.145
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.872,
+          "y": -0.277
+        },
+        {
+          "x": 0.08,
+          "y": -1.508
+        },
+        {
+          "x": 0.117,
+          "y": -1.464
+        },
+        {
+          "x": 0.151,
+          "y": -1.389
+        },
+        {
+          "x": 0.121,
+          "y": -0.42
+        },
+        {
+          "x": 0.111,
+          "y": -0.301
+        },
+        {
+          "x": -0.053,
+          "y": -0.124
+        },
+        {
+          "x": -0.189,
+          "y": -0.111
+        },
+        {
+          "x": -0.604,
+          "y": -0.131
+        },
+        {
+          "x": -1.733,
+          "y": -0.199
+        },
+        {
+          "x": -1.818,
+          "y": -0.223
+        },
+        {
+          "x": -1.866,
+          "y": -0.27
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 2.024,
+        "rows": 1.398
+      },
+      "visualHeightCells": 2.565,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.565
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 134,
+        "supportPointCount": 300,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "corral-wood-standard-imagegen-v1": {
+      "assetId": "corral-wood-standard-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 580,
+        "height": 371
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 8,
+        "width": 568,
+        "height": 356
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.64,
+        "rows": 0.64
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.782,
+          "y": 0.11
+        },
+        {
+          "x": -0.149,
+          "y": -0.523
+        },
+        {
+          "x": -0.142,
+          "y": -0.399
+        },
+        {
+          "x": -0.142,
+          "y": -0.381
+        },
+        {
+          "x": -0.149,
+          "y": -0.009
+        },
+        {
+          "x": -0.159,
+          "y": 0.065
+        },
+        {
+          "x": -0.166,
+          "y": 0.082
+        },
+        {
+          "x": -0.191,
+          "y": 0.107
+        },
+        {
+          "x": -0.714,
+          "y": 0.117
+        },
+        {
+          "x": -0.733,
+          "y": 0.117
+        },
+        {
+          "x": -0.768,
+          "y": 0.114
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.508,
+          "y": -0.219
+        },
+        {
+          "x": -0.208,
+          "y": -1.501
+        },
+        {
+          "x": -0.187,
+          "y": -1.494
+        },
+        {
+          "x": -0.152,
+          "y": -1.473
+        },
+        {
+          "x": -0.124,
+          "y": -1.436
+        },
+        {
+          "x": -0.114,
+          "y": -1.417
+        },
+        {
+          "x": -0.107,
+          "y": -1.396
+        },
+        {
+          "x": -0.149,
+          "y": -0.009
+        },
+        {
+          "x": -0.166,
+          "y": 0.082
+        },
+        {
+          "x": -0.878,
+          "y": 0.14
+        },
+        {
+          "x": -1.186,
+          "y": 0.112
+        },
+        {
+          "x": -1.219,
+          "y": 0.098
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.401,
+        "rows": 1.641
+      },
+      "visualHeightCells": 1.662,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.662
+      },
+      "semanticCategory": "corral",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.5,
+        "contactPointCount": 128,
+        "supportPointCount": 354,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-barn": {
+      "assetId": "dairy-barn",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 843,
+        "height": 514
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 827,
+        "height": 498
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1.175,
+        "rows": 1.199
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.673,
+          "y": -0.238
+        },
+        {
+          "x": 0.503,
+          "y": -1.414
+        },
+        {
+          "x": 0.503,
+          "y": -1.404
+        },
+        {
+          "x": 0.443,
+          "y": -1.195
+        },
+        {
+          "x": 0.371,
+          "y": -0.956
+        },
+        {
+          "x": 0.305,
+          "y": -0.742
+        },
+        {
+          "x": 0.148,
+          "y": -0.231
+        },
+        {
+          "x": 0.131,
+          "y": -0.215
+        },
+        {
+          "x": -0.659,
+          "y": -0.233
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.697,
+          "y": -0.236
+        },
+        {
+          "x": -0.062,
+          "y": -1.871
+        },
+        {
+          "x": 0.447,
+          "y": -1.469
+        },
+        {
+          "x": 0.484,
+          "y": -1.432
+        },
+        {
+          "x": 0.503,
+          "y": -1.414
+        },
+        {
+          "x": 0.503,
+          "y": -1.404
+        },
+        {
+          "x": 0.443,
+          "y": -1.195
+        },
+        {
+          "x": 0.371,
+          "y": -0.956
+        },
+        {
+          "x": 0.305,
+          "y": -0.742
+        },
+        {
+          "x": 0.148,
+          "y": -0.231
+        },
+        {
+          "x": 0.131,
+          "y": -0.215
+        },
+        {
+          "x": -1.69,
+          "y": -0.233
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 2.2,
+        "rows": 1.656
+      },
+      "visualHeightCells": 2.314,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.314
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 180,
+        "supportPointCount": 400,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-girolando-cow": {
+      "assetId": "dairy-girolando-cow",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 1164,
+        "height": 831
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 1148,
+        "height": 815
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.421,
+        "rows": 0.45
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.259,
+          "y": -0.074
+        },
+        {
+          "x": 0.152,
+          "y": -0.403
+        },
+        {
+          "x": 0.159,
+          "y": -0.389
+        },
+        {
+          "x": 0.163,
+          "y": -0.352
+        },
+        {
+          "x": -0.011,
+          "y": -0.01
+        },
+        {
+          "x": -0.044,
+          "y": 0.025
+        },
+        {
+          "x": -0.163,
+          "y": 0.047
+        },
+        {
+          "x": -0.185,
+          "y": 0.046
+        },
+        {
+          "x": -0.192,
+          "y": 0.04
+        },
+        {
+          "x": -0.197,
+          "y": 0.035
+        },
+        {
+          "x": -0.208,
+          "y": 0.023
+        },
+        {
+          "x": -0.227,
+          "y": -0.011
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.384,
+          "y": -0.159
+        },
+        {
+          "x": 0.152,
+          "y": -0.403
+        },
+        {
+          "x": 0.155,
+          "y": -0.4
+        },
+        {
+          "x": 0.162,
+          "y": -0.373
+        },
+        {
+          "x": 0.162,
+          "y": -0.348
+        },
+        {
+          "x": -0.022,
+          "y": 0.003
+        },
+        {
+          "x": -0.044,
+          "y": 0.025
+        },
+        {
+          "x": -0.163,
+          "y": 0.047
+        },
+        {
+          "x": -0.185,
+          "y": 0.046
+        },
+        {
+          "x": -0.192,
+          "y": 0.04
+        },
+        {
+          "x": -0.195,
+          "y": 0.037
+        },
+        {
+          "x": -0.198,
+          "y": 0.034
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.547,
+        "rows": 0.45
+      },
+      "visualHeightCells": 0.875,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 0.875
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 294,
+        "supportPointCount": 490,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-heifer-calf": {
+      "assetId": "dairy-heifer-calf",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 909,
+        "height": 750
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 893,
+        "height": 734
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.499,
+        "rows": 0.61
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.361,
+          "y": -0.093
+        },
+        {
+          "x": 0.113,
+          "y": -0.561
+        },
+        {
+          "x": 0.127,
+          "y": -0.536
+        },
+        {
+          "x": 0.135,
+          "y": -0.499
+        },
+        {
+          "x": 0.138,
+          "y": -0.47
+        },
+        {
+          "x": 0.137,
+          "y": -0.449
+        },
+        {
+          "x": -0.075,
+          "y": 0.033
+        },
+        {
+          "x": -0.265,
+          "y": 0.049
+        },
+        {
+          "x": -0.299,
+          "y": 0.038
+        },
+        {
+          "x": -0.309,
+          "y": 0.029
+        },
+        {
+          "x": -0.34,
+          "y": -0.043
+        },
+        {
+          "x": -0.36,
+          "y": -0.091
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.496,
+          "y": -0.242
+        },
+        {
+          "x": 0.106,
+          "y": -0.567
+        },
+        {
+          "x": 0.124,
+          "y": -0.546
+        },
+        {
+          "x": 0.127,
+          "y": -0.536
+        },
+        {
+          "x": 0.135,
+          "y": -0.499
+        },
+        {
+          "x": 0.138,
+          "y": -0.47
+        },
+        {
+          "x": 0.137,
+          "y": -0.449
+        },
+        {
+          "x": -0.06,
+          "y": 0.031
+        },
+        {
+          "x": -0.254,
+          "y": 0.051
+        },
+        {
+          "x": -0.265,
+          "y": 0.049
+        },
+        {
+          "x": -0.299,
+          "y": 0.038
+        },
+        {
+          "x": -0.309,
+          "y": 0.029
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.634,
+        "rows": 0.618
+      },
+      "visualHeightCells": 1.183,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.183
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 266,
+        "supportPointCount": 442,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-holstein-cow": {
+      "assetId": "dairy-holstein-cow",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 1087,
+        "height": 771
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 1071,
+        "height": 755
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.433,
+        "rows": 0.448
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.273,
+          "y": -0.058
+        },
+        {
+          "x": 0.146,
+          "y": -0.39
+        },
+        {
+          "x": 0.15,
+          "y": -0.385
+        },
+        {
+          "x": 0.155,
+          "y": -0.378
+        },
+        {
+          "x": 0.16,
+          "y": -0.36
+        },
+        {
+          "x": 0.16,
+          "y": -0.341
+        },
+        {
+          "x": -0.031,
+          "y": 0.005
+        },
+        {
+          "x": -0.057,
+          "y": 0.036
+        },
+        {
+          "x": -0.203,
+          "y": 0.058
+        },
+        {
+          "x": -0.215,
+          "y": 0.057
+        },
+        {
+          "x": -0.222,
+          "y": 0.051
+        },
+        {
+          "x": -0.226,
+          "y": 0.047
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.384,
+          "y": -0.157
+        },
+        {
+          "x": 0.089,
+          "y": -0.445
+        },
+        {
+          "x": 0.147,
+          "y": -0.388
+        },
+        {
+          "x": 0.155,
+          "y": -0.378
+        },
+        {
+          "x": 0.16,
+          "y": -0.36
+        },
+        {
+          "x": 0.16,
+          "y": -0.341
+        },
+        {
+          "x": -0.023,
+          "y": -0.004
+        },
+        {
+          "x": -0.051,
+          "y": 0.03
+        },
+        {
+          "x": -0.069,
+          "y": 0.042
+        },
+        {
+          "x": -0.215,
+          "y": 0.057
+        },
+        {
+          "x": -0.222,
+          "y": 0.051
+        },
+        {
+          "x": -0.226,
+          "y": 0.047
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.543,
+        "rows": 0.502
+      },
+      "visualHeightCells": 0.868,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 0.868
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 272,
+        "supportPointCount": 454,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-milk-chilling-tank": {
+      "assetId": "dairy-milk-chilling-tank",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 580,
+        "height": 439
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 564,
+        "height": 423
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.809,
+        "rows": 0.809
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.873,
+          "y": 0.213
+        },
+        {
+          "x": -0.064,
+          "y": -0.595
+        },
+        {
+          "x": -0.134,
+          "y": -0.169
+        },
+        {
+          "x": -0.18,
+          "y": 0.111
+        },
+        {
+          "x": -0.194,
+          "y": 0.124
+        },
+        {
+          "x": -0.221,
+          "y": 0.128
+        },
+        {
+          "x": -0.82,
+          "y": 0.208
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.179,
+          "y": -0.202
+        },
+        {
+          "x": -0.066,
+          "y": -1.152
+        },
+        {
+          "x": -0.06,
+          "y": -1.15
+        },
+        {
+          "x": -0.029,
+          "y": -1.119
+        },
+        {
+          "x": 0.017,
+          "y": -1.065
+        },
+        {
+          "x": 0.014,
+          "y": -1.038
+        },
+        {
+          "x": -0.194,
+          "y": 0.124
+        },
+        {
+          "x": -0.221,
+          "y": 0.128
+        },
+        {
+          "x": -0.873,
+          "y": 0.213
+        },
+        {
+          "x": -0.9,
+          "y": 0.194
+        },
+        {
+          "x": -0.904,
+          "y": 0.19
+        },
+        {
+          "x": -0.966,
+          "y": 0.128
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.197,
+        "rows": 1.366
+      },
+      "visualHeightCells": 1.641,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.641
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 154,
+        "supportPointCount": 340,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-milking-parlor": {
+      "assetId": "dairy-milking-parlor",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 894,
+        "height": 559
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 878,
+        "height": 543
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1.161,
+        "rows": 1.161
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -1.165,
+          "y": 0.237
+        },
+        {
+          "x": -0.004,
+          "y": -0.924
+        },
+        {
+          "x": -0.009,
+          "y": -0.894
+        },
+        {
+          "x": -0.022,
+          "y": -0.802
+        },
+        {
+          "x": -0.07,
+          "y": -0.482
+        },
+        {
+          "x": -0.12,
+          "y": -0.151
+        },
+        {
+          "x": -0.125,
+          "y": -0.129
+        },
+        {
+          "x": -0.173,
+          "y": 0.094
+        },
+        {
+          "x": -0.188,
+          "y": 0.11
+        },
+        {
+          "x": -0.199,
+          "y": 0.112
+        },
+        {
+          "x": -0.23,
+          "y": 0.116
+        },
+        {
+          "x": -1.157,
+          "y": 0.237
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.901,
+          "y": -0.079
+        },
+        {
+          "x": 0.068,
+          "y": -1.847
+        },
+        {
+          "x": 0.118,
+          "y": -1.801
+        },
+        {
+          "x": 0.136,
+          "y": -1.783
+        },
+        {
+          "x": 0.134,
+          "y": -1.755
+        },
+        {
+          "x": 0.116,
+          "y": -1.632
+        },
+        {
+          "x": -0.125,
+          "y": -0.129
+        },
+        {
+          "x": -0.188,
+          "y": 0.11
+        },
+        {
+          "x": -1.557,
+          "y": 0.313
+        },
+        {
+          "x": -1.577,
+          "y": 0.315
+        },
+        {
+          "x": -1.606,
+          "y": 0.318
+        },
+        {
+          "x": -1.68,
+          "y": 0.243
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 2.037,
+        "rows": 2.164
+      },
+      "visualHeightCells": 2.379,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.379
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 196,
+        "supportPointCount": 436,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "dairy-waiting-pen": {
+      "assetId": "dairy-waiting-pen",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 688,
+        "height": 424
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 672,
+        "height": 408
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.84,
+        "rows": 0.801
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.708,
+          "y": -0.098
+        },
+        {
+          "x": 0.074,
+          "y": -0.88
+        },
+        {
+          "x": 0.079,
+          "y": -0.875
+        },
+        {
+          "x": 0.108,
+          "y": -0.845
+        },
+        {
+          "x": 0.133,
+          "y": -0.821
+        },
+        {
+          "x": 0.133,
+          "y": -0.791
+        },
+        {
+          "x": 0.02,
+          "y": -0.167
+        },
+        {
+          "x": 0,
+          "y": -0.088
+        },
+        {
+          "x": -0.01,
+          "y": -0.079
+        },
+        {
+          "x": -0.558,
+          "y": -0.091
+        },
+        {
+          "x": -0.69,
+          "y": -0.096
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.587,
+          "y": -0.103
+        },
+        {
+          "x": -0.039,
+          "y": -1.651
+        },
+        {
+          "x": -0.002,
+          "y": -1.648
+        },
+        {
+          "x": 0.027,
+          "y": -1.619
+        },
+        {
+          "x": 0.066,
+          "y": -1.58
+        },
+        {
+          "x": 0.074,
+          "y": -1.567
+        },
+        {
+          "x": 0.076,
+          "y": -1.55
+        },
+        {
+          "x": 0.133,
+          "y": -0.821
+        },
+        {
+          "x": 0.133,
+          "y": -0.791
+        },
+        {
+          "x": 0.02,
+          "y": -0.167
+        },
+        {
+          "x": -0.01,
+          "y": -0.079
+        },
+        {
+          "x": -1.531,
+          "y": -0.101
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.72,
+        "rows": 1.572
+      },
+      "visualHeightCells": 2.005,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.005
+      },
+      "semanticCategory": "building",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 148,
+        "supportPointCount": 328,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "feed-salt-roofed-imagegen-v1": {
+      "assetId": "feed-salt-roofed-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 279,
+        "height": 314
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 8,
+        "width": 264,
+        "height": 300
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.589,
+        "rows": 0.711
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.539,
+          "y": -0.121
+        },
+        {
+          "x": -0.011,
+          "y": -0.722
+        },
+        {
+          "x": 0.023,
+          "y": -0.682
+        },
+        {
+          "x": 0.05,
+          "y": -0.624
+        },
+        {
+          "x": 0.038,
+          "y": -0.356
+        },
+        {
+          "x": 0.023,
+          "y": -0.206
+        },
+        {
+          "x": -0.06,
+          "y": -0.038
+        },
+        {
+          "x": -0.09,
+          "y": -0.032
+        },
+        {
+          "x": -0.215,
+          "y": -0.017
+        },
+        {
+          "x": -0.331,
+          "y": -0.011
+        },
+        {
+          "x": -0.526,
+          "y": -0.06
+        },
+        {
+          "x": -0.536,
+          "y": -0.099
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.755,
+          "y": -0.417
+        },
+        {
+          "x": -0.017,
+          "y": -0.728
+        },
+        {
+          "x": 0.002,
+          "y": -0.71
+        },
+        {
+          "x": 0.038,
+          "y": -0.661
+        },
+        {
+          "x": 0.05,
+          "y": -0.612
+        },
+        {
+          "x": 0.023,
+          "y": -0.206
+        },
+        {
+          "x": -0.047,
+          "y": -0.05
+        },
+        {
+          "x": -0.09,
+          "y": -0.032
+        },
+        {
+          "x": -0.215,
+          "y": -0.017
+        },
+        {
+          "x": -0.386,
+          "y": -0.017
+        },
+        {
+          "x": -0.526,
+          "y": -0.06
+        },
+        {
+          "x": -0.755,
+          "y": -0.392
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.806,
+        "rows": 0.711
+      },
+      "visualHeightCells": 1.831,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.831
+      },
+      "semanticCategory": "feed",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 106,
+        "supportPointCount": 178,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "feed-trough-hay-imagegen-v1": {
+      "assetId": "feed-trough-hay-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 423,
+        "height": 261
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 7,
+        "width": 412,
+        "height": 247
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.579,
+        "rows": 0.643
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.968,
+          "y": 0.303
+        },
+        {
+          "x": -0.389,
+          "y": -0.277
+        },
+        {
+          "x": -0.399,
+          "y": 0.232
+        },
+        {
+          "x": -0.402,
+          "y": 0.248
+        },
+        {
+          "x": -0.411,
+          "y": 0.283
+        },
+        {
+          "x": -0.418,
+          "y": 0.303
+        },
+        {
+          "x": -0.472,
+          "y": 0.344
+        },
+        {
+          "x": -0.543,
+          "y": 0.351
+        },
+        {
+          "x": -0.815,
+          "y": 0.367
+        },
+        {
+          "x": -0.901,
+          "y": 0.363
+        },
+        {
+          "x": -0.949,
+          "y": 0.347
+        },
+        {
+          "x": -0.959,
+          "y": 0.331
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.176,
+          "y": 0.126
+        },
+        {
+          "x": -0.328,
+          "y": -0.722
+        },
+        {
+          "x": -0.399,
+          "y": 0.232
+        },
+        {
+          "x": -0.402,
+          "y": 0.248
+        },
+        {
+          "x": -0.411,
+          "y": 0.283
+        },
+        {
+          "x": -0.418,
+          "y": 0.303
+        },
+        {
+          "x": -0.472,
+          "y": 0.344
+        },
+        {
+          "x": -0.543,
+          "y": 0.351
+        },
+        {
+          "x": -0.815,
+          "y": 0.367
+        },
+        {
+          "x": -0.901,
+          "y": 0.363
+        },
+        {
+          "x": -1.1,
+          "y": 0.203
+        },
+        {
+          "x": -1.17,
+          "y": 0.133
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.848,
+        "rows": 1.088
+      },
+      "visualHeightCells": 1.581,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.581
+      },
+      "semanticCategory": "feed",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 88,
+        "supportPointCount": 148,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "fence-gate-wood-imagegen-v1": {
+      "assetId": "fence-gate-wood-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 379,
+        "height": 303
+      },
+      "visualBoundingBoxPx": {
+        "x": 4,
+        "y": 7,
+        "width": 371,
+        "height": 290
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.512,
+        "rows": 0.323
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.248,
+          "y": -0.222
+        },
+        {
+          "x": 0.075,
+          "y": -0.545
+        },
+        {
+          "x": 0.232,
+          "y": -0.495
+        },
+        {
+          "x": 0.242,
+          "y": -0.49
+        },
+        {
+          "x": 0.246,
+          "y": -0.486
+        },
+        {
+          "x": 0.256,
+          "y": -0.464
+        },
+        {
+          "x": 0.26,
+          "y": -0.436
+        },
+        {
+          "x": 0.264,
+          "y": -0.36
+        },
+        {
+          "x": 0.26,
+          "y": -0.34
+        },
+        {
+          "x": 0.25,
+          "y": -0.314
+        },
+        {
+          "x": 0.204,
+          "y": -0.284
+        },
+        {
+          "x": 0.165,
+          "y": -0.276
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.617,
+          "y": -0.125
+        },
+        {
+          "x": -0.061,
+          "y": -0.681
+        },
+        {
+          "x": 0.242,
+          "y": -0.49
+        },
+        {
+          "x": 0.252,
+          "y": -0.476
+        },
+        {
+          "x": 0.256,
+          "y": -0.464
+        },
+        {
+          "x": 0.26,
+          "y": -0.436
+        },
+        {
+          "x": 0.264,
+          "y": -0.408
+        },
+        {
+          "x": 0.264,
+          "y": -0.36
+        },
+        {
+          "x": 0.26,
+          "y": -0.34
+        },
+        {
+          "x": 0.226,
+          "y": -0.29
+        },
+        {
+          "x": 0.204,
+          "y": -0.284
+        },
+        {
+          "x": 0.165,
+          "y": -0.276
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.881,
+        "rows": 0.556
+      },
+      "visualHeightCells": 1.156,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.156
+      },
+      "semanticCategory": "fence",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 104,
+        "supportPointCount": 172,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "fence-wire-wood-post-imagegen-v1": {
+      "assetId": "fence-wire-wood-post-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 416,
+        "height": 299
+      },
+      "visualBoundingBoxPx": {
+        "x": 5,
+        "y": 7,
+        "width": 407,
+        "height": 285
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.501,
+        "rows": 0.311
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.176,
+          "y": -0.301
+        },
+        {
+          "x": 0.133,
+          "y": -0.61
+        },
+        {
+          "x": 0.307,
+          "y": -0.509
+        },
+        {
+          "x": 0.311,
+          "y": -0.505
+        },
+        {
+          "x": 0.319,
+          "y": -0.497
+        },
+        {
+          "x": 0.321,
+          "y": -0.491
+        },
+        {
+          "x": 0.325,
+          "y": -0.471
+        },
+        {
+          "x": 0.319,
+          "y": -0.416
+        },
+        {
+          "x": 0.311,
+          "y": -0.384
+        },
+        {
+          "x": 0.291,
+          "y": -0.364
+        },
+        {
+          "x": -0.143,
+          "y": -0.301
+        },
+        {
+          "x": -0.17,
+          "y": -0.299
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.317,
+          "y": -0.434
+        },
+        {
+          "x": 0.018,
+          "y": -0.738
+        },
+        {
+          "x": 0.307,
+          "y": -0.509
+        },
+        {
+          "x": 0.319,
+          "y": -0.497
+        },
+        {
+          "x": 0.321,
+          "y": -0.491
+        },
+        {
+          "x": 0.325,
+          "y": -0.471
+        },
+        {
+          "x": 0.319,
+          "y": -0.416
+        },
+        {
+          "x": 0.291,
+          "y": -0.364
+        },
+        {
+          "x": -0.143,
+          "y": -0.301
+        },
+        {
+          "x": -0.192,
+          "y": -0.301
+        },
+        {
+          "x": -0.22,
+          "y": -0.305
+        },
+        {
+          "x": -0.275,
+          "y": -0.372
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.643,
+        "rows": 0.436
+      },
+      "visualHeightCells": 1.152,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.152
+      },
+      "semanticCategory": "fence",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 102,
+        "supportPointCount": 170,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "grass-light": {
+      "assetId": "grass-light",
+      "geometryStatus": "annotated",
+      "reviewRequired": false,
+      "spatialReviewStatus": "complete",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 23,
+        "y": 12,
+        "width": 357,
+        "height": 232
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.82,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "visualHeightCells": 0,
+      "occlusion": {
+        "base": "tile-origin",
+        "heightCells": 0
+      },
+      "semanticCategory": "terrain",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "contract": "one tilemap cell per terrain tile",
+        "alphaBoundsMeasured": true
+      }
+    },
+    "grass-mid": {
+      "assetId": "grass-mid",
+      "geometryStatus": "annotated",
+      "reviewRequired": false,
+      "spatialReviewStatus": "complete",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 18,
+        "y": 13,
+        "width": 354,
+        "height": 231
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.82,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "visualHeightCells": 0,
+      "occlusion": {
+        "base": "tile-origin",
+        "heightCells": 0
+      },
+      "semanticCategory": "terrain",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "contract": "one tilemap cell per terrain tile",
+        "alphaBoundsMeasured": true
+      }
+    },
+    "handling-chute-cattle-imagegen-v1": {
+      "assetId": "handling-chute-cattle-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 369,
+        "height": 349
+      },
+      "visualBoundingBoxPx": {
+        "x": 4,
+        "y": 8,
+        "width": 361,
+        "height": 334
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.719,
+        "rows": 0.637
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.861,
+          "y": 0.114
+        },
+        {
+          "x": -0.238,
+          "y": -0.509
+        },
+        {
+          "x": -0.213,
+          "y": -0.49
+        },
+        {
+          "x": -0.21,
+          "y": -0.482
+        },
+        {
+          "x": -0.147,
+          "y": -0.084
+        },
+        {
+          "x": -0.141,
+          "y": -0.023
+        },
+        {
+          "x": -0.144,
+          "y": 0.034
+        },
+        {
+          "x": -0.183,
+          "y": 0.084
+        },
+        {
+          "x": -0.196,
+          "y": 0.086
+        },
+        {
+          "x": -0.21,
+          "y": 0.089
+        },
+        {
+          "x": -0.765,
+          "y": 0.128
+        },
+        {
+          "x": -0.82,
+          "y": 0.128
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.432,
+          "y": -0.479
+        },
+        {
+          "x": -0.29,
+          "y": -1.27
+        },
+        {
+          "x": -0.284,
+          "y": -1.265
+        },
+        {
+          "x": -0.224,
+          "y": -1.149
+        },
+        {
+          "x": -0.216,
+          "y": -1.124
+        },
+        {
+          "x": -0.141,
+          "y": -0.023
+        },
+        {
+          "x": -0.144,
+          "y": 0.034
+        },
+        {
+          "x": -0.183,
+          "y": 0.084
+        },
+        {
+          "x": -0.21,
+          "y": 0.089
+        },
+        {
+          "x": -0.765,
+          "y": 0.128
+        },
+        {
+          "x": -0.82,
+          "y": 0.128
+        },
+        {
+          "x": -0.877,
+          "y": 0.097
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.291,
+        "rows": 1.398
+      },
+      "visualHeightCells": 1.834,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.834
+      },
+      "semanticCategory": "corral",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.5,
+        "contactPointCount": 120,
+        "supportPointCount": 332,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "livestock-nelore-calf-idle-imagegen-v1": {
+      "assetId": "livestock-nelore-calf-idle-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 981,
+        "height": 751
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 7,
+        "width": 965,
+        "height": 736
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.573,
+        "rows": 0.595
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.329,
+          "y": -0.125
+        },
+        {
+          "x": 0.096,
+          "y": -0.547
+        },
+        {
+          "x": 0.16,
+          "y": -0.502
+        },
+        {
+          "x": 0.191,
+          "y": -0.471
+        },
+        {
+          "x": 0.24,
+          "y": -0.385
+        },
+        {
+          "x": 0.244,
+          "y": -0.347
+        },
+        {
+          "x": -0.036,
+          "y": 0.007
+        },
+        {
+          "x": -0.212,
+          "y": 0.048
+        },
+        {
+          "x": -0.225,
+          "y": 0.045
+        },
+        {
+          "x": -0.239,
+          "y": 0.033
+        },
+        {
+          "x": -0.322,
+          "y": -0.109
+        },
+        {
+          "x": -0.328,
+          "y": -0.123
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.477,
+          "y": -0.259
+        },
+        {
+          "x": 0.157,
+          "y": -0.505
+        },
+        {
+          "x": 0.189,
+          "y": -0.473
+        },
+        {
+          "x": 0.191,
+          "y": -0.471
+        },
+        {
+          "x": 0.24,
+          "y": -0.385
+        },
+        {
+          "x": 0.244,
+          "y": -0.366
+        },
+        {
+          "x": -0.004,
+          "y": -0.025
+        },
+        {
+          "x": -0.041,
+          "y": 0.009
+        },
+        {
+          "x": -0.212,
+          "y": 0.048
+        },
+        {
+          "x": -0.222,
+          "y": 0.045
+        },
+        {
+          "x": -0.232,
+          "y": 0.039
+        },
+        {
+          "x": -0.249,
+          "y": 0.021
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.722,
+        "rows": 0.553
+      },
+      "visualHeightCells": 1.184,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.184
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 266,
+        "supportPointCount": 442,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "livestock-nelore-cow-idle-imagegen-v1": {
+      "assetId": "livestock-nelore-cow-idle-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 1219,
+        "height": 884
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 1203,
+        "height": 869
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.557,
+        "rows": 0.597
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.322,
+          "y": -0.104
+        },
+        {
+          "x": 0.139,
+          "y": -0.536
+        },
+        {
+          "x": 0.191,
+          "y": -0.495
+        },
+        {
+          "x": 0.192,
+          "y": -0.493
+        },
+        {
+          "x": 0.228,
+          "y": -0.426
+        },
+        {
+          "x": 0.235,
+          "y": -0.401
+        },
+        {
+          "x": -0.024,
+          "y": 0
+        },
+        {
+          "x": -0.048,
+          "y": 0.028
+        },
+        {
+          "x": -0.195,
+          "y": 0.06
+        },
+        {
+          "x": -0.212,
+          "y": 0.061
+        },
+        {
+          "x": -0.23,
+          "y": 0.053
+        },
+        {
+          "x": -0.254,
+          "y": 0.02
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.493,
+          "y": -0.203
+        },
+        {
+          "x": 0.033,
+          "y": -0.724
+        },
+        {
+          "x": 0.035,
+          "y": -0.723
+        },
+        {
+          "x": 0.222,
+          "y": -0.438
+        },
+        {
+          "x": 0.233,
+          "y": -0.415
+        },
+        {
+          "x": 0.235,
+          "y": -0.401
+        },
+        {
+          "x": -0.024,
+          "y": 0
+        },
+        {
+          "x": -0.031,
+          "y": 0.01
+        },
+        {
+          "x": -0.06,
+          "y": 0.037
+        },
+        {
+          "x": -0.212,
+          "y": 0.061
+        },
+        {
+          "x": -0.224,
+          "y": 0.057
+        },
+        {
+          "x": -0.492,
+          "y": -0.202
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.728,
+        "rows": 0.786
+      },
+      "visualHeightCells": 1.129,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.129
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 314,
+        "supportPointCount": 522,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "livestock-nelore-heifer-idle-imagegen-v1": {
+      "assetId": "livestock-nelore-heifer-idle-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 1101,
+        "height": 809
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 8,
+        "width": 1087,
+        "height": 794
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.587,
+        "rows": 0.617
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.33,
+          "y": -0.101
+        },
+        {
+          "x": 0.164,
+          "y": -0.537
+        },
+        {
+          "x": 0.187,
+          "y": -0.514
+        },
+        {
+          "x": 0.195,
+          "y": -0.506
+        },
+        {
+          "x": 0.251,
+          "y": -0.418
+        },
+        {
+          "x": 0.256,
+          "y": -0.392
+        },
+        {
+          "x": -0.016,
+          "y": -0.01
+        },
+        {
+          "x": -0.186,
+          "y": 0.079
+        },
+        {
+          "x": -0.22,
+          "y": 0.079
+        },
+        {
+          "x": -0.229,
+          "y": 0.071
+        },
+        {
+          "x": -0.239,
+          "y": 0.061
+        },
+        {
+          "x": -0.326,
+          "y": -0.088
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.478,
+          "y": -0.23
+        },
+        {
+          "x": 0.164,
+          "y": -0.537
+        },
+        {
+          "x": 0.187,
+          "y": -0.514
+        },
+        {
+          "x": 0.189,
+          "y": -0.512
+        },
+        {
+          "x": 0.241,
+          "y": -0.436
+        },
+        {
+          "x": 0.254,
+          "y": -0.407
+        },
+        {
+          "x": 0.257,
+          "y": -0.378
+        },
+        {
+          "x": -0.047,
+          "y": 0.021
+        },
+        {
+          "x": -0.207,
+          "y": 0.083
+        },
+        {
+          "x": -0.22,
+          "y": 0.079
+        },
+        {
+          "x": -0.229,
+          "y": 0.071
+        },
+        {
+          "x": -0.239,
+          "y": 0.061
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.735,
+        "rows": 0.621
+      },
+      "visualHeightCells": 1.142,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.142
+      },
+      "semanticCategory": "livestock",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 284,
+        "supportPointCount": 476,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "road-straight": {
+      "assetId": "road-straight",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 22,
+        "y": 9,
+        "width": 355,
+        "height": 247
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.8,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.479,
+        "rows": 0.414
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.08,
+          "y": 0.142
+        },
+        {
+          "x": 0.079,
+          "y": -0.017
+        },
+        {
+          "x": 0.4,
+          "y": 0.107
+        },
+        {
+          "x": 0.109,
+          "y": 0.397
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.357,
+          "y": 0.117
+        },
+        {
+          "x": 0.054,
+          "y": -0.294
+        },
+        {
+          "x": 0.4,
+          "y": 0.107
+        },
+        {
+          "x": 0.109,
+          "y": 0.397
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.757,
+        "rows": 0.691
+      },
+      "visualHeightCells": 1.246,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.246
+      },
+      "semanticCategory": "infrastructure",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 72,
+        "supportPointCount": 132,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "road-turn": {
+      "assetId": "road-turn",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 27,
+        "y": 2,
+        "width": 352,
+        "height": 253
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.8,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.429,
+        "rows": 0.409
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.231,
+          "y": 0.273
+        },
+        {
+          "x": 0.147,
+          "y": -0.105
+        },
+        {
+          "x": 0.15,
+          "y": -0.097
+        },
+        {
+          "x": 0.155,
+          "y": -0.072
+        },
+        {
+          "x": 0.165,
+          "y": 0.009
+        },
+        {
+          "x": 0.193,
+          "y": 0.233
+        },
+        {
+          "x": 0.198,
+          "y": 0.279
+        },
+        {
+          "x": 0.198,
+          "y": 0.299
+        },
+        {
+          "x": 0.193,
+          "y": 0.304
+        },
+        {
+          "x": 0.183,
+          "y": 0.304
+        },
+        {
+          "x": -0.128,
+          "y": 0.281
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.471,
+          "y": 0.21
+        },
+        {
+          "x": 0.115,
+          "y": -0.375
+        },
+        {
+          "x": 0.122,
+          "y": -0.342
+        },
+        {
+          "x": 0.193,
+          "y": 0.233
+        },
+        {
+          "x": 0.198,
+          "y": 0.279
+        },
+        {
+          "x": 0.198,
+          "y": 0.299
+        },
+        {
+          "x": 0.183,
+          "y": 0.304
+        },
+        {
+          "x": -0.413,
+          "y": 0.263
+        },
+        {
+          "x": -0.42,
+          "y": 0.261
+        },
+        {
+          "x": -0.451,
+          "y": 0.241
+        },
+        {
+          "x": -0.456,
+          "y": 0.236
+        },
+        {
+          "x": -0.461,
+          "y": 0.231
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.669,
+        "rows": 0.679
+      },
+      "visualHeightCells": 1.277,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.277
+      },
+      "semanticCategory": "infrastructure",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 92,
+        "supportPointCount": 152,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "shade-tree": {
+      "assetId": "shade-tree",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 17,
+        "y": 0,
+        "width": 352,
+        "height": 256
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.96,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.592,
+        "rows": 0.513
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.491,
+          "y": 0.044
+        },
+        {
+          "x": -0.017,
+          "y": -0.43
+        },
+        {
+          "x": 0.102,
+          "y": 0.011
+        },
+        {
+          "x": 0.056,
+          "y": 0.056
+        },
+        {
+          "x": -0.482,
+          "y": 0.083
+        },
+        {
+          "x": -0.491,
+          "y": 0.08
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.491,
+          "y": 0.044
+        },
+        {
+          "x": -0.017,
+          "y": -0.43
+        },
+        {
+          "x": 0.102,
+          "y": 0.011
+        },
+        {
+          "x": 0.056,
+          "y": 0.056
+        },
+        {
+          "x": -0.482,
+          "y": 0.083
+        },
+        {
+          "x": -0.491,
+          "y": 0.08
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.592,
+        "rows": 0.513
+      },
+      "visualHeightCells": 1.556,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.556
+      },
+      "semanticCategory": "vegetation",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.18,
+        "contactPointCount": 76,
+        "supportPointCount": 76,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "shrub": {
+      "assetId": "shrub",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 51,
+        "y": 51,
+        "width": 333,
+        "height": 205
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.9,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.668,
+        "rows": 0.355
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.297,
+          "y": 0.159
+        },
+        {
+          "x": 0.055,
+          "y": -0.194
+        },
+        {
+          "x": 0.371,
+          "y": -0.072
+        },
+        {
+          "x": 0.213,
+          "y": 0.086
+        },
+        {
+          "x": -0.276,
+          "y": 0.162
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.297,
+          "y": 0.159
+        },
+        {
+          "x": 0.055,
+          "y": -0.194
+        },
+        {
+          "x": 0.371,
+          "y": -0.072
+        },
+        {
+          "x": 0.213,
+          "y": 0.086
+        },
+        {
+          "x": -0.276,
+          "y": 0.162
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.668,
+        "rows": 0.355
+      },
+      "visualHeightCells": 1.246,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.246
+      },
+      "semanticCategory": "vegetation",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.18,
+        "contactPointCount": 62,
+        "supportPointCount": 62,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "soil-dry": {
+      "assetId": "soil-dry",
+      "geometryStatus": "annotated",
+      "reviewRequired": false,
+      "spatialReviewStatus": "complete",
+      "measurementSource": "atlas-frame",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 384,
+        "height": 256
+      },
+      "visualBoundingBoxPx": {
+        "x": 12,
+        "y": 14,
+        "width": 354,
+        "height": 229
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 0.82,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 1
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1,
+        "rows": 1
+      },
+      "visualHeightCells": 0,
+      "occlusion": {
+        "base": "tile-origin",
+        "heightCells": 0
+      },
+      "semanticCategory": "terrain",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "contract": "one tilemap cell per terrain tile",
+        "alphaBoundsMeasured": true
+      }
+    },
+    "technology-gateway-antenna-imagegen-v1": {
+      "assetId": "technology-gateway-antenna-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 320,
+        "height": 507
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 7,
+        "width": 304,
+        "height": 492
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.587,
+        "rows": 0.537
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.572,
+          "y": -0.113
+        },
+        {
+          "x": -0.083,
+          "y": -0.595
+        },
+        {
+          "x": -0.057,
+          "y": -0.587
+        },
+        {
+          "x": -0.044,
+          "y": -0.578
+        },
+        {
+          "x": 0.009,
+          "y": -0.525
+        },
+        {
+          "x": 0.012,
+          "y": -0.507
+        },
+        {
+          "x": 0.014,
+          "y": -0.205
+        },
+        {
+          "x": 0.012,
+          "y": -0.09
+        },
+        {
+          "x": -0.005,
+          "y": -0.058
+        },
+        {
+          "x": -0.505,
+          "y": -0.06
+        },
+        {
+          "x": -0.511,
+          "y": -0.062
+        },
+        {
+          "x": -0.537,
+          "y": -0.078
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.827,
+          "y": -0.622
+        },
+        {
+          "x": -0.051,
+          "y": -0.585
+        },
+        {
+          "x": -0.044,
+          "y": -0.578
+        },
+        {
+          "x": 0.009,
+          "y": -0.525
+        },
+        {
+          "x": 0.014,
+          "y": -0.452
+        },
+        {
+          "x": 0.012,
+          "y": -0.09
+        },
+        {
+          "x": 0.009,
+          "y": -0.072
+        },
+        {
+          "x": -0.035,
+          "y": -0.057
+        },
+        {
+          "x": -0.511,
+          "y": -0.062
+        },
+        {
+          "x": -0.537,
+          "y": -0.078
+        },
+        {
+          "x": -0.572,
+          "y": -0.113
+        },
+        {
+          "x": -0.592,
+          "y": -0.136
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.841,
+        "rows": 0.565
+      },
+      "visualHeightCells": 1.739,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.739
+      },
+      "semanticCategory": "technology",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 178,
+        "supportPointCount": 394,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "technology-monitor-station-imagegen-v1": {
+      "assetId": "technology-monitor-station-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 318,
+        "height": 502
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 302,
+        "height": 487
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.58,
+        "rows": 0.591
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.607,
+          "y": -0.071
+        },
+        {
+          "x": -0.068,
+          "y": -0.603
+        },
+        {
+          "x": -0.046,
+          "y": -0.582
+        },
+        {
+          "x": -0.032,
+          "y": -0.567
+        },
+        {
+          "x": -0.027,
+          "y": -0.316
+        },
+        {
+          "x": -0.03,
+          "y": -0.077
+        },
+        {
+          "x": -0.034,
+          "y": -0.023
+        },
+        {
+          "x": -0.109,
+          "y": -0.012
+        },
+        {
+          "x": -0.478,
+          "y": -0.014
+        },
+        {
+          "x": -0.526,
+          "y": -0.016
+        },
+        {
+          "x": -0.559,
+          "y": -0.02
+        },
+        {
+          "x": -0.598,
+          "y": -0.059
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.753,
+          "y": -0.582
+        },
+        {
+          "x": -0.616,
+          "y": -0.826
+        },
+        {
+          "x": -0.046,
+          "y": -0.582
+        },
+        {
+          "x": -0.027,
+          "y": -0.551
+        },
+        {
+          "x": -0.029,
+          "y": -0.128
+        },
+        {
+          "x": -0.034,
+          "y": -0.023
+        },
+        {
+          "x": -0.109,
+          "y": -0.012
+        },
+        {
+          "x": -0.526,
+          "y": -0.016
+        },
+        {
+          "x": -0.559,
+          "y": -0.02
+        },
+        {
+          "x": -0.598,
+          "y": -0.059
+        },
+        {
+          "x": -0.632,
+          "y": -0.125
+        },
+        {
+          "x": -0.753,
+          "y": -0.575
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.726,
+        "rows": 0.814
+      },
+      "visualHeightCells": 1.738,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.738
+      },
+      "semanticCategory": "technology",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 176,
+        "supportPointCount": 390,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "technology-scale-electronic-full-imagegen-v1": {
+      "assetId": "technology-scale-electronic-full-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 485,
+        "height": 392
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 470,
+        "height": 376
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.469,
+        "rows": 0.472
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.539,
+          "y": 0.029
+        },
+        {
+          "x": -0.07,
+          "y": -0.44
+        },
+        {
+          "x": -0.07,
+          "y": -0.393
+        },
+        {
+          "x": -0.073,
+          "y": -0.142
+        },
+        {
+          "x": -0.076,
+          "y": 0.016
+        },
+        {
+          "x": -0.091,
+          "y": 0.031
+        },
+        {
+          "x": -0.281,
+          "y": 0.033
+        },
+        {
+          "x": -0.527,
+          "y": 0.031
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.864,
+          "y": -0.202
+        },
+        {
+          "x": -0.143,
+          "y": -0.916
+        },
+        {
+          "x": -0.106,
+          "y": -0.892
+        },
+        {
+          "x": -0.076,
+          "y": -0.862
+        },
+        {
+          "x": -0.065,
+          "y": -0.847
+        },
+        {
+          "x": -0.059,
+          "y": -0.805
+        },
+        {
+          "x": -0.091,
+          "y": 0.031
+        },
+        {
+          "x": -0.738,
+          "y": 0.034
+        },
+        {
+          "x": -0.758,
+          "y": 0.028
+        },
+        {
+          "x": -0.771,
+          "y": 0.014
+        },
+        {
+          "x": -0.837,
+          "y": -0.068
+        },
+        {
+          "x": -0.864,
+          "y": -0.168
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.804,
+        "rows": 0.95
+      },
+      "visualHeightCells": 1.26,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.26
+      },
+      "semanticCategory": "technology",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 136,
+        "supportPointCount": 302,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "technology-traceability-system-imagegen-v1": {
+      "assetId": "technology-traceability-system-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 490,
+        "height": 504
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 8,
+        "width": 474,
+        "height": 488
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.623,
+        "rows": 0.625
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.677,
+          "y": 0.04
+        },
+        {
+          "x": -0.053,
+          "y": -0.584
+        },
+        {
+          "x": -0.053,
+          "y": -0.551
+        },
+        {
+          "x": -0.056,
+          "y": -0.381
+        },
+        {
+          "x": -0.068,
+          "y": -0.025
+        },
+        {
+          "x": -0.07,
+          "y": 0.01
+        },
+        {
+          "x": -0.085,
+          "y": 0.025
+        },
+        {
+          "x": -0.154,
+          "y": 0.028
+        },
+        {
+          "x": -0.564,
+          "y": 0.04
+        },
+        {
+          "x": -0.672,
+          "y": 0.041
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.03,
+          "y": -0.323
+        },
+        {
+          "x": -0.116,
+          "y": -0.899
+        },
+        {
+          "x": -0.06,
+          "y": -0.842
+        },
+        {
+          "x": -0.05,
+          "y": -0.826
+        },
+        {
+          "x": -0.046,
+          "y": -0.809
+        },
+        {
+          "x": -0.056,
+          "y": -0.381
+        },
+        {
+          "x": -0.085,
+          "y": 0.025
+        },
+        {
+          "x": -0.564,
+          "y": 0.04
+        },
+        {
+          "x": -0.685,
+          "y": 0.041
+        },
+        {
+          "x": -0.751,
+          "y": 0.035
+        },
+        {
+          "x": -0.774,
+          "y": 0.012
+        },
+        {
+          "x": -0.808,
+          "y": -0.022
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.983,
+        "rows": 0.94
+      },
+      "visualHeightCells": 1.618,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.618
+      },
+      "semanticCategory": "technology",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 176,
+        "supportPointCount": 392,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "vegetation-tree-shade-imagegen-v1": {
+      "assetId": "vegetation-tree-shade-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 492,
+        "height": 432
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 7,
+        "width": 477,
+        "height": 417
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.5,
+        "rows": 0.486
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.51,
+          "y": -0.287
+        },
+        {
+          "x": -0.263,
+          "y": -0.496
+        },
+        {
+          "x": -0.256,
+          "y": -0.493
+        },
+        {
+          "x": -0.033,
+          "y": -0.394
+        },
+        {
+          "x": -0.009,
+          "y": -0.285
+        },
+        {
+          "x": -0.033,
+          "y": -0.128
+        },
+        {
+          "x": -0.043,
+          "y": -0.081
+        },
+        {
+          "x": -0.064,
+          "y": -0.021
+        },
+        {
+          "x": -0.142,
+          "y": -0.009
+        },
+        {
+          "x": -0.436,
+          "y": -0.057
+        },
+        {
+          "x": -0.443,
+          "y": -0.059
+        },
+        {
+          "x": -0.505,
+          "y": -0.225
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.51,
+          "y": -0.287
+        },
+        {
+          "x": -0.263,
+          "y": -0.496
+        },
+        {
+          "x": -0.256,
+          "y": -0.493
+        },
+        {
+          "x": -0.033,
+          "y": -0.394
+        },
+        {
+          "x": -0.009,
+          "y": -0.285
+        },
+        {
+          "x": -0.033,
+          "y": -0.128
+        },
+        {
+          "x": -0.043,
+          "y": -0.081
+        },
+        {
+          "x": -0.064,
+          "y": -0.021
+        },
+        {
+          "x": -0.142,
+          "y": -0.009
+        },
+        {
+          "x": -0.436,
+          "y": -0.057
+        },
+        {
+          "x": -0.443,
+          "y": -0.059
+        },
+        {
+          "x": -0.505,
+          "y": -0.225
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 0.5,
+        "rows": 0.486
+      },
+      "visualHeightCells": 1.978,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.978
+      },
+      "semanticCategory": "vegetation",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.18,
+        "contactPointCount": 152,
+        "supportPointCount": 152,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "vehicle-pickup-rural-imagegen-v1": {
+      "assetId": "vehicle-pickup-rural-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 497,
+        "height": 287
+      },
+      "visualBoundingBoxPx": {
+        "x": 8,
+        "y": 7,
+        "width": 481,
+        "height": 273
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.923,
+        "rows": 0.923
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -1.184,
+          "y": 0.362
+        },
+        {
+          "x": -0.261,
+          "y": -0.561
+        },
+        {
+          "x": -0.261,
+          "y": -0.546
+        },
+        {
+          "x": -0.319,
+          "y": 0.189
+        },
+        {
+          "x": -0.333,
+          "y": 0.218
+        },
+        {
+          "x": -0.344,
+          "y": 0.229
+        },
+        {
+          "x": -0.438,
+          "y": 0.279
+        },
+        {
+          "x": -0.467,
+          "y": 0.294
+        },
+        {
+          "x": -0.517,
+          "y": 0.315
+        },
+        {
+          "x": -0.662,
+          "y": 0.344
+        },
+        {
+          "x": -0.741,
+          "y": 0.351
+        },
+        {
+          "x": -0.968,
+          "y": 0.362
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.711,
+          "y": 0.023
+        },
+        {
+          "x": -0.096,
+          "y": -1.577
+        },
+        {
+          "x": -0.308,
+          "y": 0.15
+        },
+        {
+          "x": -0.333,
+          "y": 0.218
+        },
+        {
+          "x": -0.438,
+          "y": 0.279
+        },
+        {
+          "x": -0.517,
+          "y": 0.315
+        },
+        {
+          "x": -0.741,
+          "y": 0.351
+        },
+        {
+          "x": -1.184,
+          "y": 0.362
+        },
+        {
+          "x": -1.242,
+          "y": 0.348
+        },
+        {
+          "x": -1.62,
+          "y": 0.106
+        },
+        {
+          "x": -1.682,
+          "y": 0.052
+        },
+        {
+          "x": -1.703,
+          "y": 0.031
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.615,
+        "rows": 1.939
+      },
+      "visualHeightCells": 1.968,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.968
+      },
+      "semanticCategory": "vehicle",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 100,
+        "supportPointCount": 220,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "vehicle-tractor-imagegen-v1": {
+      "assetId": "vehicle-tractor-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 393,
+        "height": 318
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 8,
+        "width": 379,
+        "height": 303
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 1.3,
+        "rows": 1.296
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -1.256,
+          "y": 0.216
+        },
+        {
+          "x": 0.019,
+          "y": -1.059
+        },
+        {
+          "x": 0.04,
+          "y": -1.013
+        },
+        {
+          "x": 0.044,
+          "y": -0.983
+        },
+        {
+          "x": -0.208,
+          "y": 0.023
+        },
+        {
+          "x": -0.241,
+          "y": 0.107
+        },
+        {
+          "x": -0.329,
+          "y": 0.161
+        },
+        {
+          "x": -0.354,
+          "y": 0.17
+        },
+        {
+          "x": -0.375,
+          "y": 0.174
+        },
+        {
+          "x": -1.075,
+          "y": 0.237
+        },
+        {
+          "x": -1.172,
+          "y": 0.233
+        },
+        {
+          "x": -1.235,
+          "y": 0.229
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.826,
+          "y": -0.338
+        },
+        {
+          "x": -0.287,
+          "y": -1.86
+        },
+        {
+          "x": -0.04,
+          "y": -1.436
+        },
+        {
+          "x": 0.002,
+          "y": -1.31
+        },
+        {
+          "x": -0.208,
+          "y": 0.023
+        },
+        {
+          "x": -0.27,
+          "y": 0.136
+        },
+        {
+          "x": -0.375,
+          "y": 0.174
+        },
+        {
+          "x": -1.172,
+          "y": 0.233
+        },
+        {
+          "x": -1.365,
+          "y": 0.174
+        },
+        {
+          "x": -1.499,
+          "y": 0.073
+        },
+        {
+          "x": -1.637,
+          "y": -0.057
+        },
+        {
+          "x": -1.767,
+          "y": -0.212
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.828,
+        "rows": 2.092
+      },
+      "visualHeightCells": 2.541,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 2.541
+      },
+      "semanticCategory": "vehicle",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0.25,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.4,
+        "contactPointCount": 110,
+        "supportPointCount": 244,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "water-pond-imagegen-v1": {
+      "assetId": "water-pond-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 444,
+        "height": 320
+      },
+      "visualBoundingBoxPx": {
+        "x": 7,
+        "y": 8,
+        "width": 429,
+        "height": 304
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.614,
+        "rows": 0.623
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.653,
+          "y": -0.102
+        },
+        {
+          "x": -0.09,
+          "y": -0.665
+        },
+        {
+          "x": -0.075,
+          "y": -0.5
+        },
+        {
+          "x": -0.042,
+          "y": -0.126
+        },
+        {
+          "x": -0.039,
+          "y": -0.069
+        },
+        {
+          "x": -0.066,
+          "y": -0.042
+        },
+        {
+          "x": -0.123,
+          "y": -0.045
+        },
+        {
+          "x": -0.491,
+          "y": -0.084
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -1.048,
+          "y": -0.15
+        },
+        {
+          "x": -0.126,
+          "y": -1.072
+        },
+        {
+          "x": -0.123,
+          "y": -1.063
+        },
+        {
+          "x": -0.117,
+          "y": -1.009
+        },
+        {
+          "x": -0.042,
+          "y": -0.126
+        },
+        {
+          "x": -0.039,
+          "y": -0.069
+        },
+        {
+          "x": -0.066,
+          "y": -0.042
+        },
+        {
+          "x": -0.123,
+          "y": -0.045
+        },
+        {
+          "x": -0.851,
+          "y": -0.12
+        },
+        {
+          "x": -0.988,
+          "y": -0.138
+        },
+        {
+          "x": -1.009,
+          "y": -0.141
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.009,
+        "rows": 1.03
+      },
+      "visualHeightCells": 1.821,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.821
+      },
+      "semanticCategory": "water",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 110,
+        "supportPointCount": 184,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    },
+    "water-trough-round-imagegen-v1": {
+      "assetId": "water-trough-round-imagegen-v1",
+      "geometryStatus": "inferred-review-required",
+      "reviewRequired": true,
+      "spatialReviewStatus": "required",
+      "measurementSource": "source-sprite",
+      "units": "world-cell",
+      "sourceImagePx": {
+        "width": 462,
+        "height": 237
+      },
+      "visualBoundingBoxPx": {
+        "x": 5,
+        "y": 7,
+        "width": 452,
+        "height": 223
+      },
+      "groundContactAnchor": {
+        "x": 0.5,
+        "y": 1,
+        "units": "normalized-sprite"
+      },
+      "groundFootprintCandidate": {
+        "columns": 0.843,
+        "rows": 0.847
+      },
+      "collisionPolygonCandidate": [
+        {
+          "x": -0.58,
+          "y": 0.112
+        },
+        {
+          "x": 0.263,
+          "y": -0.721
+        },
+        {
+          "x": 0.263,
+          "y": -0.623
+        },
+        {
+          "x": 0.251,
+          "y": -0.504
+        },
+        {
+          "x": 0.222,
+          "y": -0.397
+        },
+        {
+          "x": 0.173,
+          "y": -0.29
+        },
+        {
+          "x": -0.078,
+          "y": -0.01
+        },
+        {
+          "x": -0.2,
+          "y": 0.063
+        },
+        {
+          "x": -0.341,
+          "y": 0.117
+        },
+        {
+          "x": -0.429,
+          "y": 0.127
+        },
+        {
+          "x": -0.543,
+          "y": 0.124
+        },
+        {
+          "x": -0.575,
+          "y": 0.117
+        }
+      ],
+      "supportRegionPolygonCandidate": [
+        {
+          "x": -0.838,
+          "y": 0.117
+        },
+        {
+          "x": 0.217,
+          "y": -0.869
+        },
+        {
+          "x": 0.239,
+          "y": -0.823
+        },
+        {
+          "x": 0.263,
+          "y": -0.721
+        },
+        {
+          "x": 0.265,
+          "y": -0.665
+        },
+        {
+          "x": 0.251,
+          "y": -0.504
+        },
+        {
+          "x": 0.222,
+          "y": -0.397
+        },
+        {
+          "x": 0.136,
+          "y": -0.234
+        },
+        {
+          "x": -0.078,
+          "y": -0.01
+        },
+        {
+          "x": -0.2,
+          "y": 0.063
+        },
+        {
+          "x": -0.375,
+          "y": 0.122
+        },
+        {
+          "x": -0.47,
+          "y": 0.129
+        }
+      ],
+      "supportRegionFootprintCandidate": {
+        "columns": 1.103,
+        "rows": 0.998
+      },
+      "visualHeightCells": 1.086,
+      "occlusion": {
+        "base": "ground-contact-anchor",
+        "heightCells": 1.086
+      },
+      "semanticCategory": "water",
+      "supportedOrientations": [
+        0
+      ],
+      "connectionSockets": [],
+      "clearanceCells": 0,
+      "compatibleNeighbors": [],
+      "collisionPolicy": "non-blocking",
+      "evidence": {
+        "alphaThreshold": 12,
+        "groundContactAlphaThreshold": 24,
+        "collisionTraceBandFraction": 0.18,
+        "supportRegionBandFraction": 0.3,
+        "contactPointCount": 80,
+        "supportPointCount": 132,
+        "supportRegionIsPhysicalFootprintProof": false,
+        "collisionCandidateIsPhysicalFootprintProof": false,
+        "spritePixelsOnlyCannotConfirmPhysicalScale": true
+      }
+    }
+  }
+}

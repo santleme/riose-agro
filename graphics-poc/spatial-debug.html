@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RIOSE · Inspeção espacial V6</title>
+    <link rel="stylesheet" href="./spatial-debug.css">
+  </head>
+  <body>
+    <header class="toolbar">
+      <div><strong>RIOSE AGRO</strong><small>INSPEÇÃO DE MONTAGEM V6</small></div>
+      <label>Sistema<select id="system"><option value="beef">Corte</option><option value="dairy">Leiteira</option></select></label>
+      <label>Seed<input id="seed" type="number" min="1" value="84018"></label>
+      <label>Passo<select id="stage-mode"><option value="complete">Cena completa</option><option value="terrain">Terreno</option><option value="structures">Estruturas</option><option value="roads">Acessos</option><option value="fences">Limites e portão</option><option value="environment">Vegetação</option></select></label>
+      <button id="generate">Montar macroestrutura</button>
+      <a class="tool-link" href="./asset-geometry-annotator.html" target="_blank" rel="noreferrer">Anotar geometria</a>
+      <span id="status">Inicializando…</span>
+    </header>
+    <main><section id="stage" aria-label="Fazenda semântica V6 gerada em tempo real"></section>
+      <aside><h1>Inspeção espacial</h1><p>Arraste para mover · roda do mouse para zoom · clique numa construção para inspecionar · clique no terreno para testar uma posição.</p>
+        <fieldset class="overlay-controls"><legend>Camadas de inspeção</legend>
+          <label><input type="checkbox" data-overlay="grid"> Grid do mundo</label>
+          <label><input type="checkbox" data-overlay="collision" checked> Footprints / colisão</label>
+          <label><input type="checkbox" data-overlay="support"> Região de suporte</label>
+          <label><input type="checkbox" data-overlay="sockets" checked> Sockets</label>
+          <label><input type="checkbox" data-overlay="clearance"> Clearance</label>
+          <label><input type="checkbox" data-overlay="height"> Altura visual</label>
+          <label><input type="checkbox" data-overlay="cells"> Células ocupadas</label>
+          <label><input type="checkbox" data-overlay="paddocks" checked> Limites dos piquetes</label>
+          <label><input type="checkbox" data-overlay="fenceArt"> Sprites de cerca (REVIEW)</label>
+          <label><input type="checkbox" data-overlay="roads" checked> Grafo de acessos</label>
+          <label><input type="checkbox" data-overlay="roadModules"> Peças topológicas de estrada</label>
+          <label><input type="checkbox" data-overlay="errors" checked> Violações</label>
+        </fieldset>
+        <div id="assembly-health" class="assembly-health" role="status">Aguardando validação do layout…</div>
+        <pre id="details">Aguardando geração…</pre>
+      </aside>
+    </main>
+    <script type="module" src="./dist/spatial-debug.js"></script>
+  </body>
+</html>

@@ -1,0 +1,728 @@
+{
+  "schemaVersion": "riose.asset-calibration.v1",
+  "sourceManifest": "public/assets/manifest.json",
+  "runtimeSource": "src/client/app.js",
+  "runtimeVerifiedBy": "literal drawSprite/drawCow call-site checks in this script",
+  "candidateProjection": {
+    "pxPerMeterX": 12,
+    "pxPerMeterY": 6,
+    "status": "candidate authoring convention; not approved physical calibration"
+  },
+  "importantLimit": "PNG alpha bounds measure visible non-transparent pixels only. They do not prove ground footprints, collision, height, or contact geometry.",
+  "assets": [
+    {
+      "id": "grass-light",
+      "category": "terrain",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        384,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          104,
+          70
+        ],
+        "anchor": "center",
+        "callSite": "app.js:118; grass-light/grass-mid share draw call"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          4,
+          4
+        ],
+        "heightM": 0,
+        "kind": "terrain tile",
+        "basis": "candidate 4 m square terrain module",
+        "projectedVisualBoundsPx": [
+          48.0,
+          24.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        98,
+        66
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "fence-straight",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 768,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        15,
+        384,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          42,
+          31
+        ],
+        "anchor": "center",
+        "callSite": "app.js:109 horizontal; side edges use 38 x 28 and rotate π/2"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          3,
+          0.15
+        ],
+        "heightM": 1.2,
+        "kind": "fence segment",
+        "basis": "candidate 3 m fence bay; visual height 1.2 m",
+        "projectedVisualBoundsPx": [
+          18.9,
+          23.85
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        92,
+        58
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "gate",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 256,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        372,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          37,
+          28
+        ],
+        "anchor": "center",
+        "callSite": "app.js:124"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          3,
+          0.2
+        ],
+        "heightM": 1.6,
+        "kind": "gate segment",
+        "basis": "candidate 3 m opening; visual height 1.6 m",
+        "projectedVisualBoundsPx": [
+          19.2,
+          28.8
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        92,
+        58
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "pond",
+      "category": "water",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        384,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          88,
+          61
+        ],
+        "anchor": "center",
+        "callSite": "app.js:127 default; wet season uses 102 x 70"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          8,
+          5
+        ],
+        "heightM": 0.1,
+        "kind": "water body",
+        "basis": "candidate 8 x 5 m water footprint",
+        "projectedVisualBoundsPx": [
+          78.0,
+          40.2
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        130,
+        92
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "farmhouse",
+      "category": "buildings",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        384,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          75,
+          65
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:128 first instance; second is 65 x 53"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          12,
+          9
+        ],
+        "heightM": 5,
+        "kind": "building",
+        "basis": "candidate 12 x 9 m house base; 5 m apparent height",
+        "projectedVisualBoundsPx": [
+          126.0,
+          123.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        172,
+        128
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "shed",
+      "category": "buildings",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 384,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        384,
+        243
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          128,
+          91
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:129"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          18,
+          12
+        ],
+        "heightM": 5.5,
+        "kind": "building",
+        "basis": "candidate 18 x 12 m shed base; 5.5 m apparent height",
+        "projectedVisualBoundsPx": [
+          180.0,
+          156.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        172,
+        128
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "corral-wood-standard-imagegen-v1",
+      "category": "corral",
+      "sourceFile": "public/assets/atlas/handling-review-atlas-v1.png",
+      "frame": {
+        "atlas": "handling-review",
+        "x": 8,
+        "y": 8,
+        "w": 580,
+        "h": 371
+      },
+      "sourceFramePx": [
+        580,
+        371
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        7,
+        8,
+        575,
+        364
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          93,
+          74
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:129"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          12,
+          10
+        ],
+        "heightM": 1.5,
+        "kind": "handling prefab (used by `/`)",
+        "basis": "candidate 12 x 10 m full corral base; 1.5 m rails",
+        "projectedVisualBoundsPx": [
+          132.0,
+          84.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        130,
+        92
+      ],
+      "manifestReviewStatus": "REVIEW"
+    },
+    {
+      "id": "corral",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 887,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "sourceFramePx": [
+        443,
+        444
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        27,
+        443,
+        444
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          76,
+          58
+        ],
+        "anchor": "bottom",
+        "callSite": "manifest catalog entry; `/` draws the imagegen corral below"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          12,
+          10
+        ],
+        "heightM": 1.5,
+        "kind": "handling prefab image",
+        "basis": "candidate 12 x 10 m full corral base; 1.5 m rails",
+        "projectedVisualBoundsPx": [
+          132.0,
+          84.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        76,
+        58
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "cow-beef",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 0,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "sourceFramePx": [
+        444,
+        443
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        444,
+        397
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          29,
+          27
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:150 drawCow; selected by animal id modulo 4"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          2.4,
+          1.2
+        ],
+        "heightM": 1.5,
+        "kind": "animal",
+        "basis": "candidate 2.4 x 1.2 m adult bovine; 1.5 m apparent height",
+        "projectedVisualBoundsPx": [
+          21.6,
+          28.8
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        76,
+        58
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "cow-dairy",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 1330.5,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "sourceFramePx": [
+        444,
+        444
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        39,
+        441,
+        444
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          29,
+          27
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:150 drawCow; selected by animal id modulo 4"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          2.4,
+          1.2
+        ],
+        "heightM": 1.5,
+        "kind": "animal",
+        "basis": "same candidate adult bovine dimensions as beef",
+        "projectedVisualBoundsPx": [
+          21.6,
+          28.8
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        76,
+        58
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "water-trough",
+      "category": "livestock",
+      "sourceFile": "public/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 0,
+        "y": 0,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "sourceFramePx": [
+        444,
+        444
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        9,
+        444,
+        444
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          24,
+          22
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:124"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          2.5,
+          0.8
+        ],
+        "heightM": 0.8,
+        "kind": "livestock water fixture",
+        "basis": "candidate 2.5 x 0.8 m trough; 0.8 m rim",
+        "projectedVisualBoundsPx": [
+          19.8,
+          19.5
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        108,
+        82
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "shade-tree",
+      "category": "vegetation",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 0,
+        "y": 512,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        13,
+        0,
+        384,
+        256
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          36.96,
+          44.24
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:130-131; tree instance scale varies 0.48–0.62"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          3,
+          3
+        ],
+        "heightM": 8,
+        "kind": "tree",
+        "basis": "candidate 3 x 3 m trunk/clearance; 8 m canopy height",
+        "projectedVisualBoundsPx": [
+          36.0,
+          114.0
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        112,
+        128
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "tractor",
+      "category": "vehicles",
+      "sourceFile": "public/assets/atlas/farm-starter-atlas.png",
+      "frame": {
+        "atlas": "farm",
+        "x": 1152,
+        "y": 768,
+        "w": 384,
+        "h": 256
+      },
+      "sourceFramePx": [
+        384,
+        256
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        0,
+        334,
+        240
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          49,
+          39
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:132"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          4.5,
+          2.4
+        ],
+        "heightM": 3,
+        "kind": "vehicle",
+        "basis": "candidate 4.5 x 2.4 m vehicle; 3 m apparent height",
+        "projectedVisualBoundsPx": [
+          41.4,
+          56.7
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        172,
+        128
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    },
+    {
+      "id": "pickup",
+      "category": "vehicles",
+      "sourceFile": "public/assets/atlas/livestock-equipment-atlas.png",
+      "frame": {
+        "atlas": "livestock",
+        "x": 887,
+        "y": 443.5,
+        "w": 443.5,
+        "h": 443.5
+      },
+      "sourceFramePx": [
+        443,
+        443
+      ],
+      "alphaBoundsPxDiagnosticOnly": [
+        0,
+        2,
+        438,
+        443
+      ],
+      "currentRuntime": {
+        "renderSizePx": [
+          42,
+          34
+        ],
+        "anchor": "bottom",
+        "callSite": "app.js:132"
+      },
+      "candidate": {
+        "groundFootprintM": [
+          5,
+          2.5
+        ],
+        "heightM": 2.2,
+        "kind": "vehicle",
+        "basis": "candidate 5 x 2.5 m vehicle; 2.2 m apparent height",
+        "projectedVisualBoundsPx": [
+          45.0,
+          48.9
+        ],
+        "groundFootprintStatus": "INFERRED_CANDIDATE_REQUIRES_ARTIST_REVIEW",
+        "collisionStatus": "UNRESOLVED",
+        "groundAnchorStatus": "candidate bottom-center; requires visual review"
+      },
+      "manifestDisplaySizePx": [
+        172,
+        128
+      ],
+      "manifestReviewStatus": "UNRESOLVED"
+    }
+  ]
+}

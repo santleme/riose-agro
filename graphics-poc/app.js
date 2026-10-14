@@ -7,6 +7,7 @@ import {assertSceneCommandAllowed, sceneExecutionAvailability, terminateNumericW
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
 const dairySceneUrl = '/graphics-poc/scenes/dairy.json';
+const waterStressSceneUrl = '/graphics-poc/scenes/water-stress-visual.json';
 const farmAtlasUrl = '/graphics-poc/assets/farm-starter-atlas.png';
 const neloreUrl = '/graphics-poc/assets/nelore-adult-idle-v1.png';
 const frames = {
@@ -570,7 +571,7 @@ function updateHud() {
   $('prefab-count').textContent = String(state.scene.prefabs.length + state.scene.entities.length);
   $('sim-count').textContent = execution.available ? state.view ? state.view.animalActions.length.toLocaleString('pt-BR') : '—' : 'indisponível · módulo em progresso';
   $('run-simulation').disabled = !execution.available; $('reset-simulation').disabled = !execution.available; $('herd-size').disabled = !execution.available; $('run-benchmark').disabled = !execution.available;
-  $('visible-count').textContent = state.selectedDomain === 'dairy'
+  $('visible-count').textContent = !execution.available
     ? `${state.visibleAnimalCount.toLocaleString('pt-BR')} animais no layout · sem simulação`
     : `${state.visibleAnimalCount.toLocaleString('pt-BR')} / ${state.view?.animalActions.length?.toLocaleString('pt-BR') ?? '0'} bovinos · ${state.animalRenderUnits.toLocaleString('pt-BR')} visuais`;
   const framesMs = state.frameTimes.slice(-120), fps = framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0;
@@ -590,13 +591,13 @@ async function selectScene(domain) {
   const sameGrid = savedScene?.projection?.columns === base.projection.columns && savedScene?.projection?.rows === base.projection.rows;
   state.scene = savedScene?.schemaVersion === base.schemaVersion && sameGrid ? savedScene : structuredClone(base);
   normalizeSceneAssetReferences(state.scene, state.renderManifest, state.assetSourceManifest);
-  state.selectedDomain = domain; state.selection = null; state.selectedAnimalIds = []; state.tool = null; state.view = null;
-  $('domain-module').value = domain;
+  state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; state.selection = null; state.selectedAnimalIds = []; state.tool = null; state.view = null;
+  $('domain-module').value = state.selectedDomain;
   $('scene-picker').value = domain;
-  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, domain));
+  for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
   state.terrainCells = sceneTerrainCells(state.scene);
   setSimulationRunning(false);
-  if (domain === 'beef') {
+  if (domain === 'beef' && sceneExecutionAvailability(state.scene).available) {
     state.worker ??= new Worker('/src/client/worker.js', {type: 'module'});
     state.worker.onmessage = workerMessage;
     await askWorker({type: 'reset', seed: state.scene.simulation.seed, count: state.scene.simulation.populationCount});
@@ -605,7 +606,9 @@ async function selectScene(domain) {
   } else {
     terminateNumericWorker(state.worker, state.pending); state.worker = null; state.workerReady = false;
     const unavailable = unavailableExecutionState(state.scene);
-    $('scene-status').textContent = `Cena visual carregada · execução numérica indisponível: ${unavailable.reason}`;
+    $('scene-status').textContent = state.scene.visualVariant
+      ? `${state.scene.visualVariant.label} · execução numérica bloqueada: ${unavailable.reason}`
+      : `Cena visual carregada · execução numérica indisponível: ${unavailable.reason}`;
     refreshScene(); updateHud();
   }
   refreshScene(); updateHud();
@@ -640,7 +643,7 @@ function switchRenderer(renderer) {
 
 function frameStats() {
   const framesMs = state.frameTimes.slice(-600), paintMs = state.paintTimes.slice(-600), updateMs = state.updateTimes.slice(-600), motionMs = state.motionUpdateTimes.slice(-600), lodUpdates = state.lodUpdateTimes.slice(-600);
-  return {meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: state.selectedDomain === 'dairy' ? 0 : state.view?.animalActions.length ?? 0, visibleAnimals: state.visibleAnimalCount, culledAnimals: state.culledAnimalCount, visibleByLod: {...state.visibleByLod}, accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, cameraZoom: state.camera.zoom, renderer: state.renderer};
+  return {meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: sceneExecutionAvailability(state.scene).available ? state.view?.animalActions.length ?? 0 : 0, visibleAnimals: state.visibleAnimalCount, culledAnimals: state.culledAnimalCount, visibleByLod: {...state.visibleByLod}, accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, cameraZoom: state.camera.zoom, renderer: state.renderer};
 }
 
 function pixiFrame(time) {
@@ -654,7 +657,7 @@ function pixiFrame(time) {
 }
 
 async function resetSimulation(count = Number($('herd-size').value)) {
-  if (state.selectedDomain !== 'beef') { assertSceneCommandAllowed(state.scene, 'reset'); return; }
+  if (!sceneExecutionAvailability(state.scene).available) { assertSceneCommandAllowed(state.scene, 'reset'); return; }
   const generation = state.sceneSelectionGeneration;
   state.scene.simulation.populationCount = count;
   state.scene.simulation.seed = 20261012;
@@ -665,6 +668,7 @@ async function resetSimulation(count = Number($('herd-size').value)) {
 }
 
 function setSimulationRunning(value) {
+  if (value && !sceneExecutionAvailability(state.scene).available) return;
   clearInterval(state.timer); state.running = value;
   if (value && state.selectedDomain === 'beef') state.timer = setInterval(() => {
     if (state.selectedDomain !== 'beef') { setSimulationRunning(false); return; }
@@ -714,9 +718,10 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
 
 async function initialize() {
   window.__graphicsInitStage = 'loading-assets';
-  const [scene, dairyScene, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
+  const [scene, dairyScene, waterStressScene, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
+    fetch(waterStressSceneUrl).then(response => { if (!response.ok) throw new Error('Variante visual seca não encontrada'); return response.json(); }),
     fetch('/graphics-poc/assets/main-composer-render-manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de renderização do Composer ausente'); return response.json(); }),
     fetch('/graphics-poc/asset-sources.json').then(response => { if (!response.ok) throw new Error('Manifesto de proveniência local ausente'); return response.json(); }),
     image(farmAtlasUrl), image(neloreUrl), image('/graphics-poc/assets/handling-review-atlas-v1.png'),
@@ -724,15 +729,16 @@ async function initialize() {
   ]);
   state.renderManifest = renderManifest; state.assetSourceManifest = assetSourceManifest;
   const dynamicAtlases = await Promise.all(Object.entries(renderManifest.atlases).map(async ([key, url]) => [key, await image(url)]));
-  state.scenes = {beef: scene, dairy: dairyScene};
-  const initialDomain = new URLSearchParams(location.search).get('scene') === 'dairy' ? 'dairy' : 'beef';
+  state.scenes = {beef: scene, dairy: dairyScene, 'water-stress': waterStressScene};
+  const requestedScene = new URLSearchParams(location.search).get('scene');
+  const initialDomain = ['beef', 'dairy', 'water-stress'].includes(requestedScene) ? requestedScene : 'beef';
   const baseScene = state.scenes[initialDomain], stored = localStorage.getItem(`riose-graphics-scene-v1:${baseScene.sceneId}`) ?? (initialDomain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
   const savedScene = stored ? JSON.parse(stored) : null;
   const sameGrid = savedScene?.projection?.columns === baseScene.projection.columns && savedScene?.projection?.rows === baseScene.projection.rows;
   state.scene = savedScene?.schemaVersion === baseScene.schemaVersion && sameGrid ? savedScene : structuredClone(baseScene);
   normalizeSceneAssetReferences(state.scene, renderManifest, assetSourceManifest);
   originalBeefModule = structuredClone(scene.domainModule); originalBeefScenario = scene.simulation.scenarioId;
-  state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; $('domain-module').value = state.selectedDomain; $('scene-picker').value = state.selectedDomain;
+  state.selectedDomain = state.scene.simulation.productionSystem === 'dairy' ? 'dairy' : 'beef'; $('domain-module').value = state.selectedDomain; $('scene-picker').value = initialDomain;
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
   state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, 'dairy-heifer': dairyHeiferImage, 'dairy-activity-collar': dairyCollarImage, ...Object.fromEntries(dynamicAtlases)};
   state.assetAtlasUrls = renderManifest.atlases;
@@ -740,7 +746,7 @@ async function initialize() {
   state.imageLoadMs = performance.now() - startedAt;
   state.terrainCells = sceneTerrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});
-  if (state.selectedDomain === 'beef') {
+  if (state.selectedDomain === 'beef' && sceneExecutionAvailability(state.scene).available) {
     window.__graphicsInitStage = 'starting-simulation-worker';
     state.worker = new Worker('/src/client/worker.js', {type: 'module'}); state.worker.onmessage = workerMessage;
     state.worker.onerror = event => {
@@ -758,9 +764,11 @@ async function initialize() {
   }
   state.canvasSizing = {width: $('stage').clientWidth, height: $('stage').clientHeight, ratio: Math.min(devicePixelRatio || 1, 1.5)};
   syncCanvasSize(); state.camera.zoom = fitSceneZoom(); refreshScene(); requestAnimationFrame(drawCanvas); updateHud();
-  $('scene-status').textContent = state.selectedDomain === 'dairy'
-    ? `Cena visual carregada · execução numérica indisponível: ${unavailableExecutionState(state.scene).reason}`
-    : `Cena v${state.scene.schemaVersion} · seed fixo · ${state.view.animalActions.length} animais no Worker.`;
+  $('scene-status').textContent = state.scene.visualVariant
+    ? `${state.scene.visualVariant.label} · execução numérica bloqueada: ${unavailableExecutionState(state.scene).reason}`
+    : state.selectedDomain === 'dairy'
+      ? `Cena visual carregada · execução numérica indisponível: ${unavailableExecutionState(state.scene).reason}`
+      : `Cena v${state.scene.schemaVersion} · seed fixo · ${state.view.animalActions.length} animais no Worker.`;
   $('renderer').addEventListener('change', event => switchRenderer(event.target.value));
   $('herd-size').addEventListener('change', event => resetSimulation(Number(event.target.value)));
   $('reset-simulation').addEventListener('click', () => resetSimulation());

@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "assetId": "livestock.nelore.adult.state-atlas.v1",
+  "file": "assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.png",
+  "sourceTool": "Pillow atlas packer",
+  "frameSize": {
+    "width": 587,
+    "height": 472
+  },
+  "layout": {
+    "columns": 4,
+    "rows": 4,
+    "order": [
+      "idle",
+      "walk",
+      "graze",
+      "drink"
+    ]
+  },
+  "pivotMeaning": "ground-contact center-bottom",
+  "clips": {
+    "idle": {
+      "state": "idle",
+      "frameMs": 900,
+      "status": "APPROVED_STATIC",
+      "frames": [
+        {
+          "x": 0,
+          "y": 0,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 10,
+            "y": 38,
+            "width": 567,
+            "height": 424
+          }
+        }
+      ]
+    },
+    "walk": {
+      "state": "walk",
+      "frameMs": 150,
+      "status": "REVIEW",
+      "frames": [
+        {
+          "x": 0,
+          "y": 472,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 36,
+            "y": 505,
+            "width": 514,
+            "height": 429
+          }
+        },
+        {
+          "x": 587,
+          "y": 472,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 609,
+            "y": 500,
+            "width": 542,
+            "height": 434
+          }
+        },
+        {
+          "x": 1174,
+          "y": 472,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1202,
+            "y": 501,
+            "width": 531,
+            "height": 433
+          }
+        },
+        {
+          "x": 1761,
+          "y": 472,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1788,
+            "y": 500,
+            "width": 532,
+            "height": 434
+          }
+        }
+      ]
+    },
+    "graze": {
+      "state": "graze",
+      "frameMs": 240,
+      "status": "REVIEW",
+      "frames": [
+        {
+          "x": 0,
+          "y": 944,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 28,
+            "y": 1024,
+            "width": 530,
+            "height": 382
+          }
+        },
+        {
+          "x": 587,
+          "y": 944,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 616,
+            "y": 1024,
+            "width": 528,
+            "height": 382
+          }
+        },
+        {
+          "x": 1174,
+          "y": 944,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1202,
+            "y": 1024,
+            "width": 530,
+            "height": 382
+          }
+        },
+        {
+          "x": 1761,
+          "y": 944,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1790,
+            "y": 1024,
+            "width": 528,
+            "height": 382
+          }
+        }
+      ]
+    },
+    "drink": {
+      "state": "drink",
+      "frameMs": 210,
+      "status": "REVIEW",
+      "frames": [
+        {
+          "x": 0,
+          "y": 1416,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 27,
+            "y": 1431,
+            "width": 532,
+            "height": 447
+          }
+        },
+        {
+          "x": 587,
+          "y": 1416,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 609,
+            "y": 1430,
+            "width": 543,
+            "height": 448
+          }
+        },
+        {
+          "x": 1174,
+          "y": 1416,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1196,
+            "y": 1430,
+            "width": 543,
+            "height": 448
+          }
+        },
+        {
+          "x": 1761,
+          "y": 1416,
+          "width": 587,
+          "height": 472,
+          "pivot": {
+            "x": 0.5,
+            "y": 1.0
+          },
+          "contactBounds": {
+            "x": 1784,
+            "y": 1426,
+            "width": 541,
+            "height": 452
+          }
+        }
+      ]
+    }
+  },
+  "reviewStatus": "REVIEW",
+  "notes": "Idle is one real reviewed static pose. Walk, graze and drink strips are generated candidate frame art; behavior clips remain unreviewed."
+}

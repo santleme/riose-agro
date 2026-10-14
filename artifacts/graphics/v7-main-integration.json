@@ -1,0 +1,101 @@
+{
+  "baseUrl": "http://127.0.0.1:8312/",
+  "integration": {
+    "route": "/",
+    "renderer": "src/client/app.js:Canvas2D",
+    "sceneVersion": "riose-scene-v7",
+    "seed": 9,
+    "scenarioId": "beef",
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": [
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "farmstead",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "equipment-barn",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "cattle-handling",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "water-west-north",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "water-west-south",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "water-east-north",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "water-east-south",
+          "status": "candidate-unverified"
+        }
+      ]
+    },
+    "assemblyReport": {
+      "hardConstraintStatus": "checked",
+      "hardViolations": [],
+      "geometryReviewRequired": true,
+      "uncertainAssets": [
+        "farmhouse",
+        "equipment-barn",
+        "handling-facility",
+        "livestock-water-point",
+        "fence-module"
+      ],
+      "visualApproval": "not-reviewed"
+    },
+    "renderedAssetIds": [
+      "grass-light",
+      "grass-mid",
+      "soil-dry",
+      "soil-damp",
+      "road-straight",
+      "fence-straight",
+      "gate",
+      "farmhouse",
+      "shed",
+      "corral-wood-standard-imagegen-v1",
+      "water-trough",
+      "shade-tree",
+      "fruit-tree",
+      "cow-beef",
+      "cow-dairy"
+    ],
+    "renderedPaddockIds": [
+      "paddock-west-north",
+      "paddock-west-south",
+      "paddock-east-north",
+      "paddock-east-south"
+    ],
+    "renderedFenceSegments": 88,
+    "renderedRoads": [
+      "east-farm-spine",
+      "farmstead-driveway-road",
+      "barn-driveway-road",
+      "handling-driveway-road",
+      "west-farm-spine",
+      "gate-west-north-access-road",
+      "gate-west-south-access-road",
+      "gate-east-north-access-road",
+      "gate-east-south-access-road"
+    ],
+    "assetGeometry": "candidate-unverified; see assets/previews/v7/asset-scale-calibration.json"
+  },
+  "failures": []
+}
