@@ -54,7 +54,7 @@ test('configured Worker falls back to JavaScript and marks a native execution fa
 
 test('lot Worker sends only the selected lot to Rust and preserves execution provenance',async t=>{
   const base=new FarmEngine(20261013,24).snapshot(),manifest=createLotComparisonManifest(base,{patchIndex:2,domainZoneId:'paddock-3',periodDays:3,alternativeSupplementKgDMPerAnimalPerDay:0.5});
-  const scoped=createLotScopedSnapshot(base,manifest.lot),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
+  const scoped=createLotScopedSnapshot(base,manifest.targetScope),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
   const expected=addLotComparisonContext(manifest,compareConfiguredScenarios(scoped,options));let received;
   const fetchImpl=async(_url,request)=>request?{ok:true,json:async()=>{received=JSON.parse(request.body);return {comparison:compareConfiguredScenarios(received.snapshot,options),
     engine:{engineVersion:'0.1.0',buildId:'native-lot-build',modelStatus:'demonstrative_unvalidated',validated:false},
@@ -62,30 +62,30 @@ test('lot Worker sends only the selected lot to Rust and preserves execution pro
   await withWorker(t,fetchImpl,async worker=>{
     await worker.onmessage({data:{protocolVersion:1,type:'compareLotConfigured',manifest}});
     const response=normalizeWorkerResponse(worker.messages.at(-1));
-    assert.deepEqual(received.snapshot.animals.map(animal=>animal.id),manifest.lot.animalIds);
-    assert.equal(received.snapshot.animals.length,manifest.lot.animalIds.length);
+    assert.deepEqual(received.snapshot.animals.map(animal=>animal.id),manifest.targetScope.animalIds);
+    assert.equal(received.snapshot.animals.length,manifest.targetScope.animalIds.length);
     assert.equal(response.engineImplementation,'riose-core-native/0.1.0');
     assert.equal(response.execution.backend,'local-rust');
     assert.equal(response.execution.fallbackUsed,false);
     assert.deepEqual(response.data,expected);
-    assert.equal(response.data.herdSize,manifest.lot.animalIds.length);
+    assert.equal(response.data.herdSize,manifest.targetScope.animalIds.length);
     const run=createRunRecord({manifest,result:response.data,execution:response.execution,id:'native-lot-history'});
     assert.equal(run.execution.buildId,'native-lot-build');
     assert.equal(run.executor.engineImplementation,'riose-core-native/0.1.0');
     assert.equal(runCompatibility(run).supported,true);
-    assert.deepEqual(manifest.lot.unaffectedAnimalIds,base.animals.filter(animal=>animal.patch!==manifest.lot.patchIndex).map(animal=>animal.id));
+    assert.deepEqual(manifest.targetScope.unaffectedAnimalIds,base.animals.filter(animal=>animal.patch!==manifest.targetScope.patchIndex).map(animal=>animal.id).sort((a,b)=>a-b));
   });
 });
 
 test('lot Worker uses the same selected-lot contract when Rust is unavailable',async t=>{
   const snapshot=new FarmEngine(20261013,24).snapshot(),manifest=createLotComparisonManifest(snapshot,{patchIndex:0,domainZoneId:'paddock-1',periodDays:3,alternativeSupplementKgDMPerAnimalPerDay:0.5});
-  const scoped=createLotScopedSnapshot(snapshot,manifest.lot),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
+  const scoped=createLotScopedSnapshot(snapshot,manifest.targetScope),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
   const fetchImpl=async()=>({ok:true,json:async()=>({available:false,backend:'local-rust'})});
   await withWorker(t,fetchImpl,async worker=>{
     await worker.onmessage({data:{protocolVersion:1,type:'compareLotConfigured',manifest}});
     const response=normalizeWorkerResponse(worker.messages.at(-1));
     assert.deepEqual(response.data,addLotComparisonContext(manifest,compareConfiguredScenarios(scoped,options)));
-    assert.equal(response.data.herdSize,manifest.lot.animalIds.length);
+    assert.equal(response.data.herdSize,manifest.targetScope.animalIds.length);
     assert.equal(response.execution.backend,'local-js');
     assert.equal(response.execution.fallbackUsed,false);
     assert.equal(response.execution.availability,'native_runner_unavailable');

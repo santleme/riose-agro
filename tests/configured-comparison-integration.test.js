@@ -9,6 +9,7 @@ import {
 import {createComparisonArchive} from '../src/client/comparison-archive.js';
 import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
 import {createRunRecord,runCompatibility} from '../src/client/run-history.js';
+import {createLotComparisonManifest} from '../src/client/lot-comparison.js';
 import {validateReproducibilityManifest,replayScenarioContract} from '../src/client/scenario-contract.js';
 import {decodeWorkerCommand,normalizeWorkerResponse} from '../src/client/worker-protocol.js';
 
@@ -28,6 +29,17 @@ test('configured manifest is versioned, schema-valid, and replayable through the
   assert.equal(archive.manifestReference.type,'riose-configured-comparison');
   assert.equal(archive.comparison.comparisonFactor,'diet');
   assert.equal(archive.comparison.validated,false);
+});
+
+test('lot scope extends the existing configured manifest while legacy whole-farm manifests remain valid',()=>{
+  const legacy=createConfiguredComparisonManifest(snapshot,{referenceConfig,scenarioConfig,days:4});
+  const lot=createLotComparisonManifest(snapshot,{patchIndex:1,domainZoneId:'paddock-2',periodDays:4,alternativeSupplementKgDMPerAnimalPerDay:0.5});
+  assert.equal(lot.type,legacy.type);
+  assert.equal(lot.version,legacy.version);
+  assert.equal(validateSchema(lot),true,JSON.stringify(validateSchema.errors));
+  assert.equal(validateConfiguredComparisonManifest(lot),true);
+  assert.equal(validateConfiguredComparisonManifest(legacy),true);
+  assert.throws(()=>validateConfiguredComparisonManifest({...lot,unsupportedScope:{kind:'global'}}),/campos ausentes ou não suportados/);
 });
 
 test('run history preserves and validates the configured intervention for future replay',()=>{

@@ -18,6 +18,7 @@
       "type": "object", "additionalProperties": false, "required": ["reference", "scenario"],
       "properties": {"reference": {"$ref": "#/$defs/config"}, "scenario": {"$ref": "#/$defs/config"}}
     },
+    "targetScope": {"$ref": "#/$defs/lotTargetScope"},
     "validated": {"const": false}
   },
   "$defs": {
@@ -29,6 +30,37 @@
         "housing": {"enum": ["pasture", "barn"]},
         "weather": {"enum": ["normal", "hot", "rain"]},
         "supplement": {"type": "number", "minimum": 0, "maximum": 4}
+      }
+    },
+    "lotTargetScope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "sourceKind", "farmId", "domainZoneId", "paddockId", "lotId", "patchIndex", "animalIds", "unaffectedAnimalIds", "populationScope", "model", "modelParameters", "snapshotFingerprint"],
+      "properties": {
+        "kind": {"const": "lot"},
+        "sourceKind": {"const": "synthetic-demonstration"},
+        "farmId": {"type": "string", "minLength": 1},
+        "domainZoneId": {"type": "string", "minLength": 1},
+        "paddockId": {"type": "string", "minLength": 1},
+        "lotId": {"type": "string", "minLength": 1},
+        "patchIndex": {"type": "integer", "minimum": 0, "maximum": 3},
+        "animalIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "unaffectedAnimalIds": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "populationScope": {"const": "selected-lot-only"},
+        "model": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "version", "status", "evidenceStatus", "validated", "implementation", "evidenceReferences"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "status": {"type": "string", "minLength": 1},
+            "evidenceStatus": {"type": "string", "minLength": 1},
+            "validated": {"const": false},
+            "implementation": {"type": "string", "minLength": 1},
+            "evidenceReferences": {"type": "array", "items": {"type": "string", "minLength": 1}}
+          }
+        },
+        "modelParameters": {"type": "object", "additionalProperties": {"type": "number"}},
+        "snapshotFingerprint": {"type": "string", "pattern": "^fnv1a64:[a-f0-9]{16}$"}
       }
     }
   }

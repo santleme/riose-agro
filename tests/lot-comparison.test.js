@@ -14,20 +14,24 @@ const makeManifest=(snapshot,patchIndex=1)=>createLotComparisonManifest(snapshot
 test('lot selection has stable identity and the intervention changes only selected-lot supplement',()=>{
   const snapshot=new FarmEngine(60413,20).snapshot(),before=structuredClone(snapshot),manifest=makeManifest(snapshot,2);
   assert.equal(manifest.type,LOT_COMPARISON_MANIFEST_TYPE);
-  assert.equal(manifest.lot.lotId,'demo-lot-03');
-  assert.equal(manifest.lot.paddockId,'demo-paddock-03');
-  assert.ok(manifest.lot.animalIds.length>0);
-  assert.ok(manifest.lot.unaffectedAnimalIds.length>0);
+  assert.equal(manifest.type,'riose-configured-comparison');
+  assert.equal(manifest.targetScope.kind,'lot');
+  assert.equal(manifest.targetScope.lotId,'demo-lot-03');
+  assert.equal(manifest.targetScope.paddockId,'demo-paddock-03');
+  assert.ok(manifest.targetScope.animalIds.length>0);
+  assert.ok(manifest.targetScope.unaffectedAnimalIds.length>0);
   assert.deepEqual(snapshot,before,'preparing the intervention must not mutate the live state');
   assert.deepEqual(Object.keys(manifest.scenarios.reference).filter(key=>manifest.scenarios.reference[key]!==manifest.scenarios.scenario[key]),['supplement']);
   assert.equal(manifest.scenarios.reference.supplement,snapshot.config.supplement);
-  assert.equal(manifest.lot.model.id,'agroville-engine');
-  assert.equal(manifest.lot.model.evidenceStatus,'demonstrative');
-  assert.equal(manifest.lot.model.validated,false);
+  assert.equal(manifest.targetScope.model.id,'agroville-engine');
+  assert.equal(manifest.targetScope.model.status,'demonstrative_unvalidated');
+  assert.equal(manifest.targetScope.model.evidenceStatus,'demonstrative');
+  assert.deepEqual(manifest.targetScope.model.evidenceReferences,[]);
+  assert.equal(manifest.targetScope.model.validated,false);
   assert.equal(manifest.seed,snapshot.initialSeed);
-  assert.equal(manifest.lot.populationScope,'selected-lot-only');
-  assert.deepEqual(createLotScopedSnapshot(snapshot,manifest.lot).animals.map(animal=>animal.id),manifest.lot.animalIds);
-  assert.throws(()=>validateLotComparisonManifest({...manifest,lot:{...manifest.lot,animalIds:[...manifest.lot.unaffectedAnimalIds]}}),/identidade ou proveniência/);
+  assert.equal(manifest.targetScope.populationScope,'selected-lot-only');
+  assert.deepEqual(createLotScopedSnapshot(snapshot,manifest.targetScope).animals.map(animal=>animal.id),manifest.targetScope.animalIds);
+  assert.throws(()=>validateLotComparisonManifest({...manifest,targetScope:{...manifest.targetScope,animalIds:[...manifest.targetScope.unaffectedAnimalIds]}}),/identidade|targetScope/);
 });
 
 test('lot comparison is deterministic, isolated, and replays from the same seed',()=>{
@@ -36,17 +40,30 @@ test('lot comparison is deterministic, isolated, and replays from the same seed'
   assert.deepEqual(first,second);
   assert.deepEqual(replayLotComparisonManifest(manifest),first);
   assert.deepEqual(manifest.initialSnapshot,before);
-  assert.equal(first.herdSize,manifest.lot.animalIds.length);
+  assert.equal(first.herdSize,manifest.targetScope.animalIds.length);
   assert.equal(first.seed,manifest.seed);
-  assert.equal(first.lot.lotId,manifest.lot.lotId);
-  assert.equal(first.model.id,manifest.lot.model.id);
+  assert.equal(first.lot.lotId,manifest.targetScope.lotId);
+  assert.equal(first.model.id,manifest.targetScope.model.id);
   assert.equal(first.initialConfig.supplement,manifest.scenarios.reference.supplement);
   assert.equal(first.scenarioConfig.supplement,manifest.scenarios.scenario.supplement);
   assert.equal(first.comparisonFactor,'supplement');
+  assert.notEqual(first.reference.gain,first.scenario.gain,'the selected lot should respond to the intervention');
   assert.equal(first.rows[0].referenceWeight,first.rows[0].scenarioWeight);
-  assert.equal(first.rows.at(-1).referencePastureKgDM,first.rows.at(-1).referencePastureByPaddock[manifest.lot.patchIndex]);
-  assert.equal(first.rows.at(-1).scenarioPastureKgDM,first.rows.at(-1).scenarioPastureByPaddock[manifest.lot.patchIndex]);
-  assert.deepEqual(manifest.lot.unaffectedAnimalIds,manifest.initialSnapshot.animals.filter(animal=>animal.patch!==manifest.lot.patchIndex).map(animal=>animal.id));
+  assert.equal(first.rows.at(-1).referencePastureKgDM,first.rows.at(-1).referencePastureByPaddock[manifest.targetScope.patchIndex]);
+  assert.equal(first.rows.at(-1).scenarioPastureKgDM,first.rows.at(-1).scenarioPastureByPaddock[manifest.targetScope.patchIndex]);
+  for(const row of first.rows)for(let paddock=0;paddock<4;paddock++)if(paddock!==manifest.targetScope.patchIndex){
+    assert.equal(row.referencePastureByPaddock[paddock],row.scenarioPastureByPaddock[paddock],'unrelated paddock state should remain invariant');
+  }
+  assert.deepEqual(manifest.targetScope.unaffectedAnimalIds,manifest.initialSnapshot.animals.filter(animal=>animal.patch!==manifest.targetScope.patchIndex).map(animal=>animal.id).sort((a,b)=>a-b));
+  const scoped=createLotScopedSnapshot(manifest.initialSnapshot,manifest.targetScope);
+  assert.deepEqual(scoped.animals.map(animal=>animal.id),manifest.targetScope.animalIds,'unselected entities must not enter either engine arm');
+});
+
+test('lot identity is independent of animal array order and replay resolves by stable IDs',()=>{
+  const snapshot=new FarmEngine(417,24).snapshot(),forward=makeManifest(snapshot,1),reordered={...snapshot,animals:[...snapshot.animals].reverse()},reverse=makeManifest(reordered,1);
+  assert.deepEqual(reverse.targetScope.animalIds,forward.targetScope.animalIds);
+  assert.deepEqual(createLotScopedSnapshot(reordered,reverse.targetScope).animals.map(animal=>animal.id),forward.targetScope.animalIds);
+  assert.deepEqual(replayLotComparisonManifest(reverse),replayLotComparisonManifest(forward));
 });
 
 test('lot comparison preserves manifest, executor and deterministic replay in local history',()=>{
@@ -57,7 +74,7 @@ test('lot comparison preserves manifest, executor and deterministic replay in lo
   const saved=getRun('lot-run',adapter);
   assert.equal(saved.manifest.type,LOT_COMPARISON_MANIFEST_TYPE);
   assert.equal(saved.executor.engineImplementation,'javascript-fallback');
-  assert.equal(saved.manifest.lot.lotId,manifest.lot.lotId);
+  assert.equal(saved.manifest.targetScope.lotId,manifest.targetScope.lotId);
   assert.deepEqual(replayLotComparisonManifest(saved.manifest),saved.result);
   assert.equal(runCompatibility(saved).supported,true);
   assert.match(storage.get(RUN_HISTORY_KEY),/synthetic-demonstration/);

@@ -44,7 +44,7 @@ test('Worker command decoder rejects malformed versions, commands and payloads d
 
 test('lot simulation and replay commands accept only manifest envelopes',()=>{
   for(const type of ['compareLotConfigured','replayLotConfigured']){
-    assert.deepEqual(decodeWorkerCommand({protocolVersion:1,type,manifest:{type:'riose-lot-configured-comparison'}}).command,{protocolVersion:1,type,manifest:{type:'riose-lot-configured-comparison'}});
+    assert.deepEqual(decodeWorkerCommand({protocolVersion:1,type,manifest:{type:'riose-configured-comparison',targetScope:{kind:'lot'}}}).command,{protocolVersion:1,type,manifest:{type:'riose-configured-comparison',targetScope:{kind:'lot'}}});
     protocolError(()=>decodeWorkerCommand({protocolVersion:1,type}), 'INVALID_COMMAND_PAYLOAD');
   }
 });

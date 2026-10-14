@@ -94,7 +94,7 @@ test('farm map lot flow runs, scopes, persists and replays the selected syntheti
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/Lote B/);
   assert.match(ui.elements.get('lot-selection-details').innerHTML,/simulada · IDs estáveis/);
   assert.deepEqual(JSON.parse(ui.storage.get('agroville-farm-selection-v1')),{domainZoneId:'paddock-2',lotId:'demo-lot-02'});
-  ui.elements.set('lot-supplement-alt',{value:'0.5'});
+  ui.elements.set('lot-supplement-alt',{value:'1.3'});
   const selectedLot=initial.animals.filter(animal=>animal.patch===1).map(animal=>animal.id);
   const others=initial.animals.filter(animal=>animal.patch!==1).map(animal=>animal.id);
   ui.elements.get('lot-compare').onclick();
@@ -102,8 +102,9 @@ test('farm map lot flow runs, scopes, persists and replays the selected syntheti
   assert.equal(request.type,'compareLotConfigured');
   const manifest=request.manifest;
   assert.equal(manifest.type,LOT_COMPARISON_MANIFEST_TYPE);
-  assert.deepEqual(manifest.lot.animalIds,selectedLot);
-  assert.deepEqual(manifest.lot.unaffectedAnimalIds,others);
+  assert.deepEqual(manifest.targetScope.animalIds,selectedLot.sort((a,b)=>a-b));
+  assert.deepEqual(manifest.targetScope.unaffectedAnimalIds,others.sort((a,b)=>a-b));
+  assert.equal(manifest.scenarios.scenario.supplement,1.3,'the typed alternative must survive the snapshot response render');
   assert.deepEqual(Object.keys(manifest.scenarios.reference).filter(key=>manifest.scenarios.reference[key]!==manifest.scenarios.scenario[key]),['supplement']);
   const result=compareLotConfiguredScenarios(manifest);
   ui.deliver('comparison',result);
@@ -113,12 +114,12 @@ test('farm map lot flow runs, scopes, persists and replays the selected syntheti
   assert.doesNotMatch(ui.elements.get('pasture-summary').innerHTML,/Piquete A|Piquete C|Piquete D/);
   const history=JSON.parse(ui.storage.get('agroville-run-history-v1'));
   assert.equal(history.runs.length,1);
-  assert.equal(history.runs[0].manifest.lot.lotId,'demo-lot-02');
+  assert.equal(history.runs[0].manifest.targetScope.lotId,'demo-lot-02');
   assert.equal(history.runs[0].executor.engineImplementation,'javascript-fallback');
   ui.elements.get('run-history-select').value=history.runs[0].id;
   ui.elements.get('run-history-replay').onclick();
   assert.equal(ui.messages.at(-1).type,'replayLotConfigured');
-  assert.equal(ui.messages.at(-1).manifest.lot.lotId,'demo-lot-02');
+  assert.equal(ui.messages.at(-1).manifest.targetScope.lotId,'demo-lot-02');
   ui.deliver('comparison',replayLotComparisonManifest(history.runs[0].manifest));
   assert.equal(JSON.parse(ui.storage.get('agroville-run-history-v1')).runs.length,2);
 });
@@ -274,6 +275,7 @@ test('lot metrics, environmental edits, THI and linked selection persist through
   ui.elements.get('compare').onclick();ui.deliver('state',simulatorSnapshot);
   assert.deepEqual(ui.messages.at(-1).snapshot,simulatorSnapshot);
   const request=ui.messages.at(-1);ui.deliver('comparison',compareConfiguredScenarios(simulatorSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:30}));
+  assert.equal(ui.elements.get('lot-compare').disabled,true,'a regular comparison must not enable an ineligible observed lot');
   assert.equal(ui.elements.get('lot-comparison-context').hidden,true);
   assert.equal(ui.storage.has('agroville-last-lot-comparison-v1'),false);
   const savedRun=JSON.parse(ui.storage.get('agroville-run-history-v1')).runs[0];

@@ -245,14 +245,17 @@ export function compareConfiguredScenarios(snapshot,options,metabolismKernel=upd
 export function createConfiguredComparisonManifest(snapshot,options){
   assertSnapshot(snapshot);
   const {referenceConfig,scenarioConfig,factor,days}=configuredComparisonOptions(options);
-  return {type:CONFIGURED_MANIFEST_TYPE,version:1,engineVersion:FARM_ENGINE_VERSION,seed:Number.isInteger(snapshot.initialSeed)?snapshot.initialSeed:snapshot.seed,
+  const manifest={type:CONFIGURED_MANIFEST_TYPE,version:1,engineVersion:FARM_ENGINE_VERSION,seed:Number.isInteger(snapshot.initialSeed)?snapshot.initialSeed:snapshot.seed,
     initialSnapshot:structuredClone(snapshot),periodDays:days,factor,
     scenarios:{reference:referenceConfig,scenario:scenarioConfig},validated:false};
+  if(options.targetScope!==undefined)manifest.targetScope=structuredClone(options.targetScope);
+  return manifest;
 }
 export function validateConfiguredComparisonManifest(manifest){
   if(!manifest||manifest.type!==CONFIGURED_MANIFEST_TYPE||manifest.version!==1)throw new Error('Tipo ou versão de manifesto configurado não suportado');
-  const expectedKeys=['type','version','engineVersion','seed','initialSnapshot','periodDays','factor','scenarios','validated'];
-  if(Object.keys(manifest).length!==expectedKeys.length||expectedKeys.some(key=>!Object.hasOwn(manifest,key)))throw new Error('Manifesto configurado contém campos ausentes ou não suportados');
+  const requiredKeys=['type','version','engineVersion','seed','initialSnapshot','periodDays','factor','scenarios','validated'];
+  const allowedKeys=[...requiredKeys,'targetScope'];
+  if(requiredKeys.some(key=>!Object.hasOwn(manifest,key))||Object.keys(manifest).some(key=>!allowedKeys.includes(key)))throw new Error('Manifesto configurado contém campos ausentes ou não suportados');
   if(manifest.engineVersion!==FARM_ENGINE_VERSION)throw new Error('Versão do motor do manifesto configurado não suportada');
   if(manifest.validated!==false)throw new Error('Manifesto deve preservar o estado demonstrativo não validado do motor');
   assertSnapshot(manifest.initialSnapshot);
@@ -263,8 +266,26 @@ export function validateConfiguredComparisonManifest(manifest){
   const {reference,scenario}=manifest.scenarios;
   const factor=configuredDifference(reference,scenario);
   if(manifest.factor!==factor)throw new Error('O fator declarado deve ser a única diferença entre configurações');
+  if(Object.hasOwn(manifest,'targetScope'))validateConfiguredTargetScope(manifest.targetScope,manifest.initialSnapshot);
   return true;
 }
+
+function validateConfiguredTargetScope(scope,snapshot){
+  const keys=['kind','sourceKind','farmId','domainZoneId','paddockId','lotId','patchIndex','animalIds','unaffectedAnimalIds','populationScope','model','modelParameters','snapshotFingerprint'];
+  if(!scope||typeof scope!=='object'||Array.isArray(scope)||Object.keys(scope).length!==keys.length||keys.some(key=>!Object.hasOwn(scope,key)))throw new Error('targetScope deve conter uma identidade completa de lote suportada.');
+  if(scope.kind!=='lot'||scope.sourceKind!=='synthetic-demonstration'||scope.populationScope!=='selected-lot-only'||
+    typeof scope.farmId!=='string'||!scope.farmId||typeof scope.domainZoneId!=='string'||!scope.domainZoneId||
+    typeof scope.paddockId!=='string'||!scope.paddockId||typeof scope.lotId!=='string'||!scope.lotId||
+    !Number.isInteger(scope.patchIndex)||scope.patchIndex<0||scope.patchIndex>3||
+    !Array.isArray(scope.animalIds)||!Array.isArray(scope.unaffectedAnimalIds)||
+    typeof scope.snapshotFingerprint!=='string'||!/^fnv1a64:[a-f0-9]{16}$/.test(scope.snapshotFingerprint))throw new Error('targetScope de lote contém uma identidade inválida.');
+  const ids=snapshot.animals.map(animal=>animal.id),selected=snapshot.animals.filter(animal=>animal.patch===scope.patchIndex).map(animal=>animal.id).sort((a,b)=>a-b),unaffected=snapshot.animals.filter(animal=>animal.patch!==scope.patchIndex).map(animal=>animal.id).sort((a,b)=>a-b);
+  if(!sameNumberIds(scope.animalIds,selected)||!sameNumberIds(scope.unaffectedAnimalIds,unaffected)||
+    scope.animalIds.some(id=>!ids.includes(id))||scope.unaffectedAnimalIds.some(id=>!ids.includes(id)))throw new Error('targetScope.animalIds deve identificar o lote selecionado sem usar posições.');
+  if(!scope.model||typeof scope.model!=='object'||typeof scope.model.id!=='string'||typeof scope.model.version!=='string'||scope.model.validated!==false||!Array.isArray(scope.model.evidenceReferences))throw new Error('targetScope.model deve preservar ID, versão, estado e evidências do modelo.');
+  if(!scope.modelParameters||typeof scope.modelParameters!=='object'||Array.isArray(scope.modelParameters))throw new Error('targetScope.modelParameters deve ser um objeto.');
+}
+function sameNumberIds(actual,expected){return actual.length===expected.length&&new Set(actual).size===actual.length&&actual.every((id,index)=>Number.isInteger(id)&&id===expected[index]);}
 export function replayConfiguredComparisonManifest(manifest,metabolismKernel=updateMetabolismJS){
   validateConfiguredComparisonManifest(manifest);
   return compareConfiguredScenarios(manifest.initialSnapshot,{days:manifest.periodDays,
