@@ -66,7 +66,7 @@ This roll-up distinguishes an issue's GitHub state from whether its technical ev
 | GPU study confirms actual accelerator execution and includes equivalent output, setup/copy and total-run costs | **Incomplete on available hardware.** #111 documents that this host has no ROCm device/runtime and measures only the CPU path. No GPU execution, transfer timing, or speedup is claimed; a ROCm-capable host is required to complete this criterion. |
 | C++ study includes ABI/build/ownership costs | **Satisfied for the selected metabolism kernel.** #112 compares shared outputs through the C ABI and accounts for setup/allocation and ownership costs; it does not claim full-engine performance. |
 | WASM study includes startup and Worker costs | **Satisfied for the measured browser matrix.** #113 reports full-scenario, Worker, startup, memory, parity, fallback, and a separate shared-renderer result-display phase across Chromium and Firefox. The UI timing is a benchmark probe, not live full-core WASM integration. |
-| No exploratory result changes product defaults without review and repeatable benefit | **Satisfied.** The JavaScript default remains unchanged; the browser evidence recommends optional evaluation only, and the draft PR is awaiting review. |
+| No exploratory result changes product defaults without review and repeatable benefit | **Satisfied.** The JavaScript default remains unchanged; the browser evidence recommends optional evaluation only, and PR #131 is available for review. |
 
 ### Parent epic disposition
 
