@@ -89,6 +89,8 @@ The browser harness is `npm run bench:browser` (`BENCH_REPETITIONS=5` controls t
 
 The baseline is the checked-out `913b36b` app; the optimized app is this Architecture V2 worktree after the Worker view transfer, list virtualization, sprite caching and no-snapshot tick changes. Both used Chromium 156.0.8078.4, seed `20261012`, 10,000 animals and a 24-hour tick. The baseline used 9 repetitions and the final run used 5; compare medians, and treat p95 as directional because the sample counts differ.
 
+The separate [full-core Rust/WASM browser evaluation](../evidence/native-core-browser-wasm-2026-10-14/README.md) compares the complete 24-hour native scenario contract with the JavaScript `FarmEngine` in dedicated Workers. It passed exact A3/B3 fixture checks and showed lower full-scenario and Worker medians at 100/1,000/10,000 animals in three Chromium runs. This is a one-host, headless-worker result with no UI phase; its 331,732-byte experiment module is separate from the 21,351-byte production metabolism-only WASM module, and it does not change the JS default.
+
 | Measurement at 10,000 animals | Baseline | Optimized app | Change |
 | --- | ---: | ---: | ---: |
 | Worker 24-hour round-trip median | 657.1 ms | 27.0 ms | 95.9% lower |

@@ -10,6 +10,7 @@ serde_json.workspace = true
 
 [features]
 history-ring = []
+browser-scenario-wasm = []
 
 [lib]
 crate-type = ["rlib", "cdylib"]
