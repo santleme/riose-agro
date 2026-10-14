@@ -19,6 +19,7 @@
     "bench:history-storage": "node --expose-gc scripts/benchmark-history-storage.mjs",
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "bench:wasm-scenario-browser": "node scripts/benchmark-native-wasm-browser.mjs",
+    "bench:wasm-scenario-browser:firefox": "node scripts/benchmark-native-wasm-browser.mjs --browser=firefox",
     "build:graphics-poc": "node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "build:graphics-release": "node scripts/build-composer-scenes.mjs --release && node scripts/build-graphics-poc.mjs",
     "bench:farm-layout": "node scripts/benchmark-farm-layout.mjs",
@@ -75,7 +76,8 @@
   "devDependencies": {
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "esbuild": "^0.28.2"
+    "esbuild": "^0.28.2",
+    "playwright": "1.57.0"
   },
   "dependencies": {
     "pixi.js": "^8.22.0"

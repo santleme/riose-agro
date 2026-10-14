@@ -1,12 +1,10 @@
-import {execFileSync, spawn} from 'node:child_process';
-import {access, mkdtemp, readdir, readFile, rm, stat} from 'node:fs/promises';
-import {arch, cpus, homedir, release, tmpdir, type} from 'node:os';
+import {execFileSync} from 'node:child_process';
+import {access, readdir, readFile, stat} from 'node:fs/promises';
+import {arch, cpus, homedir, release, type} from 'node:os';
 import path from 'node:path';
-import net from 'node:net';
 import crypto from 'node:crypto';
-import {setTimeout as delay} from 'node:timers/promises';
+import {chromium, firefox} from 'playwright';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
-import {waitForDevToolsActivePort} from './browser-startup.mjs';
 
 async function findChrome() {
   const candidates = [process.env.CHROME_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
@@ -22,94 +20,9 @@ async function findChrome() {
   throw new Error('Chromium was not found. Set CHROME_BIN to a local Chromium or Chrome executable.');
 }
 
-class Cdp {
-  constructor(wsUrl) {
-    const endpoint = new URL(wsUrl);
-    const client = net.connect(Number(endpoint.port), endpoint.hostname);
-    this.socket = client;
-    this.buffer = Buffer.alloc(0);
-    this.pending = new Map();
-    this.nextId = 0;
-    this.ready = new Promise((resolve, reject) => {
-      client.once('connect', () => {
-        const key = crypto.randomBytes(16).toString('base64');
-        client.write(`GET ${endpoint.pathname}${endpoint.search} HTTP/1.1\r\nHost: ${endpoint.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\n\r\n`);
-        let response = '';
-        const onData = chunk => {
-          response += chunk.toString('binary');
-          if (!response.includes('\r\n\r\n')) return;
-          client.off('data', onData);
-          if (!response.startsWith('HTTP/1.1 101')) reject(new Error(response));
-          else resolve();
-        };
-        client.on('data', onData);
-      });
-      client.once('error', reject);
-    }).then(() => client.on('data', chunk => this.consume(chunk)));
-  }
-
-  consume(chunk) {
-    this.buffer = Buffer.concat([this.buffer, chunk]);
-    while (this.buffer.length >= 2) {
-      const opcode = this.buffer[0] & 15;
-      let length = this.buffer[1] & 127;
-      let offset = 2;
-      if (length === 126) { if (this.buffer.length < 4) return; length = this.buffer.readUInt16BE(2); offset = 4; }
-      else if (length === 127) { if (this.buffer.length < 10) return; length = Number(this.buffer.readBigUInt64BE(2)); offset = 10; }
-      const masked = (this.buffer[1] & 128) !== 0;
-      if (masked) offset += 4;
-      if (this.buffer.length < offset + length) return;
-      let payload = this.buffer.subarray(offset, offset + length);
-      if (masked) {
-        const mask = this.buffer.subarray(offset - 4, offset);
-        payload = Buffer.from(payload);
-        for (let i = 0; i < payload.length; i++) payload[i] ^= mask[i % 4];
-      }
-      this.buffer = this.buffer.subarray(offset + length);
-      if (opcode === 8) { this.socket.end(); continue; }
-      if (opcode === 9) { this.writeFrame(10, payload); continue; }
-      if (opcode !== 1) continue;
-      const message = JSON.parse(payload.toString());
-      if (!message.id) continue;
-      const pending = this.pending.get(message.id);
-      if (!pending) continue;
-      this.pending.delete(message.id);
-      message.error ? pending.reject(new Error(message.error.message ?? JSON.stringify(message.error))) : pending.resolve(message.result);
-    }
-  }
-
-  writeFrame(opcode, payload) {
-    const body = Buffer.from(payload);
-    let header;
-    if (body.length < 126) { header = Buffer.alloc(6); header[0] = 0x80 | opcode; header[1] = 0x80 | body.length; }
-    else if (body.length <= 65535) { header = Buffer.alloc(8); header[0] = 0x80 | opcode; header[1] = 0x80 | 126; header.writeUInt16BE(body.length, 2); }
-    else { header = Buffer.alloc(14); header[0] = 0x80 | opcode; header[1] = 0x80 | 127; header.writeBigUInt64BE(BigInt(body.length), 2); }
-    const mask = crypto.randomBytes(4);
-    mask.copy(header, header.length - 4);
-    const masked = Buffer.alloc(body.length);
-    for (let i = 0; i < body.length; i++) masked[i] = body[i] ^ mask[i % 4];
-    this.socket.write(Buffer.concat([header, masked]));
-  }
-
-  async send(method, params = {}) {
-    await this.ready;
-    const id = ++this.nextId;
-    const response = new Promise((resolve, reject) => this.pending.set(id, {resolve, reject}));
-    this.writeFrame(1, JSON.stringify({id, method, params}));
-    return response;
-  }
-
-  async evaluate(expression) {
-    const response = await this.send('Runtime.evaluate', {expression, awaitPromise: true, returnByValue: true});
-    if (response.exceptionDetails) throw new Error(JSON.stringify(response.exceptionDetails));
-    if (response.result?.value === undefined) throw new Error(`CDP evaluation returned no by-value result: ${JSON.stringify(response.result)}`);
-    return response.result.value;
-  }
-
-  close() { this.socket.end(); }
-}
-
 const origin = process.env.RIOSE_URL ?? 'http://127.0.0.1:8000/';
+const browserArgument = process.argv.find(argument => argument.startsWith('--browser='))?.slice('--browser='.length);
+const browserEngine = browserArgument ?? process.env.NATIVE_WASM_BROWSER ?? 'chromium';
 const repetitions = Number(process.env.NATIVE_WASM_REPETITIONS ?? 15);
 const warmups = Number(process.env.NATIVE_WASM_WARMUPS ?? 3);
 const fingerprintPaths = [
@@ -144,8 +57,12 @@ const fingerprintPaths = [
 if (!Number.isInteger(repetitions) || repetitions < 3 || !Number.isInteger(warmups) || warmups < 1) {
   throw new Error('NATIVE_WASM_REPETITIONS must be >= 3 and NATIVE_WASM_WARMUPS must be >= 1');
 }
+if (!['chromium', 'firefox'].includes(browserEngine)) throw new Error('NATIVE_WASM_BROWSER must be chromium or firefox');
 
-const chrome = await findChrome();
+const browserType = browserEngine === 'firefox' ? firefox : chromium;
+const browserOptions = browserEngine === 'firefox'
+  ? {headless: true}
+  : {headless: true, executablePath: await findChrome(), args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu']};
 const sourceHashes = Object.fromEntries(await Promise.all(fingerprintPaths.map(async relativePath => {
   const contents = await readFile(new URL(`../${relativePath}`, import.meta.url));
   return [relativePath, crypto.createHash('sha256').update(contents).digest('hex')];
@@ -153,13 +70,8 @@ const sourceHashes = Object.fromEntries(await Promise.all(fingerprintPaths.map(a
 const sourceTreeDigest = crypto.createHash('sha256')
   .update(Object.entries(sourceHashes).map(([file, digest]) => `${file}:${digest}\n`).join(''))
   .digest('hex');
-const userData = await mkdtemp(path.join(tmpdir(), 'riose-native-wasm-bench-'));
-const browser = spawn(chrome, ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--remote-allow-origins=*', '--remote-debugging-port=0', `--user-data-dir=${userData}`, 'about:blank'], {stdio: ['ignore', 'ignore', 'pipe']});
-let browserExit = null;
-let browserStderr = '';
-browser.once('exit', (code, signal) => { browserExit = {code, signal}; });
-browser.stderr.setEncoding('utf8');
-browser.stderr.on('data', chunk => { browserStderr = (browserStderr + chunk).slice(-4000); });
+const browser = await browserType.launch(browserOptions);
+const page = await browser.newPage({viewport: {width: 1280, height: 720}});
 let cdp;
 
 const requestSource = `
@@ -208,27 +120,21 @@ return result;
 `;
 
 try {
-  const active = await waitForDevToolsActivePort({filePath: path.join(userData, 'DevToolsActivePort'), getExit: () => browserExit, getStderr: () => browserStderr});
-  const port = Number(active.split('\n')[0]);
-  const response = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(origin)}`, {method: 'PUT'});
-  if (!response.ok) throw new Error(`Chrome DevTools HTTP ${response.status}`);
-  const target = await response.json();
-  cdp = new Cdp(target.webSocketDebuggerUrl);
-  await cdp.send('Page.enable');
-  await cdp.send('Runtime.enable');
-  await cdp.send('Performance.enable');
-  const browserVersion = await cdp.send('Browser.getVersion');
   const ready = await fetch(origin);
   if (!ready.ok) throw new Error(`Benchmark origin returned HTTP ${ready.status}: ${origin}`);
-  await cdp.send('Page.navigate', {url: origin});
-  await delay(1000);
-  await cdp.send('HeapProfiler.collectGarbage');
-  const before = Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value]));
-  const browserResult = await cdp.evaluate(`(async()=>{${requestSource}})()`);
-  browserResult.browser.browserProduct = browserVersion.product;
-  browserResult.browser.browserRevision = browserVersion.revision;
-  await cdp.send('HeapProfiler.collectGarbage');
-  const after = Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value]));
+  await page.goto(origin, {waitUntil: 'load'});
+  if (browserEngine === 'chromium') {
+    cdp = await page.context().newCDPSession(page);
+    await cdp.send('HeapProfiler.enable');
+    await cdp.send('Performance.enable');
+    await cdp.send('HeapProfiler.collectGarbage');
+  }
+  const before = cdp ? Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value])) : null;
+  const browserResult = await page.evaluate(`(async()=>{${requestSource}})()`);
+  browserResult.browser.browserProduct = `${browserEngine === 'chromium' ? 'Chromium' : 'Firefox'} ${browser.version()}`;
+  browserResult.browser.browserRevision = `Playwright ${process.env.npm_package_devDependencies_playwright ?? '1.57.0'}`;
+  if (cdp) await cdp.send('HeapProfiler.collectGarbage');
+  const after = cdp ? Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value])) : null;
 
   const byCount = (rows, count, field) => rows.filter(row => row.count === count).map(row => row[field]);
   const summary = values => summarizeSamples(values);
@@ -271,7 +177,7 @@ try {
     memory: {status: 'measured', measurements: [100, 1000, 10000].map(animals => {
       const rows = browserResult.memoryRuns.filter(row => row.count === animals);
       return measurement('memory', 'wasmLinearMemoryBytesAfterScenario', 'bytes', summary(rows.map(row => row.memoryBytes)), {population: {animals, scope: 'full-core scenario'}, implementation: 'full-core-wasm', memoryType: 'wasm-memory', observations: rows.map(row => row.memoryBytes), source: 'WebAssembly.Memory.buffer.byteLength after the scenario response has been copied'});
-    }).concat(measurement('memory', 'pageJsHeapAfterGarbageCollection', 'bytes', summary([after.JSHeapUsedSize]), {population: {animals: 10000, scope: 'browser benchmark page'}, implementation: 'combined-browser-page', memoryType: 'js-heap', observations: [after.JSHeapUsedSize], deltaBytes: after.JSHeapUsedSize - before.JSHeapUsedSize, source: 'Chrome Performance.getMetrics after forced page garbage collection; excludes dedicated Worker heap attribution'}))},
+    }).concat(after?.JSHeapUsedSize !== undefined ? [measurement('memory', 'pageJsHeapAfterGarbageCollection', 'bytes', summary([after.JSHeapUsedSize]), {population: {animals: 10000, scope: 'browser benchmark page'}, implementation: 'combined-browser-page', memoryType: 'js-heap', observations: [after.JSHeapUsedSize], deltaBytes: after.JSHeapUsedSize - before.JSHeapUsedSize, source: 'Chromium Performance.getMetrics after forced page garbage collection; excludes dedicated Worker heap attribution'})] : [])},
     ui: {status: 'not-measured', measurements: []},
   };
   const parityFailed = Object.values(browserResult.goldenParity).some(value => !value);
@@ -286,25 +192,25 @@ try {
   });
   const result = benchmarkReport({
     name: 'native-core-browser-wasm',
-    runtime: {browser: 'Chromium', browserVersion: browserResult.browser.browserProduct, browserRevision: browserResult.browser.browserRevision, browserUserAgent: browserResult.browser.userAgent, node: process.version, rust: execFileSync('rustc', ['--version'], {encoding: 'utf8'}).trim()},
+    runtime: {browser: browserEngine, browserVersion: browserResult.browser.browserProduct, browserRevision: browserResult.browser.browserRevision, browserUserAgent: browserResult.browser.userAgent, node: process.version, rust: execFileSync('rustc', ['--version'], {encoding: 'utf8'}).trim()},
     hardware: {os: `${type()} ${release()}`, architecture: arch(), cpu: cpus()[0]?.model ?? null, gpuMemoryBytes: null, browserDevice: {hardwareConcurrency: browserResult.browser.hardwareConcurrency, deviceMemoryGiB: browserResult.browser.deviceMemoryGiB, devicePixelRatio: browserResult.browser.devicePixelRatio, screen: browserResult.browser.screen}},
     workload: {seed: 20261012, populations, scenario: 'baseline pasture; 24-hour horizon', fixtureChecks: 'baseline-pasture (A3) and housing-comparison (B3), exact JSON parity'},
-    configuration: {warmupRuns: warmups, repetitions, startupWarmSamples: browserResult.wasmWarmStartup.length, workersPerWarmStartupSample: 10, browserCacheState: 'same isolated Chromium profile; warm samples divide batches of ten Worker startups after the initial cold WASM compile'},
+    configuration: {warmupRuns: warmups, repetitions, startupWarmSamples: browserResult.wasmWarmStartup.length, workersPerWarmStartupSample: 10, browserCacheState: `isolated ${browserEngine} profile; warm samples divide batches of ten Worker startups after the initial cold WASM compile`},
     limits: {farmEngineMaxAnimals: 10000, rendererMaxAnimals: 10000, numericKernelMaxAnimalsMeasured: 100000},
     phases,
     timingBoundaries: [
       {phase: 'startup', timed: ['Worker construction through ready message; WASM fetch and compile are included for WASM.'], notTimed: ['Browser process launch and initial page navigation.']},
-      {phase: 'coldStartup', timed: ['First dedicated Worker startup and first WASM fetch/compile in an isolated browser profile.'], notTimed: ['Chrome process startup.']},
-      {phase: 'warmStartup', timed: ['New Worker startup after the first WASM module has been fetched and compiled by Chromium.'], notTimed: ['A guaranteed HTTP cache hit across devices/browsers.']},
+      {phase: 'coldStartup', timed: ['First dedicated Worker startup and first WASM fetch/compile in an isolated browser profile.'], notTimed: ['Browser process startup.']},
+      {phase: 'warmStartup', timed: ['New Worker startup after the first WASM module has been fetched and compiled by the selected browser.'], notTimed: ['A guaranteed HTTP cache hit across devices/browsers.']},
       {phase: 'engine', timed: ['JavaScript FarmEngine setup, 24-hour tick, snapshot, and metrics; Rust run_native_scenario after request JSON parsing.'], notTimed: ['Worker scheduling/transport, WASM request parsing and result serialization, and page rendering.']},
-      {phase: 'fullScenario', timed: ['Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode.'], notTimed: ['Page rendering and Chrome process launch.']},
+      {phase: 'fullScenario', timed: ['Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode.'], notTimed: ['Page rendering and browser process launch.']},
       {phase: 'worker', timed: ['Page request through Worker response including structured-clone transfer and scheduling.'], notTimed: ['UI rendering; the study uses a dedicated benchmark Worker.']},
       {phase: 'bridgeMarshaling', timed: ['WASM request JSON encode, input allocation/copy, Rust request JSON parse, result JSON serialization, output copy, response JSON decode, and total ABI call.'], notTimed: ['UI rendering; response-envelope assembly is included in the total ABI call but not timed as a separate subphase.']},
-      {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario and page JS heap after forced GC.'], notTimed: ['Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation.']},
+      {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario; Chromium page JS heap after forced GC when available.'], notTimed: ['Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation.']},
     ],
     results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToEndGo ? 'GO candidate: WASM was faster end-to-end for each tested population; requires independent repeat before adoption' : 'NO-GO for product adoption: no repeatable end-to-end benefit across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, sourceArtifactBytes: (await stat(new URL('../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
     limitations: [
-      'One Linux x86_64 host and one Chromium build are measured per report; combined evidence across multiple Chromium releases still uses one browser engine and does not generalize to other devices.',
+      `One Linux x86_64 host and one ${browserEngine} build are measured per report; evidence from other browser releases or devices is not implied.`,
       'The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity; no product UI is rendered.',
       'Worker JS heap and process RSS are not attributed. WASM linear memory is reported separately and is not GPU memory.',
       'The baseline workload is a 24-hour demonstrative pasture scenario; it is not scientific model validation or evidence for model accuracy.',
@@ -313,11 +219,6 @@ try {
   });
   console.log(JSON.stringify(result, null, 2));
 } finally {
-  cdp?.close();
-  if (browser.exitCode === null) {
-    browser.kill('SIGTERM');
-    await Promise.race([new Promise(resolve => browser.once('exit', resolve)), delay(1000)]);
-    if (browser.exitCode === null) browser.kill('SIGKILL');
-  }
-  await rm(userData, {recursive: true, force: true, maxRetries: 5, retryDelay: 100});
+  if (cdp) await cdp.detach();
+  await browser.close();
 }
