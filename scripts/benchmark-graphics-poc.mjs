@@ -13,6 +13,10 @@ const durationMs = Number(process.env.BENCH_DURATION_MS ?? 2500), warmupMs = Num
 const cameraZoom = Number(process.env.BENCH_CAMERA_ZOOM ?? 3.2);
 const repeats = Number(process.env.BENCH_REPEATS ?? 2);
 const graphicsReadyTimeoutMs = Number(process.env.RIOSE_GRAPHICS_READY_TIMEOUT_MS ?? 30_000);
+const gpuMode = process.env.BENCH_GPU_MODE ?? 'software';
+const deviceProfile = process.env.BENCH_DEVICE_PROFILE ?? null;
+if (!['software', 'hardware'].includes(gpuMode)) throw new TypeError('BENCH_GPU_MODE must be software or hardware.');
+if (gpuMode === 'hardware' && !deviceProfile) throw new TypeError('BENCH_DEVICE_PROFILE is required when BENCH_GPU_MODE=hardware (for example, laptop-amd-radeon).');
 
 async function chromePath() {
   const candidates = [process.env.CHROME_BIN, '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
@@ -71,7 +75,15 @@ class DevTools {
 }
 
 const chrome = await chromePath(), userData = await mkdtemp(path.join(tmpdir(), 'riose-graphics-bench-'));
-const browser = spawn(chrome, ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--enable-webgl', '--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=swiftshader-webgl', '--remote-debugging-port=0', `--user-data-dir=${userData}`, 'about:blank'], {stdio: 'ignore'});
+const chromeArgs = ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--enable-webgl'];
+if (gpuMode === 'software') {
+  chromeArgs.push('--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=swiftshader-webgl');
+} else {
+  // Leave Chrome's ANGLE/backend selection intact so this run can use the host GPU.
+  chromeArgs.push('--enable-gpu');
+}
+chromeArgs.push('--remote-debugging-port=0', `--user-data-dir=${userData}`, 'about:blank');
+const browser = spawn(chrome, chromeArgs, {stdio: 'ignore'});
 let cdp;
 const waitPage = async () => {
   const deadline = Date.now() + graphicsReadyTimeoutMs;
@@ -96,6 +108,35 @@ try {
   const target = await targetResponse.json(); cdp = new DevTools(target.webSocketDebuggerUrl);
   await cdp.send('Page.enable'); await cdp.send('Runtime.enable'); await cdp.send('Performance.enable'); await cdp.send('HeapProfiler.enable'); await cdp.send('Page.navigate', {url: origin}); await waitPage();
   const browserInfo = await cdp.send('Browser.getVersion');
+  let browserSystemInfo = null;
+  try {
+    const browserEndpoint = await fetch(`http://127.0.0.1:${port}/json/version`).then(response => response.json());
+    const browserCdp = new DevTools(browserEndpoint.webSocketDebuggerUrl);
+    try { browserSystemInfo = await browserCdp.send('SystemInfo.getInfo'); }
+    finally { browserCdp.close(); }
+  } catch {}
+  const gpu = await cdp.evaluate(`(() => {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (!gl) return {available: false, vendor: null, renderer: null, version: null, shadingLanguageVersion: null, maxTextureSize: null, maxViewportDimensions: null, softwareRenderer: null};
+    const debug = gl.getExtension('WEBGL_debug_renderer_info');
+    const vendor = debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+    const renderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+    return {
+      available: true,
+      vendor,
+      renderer,
+      version: gl.getParameter(gl.VERSION),
+      shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION),
+      maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+      maxViewportDimensions: Array.from(gl.getParameter(gl.MAX_VIEWPORT_DIMS)),
+      debugRendererInfoExposed: Boolean(debug),
+      softwareRenderer: /swiftshader|llvmpipe|softpipe|software rasterizer|software rendering/i.test(renderer),
+    };
+  })()`);
+  if (gpuMode === 'hardware' && (!gpu.available || !gpu.debugRendererInfoExposed || gpu.softwareRenderer)) {
+    throw new Error(`Hardware GPU mode requested, but Chromium did not expose a verifiable physical GPU renderer: ${JSON.stringify(gpu)}. Run on the target device with hardware acceleration and WEBGL_debug_renderer_info enabled.`);
+  }
   const results = [], rendererLoads = [];
   for (let repeat = 1; repeat <= repeats; repeat++) {
     for (const renderer of ['canvas', 'pixi']) {
@@ -136,6 +177,7 @@ try {
   const grouped=(renderer,count)=>results.filter(row=>row.renderer===renderer&&row.count===count);
   const report = benchmarkReport({
     name:'graphics-poc',runtime:{browser:browserInfo.product,browserRevision:browserInfo.revision,userAgent:browserInfo.userAgent},
+    hardware:{gpuMode,deviceProfile,gpu,browserSystemGpu:browserSystemInfo?.gpu ?? null},
     workload:{populations:counts.map(animals=>({animals,scope:'FarmEngine and renderer',limit:'FarmEngine and renderer maximum 10000'})),seed:20261012},
     configuration:{warmupRuns:1,repetitions:repeats,measurementDurationMs:durationMs},
     limits:{numericKernelMaxAnimalsMeasured:null},
@@ -161,8 +203,8 @@ try {
       {phase:'startup',timed:['Canvas asset loading or Pixi renderer initialization as reported.'],notTimed:['Simulation ticks and steady-state frame loop.']},
       {phase:'memory',timed:['JavaScript heap after forced garbage collection, sampled per renderer and population.'],notTimed:['GPU allocation, process RSS and retained per-object attribution.']},
     ],
-    results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},url:origin,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
-    limitations:measurementNotes,
+    results:{browser:{product:browserInfo.product,revision:browserInfo.revision,userAgent:browserInfo.userAgent},gpu:{mode:gpuMode,deviceProfile, ...gpu, browserSystemInfo:browserSystemInfo?.gpu ?? null},url:origin,counts,cameraZoom,cameraAnchor:'simulation animal #1',repeats,durationMs,warmupMs,loading:{canvasAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='canvas').map(row=>row.assetsMs)),pixiAssetLoadMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.assetsMs)),pixiInitMsMedian:median(rendererLoads.filter(row=>row.renderer==='pixi').map(row=>row.pixiInitMs))},measurementNotes,summary,results},
+    limitations:[...measurementNotes, ...(gpuMode === 'software' ? ['Software mode is for harness smoke checks only and cannot qualify Canvas versus Pixi on supported physical GPUs.'] : ['A hardware capture describes one device profile only; repeat on every supported GPU/browser profile before making a renderer decision.'])],
   });
   console.log(JSON.stringify(report, null, 2));
 } finally {

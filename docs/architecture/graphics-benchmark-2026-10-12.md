@@ -66,3 +66,13 @@ The existing browser benchmark was also invoked with `BENCH_HERDS=100000`, one r
 ## Zone-overlay verification sample
 
 After adding labeled zone boundaries, the same harness ran at 10,000 animals, zoom 3.2×, 735×378 CSS pixels, one fresh page per renderer, 400 ms warm-up and 1,000 ms capture. It again accounted for all animals: 771 bounds-visible, 9,229 culled, and all 771 visible IDs represented by 435 draw units (111 clusters). Canvas measured 121.0 mean FPS, 16.7 ms frame p95, 6.8 ms scene update, 1.3 ms draw submission, 2.6 MB post-GC JS heap, and 20.7 ms Worker round-trip. Pixi measured 15.7 mean FPS, 83.3 ms frame p95, 4.1 ms scene update, 0.2 ms draw submission, 7.5 MB post-GC heap, and 77.7 ms Worker round-trip. This single repetition verifies the new overlay path and population accounting, not release performance.
+
+## Capturing supported physical GPUs
+
+The default benchmark explicitly selects SwiftShader for repeatable harness checks. Those numbers do not qualify a renderer choice. With the project built and its local server running, capture a supported physical device using its normal hardware-accelerated Chromium installation:
+
+```bash
+BENCH_GPU_MODE=hardware BENCH_DEVICE_PROFILE=laptop-amd-radeon BENCH_REPEATS=30 node scripts/benchmark-graphics-poc.mjs > graphics-poc-amd-radeon.json
+```
+
+Use a distinct stable profile name for each supported GPU/browser combination and keep the resulting report with the device name, driver and browser version. Hardware mode does not force an ANGLE backend or bypass Chrome's GPU blocklist. It records WebGL vendor/renderer/version/limits and Chrome's device/driver details when exposed, and stops if WebGL reports a known software renderer. The harness still reports JavaScript submission separately from GPU completion; browser WebGL exposes no general GPU completion or texture-memory measurement here. A renderer decision therefore requires repeated captures across the supported profiles, the exact atlas and scene workload, and documented driver/browser versions. A passing hardware capture is evidence for its named profile, not for devices that were not measured.
