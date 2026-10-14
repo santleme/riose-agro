@@ -245,6 +245,11 @@ test('the map runs, records and replays a one-factor comparison for only its reg
   assert.equal(history[0].lotContext.model.status,'demonstrative_unvalidated');
   assert.deepEqual(history[0].lotContext.animalIds,lotSnapshot.animals.map(animal=>animal.id));
   assert.match(ui.elements.get('lot-comparison-context').innerHTML,/demo-paddock-1/);
+  ui.elements.get('export').onclick();
+  const csv=await ui.downloads.at(-1).text();
+  assert.match(csv,/escopo_lote_id,animais_lote_ids,modelo_id,modelo_versao,modelo_status,evidencia_modelo_status,evidencia_modelo_referencia/);
+  assert.match(csv,/demo-paddock-1/);
+  assert.match(csv,/riose-registered-demo-lot,1\.0\.0,demonstrative_unvalidated,no_empirical_validation,src\/client\/engine\.js/);
   ui.elements.get('manifest-export').onclick();
   assert.equal(JSON.parse(await ui.downloads.at(-1).text()).lotContext.lotId,'demo-paddock-1');
   const exported=await ui.downloads.at(-1).text();

@@ -389,17 +389,20 @@ function showComparison(data){
   for(const [key,color] of [['baselineWeight','#b2b49b'],['scenarioWeight','#4c7942']]){let points=[],previousDay;const flush=()=>{if(points.length)svg+='<polyline points="'+points.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2.5"/>';points=[];};for(const row of rows){if(Number.isFinite(row.day)&&Number.isFinite(row[key])&&Number.isFinite(x(row.day))&&Number.isFinite(y(row[key]))){if(previousDay!==undefined&&row.day!==previousDay+1)flush();points.push(x(row.day)+','+y(row[key]));previousDay=row.day;}else{flush();previousDay=undefined;}}flush();}
   $('chart').innerHTML=svg;renderDetailedResults(data);$('comparison').showModal();
 }
-function comparisonCSV(data){
+function comparisonCSV(data,lotContext=null){
   data=comparisonData(data);
   const initial=comparisonArray(data.initialPastureByPaddock),cell=(value,digits=4)=>Number.isFinite(value)?value.toFixed(digits):'Indisponível';
   const headers=['dia','fator_comparado','valor_referencia','valor_alternativa','peso_ref_kg','peso_alternativa_kg','consumo_ref_lote_kgMS','consumo_alternativa_lote_kgMS','consumo_ref_kgMS_animal','consumo_alternativa_kgMS_animal','estoque_ref_total_kgMS','estoque_alternativa_total_kgMS','custo_ref_brl','custo_alternativa_brl'];
   for(let i=0;i<4;i++)headers.push('piquete_'+String.fromCharCode(65+i)+'_inicio_kgMS','piquete_'+String.fromCharCode(65+i)+'_ref_final_kgMS','piquete_'+String.fromCharCode(65+i)+'_alternativa_final_kgMS');
   // Keep the non-calibrated status attached when CSV data leaves the UI context.
   headers.push('status_modelo','intervalo_probabilistico');
+  headers.push('escopo_lote_id','animais_lote_ids','modelo_id','modelo_versao','modelo_status','evidencia_modelo_status','evidencia_modelo_referencia');
   const factor=data.comparisonFactor??'housing',reference=data.referenceConfig??data.baselineConfig??{},scenario=data.scenarioConfig??{};
-  return [headers.join(','),...comparisonRows(data).map(row=>{const base=comparisonConsumption(row,'baseline'),alternative=comparisonConsumption(row,'scenario');return [cell(row.day,0),comparisonFactorName(factor),String(reference[factor]),String(scenario[factor]),...[row.baselineWeight,row.scenarioWeight,base,alternative,comparisonPerAnimal(base),comparisonPerAnimal(alternative),row.baselinePastureKgDM,row.scenarioPastureKgDM,row.baselineCost,row.scenarioCost].map(value=>cell(value)),...Array.from({length:4},(_,i)=>[initial[i],row.baselinePastureByPaddock?.[i],row.scenarioPastureByPaddock?.[i]].map(value=>cell(value,2))).flat(),'demonstrativo_nao_validado','nao_disponivel_sem_calibracao'].join(',');})].join('\n');
+  const csvText=value=>{const text=String(value??'');return /[",\r\n]/.test(text)?'"'+text.replaceAll('"','""')+'"':text;};
+  const lotValues=lotContext?[lotContext.lotId,lotContext.animalIds.join('|'),lotContext.model.id,lotContext.model.version,lotContext.model.status,lotContext.model.evidenceStatus,lotContext.model.evidenceReferences.map(item=>item.id).join('|')]:['','','','','','',''];
+  return [headers.join(','),...comparisonRows(data).map(row=>{const base=comparisonConsumption(row,'baseline'),alternative=comparisonConsumption(row,'scenario');return [cell(row.day,0),comparisonFactorName(factor),String(reference[factor]),String(scenario[factor]),...[row.baselineWeight,row.scenarioWeight,base,alternative,comparisonPerAnimal(base),comparisonPerAnimal(alternative),row.baselinePastureKgDM,row.scenarioPastureKgDM,row.baselineCost,row.scenarioCost].map(value=>cell(value)),...Array.from({length:4},(_,i)=>[initial[i],row.baselinePastureByPaddock?.[i],row.scenarioPastureByPaddock?.[i]].map(value=>cell(value,2))).flat(),'demonstrativo_nao_validado','nao_disponivel_sem_calibracao',...lotValues].map(csvText).join(',');})].join('\n');
 }
-$('export').onclick=()=>{if(comparison&&!requestCompare&&!loadingScenario)downloadFile('agroville-comparacao-demonstrativa.csv',comparisonCSV(comparison),'text/csv;charset=utf-8');};
+$('export').onclick=()=>{if(comparison&&!requestCompare&&!loadingScenario)downloadFile('agroville-comparacao-demonstrativa.csv',comparisonCSV(comparison,comparisonLotContext),'text/csv;charset=utf-8');};
 $('report-export').onclick=()=>{if(!comparison||requestCompare||loadingScenario)return;try{downloadFile('agroville-relatorio-demonstrativo.md',renderSimulationReport(comparison,comparisonManifest,{lotContext:comparisonLotContext}),'text/markdown;charset=utf-8');}catch(error){notify('Não foi possível gerar o relatório: '+error.message);}};
 
 let noticeTimer                              ;function notify(message       ){$('notice').textContent=message;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,5000);}
