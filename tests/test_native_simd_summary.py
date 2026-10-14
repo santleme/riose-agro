@@ -53,6 +53,25 @@ class NativeSimdSummaryTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("At least four captures", result.stderr)
 
+    def test_capture_runner_refuses_existing_output_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "captures"
+            output.mkdir()
+            (output / "generic-run-4.json").write_text("stale")
+            environment = {
+                **os.environ,
+                "SIMD_STUDY_RUNS": "4",
+                "SIMD_STUDY_TARGET_ROOT": str(Path(directory) / "targets"),
+            }
+            result = subprocess.run(
+                ["bash", str(RUNNER), str(output)],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=environment,
+            )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("must not already exist", result.stderr)
 
 if __name__ == "__main__":
     unittest.main()

@@ -64,7 +64,7 @@ Reconsider production integration only after a full FarmEngine benchmark on cont
 
 ## Reproduction and files
 
-The source harness, audit, and capture scripts are in `crates/riose-core/examples/simd_metabolism_study.rs` and `scripts/{audit-native-simd.py,run-native-simd-study.sh,summarize-native-simd.py}`. The runner requires a clean checkout and external Cargo/output directories. `summary.json` consolidates, but does not replace, the raw 12 reports; each `*-run-*.time.txt` contains GNU time/RSS output.
+The source harness, audit, and capture scripts are in `crates/riose-core/examples/simd_metabolism_study.rs` and `scripts/{audit-native-simd.py,run-native-simd-study.sh,summarize-native-simd.py}`. The runner requires a clean checkout, an external Cargo directory, and an output path that does not already exist. `summary.json` consolidates, but does not replace, the raw 12 reports; each `*-run-*.time.txt` contains GNU time/RSS output.
 
 Source revision: `ae21e8b0056ccb9a15353907168d6bb947cff083` (the harness commit before this evidence report). Study base: `4ffe4f7e10d8b6b9765e92293374c1034a357fe1`.
 

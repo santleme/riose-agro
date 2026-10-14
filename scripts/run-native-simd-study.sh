@@ -12,6 +12,10 @@ if [[ "$out/" == "$(pwd)/"* || "$target/" == "$(pwd)/"* ]]; then
   echo 'Output and target directories must be outside the source checkout.' >&2
   exit 1
 fi
+if [[ -e "$out" ]]; then
+  echo 'Capture output path must not already exist; choose a fresh directory.' >&2
+  exit 1
+fi
 if [[ -n "$(git status --porcelain)" ]]; then
   echo 'Commit the harness before capture; source must be clean.' >&2
   exit 1
