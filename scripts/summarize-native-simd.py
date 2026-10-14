@@ -6,6 +6,20 @@ import pathlib
 import statistics
 
 PROFILES = ("generic", "native", "scalar")
+DATASETS = ("existing-native-benchmark", "mixed-clamps-resting")
+POPULATIONS = (1_000, 10_000, 100_000)
+IMPLEMENTATIONS = ("current", "explicit-avx2-direct", "runtime-dispatch", "forced-fallback")
+
+
+def expected_measurements():
+    expected = set()
+    for dataset in DATASETS:
+        for population in POPULATIONS:
+            for metric in ("metabolismBatch", "allocateFillKernelRelease"):
+                expected.update((dataset, population, metric, implementation)
+                                for implementation in IMPLEMENTATIONS)
+            expected.add((dataset, population, "allocateFillRelease", "shared-setup"))
+    return expected
 
 
 def load_reports(directory, runs):
@@ -43,6 +57,7 @@ def main():
     reports = load_reports(args.directory, args.runs)
     revision = reports[0][1]["benchmark"]["source"]["revision"]
     hardware = reports[0][1]["hardware"]
+    expected = expected_measurements()
     groups = {}
     dispatch = {}
     for name, report in reports:
@@ -58,7 +73,19 @@ def main():
             raise SystemExit(f"{name}: implementations failed bitwise equivalence")
         profile = report["configuration"]["flags"].split(":")[0]
         dispatch.setdefault(profile, []).append(report["results"]["selectionOverheadMs"]["median"])
-        for item in report["phases"]["engine"]["measurements"]:
+        measurements = report["phases"]["engine"]["measurements"]
+        keys = [(item["dataset"], item["population"], item["metric"], item["implementation"])
+                for item in measurements]
+        if len(keys) != len(set(keys)):
+            raise SystemExit(f"{name}: duplicate engine measurement keys")
+        if set(keys) != expected:
+            missing = sorted(expected - set(keys))
+            unexpected = sorted(set(keys) - expected)
+            raise SystemExit(
+                f"{name}: engine measurement matrix mismatch: "
+                f"missing={missing}; unexpected={unexpected}"
+            )
+        for item in measurements:
             key = (profile, item["dataset"], item["population"], item["metric"])
             groups.setdefault(key, {}).setdefault(item["implementation"], []).append(
                 item["statistics"]["median"])

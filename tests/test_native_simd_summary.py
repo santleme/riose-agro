@@ -14,6 +14,28 @@ RUNNER = REPOSITORY / "scripts" / "run-native-simd-study.sh"
 
 class NativeSimdSummaryTests(unittest.TestCase):
     def write_complete_capture_set(self, directory):
+        measurements = []
+        datasets = ("existing-native-benchmark", "mixed-clamps-resting")
+        populations = (1_000, 10_000, 100_000)
+        implementations = ("current", "explicit-avx2-direct", "runtime-dispatch", "forced-fallback")
+        for dataset in datasets:
+            for population in populations:
+                for metric in ("metabolismBatch", "allocateFillKernelRelease"):
+                    for implementation in implementations:
+                        measurements.append({
+                            "dataset": dataset,
+                            "population": population,
+                            "metric": metric,
+                            "implementation": implementation,
+                            "statistics": {"median": 1.0},
+                        })
+                measurements.append({
+                    "dataset": dataset,
+                    "population": population,
+                    "metric": "allocateFillRelease",
+                    "implementation": "shared-setup",
+                    "statistics": {"median": 1.0},
+                })
         report = {
             "benchmark": {"source": {"revision": "study-revision", "dirty": False}},
             "hardware": {"cpu": "test-cpu"},
@@ -27,7 +49,7 @@ class NativeSimdSummaryTests(unittest.TestCase):
                 "equivalence": {"bitwiseEqual": True},
                 "selectionOverheadMs": {"median": 0.001},
             },
-            "phases": {"engine": {"measurements": []}},
+            "phases": {"engine": {"measurements": measurements}},
         }
         for profile in ("generic", "native", "scalar"):
             for run in range(1, 5):
@@ -88,6 +110,30 @@ class NativeSimdSummaryTests(unittest.TestCase):
                 )
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(expected_error, result.stderr)
+
+    def test_rejects_incomplete_measurement_matrix_before_pairing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.write_complete_capture_set(directory)
+            report_path = Path(directory) / "generic-run-2.json"
+            report = json.loads(report_path.read_text())
+            report["phases"]["engine"]["measurements"] = [
+                item for item in report["phases"]["engine"]["measurements"]
+                if not (
+                    item["dataset"] == "existing-native-benchmark"
+                    and item["population"] == 1_000
+                    and item["metric"] == "metabolismBatch"
+                    and item["implementation"] == "current"
+                )
+            ]
+            report_path.write_text(json.dumps(report))
+            result = subprocess.run(
+                [sys.executable, "-O", str(SUMMARIZER), directory],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("engine measurement matrix mismatch", result.stderr)
 
     def test_capture_runner_rejects_fewer_than_four_runs(self):
         with tempfile.TemporaryDirectory() as directory:
