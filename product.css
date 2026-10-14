@@ -75,3 +75,5 @@
 .timeline-play .pause-icon{display:none;align-items:center;gap:3px}.timeline-play .pause-icon i{display:block;width:2px;height:11px;border-radius:2px;background:#4e5047}.timeline-play .play-icon{display:block;width:0;height:0;margin-left:2px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #4e5047}.timeline-play[data-running="true"] .pause-icon{display:flex}.timeline-play[data-running="true"] .play-icon{display:none}
 .command-form button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:520px){.world-stage-surface{width:94vw;max-width:94vw;transform:translateY(-8px)}}
+
+.product-disclaimer{position:absolute;z-index:3;left:50%;bottom:clamp(68px,8vh,84px);width:min(560px,calc(100vw - 40px));margin:0;padding:8px 12px;border:1px solid rgb(255 255 255 / .84);border-radius:13px;background:var(--product-glass);box-shadow:0 8px 28px rgb(48 45 37 / .08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#696a62;text-align:center;font:8px/1.5 var(--product-mono);pointer-events:none;transform:translateX(-50%)}
