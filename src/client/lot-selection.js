@@ -44,6 +44,7 @@ export function isolateDemoLotSnapshot(snapshot, demoLot) {
 export function createDemoLotContext(demoLot, factor, referenceConfig, scenarioConfig) {
   if (!record(demoLot) || !['diet', 'housing', 'supplement', 'weather'].includes(factor)
     || !Array.isArray(demoLot.animalIds) || demoLot.animalIds.length === 0
+    || demoLot.animalIds.some(id => !Number.isInteger(id) || id <= 0)
     || referenceConfig?.[factor] === scenarioConfig?.[factor]) {
     throw new Error('Intervenção do lote demonstrativo inválida.');
   }
@@ -71,6 +72,7 @@ export function validateDemoLotContext(context, snapshot, factor, referenceConfi
     ||!Number.isInteger(context.patchIndex)||context.patchIndex<0||context.patchIndex>3
     ||context.lotId!==`demo-paddock-${context.patchIndex+1}`
     ||!Array.isArray(context.animalIds)||context.animalIds.length===0
+    ||context.animalIds.some(id=>!Number.isInteger(id)||id<=0)
     ||new Set(context.animalIds).size!==context.animalIds.length
     ||context.model?.id!==DEMO_LOT_MODEL.id||context.model.version!==DEMO_LOT_MODEL.version
     ||context.model.status!==DEMO_LOT_MODEL.status

@@ -77,4 +77,6 @@ test('demo lot provenance records model evidence without claiming empirical vali
   assert.equal(validateDemoLotContext(context,isolated,'diet',{diet:'pasture'},{diet:'balanced'}),true);
   context.model.evidenceReferences=[];
   assert.throws(()=>validateDemoLotContext(context,isolated,'diet',{diet:'pasture'},{diet:'balanced'}),/incompatível/);
+  const invalidAnimalId=resolveDemoLot(snapshot,1);invalidAnimalId.animalIds[0]=0;
+  assert.throws(()=>createDemoLotContext(invalidAnimalId,'diet',{diet:'pasture'},{diet:'balanced'}),/Intervenção do lote demonstrativo inválida/);
 });

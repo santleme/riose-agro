@@ -234,6 +234,8 @@ test('the map runs, records and replays a one-factor comparison for only its reg
   assert.equal(validateDemoLotManifestEnvelope(demoManifest),true);
   const legacyEnvelope=structuredClone(demoManifest);legacyEnvelope.manifest.type='agroville-comparison';
   assert.throws(()=>validateDemoLotManifestEnvelope(legacyEnvelope),/manifesto configurado/);
+  const invalidIdEnvelope=structuredClone(demoManifest);invalidIdEnvelope.lotContext.animalIds[0]=0;invalidIdEnvelope.manifest.initialSnapshot.animals[0].id=0;
+  assert.throws(()=>validateDemoLotManifestEnvelope(invalidIdEnvelope),/incompatível/);
   validateConfiguredComparisonManifest(demoManifest.manifest);
   const result=compareConfiguredScenarios(lotSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
   ui.deliver('comparison',result);
