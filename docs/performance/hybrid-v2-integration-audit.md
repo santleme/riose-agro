@@ -9,7 +9,7 @@ Captured 2026-10-13 in the isolated `codex/hybrid-compute-performance` worktree.
 | Main/base | `16fa6ec` | Shared starting point for the hybrid proof of concept and PR #116 integration work |
 | Hybrid proof of concept | `a6c56bb` | Local-first JS/Rust/Modal contracts, reusable Rust scratch buffers, and isolated Modal metabolism adapter |
 | Hybrid v2 source | `a6293fd` | Bounded scenario scheduler, resumable journal, exact-profile executor selection, and local hybrid benchmarks |
-| PR #116 | `b7b03ef` | Separate open PR worktree at `/home/lucas_coimbra/.codex/worktrees/0bec/riose-agro` |
+| PR #116 | `b7b03ef` | Separate open PR worktree at `<workspace>/.codex/worktrees/0bec/riose-agro` |
 
 The locally cached `origin/pr/116` tracking ref was behind during the audit; `git ls-remote origin refs/pull/116/head` confirmed the current PR head is `b7b03efe08b3889774aaf7959adaa6d5d5f47b3a`. The separate worktree was clean after its test run.
 

@@ -2,7 +2,7 @@
 
 ## Delivered in this worktree
 
-1. Inventory all accessible worktrees, branches, stashes and parallel uncommitted work; record `repository-wide-audit.md`.
+1. Keep personal worktree state in internal planning records; exclude it from the public repository.
 2. Record executable system behavior and baseline test/throughput results in `current-system-audit.md`.
 3. Add the initial architecture and contracts while preserving comparison manifest v1, current UI, assets and JS engine.
 4. Implement Rust runtime primitives for clock, IDs, seed, metrics, command/event envelopes and versioned JSON core snapshots; add a pure metabolism batch kernel, compile native and WASM, connect it to the existing Worker behind `?engine=wasm`, retain JS as the default/fallback, and verify equivalence.

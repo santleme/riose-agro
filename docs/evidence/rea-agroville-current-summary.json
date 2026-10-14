@@ -8,7 +8,7 @@
     },
     "format": "directory",
     "architecture": null,
-    "local_path": "/home/lucas_coimbra/projects/hackhatons/riose-agro"
+    "local_path": "<workspace>/projects/hackhatons/riose-agro"
   },
   "provider": {
     "id": "rea-javascript-application",
