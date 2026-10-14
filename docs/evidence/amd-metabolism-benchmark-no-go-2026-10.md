@@ -1,6 +1,6 @@
 # Cattle metabolism accelerator benchmark: no-go
 
-Clean recapture: 2026-10-14, source revision `f2bd3dcdf4eade27c174247c6b8bdf237e466ff3`.
+Clean recapture: 2026-10-14, source revision `1d108154cae53f80768c9ebf86f1f55caa200d51`.
 
 **Decision:** no-go for this environment. The runner measured the production
 native Rust metabolism batch used by `FarmEngine`, but this WSL2 session has no
@@ -25,17 +25,17 @@ reference measurements, not GPU results:
 
 | Animals | Native CPU median (ms) |
 | ---: | ---: |
-| 100 | 0.001155 |
-| 1,000 | 0.002017 |
-| 10,000 | 0.010221 |
-| 100,000 | 0.094877 |
+| 100 | 0.001136 |
+| 1,000 | 0.002026 |
+| 10,000 | 0.010248 |
+| 100,000 | 0.095446 |
 
 ## Hardware probe and rerun
 
 The captured host is WSL2. The clean report confirms `/dev/kfd` and `/dev/dri`
 are absent; `rocminfo`, `rocm-smi`, `hipcc`, and `nvidia-smi` are unavailable;
-PyTorch is not installed. The report records source revision
-`f2bd3dcdf4eade27c174247c6b8bdf237e466ff3` with `dirty: false`.
+PyTorch is not installed. The refreshed report records source revision
+`1d108154cae53f80768c9ebf86f1f55caa200d51` with `dirty: false`.
 This is insufficient to execute or claim an AMD benchmark. A future run on a
 ROCm-enabled host can use:
 
