@@ -125,3 +125,45 @@ test('worker falls back to JavaScript when the scenario WASM is invalid', async 
   assert.match(replies[1].fallback.reason, /could not be instantiated/);
   assert.equal(replies[1].result.snapshot.hour, baselineGolden.output.state.hour);
 });
+
+test('worker falls back to JavaScript when the scenario WASM ABI is incompatible', async t => {
+  const originalSelf = globalThis.self;
+  const originalFetch = globalThis.fetch;
+  const originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+  const replies = [];
+  globalThis.self = {postMessage: reply => replies.push(reply)};
+  globalThis.fetch = async () => new Response(new Uint8Array([0, 97, 115, 109]), {
+    status: 200,
+    headers: {'content-type': 'application/wasm'},
+  });
+  WebAssembly.instantiateStreaming = async () => ({
+    instance: {exports: {
+      memory: new WebAssembly.Memory({initial: 1}),
+      riose_scenario_abi_version: () => 999,
+    }},
+  });
+  t.after(() => {
+    globalThis.self = originalSelf;
+    globalThis.fetch = originalFetch;
+    WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+  });
+
+  await import(`../src/client/native-scenario-wasm-bench-worker.js?abi-fallback-test=${Date.now()}`);
+  await globalThis.self.onmessage({data: {id: 1, action: 'init'}});
+  assert.equal(replies[0].ok, false);
+  assert.match(replies[0].startup.reason, /exports do not match/);
+  await globalThis.self.onmessage({data: {
+    id: 2,
+    action: 'run',
+    backend: 'wasm',
+    request: {
+      type: 'baseline', version: 1, seed: 417, animalCount: 3,
+      configuration: baselineGolden.configuration, hours: 24,
+    },
+  }});
+  assert.equal(replies[1].ok, true);
+  assert.equal(replies[1].backend, 'javascript');
+  assert.equal(replies[1].fallback.used, true);
+  assert.match(replies[1].fallback.reason, /exports do not match/);
+  assert.equal(replies[1].result.snapshot.hour, baselineGolden.output.state.hour);
+});
