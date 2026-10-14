@@ -96,16 +96,31 @@ pub unsafe extern "C" fn riose_scenario_run_json(input: *const u8, length: usize
     let Ok(timings_json) = serde_json::to_vec(&timings) else {
         return 0;
     };
-    let mut response = Vec::with_capacity(encoded.len() + timings_json.len() + 24);
-    response.extend_from_slice(b"{\"result\":");
-    response.extend_from_slice(&encoded);
-    response.extend_from_slice(b",\"timings\":");
-    response.extend_from_slice(&timings_json);
-    response.push(b'}');
-    if response.len() > MAX_RESPONSE_BYTES || response.len() > u32::MAX as usize {
+    const RESULT_PREFIX: &[u8] = b"{\"result\":";
+    const TIMINGS_PREFIX: &[u8] = b",\"timings\":";
+    let result_length = encoded.len();
+    let Some(response_length) = result_length
+        .checked_add(RESULT_PREFIX.len())
+        .and_then(|length| length.checked_add(TIMINGS_PREFIX.len()))
+        .and_then(|length| length.checked_add(timings_json.len()))
+        .and_then(|length| length.checked_add(1))
+    else {
+        return 0;
+    };
+    if response_length > MAX_RESPONSE_BYTES || response_length > u32::MAX as usize {
         return 0;
     }
-    let length = response.len() as u32;
+    let mut response = encoded;
+    response.reserve(response_length - result_length);
+    response.resize(response_length, 0);
+    response.copy_within(0..result_length, RESULT_PREFIX.len());
+    response[..RESULT_PREFIX.len()].copy_from_slice(RESULT_PREFIX);
+    let timings_prefix_start = RESULT_PREFIX.len() + result_length;
+    let timings_start = timings_prefix_start + TIMINGS_PREFIX.len();
+    response[timings_prefix_start..timings_start].copy_from_slice(TIMINGS_PREFIX);
+    response[timings_start..timings_start + timings_json.len()].copy_from_slice(&timings_json);
+    response[response_length - 1] = b'}';
+    let length = response_length as u32;
     let pointer = Box::into_raw(response.into_boxed_slice()) as *mut u8;
     ((length as u64) << 32) | (pointer as u32 as u64)
 }
