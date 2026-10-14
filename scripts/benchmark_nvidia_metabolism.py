@@ -333,12 +333,15 @@ def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int, initializatio
             actual = array.array("d", [0.0]) * (count * 2)
             d2h_start = time.perf_counter_ns(); driver.d2h(actual, out_ptr)
             d2h_samples.append((time.perf_counter_ns() - d2h_start) / 1_000_000)
+            # Stop at the documented end-to-end boundary before CPU-side
+            # correctness validation or device-buffer cleanup.
+            gpu_elapsed_ms = (time.perf_counter_ns() - gpu_total_start) / 1_000_000
             correctness = compare(cpu_out, actual)
             if not correctness["equivalent"]:
                 raise RuntimeError(f"GPU correctness failed for {count}: {correctness}")
         finally:
             driver.free(out_ptr); driver.free(in_ptr)
-        gpu_total_samples.append(host_setup_ms + (time.perf_counter_ns() - gpu_total_start) / 1_000_000)
+        gpu_total_samples.append(host_setup_ms + gpu_elapsed_ms)
 
     # Repeated, steady-state runs reuse device allocations while keeping both
     # transfers and synchronization inside the timed operation.
