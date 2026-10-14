@@ -12,7 +12,7 @@ This is the NVIDIA vendor-specific evidence for issue #111 under the vendor-neut
 - Populations: 100, 1,000, 10,000, and 100,000. The last case is numeric-kernel-only; FarmEngine and renderer limits remain 10,000.
 - Three warmups and 21 measured repetitions per population. Reported cells are median [minimum–maximum] milliseconds; the JSON retains every raw observation.
 - The GPU path was gated by a real 100-animal CUDA execution and comparison with native Rust. Correctness also passed at every population and each measured repetition. No CPU fallback is used to claim GPU execution.
-- CPU end-to-end includes deterministic host input creation, CPU output allocation, and native batch call. GPU total includes equivalent host input preparation, device allocation, H2D, launch, synchronization, and D2H. The separate preallocated steady-state measurement reuses device buffers but still includes transfers and synchronization.
+- Common deterministic host input creation is timed separately. CPU end-to-end includes that common setup, its CPU output allocation, and the native batch call. GPU total includes the same common input setup, device allocation, its own host output allocation, H2D, launch, synchronization, and D2H. The separate preallocated steady-state measurement reuses device buffers but still includes host output allocation, transfers, and synchronization.
 - CUDA event time measures the kernel. Host synchronization is reported separately because it includes waiting for queued GPU work; do not add the two as independent costs.
 
 ## Results

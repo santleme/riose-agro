@@ -309,9 +309,10 @@ def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int, initializatio
         total_start = time.perf_counter_ns()
         host_start = time.perf_counter_ns()
         values = cattle_input(count)
-        cpu_out = array.array("d", [0.0]) * (count * 2)
         host_setup_samples.append((time.perf_counter_ns() - host_start) / 1_000_000)
         host_setup_ms = host_setup_samples[-1]
+        # Each path allocates only its own output buffer inside its total.
+        cpu_out = array.array("d", [0.0]) * (count * 2)
         cpu_start = time.perf_counter_ns()
         status = library.riose_update_metabolism_batch(
             count, (ctypes.c_double * len(values)).from_buffer(values),
@@ -487,9 +488,9 @@ def main() -> None:
                              "fullScenario": {"status": "not-measured", "measurements": []},
                              "uiEndToEnd": {"status": "not-measured", "measurements": []},
                              "memory": {"status": "not-measured", "measurements": []}},
-                  "timingBoundaries": [{"phase": "engine", "timed": ["Native CPU kernel and end-to-end host setup; CUDA allocation, H2D, launch, synchronized execution, D2H and total; preallocated steady-state with transfers."],
+                  "timingBoundaries": [{"phase": "engine", "timed": ["Native CPU total includes common input creation and its CPU output allocation; GPU total includes common input creation, device and host output allocation, H2D, launch, synchronized execution, and D2H; preallocated steady-state includes transfers."],
                                         "notTimed": ["FarmEngine orchestration, feeding, weather, snapshots, worker scheduling, UI and rendering."],
-                                        "whatIsTimed": ["Native CPU kernel and end-to-end host setup; CUDA allocation, H2D, launch, synchronized execution, D2H and total; preallocated steady-state with transfers."],
+                                        "whatIsTimed": ["Native CPU total includes common input creation and its CPU output allocation; GPU total includes common input creation, device and host output allocation, H2D, launch, synchronized execution, and D2H; preallocated steady-state includes transfers."],
                                         "whatIsNotTimed": ["FarmEngine orchestration, feeding, weather, snapshots, worker scheduling, UI and rendering."]},
                                        {"phase": "startup", "timed": ["CUDA Driver API initialization, physical-device discovery, context creation, PTX JIT and module load."],
                                         "notTimed": ["Python process startup, repository import time, native Rust build time."],
