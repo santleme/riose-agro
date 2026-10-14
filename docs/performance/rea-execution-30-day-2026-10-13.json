@@ -102,5 +102,106 @@
       "Relocation and GOT/PLT map completeness unknown.",
       "Ghidra/Hopper unavailable; no decompilation or pseudocode."
     ]
+  },
+  "validationRerun": {
+    "date": "2026-10-13",
+    "sourceRevision": "f5d8db39049b53ae7538b4b0203025b705ae5814",
+    "runtime": {
+      "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+      "architecture": "x86_64",
+      "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+      "rustc": "1.95.0",
+      "profile": "release, thin LTO, codegen-units=1, panic=abort"
+    },
+    "workload": {
+      "seed": 2026,
+      "animalCount": 10000,
+      "days": 30,
+      "scenario": "two-arm pasture vs barn comparison",
+      "requestSha256": "fe46a5af5895a37f5e84311df534f597f556980c5c1b45a55cbba9546ec6e51d"
+    },
+    "inProcessBenchmark": {
+      "warmups": 3,
+      "repetitions": 21,
+      "sequential": {
+        "medianMs": 676.144,
+        "p95Ms": 858.056,
+        "samplesMs": [594.520, 599.777, 604.610, 609.706, 619.996, 629.371, 630.299, 639.309, 639.341, 659.293, 676.144, 681.769, 686.547, 688.232, 730.488, 738.975, 817.512, 832.461, 851.980, 858.056, 949.066]
+      },
+      "historyRing": {
+        "medianMs": 339.580,
+        "p95Ms": 347.515,
+        "samplesMs": [333.970, 334.800, 335.455, 337.031, 337.156, 337.222, 337.882, 338.015, 338.078, 338.159, 339.580, 339.688, 340.081, 340.420, 340.879, 340.881, 342.568, 343.445, 343.916, 347.515, 371.367]
+      },
+      "comparisonJsonSha256Both": "1727a3d2383aec8f4f889bae4983426ce191aa8c261101847b5e96c555cbb862",
+      "finalTwoSnapshotJsonSha256Both": "21d16df787976d2f199e238e880e138dfd93ea87b80c084fac1bc4d148cedba4"
+    },
+    "processBenchmark": {
+      "warmupsPerRunner": 1,
+      "repetitions": 5,
+      "order": "baseline then candidate for each measured pair",
+      "scope": "subprocess launch, stdin, input parsing, comparison, output serialization, stdout and JSON validation",
+      "sequential": {
+        "medianMs": 712.667,
+        "p95Ms": 735.640,
+        "samplesMs": [730.667, 735.640, 712.667, 703.392, 711.163]
+      },
+      "historyRing": {
+        "medianMs": 464.676,
+        "p95Ms": 502.200,
+        "samplesMs": [498.661, 464.327, 502.200, 464.676, 464.281]
+      },
+      "scientificResultParity": "exact for all five timed pairs",
+      "fullEnvelopeParity": "exact for five additional untimed pairs"
+    },
+    "reaElfInspection": {
+      "toolVersion": "6.4.0",
+      "provider": "pwntools@4.15.0;pyelftools@0.33;unicorn@2.1.2",
+      "sequential": {
+        "evidenceId": "ev_a06950f6cb75f81dd2981028370e70a3cc3f6db019a03fd1b400a54fcff69284",
+        "sha256": "d168b54813c1c073ece7b2622a723fb14efc0fc793c92327bc3f1337b2abc7af",
+        "bytes": 830936,
+        "neededLibraries": ["libgcc_s.so.1", "libc.so.6"],
+        "sections": 35,
+        "segments": 12,
+        "symbols": 1265,
+        "relocations": 1025
+      },
+      "historyRing": {
+        "evidenceId": "ev_44700983cbbfafa5c5c97191fbd176420eb308419831204981e73bb994377cae",
+        "sha256": "0df794cb90ae0644b4531fa2974b4244f7020741c6ad78a20df1330260e65184",
+        "bytes": 834112,
+        "neededLibraries": ["libgcc_s.so.1", "libc.so.6"],
+        "sections": 35,
+        "segments": 12,
+        "symbols": 1269,
+        "relocations": 1026
+      },
+      "openMpiOrterun": {
+        "evidenceId": "ev_27fb73a6d27938e8c9a8f03bc889a63bf79aa7456ca4af5f2049bd5e171ae3c2",
+        "sha256": "e3a009cd4ab8b41ef23019df3a1388944294b330b7c51ad17be18a0120b36daa",
+        "bytes": 14488,
+        "neededLibraries": ["libopen-rte.so.40", "libopen-pal.so.40", "libevent_core-2.1.so.7", "libc.so.6"],
+        "sections": 29,
+        "segments": 13,
+        "symbols": 30,
+        "relocations": 32
+      },
+      "openMpiLibrary": {
+        "evidenceId": "ev_03c0577eef78a12fa55161ca6b754d3c61a206d3e5aec2960d209c7b01e50398",
+        "sha256": "9055018b12757e830591aa0283e485e471f1f2a06d3bc0dd5fb35ab00386c172",
+        "bytes": 1182056,
+        "neededLibraries": ["libopen-rte.so.40", "libopen-pal.so.40", "libm.so.6", "libhwloc.so.15", "libc.so.6"],
+        "sections": 29,
+        "segments": 11,
+        "symbols": 2201,
+        "relocations": 1921
+      }
+    },
+    "limitations": [
+      "The process benchmark is wall-clock elapsed time, not CPU profiling.",
+      "Samples are sequentially paired in one WSL session and remain sensitive to scheduler and thermal noise.",
+      "REA static ELF evidence does not establish execution behavior or identify measured hot spots."
+    ]
   }
 }

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "sourceRevision": "fb69c16169ccb674392c9e06d2c6cec63112af9e",
+  "implementation": "history-ring circular start index over existing Vec<ActivityRecord>",
+  "workload": {
+    "animals": 1000,
+    "days": 30,
+    "housing": "barn",
+    "seeds": [
+      417,
+      2026
+    ]
+  },
+  "measurement": {
+    "warmups": 3,
+    "timedRunsPerProcess": 21,
+    "processesPerVariantPerSeed": 3,
+    "order": "alternating variant order across repeated paired runs",
+    "tool": "GNU /usr/bin/time maximum resident set size, KiB"
+  },
+  "runs": [
+    {
+      "seed": 417,
+      "sequentialRssKb": [
+        19708,
+        19708,
+        19708
+      ],
+      "historyRingRssKb": [
+        25072,
+        25072,
+        24944
+      ]
+    },
+    {
+      "seed": 2026,
+      "sequentialRssKb": [
+        19708,
+        19572,
+        19708
+      ],
+      "historyRingRssKb": [
+        24880,
+        24948,
+        24952
+      ]
+    }
+  ],
+  "observedMedianRssKb": {
+    "sequential": 19708,
+    "historyRing": 24950,
+    "differenceHistoryRingMinusSequential": 5242
+  },
+  "limitation": "RSS delta is unexplained by source-level allocation inventory; it is recorded as an observed process-level difference, not attributed to a specific allocation site.",
+  "sourceFilesSha256": {
+    "crates/riose-core/src/simulation.rs": "9eeebd70b80b298f56d455ff281d4224dd062287e5c031609246368656169e3c"
+  }
+}

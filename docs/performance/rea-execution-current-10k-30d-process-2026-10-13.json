@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "sourceRevision": "fb69c16169ccb674392c9e06d2c6cec63112af9e",
+  "sourceFilesSha256": {
+    "crates/riose-core/src/simulation.rs": "9eeebd70b80b298f56d455ff281d4224dd062287e5c031609246368656169e3c",
+    "scripts/benchmark-rea-process.py": "ccb4fee8a4dc50d4e63786e5099a04f0467e44cdade615f436a93bcaacdd30c3"
+  },
+  "implementation": "history-ring circular start index over the existing Vec<ActivityRecord>; snapshot rotates a cloned Vec into chronological order",
+  "runtime": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x86_64",
+    "cpu": "AMD Ryzen 7 7700X",
+    "rustc": "1.95.0",
+    "profile": "release, thin LTO, codegen-units=1, panic=abort"
+  },
+  "workload": {
+    "seed": 2026,
+    "animals": 10000,
+    "days": 30,
+    "scenario": "two-arm pasture vs barn housing comparison",
+    "inputSha256": "fe46a5af5895a37f5e84311df534f597f556980c5c1b45a55cbba9546ec6e51d"
+  },
+  "measurement": {
+    "scope": "subprocess startup, stdin, JSON parsing, two-arm simulation, output JSON, stdout capture and JSON validation",
+    "warmupsPerRunner": 3,
+    "repetitions": 21,
+    "order": "baseline then candidate for each pair",
+    "percentileMethod": "nearest-rank"
+  },
+  "baseline": {
+    "medianMs": 699.093,
+    "p95Ms": 807.519,
+    "samplesMs": [
+      700.719,
+      699.093,
+      714.218,
+      807.519,
+      706.094,
+      671.828,
+      675.092,
+      673.448,
+      666.891,
+      686.502,
+      680.885,
+      689.87,
+      660.842,
+      867.741,
+      740.364,
+      720.49,
+      678.87,
+      780.978,
+      738.918,
+      667.365,
+      738.546
+    ]
+  },
+  "historyRing": {
+    "medianMs": 507.441,
+    "p95Ms": 573.776,
+    "samplesMs": [
+      495.216,
+      522.968,
+      573.776,
+      542.057,
+      510.15,
+      501.237,
+      497.261,
+      495.655,
+      520.397,
+      494.688,
+      490.215,
+      493.403,
+      551.593,
+      572.034,
+      507.406,
+      513.779,
+      499.216,
+      515.075,
+      495.071,
+      507.441,
+      578.432
+    ]
+  },
+  "improvementMedianPercent": 27.414,
+  "scientificResultParity": "exact for all 21 paired nativeResult values",
+  "peakRss": "not measured in this process-level run; see rea-history-ring-matrix-2026-10-13.json and rea-history-ring-rss-repeat-2026-10-13.json",
+  "historical666msBaseline": "source revision a6293fd and prior sample set; informational only"
+}

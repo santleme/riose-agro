@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "sourceRevision": "fb69c16",
+  "runtime": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x86_64",
+    "cpu": "AMD Ryzen 7 7700X",
+    "rustc": "1.95.0",
+    "profile": "release, thin LTO, codegen-units=1, panic=abort"
+  },
+  "workload": {
+    "seed": 2026,
+    "animals": 10000,
+    "days": 30,
+    "scenario": "two-arm pasture vs barn housing comparison",
+    "inputSha256": "fe46a5af5895a37f5e84311df534f597f556980c5c1b45a55cbba9546ec6e51d"
+  },
+  "measurement": {
+    "scope": "subprocess startup, stdin, JSON parsing, two-arm simulation, output JSON, stdout capture and JSON validation",
+    "warmupsPerRunner": 3,
+    "repetitions": 21,
+    "order": "baseline then candidate for each pair",
+    "percentileMethod": "nearest-rank"
+  },
+  "baseline": {
+    "medianMs": 715.812,
+    "p95Ms": 813.447,
+    "samplesMs": [
+      813.447,
+      715.473,
+      745.893,
+      752.052,
+      720.285,
+      715.812,
+      727.268,
+      732.097,
+      729.569,
+      726.869,
+      753.934,
+      822.69,
+      659.01,
+      663.469,
+      658.254,
+      666.564,
+      659.593,
+      662.153,
+      659.767,
+      659.941,
+      663.529
+    ]
+  },
+  "historyRing": {
+    "medianMs": 468.935,
+    "p95Ms": 488.502,
+    "samplesMs": [
+      490.753,
+      471.643,
+      467.65,
+      473.887,
+      471.438,
+      488.502,
+      471.71,
+      468.64,
+      478.338,
+      482.823,
+      475.467,
+      462.26,
+      463.473,
+      466.513,
+      461.728,
+      468.935,
+      467.475,
+      460.931,
+      460.568,
+      487.342,
+      462.318
+    ]
+  },
+  "scientificResultParity": "exact for all 21 paired nativeResult values",
+  "peakRss": "not measured in this process-level run; see rea-history-ring-matrix-2026-10-13.json for per-process RSS on single-arm workloads",
+  "historical666msBaseline": "different source revision (a6293fd) and run set; informational only"
+}
