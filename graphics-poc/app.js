@@ -5,6 +5,7 @@ import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contra
 import {assertSceneCommandAllowed, sceneExecutionAvailability, terminateNumericWorker, unavailableExecutionState} from './execution-eligibility.js';
 import {APPROVED_BENCHMARK_FIXTURE_ID, createApprovedBenchmarkFixture} from './benchmark-fixture.js';
 import {classifyWebGlAdapterInfo} from './gpu-preflight.js';
+import {initialGraphicsDomain, loadImageEntriesConcurrently} from './initialization.js';
 
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
@@ -208,6 +209,8 @@ function refreshScene() {
     } else objects.push(entry);
   }
   state.cullingMs = performance.now() - cullingStarted;
+  state.cullingTimes.push(state.cullingMs);
+  if (state.cullingTimes.length > 240) state.cullingTimes.shift();
   const {individual, clusters} = clusterFarAnimals(animals);
   assertVisibleAnimalMembership(animals, individual, clusters);
   const accounting = accountAnimalVisibility(simulatedAnimalIds, individual, clusters);
@@ -308,13 +311,12 @@ function drawCanvas(time) {
 function recordFrame(time) {
   if (state.lastFrame) state.frameTimes.push(time - state.lastFrame);
   state.lastFrame = time;
-  state.paintTimes.push(state.paintMs); state.updateTimes.push(state.updateMs); state.cullingTimes.push(state.cullingMs);
+  state.paintTimes.push(state.paintMs); state.updateTimes.push(state.updateMs);
   state.motionUpdateTimes.push(state.motionUpdateMs);
   state.lodUpdateTimes.push(state.lodUpdates);
   if (state.frameTimes.length > 240) state.frameTimes.shift();
   if (state.paintTimes.length > 240) state.paintTimes.shift();
   if (state.updateTimes.length > 240) state.updateTimes.shift();
-  if (state.cullingTimes.length > 240) state.cullingTimes.shift();
   if (state.motionUpdateTimes.length > 240) state.motionUpdateTimes.shift();
   if (state.lodUpdateTimes.length > 240) state.lodUpdateTimes.shift();
   if (time - state.lastHud > 500) updateHud();
@@ -661,7 +663,7 @@ function switchRenderer(renderer) {
 
 function frameStats() {
   const framesMs = state.frameTimes.slice(-600), paintMs = state.paintTimes.slice(-600), updateMs = state.updateTimes.slice(-600), cullingMs = state.cullingTimes.slice(-600), motionMs = state.motionUpdateTimes.slice(-600), lodUpdates = state.lodUpdateTimes.slice(-600);
-  return {meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, medianFrameMs: quantile(framesMs, .5), p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianCullingMs: quantile(cullingMs, .5), p95CullingMs: quantile(cullingMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: state.selectedDomain === 'dairy' ? 0 : state.view?.animalActions.length ?? 0, visibleAnimals: state.visibleAnimalCount, culledAnimals: state.culledAnimalCount, visibleByLod: {...state.visibleByLod}, visibleAnimalIds: [...state.visibleAnimalIds], culledAnimalIds: [...state.culledAnimalIds], selectedAnimalIds: [...state.selectedAnimalIds], accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, devicePixelRatio, renderResolution: state.canvasSizing.ratio, cameraZoom: state.camera.zoom, renderer: state.renderer, frameIntervalsMs: framesMs, renderSubmissionSamplesMs: paintMs, sceneUpdateSamplesMs: updateMs, cullingSamplesMs: cullingMs};
+  return {renderFrameSampleCount: framesMs.length, cullingExecutionCount: cullingMs.length, meanFps: framesMs.length ? 1000 / (framesMs.reduce((sum, value) => sum + value, 0) / framesMs.length) : 0, medianFrameMs: quantile(framesMs, .5), p95FrameMs: quantile(framesMs, .95), medianPaintMs: quantile(paintMs, .5), p95PaintMs: quantile(paintMs, .95), medianSceneUpdateMs: quantile(updateMs, .5), p95SceneUpdateMs: quantile(updateMs, .95), medianCullingMs: quantile(cullingMs, .5), p95CullingMs: quantile(cullingMs, .95), medianMotionUpdateMs: quantile(motionMs, .5), meanLodVisualUpdates: lodUpdates.length ? lodUpdates.reduce((sum, value) => sum + value, 0) / lodUpdates.length : 0, simulatedAnimals: state.selectedDomain === 'dairy' ? 0 : state.view?.animalActions.length ?? 0, visibleAnimals: state.visibleAnimalCount, culledAnimals: state.culledAnimalCount, visibleByLod: {...state.visibleByLod}, visibleAnimalIds: [...state.visibleAnimalIds], culledAnimalIds: [...state.culledAnimalIds], selectedAnimalIds: [...state.selectedAnimalIds], accountedAnimals: state.accountedAnimalCount, animalRenderUnits: state.animalRenderUnits, herdClusters: state.herdClusterCount, visibleSprites: state.visible.length, viewportWidth: state.canvasSizing.width, viewportHeight: state.canvasSizing.height, devicePixelRatio, renderResolution: state.canvasSizing.ratio, cameraZoom: state.camera.zoom, renderer: state.renderer, frameIntervalsMs: framesMs, renderSubmissionSamplesMs: paintMs, sceneUpdateSamplesMs: updateMs, cullingSamplesMs: cullingMs};
 }
 
 function pixiFrame(time) {
@@ -728,6 +730,7 @@ async function runGraphicsBenchmark({counts = [1000, 10000], durationMs = 3000, 
       if (!focusAnimal(1)) throw new Error(`Não foi possível enquadrar o animal #1 no benchmark de ${count} bovinos.`);
       state.selectedAnimalIds = [1]; state.selection = 'animal-1'; refreshScene(); updateHud();
       await captureFrames(warmupMs); state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.cullingTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0;
+      refreshScene();
       const frames = await captureFrames(durationMs); state.frameTimes = frames;
       const workerStarted = performance.now(); await askWorker({type: 'tick', hours: 1}); const workerRoundTripMs = performance.now() - workerStarted;
       const record = frameStats(); record.count = count; record.workerRoundTripMs = workerRoundTripMs;
@@ -776,7 +779,7 @@ async function initialize() {
   ]);
   state.renderManifest = renderManifest; state.assetSourceManifest = assetSourceManifest;
   state.scenes = {beef: scene, dairy: dairyScene};
-  const initialDomain = 'beef';
+  const initialDomain = initialGraphicsDomain(location.search, benchmarkFixtureMode);
   const baseScene = state.scenes[initialDomain], stored = localStorage.getItem(`riose-graphics-scene-v1:${baseScene.sceneId}`) ?? (initialDomain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
   const savedScene = stored ? JSON.parse(stored) : null;
   const sameGrid = savedScene?.projection?.columns === baseScene.projection.columns && savedScene?.projection?.rows === baseScene.projection.rows;
@@ -791,14 +794,29 @@ async function initialize() {
     $('gpu-info-panel').classList.remove('hidden');
   }
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
-  const neloreImage = await image(neloreUrl);
-  state.assetImages = benchmarkFixtureMode ? {nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage)} : {
-    farm: await image(farmAtlasUrl), nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage),
-    handling: await image('/graphics-poc/assets/handling-review-atlas-v1.png'),
-    'dairy-heifer': await image('/graphics-poc/assets/dairy/dairy-heifer.png'),
-    'dairy-activity-collar': await image('/graphics-poc/assets/dairy/dairy-activity-collar.png'),
-    ...Object.fromEntries(await Promise.all(Object.entries(renderManifest.atlases).map(async ([key, url]) => [key, await image(url)])))
-  };
+  if (benchmarkFixtureMode) {
+    const neloreImage = await image(neloreUrl);
+    state.assetImages = {nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage)};
+  } else {
+    const atlasEntries = Object.entries(renderManifest.atlases);
+    const loadedImages = await loadImageEntriesConcurrently([
+      ['farm', farmAtlasUrl],
+      ['nelore', neloreUrl],
+      ['handling', '/graphics-poc/assets/handling-review-atlas-v1.png'],
+      ['dairy-heifer', '/graphics-poc/assets/dairy/dairy-heifer.png'],
+      ['dairy-activity-collar', '/graphics-poc/assets/dairy/dairy-activity-collar.png'],
+      ...atlasEntries,
+    ], image);
+    state.assetImages = {
+      farm: loadedImages.farm,
+      nelore: loadedImages.nelore,
+      neloreLow: makeLowResolutionCow(loadedImages.nelore),
+      handling: loadedImages.handling,
+      'dairy-heifer': loadedImages['dairy-heifer'],
+      'dairy-activity-collar': loadedImages['dairy-activity-collar'],
+      ...Object.fromEntries(atlasEntries.map(([key]) => [key, loadedImages[key]])),
+    };
+  }
   state.assetAtlasUrls = benchmarkFixtureMode ? {} : renderManifest.atlases;
   state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
   state.imageLoadMs = performance.now() - startedAt;
@@ -872,6 +890,7 @@ async function initialize() {
       state.selectedAnimalIds = [id]; state.selection = `animal-${id}`; refreshScene(); updateHud(); return true;
     },
     clearStats: () => { state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.cullingTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0; },
+    refreshScene: () => refreshScene(),
     stats: frameStats,
     tick: async () => { const result = await askWorker({type: 'tick', hours: 1}); return {roundTripMs: state.lastWorkerRoundTripMs, implementation: result.engineImplementation}; },
     load: () => ({assetsMs: state.imageLoadMs, pixiInitMs: state.pixiLoadMs ?? null}),

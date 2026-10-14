@@ -1,6 +1,6 @@
 # Issue #99 — Canvas vs Pixi on GTX 1060
 
-Decision: **CONDITIONAL_GO**. Pixi is a credible option for the 10k fixture: median RAF-derived FPS was 96.05 for Canvas and 164.99 for Pixi. At 1k both were at the browser's observed refresh cadence. Keep Canvas as the product default; this single-device fixture does not justify a default change.
+Decision: **CONDITIONAL_GO**. Pixi was faster in the corrected RAF samples at both populations: at 1k the frame median tied while Pixi had a narrower p95 and higher observed FPS; at 10k the FPS median was 56.99 for Canvas and 161.01 for Pixi. The single-device result and mismatch between Windows' reported 75Hz display mode and RAF cadence do not justify a product-default change. Keep Canvas as the product default.
 
 ## Environment
 
@@ -18,14 +18,14 @@ Five sequential fresh-page captures. Every page ran Canvas and Pixi at 1,000 and
 
 ## Results
 
-All values show median across five fresh pages, with the observed min–max spread. Frame p95 is the median of each page's p95 RAF interval.
+All values show median across five fresh pages, with the observed min–max spread. Frame p95 is the median of each page's p95 RAF interval. Culling execution count is measured independently from render-frame sample count; repeated cached culling values are excluded.
 
-| Renderer | Population | FPS | Frame median ms | Frame p95 ms | Submission median ms | Scene update ms | Culling ms | Worker tick ms | Asset load ms | Pixi init ms | JS heap bytes | Visible / culled | Draw units |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| canvas | 1,000 | 165.00 (147.66–165.33) | 6.10 (6.10–6.10) | 6.20 (6.20–12.10) | 1.30 (1.30–2.90) | 1.70 (1.30–2.70) | 0.30 (0.20–0.60) | 12.00 (6.80–16.70) | 37.70 (31.90–59.50) | — | 33407123.00 (17993912.00–47609529.00) | 342 / 658 | 129 |
-| canvas | 10,000 | 96.05 (59.76–99.74) | 12.10 (12.10–18.10) | 18.10 (12.20–24.20) | 3.10 (3.00–5.00) | 12.70 (11.50–25.40) | 1.60 (1.40–4.30) | 27.70 (26.20–38.80) | 37.70 (31.90–59.50) | — | 34096136.00 (17556828.00–49746099.00) | 3,296 / 6,704 | 842 |
-| pixi | 1,000 | 164.99 (164.99–165.00) | 6.10 (6.10–6.10) | 6.20 (6.20–6.20) | 0.20 (0.10–0.20) | 1.40 (1.20–2.50) | 0.20 (0.20–0.30) | 6.80 (4.90–7.10) | 37.70 (31.90–59.50) | 100.10 (81.10–168.90) | 43649763.00 (27581843.00–46755763.00) | 342 / 658 | 129 |
-| pixi | 10,000 | 164.99 (164.66–164.99) | 6.10 (6.10–6.10) | 6.20 (6.10–6.20) | 0.20 (0.20–0.20) | 13.20 (11.40–16.10) | 1.70 (1.30–1.80) | 21.20 (19.60–21.50) | 37.70 (31.90–59.50) | 100.10 (81.10–168.90) | 49979053.00 (48648422.00–50044474.00) | 3,296 / 6,704 | 842 |
+| Renderer | Population | FPS | Frame median ms | Frame p95 ms | Submission median ms | Scene update ms | Culling ms | Culling executions/run | Render frames/run | Worker tick ms | Asset load ms | Pixi init ms | JS heap bytes | Visible / culled | Draw units |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| canvas | 1,000 | 131.26 (88.35–131.33) | 6.10 (6.10–12.10) | 12.20 (12.20–18.20) | 3.10 (2.70–3.40) | 5.40 (3.90–8.70) | 0.50 (0.50–0.90) | 2.00 (2.00–2.00) | 393.00 (264.00–394.00) | 18.60 (15.90–27.70) | 78.80 (31.20–148.80) | — | 34444546.00 (14988693.00–39320614.00) | 342 / 658 | 129 |
+| canvas | 10,000 | 56.99 (38.61–72.56) | 18.20 (12.20–24.30) | 24.20 (18.20–36.60) | 5.90 (4.40–7.90) | 39.00 (25.50–51.90) | 2.50 (1.30–3.80) | 2.00 (2.00–2.00) | 172.00 (117.00–219.00) | 75.20 (63.90–99.70) | 78.80 (31.20–148.80) | — | 38889278.00 (19229249.00–44690671.00) | 3,296 / 6,704 | 842 |
+| pixi | 1,000 | 161.01 (159.00–162.33) | 6.10 (6.10–6.10) | 6.20 (6.20–6.20) | 0.30 (0.20–0.30) | 5.50 (3.70–49.70) | 0.40 (0.30–0.50) | 2.00 (2.00–2.00) | 484.00 (478.00–488.00) | 17.50 (14.00–22.80) | 78.80 (31.20–148.80) | 180.00 (90.40–391.60) | 23799177.00 (21288204.00–40404673.00) | 342 / 658 | 129 |
+| pixi | 10,000 | 161.01 (160.01–163.00) | 6.10 (6.10–6.10) | 6.20 (6.20–6.20) | 0.30 (0.20–0.40) | 50.00 (35.60–56.00) | 1.90 (1.40–3.20) | 2.00 (2.00–2.00) | 483.00 (479.00–490.00) | 54.70 (32.60–94.70) | 78.80 (31.20–148.80) | 180.00 (90.40–391.60) | 30872908.00 (30573805.00–37759872.00) | 3,296 / 6,704 | 842 |
 
 Visible + culled equaled population on every run; visible/culled stable-ID digests were identical between Canvas and Pixi, and animal 1 remained selected. Draw-unit counts matched for both renderers at each population.
 
@@ -35,24 +35,24 @@ Percentages compare Pixi median to Canvas median.
 
 | Population | FPS change | Frame median change | Frame p95 change | Frame-median speedup |
 | ---: | ---: | ---: | ---: | ---: |
-| 1,000 | -0.0% | -0.00 ms (-0.0%) | 0.00 ms (0.0%) | 1.00× |
-| 10,000 | 71.8% | -6.00 ms (-49.6%) | -11.90 ms (-65.7%) | 1.98× |
+| 1,000 | 22.7% | -0.00 ms (-0.0%) | -6.00 ms (-49.2%) | 1.00× |
+| 10,000 | 182.5% | -12.10 ms (-66.5%) | -18.00 ms (-74.4%) | 2.98× |
 
 ## Interpretation
 
-- **1k:** Canvas and Pixi both reached approximately 165 RAF callbacks per second, so Pixi did not demonstrate a material frame-rate advantage at this population. Pixi's JavaScript submission call was shorter, but it does not measure completed GPU work.
-- **10k:** Pixi reached a stable refresh-cadence ceiling while Canvas median FPS and p95 intervals varied across pages. This supports keeping Pixi available for dense populations, but the browser/display cadence mismatch and absence of GPU-completion timing make the size of the real presentation gain uncertain.
-- **Complexity:** the data supports a conditional renderer option, not a product-default switch.
+- **1k:** both renderers had a 6.10ms median frame interval, but Canvas' median p95 was 12.20ms versus Pixi's 6.20ms; RAF-derived FPS medians were 131.26 and 161.01 respectively. This indicates more consistent Pixi callbacks in this capture set, though RAF cadence is not physical presentation timing.
+- **10k:** Pixi's FPS median was 161.01 versus Canvas' 56.99; p95 frame intervals were 6.20ms and 24.20ms. Pixi's JavaScript submission was lower, but it does not measure completed GPU work.
+- **Complexity:** evidence supports keeping Pixi available as an option, but not changing the product default from this single browser/GPU profile.
 
 ## Limitations
 
 - One GTX 1060 and one Chromium-family in-app browser only; no iGPU, AMD, mobile, or other display profiles.
 - WebGL identifies the physical NVIDIA adapter. GPU duration, utilization and allocated VRAM were not available through permitted browser page APIs. The product model name includes 6GB; allocated VRAM is not measured.
-- Frame timing is requestAnimationFrame callback interval. Renderer submission is JavaScript call time, not GPU completion. The 75Hz Windows mode and near-165Hz RAF observations do not align.
+- Frame timing is requestAnimationFrame callback interval. Renderer submission is JavaScript call time, not GPU completion. The 75Hz Windows mode and 160+ RAF observations do not align.
 - Browser cache stayed enabled between fresh-page runs. Heap is browser-reported `performance.memory` when available, without forced GC.
 - Scene update and culling timings overlap; do not sum them. Worker time is a separate one-hour tick.
 - The screenshot regression runner was unavailable because Node could not spawn local Chromium on Windows (spawn UNKNOWN). Its baseline covers Canvas product scenes, not this fixture or Pixi; no Canvas-vs-Pixi pixel diff is claimed.
 
 ## Decision
 
-**CONDITIONAL_GO** — retain Pixi as an optional path for dense 10k scenes, keep Canvas as the product default, and repeat on additional browser/GPU/display profiles before considering a default change.
+**CONDITIONAL_GO** — retain Pixi as an optional path for dense scenes and consider further product analysis after collecting results on additional GPUs and browser/display profiles. Keep Canvas as the product default.
