@@ -3,8 +3,8 @@
   "benchmark": {
     "name": "graphics-poc-canvas-vs-pixi-issue-99-gtx1060",
     "source": {
-      "revision": "5c93d5778cbdcbe8990fbd6c5a34f0df26e7fd78",
-      "dirty": true
+      "revision": "d496b0ef5cdfc980723e851cf0b804b60f294321",
+      "dirty": false
     }
   },
   "runtime": {
