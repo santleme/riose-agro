@@ -76,3 +76,18 @@ test('lot Worker sends only the selected lot to Rust and preserves execution pro
     assert.deepEqual(manifest.lot.unaffectedAnimalIds,base.animals.filter(animal=>animal.patch!==manifest.lot.patchIndex).map(animal=>animal.id));
   });
 });
+
+test('lot Worker uses the same selected-lot contract when Rust is unavailable',async t=>{
+  const snapshot=new FarmEngine(20261013,24).snapshot(),manifest=createLotComparisonManifest(snapshot,{patchIndex:0,domainZoneId:'paddock-1',periodDays:3,alternativeSupplementKgDMPerAnimalPerDay:0.5});
+  const scoped=createLotScopedSnapshot(snapshot,manifest.lot),options={days:3,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario};
+  const fetchImpl=async()=>({ok:true,json:async()=>({available:false,backend:'local-rust'})});
+  await withWorker(t,fetchImpl,async worker=>{
+    await worker.onmessage({data:{protocolVersion:1,type:'compareLotConfigured',manifest}});
+    const response=normalizeWorkerResponse(worker.messages.at(-1));
+    assert.deepEqual(response.data,addLotComparisonContext(manifest,compareConfiguredScenarios(scoped,options)));
+    assert.equal(response.data.herdSize,manifest.lot.animalIds.length);
+    assert.equal(response.execution.backend,'local-js');
+    assert.equal(response.execution.fallbackUsed,false);
+    assert.equal(response.execution.availability,'native_runner_unavailable');
+  });
+});
