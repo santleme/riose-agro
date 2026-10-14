@@ -7,10 +7,12 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import {validateFarmSnapshot} from '../client/snapshot-validator.js';
 import {validateFarmSnapshotManifestReference} from '../client/snapshot-manifest-link.js';
+import {executeNativeConfiguredComparison, nativeComparisonAvailable, nativeComparisonRunner} from './native-comparison.js';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
 const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
+const MAX_NATIVE_COMPARISON_BODY_BYTES = 8 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
@@ -192,6 +194,8 @@ const snapshotSchema = JSON.parse(readFileSync(schemaPath, 'utf8'));
 const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
 addFormats(ajv);
 const validateSnapshotSchema = ajv.compile(snapshotSchema);
+const configuredComparisonSchema = JSON.parse(readFileSync(resolve(ROOT, 'schemas/configured-comparison-request-v2.schema.json'), 'utf8'));
+const validateConfiguredComparisonRequest = new Ajv2020({allErrors: true, strict: false, strictRequired: false}).compile(configuredComparisonSchema);
 
 export function validateSnapshotReviewRequest(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input) || !input.snapshot || typeof input.snapshot !== 'object' || Array.isArray(input.snapshot)) {
@@ -301,9 +305,44 @@ async function serveStatic(pathname, response, env = process.env) {
   }
 }
 
+function isLoopbackRequest(request) {
+  const address = request.socket.remoteAddress ?? '';
+  return address === '127.0.0.1' || address === '::1' || address === '::ffff:127.0.0.1';
+}
+
 export function createServer({env = process.env, fetchImpl = fetch} = {}) {
   return createHttpServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
+    if (url.pathname === '/api/native/configured-comparison') {
+      if (request.method === 'GET') {
+        const runner = nativeComparisonRunner(env, ROOT);
+        const available = isLoopbackRequest(request) && await nativeComparisonAvailable(runner);
+        return sendJson(response, 200, {available, backend: available ? 'local-rust' : 'local-js'});
+      }
+      if (request.method === 'POST') {
+        if (!isLoopbackRequest(request)) return sendJson(response, 403, {error: 'native_runner_requires_loopback'});
+        const runner = nativeComparisonRunner(env, ROOT);
+        if (!await nativeComparisonAvailable(runner)) return sendJson(response, 503, {error: 'native_runner_unavailable'});
+        if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+          return sendJson(response, 415, {error: 'content_type_must_be_json'});
+        }
+        try {
+          const input = await readJsonWithLimit(request, MAX_NATIVE_COMPARISON_BODY_BYTES);
+          if (!validateConfiguredComparisonRequest(input)) return sendJson(response, 400, {error: 'invalid_configured_comparison_request'});
+          const native = await executeNativeConfiguredComparison(input, runner);
+          return sendJson(response, 200, {
+            comparison: native.comparison,
+            engine: native.engine,
+            runId: native.runId,
+            inputSha256: native.inputSha256,
+          });
+        } catch (error) {
+          return sendJson(response, error.status ?? 502, {error: error.status === 413 ? 'request_too_large' : 'native_comparison_failed'});
+        }
+      }
+      response.setHeader('allow', 'GET, POST');
+      return sendJson(response, 405, {error: 'method_not_allowed'});
+    }
     if (url.pathname === '/api/explain' && request.method === 'POST') {
       if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
         return sendJson(response, 415, {error: 'content_type_must_be_json'});

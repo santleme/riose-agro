@@ -1,13 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import os from 'node:os';
 import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {digestResultRecordBytes, sha256Digest} from '../experiments/batch-manifest.js';
-import {runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
-import {executeScenario} from '../scripts/run-scenarios.js';
+import {executeScenario, parseExecutorResourceLimits, runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
 import {ScenarioWorkerPool} from '../scripts/scenario-worker-pool.js';
 import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
+
+test('automatic executor limits reject malformed, negative and non-finite cost or RSS values', () => {
+  assert.deepEqual(parseExecutorResourceLimits({}), {maxCostUsd: 0, maxRssBytes: Infinity});
+  assert.deepEqual(parseExecutorResourceLimits({RIOSE_EXECUTOR_MAX_COST_USD: '0', RIOSE_EXECUTOR_MAX_RSS_BYTES: '512000000'}),
+    {maxCostUsd: 0, maxRssBytes: 512000000});
+  for (const [name, value] of [
+    ['RIOSE_EXECUTOR_MAX_COST_USD', 'typo'],
+    ['RIOSE_EXECUTOR_MAX_COST_USD', ''],
+    ['RIOSE_EXECUTOR_MAX_COST_USD', '-0.01'],
+    ['RIOSE_EXECUTOR_MAX_COST_USD', 'Infinity'],
+    ['RIOSE_EXECUTOR_MAX_RSS_BYTES', '512MB'],
+    ['RIOSE_EXECUTOR_MAX_RSS_BYTES', '-1'],
+    ['RIOSE_EXECUTOR_MAX_RSS_BYTES', 'NaN'],
+    ['RIOSE_EXECUTOR_MAX_RSS_BYTES', '1e309'],
+  ]) {
+    assert.throws(() => parseExecutorResourceLimits({[name]: value}), new RegExp(name));
+  }
+});
 
 test('scenario directory runner resumes verified records and reruns a corrupt per-scenario result', async t => {
   const root = await mkdtemp(join(tmpdir(), 'riose-scenario-resume-'));
@@ -48,6 +66,27 @@ test('scenario directory runner resumes verified records and reruns a corrupt pe
   const manifestAfter = JSON.parse(await readFile(manifestPath, 'utf8'));
   assert.equal(manifestAfter.runs[0].status, 'completed');
   assert.equal(manifestBefore.runs[0].outputDigest, manifestAfter.runs[0].outputDigest);
+});
+
+test('automatic scenario execution uses an exact measured concurrency profile and reports its choice', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'riose-scenario-auto-'));
+  t.after(() => rm(root, {recursive: true, force: true}));
+  const scenarios = join(root, 'scenarios'), results = join(root, 'results');
+  const {mkdir} = await import('node:fs/promises');
+  await mkdir(scenarios, {recursive: true});
+  const fixture = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
+  await writeFile(join(scenarios, 'baseline.json'), JSON.stringify(fixture));
+  const executorProfile = {version: 'riose-executor-profile/1', environment: {
+    platform: process.platform, arch: process.arch, node: process.version, cpu: os.cpus()[0]?.model,
+  }, records: [{operation: 'scenario-batch', scenarioCount: 1, animalCount: 3, hours: 24,
+    backend: 'local-js', concurrency: 2, p95EndToEndMs: 10, peakRssBytes: 100_000_000,
+    estimatedCostUsd: 0, parity: 'passed', status: 'measured'}]};
+  let selected;
+  const output = await runScenarioDirectoryResumable(scenarios, results, {concurrency: 'auto', executorProfile,
+    onExecutorSelection: choice => { selected = choice; }});
+  assert.equal(selected.backend, 'local-js');
+  assert.equal(selected.concurrency, 2);
+  assert.equal(output[0].passed, true);
 });
 
 test('worker execution preserves serial scenario and seed indexed outputs', async t => {

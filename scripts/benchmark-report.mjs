@@ -223,12 +223,23 @@ export function assertBenchmarkReport(report) {
   }
   if (report.benchmark.name === 'scenario-scheduler-concurrency') {
     const availableParallelism = report.results.environment.reportedAvailableParallelism;
-    const workloadAvailableWorkers = Math.min(availableParallelism, report.results.workload.scenarios);
-    const expectedConcurrencyCases = [...new Set([1, Math.min(2, workloadAvailableWorkers), workloadAvailableWorkers])];
+    const configuredMaximum = report.configuration.maxWorkerConcurrency ?? Number.POSITIVE_INFINITY;
+    if (configuredMaximum !== Number.POSITIVE_INFINITY && (!Number.isSafeInteger(configuredMaximum) || configuredMaximum < 1)) {
+      throw new TypeError('Invalid benchmark report: maxWorkerConcurrency must be a positive integer when provided.');
+    }
+    const workloadAvailableWorkers = Math.min(availableParallelism, report.results.workload.scenarios, configuredMaximum);
+    const supportedConcurrencyCases = [...new Set([1, Math.min(2, workloadAvailableWorkers), workloadAvailableWorkers])];
+    const configuredConcurrencyCases = report.configuration.concurrencyCases;
+    const concurrencyCasesAreValid = Array.isArray(configuredConcurrencyCases)
+      && configuredConcurrencyCases.length > 0
+      && configuredConcurrencyCases[0] === 1
+      && configuredConcurrencyCases.every((value, index) => supportedConcurrencyCases.includes(value)
+        && (index === 0 || configuredConcurrencyCases[index - 1] < value))
+      && (workloadAvailableWorkers === 1 || configuredConcurrencyCases.some(value => value > 1));
     if (report.results.environment.workloadAvailableWorkers !== workloadAvailableWorkers
-      || JSON.stringify(report.configuration.concurrencyCases) !== JSON.stringify(expectedConcurrencyCases)
-      || JSON.stringify(report.results.rows.map(row => row.concurrency)) !== JSON.stringify(expectedConcurrencyCases)) {
-      throw new TypeError('Invalid benchmark report: concurrency cases must cover serial, two-worker, and effective-available limits after workload capping.');
+      || !concurrencyCasesAreValid
+      || JSON.stringify(report.results.rows.map(row => row.concurrency)) !== JSON.stringify(configuredConcurrencyCases)) {
+      throw new TypeError('Invalid benchmark report: concurrency cases must be an ordered subset of serial, two-worker, and effective-available limits, including serial and at least one parallel case when available.');
     }
     for (const [rowIndex, row] of report.results.rows.entries()) {
       const oneCoreMedian = summarizeNumericObservations(row.samples.map(sample => sample.cpuUtilization.oneCoreEquivalentPercent)).median;

@@ -344,7 +344,7 @@ function renderComparisonContext(data){
 }
 function showComparison(data){
   const completed=pendingComparison;comparisonSnapshot=completed?.snapshot??comparisonSnapshot;comparisonManifest=completed?.manifest??comparisonManifest;comparisonEnvironmentState=completed?(completed.environmentState??null):environmentState;
-  if(completed)persistRun(completed.manifest,data,'completed');
+  if(completed)persistRun(completed.manifest,data,'completed',undefined,completed.execution);
   const lotContext=$('lot-comparison-context');if(lotContext){lotContext.hidden=true;lotContext.textContent='';}
   pendingComparison=null;
   data=normalizeConfiguredComparison(data);data=comparisonData(data);
@@ -354,7 +354,8 @@ function showComparison(data){
   const c=data.baselineConfig??{},snapshot=comparisonSnapshot??{},days=comparisonNumber(data.days,0),initial=comparisonArray(data.initialPastureByPaddock),initialTotal=initial.length===4?comparisonCalculation(initial,(...values)=>values.reduce((sum,value)=>sum+value,0)):undefined;
   const start=Number.isFinite(snapshot.hour)?'dia '+(Math.floor(snapshot.hour/24)+1)+' às '+String(snapshot.hour%24).padStart(2,'0')+':00':'horário indisponível';
   const factor=data.comparisonFactor??'housing',s=data.scenarioConfig??{},factorLabel=comparisonFactorName(factor),referenceText=comparisonValueName(factor,c[factor]),scenarioText=comparisonValueName(factor,s[factor]);
-  $('compareconfig').textContent='Derivado · demonstrativo · não validado · motor '+(data.engineVersion??'versão não informada')+'. Semente: '+(Number.isInteger(data.seed)?data.seed:'não informada')+'. Único fator configurado diferente: '+factorLabel+'. Referência: '+referenceText+(factor==='supplement'?' kg MS/animal/dia':'')+'; alternativa: '+scenarioText+(factor==='supplement'?' kg MS/animal/dia':'')+'. Horizonte: '+days+' dias a partir de '+start+'. Mesmo snapshot simulado: '+comparisonNumber(snapshot.animals?.length,0)+' animais, peso inicial '+comparisonNumber(data.startWeight)+' kg/animal (média no snapshot) e forragem inicial '+comparisonNumber(initialTotal,0)+' kg MS (soma dos piquetes). Configurações iguais fora do fator: '+(dietNames[c.diet]??'dieta indisponível')+', '+comparisonNumber(c.supplement)+' kg MS de suplemento/animal/dia, '+comparisonValueName('housing',c.housing)+' e '+comparisonValueName('weather',c.weather)+'.';
+  const executorLabel=completed?.execution?.backend==='local-rust'?'Rust local · '+(completed.execution.buildId??completed.execution.engineVersion):completed?.execution?.fallbackUsed?'JavaScript local · fallback do Rust':'JavaScript/WASM local';
+  $('compareconfig').textContent='Derivado · demonstrativo · não validado · motor '+(data.engineVersion??'versão não informada')+'. Executor: '+executorLabel+'. Semente: '+(Number.isInteger(data.seed)?data.seed:'não informada')+'. Único fator configurado diferente: '+factorLabel+'. Referência: '+referenceText+(factor==='supplement'?' kg MS/animal/dia':'')+'; alternativa: '+scenarioText+(factor==='supplement'?' kg MS/animal/dia':'')+'. Horizonte: '+days+' dias a partir de '+start+'. Mesmo snapshot simulado: '+comparisonNumber(snapshot.animals?.length,0)+' animais, peso inicial '+comparisonNumber(data.startWeight)+' kg/animal (média no snapshot) e forragem inicial '+comparisonNumber(initialTotal,0)+' kg MS (soma dos piquetes). Configurações iguais fora do fator: '+(dietNames[c.diet]??'dieta indisponível')+', '+comparisonNumber(c.supplement)+' kg MS de suplemento/animal/dia, '+comparisonValueName('housing',c.housing)+' e '+comparisonValueName('weather',c.weather)+'.';
   $('chart').setAttribute('aria-label','Evolução demonstrativa de peso médio em kg/animal durante '+days+' dias; derivada, não validada');
   $('chart-note').innerHTML=comparisonEvidence('Cada ponto é a média dos pesos simulados em kg/animal; pesos e estoques iniciais acima vêm do snapshot simulado.','dia 0 até dia '+days+' desde o snapshot');
   const rows=comparisonRows(data),values=rows.flatMap(r=>[r.baselineWeight,r.scenarioWeight]).filter(Number.isFinite),low=Math.floor(Math.min(...values)-1),high=Math.ceil(Math.max(...values)+1);
@@ -390,8 +391,8 @@ function renderRunHistory(){
   }catch(error){select.value='';$('run-history-status').textContent=error.message;}
   $('run-history-replay').disabled=!select.value||requestCompare||loadingScenario;
 }
-function persistRun(manifest,result,status,error){
-  try{const before=listRuns(localStorage),run=createRunRecord({manifest,result,status,error});if(pendingComparison?.environmentState)run.environmentState=structuredClone(pendingComparison.environmentState);recordRun(run,localStorage);const afterIds=new Set(listRuns(localStorage).map(item=>item.id)),removed=before.filter(item=>!afterIds.has(item.id)).length;renderRunHistory();if(removed)$('run-history-status').textContent+=` ${removed} registro(s) mais antigo(s) foram removidos para respeitar os limites; exporte o histórico antes de uma nova execução para manter uma cópia.`;}
+function persistRun(manifest,result,status,error,execution){
+  try{const before=listRuns(localStorage),run=createRunRecord({manifest,result,status,error,execution});if(pendingComparison?.environmentState)run.environmentState=structuredClone(pendingComparison.environmentState);recordRun(run,localStorage);const afterIds=new Set(listRuns(localStorage).map(item=>item.id)),removed=before.filter(item=>!afterIds.has(item.id)).length;renderRunHistory();if(removed)$('run-history-status').textContent+=` ${removed} registro(s) mais antigo(s) foram removidos para respeitar os limites; exporte o histórico antes de uma nova execução para manter uma cópia.`;}
   catch(storageError){$('run-history-status').textContent=storageError.message;notify(storageError.message);}
 }
 function failPendingRun(message){if(pendingComparison)persistRun(pendingComparison.manifest,undefined,'failed',message);pendingComparison=null;}
@@ -431,6 +432,7 @@ worker.onmessage=e=>{
     $('engine-status').textContent=response.engineImplementation==='riose-core-wasm/0.1.0'?'MOTOR LOCAL · RUST/WASM':'MOTOR LOCAL · JAVASCRIPT';updateUI();
   }else if(response.type==='comparison'){
     if(!pendingComparison){reportUnexpectedWorkerResponse('Unexpected comparison response with no pending comparison.');return;}
+    pendingComparison.execution=response.execution;
     showComparison(response.data);
   }
   else if(response.type==='error'){

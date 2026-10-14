@@ -1,0 +1,1480 @@
+{
+  "schemaVersion": 2,
+  "benchmark": {
+    "name": "scenario-scheduler-concurrency",
+    "source": {
+      "revision": "85705be464dee1ba8b0afdff90cfd55c324a3e84",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null
+  },
+  "workload": {
+    "seed": 20261012,
+    "populations": [
+      {
+        "count": 10,
+        "unit": "scenarios",
+        "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+      }
+    ],
+    "hours": 24,
+    "scenarioSeeds": [
+      20261012,
+      20261013,
+      20261014,
+      20261015,
+      20261016,
+      20261017,
+      20261018,
+      20261019,
+      20261020,
+      20261021
+    ]
+  },
+  "configuration": {
+    "warmupRuns": 1,
+    "repetitions": 5,
+    "concurrencyCases": [
+      1,
+      4
+    ],
+    "maxWorkerConcurrency": 4,
+    "workerMemoryLimitMb": 128,
+    "rssPollIntervalMs": 5
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "engine",
+          "metric": "journaled workload wall time",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 13.792,
+            "spread": {
+              "min": 12.642,
+              "max": 15.477,
+              "range": 2.835000000000001
+            },
+            "rawObservations": [
+              15.477,
+              14.126,
+              13.792,
+              13.217,
+              12.642
+            ]
+          },
+          "concurrency": 1,
+          "source": "runScenarioDirectoryResumable from first dispatch through verified results",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "journaled workload throughput",
+          "unit": "scenarios/s",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 725.066,
+            "spread": {
+              "min": 646.129,
+              "max": 791.029,
+              "range": 144.89999999999998
+            },
+            "rawObservations": [
+              646.129,
+              707.933,
+              725.066,
+              756.626,
+              791.029
+            ]
+          },
+          "concurrency": 1,
+          "source": "10 independent scenario results divided by workload wall time at concurrency 1",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "process CPU total",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 19.059,
+            "spread": {
+              "min": 15.318,
+              "max": 28.773,
+              "range": 13.455
+            },
+            "rawObservations": [
+              28.773,
+              19.128,
+              19.059,
+              15.958,
+              15.318
+            ]
+          },
+          "concurrency": 1,
+          "source": "process.cpuUsage delta for the whole Node process during journaled workload; includes CPU used by scenario Worker threads and the RSS monitor thread; worker startup CPU is reported separately",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "CPU utilization, one-core-equivalent",
+          "unit": "% of one logical CPU",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 135.41,
+            "spread": {
+              "min": 120.738,
+              "max": 185.908,
+              "range": 65.16999999999999
+            },
+            "rawObservations": [
+              185.908,
+              135.41,
+              138.189,
+              120.738,
+              121.168
+            ]
+          },
+          "concurrency": 1,
+          "source": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "CPU utilization, host-normalized",
+          "unit": "% of os.availableParallelism capacity",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 8.463,
+            "spread": {
+              "min": 7.546,
+              "max": 11.619,
+              "range": 4.0729999999999995
+            },
+            "rawObservations": [
+              11.619,
+              8.463,
+              8.637,
+              7.546,
+              7.573
+            ]
+          },
+          "concurrency": 1,
+          "source": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "end-to-end time",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 13.792,
+            "spread": {
+              "min": 12.642,
+              "max": 15.477,
+              "range": 2.835000000000001
+            },
+            "rawObservations": [
+              15.477,
+              14.126,
+              13.792,
+              13.217,
+              12.642
+            ]
+          },
+          "concurrency": 1,
+          "source": "worker startup + workload wall + worker shutdown; serial path has no worker startup",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "end-to-end throughput",
+          "unit": "scenarios/s",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 725.058,
+            "spread": {
+              "min": 646.12,
+              "max": 791.014,
+              "range": 144.894
+            },
+            "rawObservations": [
+              646.12,
+              707.914,
+              725.058,
+              756.601,
+              791.014
+            ]
+          },
+          "concurrency": 1,
+          "source": "10 independent scenario results divided by end-to-end time at concurrency 1",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "journaled workload wall time",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 14.241,
+            "spread": {
+              "min": 13.026,
+              "max": 15.685,
+              "range": 2.6590000000000007
+            },
+            "rawObservations": [
+              13.624,
+              13.026,
+              14.241,
+              15.685,
+              15.491
+            ]
+          },
+          "concurrency": 4,
+          "source": "runScenarioDirectoryResumable from first dispatch through verified results",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "journaled workload throughput",
+          "unit": "scenarios/s",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 702.196,
+            "spread": {
+              "min": 637.535,
+              "max": 767.705,
+              "range": 130.17000000000007
+            },
+            "rawObservations": [
+              733.979,
+              767.705,
+              702.196,
+              637.535,
+              645.547
+            ]
+          },
+          "concurrency": 4,
+          "source": "10 independent scenario results divided by workload wall time at concurrency 4",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "process CPU total",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 103.66,
+            "spread": {
+              "min": 90.738,
+              "max": 129.429,
+              "range": 38.691
+            },
+            "rawObservations": [
+              95.176,
+              90.738,
+              120.784,
+              103.66,
+              129.429
+            ]
+          },
+          "concurrency": 4,
+          "source": "process.cpuUsage delta for the whole Node process during journaled workload; includes CPU used by scenario Worker threads and the RSS monitor thread; worker startup CPU is reported separately",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "CPU utilization, one-core-equivalent",
+          "unit": "% of one logical CPU",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 698.591,
+            "spread": {
+              "min": 660.886,
+              "max": 848.143,
+              "range": 187.25700000000006
+            },
+            "rawObservations": [
+              698.591,
+              696.591,
+              848.143,
+              660.886,
+              835.511
+            ]
+          },
+          "concurrency": 4,
+          "source": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "CPU utilization, host-normalized",
+          "unit": "% of os.availableParallelism capacity",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 43.662,
+            "spread": {
+              "min": 41.305,
+              "max": 53.009,
+              "range": 11.704
+            },
+            "rawObservations": [
+              43.662,
+              43.537,
+              53.009,
+              41.305,
+              52.219
+            ]
+          },
+          "concurrency": 4,
+          "source": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "end-to-end time",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 159.808,
+            "spread": {
+              "min": 141.207,
+              "max": 172.297,
+              "range": 31.090000000000003
+            },
+            "rawObservations": [
+              148.265,
+              159.84,
+              172.297,
+              159.808,
+              141.207
+            ]
+          },
+          "concurrency": 4,
+          "source": "worker startup + workload wall + worker shutdown; serial path has no worker startup",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "engine",
+          "metric": "end-to-end throughput",
+          "unit": "scenarios/s",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 62.575,
+            "spread": {
+              "min": 58.039,
+              "max": 70.818,
+              "range": 12.778999999999996
+            },
+            "rawObservations": [
+              67.447,
+              62.563,
+              58.039,
+              62.575,
+              70.818
+            ]
+          },
+          "concurrency": 4,
+          "source": "10 independent scenario results divided by end-to-end time at concurrency 4",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "worker",
+          "metric": "sampled process peak RSS",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 88035328,
+            "spread": {
+              "min": 87642112,
+              "max": 88805376,
+              "range": 1163264
+            },
+            "rawObservations": [
+              88805376,
+              87642112,
+              88420352,
+              87916544,
+              88035328
+            ]
+          },
+          "concurrency": 1,
+          "source": "Independent Worker thread polls process.memoryUsage.rss() every 5ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.",
+          "memoryType": "process-rss",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "worker",
+          "metric": "sampled process peak RSS",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 182800384,
+            "spread": {
+              "min": 181370880,
+              "max": 183971840,
+              "range": 2600960
+            },
+            "rawObservations": [
+              181424128,
+              182800384,
+              183885824,
+              181370880,
+              183971840
+            ]
+          },
+          "concurrency": 4,
+          "source": "Independent Worker thread polls process.memoryUsage.rss() every 5ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.",
+          "memoryType": "process-rss",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        }
+      ]
+    },
+    "ui": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "layout": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "startup",
+          "metric": "worker pool startup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "concurrency": 1,
+          "source": "Worker constructor through ready handshake; serial case is zero",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "startup",
+          "metric": "worker startup process CPU total",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "concurrency": 1,
+          "source": "process.cpuUsage delta during Worker construction through ready handshake; serial case is zero",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "startup",
+          "metric": "worker pool startup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 126.615,
+            "spread": {
+              "min": 110.425,
+              "max": 142.523,
+              "range": 32.098
+            },
+            "rawObservations": [
+              118.447,
+              131.342,
+              142.523,
+              126.615,
+              110.425
+            ]
+          },
+          "concurrency": 4,
+          "source": "Worker constructor through ready handshake; serial case is zero",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        },
+        {
+          "phase": "startup",
+          "metric": "worker startup process CPU total",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 5,
+            "median": 760.465,
+            "spread": {
+              "min": 704.464,
+              "max": 846.264,
+              "range": 141.79999999999995
+            },
+            "rawObservations": [
+              760.465,
+              846.264,
+              751.663,
+              831.135,
+              704.464
+            ]
+          },
+          "concurrency": 4,
+          "source": "process.cpuUsage delta during Worker construction through ready handshake; serial case is zero",
+          "population": {
+            "count": 10,
+            "unit": "scenarios",
+            "scope": "FarmEngine scenario scheduler; worker concurrency comparison"
+          }
+        }
+      ]
+    },
+    "coldStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "warmStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "bridgeMarshaling": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "fullScenario": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "uiEndToEnd": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "memory": {
+      "status": "not-measured",
+      "measurements": []
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "engine",
+      "timed": [
+        "scenario execution",
+        "manifest and journal writes",
+        "result verification"
+      ],
+      "notTimed": [
+        "scenario fixture creation",
+        "worker startup",
+        "worker shutdown",
+        "RSS monitor startup"
+      ],
+      "whatIsTimed": [
+        "scenario execution",
+        "manifest and journal writes",
+        "result verification"
+      ],
+      "whatIsNotTimed": [
+        "scenario fixture creation",
+        "worker startup",
+        "worker shutdown",
+        "RSS monitor startup"
+      ]
+    },
+    {
+      "phase": "startup",
+      "timed": [
+        "Worker construction and ready handshake"
+      ],
+      "notTimed": [
+        "scenario fixture creation",
+        "scenario execution",
+        "worker shutdown"
+      ],
+      "whatIsTimed": [
+        "Worker construction and ready handshake"
+      ],
+      "whatIsNotTimed": [
+        "scenario fixture creation",
+        "scenario execution",
+        "worker shutdown"
+      ]
+    },
+    {
+      "phase": "worker",
+      "timed": [
+        "process RSS observations collected while the run executes"
+      ],
+      "notTimed": [
+        "per-worker RSS attribution",
+        "hard process memory enforcement",
+        "memory outside the polling interval"
+      ],
+      "whatIsTimed": [
+        "process RSS observations collected while the run executes"
+      ],
+      "whatIsNotTimed": [
+        "per-worker RSS attribution",
+        "hard process memory enforcement",
+        "memory outside the polling interval"
+      ]
+    }
+  ],
+  "results": {
+    "environment": {
+      "node": "v20.20.2",
+      "platform": "linux",
+      "arch": "x64",
+      "reportedAvailableParallelism": 16,
+      "workloadAvailableWorkers": 4
+    },
+    "workload": {
+      "scenarios": 10,
+      "hours": 24,
+      "seeds": [
+        20261012,
+        20261013,
+        20261014,
+        20261015,
+        20261016,
+        20261017,
+        20261018,
+        20261019,
+        20261020,
+        20261021
+      ]
+    },
+    "measurement": {
+      "workerStartup": "Worker constructor through ready handshake; separate from workload wall and CPU time",
+      "processCpu": "process.cpuUsage delta for the whole Node process during journaled workload; includes CPU used by scenario Worker threads and the RSS monitor thread; worker startup CPU is reported separately",
+      "cpuUtilization": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+      "effectiveWorkerCount": "Concurrency is capped at 4; the pool is limited to four Workers, available parallelism, and the scenario count.",
+      "percentile": "Batch p95 uses nearest-rank from 5 independent measured batches per concurrency; fewer than 30 samples are provisional.",
+      "peakRss": "Independent Worker thread polls process.memoryUsage.rss() every 5ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.",
+      "rssLimit": "Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.",
+      "includes": [
+        "scenario execution",
+        "manifest and journal writes",
+        "result verification"
+      ],
+      "endToEndTime": "worker startup + workload wall + worker shutdown; serial is workload wall only",
+      "excludesFromWorkloadTime": [
+        "scenario fixture creation",
+        "worker startup",
+        "worker shutdown",
+        "RSS monitor startup"
+      ]
+    },
+    "rows": [
+      {
+        "scenarioCount": 10,
+        "concurrency": 1,
+        "workerMemoryLimitMb": null,
+        "sampleCount": 5,
+        "percentileMethod": "nearest-rank; sample p95 is provisional when fewer than 30 independent batch samples are available",
+        "samples": [
+          {
+            "workerStartupMs": 0,
+            "workerStartupCpuMs": {
+              "user": 0,
+              "system": 0,
+              "total": 0
+            },
+            "wallMs": 15.477,
+            "throughputScenariosPerSecond": 646.129,
+            "processCpuMs": {
+              "user": 19.299,
+              "system": 9.474,
+              "total": 28.773
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 185.908,
+              "hostNormalizedPercent": 11.619,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 88805376,
+            "rssSamples": 4,
+            "rssMaxObservedPollGapMs": 5.158,
+            "allPassed": true,
+            "workerShutdownMs": 0,
+            "endToEndMs": 15.477,
+            "endToEndThroughputScenariosPerSecond": 646.12
+          },
+          {
+            "workerStartupMs": 0,
+            "workerStartupCpuMs": {
+              "user": 0,
+              "system": 0,
+              "total": 0
+            },
+            "wallMs": 14.126,
+            "throughputScenariosPerSecond": 707.933,
+            "processCpuMs": {
+              "user": 9.954,
+              "system": 9.174,
+              "total": 19.128
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 135.41,
+              "hostNormalizedPercent": 8.463,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 87642112,
+            "rssSamples": 3,
+            "rssMaxObservedPollGapMs": 5.126,
+            "allPassed": true,
+            "workerShutdownMs": 0,
+            "endToEndMs": 14.126,
+            "endToEndThroughputScenariosPerSecond": 707.914
+          },
+          {
+            "workerStartupMs": 0,
+            "workerStartupCpuMs": {
+              "user": 0,
+              "system": 0,
+              "total": 0
+            },
+            "wallMs": 13.792,
+            "throughputScenariosPerSecond": 725.066,
+            "processCpuMs": {
+              "user": 6.905,
+              "system": 12.154,
+              "total": 19.059
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 138.189,
+              "hostNormalizedPercent": 8.637,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 88420352,
+            "rssSamples": 3,
+            "rssMaxObservedPollGapMs": 5.197,
+            "allPassed": true,
+            "workerShutdownMs": 0,
+            "endToEndMs": 13.792,
+            "endToEndThroughputScenariosPerSecond": 725.058
+          },
+          {
+            "workerStartupMs": 0,
+            "workerStartupCpuMs": {
+              "user": 0,
+              "system": 0,
+              "total": 0
+            },
+            "wallMs": 13.217,
+            "throughputScenariosPerSecond": 756.626,
+            "processCpuMs": {
+              "user": 6.309,
+              "system": 9.649,
+              "total": 15.958
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 120.738,
+              "hostNormalizedPercent": 7.546,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 87916544,
+            "rssSamples": 3,
+            "rssMaxObservedPollGapMs": 5.186,
+            "allPassed": true,
+            "workerShutdownMs": 0,
+            "endToEndMs": 13.217,
+            "endToEndThroughputScenariosPerSecond": 756.601
+          },
+          {
+            "workerStartupMs": 0,
+            "workerStartupCpuMs": {
+              "user": 0,
+              "system": 0,
+              "total": 0
+            },
+            "wallMs": 12.642,
+            "throughputScenariosPerSecond": 791.029,
+            "processCpuMs": {
+              "user": 7.386,
+              "system": 7.932,
+              "total": 15.318
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 121.168,
+              "hostNormalizedPercent": 7.573,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 88035328,
+            "rssSamples": 3,
+            "rssMaxObservedPollGapMs": 5.202,
+            "allPassed": true,
+            "workerShutdownMs": 0,
+            "endToEndMs": 12.642,
+            "endToEndThroughputScenariosPerSecond": 791.014
+          }
+        ],
+        "medianWallMs": 13.792,
+        "p95WallMs": 15.477,
+        "medianThroughputScenariosPerSecond": 725.066,
+        "medianProcessCpuMs": 19.059,
+        "medianCpuUtilizationOneCoreEquivalentPercent": 135.41,
+        "medianCpuUtilizationHostNormalizedPercent": 8.463,
+        "medianWorkerStartupMs": 0,
+        "medianWorkerStartupCpuMs": 0,
+        "medianEndToEndMs": 13.792,
+        "p95EndToEndMs": 15.477,
+        "medianEndToEndThroughputScenariosPerSecond": 725.058,
+        "medianPeakObservedRssBytes": 88035328,
+        "p95PeakObservedRssBytes": 88805376,
+        "allPassed": true
+      },
+      {
+        "scenarioCount": 10,
+        "concurrency": 4,
+        "workerMemoryLimitMb": 128,
+        "sampleCount": 5,
+        "percentileMethod": "nearest-rank; sample p95 is provisional when fewer than 30 independent batch samples are available",
+        "samples": [
+          {
+            "workerStartupMs": 118.447,
+            "workerStartupCpuMs": {
+              "user": 682.479,
+              "system": 77.986,
+              "total": 760.465
+            },
+            "wallMs": 13.624,
+            "throughputScenariosPerSecond": 733.979,
+            "processCpuMs": {
+              "user": 80.647,
+              "system": 14.529,
+              "total": 95.176
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 698.591,
+              "hostNormalizedPercent": 43.662,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 181424128,
+            "rssSamples": 27,
+            "rssMaxObservedPollGapMs": 5.293,
+            "allPassed": true,
+            "workerShutdownMs": 16.194,
+            "endToEndMs": 148.265,
+            "endToEndThroughputScenariosPerSecond": 67.447
+          },
+          {
+            "workerStartupMs": 131.342,
+            "workerStartupCpuMs": {
+              "user": 732.042,
+              "system": 114.222,
+              "total": 846.264
+            },
+            "wallMs": 13.026,
+            "throughputScenariosPerSecond": 767.705,
+            "processCpuMs": {
+              "user": 76.262,
+              "system": 14.476,
+              "total": 90.738
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 696.591,
+              "hostNormalizedPercent": 43.537,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 182800384,
+            "rssSamples": 29,
+            "rssMaxObservedPollGapMs": 5.255,
+            "allPassed": true,
+            "workerShutdownMs": 15.472,
+            "endToEndMs": 159.84,
+            "endToEndThroughputScenariosPerSecond": 62.563
+          },
+          {
+            "workerStartupMs": 142.523,
+            "workerStartupCpuMs": {
+              "user": 653.394,
+              "system": 98.269,
+              "total": 751.663
+            },
+            "wallMs": 14.241,
+            "throughputScenariosPerSecond": 702.196,
+            "processCpuMs": {
+              "user": 111.191,
+              "system": 9.593,
+              "total": 120.784
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 848.143,
+              "hostNormalizedPercent": 53.009,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 183885824,
+            "rssSamples": 31,
+            "rssMaxObservedPollGapMs": 5.24,
+            "allPassed": true,
+            "workerShutdownMs": 15.533,
+            "endToEndMs": 172.297,
+            "endToEndThroughputScenariosPerSecond": 58.039
+          },
+          {
+            "workerStartupMs": 126.615,
+            "workerStartupCpuMs": {
+              "user": 730.289,
+              "system": 100.846,
+              "total": 831.135
+            },
+            "wallMs": 15.685,
+            "throughputScenariosPerSecond": 637.535,
+            "processCpuMs": {
+              "user": 72.972,
+              "system": 30.688,
+              "total": 103.66
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 660.886,
+              "hostNormalizedPercent": 41.305,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 181370880,
+            "rssSamples": 28,
+            "rssMaxObservedPollGapMs": 5.221,
+            "allPassed": true,
+            "workerShutdownMs": 17.508,
+            "endToEndMs": 159.808,
+            "endToEndThroughputScenariosPerSecond": 62.575
+          },
+          {
+            "workerStartupMs": 110.425,
+            "workerStartupCpuMs": {
+              "user": 636.346,
+              "system": 68.118,
+              "total": 704.464
+            },
+            "wallMs": 15.491,
+            "throughputScenariosPerSecond": 645.547,
+            "processCpuMs": {
+              "user": 101.479,
+              "system": 27.95,
+              "total": 129.429
+            },
+            "cpuUtilization": {
+              "oneCoreEquivalentPercent": 835.511,
+              "hostNormalizedPercent": 52.219,
+              "normalizationCores": 16
+            },
+            "peakObservedRssBytes": 183971840,
+            "rssSamples": 25,
+            "rssMaxObservedPollGapMs": 5.231,
+            "allPassed": true,
+            "workerShutdownMs": 15.291,
+            "endToEndMs": 141.207,
+            "endToEndThroughputScenariosPerSecond": 70.818
+          }
+        ],
+        "medianWallMs": 14.241,
+        "p95WallMs": 15.685,
+        "medianThroughputScenariosPerSecond": 702.196,
+        "medianProcessCpuMs": 103.66,
+        "medianCpuUtilizationOneCoreEquivalentPercent": 698.591,
+        "medianCpuUtilizationHostNormalizedPercent": 43.662,
+        "medianWorkerStartupMs": 126.615,
+        "medianWorkerStartupCpuMs": 760.465,
+        "medianEndToEndMs": 159.808,
+        "p95EndToEndMs": 172.297,
+        "medianEndToEndThroughputScenariosPerSecond": 62.575,
+        "medianPeakObservedRssBytes": 182800384,
+        "p95PeakObservedRssBytes": 183971840,
+        "allPassed": true
+      }
+    ]
+  },
+  "limitations": [
+    "Independent Worker thread polls process.memoryUsage.rss() every 5ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.",
+    "Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.",
+    "Concurrency is capped at 4; the pool is limited to four Workers, available parallelism, and the scenario count.",
+    "Synthetic baseline scenarios and this host-specific measurement do not establish performance on other machines."
+  ],
+  "format": "riose-scenario-scheduler-benchmark-v2",
+  "environment": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "arch": "x64",
+    "reportedAvailableParallelism": 16,
+    "workloadAvailableWorkers": 4
+  },
+  "legacyWorkload": {
+    "scenarios": 10,
+    "hours": 24,
+    "seeds": [
+      20261012,
+      20261013,
+      20261014,
+      20261015,
+      20261016,
+      20261017,
+      20261018,
+      20261019,
+      20261020,
+      20261021
+    ]
+  },
+  "measurement": {
+    "workerStartup": "Worker constructor through ready handshake; separate from workload wall and CPU time",
+    "processCpu": "process.cpuUsage delta for the whole Node process during journaled workload; includes CPU used by scenario Worker threads and the RSS monitor thread; worker startup CPU is reported separately",
+    "cpuUtilization": "Per sample, one-core-equivalent percent = (whole-process user+system CPU milliseconds / workload wall milliseconds) * 100. It may exceed 100% when multiple threads run simultaneously. Host-normalized percent divides that value by os.availableParallelism(), the OS-reported available parallelism at capture time; it is not a machine-wide OS utilization reading.",
+    "effectiveWorkerCount": "Concurrency is capped at 4; the pool is limited to four Workers, available parallelism, and the scenario count.",
+    "percentile": "Batch p95 uses nearest-rank from 5 independent measured batches per concurrency; fewer than 30 samples are provisional.",
+    "peakRss": "Independent Worker thread polls process.memoryUsage.rss() every 5ms nominally; each sample also records the largest observed gap, making practical timer scheduling resolution explicit. RSS is process-wide and sampled rather than a hard peak guarantee.",
+    "rssLimit": "Not a hard total-process memory limit: worker old-generation caps do not cap young generation, native allocations, main thread, monitor thread, or process RSS; do not sum RSS values or per-worker caps as a total-process bound.",
+    "includes": [
+      "scenario execution",
+      "manifest and journal writes",
+      "result verification"
+    ],
+    "endToEndTime": "worker startup + workload wall + worker shutdown; serial is workload wall only",
+    "excludesFromWorkloadTime": [
+      "scenario fixture creation",
+      "worker startup",
+      "worker shutdown",
+      "RSS monitor startup"
+    ]
+  },
+  "rows": [
+    {
+      "scenarioCount": 10,
+      "concurrency": 1,
+      "workerMemoryLimitMb": null,
+      "sampleCount": 5,
+      "percentileMethod": "nearest-rank; sample p95 is provisional when fewer than 30 independent batch samples are available",
+      "samples": [
+        {
+          "workerStartupMs": 0,
+          "workerStartupCpuMs": {
+            "user": 0,
+            "system": 0,
+            "total": 0
+          },
+          "wallMs": 15.477,
+          "throughputScenariosPerSecond": 646.129,
+          "processCpuMs": {
+            "user": 19.299,
+            "system": 9.474,
+            "total": 28.773
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 185.908,
+            "hostNormalizedPercent": 11.619,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 88805376,
+          "rssSamples": 4,
+          "rssMaxObservedPollGapMs": 5.158,
+          "allPassed": true,
+          "workerShutdownMs": 0,
+          "endToEndMs": 15.477,
+          "endToEndThroughputScenariosPerSecond": 646.12
+        },
+        {
+          "workerStartupMs": 0,
+          "workerStartupCpuMs": {
+            "user": 0,
+            "system": 0,
+            "total": 0
+          },
+          "wallMs": 14.126,
+          "throughputScenariosPerSecond": 707.933,
+          "processCpuMs": {
+            "user": 9.954,
+            "system": 9.174,
+            "total": 19.128
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 135.41,
+            "hostNormalizedPercent": 8.463,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 87642112,
+          "rssSamples": 3,
+          "rssMaxObservedPollGapMs": 5.126,
+          "allPassed": true,
+          "workerShutdownMs": 0,
+          "endToEndMs": 14.126,
+          "endToEndThroughputScenariosPerSecond": 707.914
+        },
+        {
+          "workerStartupMs": 0,
+          "workerStartupCpuMs": {
+            "user": 0,
+            "system": 0,
+            "total": 0
+          },
+          "wallMs": 13.792,
+          "throughputScenariosPerSecond": 725.066,
+          "processCpuMs": {
+            "user": 6.905,
+            "system": 12.154,
+            "total": 19.059
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 138.189,
+            "hostNormalizedPercent": 8.637,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 88420352,
+          "rssSamples": 3,
+          "rssMaxObservedPollGapMs": 5.197,
+          "allPassed": true,
+          "workerShutdownMs": 0,
+          "endToEndMs": 13.792,
+          "endToEndThroughputScenariosPerSecond": 725.058
+        },
+        {
+          "workerStartupMs": 0,
+          "workerStartupCpuMs": {
+            "user": 0,
+            "system": 0,
+            "total": 0
+          },
+          "wallMs": 13.217,
+          "throughputScenariosPerSecond": 756.626,
+          "processCpuMs": {
+            "user": 6.309,
+            "system": 9.649,
+            "total": 15.958
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 120.738,
+            "hostNormalizedPercent": 7.546,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 87916544,
+          "rssSamples": 3,
+          "rssMaxObservedPollGapMs": 5.186,
+          "allPassed": true,
+          "workerShutdownMs": 0,
+          "endToEndMs": 13.217,
+          "endToEndThroughputScenariosPerSecond": 756.601
+        },
+        {
+          "workerStartupMs": 0,
+          "workerStartupCpuMs": {
+            "user": 0,
+            "system": 0,
+            "total": 0
+          },
+          "wallMs": 12.642,
+          "throughputScenariosPerSecond": 791.029,
+          "processCpuMs": {
+            "user": 7.386,
+            "system": 7.932,
+            "total": 15.318
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 121.168,
+            "hostNormalizedPercent": 7.573,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 88035328,
+          "rssSamples": 3,
+          "rssMaxObservedPollGapMs": 5.202,
+          "allPassed": true,
+          "workerShutdownMs": 0,
+          "endToEndMs": 12.642,
+          "endToEndThroughputScenariosPerSecond": 791.014
+        }
+      ],
+      "medianWallMs": 13.792,
+      "p95WallMs": 15.477,
+      "medianThroughputScenariosPerSecond": 725.066,
+      "medianProcessCpuMs": 19.059,
+      "medianCpuUtilizationOneCoreEquivalentPercent": 135.41,
+      "medianCpuUtilizationHostNormalizedPercent": 8.463,
+      "medianWorkerStartupMs": 0,
+      "medianWorkerStartupCpuMs": 0,
+      "medianEndToEndMs": 13.792,
+      "p95EndToEndMs": 15.477,
+      "medianEndToEndThroughputScenariosPerSecond": 725.058,
+      "medianPeakObservedRssBytes": 88035328,
+      "p95PeakObservedRssBytes": 88805376,
+      "allPassed": true
+    },
+    {
+      "scenarioCount": 10,
+      "concurrency": 4,
+      "workerMemoryLimitMb": 128,
+      "sampleCount": 5,
+      "percentileMethod": "nearest-rank; sample p95 is provisional when fewer than 30 independent batch samples are available",
+      "samples": [
+        {
+          "workerStartupMs": 118.447,
+          "workerStartupCpuMs": {
+            "user": 682.479,
+            "system": 77.986,
+            "total": 760.465
+          },
+          "wallMs": 13.624,
+          "throughputScenariosPerSecond": 733.979,
+          "processCpuMs": {
+            "user": 80.647,
+            "system": 14.529,
+            "total": 95.176
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 698.591,
+            "hostNormalizedPercent": 43.662,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 181424128,
+          "rssSamples": 27,
+          "rssMaxObservedPollGapMs": 5.293,
+          "allPassed": true,
+          "workerShutdownMs": 16.194,
+          "endToEndMs": 148.265,
+          "endToEndThroughputScenariosPerSecond": 67.447
+        },
+        {
+          "workerStartupMs": 131.342,
+          "workerStartupCpuMs": {
+            "user": 732.042,
+            "system": 114.222,
+            "total": 846.264
+          },
+          "wallMs": 13.026,
+          "throughputScenariosPerSecond": 767.705,
+          "processCpuMs": {
+            "user": 76.262,
+            "system": 14.476,
+            "total": 90.738
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 696.591,
+            "hostNormalizedPercent": 43.537,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 182800384,
+          "rssSamples": 29,
+          "rssMaxObservedPollGapMs": 5.255,
+          "allPassed": true,
+          "workerShutdownMs": 15.472,
+          "endToEndMs": 159.84,
+          "endToEndThroughputScenariosPerSecond": 62.563
+        },
+        {
+          "workerStartupMs": 142.523,
+          "workerStartupCpuMs": {
+            "user": 653.394,
+            "system": 98.269,
+            "total": 751.663
+          },
+          "wallMs": 14.241,
+          "throughputScenariosPerSecond": 702.196,
+          "processCpuMs": {
+            "user": 111.191,
+            "system": 9.593,
+            "total": 120.784
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 848.143,
+            "hostNormalizedPercent": 53.009,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 183885824,
+          "rssSamples": 31,
+          "rssMaxObservedPollGapMs": 5.24,
+          "allPassed": true,
+          "workerShutdownMs": 15.533,
+          "endToEndMs": 172.297,
+          "endToEndThroughputScenariosPerSecond": 58.039
+        },
+        {
+          "workerStartupMs": 126.615,
+          "workerStartupCpuMs": {
+            "user": 730.289,
+            "system": 100.846,
+            "total": 831.135
+          },
+          "wallMs": 15.685,
+          "throughputScenariosPerSecond": 637.535,
+          "processCpuMs": {
+            "user": 72.972,
+            "system": 30.688,
+            "total": 103.66
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 660.886,
+            "hostNormalizedPercent": 41.305,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 181370880,
+          "rssSamples": 28,
+          "rssMaxObservedPollGapMs": 5.221,
+          "allPassed": true,
+          "workerShutdownMs": 17.508,
+          "endToEndMs": 159.808,
+          "endToEndThroughputScenariosPerSecond": 62.575
+        },
+        {
+          "workerStartupMs": 110.425,
+          "workerStartupCpuMs": {
+            "user": 636.346,
+            "system": 68.118,
+            "total": 704.464
+          },
+          "wallMs": 15.491,
+          "throughputScenariosPerSecond": 645.547,
+          "processCpuMs": {
+            "user": 101.479,
+            "system": 27.95,
+            "total": 129.429
+          },
+          "cpuUtilization": {
+            "oneCoreEquivalentPercent": 835.511,
+            "hostNormalizedPercent": 52.219,
+            "normalizationCores": 16
+          },
+          "peakObservedRssBytes": 183971840,
+          "rssSamples": 25,
+          "rssMaxObservedPollGapMs": 5.231,
+          "allPassed": true,
+          "workerShutdownMs": 15.291,
+          "endToEndMs": 141.207,
+          "endToEndThroughputScenariosPerSecond": 70.818
+        }
+      ],
+      "medianWallMs": 14.241,
+      "p95WallMs": 15.685,
+      "medianThroughputScenariosPerSecond": 702.196,
+      "medianProcessCpuMs": 103.66,
+      "medianCpuUtilizationOneCoreEquivalentPercent": 698.591,
+      "medianCpuUtilizationHostNormalizedPercent": 43.662,
+      "medianWorkerStartupMs": 126.615,
+      "medianWorkerStartupCpuMs": 760.465,
+      "medianEndToEndMs": 159.808,
+      "p95EndToEndMs": 172.297,
+      "medianEndToEndThroughputScenariosPerSecond": 62.575,
+      "medianPeakObservedRssBytes": 182800384,
+      "p95PeakObservedRssBytes": 183971840,
+      "allPassed": true
+    }
+  ]
+}

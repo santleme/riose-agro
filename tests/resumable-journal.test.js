@@ -27,12 +27,12 @@ async function setup(t, runs = ['r1', 'r2', 'r3']) {
   };
 }
 
-test('writes the plan first, then atomically journals each completed run and skips verified outputs on resume', async t => {
+test('writes the plan first, journals each completion and skips verified outputs on resume', async t => {
   const options = await setup(t);
   const called = [];
   const first = await runResumableBatch({...options, executeRun: async run => {
     called.push(run.runId);
-    assert.equal(JSON.parse(await readFile(options.manifestPath, 'utf8')).runs.find(item => item.runId === run.runId).status, 'running');
+    assert.equal(run.status, 'running');
     return {gain: {value: 10 + called.length, unit: 'kg/day'}};
   }});
   assert.deepEqual(called, ['r1', 'r2', 'r3']);
@@ -54,18 +54,58 @@ test('rejects a resume when engine identity or declared inputs changed', async t
   await assert.rejects(() => runResumableBatch({...options, manifest: changedPlan, executeRun: async () => ({})}), /plan does not match/);
 });
 
-test('an interruption after the durable running status restarts only the unfinished runs', async t => {
+test('an interruption before a manifest checkpoint recovers durable journal rows and runs only unfinished work', async t => {
   const options = await setup(t);
   await assert.rejects(() => runResumableBatch({...options,
     executeRun: async () => ({gain: {value: 7, unit: 'kg/day'}}),
     onProgress: ({runId, status}) => { if (runId === 'r2' && status === 'running') throw new Error('simulated process interruption'); },
   }), /simulated process interruption/);
   const interrupted = JSON.parse(await readFile(options.manifestPath, 'utf8'));
-  assert.deepEqual(interrupted.runs.map(run => run.status), ['completed', 'running', 'planned']);
+  assert.deepEqual(interrupted.runs.map(run => run.status), ['planned', 'planned', 'planned']);
   const called = [];
   const resumed = await runResumableBatch({...options, executeRun: async run => { called.push(run.runId); return {gain: {value: 8, unit: 'kg/day'}}; }});
   assert.deepEqual(called, ['r2', 'r3']);
   assert.equal(resumed.completedRuns, 3);
+});
+
+test('manifest updates are checkpointed in configured groups while every result is journaled immediately', async t => {
+  const options = await setup(t, ['r1', 'r2', 'r3']);
+  const manifestStates = [];
+  const result = await runResumableBatch({...options, manifestCheckpointInterval: 2,
+    executeRun: async run => ({gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}}),
+    onProgress: async ({status}) => {
+      if (status === 'completed') {
+        manifestStates.push(JSON.parse(await readFile(options.manifestPath, 'utf8')).runs.map(run => run.status));
+        assert.equal((await readFile(options.resultsPath, 'utf8')).trim().split('\n').length, manifestStates.length);
+      }
+    },
+  });
+  assert.deepEqual(manifestStates, [
+    ['planned', 'planned', 'planned'],
+    ['completed', 'completed', 'planned'],
+    ['completed', 'completed', 'planned'],
+  ]);
+  assert.equal(result.completedRuns, 3);
+  assert.deepEqual(result.manifest.runs.map(run => run.status), ['completed', 'completed', 'completed']);
+});
+
+test('resume verifies multiple planned journal rows after interruption within a checkpoint group', async t => {
+  const options = await setup(t, ['r1', 'r2', 'r3']);
+  await assert.rejects(() => runResumableBatch({...options, manifestCheckpointInterval: 3,
+    executeRun: async run => ({gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}}),
+    onProgress: ({runId, status}) => { if (runId === 'r2' && status === 'completed') throw new Error('interrupted before checkpoint'); },
+  }), /interrupted before checkpoint/);
+  assert.deepEqual(JSON.parse(await readFile(options.manifestPath, 'utf8')).runs.map(run => run.status), ['planned', 'planned', 'planned']);
+
+  const verifiedStatuses = [];
+  const executed = [];
+  const result = await runResumableBatch({...options, manifestCheckpointInterval: 3,
+    verifyCompletedRun: async run => { verifiedStatuses.push(run.status); return true; },
+    executeRun: async run => { executed.push(run.runId); return {gain: {value: Number(run.runId.slice(1)), unit: 'kg/day'}}; },
+  });
+  assert.deepEqual(verifiedStatuses, ['planned', 'planned', 'planned', 'planned']);
+  assert.deepEqual(executed, ['r3']);
+  assert.equal(result.completedRuns, 3);
 });
 
 test('a digest mismatch or corrupt JSONL row is discarded and the run safely reruns', async t => {
