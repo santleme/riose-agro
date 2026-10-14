@@ -10,6 +10,7 @@ import {
   replayConfiguredComparisonManifest,
   validateConfiguredComparisonManifest
 } from '../src/client/engine.js';
+import {createDemoLotContext,createDemoLotManifestEnvelope,isolateDemoLotSnapshot,resolveDemoLot,validateDemoLotManifestEnvelope} from '../src/client/lot-selection.js';
 
 const pairs = [
   ['diet', {diet: 'pasture'}, {diet: 'balanced'}],
@@ -57,6 +58,23 @@ test('configured comparison and its versioned manifest replay deterministically'
   const second = replayConfiguredComparisonManifest(JSON.parse(JSON.stringify(roundTrip)));
   assert.deepEqual(first, second);
   assert.deepEqual(first, compareConfiguredScenarios(snapshot, options));
+});
+
+test('lot context is tied to one isolated demo paddock and survives manifest replay validation',()=>{
+  const source=new FarmEngine(661,12).snapshot(),lot=resolveDemoLot(source,1),snapshot=isolateDemoLotSnapshot(source,lot);
+  const referenceConfig={...snapshot.config,diet:'pasture'},scenarioConfig={...snapshot.config,diet:'balanced'};
+  const lotContext=createDemoLotContext(lot,'diet',referenceConfig,scenarioConfig);
+  const manifest=createConfiguredComparisonManifest(snapshot,{referenceConfig,scenarioConfig,days:2});
+  const decoded=JSON.parse(JSON.stringify(createDemoLotManifestEnvelope(manifest,lotContext)));
+  assert.equal(validateDemoLotManifestEnvelope(decoded),true);
+  assert.equal(validateConfiguredComparisonManifest(decoded.manifest),true);
+  assert.deepEqual(replayConfiguredComparisonManifest(decoded.manifest),compareConfiguredScenarios(snapshot,{referenceConfig,scenarioConfig,days:2}));
+  for(const mutate of [
+    value=>{value.lotContext.lotId='demo-paddock-1';},
+    value=>{value.lotContext.animalIds[0]=999;},
+    value=>{value.lotContext.source='observed-study-slice';},
+    value=>{value.lotContext.intervention.scenarioValue='concentrate';}
+  ]){const invalid=structuredClone(decoded);mutate(invalid);assert.throws(()=>validateDemoLotManifestEnvelope(invalid),/Contexto de lote/);}
 });
 
 test('configured comparison rejects multiple config differences and invalid complete configs', () => {

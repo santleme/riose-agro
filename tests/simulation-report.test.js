@@ -50,6 +50,17 @@ test('renders registered scientific model identity, units, evidence status, and 
   assert.match(report,/a resolução não promove evidência nem valida o modelo/);
 });
 
+test('demo lot provenance stays attached to the portable comparison report',()=>{
+  const result={days:1,herdSize:2,startWeight:340,validated:false,rows:[{day:1}],assumptions:{}};
+  const report=renderSimulationReport(result,{}, {lotContext:{lotId:'demo-paddock-2',animalIds:[2,6],
+    model:{id:'riose-registered-demo-lot',version:'1.0.0',status:'demonstrative_unvalidated',evidenceStatus:'no_empirical_validation',evidenceReferences:[{id:'src/client/engine.js',status:'registered_demo_implementation'}]},
+    intervention:{factor:'diet',referenceValue:'pasture',scenarioValue:'balanced'}}});
+  assert.match(report,/ID estável: demo-paddock-2/);
+  assert.match(report,/IDs de animais simulados: 2, 6/);
+  assert.match(report,/Evidência do modelo: no_empirical_validation; referência: src\/client\/engine\.js \(registered_demo_implementation\)/);
+  assert.match(report,/Dados de snapshots observados não foram usados/);
+});
+
 test('keeps missing and non-finite values explicit without substituting zero',()=>{
   const snapshot=new FarmEngine(42,2).snapshot();
   const result=compare(snapshot,1);
@@ -83,7 +94,7 @@ test('comparison dialog exports the generated Markdown report',async()=>{
   const snapshot=new FarmEngine(42,2).snapshot(),manifest=createComparisonManifest(snapshot,1),result=compare(snapshot,1);
   const downloads=[],button={};
   const context=vm.createContext({
-    comparison:result,comparisonManifest:manifest,requestCompare:false,loadingScenario:false,
+    comparison:result,comparisonManifest:manifest,comparisonLotContext:null,requestCompare:false,loadingScenario:false,
     renderSimulationReport,downloadFile:(...args)=>downloads.push(args),notify:()=>{},$:()=>button
   });
   vm.runInContext(binding,context);
