@@ -119,15 +119,25 @@ def cpu_model() -> str | None:
     return platform.processor() or None
 
 
-def native_library() -> ctypes.CDLL:
-    build = subprocess.run(["cargo", "build", "--release", "-p", "riose-core"], cwd=ROOT,
-                           capture_output=True, text=True)
-    if build.returncode:
-        raise RuntimeError(f"cargo build failed: {build.stderr[-2000:]}")
-    library = ctypes.CDLL(str(ROOT / "target/release/libriose_core.so"))
+def native_library(prebuilt_library: Path | None = None) -> ctypes.CDLL:
+    if prebuilt_library is None:
+        build = subprocess.run(["cargo", "build", "--release", "-p", "riose-core"], cwd=ROOT,
+                               capture_output=True, text=True)
+        if build.returncode:
+            raise RuntimeError(f"cargo build failed: {build.stderr[-2000:]}")
+        library_path = ROOT / "target/release/libriose_core.so"
+        build_mode = "cargo-build"
+    else:
+        library_path = prebuilt_library.expanduser().resolve()
+        if not library_path.is_file():
+            raise FileNotFoundError(f"native library does not exist: {library_path}")
+        build_mode = "prebuilt"
+    library = ctypes.CDLL(str(library_path))
     library.riose_update_metabolism_batch.argtypes = [
         ctypes.c_size_t, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
     library.riose_update_metabolism_batch.restype = ctypes.c_int
+    library.benchmark_native_provenance = {"mode": build_mode, "path": str(library_path),
+                                           "sha256": hashlib.sha256(library_path.read_bytes()).hexdigest()}
     return library
 
 
@@ -279,7 +289,7 @@ def device_metadata(driver: CudaDriver) -> dict:
         return {**driver.metadata(), "nvidiaSmiName": None, "driverVersion": None, "gpuMemoryBytes": None}
 
 
-def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int, initialization_ms: float) -> dict:
+def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int) -> dict:
     host_setup_samples: list[float] = []
     allocation_samples: list[float] = []
     h2d_samples: list[float] = []
@@ -363,9 +373,7 @@ def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int, initializatio
     finally:
         driver.free(out_ptr); driver.free(in_ptr)
 
-    gpu_first_total_samples = [initialization_ms + value for value in gpu_total_samples]
     warm_speedup = statistics.median(cpu_total_samples) / max(statistics.median(gpu_total_samples), 1e-12)
-    cold_speedup = statistics.median(cpu_total_samples) / max(statistics.median(gpu_first_total_samples), 1e-12)
     return {"animals": count, "correctness": correctness,
             "cpuKernel": statistics_for(cpu_kernel_samples), "cpuTotal": statistics_for(cpu_total_samples),
             "initialHostSetup": statistics_for(host_setup_samples),
@@ -373,10 +381,9 @@ def run_case(driver: CudaDriver, library: ctypes.CDLL, count: int, initializatio
             "kernelLaunchHost": statistics_for(launch_samples), "synchronization": statistics_for(sync_samples),
             "gpuKernel": statistics_for(kernel_samples),
             "d2h": statistics_for(d2h_samples), "gpuTotal": statistics_for(gpu_total_samples),
-            "gpuFirstRunTotal": statistics_for(gpu_first_total_samples),
             "gpuSteadyStateWithTransfers": statistics_for(steady_samples),
             "kernelOnlySpeedup": statistics.median(cpu_kernel_samples) / max(statistics.median(kernel_samples), 1e-12),
-            "warmEndToEndSpeedup": warm_speedup, "firstRunEndToEndSpeedup": cold_speedup,
+            "warmEndToEndSpeedup": warm_speedup,
             "hostInputBytes": count * 4 * 8, "hostOutputBytes": count * 2 * 8,
             "deviceInputBytes": count * 4 * 8, "deviceOutputBytes": count * 2 * 8}
 
@@ -393,6 +400,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--native-library", type=Path,
+                        help="use a prebuilt riose_core shared library instead of building with Cargo")
     args = parser.parse_args()
     if WARMUPS < 0 or REPETITIONS < 1:
         raise ValueError("warmups must be >= 0 and repetitions >= 1")
@@ -407,7 +416,7 @@ def main() -> None:
         print(json.dumps(report, indent=2)); return
     init_ms = (time.perf_counter_ns() - initialized) / 1_000_000
     try:
-        library = native_library()
+        library = native_library(args.native_library)
         preflight_values = cattle_input(100)
         preflight_cpu = native_call(library, preflight_values, 100)
         in_ptr = driver.allocate(len(preflight_values) * 8)
@@ -429,7 +438,7 @@ def main() -> None:
                               "correctness": correctness}, indent=2))
             return
 
-        rows = [run_case(driver, library, count, init_ms) for count in SIZES]
+        rows = [run_case(driver, library, count) for count in SIZES]
         warm_speedups = [row["warmEndToEndSpeedup"] for row in rows]
         if all(speedup <= 1.0 for speedup in warm_speedups):
             decision = "NO_GO"
@@ -452,14 +461,14 @@ def main() -> None:
                                        ("synchronization", "accelerator_synchronization", "deviceSynchronization"),
                                        ("d2h", "device_to_host_transfer", "outputCopy"),
                                        ("gpuTotal", "accelerator_total_run", "deviceEndToEnd"),
-                                       ("gpuFirstRunTotal", "accelerator_first_run_total", "deviceFirstRunTotal"),
                                        ("gpuSteadyStateWithTransfers", "accelerator_steady_state", "deviceSteadyStateWithTransfers")):
                 measurements.append(measurement(label, metric, row[key]["rawObservations"], count,
                                                 "real CUDA Driver API PTX kernel; no CPU fallback" if key not in ("cpuKernel", "cpuTotal") else "riose_core::update_metabolism via native C ABI"))
         report = {"schemaVersion": 2,
                   "benchmark": {"name": "cattle-metabolism-cpu-nvidia-cuda", "source": source_info()},
                   "runtime": {"platform": sys.platform, "python": platform.python_version(),
-                              "cudaDriverApiVersion": hardware["cudaDriverApiVersion"]},
+                              "cudaDriverApiVersion": hardware["cudaDriverApiVersion"],
+                              "nativeLibrary": library.benchmark_native_provenance},
                   "hardware": {"os": platform.platform(), "architecture": platform.machine(),
                                "cpu": cpu_model(), "gpuMemoryBytes": hardware["gpuMemoryBytes"],
                                "accelerator": hardware},
@@ -499,7 +508,7 @@ def main() -> None:
                   "results": {"decision": decision, "decisionReason": decision_reason, "rows": rows,
                               "correctness": {"status": "passed", "method": "native Rust baseline compared with CUDA output at all sizes and each repetition", "tolerance": {"relative": REL_TOLERANCE, "absolute": ABS_TOLERANCE}},
                               "gpuExecutionClaim": True,
-                              "interpretation": "Use endToEndSpeedup and gpuSteadyStateWithTransfers for accelerator decisions; kernelOnlySpeedup excludes transfers, allocation, host input setup and synchronization."},
+                              "interpretation": "Use warmEndToEndSpeedup and gpuSteadyStateWithTransfers for accelerator decisions; kernelOnlySpeedup excludes transfers, allocation, host input setup, synchronization and device-buffer frees."},
                   "limitations": ["Hardware tested: one NVIDIA GeForce GTX 1060 6GB; this is not AMD/ROCm evidence and supports no cross-vendor claim.",
                                   "The workload is the native metabolism numeric kernel used by FarmEngine, not a full farm simulation or renderer.",
                                   "The 100,000-animal case exceeds current FarmEngine and renderer limits and is isolated kernel research only.",

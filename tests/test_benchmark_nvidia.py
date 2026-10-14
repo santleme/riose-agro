@@ -1,8 +1,10 @@
 import contextlib
 import importlib.util
 import io
+import hashlib
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -24,6 +26,25 @@ class NvidiaBenchmarkTests(unittest.TestCase):
         self.assertTrue(benchmark.compare(expected, within_tolerance)["equivalent"])
         self.assertFalse(benchmark.compare(expected, outside_tolerance)["equivalent"])
         self.assertFalse(benchmark.compare(expected, benchmark.array.array("d", [330.0]))["equivalent"])
+
+
+    def test_prebuilt_native_library_skips_cargo_and_records_hash(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "libriose_core.so"
+            path.write_bytes(b"native-library-fixture")
+            fake_function = type("FakeFunction", (), {})()
+            fake_library = type("FakeLibrary", (), {"riose_update_metabolism_batch": fake_function})()
+            with patch.object(benchmark.ctypes, "CDLL", return_value=fake_library), \
+                 patch.object(benchmark.subprocess, "run", side_effect=AssertionError("Cargo should not run")):
+                library = benchmark.native_library(path)
+
+        self.assertIs(library, fake_library)
+        self.assertEqual(library.benchmark_native_provenance["mode"], "prebuilt")
+        self.assertEqual(library.benchmark_native_provenance["sha256"], hashlib.sha256(b"native-library-fixture").hexdigest())
+
+    def test_missing_prebuilt_native_library_fails_with_path(self):
+        with self.assertRaises(FileNotFoundError):
+            benchmark.native_library(Path("/no/such/libriose_core.so"))
 
     def test_missing_cuda_backend_is_an_explicit_skip_without_gpu_claim(self):
         output = io.StringIO()
