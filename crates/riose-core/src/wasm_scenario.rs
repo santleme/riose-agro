@@ -64,7 +64,8 @@ pub unsafe extern "C" fn riose_scenario_run_json(input: *const u8, length: usize
     let Ok(encoded) = serde_json::to_vec(&result) else {
         return 0;
     };
-    if encoded.is_empty() || encoded.len() > MAX_RESPONSE_BYTES || encoded.len() > u32::MAX as usize {
+    if encoded.is_empty() || encoded.len() > MAX_RESPONSE_BYTES || encoded.len() > u32::MAX as usize
+    {
         return 0;
     }
     let length = encoded.len() as u32;
