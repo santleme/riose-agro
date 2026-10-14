@@ -3,7 +3,11 @@ const record = value => value !== null && typeof value === 'object' && !Array.is
 export const DEMO_LOT_MODEL = Object.freeze({
   id: 'riose-registered-demo-lot',
   version: '1.0.0',
-  status: 'demonstrative_unvalidated'
+  status: 'demonstrative_unvalidated',
+  evidenceStatus: 'no_empirical_validation',
+  evidenceReferences: Object.freeze([
+    Object.freeze({id: 'src/client/engine.js', locator: 'src/client/engine.js#FarmEngine', status: 'registered_demo_implementation'})
+  ])
 });
 
 /** A map patch is a stable lot in the registered demo farm, independent of observed snapshots. */
@@ -48,7 +52,7 @@ export function createDemoLotContext(demoLot, factor, referenceConfig, scenarioC
     lotId: demoLot.lotId,
     patchIndex: demoLot.patchIndex,
     animalIds: [...demoLot.animalIds],
-    model: {...DEMO_LOT_MODEL},
+    model: {...DEMO_LOT_MODEL, evidenceReferences: DEMO_LOT_MODEL.evidenceReferences.map(reference => ({...reference}))},
     intervention: {
       factor,
       referenceValue: referenceConfig[factor],
@@ -68,7 +72,10 @@ export function validateDemoLotContext(context, snapshot, factor, referenceConfi
     ||new Set(context.animalIds).size!==context.animalIds.length
     ||context.model?.id!==DEMO_LOT_MODEL.id||context.model.version!==DEMO_LOT_MODEL.version
     ||context.model.status!==DEMO_LOT_MODEL.status
-    ||Object.keys(context.model).sort().join(',')!=='id,status,version'
+    ||context.model.evidenceStatus!==DEMO_LOT_MODEL.evidenceStatus
+    ||Object.keys(context.model).sort().join(',')!=='evidenceReferences,evidenceStatus,id,status,version'
+    ||!Array.isArray(context.model.evidenceReferences)
+    ||JSON.stringify(context.model.evidenceReferences)!==JSON.stringify(DEMO_LOT_MODEL.evidenceReferences)
     ||!context.intervention||Object.keys(context.intervention).sort().join(',')!=='factor,referenceValue,scenarioValue'
     ||context.intervention.factor!==factor
     ||context.intervention.referenceValue!==referenceConfig?.[factor]

@@ -23,11 +23,23 @@
         "animalIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
         "model": {
           "type": "object", "additionalProperties": false,
-          "required": ["id", "version", "status"],
+          "required": ["id", "version", "status", "evidenceStatus", "evidenceReferences"],
           "properties": {
             "id": {"const": "riose-registered-demo-lot"},
             "version": {"const": "1.0.0"},
-            "status": {"const": "demonstrative_unvalidated"}
+            "status": {"const": "demonstrative_unvalidated"},
+            "evidenceStatus": {"const": "no_empirical_validation"},
+            "evidenceReferences": {
+              "type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": false,
+                "required": ["id", "locator", "status"],
+                "properties": {
+                  "id": {"const": "src/client/engine.js"},
+                  "locator": {"const": "src/client/engine.js#FarmEngine"},
+                  "status": {"const": "registered_demo_implementation"}
+                }
+              }
+            }
           }
         },
         "intervention": {

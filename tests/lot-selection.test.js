@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {resolveLotSelection, formatLotArea, resolveDemoLot, isolateDemoLotSnapshot} from '../src/client/lot-selection.js';
+import {resolveLotSelection, formatLotArea, resolveDemoLot, isolateDemoLotSnapshot, createDemoLotContext, validateDemoLotContext, DEMO_LOT_MODEL} from '../src/client/lot-selection.js';
 import {FarmEngine} from '../src/client/engine.js';
 
 const example = JSON.parse(await readFile(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));
@@ -66,4 +66,15 @@ test('registered demo lot IDs are stable and isolation preserves the shared snap
   assert.deepEqual(snapshot,before);
   assert.equal(resolveDemoLot(snapshot,9),null);
   assert.throws(()=>isolateDemoLotSnapshot(snapshot,{...lot,animalIds:[...lot.animalIds,999]}),/não correspondem/);
+});
+
+test('demo lot provenance records model evidence without claiming empirical validation',()=>{
+  const snapshot=new FarmEngine(88,12).snapshot(),lot=resolveDemoLot(snapshot,1);
+  const context=createDemoLotContext(lot,'diet',{diet:'pasture'},{diet:'balanced'});
+  const isolated=isolateDemoLotSnapshot(snapshot,lot);
+  assert.equal(context.model.evidenceStatus,'no_empirical_validation');
+  assert.deepEqual(context.model.evidenceReferences,DEMO_LOT_MODEL.evidenceReferences);
+  assert.equal(validateDemoLotContext(context,isolated,'diet',{diet:'pasture'},{diet:'balanced'}),true);
+  context.model.evidenceReferences=[];
+  assert.throws(()=>validateDemoLotContext(context,isolated,'diet',{diet:'pasture'},{diet:'balanced'}),/incompatível/);
 });

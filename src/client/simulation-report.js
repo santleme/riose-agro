@@ -75,6 +75,7 @@ export function renderSimulationReport(result, manifest, {lotContext} = {}) {
     `- ID estável: ${valueText(lotContext.lotId)}`,
     `- IDs de animais simulados: ${Array.isArray(lotContext.animalIds)?lotContext.animalIds.join(', '):unavailable}`,
     `- Modelo: ${valueText(lotContext.model?.id)}@${valueText(lotContext.model?.version)}; estado: ${valueText(lotContext.model?.status)}`,
+    `- Evidência do modelo: ${valueText(lotContext.model?.evidenceStatus)}; referência: ${Array.isArray(lotContext.model?.evidenceReferences)?lotContext.model.evidenceReferences.map(reference=>valueText(reference.id)+' ('+valueText(reference.status)+')').join('; '):unavailable}`,
     `- Intervenção única: ${valueText(lotContext.intervention?.factor)} ${valueText(lotContext.intervention?.referenceValue)} → ${valueText(lotContext.intervention?.scenarioValue)}`,
     '- Dados de snapshots observados não foram usados como estado inicial.'
   ].join('\n'):null;

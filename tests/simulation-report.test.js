@@ -53,10 +53,11 @@ test('renders registered scientific model identity, units, evidence status, and 
 test('demo lot provenance stays attached to the portable comparison report',()=>{
   const result={days:1,herdSize:2,startWeight:340,validated:false,rows:[{day:1}],assumptions:{}};
   const report=renderSimulationReport(result,{}, {lotContext:{lotId:'demo-paddock-2',animalIds:[2,6],
-    model:{id:'riose-registered-demo-lot',version:'1.0.0',status:'demonstrative_unvalidated'},
+    model:{id:'riose-registered-demo-lot',version:'1.0.0',status:'demonstrative_unvalidated',evidenceStatus:'no_empirical_validation',evidenceReferences:[{id:'src/client/engine.js',status:'registered_demo_implementation'}]},
     intervention:{factor:'diet',referenceValue:'pasture',scenarioValue:'balanced'}}});
   assert.match(report,/ID estável: demo-paddock-2/);
   assert.match(report,/IDs de animais simulados: 2, 6/);
+  assert.match(report,/Evidência do modelo: no_empirical_validation; referência: src\/client\/engine\.js \(registered_demo_implementation\)/);
   assert.match(report,/Dados de snapshots observados não foram usados/);
 });
 
