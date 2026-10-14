@@ -7,6 +7,13 @@ export const PRODUCT_WORLD = Object.freeze({
   unit: 'cell', width: 34, height: 16,
   tile: {width: 26, height: 14}, origin: {x: 283, y: 32}, soilDepth: 18,
 });
+// Irregular playable land perimeter in world-grid coordinates. Keeping it as
+// scene data prevents the renderer from framing the farm as a rectangular slab.
+export const PRODUCT_WORLD_OUTLINE = Object.freeze([
+  [0, 3], [2, 1], [5, 0], [12, 0], [15, 1], [19, 0], [29, 0], [32, 1], [34, 3],
+  [33, 5], [34, 7], [33, 9], [34, 12], [32, 14], [29, 15], [24, 16], [18, 15],
+  [13, 16], [8, 15], [4, 16], [1, 14], [0, 11], [1, 8], [0, 6],
+]);
 export const PRODUCT_CANVAS_SIZE=Object.freeze({width:800,height:416});
 export const PRODUCT_PREFABS = Object.freeze({
   pasture: {footprint: [6, 4], physicalClearance: 0, visualClearance: 0},
@@ -66,14 +73,121 @@ export const PRODUCT_BLOCKOUT = {
     {id:'gate-d', zone:'paddock-d', a:{x:14,y:8}, b:{x:14,y:9}, connects:'south-lane'},
     {id:'yard-gate', zone:'working-pen', a:{x:23,y:8}, b:{x:24,y:8}, connects:'crop-connector'},
   ],
-  // Relative placement is reserved for later art; blockout stays readable.
-  vegetation: [],
+  // Decorative placements are part of the scene data, not renderer constants.
+  // These are visual props only; they do not affect grazing or simulation state.
+  vegetation: [
+    {id:'tree-north-west', asset:'vegetation-tree-shade-imagegen-v1', x:1.6, y:2.8},
+    {id:'tree-north-west-inner', asset:'vegetation-tree-shade-imagegen-v1', x:4, y:1.2},
+    {id:'tree-north-mid', asset:'vegetation-tree-shade-imagegen-v1', x:11, y:.4},
+    {id:'tree-north-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:15, y:1.6},
+    {id:'tree-north-east', asset:'vegetation-tree-shade-imagegen-v1', x:23, y:.25},
+    {id:'tree-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:30, y:1},
+    {id:'tree-east', asset:'vegetation-tree-shade-imagegen-v1', x:32, y:3},
+    {id:'tree-west', asset:'vegetation-tree-shade-imagegen-v1', x:1, y:12},
+    {id:'tree-south-west', asset:'vegetation-tree-shade-imagegen-v1', x:7, y:14},
+    {id:'tree-south-mid', asset:'vegetation-tree-shade-imagegen-v1', x:15, y:15},
+    {id:'tree-south-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:25, y:14},
+    {id:'tree-east-south', asset:'vegetation-tree-shade-imagegen-v1', x:31, y:11},
+  ],
 };
 
 export function worldToScreen(x, y, world = PRODUCT_WORLD) {
   const {width:tw,height:th}=world.tile;
   return {x:world.origin.x+(x-y)*tw/2,y:world.origin.y+(x+y)*th/2};
 }
+
+export function productWorldOutline(scene = PRODUCT_BLOCKOUT) {
+  const world = scene.world ?? PRODUCT_WORLD;
+  const scaleX = world.width / PRODUCT_WORLD.width, scaleY = world.height / PRODUCT_WORLD.height;
+  return PRODUCT_WORLD_OUTLINE.map(([x, y]) => ({x: x * scaleX, y: y * scaleY}));
+}
+
+// Only the southern half of the contour gets a visible soil face in this
+// 2.5D view. This preserves the island edge without drawing a closed display
+// frame around the whole map.
+export function productWorldFrontEdges(scene = PRODUCT_BLOCKOUT) {
+  const world = scene.world ?? PRODUCT_WORLD;
+  const points = productWorldOutline(scene).map(point => worldToScreen(point.x, point.y, world));
+  const middleY = (Math.min(...points.map(point => point.y)) + Math.max(...points.map(point => point.y))) / 2;
+  return points.flatMap((from, index) => {
+    const to = points[(index + 1) % points.length];
+    if ((from.y + to.y) / 2 < middleY) return [];
+    return [{from, to, shade: to.x < from.x ? 'side' : 'front'}];
+  });
+}
+
+// Scene-derived ground placements form a small, deterministic tile layer. An
+// explicit terrainTiles array can replace this generator when an authored map
+// is connected; the fallback keeps the current blockout reproducible.
+export function productGroundTiles(scene = PRODUCT_BLOCKOUT) {
+  if (Array.isArray(scene.terrainTiles) && scene.terrainTiles.length) {
+    return scene.terrainTiles.map(tile => ({
+      id: tile.id ?? `ground-${tile.x}-${tile.y}`,
+      assetId: tile.assetId ?? 'grass-light',
+      x: tile.x,
+      y: tile.y,
+      zoneId: tile.zoneId ?? null,
+    }));
+  }
+  const tiles = new Map(), world = scene.world ?? PRODUCT_WORLD;
+  for (const zone of scene.zones ?? []) {
+    for (let y = Math.floor(zone.y); y < Math.ceil(zone.y + zone.h); y++) {
+      for (let x = Math.floor(zone.x); x < Math.ceil(zone.x + zone.w); x++) {
+        if (x < 0 || y < 0 || x >= world.width || y >= world.height) continue;
+        const hash = (x * 37 + y * 71 + x * y * 13) % 101;
+        tiles.set(`${x},${y}`, {
+          id: `ground-${x}-${y}`,
+          assetId: hash > 77 ? 'grass-mid' : 'grass-light',
+          x,
+          y,
+          zoneId: zone.id,
+        });
+      }
+    }
+  }
+  return [...tiles.values()].sort((a, b) => a.x + a.y - b.x - b.y || a.y - b.y || a.x - b.x);
+}
+
+// The current fence art is a composed multi-post section, not a one-cell edge
+// tile. Return continuous, gate-aware runs for connected line rendering.
+export function productFenceRuns(scene = PRODUCT_BLOCKOUT) {
+  const runs = [];
+  for (const zone of scene.zones ?? []) {
+    const edges = [
+      {id: 'north', axis: 'x', fixed: zone.y, start: zone.x, length: zone.w},
+      {id: 'east', axis: 'y', fixed: zone.x + zone.w, start: zone.y, length: zone.h},
+      {id: 'south', axis: 'x', fixed: zone.y + zone.h, start: zone.x, length: zone.w},
+      {id: 'west', axis: 'y', fixed: zone.x, start: zone.y, length: zone.h},
+    ];
+    for (const edge of edges) {
+      const end = edge.start + edge.length;
+      const openings = (scene.gates ?? []).filter(gate => gate.zone === zone.id).flatMap(gate => {
+        const [a, b] = [gate.a, gate.b];
+        const aligned = edge.axis === 'x'
+          ? Math.abs(a.y - edge.fixed) < 1e-6 && Math.abs(b.y - edge.fixed) < 1e-6
+          : Math.abs(a.x - edge.fixed) < 1e-6 && Math.abs(b.x - edge.fixed) < 1e-6;
+        if (!aligned) return [];
+        const from = Math.max(edge.start, Math.min(a[edge.axis], b[edge.axis]));
+        const to = Math.min(end, Math.max(a[edge.axis], b[edge.axis]));
+        return to - from > 1e-6 ? [{from, to}] : [];
+      }).sort((a, b) => a.from - b.from);
+      const spans = [];
+      let cursor = edge.start;
+      for (const opening of openings) {
+        if (opening.from > cursor + 1e-6) spans.push([cursor, opening.from]);
+        cursor = Math.max(cursor, opening.to);
+      }
+      if (cursor < end - 1e-6) spans.push([cursor, end]);
+      for (const [from, to] of spans) {
+        const start = edge.axis === 'x' ? {x: from, y: edge.fixed} : {x: edge.fixed, y: from};
+        const finish = edge.axis === 'x' ? {x: to, y: edge.fixed} : {x: edge.fixed, y: to};
+        runs.push({id: `fence-${zone.id}-${edge.id}-${from}-${to}`, zoneId: zone.id, edge: edge.id, from: start, to: finish, length: to - from});
+      }
+    }
+  }
+  return runs;
+}
+
 export function screenToWorld(x, y, world = PRODUCT_WORLD) {
   const dx=(x-world.origin.x)/(world.tile.width/2),dy=(y-world.origin.y)/(world.tile.height/2);
   return {x:(dx+dy)/2,y:(dy-dx)/2};

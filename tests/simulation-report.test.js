@@ -86,7 +86,7 @@ test('explains invalid report inputs',()=>{
 
 test('comparison dialog exports the generated Markdown report',async()=>{
   const app=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
-  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  const html=await readFile(new URL('../lab.html',import.meta.url),'utf8');
   const binding=app.split('\n').find(line=>line.startsWith("$('report-export').onclick="));
   assert.ok(binding);
   assert.match(html,/<button id="report-export"[^>]*>Exportar relatório Markdown/);
