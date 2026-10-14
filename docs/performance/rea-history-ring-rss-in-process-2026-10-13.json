@@ -1,0 +1,1654 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "sourceRevision": "fb69c16169ccb674392c9e06d2c6cec63112af9e",
+  "workload": {
+    "animals": 1000,
+    "days": 30,
+    "housing": "barn",
+    "seeds": [
+      417,
+      2026
+    ]
+  },
+  "measurement": {
+    "warmups": 3,
+    "repeatedRunsPerProcess": 60,
+    "variants": [
+      "sequential",
+      "history-ring"
+    ],
+    "sampling": "/proc/self/status VmRSS and VmHWM after each complete simulation+snapshot serialization; read outside timed interval",
+    "processes": 4,
+    "sameProcess": true
+  },
+  "runs": [
+    {
+      "variant": "sequential",
+      "seed": 417,
+      "trace": [
+        {
+          "phase": "initial",
+          "index": 0,
+          "vmRssKb": 2048,
+          "vmHwmKb": 2048
+        },
+        {
+          "phase": "warmup",
+          "index": 1,
+          "vmRssKb": 3064,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 2,
+          "vmRssKb": 10360,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 3,
+          "vmRssKb": 10360,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 1,
+          "vmRssKb": 10488,
+          "vmHwmKb": 10488
+        },
+        {
+          "phase": "sample",
+          "index": 2,
+          "vmRssKb": 15096,
+          "vmHwmKb": 15096
+        },
+        {
+          "phase": "sample",
+          "index": 3,
+          "vmRssKb": 15096,
+          "vmHwmKb": 15096
+        },
+        {
+          "phase": "sample",
+          "index": 4,
+          "vmRssKb": 15224,
+          "vmHwmKb": 15224
+        },
+        {
+          "phase": "sample",
+          "index": 5,
+          "vmRssKb": 19832,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 6,
+          "vmRssKb": 10732,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 7,
+          "vmRssKb": 15212,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 8,
+          "vmRssKb": 19820,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 9,
+          "vmRssKb": 10740,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 10,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 11,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 12,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 13,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 14,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 15,
+          "vmRssKb": 19828,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 16,
+          "vmRssKb": 10752,
+          "vmHwmKb": 22132
+        },
+        {
+          "phase": "sample",
+          "index": 17,
+          "vmRssKb": 18048,
+          "vmHwmKb": 22132
+        },
+        {
+          "phase": "sample",
+          "index": 18,
+          "vmRssKb": 22656,
+          "vmHwmKb": 22656
+        },
+        {
+          "phase": "sample",
+          "index": 19,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 20,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 21,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 22,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 23,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 24,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 25,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 26,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 27,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 28,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 29,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 30,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 31,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 32,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 33,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 34,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 35,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 36,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 37,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 38,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 39,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 40,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 41,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 42,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 43,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 44,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 45,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 46,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 47,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 48,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 49,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 50,
+          "vmRssKb": 13576,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 51,
+          "vmRssKb": 18056,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 52,
+          "vmRssKb": 22664,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 53,
+          "vmRssKb": 13576,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 54,
+          "vmRssKb": 18056,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 55,
+          "vmRssKb": 22664,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 56,
+          "vmRssKb": 13576,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 57,
+          "vmRssKb": 18056,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 58,
+          "vmRssKb": 18056,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 59,
+          "vmRssKb": 18056,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 60,
+          "vmRssKb": 22664,
+          "vmHwmKb": 25088
+        }
+      ],
+      "summary": {
+        "initialRssKb": 2048,
+        "afterWarmupsRssKb": 10360,
+        "lastRssKb": 22664,
+        "postSample10RssRangeKb": [
+          10752,
+          22712
+        ],
+        "maxHwmKb": 25088,
+        "firstSampleAtFinalMaxHwm": 19,
+        "last10HwmKb": [
+          25088
+        ]
+      }
+    },
+    {
+      "variant": "history-ring",
+      "seed": 417,
+      "trace": [
+        {
+          "phase": "initial",
+          "index": 0,
+          "vmRssKb": 2048,
+          "vmHwmKb": 2048
+        },
+        {
+          "phase": "warmup",
+          "index": 1,
+          "vmRssKb": 3068,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 2,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 3,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 1,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 2,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 3,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 4,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 5,
+          "vmRssKb": 19708,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 6,
+          "vmRssKb": 10640,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 7,
+          "vmRssKb": 15120,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 8,
+          "vmRssKb": 19728,
+          "vmHwmKb": 19728
+        },
+        {
+          "phase": "sample",
+          "index": 9,
+          "vmRssKb": 10656,
+          "vmHwmKb": 19728
+        },
+        {
+          "phase": "sample",
+          "index": 10,
+          "vmRssKb": 15008,
+          "vmHwmKb": 19728
+        },
+        {
+          "phase": "sample",
+          "index": 11,
+          "vmRssKb": 19744,
+          "vmHwmKb": 19744
+        },
+        {
+          "phase": "sample",
+          "index": 12,
+          "vmRssKb": 10668,
+          "vmHwmKb": 19744
+        },
+        {
+          "phase": "sample",
+          "index": 13,
+          "vmRssKb": 15020,
+          "vmHwmKb": 19744
+        },
+        {
+          "phase": "sample",
+          "index": 14,
+          "vmRssKb": 15020,
+          "vmHwmKb": 19744
+        },
+        {
+          "phase": "sample",
+          "index": 15,
+          "vmRssKb": 15148,
+          "vmHwmKb": 19744
+        },
+        {
+          "phase": "sample",
+          "index": 16,
+          "vmRssKb": 19756,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 17,
+          "vmRssKb": 10700,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 18,
+          "vmRssKb": 15052,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 19,
+          "vmRssKb": 15052,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 20,
+          "vmRssKb": 15052,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 21,
+          "vmRssKb": 15052,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 22,
+          "vmRssKb": 15052,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 23,
+          "vmRssKb": 19660,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 24,
+          "vmRssKb": 10712,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 25,
+          "vmRssKb": 15064,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 26,
+          "vmRssKb": 15064,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 27,
+          "vmRssKb": 15064,
+          "vmHwmKb": 19756
+        },
+        {
+          "phase": "sample",
+          "index": 28,
+          "vmRssKb": 19800,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 29,
+          "vmRssKb": 10744,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 30,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 31,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 32,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 33,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 34,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 35,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 36,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 37,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 38,
+          "vmRssKb": 15096,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 39,
+          "vmRssKb": 19704,
+          "vmHwmKb": 19800
+        },
+        {
+          "phase": "sample",
+          "index": 40,
+          "vmRssKb": 10764,
+          "vmHwmKb": 22136
+        },
+        {
+          "phase": "sample",
+          "index": 41,
+          "vmRssKb": 18060,
+          "vmHwmKb": 22136
+        },
+        {
+          "phase": "sample",
+          "index": 42,
+          "vmRssKb": 22668,
+          "vmHwmKb": 22668
+        },
+        {
+          "phase": "sample",
+          "index": 43,
+          "vmRssKb": 13628,
+          "vmHwmKb": 24972
+        },
+        {
+          "phase": "sample",
+          "index": 44,
+          "vmRssKb": 17980,
+          "vmHwmKb": 24972
+        },
+        {
+          "phase": "sample",
+          "index": 45,
+          "vmRssKb": 17980,
+          "vmHwmKb": 24972
+        },
+        {
+          "phase": "sample",
+          "index": 46,
+          "vmRssKb": 17980,
+          "vmHwmKb": 24972
+        },
+        {
+          "phase": "sample",
+          "index": 47,
+          "vmRssKb": 22588,
+          "vmHwmKb": 24972
+        },
+        {
+          "phase": "sample",
+          "index": 48,
+          "vmRssKb": 13632,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 49,
+          "vmRssKb": 17984,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 50,
+          "vmRssKb": 17984,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 51,
+          "vmRssKb": 17984,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 52,
+          "vmRssKb": 22592,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 53,
+          "vmRssKb": 13564,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 54,
+          "vmRssKb": 17916,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 55,
+          "vmRssKb": 17916,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 56,
+          "vmRssKb": 17916,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 57,
+          "vmRssKb": 22524,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 58,
+          "vmRssKb": 13572,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 59,
+          "vmRssKb": 17924,
+          "vmHwmKb": 25020
+        },
+        {
+          "phase": "sample",
+          "index": 60,
+          "vmRssKb": 22532,
+          "vmHwmKb": 25020
+        }
+      ],
+      "summary": {
+        "initialRssKb": 2048,
+        "afterWarmupsRssKb": 10364,
+        "lastRssKb": 22532,
+        "postSample10RssRangeKb": [
+          10668,
+          22668
+        ],
+        "maxHwmKb": 25020,
+        "firstSampleAtFinalMaxHwm": 48,
+        "last10HwmKb": [
+          25020
+        ]
+      }
+    },
+    {
+      "variant": "sequential",
+      "seed": 2026,
+      "trace": [
+        {
+          "phase": "initial",
+          "index": 0,
+          "vmRssKb": 2048,
+          "vmHwmKb": 2048
+        },
+        {
+          "phase": "warmup",
+          "index": 1,
+          "vmRssKb": 3064,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 2,
+          "vmRssKb": 10360,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 3,
+          "vmRssKb": 10360,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 1,
+          "vmRssKb": 10488,
+          "vmHwmKb": 10488
+        },
+        {
+          "phase": "sample",
+          "index": 2,
+          "vmRssKb": 15096,
+          "vmHwmKb": 15096
+        },
+        {
+          "phase": "sample",
+          "index": 3,
+          "vmRssKb": 15096,
+          "vmHwmKb": 15096
+        },
+        {
+          "phase": "sample",
+          "index": 4,
+          "vmRssKb": 15224,
+          "vmHwmKb": 15224
+        },
+        {
+          "phase": "sample",
+          "index": 5,
+          "vmRssKb": 19832,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 6,
+          "vmRssKb": 10732,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 7,
+          "vmRssKb": 15212,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 8,
+          "vmRssKb": 19820,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 9,
+          "vmRssKb": 10740,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 10,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 11,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 12,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 13,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 14,
+          "vmRssKb": 15220,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 15,
+          "vmRssKb": 19828,
+          "vmHwmKb": 19832
+        },
+        {
+          "phase": "sample",
+          "index": 16,
+          "vmRssKb": 10752,
+          "vmHwmKb": 22132
+        },
+        {
+          "phase": "sample",
+          "index": 17,
+          "vmRssKb": 18048,
+          "vmHwmKb": 22132
+        },
+        {
+          "phase": "sample",
+          "index": 18,
+          "vmRssKb": 22656,
+          "vmHwmKb": 22656
+        },
+        {
+          "phase": "sample",
+          "index": 19,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 20,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 21,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 22,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 23,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 24,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 25,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 26,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 27,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 28,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 29,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 30,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 31,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 32,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 33,
+          "vmRssKb": 13608,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 34,
+          "vmRssKb": 18088,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 35,
+          "vmRssKb": 22696,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 36,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 37,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 38,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 39,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 40,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 41,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 42,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 43,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 44,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 45,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 46,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 47,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 48,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 49,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 50,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 51,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 52,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 53,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 54,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 55,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 56,
+          "vmRssKb": 13624,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 57,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 58,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 59,
+          "vmRssKb": 18104,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 60,
+          "vmRssKb": 22712,
+          "vmHwmKb": 25088
+        }
+      ],
+      "summary": {
+        "initialRssKb": 2048,
+        "afterWarmupsRssKb": 10360,
+        "lastRssKb": 22712,
+        "postSample10RssRangeKb": [
+          10752,
+          22712
+        ],
+        "maxHwmKb": 25088,
+        "firstSampleAtFinalMaxHwm": 19,
+        "last10HwmKb": [
+          25088
+        ]
+      }
+    },
+    {
+      "variant": "history-ring",
+      "seed": 2026,
+      "trace": [
+        {
+          "phase": "initial",
+          "index": 0,
+          "vmRssKb": 2048,
+          "vmHwmKb": 2048
+        },
+        {
+          "phase": "warmup",
+          "index": 1,
+          "vmRssKb": 3068,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 2,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "warmup",
+          "index": 3,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 1,
+          "vmRssKb": 10364,
+          "vmHwmKb": 10368
+        },
+        {
+          "phase": "sample",
+          "index": 2,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 3,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 4,
+          "vmRssKb": 15100,
+          "vmHwmKb": 15100
+        },
+        {
+          "phase": "sample",
+          "index": 5,
+          "vmRssKb": 19708,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 6,
+          "vmRssKb": 10612,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 7,
+          "vmRssKb": 15092,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 8,
+          "vmRssKb": 19700,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 9,
+          "vmRssKb": 10620,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 10,
+          "vmRssKb": 15100,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 11,
+          "vmRssKb": 19708,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 12,
+          "vmRssKb": 10632,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 13,
+          "vmRssKb": 15112,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 14,
+          "vmRssKb": 15112,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 15,
+          "vmRssKb": 15112,
+          "vmHwmKb": 19708
+        },
+        {
+          "phase": "sample",
+          "index": 16,
+          "vmRssKb": 19720,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 17,
+          "vmRssKb": 10652,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 18,
+          "vmRssKb": 15132,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 19,
+          "vmRssKb": 15132,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 20,
+          "vmRssKb": 15132,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 21,
+          "vmRssKb": 15132,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 22,
+          "vmRssKb": 15132,
+          "vmHwmKb": 19720
+        },
+        {
+          "phase": "sample",
+          "index": 23,
+          "vmRssKb": 19740,
+          "vmHwmKb": 19740
+        },
+        {
+          "phase": "sample",
+          "index": 24,
+          "vmRssKb": 10660,
+          "vmHwmKb": 19740
+        },
+        {
+          "phase": "sample",
+          "index": 25,
+          "vmRssKb": 15140,
+          "vmHwmKb": 19740
+        },
+        {
+          "phase": "sample",
+          "index": 26,
+          "vmRssKb": 15140,
+          "vmHwmKb": 19740
+        },
+        {
+          "phase": "sample",
+          "index": 27,
+          "vmRssKb": 15140,
+          "vmHwmKb": 19740
+        },
+        {
+          "phase": "sample",
+          "index": 28,
+          "vmRssKb": 19748,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 29,
+          "vmRssKb": 10680,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 30,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 31,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 32,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 33,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 34,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 35,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 36,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 37,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 38,
+          "vmRssKb": 15160,
+          "vmHwmKb": 19748
+        },
+        {
+          "phase": "sample",
+          "index": 39,
+          "vmRssKb": 19768,
+          "vmHwmKb": 19768
+        },
+        {
+          "phase": "sample",
+          "index": 40,
+          "vmRssKb": 10688,
+          "vmHwmKb": 22200
+        },
+        {
+          "phase": "sample",
+          "index": 41,
+          "vmRssKb": 17984,
+          "vmHwmKb": 22200
+        },
+        {
+          "phase": "sample",
+          "index": 42,
+          "vmRssKb": 22592,
+          "vmHwmKb": 22592
+        },
+        {
+          "phase": "sample",
+          "index": 43,
+          "vmRssKb": 13548,
+          "vmHwmKb": 25024
+        },
+        {
+          "phase": "sample",
+          "index": 44,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25024
+        },
+        {
+          "phase": "sample",
+          "index": 45,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25024
+        },
+        {
+          "phase": "sample",
+          "index": 46,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25024
+        },
+        {
+          "phase": "sample",
+          "index": 47,
+          "vmRssKb": 22636,
+          "vmHwmKb": 25024
+        },
+        {
+          "phase": "sample",
+          "index": 48,
+          "vmRssKb": 13548,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 49,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 50,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 51,
+          "vmRssKb": 18028,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 52,
+          "vmRssKb": 22636,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 53,
+          "vmRssKb": 13568,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 54,
+          "vmRssKb": 18048,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 55,
+          "vmRssKb": 18048,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 56,
+          "vmRssKb": 18048,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 57,
+          "vmRssKb": 22656,
+          "vmHwmKb": 25068
+        },
+        {
+          "phase": "sample",
+          "index": 58,
+          "vmRssKb": 13568,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 59,
+          "vmRssKb": 18048,
+          "vmHwmKb": 25088
+        },
+        {
+          "phase": "sample",
+          "index": 60,
+          "vmRssKb": 22656,
+          "vmHwmKb": 25088
+        }
+      ],
+      "summary": {
+        "initialRssKb": 2048,
+        "afterWarmupsRssKb": 10364,
+        "lastRssKb": 22656,
+        "postSample10RssRangeKb": [
+          10632,
+          22656
+        ],
+        "maxHwmKb": 25088,
+        "firstSampleAtFinalMaxHwm": 58,
+        "last10HwmKb": [
+          25068,
+          25088
+        ]
+      }
+    }
+  ],
+  "assessment": "The two variants showed bounded RSS oscillation across 60 same-process repetitions. VmHWM rose during allocator/process warm-up and then plateaued in the final ten repetitions; final observed peaks were about 25 MiB in both variants. No continuous monotonic growth was observed in this bounded window. This trace does not explain the separate approximately 5 MiB difference measured in shorter fresh-process runs.",
+  "limitations": [
+    "VmRSS/VmHWM are process-level observations and do not identify allocation sites.",
+    "Reading /proc and retaining trace rows adds small measurement overhead; timing results from these runs are not used for speed comparisons.",
+    "Two seeds and one workload were checked; this does not characterize all workloads or allocator configurations.",
+    "The allocator may retain freed pages, and the observed peak is not equivalent to live application memory."
+  ],
+  "sourceFilesSha256": {
+    "crates/riose-core/examples/history_ring_matrix.rs": "0a6475337642a41a504ca3e475546af69696fd367635c200272552e0dea13fae"
+  }
+}
