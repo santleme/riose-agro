@@ -44,6 +44,7 @@ class NativeSimdSummaryTests(unittest.TestCase):
                 "warmupRuns": 5,
                 "flags": "",
                 "implementationOrderRotation": 0,
+                "avx2Available": True,
             },
             "results": {
                 "equivalence": {"bitwiseEqual": True},
@@ -89,6 +90,7 @@ class NativeSimdSummaryTests(unittest.TestCase):
             (("hardware", "cpu"), "different-cpu", "capture hardware"),
             (("configuration", "repetitions"), 30, "expected 31 timed repetitions"),
             (("configuration", "warmupRuns"), 4, "expected five warmup runs"),
+            (("configuration", "avx2Available"), False, "AVX2 unavailable"),
             (("results", "equivalence", "bitwiseEqual"), False,
              "failed bitwise equivalence"),
         )

@@ -69,6 +69,8 @@ def main():
             raise SystemExit(f"{name}: expected 31 timed repetitions")
         if report["configuration"]["warmupRuns"] != 5:
             raise SystemExit(f"{name}: expected five warmup runs")
+        if not report["configuration"]["avx2Available"]:
+            raise SystemExit(f"{name}: AVX2 unavailable; SIMD captures require an AVX2-capable host")
         if not report["results"]["equivalence"]["bitwiseEqual"]:
             raise SystemExit(f"{name}: implementations failed bitwise equivalence")
         profile = report["configuration"]["flags"].split(":")[0]
