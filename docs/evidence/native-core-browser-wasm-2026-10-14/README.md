@@ -2,52 +2,69 @@
 
 ## Decision
 
-**GO for continued optional full-core WASM evaluation on this reference workload; NO-GO for changing the product default.** Exact parity held against both official JS fixtures, JavaScript remained the fallback when the WASM file was unavailable, and WASM had lower full-scenario and Worker medians in all three runs at 100, 1,000, and 10,000 animals. The cold startup cost and the single-browser/single-host scope still require review before any product integration.
+**GO for continued optional full-core WASM evaluation; NO-GO for changing the product default.** WASM had lower full-scenario and Worker medians than JavaScript in all nine captures across three Chromium versions and all tested populations. A3/B3 results matched the official goldens exactly, and missing or malformed WASM fell back to JavaScript in every capture.
+
+Startup costs vary sharply by browser version. Chrome 147 took about 44 ms per warm WASM Worker versus 6 ms for JavaScript; Chrome 153 and 156 were closer, but WASM remained slower to start. These results are a version-specific candidate, not a product-wide performance claim.
 
 ## Workload and method
 
-The study builds `riose-core` with the isolated `browser-scenario-wasm` feature and runs the same 24-hour pasture baseline request through (1) the Rust core compiled to WASM and (2) the JavaScript `FarmEngine`. Both paths run inside separate module Workers. It uses the repository's supported full-engine sizes, seed `20261012`, and fixed pasture configuration. Each of three independent Chromium processes used a fresh temporary profile; each population had three warmups and 15 timed repetitions, alternating backend order.
+The study builds `riose-core` with the isolated `browser-scenario-wasm` feature and runs the same 24-hour pasture baseline request through (1) the Rust core compiled to WASM and (2) the JavaScript `FarmEngine`. It uses supported engine populations of 100, 1,000, and 10,000 animals, seed `20261012`, and fixed pasture configuration. Each browser version was measured in three independent Chromium processes with fresh temporary profiles; every population used three warmups and 15 timed repetitions, alternating backend order.
 
-Before timing, the harness checks the A3 `baseline-pasture` and B3 `housing-comparison` fixtures against the official goldens and compares JS with WASM exactly. It also checks both a missing WASM file and malformed WASM bytes, verifying that the Worker returns the equivalent JavaScript result with an explicit fallback reason in either case. The production Worker and UI are not changed by this experiment.
+Before timing, the harness checks A3 `baseline-pasture` and B3 `housing-comparison` against their official goldens and compares JS with WASM exactly. It also checks both a missing WASM file and malformed WASM bytes, verifying that the Worker returns the equivalent JavaScript result with an explicit fallback reason. Every run validates against `docs/architecture/benchmark-report.schema.json` and includes source-file hashes.
 
-The per-run machine-readable reports are [`run-1.json`](run-1.json), [`run-2.json`](run-2.json), and [`run-3.json`](run-3.json); each validates against `docs/architecture/benchmark-report.schema.json`. The full-core WASM artifact is 331,732 bytes. The existing default metabolism-only artifact remains 21,351 bytes and is built independently with `npm run build:wasm`.
+The captures identify clean source revision `232e704c402f33f9597fb86d275b691cbdd3cce2` (`dirty: false`) and share source-tree digest `d20abcbcea54b355d447163f875583b11d50f6ac0dfdfc6c07f001b04712ea17`.
 
 ## Results
 
-Values below are medians of the three independent run medians. Parentheses show the range across those run medians.
+Each value is the median of the three independent run medians; parentheses show the range across those run medians. Times are milliseconds.
 
-| Animals | Full scenario JS (ms) | Full scenario WASM (ms) | Worker round trip JS (ms) | Worker round trip WASM (ms) | WASM linear memory after scenario |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 100 | 1.20 (1.20–1.30) | 0.60 (0.50–0.60) | 1.80 (1.80–1.80) | 1.10 (1.00–1.10) | 1.44 MiB |
-| 1,000 | 11.10 (11.00–11.20) | 3.60 (3.60–3.80) | 16.10 (16.00–16.50) | 8.00 (7.90–8.30) | 3.50 MiB |
-| 10,000 | 106.00 (105.60–110.50) | 43.20 (42.10–44.20) | 164.40 (164.30–170.10) | 93.40 (93.00–96.00) | 20.88 MiB |
+| Chromium | Animals | Full scenario JS | Full scenario WASM | Worker JS | Worker WASM | WASM memory after scenario |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 147.0.7727.15 | 100 | 1.20 (1.20–1.40) | 0.60 (0.50–0.70) | 1.80 (1.70–1.80) | 1.00 (1.00–1.10) | 1.44 MiB |
+| 147.0.7727.15 | 1,000 | 11.60 (11.30–11.80) | 4.00 (3.90–4.40) | 16.00 (15.70–16.10) | 8.20 (8.20–8.30) | 3.50 MiB |
+| 147.0.7727.15 | 10,000 | 103.10 (102.80–106.20) | 43.30 (43.20–43.70) | 156.00 (153.70–158.30) | 87.40 (87.10–87.40) | 20.88 MiB |
+| 153.0.8010.12 | 100 | 1.20 (1.20–1.40) | 0.60 (0.50–0.60) | 1.90 (1.90–1.90) | 1.10 (1.10–1.20) | 1.44 MiB |
+| 153.0.8010.12 | 1,000 | 11.60 (11.40–11.60) | 3.90 (3.90–4.20) | 17.30 (17.20–18.00) | 8.80 (8.70–9.30) | 3.50 MiB |
+| 153.0.8010.12 | 10,000 | 110.60 (110.40–113.00) | 43.60 (43.00–43.80) | 176.30 (176.00–181.20) | 99.70 (99.70–101.20) | 20.88 MiB |
+| 156.0.8078.4 | 100 | 1.30 (1.30–1.30) | 0.60 (0.50–0.60) | 1.90 (1.80–2.00) | 1.10 (1.10–1.10) | 1.44 MiB |
+| 156.0.8078.4 | 1,000 | 12.20 (11.70–12.40) | 3.90 (3.80–4.40) | 17.40 (17.30–17.40) | 8.70 (8.70–9.10) | 3.50 MiB |
+| 156.0.8078.4 | 10,000 | 112.40 (109.50–114.00) | 43.60 (42.70–43.80) | 174.20 (172.30–180.40) | 95.90 (95.20–97.40) | 20.88 MiB |
 
-Worker round trips include request scheduling, structured-clone transfer, scenario execution, and response transfer. WASM's JSON ABI adds request encoding, allocation/copy, Rust JSON parsing/serialization, response copy, and JS JSON decoding; the reports break out the JS-observable subphases. At 10,000 animals the median observed WASM-side output copy was about 3.7 ms and JSON decoding about 20.9 ms. Rust JSON parsing, simulation, and serialization remain combined in the ABI-call timing.
+### Startup cost
 
-Cold Worker startup medians were 9.4 ms for WASM and 5.0 ms for JS. Warm startup is the average per Worker over batches of ten new Workers, after the first WASM fetch: 5.50 ms for WASM and 3.91 ms for JS. The Worker stays alive for multiple scenario requests in normal operation, so startup is a session cost. At 100 animals the warm Worker saves about 0.7 ms per run and needs about seven runs to repay the measured cold-start difference; at 1,000 and 10,000 animals, the scenario savings exceed that startup difference in one run. Warm-start still instantiates the module in each new Worker.
+Startup values are medians of the three run-level medians. Warm startup is the average per Worker across batches of ten new Workers after the initial WASM fetch.
+
+| Chromium | Cold WASM | Cold JS | Warm WASM | Warm JS |
+| --- | ---: | ---: | ---: | ---: |
+| 147.0.7727.15 | 48.1 ms | 7.6 ms | 44.33 ms | 6.35 ms |
+| 153.0.8010.12 | 12.5 ms | 7.3 ms | 8.78 ms | 6.01 ms |
+| 156.0.8078.4 | 10.3 ms | 5.7 ms | 6.38 ms | 4.49 ms |
+
+At 100 animals, the warm Worker saves about 0.8 ms per run. The warm-start penalty implies roughly 48 runs to break even on Chrome 147, four on Chrome 153, and three on Chrome 156. At 1,000 animals, the same estimate is five, one, and one run respectively; at 10,000 animals, a single run repays the warm-start penalty for each version. This estimate uses only the measured Worker round trip and startup medians; it is not a browser-session workload model.
+
+Worker round trips include request scheduling, structured-clone transfer, scenario execution, and response transfer. The JSON ABI adds request encoding, allocation/copy, Rust JSON parsing/serialization, response copy, and JS JSON decoding; the reports break out JS-observable subphases. At 10,000 animals, WASM-side output copy was about 3.7 ms and JSON decoding about 20.9 ms on Chrome 156. Rust parsing, simulation, and serialization remain combined in the ABI-call timing.
 
 ## Limits
 
-- Host: Linux WSL2 x86_64, AMD Ryzen 7 7700X, 16 reported hardware threads, 16 GiB browser `deviceMemory`; browser: headless Chrome 156.0.8078.4. One host and one browser were measured.
+- One host was measured: Linux WSL2 x86_64, AMD Ryzen 7 7700X, 16 reported hardware threads, and 16 GiB browser `deviceMemory`. The three measurements are Chromium versions on the same Blink/V8 engine, not three browser engines or three devices.
+- The cached WebKit GTK and WPE MiniBrowsers could not launch because `libgtk-4.so.1` and `libgstgl-1.0.so.0` are absent; no Firefox binary was available. A second browser engine remains unmeasured.
 - The dedicated benchmark Worker has no product UI. The `ui` phase is explicitly not measured; this is not a rendered-page or user-interaction result.
 - WASM memory is the linear-memory buffer size after the result is returned; it is not transient peak allocation. Page JS heap excludes Worker heap attribution. Process RSS and GPU memory are not measured.
-- The clean captures identify commit `7d8ceefafcb76fe0a98c6f16d849364c4e815448` with `dirty: false`. Each report also includes SHA-256 hashes for the Rust source modules, JS benchmark and engine, build scripts, locked dependencies, report schema, fixtures, and both WASM artifacts; all three share tree digest `e8e93bbc75b898b66b86ba7204dc65f5fb6a438df67f8ebb5240e4bed4ffcab4`. The fingerprint makes the measured source and artifacts reproducible; this remains a single-host exploratory benchmark, not a release benchmark.
-- The simulated outputs remain demonstrative and unvalidated; timing and parity establish implementation equivalence to existing fixtures, not scientific accuracy.
+- The simulated outputs remain demonstrative and unvalidated. Timing and parity establish implementation equivalence to existing fixtures, not scientific accuracy.
 
 ## Reproduce
 
-Build both WASM artifacts and run the static app server in the repository root:
+Build the optional scenario artifact and run a static server in the repository root:
 
 ```sh
-npm run build:wasm
 npm run build:wasm-scenario
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-In a second terminal, capture and validate one run:
+In a second terminal, choose an installed Chromium binary and capture one run:
 
 ```sh
-NATIVE_WASM_REPETITIONS=15 NATIVE_WASM_WARMUPS=3 node scripts/benchmark-native-wasm-browser.mjs > /tmp/native-core-browser-wasm.json
+CHROME_BIN=/path/to/chrome NATIVE_WASM_REPETITIONS=15 NATIVE_WASM_WARMUPS=3 node scripts/benchmark-native-wasm-browser.mjs > /tmp/native-core-browser-wasm.json
 node scripts/validate-benchmark-report.mjs < /tmp/native-core-browser-wasm.json
 ```
 
