@@ -1,6 +1,6 @@
 # Physical NVIDIA GPU metabolism benchmark
 
-**Decision: NO_GO for accelerator adoption.** The CUDA kernel executed on the physical GTX 1060 and matched the native Rust implementation at all tested sizes. End-to-end GPU medians were slower than the CPU medians at every population, including 100,000 animals. The kernel-only result at 100,000 animals was 2.76× faster, but it does not include transfers, synchronization, allocation, or host input setup.
+**Decision: NO_GO for accelerator adoption.** The CUDA kernel executed on the physical GTX 1060 and matched the native Rust implementation at all tested sizes. End-to-end GPU medians were slower than the CPU medians at every population, including 100,000 animals. The kernel-only result at 100,000 animals was 1.99× faster, but it does not include transfers, synchronization, allocation, or host input setup.
 
 This is the NVIDIA vendor-specific evidence for issue #111 under the vendor-neutral accelerator research objective in #77. It makes no claim about AMD/ROCm or cross-vendor performance.
 
@@ -19,18 +19,18 @@ This is the NVIDIA vendor-specific evidence for issue #111 under the vendor-neut
 
 | Animals | CPU kernel | CPU end-to-end | Device allocation | H2D | Host launch | GPU kernel | Synchronization | D2H | GPU warm total | GPU steady state with transfers | Kernel-only speedup | Warm end-to-end speedup |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 100 | 0.0116 [0.0078–0.0195] | 0.0806 [0.0679–0.1290] | 0.4373 [0.3491–0.5387] | 0.0290 [0.0204–0.0996] | 0.0195 [0.0131–0.0853] | 0.0164 [0.0051–0.1597] | 0.0595 [0.0250–0.2120] | 0.0460 [0.0354–0.0935] | 0.7176 [0.5619–1.0745] | 0.0888 [0.0747–0.1349] | 0.71× | 0.11× |
-| 1,000 | 0.0150 [0.0128–0.0259] | 0.6016 [0.5607–0.6837] | 0.4294 [0.3683–0.5312] | 0.0336 [0.0240–0.0657] | 0.0191 [0.0128–0.0783] | 0.0164 [0.0051–0.1328] | 0.0564 [0.0048–0.1390] | 0.0499 [0.0381–0.1103] | 1.2421 [1.1111–1.5406] | 0.1579 [0.1512–0.2421] | 0.92× | 0.48× |
-| 10,000 | 0.0512 [0.0411–0.0765] | 5.5460 [5.1983–6.0123] | 0.6488 [0.5205–0.7969] | 0.0864 [0.0485–0.1699] | 0.0317 [0.0222–0.1105] | 0.1078 [0.0533–0.1956] | 0.0921 [0.0435–0.1706] | 0.1081 [0.0637–0.1442] | 6.4710 [6.0692–7.2591] | 0.4715 [0.2105–0.6625] | 0.48× | 0.86× |
-| 100,000* | 0.3728 [0.3206–0.8406] | 59.3722 [54.3296–82.2026] | 1.2898 [0.9975–1.4355] | 0.5035 [0.3966–0.8533] | 0.0310 [0.0264–0.0607] | 0.1462 [0.1298–0.2090] | 0.1895 [0.1293–0.2890] | 0.3719 [0.3053–0.6627] | 61.4428 [56.3224–85.0332] | 1.3733 [0.8065–1.6409] | 2.55× | 0.97× |
+| 100 | 0.0085 [0.0072–0.0124] | 0.0721 [0.0640–0.0941] | 0.3281 [0.2946–0.5314] | 0.0215 [0.0176–0.0943] | 0.0134 [0.0099–0.0357] | 0.0072 [0.0049–0.1089] | 0.0372 [0.0034–0.2294] | 0.0352 [0.0305–0.0720] | 0.5407 [0.4681–0.8497] | 0.1392 [0.1105–0.1977] | 1.19× | 0.13× |
+| 1,000 | 0.0133 [0.0099–0.0215] | 0.5824 [0.5235–0.9070] | 0.4181 [0.3260–0.6091] | 0.0310 [0.0220–0.1125] | 0.0210 [0.0119–0.1284] | 0.0174 [0.0051–0.1475] | 0.0459 [0.0130–0.1260] | 0.0445 [0.0350–0.0885] | 1.1732 [1.0157–1.5662] | 0.1846 [0.1217–0.4742] | 0.76× | 0.50× |
+| 10,000 | 0.0687 [0.0521–0.2338] | 6.1405 [5.5067–7.6884] | 0.5766 [0.4525–1.0464] | 0.0773 [0.0570–0.1535] | 0.0294 [0.0243–0.1338] | 0.1178 [0.0552–0.2297] | 0.1126 [0.0071–0.1410] | 0.0964 [0.0629–0.2305] | 6.9552 [6.2394–9.0986] | 0.4179 [0.1883–0.6149] | 0.58× | 0.88× |
+| 100,000* | 0.3339 [0.3003–0.5730] | 61.0289 [57.8622–78.7464] | 1.2691 [1.0485–1.4597] | 0.5081 [0.3966–0.7442] | 0.0342 [0.0248–0.0919] | 0.1681 [0.1330–0.2917] | 0.1808 [0.1262–0.3286] | 0.4152 [0.2982–0.6110] | 62.9542 [59.8394–80.7959] | 1.2392 [1.0147–1.9259] | 1.99× | 0.97× |
 
 *The 100,000-animal case is isolated numeric-kernel research, beyond the current FarmEngine and renderer limits. It is not evidence of a production workload.
 
-First-run GPU total, including CUDA driver/device/context/PTX initialization, had a median of 447.87 ms, 448.39 ms, 453.62 ms, and 508.59 ms for 100, 1,000, 10,000, and 100,000 animals respectively. The corresponding CPU end-to-end medians were 0.08 ms, 0.60 ms, 5.55 ms, and 59.37 ms.
+First-run GPU total, including CUDA driver/device/context/PTX initialization, had a median of 178.67 ms, 179.31 ms, 185.09 ms, and 241.09 ms for 100, 1,000, 10,000, and 100,000 animals respectively. The corresponding CPU end-to-end medians were 0.07 ms, 0.58 ms, 6.14 ms, and 61.03 ms.
 
 ## Interpretation and limits
 
-The measured isolated GPU kernel has some advantage only at the largest population. That does not offset allocation, copy, synchronization, and host overhead in this workload. End-to-end GPU medians lost at every tested size, so the evidence does not justify adding an accelerator path or changing defaults. No product dependency or production integration is proposed.
+The isolated GPU kernel was faster at 100 and 100,000 animals in this capture, while slower at 1,000 and 10,000. Those kernel-only results do not offset allocation, copy, synchronization, and host overhead. End-to-end GPU medians lost at every tested size, so the evidence does not justify adding an accelerator path or changing defaults. No product dependency or production integration is proposed.
 
 The harness creates deterministic input arrays in Python and includes that preparation in both end-to-end paths; it does not measure FarmEngine orchestration, state packing, feeding, weather, snapshots, worker scheduling, UI, or rendering. The CUDA kernel is a separate PTX translation of the existing Rust formula and is not integrated into production. Only one GTX 1060/driver/runtime combination was measured. This benchmark does not replace or extend the prior AMD evidence.
 
@@ -44,5 +44,5 @@ python3 -m unittest discover -s tests -p test_benchmark_nvidia.py
 The command requires the NVIDIA CUDA driver library and a real usable NVIDIA device. If the backend is unavailable, it emits a blocked result with `gpuExecutionClaim: false`; it does not fall back to CPU as GPU evidence. The generated report is [nvidia-metabolism-benchmark-2026-10.json](nvidia-metabolism-benchmark-2026-10.json) and validates against the shared benchmark report schema.
 
 - Baseline `main`: `0d79e416a5297b846274001d3b3281a1e674c674`
-- Benchmark implementation and capture source: clean worktree at `77304faa4b8500ed7179a2cdf53dabb78cab79e6`
+- Fresh branch: `codex/issue-111-vendor-neutral-gpu`; benchmark implementation and capture source: clean worktree at `505c21def382fcb226b29b8f68fbba28dd00a4f5`
 - Input payload SHA-256: `e14abf40b600aa4eab044bce048423287d5585e594067f8a7e7e5cea374daa8b`
