@@ -37,3 +37,15 @@ test('scenario scheduler can select sequential and parallel comparison cases',()
   assert.deepEqual(report.configuration.concurrencyCases,expected);
   assert.deepEqual(report.rows.map(row=>row.concurrency),expected);
 });
+
+test('scenario scheduler deduplicates default concurrency cases for a one-scenario workload',()=>{
+  const env={...process.env,RIOSE_SCHEDULER_SCENARIO_COUNT:'1',RIOSE_SCHEDULER_REPETITIONS:'1',RIOSE_SCHEDULER_WARMUPS:'0'};
+  delete env.RIOSE_SCHEDULER_CONCURRENCIES;
+  const result=spawnSync(process.execPath,[script],{encoding:'utf8',maxBuffer:4*1024*1024,env});
+  assert.equal(result.status,0,result.stderr);
+  const report=JSON.parse(result.stdout);
+  assert.deepEqual(report.configuration.concurrencyCases,[1]);
+  assert.deepEqual(report.rows.map(row=>row.concurrency),[1]);
+  assert.equal(report.rows[0].scenarioCount,1);
+  assert.equal(report.rows[0].allPassed,true);
+});

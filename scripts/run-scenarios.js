@@ -137,6 +137,22 @@ function resultFileName(file) {
   return file.replace(/\.json$/i, '.result.json');
 }
 
+export function parseExecutorResourceLimits(environment = process.env) {
+  const parseLimit = (name, defaultValue) => {
+    const raw = environment[name];
+    if (raw === undefined) return defaultValue;
+    const value = typeof raw === 'string' && raw.trim() !== '' ? Number(raw) : NaN;
+    if (!Number.isFinite(value) || value < 0) {
+      throw new RangeError(`${name} must be a finite nonnegative number`);
+    }
+    return value;
+  };
+  return {
+    maxCostUsd: parseLimit('RIOSE_EXECUTOR_MAX_COST_USD', 0),
+    maxRssBytes: parseLimit('RIOSE_EXECUTOR_MAX_RSS_BYTES', Infinity),
+  };
+}
+
 export async function runScenarioDirectoryResumable(scenarioDirectory, resultDirectory, {
   concurrency: requestedConcurrency = 1, workerMemoryLimitMb: requestedWorkerMemoryLimitMb,
   signal, workerPool: suppliedWorkerPool, executorProfile, maxCostUsd = 0, maxRssBytes = Infinity,
@@ -265,10 +281,9 @@ async function main() {
     if (automatic) {
       const executorProfilePath = fileURLToPath(new URL('../docs/performance/executor-profile-v2.json', import.meta.url));
       const executorProfile = JSON.parse(await readFile(executorProfilePath, 'utf8'));
+      const resourceLimits = parseExecutorResourceLimits();
       executorOptions = {concurrency: 'auto', executorProfile,
-        maxCostUsd: Number(process.env.RIOSE_EXECUTOR_MAX_COST_USD ?? 0),
-        maxRssBytes: process.env.RIOSE_EXECUTOR_MAX_RSS_BYTES === undefined
-          ? Infinity : Number(process.env.RIOSE_EXECUTOR_MAX_RSS_BYTES),
+        ...resourceLimits,
         onExecutorSelection: selection => process.stdout.write(`Executor: ${selection.backend}, concurrency ${selection.concurrency} (${selection.reason})\n`)};
     }
     const results = resumable || automatic
