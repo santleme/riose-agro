@@ -46,11 +46,16 @@ def main():
     groups = {}
     dispatch = {}
     for name, report in reports:
-        assert report["benchmark"]["source"] == {"revision": revision, "dirty": False}, name
-        assert report["hardware"] == hardware, name
-        assert report["configuration"]["repetitions"] == 31, name
-        assert report["configuration"]["warmupRuns"] == 5, name
-        assert report["results"]["equivalence"]["bitwiseEqual"], name
+        if report["benchmark"]["source"] != {"revision": revision, "dirty": False}:
+            raise SystemExit(f"{name}: capture source must be clean and match revision {revision}")
+        if report["hardware"] != hardware:
+            raise SystemExit(f"{name}: capture hardware does not match the other reports")
+        if report["configuration"]["repetitions"] != 31:
+            raise SystemExit(f"{name}: expected 31 timed repetitions")
+        if report["configuration"]["warmupRuns"] != 5:
+            raise SystemExit(f"{name}: expected five warmup runs")
+        if not report["results"]["equivalence"]["bitwiseEqual"]:
+            raise SystemExit(f"{name}: implementations failed bitwise equivalence")
         profile = report["configuration"]["flags"].split(":")[0]
         dispatch.setdefault(profile, []).append(report["results"]["selectionOverheadMs"]["median"])
         for item in report["phases"]["engine"]["measurements"]:

@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -12,6 +13,30 @@ RUNNER = REPOSITORY / "scripts" / "run-native-simd-study.sh"
 
 
 class NativeSimdSummaryTests(unittest.TestCase):
+    def write_complete_capture_set(self, directory):
+        report = {
+            "benchmark": {"source": {"revision": "study-revision", "dirty": False}},
+            "hardware": {"cpu": "test-cpu"},
+            "configuration": {
+                "repetitions": 31,
+                "warmupRuns": 5,
+                "flags": "",
+                "implementationOrderRotation": 0,
+            },
+            "results": {
+                "equivalence": {"bitwiseEqual": True},
+                "selectionOverheadMs": {"median": 0.001},
+            },
+            "phases": {"engine": {"measurements": []}},
+        }
+        for profile in ("generic", "native", "scalar"):
+            for run in range(1, 5):
+                report["configuration"]["flags"] = f"{profile}: "
+                report["configuration"]["implementationOrderRotation"] = (run - 1) % 4
+                (Path(directory) / f"{profile}-run-{run}.json").write_text(
+                    json.dumps(report)
+                )
+
     def test_rejects_incomplete_capture_matrix_before_aggregation(self):
         with tempfile.TemporaryDirectory() as directory:
             (Path(directory) / "generic-run-1.json").write_text("{}")
@@ -35,6 +60,34 @@ class NativeSimdSummaryTests(unittest.TestCase):
             )
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("--runs must be at least four", result.stderr)
+
+    def test_optimized_python_keeps_capture_provenance_validation(self):
+        invalid_cases = (
+            (("benchmark", "source", "dirty"), True, "capture source must be clean"),
+            (("hardware", "cpu"), "different-cpu", "capture hardware"),
+            (("configuration", "repetitions"), 30, "expected 31 timed repetitions"),
+            (("configuration", "warmupRuns"), 4, "expected five warmup runs"),
+            (("results", "equivalence", "bitwiseEqual"), False,
+             "failed bitwise equivalence"),
+        )
+        for key_path, invalid_value, expected_error in invalid_cases:
+            with self.subTest(key_path=key_path), tempfile.TemporaryDirectory() as directory:
+                self.write_complete_capture_set(directory)
+                report_path = Path(directory) / "native-run-2.json"
+                report = json.loads(report_path.read_text())
+                value = report
+                for key in key_path[:-1]:
+                    value = value[key]
+                value[key_path[-1]] = invalid_value
+                report_path.write_text(json.dumps(report))
+                result = subprocess.run(
+                    [sys.executable, "-O", str(SUMMARIZER), directory],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(expected_error, result.stderr)
 
     def test_capture_runner_rejects_fewer_than_four_runs(self):
         with tempfile.TemporaryDirectory() as directory:
