@@ -10,8 +10,6 @@ use crate::state::{
 };
 use crate::{update_metabolism, EntityId, EntityIdAllocator, Housing, SeedStreams, SeededRng};
 use serde::{Deserialize, Serialize};
-#[cfg(feature = "history-ring")]
-use std::collections::VecDeque;
 
 const NAMES: [&str; 24] = [
     "Aurora", "Bento", "Cacau", "Dália", "Estrela", "Figo", "Gaia", "Hugo", "Íris", "Joca",
@@ -65,7 +63,8 @@ pub struct FarmEngine {
     model_rng: SeededRng,
     locomotion_rng: SeededRng,
     #[cfg(feature = "history-ring")]
-    history_rings: Vec<VecDeque<ActivityRecord>>,
+    /// Physical index of the oldest entry in each animal's bounded history.
+    history_starts: Vec<u8>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -167,12 +166,8 @@ impl FarmEngine {
             model_rng: streams.model,
             locomotion_rng: streams.locomotion,
             #[cfg(feature = "history-ring")]
-            history_rings: Vec::new(),
+            history_starts: vec![0; count],
         };
-        #[cfg(feature = "history-ring")]
-        {
-            engine.history_rings = take_history_rings(&mut engine.state.animals);
-        }
         engine.sync_rng_states();
         Ok(engine)
     }
@@ -181,26 +176,23 @@ impl FarmEngine {
         snapshot.validate()?;
         let model_rng = SeededRng::new(snapshot.seed);
         let locomotion_rng = SeededRng::new(snapshot.locomotion_seed);
-        #[allow(unused_mut)]
-        let mut engine = Self {
+        #[cfg(feature = "history-ring")]
+        let history_starts = vec![0; snapshot.animals.len()];
+        let engine = Self {
             state: snapshot,
             model_rng,
             locomotion_rng,
             #[cfg(feature = "history-ring")]
-            history_rings: Vec::new(),
+            history_starts,
         };
-        #[cfg(feature = "history-ring")]
-        {
-            engine.history_rings = take_history_rings(&mut engine.state.animals);
-        }
         Ok(engine)
     }
 
     pub fn snapshot(&self) -> FarmSnapshot {
         let mut result = self.state.clone();
         #[cfg(feature = "history-ring")]
-        for (animal, ring) in result.animals.iter_mut().zip(&self.history_rings) {
-            animal.history = ring.iter().cloned().collect();
+        for (animal, start) in result.animals.iter_mut().zip(&self.history_starts) {
+            animal.history.rotate_left(usize::from(*start));
         }
         result.seed = self.model_rng.state();
         result.locomotion_seed = self.locomotion_rng.state();
@@ -332,7 +324,8 @@ impl FarmEngine {
                     let event = if animal.action != previous_action {
                         #[cfg(feature = "history-ring")]
                         record_activity_ring(
-                            &mut self.history_rings[animal_index],
+                            &mut animal.history,
+                            &mut self.history_starts[animal_index],
                             self.state.hour,
                             reason,
                             observed_thirst,
@@ -484,30 +477,16 @@ fn record_activity(
 }
 
 #[cfg(feature = "history-ring")]
-fn take_history_rings(animals: &mut [AnimalState]) -> Vec<VecDeque<ActivityRecord>> {
-    animals
-        .iter_mut()
-        .map(|animal| {
-            let mut ring = VecDeque::with_capacity(40);
-            ring.extend(std::mem::take(&mut animal.history));
-            ring
-        })
-        .collect()
-}
-
-#[cfg(feature = "history-ring")]
 fn record_activity_ring(
-    history: &mut VecDeque<ActivityRecord>,
+    history: &mut Vec<ActivityRecord>,
+    start: &mut u8,
     hour: u64,
     reason: ActivityReason,
     observed_thirst: f64,
     housing: Housing,
     action: Activity,
 ) {
-    if history.len() == 40 {
-        history.pop_front();
-    }
-    history.push_back(ActivityRecord {
+    let record = ActivityRecord {
         hour,
         action,
         reason,
@@ -516,7 +495,13 @@ fn record_activity_ring(
             thirst: observed_thirst,
             housing,
         },
-    });
+    };
+    if history.len() < 40 {
+        history.push(record);
+    } else {
+        history[usize::from(*start)] = record;
+        *start = ((*start + 1) % 40) as u8;
+    }
 }
 
 pub fn metrics(snapshot: &FarmSnapshot) -> FarmMetrics {
@@ -801,6 +786,104 @@ pub fn compare_configured(
 mod tests {
     use super::*;
     use crate::{Diet, Weather};
+
+    #[cfg(feature = "history-ring")]
+    #[test]
+    fn history_ring_overwrites_oldest_record_and_keeps_chronological_order() {
+        let mut history = Vec::with_capacity(40);
+        let mut start = 0;
+        for hour in 1..=83 {
+            record_activity_ring(
+                &mut history,
+                &mut start,
+                hour,
+                ActivityReason::PastureHousing,
+                hour as f64,
+                Housing::Pasture,
+                Activity::Grazing,
+            );
+        }
+
+        assert_eq!(history.len(), 40);
+        assert_eq!(start, 3);
+        let mut chronological = history.clone();
+        chronological.rotate_left(usize::from(start));
+        assert_eq!(
+            chronological
+                .iter()
+                .map(|record| record.hour)
+                .collect::<Vec<_>>(),
+            (44..=83).collect::<Vec<_>>()
+        );
+        assert_eq!(chronological.first().unwrap().observed.thirst, 44.0);
+        assert_eq!(chronological.last().unwrap().observed.hour, 11);
+    }
+
+    #[cfg(feature = "history-ring")]
+    #[test]
+    fn snapshot_keeps_repeatedly_wrapped_history_chronological() {
+        let mut engine = FarmEngine::new(2026, 1).unwrap();
+        engine.state.hour = 83;
+        engine.state.animals[0].history.clear();
+        for hour in 1..=83 {
+            record_activity_ring(
+                &mut engine.state.animals[0].history,
+                &mut engine.history_starts[0],
+                hour,
+                ActivityReason::PastureHousing,
+                hour as f64,
+                Housing::Pasture,
+                Activity::Grazing,
+            );
+        }
+
+        let snapshot = engine.snapshot();
+        let history = &snapshot.animals[0].history;
+        assert_eq!(
+            history.iter().map(|record| record.hour).collect::<Vec<_>>(),
+            (44..=83).collect::<Vec<_>>()
+        );
+        assert_eq!(engine.snapshot(), snapshot);
+    }
+
+    #[cfg(feature = "history-ring")]
+    #[test]
+    fn full_history_snapshot_restores_and_replays_with_identical_chronology() {
+        let mut checkpoint = FarmEngine::new(2026, 1).unwrap().snapshot();
+        checkpoint.hour = 46;
+        checkpoint.animals[0].history = (7..=46)
+            .map(|hour| ActivityRecord {
+                hour,
+                action: Activity::Grazing,
+                reason: ActivityReason::PastureHousing,
+                observed: ObservedActivityState {
+                    hour: (hour % 24) as u8,
+                    thirst: 20.0,
+                    housing: Housing::Pasture,
+                },
+            })
+            .collect();
+
+        let mut uninterrupted = FarmEngine::from_snapshot(checkpoint.clone()).unwrap();
+        assert_eq!(uninterrupted.snapshot(), checkpoint);
+        let saved = uninterrupted.snapshot();
+        let mut replayed = FarmEngine::from_snapshot(saved).unwrap();
+
+        uninterrupted.tick(1).unwrap();
+        replayed.tick(1).unwrap();
+
+        let uninterrupted_snapshot = uninterrupted.snapshot();
+        let replayed_snapshot = replayed.snapshot();
+        assert_eq!(uninterrupted_snapshot, replayed_snapshot);
+        let history = &uninterrupted_snapshot.animals[0].history;
+        assert_eq!(history.len(), 40);
+        assert_eq!(history.first().unwrap().hour, 8);
+        assert_eq!(history.last().unwrap().hour, 47);
+        assert_eq!(history.last().unwrap().action, Activity::Resting);
+        assert!(history
+            .windows(2)
+            .all(|records| records[0].hour < records[1].hour));
+    }
 
     #[test]
     fn native_initialization_uses_stable_ids_and_the_two_js_rng_streams() {
