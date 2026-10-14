@@ -1,0 +1,4179 @@
+{
+  "schemaVersion": 2,
+  "benchmark": {
+    "name": "native-core-browser-wasm",
+    "source": {
+      "revision": "0939e1f981e2a2271440efd6e6cf6c7b0a969446",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "platform": "linux",
+    "browser": "firefox",
+    "browserVersion": "Firefox 144.0.2",
+    "browserRevision": "Playwright 1.57.0",
+    "browserUserAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0",
+    "rust": "rustc 1.95.0 (59807616e 2026-04-14)"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null,
+    "browserDevice": {
+      "hardwareConcurrency": 16,
+      "deviceMemoryGiB": null,
+      "devicePixelRatio": 1,
+      "screen": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  },
+  "workload": {
+    "seed": 20261012,
+    "populations": [
+      {
+        "animals": 100,
+        "scope": "full-core browser scenario and Worker",
+        "limit": "FarmEngine supported maximum 10000"
+      },
+      {
+        "animals": 1000,
+        "scope": "full-core browser scenario and Worker",
+        "limit": "FarmEngine supported maximum 10000"
+      },
+      {
+        "animals": 10000,
+        "scope": "full-core browser scenario and Worker",
+        "limit": "FarmEngine supported maximum 10000"
+      }
+    ],
+    "scenario": "baseline pasture; 24-hour horizon",
+    "fixtureChecks": "baseline-pasture (A3) and housing-comparison (B3), exact JSON parity"
+  },
+  "configuration": {
+    "warmupRuns": 3,
+    "repetitions": 15,
+    "uiRepetitions": 15,
+    "startupWarmSamples": 3,
+    "workersPerWarmStartupSample": 10,
+    "browserCacheState": "isolated firefox profile; warm samples divide batches of ten Worker startups after the initial cold WASM compile"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "rendererMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "engine",
+          "metric": "nativeScenarioExecution",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              1,
+              0,
+              1,
+              0,
+              0,
+              1,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "source": "riose_scenario_run_json timing around run_native_scenario after request JSON parse"
+        },
+        {
+          "phase": "engine",
+          "metric": "farmEngineBaseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1,
+            "spread": {
+              "min": 0,
+              "max": 2,
+              "range": 2
+            },
+            "rawObservations": [
+              2,
+              1,
+              1,
+              1,
+              2,
+              2,
+              1,
+              1,
+              2,
+              1,
+              1,
+              2,
+              0,
+              2,
+              1
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "javascript",
+          "observations": [
+            2,
+            1,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            0,
+            2,
+            1
+          ],
+          "source": "benchmark Worker timing around FarmEngine setup, tick, snapshot, and metrics"
+        },
+        {
+          "phase": "engine",
+          "metric": "nativeScenarioExecution",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 6,
+            "spread": {
+              "min": 4,
+              "max": 6,
+              "range": 2
+            },
+            "rawObservations": [
+              6,
+              6,
+              5,
+              5,
+              5,
+              6,
+              5,
+              6,
+              5,
+              6,
+              6,
+              6,
+              6,
+              4,
+              5
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            6,
+            6,
+            5,
+            5,
+            5,
+            6,
+            5,
+            6,
+            5,
+            6,
+            6,
+            6,
+            6,
+            4,
+            5
+          ],
+          "source": "riose_scenario_run_json timing around run_native_scenario after request JSON parse"
+        },
+        {
+          "phase": "engine",
+          "metric": "farmEngineBaseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 14,
+            "spread": {
+              "min": 12,
+              "max": 21,
+              "range": 9
+            },
+            "rawObservations": [
+              15,
+              15,
+              15,
+              16,
+              13,
+              13,
+              13,
+              12,
+              15,
+              21,
+              13,
+              13,
+              15,
+              12,
+              14
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "javascript",
+          "observations": [
+            15,
+            15,
+            15,
+            16,
+            13,
+            13,
+            13,
+            12,
+            15,
+            21,
+            13,
+            13,
+            15,
+            12,
+            14
+          ],
+          "source": "benchmark Worker timing around FarmEngine setup, tick, snapshot, and metrics"
+        },
+        {
+          "phase": "engine",
+          "metric": "nativeScenarioExecution",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 53,
+            "spread": {
+              "min": 51,
+              "max": 62,
+              "range": 11
+            },
+            "rawObservations": [
+              51,
+              53,
+              55,
+              55,
+              51,
+              62,
+              57,
+              53,
+              53,
+              55,
+              52,
+              52,
+              54,
+              52,
+              52
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            51,
+            53,
+            55,
+            55,
+            51,
+            62,
+            57,
+            53,
+            53,
+            55,
+            52,
+            52,
+            54,
+            52,
+            52
+          ],
+          "source": "riose_scenario_run_json timing around run_native_scenario after request JSON parse"
+        },
+        {
+          "phase": "engine",
+          "metric": "farmEngineBaseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 153,
+            "spread": {
+              "min": 130,
+              "max": 206,
+              "range": 76
+            },
+            "rawObservations": [
+              143,
+              206,
+              176,
+              133,
+              157,
+              158,
+              153,
+              131,
+              156,
+              130,
+              133,
+              138,
+              152,
+              180,
+              182
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario engine"
+          },
+          "implementation": "javascript",
+          "observations": [
+            143,
+            206,
+            176,
+            133,
+            157,
+            158,
+            153,
+            131,
+            156,
+            130,
+            133,
+            138,
+            152,
+            180,
+            182
+          ],
+          "source": "benchmark Worker timing around FarmEngine setup, tick, snapshot, and metrics"
+        }
+      ]
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "worker": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 2,
+            "spread": {
+              "min": 1,
+              "max": 3,
+              "range": 2
+            },
+            "rawObservations": [
+              2,
+              2,
+              2,
+              2,
+              3,
+              2,
+              2,
+              1,
+              3,
+              2,
+              2,
+              1,
+              2,
+              2,
+              2
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            1,
+            3,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        },
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 2,
+            "spread": {
+              "min": 1,
+              "max": 4,
+              "range": 3
+            },
+            "rawObservations": [
+              2,
+              3,
+              2,
+              3,
+              4,
+              2,
+              1,
+              3,
+              2,
+              2,
+              2,
+              3,
+              2,
+              2,
+              3
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "javascript",
+          "observations": [
+            2,
+            3,
+            2,
+            3,
+            4,
+            2,
+            1,
+            3,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            3
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        },
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 20,
+            "spread": {
+              "min": 18,
+              "max": 32,
+              "range": 14
+            },
+            "rawObservations": [
+              20,
+              26,
+              20,
+              19,
+              19,
+              31,
+              20,
+              20,
+              19,
+              32,
+              20,
+              18,
+              26,
+              19,
+              20
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            20,
+            26,
+            20,
+            19,
+            19,
+            31,
+            20,
+            20,
+            19,
+            32,
+            20,
+            18,
+            26,
+            19,
+            20
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        },
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 20,
+            "spread": {
+              "min": 17,
+              "max": 25,
+              "range": 8
+            },
+            "rawObservations": [
+              20,
+              21,
+              21,
+              22,
+              19,
+              19,
+              20,
+              18,
+              21,
+              25,
+              17,
+              19,
+              20,
+              18,
+              25
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "javascript",
+          "observations": [
+            20,
+            21,
+            21,
+            22,
+            19,
+            19,
+            20,
+            18,
+            21,
+            25,
+            17,
+            19,
+            20,
+            18,
+            25
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        },
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 215,
+            "spread": {
+              "min": 207,
+              "max": 258,
+              "range": 51
+            },
+            "rawObservations": [
+              223,
+              207,
+              213,
+              236,
+              222,
+              243,
+              258,
+              209,
+              213,
+              215,
+              208,
+              234,
+              216,
+              209,
+              213
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            223,
+            207,
+            213,
+            236,
+            222,
+            243,
+            258,
+            209,
+            213,
+            215,
+            208,
+            234,
+            216,
+            209,
+            213
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        },
+        {
+          "phase": "worker",
+          "metric": "scenarioRequestRoundTrip",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 224,
+            "spread": {
+              "min": 202,
+              "max": 275,
+              "range": 73
+            },
+            "rawObservations": [
+              214,
+              275,
+              245,
+              211,
+              235,
+              239,
+              224,
+              206,
+              231,
+              202,
+              211,
+              217,
+              220,
+              253,
+              251
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario Worker"
+          },
+          "implementation": "javascript",
+          "observations": [
+            214,
+            275,
+            245,
+            211,
+            235,
+            239,
+            224,
+            206,
+            231,
+            202,
+            211,
+            217,
+            220,
+            253,
+            251
+          ],
+          "source": "native-core-browser-wasm worker measurement"
+        }
+      ]
+    },
+    "ui": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "ui",
+          "metric": "snapshotToDomUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 2,
+            "spread": {
+              "min": 1,
+              "max": 3,
+              "range": 2
+            },
+            "rawObservations": [
+              2,
+              2,
+              2,
+              2,
+              2,
+              1,
+              1,
+              3,
+              1,
+              2,
+              1,
+              2,
+              1,
+              2,
+              1,
+              3,
+              1,
+              2,
+              2,
+              2,
+              1,
+              2,
+              2,
+              2,
+              2,
+              2,
+              3,
+              1,
+              1,
+              2
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1,
+            3,
+            1,
+            2,
+            1,
+            2,
+            1,
+            2,
+            1,
+            3,
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            1,
+            1,
+            2
+          ],
+          "detail": "synchronous existing UI metric/animal list updates after equal JavaScript/WASM scenario snapshots are applied in alternating order",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "snapshotToCanvasFrame",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 15,
+            "spread": {
+              "min": 9,
+              "max": 17,
+              "range": 8
+            },
+            "rawObservations": [
+              9,
+              16,
+              13,
+              16,
+              15,
+              15,
+              16,
+              15,
+              15,
+              16,
+              16,
+              14,
+              17,
+              16,
+              15,
+              15,
+              14,
+              16,
+              13,
+              14,
+              16,
+              15,
+              14,
+              15,
+              13,
+              14,
+              14,
+              15,
+              15,
+              15
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            9,
+            16,
+            13,
+            16,
+            15,
+            15,
+            16,
+            15,
+            15,
+            16,
+            16,
+            14,
+            17,
+            16,
+            15,
+            15,
+            14,
+            16,
+            13,
+            14,
+            16,
+            15,
+            14,
+            15,
+            13,
+            14,
+            14,
+            15,
+            15,
+            15
+          ],
+          "detail": "wait from equivalent snapshot application to next completed product canvas draw",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "virtualizedAnimalRows",
+          "unit": "rows",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 12,
+            "spread": {
+              "min": 12,
+              "max": 12,
+              "range": 0
+            },
+            "rawObservations": [
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "domNodes": {
+            "sampleCount": 30,
+            "median": 510,
+            "spread": {
+              "min": 510,
+              "max": 510,
+              "range": 0
+            },
+            "rawObservations": [
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510
+            ]
+          },
+          "completedDrawFrames": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "snapshotToDomUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 2,
+            "spread": {
+              "min": 1,
+              "max": 4,
+              "range": 3
+            },
+            "rawObservations": [
+              2,
+              3,
+              3,
+              2,
+              2,
+              2,
+              3,
+              3,
+              2,
+              2,
+              3,
+              4,
+              2,
+              4,
+              2,
+              2,
+              1,
+              2,
+              3,
+              3,
+              3,
+              2,
+              2,
+              2,
+              2,
+              2,
+              2,
+              3,
+              2,
+              2
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            2,
+            3,
+            3,
+            2,
+            2,
+            2,
+            3,
+            3,
+            2,
+            2,
+            3,
+            4,
+            2,
+            4,
+            2,
+            2,
+            1,
+            2,
+            3,
+            3,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2
+          ],
+          "detail": "synchronous existing UI metric/animal list updates after equal JavaScript/WASM scenario snapshots are applied in alternating order",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "snapshotToCanvasFrame",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 47,
+            "spread": {
+              "min": 23,
+              "max": 49,
+              "range": 26
+            },
+            "rawObservations": [
+              23,
+              47,
+              46,
+              48,
+              48,
+              47,
+              48,
+              32,
+              47,
+              47,
+              47,
+              47,
+              48,
+              47,
+              47,
+              47,
+              49,
+              32,
+              47,
+              47,
+              31,
+              48,
+              47,
+              48,
+              49,
+              48,
+              47,
+              47,
+              47,
+              32
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            23,
+            47,
+            46,
+            48,
+            48,
+            47,
+            48,
+            32,
+            47,
+            47,
+            47,
+            47,
+            48,
+            47,
+            47,
+            47,
+            49,
+            32,
+            47,
+            47,
+            31,
+            48,
+            47,
+            48,
+            49,
+            48,
+            47,
+            47,
+            47,
+            32
+          ],
+          "detail": "wait from equivalent snapshot application to next completed product canvas draw",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "virtualizedAnimalRows",
+          "unit": "rows",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 12,
+            "spread": {
+              "min": 12,
+              "max": 12,
+              "range": 0
+            },
+            "rawObservations": [
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "domNodes": {
+            "sampleCount": 30,
+            "median": 510,
+            "spread": {
+              "min": 510,
+              "max": 510,
+              "range": 0
+            },
+            "rawObservations": [
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510
+            ]
+          },
+          "completedDrawFrames": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "snapshotToDomUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 10,
+            "spread": {
+              "min": 7,
+              "max": 26,
+              "range": 19
+            },
+            "rawObservations": [
+              13,
+              9,
+              10,
+              9,
+              8,
+              9,
+              11,
+              10,
+              9,
+              8,
+              9,
+              10,
+              26,
+              8,
+              7,
+              10,
+              11,
+              10,
+              11,
+              11,
+              10,
+              10,
+              9,
+              11,
+              10,
+              10,
+              9,
+              8,
+              8,
+              10
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            13,
+            9,
+            10,
+            9,
+            8,
+            9,
+            11,
+            10,
+            9,
+            8,
+            9,
+            10,
+            26,
+            8,
+            7,
+            10,
+            11,
+            10,
+            11,
+            11,
+            10,
+            10,
+            9,
+            11,
+            10,
+            10,
+            9,
+            8,
+            8,
+            10
+          ],
+          "detail": "synchronous existing UI metric/animal list updates after equal JavaScript/WASM scenario snapshots are applied in alternating order",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "snapshotToCanvasFrame",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 40,
+            "spread": {
+              "min": 5,
+              "max": 43,
+              "range": 38
+            },
+            "rawObservations": [
+              5,
+              24,
+              39,
+              40,
+              25,
+              40,
+              39,
+              40,
+              41,
+              41,
+              41,
+              40,
+              24,
+              42,
+              43,
+              31,
+              39,
+              40,
+              40,
+              40,
+              40,
+              24,
+              41,
+              38,
+              25,
+              41,
+              40,
+              42,
+              25,
+              41
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            5,
+            24,
+            39,
+            40,
+            25,
+            40,
+            39,
+            40,
+            41,
+            41,
+            41,
+            40,
+            24,
+            42,
+            43,
+            31,
+            39,
+            40,
+            40,
+            40,
+            40,
+            24,
+            41,
+            38,
+            25,
+            41,
+            40,
+            42,
+            25,
+            41
+          ],
+          "detail": "wait from equivalent snapshot application to next completed product canvas draw",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "virtualizedAnimalRows",
+          "unit": "rows",
+          "statistics": {
+            "sampleCount": 30,
+            "median": 12,
+            "spread": {
+              "min": 12,
+              "max": 12,
+              "range": 0
+            },
+            "rawObservations": [
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12,
+              12
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "existing product UI result display"
+          },
+          "implementation": "shared-renderer",
+          "observations": [
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "domNodes": {
+            "sampleCount": 30,
+            "median": 510,
+            "spread": {
+              "min": 510,
+              "max": 510,
+              "range": 0
+            },
+            "rawObservations": [
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510,
+              510
+            ]
+          },
+          "completedDrawFrames": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 19,
+            "spread": {
+              "min": 19,
+              "max": 19,
+              "range": 0
+            },
+            "rawObservations": [
+              19
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            19
+          ],
+          "detail": "derived as Worker round-trip median 2 ms plus UI update/canvas medians 17 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 19,
+            "spread": {
+              "min": 19,
+              "max": 19,
+              "range": 0
+            },
+            "rawObservations": [
+              19
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "javascript",
+          "observations": [
+            19
+          ],
+          "detail": "derived as Worker round-trip median 2 ms plus UI update/canvas medians 17 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 69,
+            "spread": {
+              "min": 69,
+              "max": 69,
+              "range": 0
+            },
+            "rawObservations": [
+              69
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            69
+          ],
+          "detail": "derived as Worker round-trip median 20 ms plus UI update/canvas medians 49 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 69,
+            "spread": {
+              "min": 69,
+              "max": 69,
+              "range": 0
+            },
+            "rawObservations": [
+              69
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "javascript",
+          "observations": [
+            69
+          ],
+          "detail": "derived as Worker round-trip median 20 ms plus UI update/canvas medians 49 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 265,
+            "spread": {
+              "min": 265,
+              "max": 265,
+              "range": 0
+            },
+            "rawObservations": [
+              265
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            265
+          ],
+          "detail": "derived as Worker round-trip median 215 ms plus UI update/canvas medians 50 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        },
+        {
+          "phase": "ui",
+          "metric": "workerToRenderedResultEstimate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 274,
+            "spread": {
+              "min": 274,
+              "max": 274,
+              "range": 0
+            },
+            "rawObservations": [
+              274
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "scenario Worker response plus separately timed product UI display"
+          },
+          "implementation": "javascript",
+          "observations": [
+            274
+          ],
+          "detail": "derived as Worker round-trip median 224 ms plus UI update/canvas medians 50 ms; not measured as one continuous request",
+          "source": "native-core-browser-wasm ui measurement"
+        }
+      ]
+    },
+    "layout": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "render": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "startup": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "startup",
+          "metric": "workerAndWasmColdStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 37,
+            "spread": {
+              "min": 37,
+              "max": 37,
+              "range": 0
+            },
+            "rawObservations": [
+              37
+            ]
+          },
+          "implementation": "full-core-wasm",
+          "memory": {
+            "wasmLinearBytes": 1114112
+          },
+          "observations": [
+            37
+          ],
+          "memoryType": "wasm-memory",
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm startup measurement"
+        },
+        {
+          "phase": "startup",
+          "metric": "workerAndJsColdStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 13,
+            "spread": {
+              "min": 13,
+              "max": 13,
+              "range": 0
+            },
+            "rawObservations": [
+              13
+            ]
+          },
+          "implementation": "javascript",
+          "observations": [
+            13
+          ],
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm startup measurement"
+        },
+        {
+          "phase": "startup",
+          "metric": "workerAndWasmWarmStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 16.3,
+            "spread": {
+              "min": 15.7,
+              "max": 20.1,
+              "range": 4.400000000000002
+            },
+            "rawObservations": [
+              20.1,
+              16.3,
+              15.7
+            ]
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            20.1,
+            16.3,
+            15.7
+          ],
+          "memoryType": "wasm-memory",
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm startup measurement"
+        },
+        {
+          "phase": "startup",
+          "metric": "workerAndJsWarmStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 9.4,
+            "spread": {
+              "min": 9.3,
+              "max": 10.9,
+              "range": 1.5999999999999996
+            },
+            "rawObservations": [
+              10.9,
+              9.4,
+              9.3
+            ]
+          },
+          "implementation": "javascript",
+          "observations": [
+            10.9,
+            9.4,
+            9.3
+          ],
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm startup measurement"
+        }
+      ]
+    },
+    "coldStartup": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "coldStartup",
+          "metric": "workerAndWasmColdStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 37,
+            "spread": {
+              "min": 37,
+              "max": 37,
+              "range": 0
+            },
+            "rawObservations": [
+              37
+            ]
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            37
+          ],
+          "memoryType": "wasm-memory",
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm coldStartup measurement"
+        },
+        {
+          "phase": "coldStartup",
+          "metric": "workerAndJsColdStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 1,
+            "median": 13,
+            "spread": {
+              "min": 13,
+              "max": 13,
+              "range": 0
+            },
+            "rawObservations": [
+              13
+            ]
+          },
+          "implementation": "javascript",
+          "observations": [
+            13
+          ],
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm coldStartup measurement"
+        }
+      ]
+    },
+    "warmStartup": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "warmStartup",
+          "metric": "workerAndWasmWarmStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 16.3,
+            "spread": {
+              "min": 15.7,
+              "max": 20.1,
+              "range": 4.400000000000002
+            },
+            "rawObservations": [
+              20.1,
+              16.3,
+              15.7
+            ]
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            20.1,
+            16.3,
+            15.7
+          ],
+          "memoryType": "wasm-memory",
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm warmStartup measurement"
+        },
+        {
+          "phase": "warmStartup",
+          "metric": "workerAndJsWarmStartup",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 9.4,
+            "spread": {
+              "min": 9.3,
+              "max": 10.9,
+              "range": 1.5999999999999996
+            },
+            "rawObservations": [
+              10.9,
+              9.4,
+              9.3
+            ]
+          },
+          "implementation": "javascript",
+          "observations": [
+            10.9,
+            9.4,
+            9.3
+          ],
+          "population": "all configured populations",
+          "source": "native-core-browser-wasm warmStartup measurement"
+        }
+      ]
+    },
+    "bridgeMarshaling": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonEncodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputAllocateMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonParseMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "detail": "measured inside riose_scenario_run_json before native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "resultJsonSerializeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              0,
+              1,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              0,
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1
+          ],
+          "detail": "measured inside riose_scenario_run_json after native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "outputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "responseJsonDecodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "coreAndJsonAbiMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1,
+            "spread": {
+              "min": 1,
+              "max": 2,
+              "range": 1
+            },
+            "rawObservations": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              1,
+              2,
+              1,
+              2,
+              2,
+              1,
+              1
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            1,
+            2,
+            2,
+            1,
+            1
+          ],
+          "detail": "total Rust ABI call including request parsing, native execution, result serialization, and response envelope",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonEncodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputAllocateMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonParseMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "detail": "measured inside riose_scenario_run_json before native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "resultJsonSerializeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 5,
+            "spread": {
+              "min": 4,
+              "max": 6,
+              "range": 2
+            },
+            "rawObservations": [
+              5,
+              5,
+              5,
+              5,
+              5,
+              6,
+              5,
+              5,
+              6,
+              5,
+              4,
+              5,
+              5,
+              6,
+              6
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            6,
+            5,
+            5,
+            6,
+            5,
+            4,
+            5,
+            5,
+            6,
+            6
+          ],
+          "detail": "measured inside riose_scenario_run_json after native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "outputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 1,
+              "range": 1
+            },
+            "rawObservations": [
+              0,
+              0,
+              1,
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "responseJsonDecodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 3,
+            "spread": {
+              "min": 2,
+              "max": 4,
+              "range": 2
+            },
+            "rawObservations": [
+              3,
+              3,
+              3,
+              2,
+              3,
+              2,
+              3,
+              4,
+              4,
+              3,
+              3,
+              3,
+              3,
+              4,
+              3
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            3,
+            3,
+            3,
+            2,
+            3,
+            2,
+            3,
+            4,
+            4,
+            3,
+            3,
+            3,
+            3,
+            4,
+            3
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "coreAndJsonAbiMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 11,
+            "spread": {
+              "min": 10,
+              "max": 12,
+              "range": 2
+            },
+            "rawObservations": [
+              11,
+              11,
+              10,
+              10,
+              11,
+              12,
+              10,
+              11,
+              11,
+              12,
+              10,
+              11,
+              11,
+              10,
+              11
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            11,
+            11,
+            10,
+            10,
+            11,
+            12,
+            10,
+            11,
+            11,
+            12,
+            10,
+            11,
+            11,
+            10,
+            11
+          ],
+          "detail": "total Rust ABI call including request parsing, native execution, result serialization, and response envelope",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonEncodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputAllocateMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "inputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "requestJsonParseMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 0,
+            "spread": {
+              "min": 0,
+              "max": 0,
+              "range": 0
+            },
+            "rawObservations": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "detail": "measured inside riose_scenario_run_json before native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "resultJsonSerializeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 54,
+            "spread": {
+              "min": 51,
+              "max": 63,
+              "range": 12
+            },
+            "rawObservations": [
+              56,
+              51,
+              53,
+              63,
+              53,
+              56,
+              55,
+              51,
+              51,
+              55,
+              54,
+              54,
+              51,
+              53,
+              55
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            56,
+            51,
+            53,
+            63,
+            53,
+            56,
+            55,
+            51,
+            51,
+            55,
+            54,
+            54,
+            51,
+            53,
+            55
+          ],
+          "detail": "measured inside riose_scenario_run_json after native scenario execution",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "outputCopyMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 4,
+            "spread": {
+              "min": 3,
+              "max": 5,
+              "range": 2
+            },
+            "rawObservations": [
+              3,
+              3,
+              3,
+              4,
+              4,
+              5,
+              4,
+              4,
+              4,
+              5,
+              5,
+              3,
+              4,
+              4,
+              4
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            3,
+            3,
+            3,
+            4,
+            4,
+            5,
+            4,
+            4,
+            4,
+            5,
+            5,
+            3,
+            4,
+            4,
+            4
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "responseJsonDecodeMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 32,
+            "spread": {
+              "min": 26,
+              "max": 57,
+              "range": 31
+            },
+            "rawObservations": [
+              44,
+              31,
+              34,
+              38,
+              36,
+              33,
+              57,
+              26,
+              27,
+              31,
+              27,
+              48,
+              30,
+              31,
+              32
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            44,
+            31,
+            34,
+            38,
+            36,
+            33,
+            57,
+            26,
+            27,
+            31,
+            27,
+            48,
+            30,
+            31,
+            32
+          ],
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        },
+        {
+          "phase": "bridgeMarshaling",
+          "metric": "coreAndJsonAbiMs",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 108,
+            "spread": {
+              "min": 105,
+              "max": 119,
+              "range": 14
+            },
+            "rawObservations": [
+              108,
+              106,
+              109,
+              119,
+              105,
+              119,
+              114,
+              105,
+              106,
+              111,
+              107,
+              108,
+              106,
+              106,
+              109
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario request"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            108,
+            106,
+            109,
+            119,
+            105,
+            119,
+            114,
+            105,
+            106,
+            111,
+            107,
+            108,
+            106,
+            106,
+            109
+          ],
+          "detail": "total Rust ABI call including request parsing, native execution, result serialization, and response envelope",
+          "source": "native-core-browser-wasm bridgeMarshaling measurement"
+        }
+      ]
+    },
+    "fullScenario": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 2,
+            "spread": {
+              "min": 1,
+              "max": 2,
+              "range": 1
+            },
+            "rawObservations": [
+              2,
+              1,
+              2,
+              1,
+              1,
+              2,
+              2,
+              2,
+              1,
+              2,
+              2,
+              2,
+              2,
+              1,
+              1
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            2,
+            1,
+            2,
+            1,
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        },
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1,
+            "spread": {
+              "min": 0,
+              "max": 2,
+              "range": 2
+            },
+            "rawObservations": [
+              2,
+              1,
+              1,
+              1,
+              2,
+              2,
+              1,
+              1,
+              2,
+              1,
+              1,
+              2,
+              0,
+              2,
+              1
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "javascript",
+          "observations": [
+            2,
+            1,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            0,
+            2,
+            1
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        },
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 14,
+            "spread": {
+              "min": 13,
+              "max": 16,
+              "range": 3
+            },
+            "rawObservations": [
+              14,
+              14,
+              14,
+              13,
+              14,
+              14,
+              15,
+              15,
+              15,
+              16,
+              14,
+              14,
+              14,
+              14,
+              14
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            14,
+            14,
+            14,
+            13,
+            14,
+            14,
+            15,
+            15,
+            15,
+            16,
+            14,
+            14,
+            14,
+            14,
+            14
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        },
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 14,
+            "spread": {
+              "min": 12,
+              "max": 21,
+              "range": 9
+            },
+            "rawObservations": [
+              15,
+              15,
+              15,
+              16,
+              13,
+              13,
+              13,
+              12,
+              15,
+              21,
+              13,
+              13,
+              15,
+              12,
+              14
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "javascript",
+          "observations": [
+            15,
+            15,
+            15,
+            16,
+            13,
+            13,
+            13,
+            12,
+            15,
+            21,
+            13,
+            13,
+            15,
+            12,
+            14
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        },
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 145,
+            "spread": {
+              "min": 135,
+              "max": 175,
+              "range": 40
+            },
+            "rawObservations": [
+              155,
+              140,
+              146,
+              161,
+              145,
+              158,
+              175,
+              135,
+              138,
+              147,
+              139,
+              159,
+              140,
+              141,
+              145
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "full-core-wasm",
+          "observations": [
+            155,
+            140,
+            146,
+            161,
+            145,
+            158,
+            175,
+            135,
+            138,
+            147,
+            139,
+            159,
+            140,
+            141,
+            145
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        },
+        {
+          "phase": "fullScenario",
+          "metric": "baseline24h",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 153,
+            "spread": {
+              "min": 130,
+              "max": 206,
+              "range": 76
+            },
+            "rawObservations": [
+              143,
+              206,
+              176,
+              133,
+              157,
+              158,
+              153,
+              131,
+              156,
+              130,
+              133,
+              138,
+              152,
+              180,
+              182
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine scenario"
+          },
+          "implementation": "javascript",
+          "observations": [
+            143,
+            206,
+            176,
+            133,
+            157,
+            158,
+            153,
+            131,
+            156,
+            130,
+            133,
+            138,
+            152,
+            180,
+            182
+          ],
+          "source": "native-core-browser-wasm fullScenario measurement"
+        }
+      ]
+    },
+    "uiEndToEnd": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "memory": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "memory",
+          "metric": "wasmLinearMemoryBytesAfterScenario",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 1507328,
+            "spread": {
+              "min": 1507328,
+              "max": 1507328,
+              "range": 0
+            },
+            "rawObservations": [
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328,
+              1507328
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "full-core scenario"
+          },
+          "implementation": "full-core-wasm",
+          "memoryType": "wasm-memory",
+          "observations": [
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328,
+            1507328
+          ],
+          "source": "WebAssembly.Memory.buffer.byteLength after the scenario response has been copied"
+        },
+        {
+          "phase": "memory",
+          "metric": "wasmLinearMemoryBytesAfterScenario",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 3670016,
+            "spread": {
+              "min": 3670016,
+              "max": 3670016,
+              "range": 0
+            },
+            "rawObservations": [
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016,
+              3670016
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "full-core scenario"
+          },
+          "implementation": "full-core-wasm",
+          "memoryType": "wasm-memory",
+          "observations": [
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016,
+            3670016
+          ],
+          "source": "WebAssembly.Memory.buffer.byteLength after the scenario response has been copied"
+        },
+        {
+          "phase": "memory",
+          "metric": "wasmLinearMemoryBytesAfterScenario",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 15,
+            "median": 21889024,
+            "spread": {
+              "min": 21889024,
+              "max": 21889024,
+              "range": 0
+            },
+            "rawObservations": [
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024,
+              21889024
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "full-core scenario"
+          },
+          "implementation": "full-core-wasm",
+          "memoryType": "wasm-memory",
+          "observations": [
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024,
+            21889024
+          ],
+          "source": "WebAssembly.Memory.buffer.byteLength after the scenario response has been copied"
+        }
+      ]
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "startup",
+      "timed": [
+        "Worker construction through ready message; WASM fetch and compile are included for WASM."
+      ],
+      "notTimed": [
+        "Browser process launch and initial page navigation."
+      ],
+      "whatIsTimed": [
+        "Worker construction through ready message; WASM fetch and compile are included for WASM."
+      ],
+      "whatIsNotTimed": [
+        "Browser process launch and initial page navigation."
+      ]
+    },
+    {
+      "phase": "coldStartup",
+      "timed": [
+        "First dedicated Worker startup and first WASM fetch/compile in an isolated browser profile."
+      ],
+      "notTimed": [
+        "Browser process startup."
+      ],
+      "whatIsTimed": [
+        "First dedicated Worker startup and first WASM fetch/compile in an isolated browser profile."
+      ],
+      "whatIsNotTimed": [
+        "Browser process startup."
+      ]
+    },
+    {
+      "phase": "warmStartup",
+      "timed": [
+        "New Worker startup after the first WASM module has been fetched and compiled by the selected browser."
+      ],
+      "notTimed": [
+        "A guaranteed HTTP cache hit across devices/browsers."
+      ],
+      "whatIsTimed": [
+        "New Worker startup after the first WASM module has been fetched and compiled by the selected browser."
+      ],
+      "whatIsNotTimed": [
+        "A guaranteed HTTP cache hit across devices/browsers."
+      ]
+    },
+    {
+      "phase": "engine",
+      "timed": [
+        "JavaScript FarmEngine setup, 24-hour tick, snapshot, and metrics; Rust run_native_scenario after request JSON parsing."
+      ],
+      "notTimed": [
+        "Worker scheduling/transport, WASM request parsing and result serialization, and page rendering."
+      ],
+      "whatIsTimed": [
+        "JavaScript FarmEngine setup, 24-hour tick, snapshot, and metrics; Rust run_native_scenario after request JSON parsing."
+      ],
+      "whatIsNotTimed": [
+        "Worker scheduling/transport, WASM request parsing and result serialization, and page rendering."
+      ]
+    },
+    {
+      "phase": "fullScenario",
+      "timed": [
+        "Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode."
+      ],
+      "notTimed": [
+        "Page rendering and browser process launch."
+      ],
+      "whatIsTimed": [
+        "Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode."
+      ],
+      "whatIsNotTimed": [
+        "Page rendering and browser process launch."
+      ]
+    },
+    {
+      "phase": "worker",
+      "timed": [
+        "Page request through Worker response including structured-clone transfer and scheduling."
+      ],
+      "notTimed": [
+        "UI rendering; the study uses a dedicated benchmark Worker."
+      ],
+      "whatIsTimed": [
+        "Page request through Worker response including structured-clone transfer and scheduling."
+      ],
+      "whatIsNotTimed": [
+        "UI rendering; the study uses a dedicated benchmark Worker."
+      ]
+    },
+    {
+      "phase": "bridgeMarshaling",
+      "timed": [
+        "WASM request JSON encode, input allocation/copy, Rust request JSON parse, result JSON serialization, output copy, response JSON decode, and total ABI call."
+      ],
+      "notTimed": [
+        "UI rendering; response-envelope assembly is included in the total ABI call but not timed as a separate subphase."
+      ],
+      "whatIsTimed": [
+        "WASM request JSON encode, input allocation/copy, Rust request JSON parse, result JSON serialization, output copy, response JSON decode, and total ABI call."
+      ],
+      "whatIsNotTimed": [
+        "UI rendering; response-envelope assembly is included in the total ABI call but not timed as a separate subphase."
+      ]
+    },
+    {
+      "phase": "memory",
+      "timed": [
+        "WASM linear memory high-water size after each completed scenario; Chromium page JS heap after forced GC and product UI snapshot rendering when available."
+      ],
+      "notTimed": [
+        "Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation."
+      ],
+      "whatIsTimed": [
+        "WASM linear memory high-water size after each completed scenario; Chromium page JS heap after forced GC and product UI snapshot rendering when available."
+      ],
+      "whatIsNotTimed": [
+        "Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation."
+      ]
+    },
+    {
+      "phase": "ui",
+      "timed": [
+        "Existing product UI synchronous metric/virtualized animal list update and time until the canvas completes a draw from an equivalent full-scenario result snapshot."
+      ],
+      "notTimed": [
+        "Scenario execution, benchmark Worker transport, user input, interactive simulation ticks, and GPU-compositor presentation. The UI-only hook applies the JS and WASM outputs separately after each scenario completes. workerToRenderedResultEstimate adds the separately measured worker and UI medians; it is not a single continuous trace."
+      ],
+      "whatIsTimed": [
+        "Existing product UI synchronous metric/virtualized animal list update and time until the canvas completes a draw from an equivalent full-scenario result snapshot."
+      ],
+      "whatIsNotTimed": [
+        "Scenario execution, benchmark Worker transport, user input, interactive simulation ticks, and GPU-compositor presentation. The UI-only hook applies the JS and WASM outputs separately after each scenario completes. workerToRenderedResultEstimate adds the separately measured worker and UI medians; it is not a single continuous trace."
+      ]
+    }
+  ],
+  "results": {
+    "browser": {
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0",
+      "hardwareConcurrency": 16,
+      "deviceMemoryGiB": null,
+      "devicePixelRatio": 1,
+      "screen": {
+        "width": 1280,
+        "height": 720
+      },
+      "browserProduct": "Firefox 144.0.2",
+      "browserRevision": "Playwright 1.57.0"
+    },
+    "goldenParity": {
+      "baselineWasmToGolden": true,
+      "baselineJsToGolden": true,
+      "housingWasmToGolden": true,
+      "housingJsToGolden": true,
+      "baselineWasmToJs": true,
+      "housingWasmToJs": true
+    },
+    "fallback": {
+      "verified": true,
+      "missing": {
+        "verified": true,
+        "reason": "Scenario WASM fetch failed: 404"
+      },
+      "invalid": {
+        "verified": true,
+        "reason": "Scenario WASM module could not be instantiated"
+      }
+    },
+    "warmupRuns": 3,
+    "repetitions": 15,
+    "decision": "NO-GO for product adoption: no repeatable Worker-to-display benefit across all tested populations",
+    "aggregateMedianMs": {
+      "wasm": 14,
+      "javascript": 14
+    },
+    "medianEndToEndBenefitAtEveryPopulation": false,
+    "medianWorkerToRenderedResultBenefitAtEveryPopulation": false,
+    "workerToRenderedResult": [
+      {
+        "animals": 100,
+        "wasmWorkerMs": 2,
+        "javascriptWorkerMs": 2,
+        "wasmUiMs": 17,
+        "javascriptUiMs": 17,
+        "wasmRenderedResultMs": 19,
+        "javascriptRenderedResultMs": 19
+      },
+      {
+        "animals": 1000,
+        "wasmWorkerMs": 20,
+        "javascriptWorkerMs": 20,
+        "wasmUiMs": 49,
+        "javascriptUiMs": 49,
+        "wasmRenderedResultMs": 69,
+        "javascriptRenderedResultMs": 69
+      },
+      {
+        "animals": 10000,
+        "wasmWorkerMs": 215,
+        "javascriptWorkerMs": 224,
+        "wasmUiMs": 50,
+        "javascriptUiMs": 50,
+        "wasmRenderedResultMs": 265,
+        "javascriptRenderedResultMs": 274
+      }
+    ],
+    "sourceArtifactBytes": 347758,
+    "sourceFingerprint": {
+      "algorithm": "sha256",
+      "treeDigest": "9e15ab536746662394c32ecc5749b6a9a78da2604e04a5297c41f47da0771317",
+      "files": {
+        "package.json": "e3ef3b5cf92c3536e8bda4ad60d22d0ffee8d1d1e1ab62a6dfdab40d8c708b47",
+        "package-lock.json": "f9eda6c97ba2c00a9e8dce3f2b0f31815566dfa9507db93fbf4c8a1e3bf61e07",
+        "Cargo.lock": "67a832c0e4f479255709458a144bcf6f2f981eae60f8bdf0ad69bfa792b0bb3c",
+        "crates/riose-core/Cargo.toml": "4fb0fb47981cc9621ffbacebda50a2b15ee16ff265697db0fca5f2a7cb6dc51f",
+        "crates/riose-core/src/br_corte.rs": "aadf9804220eced82ae1be6a115af503bf8b7d54a95039c14be935d1bd1d101c",
+        "crates/riose-core/src/contract.rs": "97309f01d2d3dfc1397eb7427000cab0ba7906dc9ff304b88aa9643f85742729",
+        "crates/riose-core/src/environment.rs": "6424d3533dc9643785bcd9dc7fb7b3ae6178b1596cd9ed9dbc5eda1c999c63ae",
+        "crates/riose-core/src/feeding.rs": "c89d3750f396216787bd441d03d4734ca98326513d366bce69e00614488e0752",
+        "crates/riose-core/src/lib.rs": "4efb055e29bceebec97ba3593f52809313fb71d7ec2056f54d1a98ca4a4c006d",
+        "crates/riose-core/src/runtime.rs": "97d9d481de64b5d895b640f86819a91ae1ea7ef76853e39973f932f8fc05cc0d",
+        "crates/riose-core/src/simulation.rs": "9eeebd70b80b298f56d455ff281d4224dd062287e5c031609246368656169e3c",
+        "crates/riose-core/src/snapshot.rs": "5b63c08a3274ec78915383bad21165d47fc76e2725d7f13c80f9327d981874aa",
+        "crates/riose-core/src/state.rs": "f617822ee270441b0a57724b36148bf5ff784649c10c364984ff46abac946e81",
+        "crates/riose-core/src/wasm_scenario.rs": "788d7e31ea6b210cbe75eead1690f198ce582aee6e6d2a528ed8b5126da2f4d1",
+        "src/client/app.js": "5f9065a4f4b13370171ea1762bfba6a5065ed96821ba66c51534c0c6ff6dafa9",
+        "src/client/animal-view-state.js": "840ee1b18df61ff45e3a857424d554f3decba3d523a920900f8aa8e5f83b93a7",
+        "src/client/engine.js": "12152069bea01e7a561f5c0d1cda2dd4956a6cae6fe50cff62c74ca48acfa7fb",
+        "src/client/metabolism-wasm.js": "e77f0c63475da553c8e18988e07138364d70aa310a5d9da7b7fdb1a6d287c529",
+        "src/client/native-scenario-wasm.js": "dad81df862d7370f6fdb0b6e2143abf001502c98f02229d236487cd81d5900d8",
+        "src/client/native-scenario-wasm-bench-worker.js": "1b64a62332354b3c90775208e53dd1985c205e9d27ec2fa2f9a7640c8e9b6689",
+        "scripts/build-wasm-scenario.sh": "5dbf7f46cf1be4d7c0ce8f723b56f44cbe4932a9e549eb853121e1d5fa749dbb",
+        "scripts/benchmark-native-wasm-browser.mjs": "d36739ae0b1915b0b9d2e49c7c3a4bcddef3e451d0dbd178d43889c4e43aa79a",
+        "scripts/browser-startup.mjs": "e5559b8e393b5b12d1db0c8e31f2079dc03ba48ecfb7f4528ecd3c3b01e2ead5",
+        "scripts/benchmark-report.mjs": "7c0158f8fe14ac21e514acc75e15d8dbe7e62e6e4f05cbb0b875d3d0ee9e6689",
+        "docs/architecture/benchmark-report.schema.json": "2147fce8e74b04fdccfce8c0246a0228010efec6c8d064c4b075032d8076f1e0",
+        "tests/scenario-goldens/baseline-pasture.json": "e479a8b37f1dc626a92c0478d027707614da74ab523426196abe3292aebb4ecc",
+        "tests/scenario-goldens/housing-comparison.json": "c230e48e170b19c621790e76595681bee40a4b83de3df049a409bdbe24066e63",
+        "wasm/riose_core.wasm": "2b3cceb34dd8b9f590c571c02e64c798cea2d6620b0e32c08d64c80548a88e1b",
+        "wasm/riose_scenario_core.wasm": "93dbff1b2de3cf7dac382390174a4c383509812ca7e828054d058eb6e7a1937f"
+      }
+    }
+  },
+  "limitations": [
+    "One Linux x86_64 host and one firefox build are measured per report; evidence from other browser releases or devices is not implied.",
+    "The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity. Their equal final snapshots are then applied to the existing product UI through a query-gated benchmark hook; this measures presentation cost but is not a live WASM UI integration.",
+    "Worker JS heap and process RSS are not attributed. WASM linear memory is reported separately and is not GPU memory.",
+    "The baseline workload is a 24-hour demonstrative pasture scenario; it is not scientific model validation or evidence for model accuracy.",
+    "A single cold startup and three warm startups describe this host run; repeatability across hosts remains for review."
+  ]
+}

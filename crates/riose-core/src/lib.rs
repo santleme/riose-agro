@@ -8,6 +8,8 @@ mod runtime;
 mod simulation;
 mod snapshot;
 mod state;
+#[cfg(all(feature = "browser-scenario-wasm", target_arch = "wasm32"))]
+mod wasm_scenario;
 pub use br_corte::{
     predict_pasture_dmi, BrCortePastureDmiDomain, BrCortePastureDmiInput,
     BrCortePastureDmiMetadata, BrCortePastureDmiPrediction, BrCortePastureDmiUnits,
