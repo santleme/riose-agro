@@ -2,6 +2,7 @@ import {
   createComparisonManifest,createConfiguredComparisonManifest,
   validateComparisonManifest,validateConfiguredComparisonManifest
 } from './engine.js';
+import {createLotComparisonManifest,validateLotComparisonManifest,LOT_COMPARISON_MANIFEST_TYPE} from './lot-comparison.js';
 
 export const RUN_HISTORY_KEY='agroville-run-history-v1';
 export const RUN_HISTORY_VERSION=1;
@@ -89,13 +90,22 @@ export function getRun(runId,storage=globalThis.localStorage){
   return listRuns(storage).find(run=>run.id===runId)??null;
 }
 
-export function createRunRecord({manifest,result,status='completed',error,execution,now=Date.now(),id}){
+export function createRunRecord({manifest,result,status='completed',error,execution,engineImplementation,now=Date.now(),id}){
   if(!manifest||!['completed','failed'].includes(status))throw new Error('Registro de execução inválido.');
   const configured=manifest.type==='riose-configured-comparison';
-  if(configured)validateConfiguredComparisonManifest(manifest);
+  const lotConfigured=manifest.type===LOT_COMPARISON_MANIFEST_TYPE;
+  if(lotConfigured)validateLotComparisonManifest(manifest);
+  else if(configured)validateConfiguredComparisonManifest(manifest);
   else validateComparisonManifest(manifest);
   const snapshot=sanitizedSnapshot(manifest.initialSnapshot);
-  const replayManifest=configured
+  const replayManifest=lotConfigured
+    ?createLotComparisonManifest(snapshot,{
+      patchIndex:manifest.lot.patchIndex,
+      domainZoneId:manifest.lot.domainZoneId,
+      periodDays:manifest.periodDays,
+      alternativeSupplementKgDMPerAnimalPerDay:manifest.scenarios.scenario.supplement
+    })
+    :configured
     ?createConfiguredComparisonManifest(snapshot,{days:manifest.periodDays,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario})
     :createComparisonManifest(snapshot,manifest.periodDays);
   const safeExecution=cleanExecution(execution);
@@ -107,7 +117,8 @@ export function createRunRecord({manifest,result,status='completed',error,execut
     manifest:replayManifest,
     ...(status==='completed'?{result}:{error:cleanError(error)}),
     provenance:{source:'local-browser',historyVersion:RUN_HISTORY_VERSION},
-    ...(safeExecution?{execution:safeExecution}:{})
+    ...(safeExecution?{execution:safeExecution}:{}),
+    ...(typeof (engineImplementation??execution?.engineImplementation)==='string'&&(engineImplementation??execution.engineImplementation)?{executor:{engineImplementation:engineImplementation??execution.engineImplementation}}:{})
   };
 }
 
@@ -153,9 +164,10 @@ export function runCompatibility(run){
   if(!run||run.status!=='completed')return {supported:false,reason:'Esta execução não foi concluída e não pode ser reproduzida.'};
   if(run.provenance?.historyVersion!==RUN_HISTORY_VERSION)return {supported:false,reason:'Versão do registro de histórico incompatível com esta instalação.'};
   if(run.engineVersion!==COMPARISON_ENGINE_VERSION)return {supported:false,reason:'Versão do motor incompatível com esta execução.'};
-  if(!(['agroville-comparison','riose-configured-comparison'].includes(run.manifest?.type))||run.manifest.version!==1)return {supported:false,reason:'Versão do manifesto não suportada por esta instalação.'};
+  if(!(['agroville-comparison','riose-configured-comparison',LOT_COMPARISON_MANIFEST_TYPE].includes(run.manifest?.type))||run.manifest.version!==1)return {supported:false,reason:'Versão do manifesto não suportada por esta instalação.'};
   try{
-    if(run.manifest.type==='riose-configured-comparison')validateConfiguredComparisonManifest(run.manifest);
+    if(run.manifest.type===LOT_COMPARISON_MANIFEST_TYPE)validateLotComparisonManifest(run.manifest);
+    else if(run.manifest.type==='riose-configured-comparison')validateConfiguredComparisonManifest(run.manifest);
     else validateComparisonManifest(run.manifest);
     return {supported:true,reason:''};
   }

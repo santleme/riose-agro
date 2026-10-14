@@ -10,8 +10,10 @@ const commandFields = {
   tick: ['hours'],
   compare: ['snapshot', 'days'],
   compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
+  compareLotConfigured: ['manifest'],
   replayComparison: ['manifest'],
   replayConfigured: ['manifest'],
+  replayLotConfigured: ['manifest'],
   snapshot: []
 };
 const responseTypes = new Set(['state', 'view', 'comparison', 'error']);
@@ -81,6 +83,10 @@ function validateCommandPayload(message) {
       break;
     case 'replayConfigured':
       if (!isRecord(message.manifest)) fail('INVALID_COMMAND_PAYLOAD', 'replayConfigured.manifest must be an object.', command);
+      break;
+    case 'compareLotConfigured':
+    case 'replayLotConfigured':
+      if (!isRecord(message.manifest)) fail('INVALID_COMMAND_PAYLOAD', `${command}.manifest must be an object.`, command);
       break;
     case 'snapshot':
       break;
