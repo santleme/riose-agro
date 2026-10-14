@@ -1,10 +1,10 @@
 {
-  "baseUrl": "http://127.0.0.1:8312/",
+  "baseUrl": "http://127.0.0.1:8000/",
   "integration": {
     "route": "/",
     "renderer": "src/client/app.js:Canvas2D",
     "sceneVersion": "riose-scene-v7",
-    "seed": 9,
+    "seed": 2026,
     "scenarioId": "beef",
     "validation": {
       "valid": true,
@@ -18,6 +18,16 @@
         {
           "code": "geometry-candidate-requires-art-review",
           "entity": "equipment-barn",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "grain-silo",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "farm-tractor",
           "status": "candidate-unverified"
         },
         {
@@ -44,6 +54,481 @@
           "code": "geometry-candidate-requires-art-review",
           "entity": "water-east-south",
           "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "maize-field-northwest",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-northwest",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-west-south",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-west-approach",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-northeast",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-east-south",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "tree-south-edge",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-001",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-002",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-003",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-004",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-005",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-006",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-007",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-008",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-009",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-010",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-011",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-012",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-013",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-014",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-015",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-016",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-017",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-018",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-019",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-020",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-021",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-022",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-023",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-024",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-025",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-026",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-027",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-028",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-029",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-030",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-031",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-032",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-033",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-034",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-035",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-036",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-037",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-038",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-039",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-040",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-041",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-042",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-043",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-044",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-045",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-046",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-047",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-048",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-049",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-050",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-051",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-052",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-053",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-054",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-055",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-056",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-057",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-058",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-059",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-060",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-061",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-062",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-063",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-064",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-065",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-066",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-067",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-068",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-069",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-070",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-071",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-072",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-073",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-074",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-075",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-076",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-077",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-078",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-079",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-080",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-081",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-082",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-083",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-084",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-085",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-086",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-087",
+          "status": "candidate-unverified"
+        },
+        {
+          "code": "geometry-candidate-requires-art-review",
+          "entity": "fence-088",
+          "status": "candidate-unverified"
         }
       ]
     },
@@ -61,21 +546,143 @@
       "visualApproval": "not-reviewed"
     },
     "renderedAssetIds": [
-      "grass-light",
-      "grass-mid",
-      "soil-dry",
-      "soil-damp",
-      "road-straight",
       "fence-straight",
-      "gate",
-      "farmhouse",
-      "shed",
-      "corral-wood-standard-imagegen-v1",
       "water-trough",
-      "shade-tree",
       "fruit-tree",
-      "cow-beef",
-      "cow-dairy"
+      "shade-tree",
+      "gate",
+      "field-maize-growing",
+      "silo",
+      "shed",
+      "tractor",
+      "farmhouse",
+      "corral-wood-standard-imagegen-v1",
+      "handling-alley-cattle-imagegen-v1",
+      "handling-chute-cattle-imagegen-v1",
+      "fence-wire-wood-post-imagegen-v1",
+      "cow-dairy",
+      "cow-beef"
+    ],
+    "renderedStaticCommands": 118,
+    "renderedSourceIds": [
+      "fence-001",
+      "fence-020",
+      "fence-002",
+      "fence-019",
+      "fence-003",
+      "fence-018",
+      "fence-004",
+      "fence-017",
+      "fence-005",
+      "fence-016",
+      "water-west-north",
+      "tree-west-south",
+      "fence-006",
+      "fence-015",
+      "fence-007",
+      "fence-014",
+      "tree-northwest",
+      "fence-008",
+      "fence-013",
+      "maize-field-northwest/tile-0-0",
+      "fence-009",
+      "fence-012",
+      "fence-021",
+      "fence-044",
+      "fence-010",
+      "fence-011",
+      "fence-022",
+      "fence-043",
+      "maize-field-northwest/tile-0-1",
+      "maize-field-northwest/tile-1-0",
+      "fence-023",
+      "fence-042",
+      "maize-field-northwest/tile-0-2",
+      "maize-field-northwest/tile-1-1",
+      "maize-field-northwest/tile-2-0",
+      "tree-west-approach",
+      "fence-024",
+      "fence-041",
+      "maize-field-northwest/tile-0-3",
+      "maize-field-northwest/tile-1-2",
+      "maize-field-northwest/tile-2-1",
+      "fence-025",
+      "fence-040",
+      "fence-026",
+      "fence-039",
+      "maize-field-northwest/tile-1-3",
+      "maize-field-northwest/tile-2-2",
+      "water-west-south",
+      "fence-027",
+      "fence-038",
+      "maize-field-northwest/tile-2-3",
+      "fence-028",
+      "fence-037",
+      "fence-029",
+      "fence-036",
+      "fence-045",
+      "fence-064",
+      "grain-silo",
+      "fence-030",
+      "fence-035",
+      "fence-046",
+      "fence-063",
+      "fence-031",
+      "fence-034",
+      "fence-047",
+      "fence-062",
+      "equipment-barn",
+      "fence-032",
+      "fence-033",
+      "fence-048",
+      "fence-061",
+      "fence-049",
+      "fence-060",
+      "water-east-north",
+      "tree-south-edge",
+      "fence-050",
+      "fence-059",
+      "fence-051",
+      "fence-058",
+      "farm-tractor",
+      "fence-052",
+      "fence-057",
+      "fence-053",
+      "fence-056",
+      "fence-065",
+      "fence-088",
+      "fence-054",
+      "fence-055",
+      "fence-066",
+      "fence-087",
+      "farmstead",
+      "fence-067",
+      "fence-086",
+      "fence-068",
+      "fence-085",
+      "tree-northeast",
+      "fence-069",
+      "fence-084",
+      "fence-070",
+      "fence-083",
+      "water-east-south",
+      "fence-071",
+      "fence-082",
+      "fence-072",
+      "fence-081",
+      "fence-073",
+      "fence-080",
+      "fence-074",
+      "fence-079",
+      "fence-075",
+      "fence-078",
+      "fence-076",
+      "fence-077",
+      "tree-east-south",
+      "cattle-handling/holding-pen",
+      "cattle-handling/working-alley",
+      "cattle-handling/handling-gate",
+      "cattle-handling/load-out"
     ],
     "renderedPaddockIds": [
       "paddock-west-north",
@@ -88,6 +695,8 @@
       "east-farm-spine",
       "farmstead-driveway-road",
       "barn-driveway-road",
+      "silo-service-road",
+      "tractor-yard-road",
       "handling-driveway-road",
       "west-farm-spine",
       "gate-west-north-access-road",
@@ -95,7 +704,1921 @@
       "gate-east-north-access-road",
       "gate-east-south-access-road"
     ],
-    "assetGeometry": "candidate-unverified; see assets/previews/v7/asset-scale-calibration.json"
+    "worldCoordinates": [
+      {
+        "id": "farmstead",
+        "assetId": "farmhouse",
+        "worldPosition": {
+          "x": 54,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 60,
+          "y": 24,
+          "confidence": "candidate-domain-estimate",
+          "units": "m"
+        },
+        "footprintMeters": {
+          "width": 12,
+          "height": 9
+        }
+      },
+      {
+        "id": "equipment-barn",
+        "assetId": "shed",
+        "worldPosition": {
+          "x": 27,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 27,
+          "confidence": "candidate-domain-estimate",
+          "units": "m"
+        },
+        "footprintMeters": {
+          "width": 18,
+          "height": 12
+        }
+      },
+      {
+        "id": "grain-silo",
+        "assetId": "silo",
+        "worldPosition": {
+          "x": 42,
+          "y": 9
+        },
+        "groundAnchor": {
+          "x": 43.5,
+          "y": 12,
+          "confidence": "candidate-domain-estimate",
+          "units": "m"
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 3
+        }
+      },
+      {
+        "id": "farm-tractor",
+        "assetId": "tractor",
+        "worldPosition": {
+          "x": 45,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 46.5,
+          "y": 29,
+          "confidence": "candidate-domain-estimate",
+          "units": "m"
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 2
+        }
+      },
+      {
+        "id": "cattle-handling",
+        "assetId": null,
+        "worldPosition": {
+          "x": 30,
+          "y": 30
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 40
+        },
+        "footprintMeters": {
+          "width": 12,
+          "height": 10
+        }
+      },
+      {
+        "id": "cattle-handling/holding-pen",
+        "assetId": "corral-wood-standard-imagegen-v1",
+        "worldPosition": {
+          "x": 30,
+          "y": 30
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 34
+        },
+        "footprintMeters": {
+          "width": 12,
+          "height": 4
+        }
+      },
+      {
+        "id": "cattle-handling/working-alley",
+        "assetId": "handling-alley-cattle-imagegen-v1",
+        "worldPosition": {
+          "x": 35,
+          "y": 34
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 38
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 4
+        }
+      },
+      {
+        "id": "cattle-handling/handling-gate",
+        "assetId": "handling-chute-cattle-imagegen-v1",
+        "worldPosition": {
+          "x": 35,
+          "y": 34
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 36
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 2
+        }
+      },
+      {
+        "id": "cattle-handling/load-out",
+        "assetId": "fence-wire-wood-post-imagegen-v1",
+        "worldPosition": {
+          "x": 30,
+          "y": 38
+        },
+        "groundAnchor": {
+          "x": 36,
+          "y": 40
+        },
+        "footprintMeters": {
+          "width": 12,
+          "height": 2
+        }
+      },
+      {
+        "id": "fence-001",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 4.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 4.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-002",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 7.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 7.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-003",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 10.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 10.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-004",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 13.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 13.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-005",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 16.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 16.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-006",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 19.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 19.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-007",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 4.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 4.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-008",
+        "assetId": "gate",
+        "worldPosition": {
+          "x": 21,
+          "y": 7.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 7.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-009",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 10.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 10.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-010",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 13.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 13.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-011",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 19.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 19.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-012",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 16.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 16.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-013",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 13.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 13.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-014",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 10.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 10.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-015",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 7.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 7.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-016",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 4.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 4.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-017",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 13.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 13.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-018",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 10.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 10.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-019",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 7.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 7.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-020",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 4.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 4.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-021",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 4.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 4.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-022",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 7.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 7.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-023",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 10.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 10.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-024",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 13.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 13.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-025",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 16.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 16.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-026",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 19.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 19.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-027",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 28.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 28.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-028",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 31.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 31.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-029",
+        "assetId": "gate",
+        "worldPosition": {
+          "x": 21,
+          "y": 34.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 34.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-030",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 37.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 37.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-031",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 40.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 40.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-032",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 21,
+          "y": 43.5
+        },
+        "groundAnchor": {
+          "x": 21,
+          "y": 43.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-033",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 19.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 19.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-034",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 16.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 16.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-035",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 13.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 13.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-036",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 10.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 10.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-037",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 7.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 7.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-038",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 4.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 4.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-039",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 43.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 43.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-040",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 40.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 40.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-041",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 37.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 37.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-042",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 34.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 34.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-043",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 31.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 31.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-044",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 3,
+          "y": 28.5
+        },
+        "groundAnchor": {
+          "x": 3,
+          "y": 28.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-045",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 52.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 52.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-046",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 55.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 55.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-047",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 58.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 58.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-048",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 61.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 61.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-049",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 64.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 64.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-050",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 67.5,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 67.5,
+          "y": 3
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-051",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 4.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 4.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-052",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 7.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 7.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-053",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 10.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 10.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-054",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 13.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 13.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-055",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 67.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 67.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-056",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 64.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 64.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-057",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 61.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 61.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-058",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 58.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 58.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-059",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 55.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 55.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-060",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 52.5,
+          "y": 15
+        },
+        "groundAnchor": {
+          "x": 52.5,
+          "y": 15
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-061",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 13.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 13.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-062",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 10.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 10.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-063",
+        "assetId": "gate",
+        "worldPosition": {
+          "x": 51,
+          "y": 7.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 7.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-064",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 4.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 4.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-065",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 52.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 52.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-066",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 55.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 55.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-067",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 58.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 58.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-068",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 61.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 61.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-069",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 64.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 64.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-070",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 67.5,
+          "y": 27
+        },
+        "groundAnchor": {
+          "x": 67.5,
+          "y": 27
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-071",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 28.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 28.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-072",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 31.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 31.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-073",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 34.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 34.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-074",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 37.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 37.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-075",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 40.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 40.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-076",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 69,
+          "y": 43.5
+        },
+        "groundAnchor": {
+          "x": 69,
+          "y": 43.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-077",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 67.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 67.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-078",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 64.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 64.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-079",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 61.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 61.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-080",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 58.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 58.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-081",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 55.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 55.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-082",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 52.5,
+          "y": 45
+        },
+        "groundAnchor": {
+          "x": 52.5,
+          "y": 45
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-083",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 43.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 43.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-084",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 40.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 40.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-085",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 37.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 37.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-086",
+        "assetId": "gate",
+        "worldPosition": {
+          "x": 51,
+          "y": 34.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 34.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-087",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 31.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 31.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "fence-088",
+        "assetId": "fence-straight",
+        "worldPosition": {
+          "x": 51,
+          "y": 28.5
+        },
+        "groundAnchor": {
+          "x": 51,
+          "y": 28.5
+        },
+        "footprintMeters": {
+          "width": 3,
+          "height": 0.15
+        }
+      },
+      {
+        "id": "water-west-north",
+        "assetId": "water-trough",
+        "worldPosition": {
+          "x": 12,
+          "y": 9
+        },
+        "groundAnchor": {
+          "x": 12,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 2
+        }
+      },
+      {
+        "id": "water-west-south",
+        "assetId": "water-trough",
+        "worldPosition": {
+          "x": 12,
+          "y": 36
+        },
+        "groundAnchor": {
+          "x": 12,
+          "y": 36
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 2
+        }
+      },
+      {
+        "id": "water-east-north",
+        "assetId": "water-trough",
+        "worldPosition": {
+          "x": 60,
+          "y": 9
+        },
+        "groundAnchor": {
+          "x": 60,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 2
+        }
+      },
+      {
+        "id": "water-east-south",
+        "assetId": "water-trough",
+        "worldPosition": {
+          "x": 60,
+          "y": 36
+        },
+        "groundAnchor": {
+          "x": 60,
+          "y": 36
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 2
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-0-0",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 24,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 26,
+          "y": 5
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-0-1",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 28,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 30,
+          "y": 5
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-0-2",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 32,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 34,
+          "y": 5
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-0-3",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 36,
+          "y": 3
+        },
+        "groundAnchor": {
+          "x": 38,
+          "y": 5
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-1-0",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 24,
+          "y": 7
+        },
+        "groundAnchor": {
+          "x": 26,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-1-1",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 28,
+          "y": 7
+        },
+        "groundAnchor": {
+          "x": 30,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-1-2",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 32,
+          "y": 7
+        },
+        "groundAnchor": {
+          "x": 34,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-1-3",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 36,
+          "y": 7
+        },
+        "groundAnchor": {
+          "x": 38,
+          "y": 9
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-2-0",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 24,
+          "y": 11
+        },
+        "groundAnchor": {
+          "x": 26,
+          "y": 13
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-2-1",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 28,
+          "y": 11
+        },
+        "groundAnchor": {
+          "x": 30,
+          "y": 13
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-2-2",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 32,
+          "y": 11
+        },
+        "groundAnchor": {
+          "x": 34,
+          "y": 13
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "maize-field-northwest/tile-2-3",
+        "assetId": "field-maize-growing",
+        "worldPosition": {
+          "x": 36,
+          "y": 11
+        },
+        "groundAnchor": {
+          "x": 38,
+          "y": 13
+        },
+        "footprintMeters": {
+          "width": 4,
+          "height": 4
+        }
+      },
+      {
+        "id": "tree-northwest",
+        "assetId": "shade-tree",
+        "worldPosition": {
+          "x": 6,
+          "y": 20
+        },
+        "groundAnchor": {
+          "x": 6,
+          "y": 20
+        },
+        "footprintMeters": {
+          "width": 5,
+          "height": 5
+        }
+      },
+      {
+        "id": "tree-west-south",
+        "assetId": "fruit-tree",
+        "worldPosition": {
+          "x": 2,
+          "y": 20
+        },
+        "groundAnchor": {
+          "x": 2,
+          "y": 20
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 5
+        }
+      },
+      {
+        "id": "tree-west-approach",
+        "assetId": "shade-tree",
+        "worldPosition": {
+          "x": 18,
+          "y": 22
+        },
+        "groundAnchor": {
+          "x": 18,
+          "y": 22
+        },
+        "footprintMeters": {
+          "width": 5,
+          "height": 5
+        }
+      },
+      {
+        "id": "tree-northeast",
+        "assetId": "fruit-tree",
+        "worldPosition": {
+          "x": 70,
+          "y": 20
+        },
+        "groundAnchor": {
+          "x": 70,
+          "y": 20
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 5
+        }
+      },
+      {
+        "id": "tree-east-south",
+        "assetId": "shade-tree",
+        "worldPosition": {
+          "x": 70,
+          "y": 43
+        },
+        "groundAnchor": {
+          "x": 70,
+          "y": 43
+        },
+        "footprintMeters": {
+          "width": 2,
+          "height": 5
+        }
+      },
+      {
+        "id": "tree-south-edge",
+        "assetId": "shade-tree",
+        "worldPosition": {
+          "x": 49,
+          "y": 20
+        },
+        "groundAnchor": {
+          "x": 49,
+          "y": 20
+        },
+        "footprintMeters": {
+          "width": 5,
+          "height": 5
+        }
+      }
+    ],
+    "assetGeometry": "visualSizePixels are explicit presentation values; physical geometry remains candidate-unverified"
   },
   "failures": []
 }

@@ -106,10 +106,18 @@ function geometry(footprint, source = 'candidate-unverified') {
 }
 
 function makeEntity({ id, kind, x, y, width, height, role, prefabId, sockets = [], geometryStatus }) {
+  const assetId = kind === 'farmhouse' ? 'farmhouse' : kind === 'milking-barn' ? 'dairy-barn' : kind === 'grain-silo' ? 'silo' : kind === 'farm-tractor' ? 'tractor' : 'shed';
+  const visualSizePixels = kind === 'farmhouse' ? { width: 126, height: 123 } : kind === 'grain-silo' ? { width: 46, height: 70 }
+    : kind === 'farm-tractor' ? { width: 52, height: 40 } : { width: 180, height: 156 };
   const geo = geometry(rect(0, 0, width, height), geometryStatus);
-  return { id, kind, role, prefabId, assetId: null, x, y, worldPosition: point(x, y), ...geo,
-    groundAnchor: { x: x + width / 2, y: y + height, confidence: 'candidate-unverified' },
-    footprintMeters: { width, height }, visualSizePixels: null,
+  const heightM = kind === 'farmhouse' ? 5 : kind === 'grain-silo' ? 8 : kind === 'farm-tractor' ? 2.8 : 5.5;
+  geo.visualBounds = { x: -visualSizePixels.width / 2, y: -visualSizePixels.height, ...visualSizePixels, units: 'px', confidence: 'presentation-estimate' };
+  geo.height = { metres: heightM, status: 'candidate-domain-estimate' };
+  geo.groundAnchor = { x: width / 2, y: height, confidence: 'candidate-domain-estimate', units: 'm' };
+  geo.occlusionGeometry = { type: 'ground-contact-anchor', contactPoint: { x: width / 2, y: height }, confidence: 'candidate-domain-estimate' };
+  return { id, kind, role, prefabId, assetId, x, y, worldPosition: point(x, y), ...geo,
+    groundAnchor: { x: x + width / 2, y: y + height, confidence: 'candidate-domain-estimate', units: 'm' },
+    footprintMeters: { width, height }, visualSizePixels,
     connectionSockets: sockets.map((socket) => ({ ...socket, position: { ...socket.position }, state: 'open' })) };
 }
 
@@ -171,7 +179,15 @@ export function buildFenceNetworkV7(zones, gateRequests = [], moduleLengthM = 3)
 function edgeOrientation(a, b) { return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI; }
 
 function component(id, kind, x, y, width, height, sockets = [], parentId = null) {
-  return { id, kind, parentId, x, y, ...geometry(rect(0, 0, width, height)), relativeTransform: parentId ? { x, y, rotationDeg: 0 } : null,
+  const assetId = ({ 'waiting-pen': 'corral-wood-standard-imagegen-v1', 'handling-alley': 'handling-alley-cattle-imagegen-v1',
+    'gate-module': 'handling-chute-cattle-imagegen-v1', 'load-out-zone': 'fence-wire-wood-post-imagegen-v1',
+    'milking-parlor': 'dairy-barn' })[kind] ?? null;
+  const visualSizePixels = kind === 'waiting-pen' ? { width: 102, height: 66 } : kind === 'handling-alley' ? { width: 48, height: 38 }
+    : kind === 'gate-module' ? { width: 38, height: 42 } : kind === 'load-out-zone' ? { width: 102, height: 32 } : { width: 118, height: 86 };
+  const geo = geometry(rect(0, 0, width, height), 'candidate-unverified');
+  geo.height = { metres: kind === 'waiting-pen' || kind === 'gate-module' ? 1.5 : kind === 'handling-alley' ? 1.2 : 1.1, status: 'candidate-domain-estimate' };
+  geo.visualBounds = { x: -visualSizePixels.width / 2, y: -visualSizePixels.height, ...visualSizePixels, units: 'px', confidence: 'presentation-estimate' };
+  return { id, kind, parentId, assetId, visualSizePixels, x, y, ...geo, relativeTransform: parentId ? { x, y, rotationDeg: 0 } : null,
     connectionSockets: sockets, assemblyStatus: 'candidate-unverified', geometryStatus: 'candidate-unverified' };
 }
 
@@ -182,7 +198,11 @@ function makePrefabAssemblies(scenarioId) {
     sockets: [makeSocket('farmstead-driveway', 'building-entrance', 54, 18, 180)] });
   const barn = makeEntity({ id: dairy ? 'milking-barn' : 'equipment-barn', kind: dairy ? 'milking-barn' : 'equipment-barn', role: 'secondary-anchor', prefabId: dairy ? 'dairy-unit-v7' : 'rural-headquarters-v7', x: 27, y: 15, width: 18, height: 12,
     sockets: [makeSocket('barn-driveway', 'building-entrance', 45, 21, 0), makeSocket('barn-handling', 'handling-entry', 36, 27, 90)] });
-  structures.push(farmhouse, barn);
+  const silo = makeEntity({ id: 'grain-silo', kind: 'grain-silo', role: 'storage', prefabId: 'grain-storage-v7', x: 42, y: 9, width: 3, height: 3,
+    sockets: [makeSocket('silo-service-access', 'building-entrance', 45, 10, 90)] });
+  const tractor = makeEntity({ id: 'farm-tractor', kind: 'farm-tractor', role: 'vehicle', prefabId: 'equipment-yard-v7', x: 45, y: 27, width: 3, height: 2,
+    sockets: [makeSocket('tractor-access', 'building-entrance', 48, 28, 90)] });
+  structures.push(farmhouse, barn, silo, tractor);
 
   const handling = { id: 'cattle-handling', kind: 'handling-facility', x: 30, y: 30, width: 12, height: 10, prefabId: 'cattle-handling-facility-v7', geometryStatus: 'candidate-unverified',
     parts: [
@@ -222,6 +242,7 @@ function makeRoadNetwork(gateRequests = []) {
     { id: 'farmstead-driveway', kind: 'driveway', position: point(54, 18) },
     { id: 'barn-driveway', kind: 'driveway', position: point(45, 21) },
     { id: 'handling-access', kind: 'handling-entry', position: point(42, 35) },
+    { id: 'silo-driveway', kind: 'driveway', position: point(45, 10) }, { id: 'tractor-driveway', kind: 'driveway', position: point(48, 28) },
     { id: 'west-spine-south', kind: 'road-end', position: point(24, 47) },
     { id: 'west-spine-north', kind: 'road-end', position: point(24, 1) },
   ];
@@ -230,6 +251,8 @@ function makeRoadNetwork(gateRequests = []) {
     ['east-spine-north', 'farmstead-driveway'], ['east-spine-north', 'barn-driveway'], ['handling-access', 'east-spine-south'],
     ['south-junction', 'west-spine-south'], ['west-spine-south', 'west-spine-north'],
   ].map(([from, to], index) => ({ id: `road-edge-${index + 1}`, from, to, widthM: 2, surface: 'compacted-earth', geometryStatus: 'candidate-unverified' }));
+  edges.push({ id: 'road-edge-9', from: 'east-spine-north', to: 'silo-driveway', widthM: 2, surface: 'compacted-earth', geometryStatus: 'candidate-unverified' },
+    { id: 'road-edge-10', from: 'east-spine-south', to: 'tractor-driveway', widthM: 2, surface: 'compacted-earth', geometryStatus: 'candidate-unverified' });
   const polylines = [
     { id: 'east-farm-spine', points: [point(36, 48), point(36, 47), point(48, 47), point(48, 1)], widthM: 2,
       sockets: [makeSocket('east-spine-entry', 'road-end', 36, 48, 0), makeSocket('east-spine-north-socket', 'road-intersection', 48, 1, 270)] },
@@ -237,6 +260,10 @@ function makeRoadNetwork(gateRequests = []) {
       sockets: [makeSocket('farmstead-road-socket', 'driveway', 54, 18, 0)] },
     { id: 'barn-driveway-road', points: [point(48, 1), point(48, 21), point(45, 21)], widthM: 2,
       sockets: [makeSocket('barn-road-socket', 'driveway', 45, 21, 180)] },
+    { id: 'silo-service-road', points: [point(48, 1), point(48, 10), point(45, 10)], widthM: 2,
+      sockets: [makeSocket('silo-road-socket', 'driveway', 45, 10, 180)] },
+    { id: 'tractor-yard-road', points: [point(48, 47), point(48, 28)], widthM: 2,
+      sockets: [makeSocket('tractor-road-socket', 'driveway', 48, 28, 180)] },
     { id: 'handling-driveway-road', points: [point(48, 47), point(48, 35), point(42, 35)], widthM: 2,
       sockets: [makeSocket('handling-road-socket', 'handling-entry', 42, 35, 180)] },
     { id: 'west-farm-spine', points: [point(36, 47), point(24, 47), point(24, 1)], widthM: 2,
@@ -260,6 +287,8 @@ function makeRoadNetwork(gateRequests = []) {
     { id: 'public-access-to-barn', from: 'public-entry', to: 'barn-driveway', edgeIds: ['road-edge-1', 'road-edge-2', 'road-edge-3', 'road-edge-5'] },
     { id: 'public-access-to-handling', from: 'public-entry', to: 'handling-access', edgeIds: ['road-edge-1', 'road-edge-2', 'road-edge-6'] },
     { id: 'west-pastures-access', from: 'public-entry', to: 'west-spine-north', edgeIds: ['road-edge-1', 'road-edge-7', 'road-edge-8'] },
+    { id: 'public-access-to-silo', from: 'public-entry', to: 'silo-driveway', edgeIds: ['road-edge-1', 'road-edge-2', 'road-edge-3', 'road-edge-9'] },
+    { id: 'public-access-to-tractor', from: 'public-entry', to: 'tractor-driveway', edgeIds: ['road-edge-1', 'road-edge-2', 'road-edge-3', 'road-edge-10'] },
   ] };
 }
 
@@ -284,6 +313,10 @@ function makeWaterPoints() {
     { id: 'water-east-north', x: 60, y: 9, zoneId: 'paddock-east-north', capacityL: null },
     { id: 'water-east-south', x: 60, y: 36, zoneId: 'paddock-east-south', capacityL: null },
   ].map((water) => ({ ...water, kind: 'livestock-water-point', groundFootprint: rect(water.x - 1, water.y - 1, 2, 2),
+    visualBounds: { x: -15, y: -22, width: 30, height: 22, units: 'px', confidence: 'presentation-estimate' },
+    groundAnchor: point(water.x, water.y), collisionPolygon: [{ x: -1, y: -1 }, { x: 1, y: -1 }, { x: 1, y: 1 }, { x: -1, y: 1 }],
+    height: { metres: 0.8, status: 'candidate-domain-estimate' }, orientation: { degrees: 0, supported: [0, 90, 180, 270], status: 'candidate' },
+    clearancePolygon: [], occlusionGeometry: { type: 'ground-contact-anchor', confidence: 'candidate-domain-estimate' },
     geometryStatus: 'candidate-unverified', connectionSockets: [makeSocket(`${water.id}-access`, 'water-access', water.x, water.y, 0)] }));
 }
 
@@ -291,7 +324,7 @@ function buildConnections(assemblies, structures, paddocks, roadNetwork, waterPo
   const links = [];
   const add = (id, type, from, to, status = 'connected', positions = null) => links.push({ id, type, from, to, status, toleranceM: 0.05, ...(positions ? { positions } : {}), geometryStatus: 'candidate-unverified' });
   for (const structure of structures) {
-    const edgeId = structure.id === 'farmstead' ? 'road-edge-4' : 'road-edge-5';
+    const edgeId = ({ farmstead: 'road-edge-4', 'equipment-barn': 'road-edge-5', 'milking-barn': 'road-edge-5', 'grain-silo': 'road-edge-9', 'farm-tractor': 'road-edge-10' })[structure.id];
     const nodeId = structure.connectionSockets[0]?.id;
     const entrance = structure.connectionSockets[0].position;
     add(`road-to-${structure.id}`, 'road-end/driveway/building-entrance', `road:${edgeId}`, `structure:${structure.id}:socket:${nodeId}`, 'connected', { road: entrance, structure: entrance });
@@ -308,10 +341,7 @@ function buildConnections(assemblies, structures, paddocks, roadNetwork, waterPo
 
 function overlap(a, b) { return a.x < b.x + b.width - EPS && a.x + a.width > b.x + EPS && a.y < b.y + b.height - EPS && a.y + a.height > b.y + EPS; }
 
-/** Flatten the compiled farm plan into render-ready world-space records.
- * Asset IDs and visual pixel sizes are intentionally null until a source sprite
- * is spatially calibrated; consumers must not infer them from PNG dimensions.
- */
+/** Flatten the compiled plan into render-ready records with explicit art sizes. */
 export function sceneV7RenderDescriptors(scene) {
   const out = [];
   for (const entity of scene.structures ?? []) out.push({ id: entity.id, kind: entity.kind, assetId: entity.assetId ?? null,
@@ -327,21 +357,51 @@ export function sceneV7RenderDescriptors(scene) {
       const worldPosition = { x: base.x + part.x, y: base.y + part.y };
       const footprintMeters = { width: part.groundFootprint.width, height: part.groundFootprint.height };
       const groundAnchor = { x: worldPosition.x + footprintMeters.width / 2, y: worldPosition.y + footprintMeters.height };
-      out.push({ id: `${prefab.id}/${part.id}`, parentId: prefab.id, kind: part.kind, assetId: null, worldPosition,
-        groundAnchor, footprintMeters, visualSizePixels: null, geometryStatus: part.geometryStatus,
+      out.push({ id: `${prefab.id}/${part.id}`, parentId: prefab.id, kind: part.kind, assetId: part.assetId, worldPosition,
+        groundAnchor, footprintMeters, visualSizePixels: part.visualSizePixels, geometryStatus: part.geometryStatus,
         zOrderAnchor: { ...groundAnchor } });
     }
   }
-  for (const segment of scene.fenceSegments ?? []) out.push({ id: segment.id, kind: segment.type, assetId: null,
+  for (const segment of scene.fenceSegments ?? []) out.push({ id: segment.id, kind: segment.type, assetId: segment.type === 'gate' ? 'gate' : 'fence-straight',
     worldPosition: { x: (segment.a.x + segment.b.x) / 2, y: (segment.a.y + segment.b.y) / 2 },
     groundAnchor: { x: (segment.a.x + segment.b.x) / 2, y: (segment.a.y + segment.b.y) / 2 },
-    footprintMeters: { width: segment.lengthM, height: 0 }, visualSizePixels: null,
+    groundFootprint: { width: segment.lengthM, depth: 0.15 }, footprintMeters: { width: segment.lengthM, height: 0.15 },
+    visualBounds: { x: -16, y: -22, width: segment.type === 'gate' ? 22 : 32, height: 22, units: 'px', confidence: 'presentation-estimate' },
+    visualSizePixels: { width: segment.type === 'gate' ? 22 : 32, height: 22 },
+    collisionPolygon: [{ x: 0, y: 0 }, { x: segment.lengthM, y: 0 }, { x: segment.lengthM, y: 0.15 }, { x: 0, y: 0.15 }],
+    height: { metres: segment.type === 'gate' ? 1.5 : 1.2, status: 'candidate-domain-estimate' },
+    orientation: { degrees: edgeOrientation(segment.a, segment.b), supported: [0, 90, 180, 270], status: 'candidate' },
+    clearancePolygon: [], connectionSockets: [segment.socketA, segment.socketB],
+    occlusionGeometry: { type: 'ground-contact-segment', confidence: 'candidate-domain-estimate' },
     geometryStatus: segment.geometryStatus, zOrderAnchor: { x: (segment.a.x + segment.b.x) / 2, y: (segment.a.y + segment.b.y) / 2 },
     endpoints: [{ ...segment.a }, { ...segment.b }] });
-  for (const water of scene.waterPoints ?? []) out.push({ id: water.id, kind: water.kind, assetId: null,
+  for (const water of scene.waterPoints ?? []) out.push({ id: water.id, kind: water.kind, assetId: 'water-trough',
     worldPosition: { x: water.x, y: water.y }, groundAnchor: { x: water.x, y: water.y },
-    footprintMeters: { width: water.groundFootprint.width, height: water.groundFootprint.height },
-    visualSizePixels: null, geometryStatus: water.geometryStatus, zOrderAnchor: { x: water.x, y: water.y } });
+    groundFootprint: { width: water.groundFootprint.width, depth: water.groundFootprint.height },
+    footprintMeters: { width: water.groundFootprint.width, height: water.groundFootprint.height }, visualBounds: water.visualBounds,
+    collisionPolygon: water.collisionPolygon, height: water.height, orientation: water.orientation, clearancePolygon: water.clearancePolygon,
+    connectionSockets: water.connectionSockets, occlusionGeometry: water.occlusionGeometry,
+    visualSizePixels: { width: 30, height: 22 }, geometryStatus: water.geometryStatus, zOrderAnchor: { x: water.x, y: water.y } });
+  for (const field of scene.fields ?? []) for (let row = 0; row < field.rows; row++) for (let column = 0; column < field.columns; column++) {
+    const worldPosition = { x: field.x + column * field.cellM, y: field.y + row * field.cellM };
+    out.push({ id: `${field.id}/tile-${row}-${column}`, parentId: field.id, kind: 'crop-tile', assetId: field.assetId,
+      worldPosition, groundAnchor: { x: worldPosition.x + field.cellM / 2, y: worldPosition.y + field.cellM / 2 },
+      groundFootprint: { width: field.cellM, depth: field.cellM }, footprintMeters: { width: field.cellM, height: field.cellM },
+      visualBounds: { x: -26, y: -36, width: 52, height: 36, units: 'px', confidence: 'presentation-estimate' },
+      collisionPolygon: [{ x: 0, y: 0 }, { x: field.cellM, y: 0 }, { x: field.cellM, y: field.cellM }, { x: 0, y: field.cellM }],
+      height: { metres: 2.2, status: 'candidate-domain-estimate' }, orientation: { degrees: 0, supported: [0], status: 'candidate' },
+      clearancePolygon: [], connectionSockets: [], occlusionGeometry: { type: 'terrain-contact-tile', confidence: 'candidate-domain-estimate' },
+      visualSizePixels: { width: 52, height: 36 },
+      geometryStatus: field.geometryStatus, zOrderAnchor: { x: worldPosition.x + field.cellM / 2, y: worldPosition.y + field.cellM / 2 }, anchor: 'center' });
+  }
+  for (const decoration of scene.decorations ?? []) out.push({ id: decoration.id, kind: decoration.kind, assetId: decoration.assetId,
+    worldPosition: { x: decoration.x, y: decoration.y }, groundAnchor: { x: decoration.x, y: decoration.y }, footprintMeters: { ...(decoration.groundFootprint ?? { width: 2, height: 2 }) },
+    groundFootprint: { width: decoration.groundFootprint?.width ?? 2, depth: decoration.groundFootprint?.height ?? 2 },
+    visualBounds: { x: -decoration.visualSizePixels.width / 2, y: -decoration.visualSizePixels.height, ...decoration.visualSizePixels, units: 'px', confidence: 'presentation-estimate' },
+    collisionPolygon: [{ x: 0, y: 0 }, { x: decoration.groundFootprint?.width ?? 2, y: 0 }, { x: decoration.groundFootprint?.width ?? 2, y: decoration.groundFootprint?.height ?? 2 }, { x: 0, y: decoration.groundFootprint?.height ?? 2 }],
+    height: decoration.height, orientation: { degrees: 0, supported: [0], status: 'candidate' }, clearancePolygon: [], connectionSockets: [],
+    occlusionGeometry: { type: 'ground-contact-anchor', confidence: 'candidate-domain-estimate' },
+    visualSizePixels: decoration.visualSizePixels, geometryStatus: decoration.geometryStatus, zOrderAnchor: { x: decoration.x, y: decoration.y }, anchor: 'bottom' });
   return out;
 }
 
@@ -349,6 +409,7 @@ export function validateFarmSceneV7(scene) {
   const errors = [], warnings = [];
   const { widthM, heightM } = scene?.world ?? SCENE_ASSEMBLY_V7.world;
   const spatial = [ ...(scene?.structures ?? []).map((item) => ({ id: item.id, box: { x: item.x, y: item.y, ...item.groundFootprint } })),
+    ...(scene?.fields ?? []).map((item) => ({ id: item.id, box: { x: item.x, y: item.y, width: item.width, height: item.height } })),
     ...(scene?.assemblies ?? []).map((item) => ({ id: item.id, box: item.bounds })) ];
   for (const item of spatial) {
     const { x, y, width, height } = item.box;
@@ -362,6 +423,14 @@ export function validateFarmSceneV7(scene) {
     const b = zone.bounds;
     if (b.x < 0 || b.y < 0 || b.x + b.width > widthM || b.y + b.height > heightM) errors.push({ code: 'paddock-out-of-bounds', entity: zone.id });
     if (!zone.accessIds?.length) errors.push({ code: 'paddock-no-access', entity: zone.id });
+  }
+  for (const decoration of scene?.decorations ?? []) {
+    const footprint = decoration.groundFootprint ?? { width: 2, height: 2 };
+    const box = { x: decoration.x, y: decoration.y, ...footprint };
+    if (box.x < 0 || box.y < 0 || box.x + box.width > widthM || box.y + box.height > heightM) errors.push({ code: 'decoration-out-of-bounds', entity: decoration.id });
+    for (const zone of scene?.paddocks ?? []) if (overlap(box, zone.bounds)) errors.push({ code: 'decoration-blocks-pasture', entity: decoration.id, zone: zone.id });
+    for (const structure of scene?.structures ?? []) if (overlap(box, { x: structure.x, y: structure.y, ...structure.groundFootprint })) errors.push({ code: 'decoration-structure-collision', entity: decoration.id, structure: structure.id });
+    for (const field of scene?.fields ?? []) if (overlap(box, field)) errors.push({ code: 'decoration-blocks-field', entity: decoration.id, field: field.id });
   }
   const fence = scene?.fenceNetwork;
   if (!fence) errors.push({ code: 'fence-network-missing' });
@@ -389,7 +458,7 @@ export function validateFarmSceneV7(scene) {
       }
     }
   }
-  for (const entity of [...(scene?.structures ?? []), ...(scene?.assemblies ?? []), ...(scene?.waterPoints ?? [])]) {
+  for (const entity of [...(scene?.structures ?? []), ...(scene?.assemblies ?? []), ...(scene?.waterPoints ?? []), ...(scene?.fields ?? []), ...(scene?.decorations ?? []), ...(scene?.fenceSegments ?? [])]) {
     if (entity.geometryStatus !== 'calibrated' && entity.geometryStatus !== 'verified') warnings.push({ code: 'geometry-candidate-requires-art-review', entity: entity.id, status: entity.geometryStatus });
   }
   return { valid: errors.length === 0, errors, warnings };
@@ -401,6 +470,8 @@ export function compileFarmSceneV7({ seed = 1, scenarioId = 'beef' } = {}) {
   const normalizedScenario = scenarioId === 'corte' ? 'beef' : scenarioId;
   if (!allowed.has(scenarioId) || !allowed.has(normalizedScenario)) throw new RangeError(`Unsupported scenarioId: ${scenarioId}`);
   const { structures, assemblies } = makePrefabAssemblies(normalizedScenario);
+  const fields = [{ id: 'maize-field-northwest', kind: 'crop-field', x: 24, y: 3, width: 16, height: 12, cellM: 4,
+    columns: 4, rows: 3, assetId: 'field-maize-growing', geometryStatus: 'candidate-unverified', material: 'cultivated-soil' }];
   const paddocks = makePaddocks();
   const pastureVariants = ['cerrado-green-a', 'cerrado-green-b', 'late-rain-season'];
   const variantIndex = numericSeed % pastureVariants.length;
@@ -421,12 +492,17 @@ export function compileFarmSceneV7({ seed = 1, scenarioId = 'beef' } = {}) {
     composition: { readingOrder: ['livestock-core', 'handling', 'house', 'pastures', 'landscape'],
       focalPoint: point(36, 24), reservedCirculation: [rect(21, 0, 3, 48), rect(45, 0, 3, 48)],
       macroOnly: true },
-    paddocks, structures, assemblies, prefabInstances: [...structures, ...assemblies], roadNetwork,
+    paddocks, structures, fields, assemblies, prefabInstances: [...structures, ...fields, ...assemblies], roadNetwork,
     roads: roadNetwork.polylines, fenceNetwork, fenceSegments: fenceNetwork.segments, waterPoints, connections,
     assemblyReport: { hardConstraintStatus: 'checked', hardViolations: [], geometryReviewRequired: true,
       uncertainAssets: ['farmhouse', 'equipment-barn', 'handling-facility', 'livestock-water-point', 'fence-module'],
       visualApproval: 'not-reviewed' },
-    decorations: [], variant: { method: 'seed-modulo-palette-selection', index: variantIndex,
+    decorations: [{ id: 'tree-northwest', kind: 'tree', assetId: 'shade-tree', x: 6, y: 20, groundFootprint: { width: 5, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' },
+      { id: 'tree-west-south', kind: 'tree', assetId: 'fruit-tree', x: 2, y: 20, groundFootprint: { width: 2, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' },
+      { id: 'tree-west-approach', kind: 'tree', assetId: 'shade-tree', x: 18, y: 22, groundFootprint: { width: 5, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' },
+      { id: 'tree-northeast', kind: 'tree', assetId: 'fruit-tree', x: 70, y: 20, groundFootprint: { width: 2, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' },
+      { id: 'tree-east-south', kind: 'tree', assetId: 'shade-tree', x: 70, y: 43, groundFootprint: { width: 2, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' },
+      { id: 'tree-south-edge', kind: 'tree', assetId: 'shade-tree', x: 49, y: 20, groundFootprint: { width: 5, height: 5 }, height: { metres: 7, status: 'candidate-domain-estimate' }, visualSizePixels: { width: 50, height: 46 }, geometryStatus: 'candidate-unverified' }], variant: { method: 'seed-modulo-palette-selection', index: variantIndex,
       pasturePalette: pastureVariants[variantIndex], status: 'art-palette-candidate' },
   };
   scene.renderEntities = sceneV7RenderDescriptors(scene);

@@ -22,6 +22,13 @@ page.on('response', (response) => {
 });
 
 try {
+  const macroUrl = new URL(baseUrl); macroUrl.searchParams.set('sceneStage', 'macro');
+  await page.goto(macroUrl.toString(), { waitUntil: 'domcontentloaded', timeout: 30_000 });
+  await page.waitForFunction(() => window.__RIOSE_SCENE_V7?.sceneVersion === 'riose-scene-v7', { timeout: 30_000 });
+  await page.waitForTimeout(300);
+  await mkdir(output, { recursive: true });
+  await page.locator('#map').screenshot({ path: `${output}/v7-main-map-macro.png` });
+
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   assert.equal(new URL(page.url()).pathname, '/', 'must capture the product root route');
   await page.waitForFunction(() => window.__RIOSE_SCENE_V7?.sceneVersion === 'riose-scene-v7', { timeout: 30_000 });
@@ -33,9 +40,13 @@ try {
   assert.equal(integration.validation.errors.length, 0, 'V7 reported hard geometry violations');
   assert.equal(integration.renderedPaddockIds.length, 4, 'four paddocks should reach the renderer');
   assert.ok(integration.renderedFenceSegments >= 60, 'compiled fence network was not rendered');
+  assert.ok(integration.renderedStaticCommands >= 110, 'compiled asset placements did not reach the main renderer');
   assert.ok(integration.renderedRoads.length >= 5, 'compiled road graph was not rendered');
-  for (const required of ['farmhouse', 'shed', 'fence-straight', 'gate', 'water-trough', 'cow-beef']) {
+  for (const required of ['farmhouse', 'shed', 'silo', 'tractor', 'field-maize-growing', 'fence-straight', 'gate', 'water-trough', 'corral-wood-standard-imagegen-v1', 'handling-alley-cattle-imagegen-v1', 'cow-beef']) {
     assert.ok(integration.renderedAssetIds.includes(required), `main renderer is missing ${required}`);
+  }
+  for (const required of ['grain-silo', 'farm-tractor', 'cattle-handling/holding-pen', 'cattle-handling/working-alley', 'maize-field-northwest/tile-0-0']) {
+    assert.ok(integration.renderedSourceIds.includes(required), `compiled placement ${required} did not reach the main renderer`);
   }
   await mkdir(output, { recursive: true });
   await page.screenshot({ path: `${output}/v7-main-after.png`, fullPage: true });
@@ -48,7 +59,7 @@ try {
   await writeFile(`${output}/v7-main-integration.json`, `${JSON.stringify({ baseUrl, integration, failures }, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify({ ok: true, route: integration.route, renderer: integration.renderer, sceneVersion: integration.sceneVersion,
     paddocks: integration.renderedPaddockIds.length, fenceSegments: integration.renderedFenceSegments, roads: integration.renderedRoads.length,
-    screenshots: [`${output}/v7-main-after.png`, `${output}/v7-main-map-after.png`, `${output}/v7-main-map-debug.png`] }, null, 2)}\n`);
+    screenshots: [`${output}/v7-main-map-macro.png`, `${output}/v7-main-after.png`, `${output}/v7-main-map-after.png`, `${output}/v7-main-map-debug.png`] }, null, 2)}\n`);
 } finally {
   await browser.close();
 }
