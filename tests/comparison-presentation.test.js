@@ -200,11 +200,15 @@ test('invalid initial pasture values cannot become apparently available trajecto
     assert.equal((ui.element('results').innerHTML.match(/<strong>Indisponível/g)??[]).length,4);
     assert.match(ui.element('comparison-coverage').innerHTML,/Estoque inicial do snapshot incompleto ou inválido/);
     assert.doesNotMatch(ui.markup(),/NaN|Infinity|undefined|5\.820/);
-    const csv=ui.context.comparisonCSV(data).split('\n').at(-1).split(',');
-    assert.equal(csv[0],'3');
-    assert.deepEqual(csv.slice(1,5),['alojamento','pasture','barn','Indisponível']);
-    assert.ok(csv.slice(5,-2).every(value=>value==='Indisponível'));
-    assert.deepEqual(csv.slice(-2),['demonstrativo_nao_validado','nao_disponivel_sem_calibracao']);
+    const csv=ui.context.comparisonCSV(data).split('\n').map(line=>line.split(',')),headers=csv[0],values=csv.at(-1);
+    const field=name=>values[headers.indexOf(name)];
+    assert.equal(field('dia'),'3');
+    assert.deepEqual(['fator_comparado','valor_referencia','valor_alternativa','peso_ref_kg'].map(field),['alojamento','pasture','barn','Indisponível']);
+    const unavailableMetrics=headers.filter((name,index)=>index>=5&&(/_kg(?:MS)?(?:_|$)/.test(name)||name.endsWith('_brl')));
+    assert.ok(unavailableMetrics.length>0);
+    for(const name of unavailableMetrics)assert.equal(field(name),'Indisponível',`${name} must stay unavailable`);
+    assert.equal(field('status_modelo'),'demonstrativo_nao_validado');
+    assert.equal(field('intervalo_probabilistico'),'nao_disponivel_sem_calibracao');
   }
   const validSnapshot=new FarmEngine(42,2).snapshot();validSnapshot.pastures=[0,1800,1800,1800];
   const valid=presentation(validSnapshot);
