@@ -1,6 +1,6 @@
 # Current system audit
 
-Audit scope: committed tree at `913b36b` in the isolated Architecture V2 worktree, with parallel uncommitted work inventoried separately in [repository-wide-audit.md](repository-wide-audit.md). Findings below describe executable code, not planned work.
+Audit scope: committed tree at `913b36b` in the isolated Architecture V2 worktree, with parallel uncommitted work excluded from this committed-tree audit. Findings below describe executable code, not planned work.
 
 ## Inventory
 

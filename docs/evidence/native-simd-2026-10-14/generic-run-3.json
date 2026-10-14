@@ -3027,7 +3027,7 @@
         "range": 5.599999999999997e-7
       }
     },
-    "workingDirectory": "/home/gusta/projetos/RIOSE-SIMILE-issue91"
+    "workingDirectory": "<workspace>"
   },
   "runtime": {
     "platform": "linux",

@@ -18,7 +18,7 @@ Este é um pedido de acesso para avaliar um único alvo compatível do motor (CM
 
 ## Mensagem autorizada para envio (em inglês)
 
-To: matt.wilson@mail.wvu.edu
+To: [redacted before public release]
 
 > **Subject:** Request for access and reuse terms for grazing beef-cattle DMI records
 >

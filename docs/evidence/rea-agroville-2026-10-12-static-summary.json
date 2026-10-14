@@ -8,7 +8,7 @@
   "confidence": "derived",
   "provider": "REA JavaScript application analyzer",
   "subject": {
-    "path": "/home/lucas_coimbra/projects/hackhatons/riose-agro",
+    "path": "<workspace>/projects/hackhatons/riose-agro",
     "sha256": "3f140aa7d0c785b70e40897fd8eed22561bed40a9e2e5f5c96487f2ef667e29a",
     "format": "directory"
   },
