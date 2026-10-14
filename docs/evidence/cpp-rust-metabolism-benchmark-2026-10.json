@@ -3,7 +3,7 @@
     "name": "rust-cpp-metabolism-prototype",
     "source": {
       "dirty": false,
-      "revision": "ba757d598d1509199f165be2716fc6ba59400aac"
+      "revision": "8221bc6ebb825e66fb0ccaadd6cba567335bb33f"
     }
   },
   "configuration": {
@@ -42,12 +42,12 @@
           "scope": "preallocated-kernel",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.000936,
+            "median": 0.000926,
             "sampleCount": 31,
             "spread": {
-              "max": 0.001008,
-              "min": 0.000927,
-              "range": 0.00008100000000000002
+              "max": 0.000999,
+              "min": 0.000916,
+              "range": 0.00008300000000000007
             }
           },
           "unit": "ms"
@@ -61,12 +61,12 @@
           "scope": "preallocated-kernel-plus-ffi",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.001557,
+            "median": 0.001522,
             "sampleCount": 31,
             "spread": {
-              "max": 0.001629,
-              "min": 0.001539,
-              "range": 0.00009000000000000002
+              "max": 0.0015680000000000002,
+              "min": 0.001512,
+              "range": 0.00005600000000000006
             }
           },
           "unit": "ms"
@@ -80,12 +80,12 @@
           "scope": "allocate-fill-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.002808,
+            "median": 0.002759,
             "sampleCount": 31,
             "spread": {
-              "max": 0.022654,
-              "min": 0.002799,
-              "range": 0.019855
+              "max": 0.022164999999999997,
+              "min": 0.00275,
+              "range": 0.019414999999999998
             }
           },
           "unit": "ms"
@@ -99,12 +99,12 @@
           "scope": "allocate-fill-c-abi-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.003708,
+            "median": 0.003657,
             "sampleCount": 31,
             "spread": {
-              "max": 0.023274,
-              "min": 0.0036,
-              "range": 0.019674
+              "max": 0.022716,
+              "min": 0.003575,
+              "range": 0.019141
             }
           },
           "unit": "ms"
@@ -118,12 +118,12 @@
           "scope": "preallocated-kernel",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.009216,
+            "median": 0.009102,
             "sampleCount": 31,
             "spread": {
-              "max": 0.013859999999999999,
-              "min": 0.009089999999999999,
-              "range": 0.00477
+              "max": 0.012558999999999999,
+              "min": 0.009066,
+              "range": 0.0034929999999999996
             }
           },
           "unit": "ms"
@@ -137,12 +137,12 @@
           "scope": "preallocated-kernel-plus-ffi",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.01575,
+            "median": 0.015362999999999998,
             "sampleCount": 31,
             "spread": {
-              "max": 0.019513000000000003,
-              "min": 0.015246,
-              "range": 0.004267000000000003
+              "max": 0.016215999999999998,
+              "min": 0.015089,
+              "range": 0.0011269999999999978
             }
           },
           "unit": "ms"
@@ -156,12 +156,12 @@
           "scope": "allocate-fill-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.039637,
+            "median": 0.03786,
             "sampleCount": 31,
             "spread": {
-              "max": 0.205312,
-              "min": 0.038359000000000004,
-              "range": 0.166953
+              "max": 0.22105,
+              "min": 0.037502,
+              "range": 0.183548
             }
           },
           "unit": "ms"
@@ -175,12 +175,12 @@
           "scope": "allocate-fill-c-abi-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.18473799999999999,
+            "median": 0.18118299999999998,
             "sampleCount": 31,
             "spread": {
-              "max": 0.27314700000000003,
-              "min": 0.18024600000000002,
-              "range": 0.09290100000000001
+              "max": 0.270798,
+              "min": 0.17873499999999998,
+              "range": 0.092063
             }
           },
           "unit": "ms"
@@ -194,12 +194,12 @@
           "scope": "preallocated-kernel",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.128442,
+            "median": 0.09514299999999999,
             "sampleCount": 31,
             "spread": {
-              "max": 0.25421900000000003,
-              "min": 0.09245,
-              "range": 0.16176900000000002
+              "max": 0.10958100000000001,
+              "min": 0.091174,
+              "range": 0.018407000000000007
             }
           },
           "unit": "ms"
@@ -213,12 +213,12 @@
           "scope": "preallocated-kernel-plus-ffi",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.16743,
+            "median": 0.15503,
             "sampleCount": 31,
             "spread": {
-              "max": 0.245858,
-              "min": 0.156738,
-              "range": 0.08912
+              "max": 0.16151100000000002,
+              "min": 0.153729,
+              "range": 0.007782000000000011
             }
           },
           "unit": "ms"
@@ -232,12 +232,12 @@
           "scope": "allocate-fill-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 0.909216,
+            "median": 0.732954,
             "sampleCount": 31,
             "spread": {
-              "max": 2.1654880000000003,
-              "min": 0.7804319999999999,
-              "range": 1.3850560000000005
+              "max": 2.0207430000000004,
+              "min": 0.713329,
+              "range": 1.3074140000000005
             }
           },
           "unit": "ms"
@@ -251,12 +251,12 @@
           "scope": "allocate-fill-c-abi-kernel-free",
           "source": "experiments/cpp-metabolism/src/main.rs",
           "statistics": {
-            "median": 2.132332,
+            "median": 1.877208,
             "sampleCount": 31,
             "spread": {
-              "max": 2.891227,
-              "min": 1.9614099999999999,
-              "range": 0.9298170000000003
+              "max": 2.568674,
+              "min": 1.826222,
+              "range": 0.7424520000000001
             }
           },
           "unit": "ms"
@@ -297,7 +297,7 @@
     "buildAndPackaging": {
       "cpp": "benchmark-only C++ translation unit compiled and archived by Cargo build.rs; no production dependency or runtime library",
       "ffi": "one C ABI call per batch; caller owns buffers; separately measured allocation/ownership path uses C++ new[]/delete[]",
-      "measuredReleaseBuildMs": 4903.461186
+      "measuredReleaseBuildMs": 4269.396773
     },
     "decision": "no-go for production C++: this prototype does not establish a material workload-level advantage; retain Rust as the single kernel implementation pending application-level evidence",
     "fixture": "same deterministic vectors for both implementations",

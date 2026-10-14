@@ -1,12 +1,12 @@
 # Rust/C++ metabolism prototype
 
-This is a bounded comparison of the pure metabolism kernel identified in [the current system audit](../architecture/current-system-audit.md). It is not a FarmEngine benchmark and does not establish application-level speedup.
+This is a bounded comparison of the pure metabolism kernel identified in [the current system audit](../architecture/current-system-audit.md). The clean recapture was run on 2026-10-14 at source revision `8221bc6ebb825e66fb0ccaadd6cba567335bb33f`. It is not a FarmEngine benchmark and does not establish application-level speedup.
 
 ## Result
 
-The fixture was bitwise identical for all outputs at 1,000, 10,000, and 100,000 animals. In this WSL2 run, Rust-native kernel medians were 0.000963 ms, 0.010197 ms, and 0.127353 ms. C++ called through the isolated C ABI measured 0.001593 ms, 0.016092 ms, and 0.167241 ms. The allocation/fill/call/free path measured 0.002880 ms, 0.040393 ms, and 0.863018 ms for Rust and 0.003771 ms, 0.192289 ms, and 2.143168 ms for C++.
+The fixture was bitwise identical for all outputs at 1,000, 10,000, and 100,000 animals. In the clean WSL2 recapture, Rust-native kernel medians were 0.000926 ms, 0.009102 ms, and 0.095143 ms. C++ called through the isolated C ABI measured 0.001522 ms, 0.015363 ms, and 0.155030 ms. The allocation/fill/call/free path measured 0.002759 ms, 0.037860 ms, and 0.732954 ms for Rust and 0.003657 ms, 0.181183 ms, and 1.877208 ms for C++.
 
-The clean release build took 4,917.5 ms. The detailed shared-envelope measurements and runtime metadata are in [the JSON report](cpp-rust-metabolism-benchmark-2026-10.json).
+The clean release build took 4,269.4 ms. The detailed shared-envelope measurements, exact parity results, and runtime metadata are in [the clean JSON report](cpp-rust-metabolism-benchmark-2026-10.json), which records `dirty: false`.
 
 Decision: no-go for adding production C++. It has no measured advantage in this workload, while introducing a second implementation, C ABI ownership/FFI concerns, and additional build tooling. The isolated prototype intentionally has no C++ dependency in the production crate or runtime.
 
