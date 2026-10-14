@@ -1,0 +1,19 @@
+error[E0658]: use of unstable library feature `portable_simd`
+ --> /mnt/d/CodexTools/issue-91/portable-simd-probe.rs:1:15
+  |
+1 | ...x: std::simd...>) -...
+  |       ^^^^^^^^^...^
+  |
+  = note: see issue #86656 <https://github.com/rust-lang/rust/issues/86656> for more information
+
+error[E0658]: use of unstable library feature `portable_simd`
+ --> /mnt/d/CodexTools/issue-91/portable-simd-probe.rs:1:43
+  |
+1 | ...-> std::simd::Simd<f64, 4> { ...
+  |       ^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: see issue #86656 <https://github.com/rust-lang/rust/issues/86656> for more information
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0658`.

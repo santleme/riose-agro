@@ -1,0 +1,2619 @@
+{
+  "sourceRevision": "ae21e8b0056ccb9a15353907168d6bb947cff083",
+  "hardware": {
+    "architecture": "x86_64",
+    "cpu": "model name\t: Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz",
+    "gpuMemoryBytes": null,
+    "os": "Linux DESKTOP-DM63QP1 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux"
+  },
+  "captures": [
+    "generic-run-1.json",
+    "generic-run-2.json",
+    "generic-run-3.json",
+    "generic-run-4.json",
+    "native-run-1.json",
+    "native-run-2.json",
+    "native-run-3.json",
+    "native-run-4.json",
+    "scalar-run-1.json",
+    "scalar-run-2.json",
+    "scalar-run-3.json",
+    "scalar-run-4.json"
+  ],
+  "dispatchSelectionMediansMs": {
+    "generic": [
+      2.5290000000000003e-06,
+      2.148e-06,
+      2.111e-06,
+      2.167e-06
+    ],
+    "native": [
+      2.66e-06,
+      2.246e-06,
+      2.832e-06,
+      2.34e-06
+    ],
+    "scalar": [
+      1.628e-06,
+      1.763e-06,
+      1.675e-06,
+      1.7180000000000001e-06
+    ]
+  },
+  "rows": [
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.003954350000000001,
+        "explicit-avx2-direct": 0.00328055,
+        "runtime-dispatch": 0.0037325500000000003,
+        "forced-fallback": 0.00398935
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0040039,
+          0.0044579,
+          0.0039048,
+          0.003345099
+        ],
+        "explicit-avx2-direct": [
+          0.0035794,
+          0.0035598,
+          0.0030013,
+          0.0028791
+        ],
+        "runtime-dispatch": [
+          0.0040105,
+          0.0045866,
+          0.0034546,
+          0.0028383
+        ],
+        "forced-fallback": [
+          0.0042136,
+          0.0042611,
+          0.0037651,
+          0.0033848
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.1185952953008886,
+          1.2522894544637337,
+          1.301036217639023,
+          1.1618557882671667
+        ],
+        "runtime-dispatch": [
+          0.9983543199102357,
+          0.9719399991278943,
+          1.1303189949632375,
+          1.1785572349645914
+        ],
+        "forced-fallback": [
+          0.9502325802164422,
+          1.04618525732792,
+          1.0371039281825183,
+          0.9882707988655164
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.2070726213654503,
+        "runtime-dispatch": 1.0643366574367366,
+        "forced-fallback": 1.0126873635240172
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.0016539000000000002
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0016555,
+          0.0016523000000000002,
+          0.0015249,
+          0.001850099
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.00234695,
+        "explicit-avx2-direct": 0.0018605995,
+        "runtime-dispatch": 0.0019156499999999999,
+        "forced-fallback": 0.0022284
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0024602,
+          0.0033,
+          0.0022337,
+          0.0018978
+        ],
+        "explicit-avx2-direct": [
+          0.0019895,
+          0.0019894,
+          0.001731799,
+          0.001590399
+        ],
+        "runtime-dispatch": [
+          0.0020783,
+          0.0023443,
+          0.0017529999999999998,
+          0.0016189
+        ],
+        "forced-fallback": [
+          0.0023479,
+          0.0023085,
+          0.0021483,
+          0.0019832
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.2365921085699925,
+          1.6587915954559163,
+          1.2898148110721857,
+          1.19328545855474
+        ],
+        "runtime-dispatch": [
+          1.183755954385796,
+          1.407669666851512,
+          1.274215630347975,
+          1.1722774723577738
+        ],
+        "forced-fallback": [
+          1.0478299757229865,
+          1.4294996751137103,
+          1.0397523623330074,
+          0.9569382815651473
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.263203459821089,
+        "runtime-dispatch": 1.2289857923668857,
+        "forced-fallback": 1.043791169027997
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.0376065,
+        "explicit-avx2-direct": 0.0345805,
+        "runtime-dispatch": 0.036012,
+        "forced-fallback": 0.03937
+      },
+      "captureMediansMs": {
+        "current": [
+          0.039878,
+          0.072419,
+          0.035335,
+          0.03522799
+        ],
+        "explicit-avx2-direct": [
+          0.047685000000000005,
+          0.039134,
+          0.030026999999999998,
+          0.029891
+        ],
+        "runtime-dispatch": [
+          0.052954,
+          0.040822000000000004,
+          0.031202,
+          0.029372989999999998
+        ],
+        "forced-fallback": [
+          0.043397000000000005,
+          0.068994,
+          0.035343,
+          0.03424
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8362797525427281,
+          1.850539173097562,
+          1.176774236520465,
+          1.1785483924927236
+        ],
+        "runtime-dispatch": [
+          0.7530687011368357,
+          1.7740189113713192,
+          1.1324594577270688,
+          1.1993327883882439
+        ],
+        "forced-fallback": [
+          0.9189114454916236,
+          1.0496419978548859,
+          0.9997736468324704,
+          1.028854848130841
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.1776613145065942,
+        "runtime-dispatch": 1.1658961230576563,
+        "forced-fallback": 1.0143142474816558
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.015434505000000001
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.01676401,
+          0.023382,
+          0.014105000000000001,
+          0.013416999999999998
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.0217115,
+        "explicit-avx2-direct": 0.018172,
+        "runtime-dispatch": 0.018938000000000003,
+        "forced-fallback": 0.026131494999999998
+      },
+      "captureMediansMs": {
+        "current": [
+          0.022562,
+          0.024835,
+          0.020786989999999998,
+          0.020861
+        ],
+        "explicit-avx2-direct": [
+          0.01793,
+          0.020558,
+          0.018414,
+          0.01766799
+        ],
+        "runtime-dispatch": [
+          0.025918,
+          0.020075000000000003,
+          0.017801,
+          0.017403
+        ],
+        "forced-fallback": [
+          0.030772,
+          0.029598,
+          0.02266499,
+          0.01969
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.2583379810373674,
+          1.20804552972079,
+          1.1288687954816987,
+          1.1807228779278232
+        ],
+        "runtime-dispatch": [
+          0.8705147002083493,
+          1.2371108343711081,
+          1.1677428234368854,
+          1.1987013733264382
+        ],
+        "forced-fallback": [
+          0.7331990120889119,
+          0.8390769646597743,
+          0.9171409296893579,
+          1.059471813103098
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.1943842038243067,
+        "runtime-dispatch": 1.1832220983816617,
+        "forced-fallback": 0.8781089471745661
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.43878494999999995,
+        "explicit-avx2-direct": 0.41827994999999996,
+        "runtime-dispatch": 0.48180995,
+        "forced-fallback": 0.46108494999999994
+      },
+      "captureMediansMs": {
+        "current": [
+          0.8239700000000001,
+          0.41556,
+          0.4425299,
+          0.43504
+        ],
+        "explicit-avx2-direct": [
+          0.63488,
+          0.43595989999999996,
+          0.39966999999999997,
+          0.4006
+        ],
+        "runtime-dispatch": [
+          0.70906,
+          0.39236,
+          0.4021099,
+          0.56151
+        ],
+        "forced-fallback": [
+          0.64313,
+          0.4548298999999999,
+          0.39211000000000007,
+          0.46734
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.2978358114919357,
+          0.9532069348579996,
+          1.1072382215327645,
+          1.0859710434348477
+        ],
+        "runtime-dispatch": [
+          1.1620596282402054,
+          1.0591293709858294,
+          1.1005197832731797,
+          0.7747680361881356
+        ],
+        "forced-fallback": [
+          1.2811873182715783,
+          0.9136602496889498,
+          1.128586111040269,
+          0.9308854367270082
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.0966046324838061,
+        "runtime-dispatch": 1.0798245771295045,
+        "forced-fallback": 1.0297357738836386
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.17841500000000002
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.24894000000000002,
+          0.1703,
+          0.16483989999999998,
+          0.18653000000000003
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.25664,
+        "explicit-avx2-direct": 0.21486000000000002,
+        "runtime-dispatch": 0.212385,
+        "forced-fallback": 0.325275
+      },
+      "captureMediansMs": {
+        "current": [
+          0.41156,
+          0.24686999999999998,
+          0.26641,
+          0.24321
+        ],
+        "explicit-avx2-direct": [
+          0.3099,
+          0.20820000000000002,
+          0.22152000000000002,
+          0.19938999999999998
+        ],
+        "runtime-dispatch": [
+          0.34591000000000005,
+          0.22671999999999998,
+          0.1687,
+          0.19805
+        ],
+        "forced-fallback": [
+          0.39826999999999996,
+          0.29358,
+          0.35696999999999995,
+          0.24206000000000003
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.3280413036463374,
+          1.1857348703170025,
+          1.2026453593355,
+          1.2197702994132105
+        ],
+        "runtime-dispatch": [
+          1.1897892515394175,
+          1.088876146788991,
+          1.5791938352104327,
+          1.2280232264579651
+        ],
+        "forced-fallback": [
+          1.03336932231903,
+          0.8408951563458,
+          0.7463092136594112,
+          1.0047508882095348
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.2112078293743553,
+        "runtime-dispatch": 1.2089062389986913,
+        "forced-fallback": 0.9228230222776674
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.00710565,
+        "explicit-avx2-direct": 0.0064341005,
+        "runtime-dispatch": 0.0062505995000000005,
+        "forced-fallback": 0.0069564499999999994
+      },
+      "captureMediansMs": {
+        "current": [
+          0.009633,
+          0.0073645,
+          0.0068468,
+          0.005962899
+        ],
+        "explicit-avx2-direct": [
+          0.006728701,
+          0.0072767,
+          0.0061395,
+          0.005615298999999999
+        ],
+        "runtime-dispatch": [
+          0.0063771,
+          0.0076462,
+          0.0061089,
+          0.006124099
+        ],
+        "forced-fallback": [
+          0.0075544,
+          0.008407,
+          0.0063585,
+          0.0061684
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.4316284822285905,
+          1.0120659089972104,
+          1.1152048212395147,
+          1.061902313661303
+        ],
+        "runtime-dispatch": [
+          1.5105612268899655,
+          0.9631581700714081,
+          1.1207909770989868,
+          0.9736777605979263
+        ],
+        "forced-fallback": [
+          1.2751509054325953,
+          0.8759961936481504,
+          1.0767948415506803,
+          0.9666848777640878
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.088553567450409,
+        "runtime-dispatch": 1.0472343688484567,
+        "forced-fallback": 1.0217398596573841
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.004723700000000001
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0049893,
+          0.0050086,
+          0.004300400000000001,
+          0.0044581
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.00225705,
+        "explicit-avx2-direct": 0.00172625,
+        "runtime-dispatch": 0.00171065,
+        "forced-fallback": 0.0021907000000000003
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0027465,
+          0.0024647,
+          0.0020494,
+          0.0019122
+        ],
+        "explicit-avx2-direct": [
+          0.0018584,
+          0.0018096,
+          0.0016429,
+          0.0015529
+        ],
+        "runtime-dispatch": [
+          0.0017731,
+          0.0018522,
+          0.0016482,
+          0.0016181
+        ],
+        "forced-fallback": [
+          0.0021833,
+          0.0029,
+          0.0019315,
+          0.0021981
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.4778842014636244,
+          1.3620137046861185,
+          1.2474283279566618,
+          1.2313735591474015
+        ],
+        "runtime-dispatch": [
+          1.548982008910947,
+          1.3306878306878305,
+          1.2434170610362818,
+          1.1817563809406093
+        ],
+        "forced-fallback": [
+          1.2579581367654467,
+          0.8498965517241379,
+          1.061040641988092,
+          0.8699331240616895
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.3047210163213903,
+        "runtime-dispatch": 1.2870524458620562,
+        "forced-fallback": 0.9654868830248908
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.065922495,
+        "explicit-avx2-direct": 0.081204495,
+        "runtime-dispatch": 0.070224,
+        "forced-fallback": 0.068969
+      },
+      "captureMediansMs": {
+        "current": [
+          0.091781,
+          0.06732,
+          0.06452499,
+          0.063477
+        ],
+        "explicit-avx2-direct": [
+          0.10266,
+          0.11972399999999998,
+          0.059748989999999995,
+          0.05881
+        ],
+        "runtime-dispatch": [
+          0.083002,
+          0.08047,
+          0.059978,
+          0.057938
+        ],
+        "forced-fallback": [
+          0.08615199999999999,
+          0.072494,
+          0.065444,
+          0.06429599000000001
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8940288330411066,
+          0.5622932745314224,
+          1.0799344055857683,
+          1.0793572521679986
+        ],
+        "runtime-dispatch": [
+          1.105768535697935,
+          0.8365850627563067,
+          1.0758109640201408,
+          1.095602195450309
+        ],
+        "forced-fallback": [
+          1.0653380072430125,
+          0.9286285761580269,
+          0.9859573070105739,
+          0.9872621916234589
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.9866930426045526,
+        "runtime-dispatch": 1.0857065797352248,
+        "forced-fallback": 0.9866097493170164
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.044348
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.069127,
+          0.04590999999999999,
+          0.04224799,
+          0.042786
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.0226515,
+        "explicit-avx2-direct": 0.020118,
+        "runtime-dispatch": 0.019159,
+        "forced-fallback": 0.021824500000000004
+      },
+      "captureMediansMs": {
+        "current": [
+          0.028909000000000004,
+          0.022999000000000002,
+          0.022304,
+          0.02032399
+        ],
+        "explicit-avx2-direct": [
+          0.02359,
+          0.030303999999999998,
+          0.01648099,
+          0.016646
+        ],
+        "runtime-dispatch": [
+          0.020644,
+          0.021349,
+          0.017674,
+          0.017543000000000003
+        ],
+        "forced-fallback": [
+          0.025582000000000004,
+          0.022861000000000003,
+          0.020514,
+          0.020788
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.2254768969902503,
+          0.7589427138331575,
+          1.3533167607043024,
+          1.2209533821939205
+        ],
+        "runtime-dispatch": [
+          1.4003584576632437,
+          1.0772869923649822,
+          1.2619667307909925,
+          1.1585241976856864
+        ],
+        "forced-fallback": [
+          1.1300523805800953,
+          1.0060364813437732,
+          1.087257482694745,
+          0.977678949393881
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.2232151395920854,
+        "runtime-dispatch": 1.2102454642383393,
+        "forced-fallback": 1.0466469820192592
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.802305,
+        "explicit-avx2-direct": 0.79371495,
+        "runtime-dispatch": 0.8035599,
+        "forced-fallback": 0.78820995
+      },
+      "captureMediansMs": {
+        "current": [
+          1.0883099999999999,
+          0.85958,
+          0.6969699,
+          0.7450300000000001
+        ],
+        "explicit-avx2-direct": [
+          1.12248,
+          0.7892199000000001,
+          0.6977299,
+          0.7982100000000001
+        ],
+        "runtime-dispatch": [
+          1.05907,
+          0.8841799,
+          0.7229399,
+          0.65547
+        ],
+        "forced-fallback": [
+          1.0999,
+          0.74282,
+          0.8335999000000001,
+          0.66663
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.9695584776566175,
+          1.08915145195908,
+          0.9989107532871961,
+          0.9333759286403327
+        ],
+        "runtime-dispatch": [
+          1.0276091287639155,
+          0.9721777208461762,
+          0.9640772351892599,
+          1.1366347811494044
+        ],
+        "forced-fallback": [
+          0.9894626784253112,
+          1.1571847823160388,
+          0.8360964294741398,
+          1.1176064683557598
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.9842346154719068,
+        "runtime-dispatch": 0.9998934248050458,
+        "forced-fallback": 1.0535345733905355
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.47947
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.59053,
+          0.50817,
+          0.45077,
+          0.42515000000000003
+        ]
+      }
+    },
+    {
+      "profile": "generic",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.24928,
+        "explicit-avx2-direct": 0.20606000000000002,
+        "runtime-dispatch": 0.19193,
+        "forced-fallback": 0.29754994999999995
+      },
+      "captureMediansMs": {
+        "current": [
+          0.49765,
+          0.24800999999999998,
+          0.25055,
+          0.24800999999999998
+        ],
+        "explicit-avx2-direct": [
+          0.35764,
+          0.19585000000000002,
+          0.18748,
+          0.21627000000000002
+        ],
+        "runtime-dispatch": [
+          0.28758,
+          0.20154,
+          0.18232,
+          0.16895
+        ],
+        "forced-fallback": [
+          0.46672,
+          0.31671,
+          0.27838989999999997,
+          0.23843999999999999
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.3914830555866233,
+          1.2663262701046716,
+          1.3364092169831447,
+          1.1467609932029406
+        ],
+        "runtime-dispatch": [
+          1.7304749982613532,
+          1.2305745757665971,
+          1.3742321193505922,
+          1.4679490973660847
+        ],
+        "forced-fallback": [
+          1.0662709976002742,
+          0.7830823150516245,
+          0.8999967312032513,
+          1.040135883241067
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.3013677435439082,
+        "runtime-dispatch": 1.4210906083583383,
+        "forced-fallback": 0.9700663072221591
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.00497325,
+        "explicit-avx2-direct": 0.0053838,
+        "runtime-dispatch": 0.00473605,
+        "forced-fallback": 0.0045138999999999995
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0031708,
+          0.0046492,
+          0.0052973,
+          0.0054653
+        ],
+        "explicit-avx2-direct": [
+          0.0050315,
+          0.0057361,
+          0.0039245,
+          0.0057467
+        ],
+        "runtime-dispatch": [
+          0.0031493,
+          0.0061986,
+          0.0038871,
+          0.005585
+        ],
+        "forced-fallback": [
+          0.0032932,
+          0.0053919,
+          0.0036359,
+          0.0059446
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.63018980423333,
+          0.8105158557207859,
+          1.3498025226143457,
+          0.951032766631284
+        ],
+        "runtime-dispatch": [
+          1.0068269139173784,
+          0.7500403316878005,
+          1.3627897404234517,
+          0.9785675917636527
+        ],
+        "forced-fallback": [
+          0.9628325033402162,
+          0.8622563474841893,
+          1.4569432602656838,
+          0.9193722033442115
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.8807743111760349,
+        "runtime-dispatch": 0.9926972528405156,
+        "forced-fallback": 0.9411023533422138
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.0021649
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0014913,
+          0.0024073,
+          0.0019225,
+          0.0027131
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.0028251500000000002,
+        "explicit-avx2-direct": 0.0029705505,
+        "runtime-dispatch": 0.00274595,
+        "forced-fallback": 0.002261
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0016443,
+          0.0028531,
+          0.0027972,
+          0.0028702
+        ],
+        "explicit-avx2-direct": [
+          0.0018812,
+          0.003097,
+          0.002844101,
+          0.0036427
+        ],
+        "runtime-dispatch": [
+          0.0024653,
+          0.0030266,
+          0.0023513,
+          0.0033090999999999997
+        ],
+        "forced-fallback": [
+          0.0018514,
+          0.0025967,
+          0.0019253,
+          0.0029456
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8740697427174144,
+          0.9212463674523732,
+          0.983509376073494,
+          0.7879320284404425
+        ],
+        "runtime-dispatch": [
+          0.6669776497789316,
+          0.9426749487874182,
+          1.189639773742185,
+          0.8673657489951951
+        ],
+        "forced-fallback": [
+          0.888138705844226,
+          1.0987407093618824,
+          1.4528644886511193,
+          0.9744024986420423
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.8976580550848938,
+        "runtime-dispatch": 0.9050203488913067,
+        "forced-fallback": 1.0365716040019624
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.055706,
+        "explicit-avx2-direct": 0.0551915,
+        "runtime-dispatch": 0.058638499999999996,
+        "forced-fallback": 0.049428
+      },
+      "captureMediansMs": {
+        "current": [
+          0.039224999999999996,
+          0.055987,
+          0.06432399999999999,
+          0.055424999999999995
+        ],
+        "explicit-avx2-direct": [
+          0.044792,
+          0.056523,
+          0.058623,
+          0.05386
+        ],
+        "runtime-dispatch": [
+          0.04603999999999999,
+          0.062219,
+          0.064782,
+          0.055057999999999996
+        ],
+        "forced-fallback": [
+          0.04032100000000001,
+          0.052108,
+          0.054044999999999996,
+          0.04674799999999999
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8757144132880871,
+          0.9905171346177664,
+          1.0972485202053799,
+          1.029056813962124
+        ],
+        "runtime-dispatch": [
+          0.851976542137272,
+          0.8998376701650622,
+          0.9929301349140192,
+          1.0066656979912092
+        ],
+        "forced-fallback": [
+          0.972818134470871,
+          1.074441544484532,
+          1.1901933573873624,
+          1.1856122187045437
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.0097869742899452,
+        "runtime-dispatch": 0.9463839025395406,
+        "forced-fallback": 1.1300268815945378
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.025839
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.017791,
+          0.026303,
+          0.026026000000000004,
+          0.025651999999999998
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.02928,
+        "explicit-avx2-direct": 0.0353735,
+        "runtime-dispatch": 0.0333425,
+        "forced-fallback": 0.025915499999999998
+      },
+      "captureMediansMs": {
+        "current": [
+          0.025490999999999996,
+          0.034759000000000005,
+          0.029840999999999996,
+          0.028719
+        ],
+        "explicit-avx2-direct": [
+          0.022965,
+          0.034746,
+          0.036001000000000005,
+          0.039245
+        ],
+        "runtime-dispatch": [
+          0.024499,
+          0.035757,
+          0.034071000000000004,
+          0.032614
+        ],
+        "forced-fallback": [
+          0.020732,
+          0.031348,
+          0.027813999999999995,
+          0.024017
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.1099934683213584,
+          1.0003741437863354,
+          0.8288936418432818,
+          0.7317874888520831
+        ],
+        "runtime-dispatch": [
+          1.040491448630556,
+          0.9720893811002044,
+          0.8758474949370431,
+          0.8805727601643467
+        ],
+        "forced-fallback": [
+          1.2295485240208373,
+          1.1088107694270768,
+          1.0728769684331632,
+          1.1957779905899988
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.9146338928148086,
+        "runtime-dispatch": 0.9263310706322756,
+        "forced-fallback": 1.152294380008538
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.9057750000000001,
+        "explicit-avx2-direct": 1.14738,
+        "runtime-dispatch": 1.4011900000000002,
+        "forced-fallback": 0.8275999999999999
+      },
+      "captureMediansMs": {
+        "current": [
+          0.59524,
+          1.0151800000000002,
+          1.9077601000000002,
+          0.79637
+        ],
+        "explicit-avx2-direct": [
+          0.55101,
+          1.56449,
+          2.26578,
+          0.73027
+        ],
+        "runtime-dispatch": [
+          0.50522,
+          1.23485,
+          2.22636,
+          1.56753
+        ],
+        "forced-fallback": [
+          0.5787498999999999,
+          0.9503499999999999,
+          1.90152,
+          0.70485
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.0802707754850185,
+          0.6488887752558343,
+          0.8419882336325681,
+          1.0905144672518385
+        ],
+        "runtime-dispatch": [
+          1.1781798028581607,
+          0.8221079483338058,
+          0.8568965037100919,
+          0.5080413134038901
+        ],
+        "forced-fallback": [
+          1.0284926183140595,
+          1.0682169726942707,
+          1.0032816378476166,
+          1.1298432290558276
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.9611295045587933,
+        "runtime-dispatch": 0.8395022260219489,
+        "forced-fallback": 1.048354795504165
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.34843999999999997
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.26091000000000003,
+          0.30987,
+          0.9213000000000001,
+          0.38700999999999997
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.59481,
+        "explicit-avx2-direct": 0.55116,
+        "runtime-dispatch": 0.520445,
+        "forced-fallback": 0.4794
+      },
+      "captureMediansMs": {
+        "current": [
+          0.23731999999999998,
+          0.56883,
+          1.1238700000000001,
+          0.62079
+        ],
+        "explicit-avx2-direct": [
+          0.24800999999999998,
+          0.6566599999999999,
+          0.86136,
+          0.44566
+        ],
+        "runtime-dispatch": [
+          0.23992,
+          0.60659,
+          1.0493999999999999,
+          0.4343
+        ],
+        "forced-fallback": [
+          0.19672,
+          0.61303,
+          0.92805,
+          0.34577
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.9568968993185758,
+          0.8662473730697774,
+          1.3047622364632676,
+          1.3929677332495622
+        ],
+        "runtime-dispatch": [
+          0.9891630543514504,
+          0.9377503750473961,
+          1.0709643605870023,
+          1.4294036380382222
+        ],
+        "forced-fallback": [
+          1.2063847092313946,
+          0.9278991240232941,
+          1.2110015624158181,
+          1.7953842149405672
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.1308295678909217,
+        "runtime-dispatch": 1.0300637074692263,
+        "forced-fallback": 1.2086931358236064
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.0083876,
+        "explicit-avx2-direct": 0.00761075,
+        "runtime-dispatch": 0.008106700000000001,
+        "forced-fallback": 0.0083779
+      },
+      "captureMediansMs": {
+        "current": [
+          0.005553599,
+          0.0138849,
+          0.0085921,
+          0.0081831
+        ],
+        "explicit-avx2-direct": [
+          0.0064828,
+          0.0097215,
+          0.0074736,
+          0.0077479
+        ],
+        "runtime-dispatch": [
+          0.0057445,
+          0.0104407,
+          0.0083212,
+          0.0078922
+        ],
+        "forced-fallback": [
+          0.0059267,
+          0.0125513,
+          0.0068,
+          0.0099558
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8566667180847781,
+          1.4282672427094585,
+          1.1496601370156283,
+          1.0561700589837246
+        ],
+        "runtime-dispatch": [
+          0.9667680389938202,
+          1.329882096028044,
+          1.0325554006633657,
+          1.0368591774156763
+        ],
+        "forced-fallback": [
+          0.9370474294295308,
+          1.1062519420299093,
+          1.263544117647059,
+          0.8219429880069908
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.1029150979996765,
+        "runtime-dispatch": 1.034707289039521,
+        "forced-fallback": 1.0216496857297201
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.0062461
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0046162,
+          0.007686400000000001,
+          0.0070857,
+          0.0054065
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.00213355,
+        "explicit-avx2-direct": 0.0021497,
+        "runtime-dispatch": 0.00216215,
+        "forced-fallback": 0.00223325
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0017027,
+          0.0028672,
+          0.0021000000000000003,
+          0.0021671
+        ],
+        "explicit-avx2-direct": [
+          0.0017218,
+          0.0031758,
+          0.0021729,
+          0.0021265
+        ],
+        "runtime-dispatch": [
+          0.0019551,
+          0.0031446,
+          0.0020702,
+          0.0022541
+        ],
+        "forced-fallback": [
+          0.0016466,
+          0.00227,
+          0.0021965,
+          0.0031351
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.9889069578348241,
+          0.9028276339819887,
+          0.9664503658704957,
+          1.0190924053609216
+        ],
+        "runtime-dispatch": [
+          0.870901744156309,
+          0.9117852827068625,
+          1.0143947444691337,
+          0.9614036644336985
+        ],
+        "forced-fallback": [
+          1.0340702052714683,
+          1.2630837004405286,
+          0.9560664693831096,
+          0.6912379190456445
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.9776786618526598,
+        "runtime-dispatch": 0.9365944735702805,
+        "forced-fallback": 0.9950683373272889
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.09609649999999999,
+        "explicit-avx2-direct": 0.09510450000000001,
+        "runtime-dispatch": 0.10215649999999998,
+        "forced-fallback": 0.1022955
+      },
+      "captureMediansMs": {
+        "current": [
+          0.05807399,
+          0.11188599999999999,
+          0.18127999999999997,
+          0.08030699999999999
+        ],
+        "explicit-avx2-direct": [
+          0.06956199,
+          0.11034000000000001,
+          0.16930601,
+          0.07986900000000001
+        ],
+        "runtime-dispatch": [
+          0.066532,
+          0.114407,
+          0.20328300000000002,
+          0.08990599999999999
+        ],
+        "forced-fallback": [
+          0.05771899999999999,
+          0.11559,
+          0.18714100000000003,
+          0.089001
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8348523381806644,
+          1.014011237991662,
+          1.0707239512643405,
+          1.0054839800172781
+        ],
+        "runtime-dispatch": [
+          0.8728730535682079,
+          0.9779646350310732,
+          0.8917617311826368,
+          0.8932329321736036
+        ],
+        "forced-fallback": [
+          1.0061503144545125,
+          0.9679557055108572,
+          0.9686813685937338,
+          0.902315704317929
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.00974760900447,
+        "runtime-dispatch": 0.8924973316781202,
+        "forced-fallback": 0.9683185370522955
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.05435
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.042913,
+          0.058044000000000005,
+          0.09079500000000001,
+          0.050656
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.030337999999999997,
+        "explicit-avx2-direct": 0.0305285,
+        "runtime-dispatch": 0.036232,
+        "forced-fallback": 0.031052000000000003
+      },
+      "captureMediansMs": {
+        "current": [
+          0.018739,
+          0.025453,
+          0.035223,
+          0.03565599
+        ],
+        "explicit-avx2-direct": [
+          0.02233899,
+          0.034648,
+          0.037094,
+          0.026409
+        ],
+        "runtime-dispatch": [
+          0.023088,
+          0.03519,
+          0.046411999999999995,
+          0.037274
+        ],
+        "forced-fallback": [
+          0.020179999999999997,
+          0.034278,
+          0.034819,
+          0.027826
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.8388472352599647,
+          0.7346167166936043,
+          0.9495605758343666,
+          1.3501454049755766
+        ],
+        "runtime-dispatch": [
+          0.8116337491337491,
+          0.7233020744529696,
+          0.7589201068689132,
+          0.9565914578526586
+        ],
+        "forced-fallback": [
+          0.9285926660059466,
+          0.74254623957057,
+          1.0116028605071943,
+          1.281391144972328
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 0.8942039055471657,
+        "runtime-dispatch": 0.7852769280013312,
+        "forced-fallback": 0.9700977632565704
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 1.62575505,
+        "explicit-avx2-direct": 1.16009495,
+        "runtime-dispatch": 1.4483549,
+        "forced-fallback": 1.2805
+      },
+      "captureMediansMs": {
+        "current": [
+          0.77896,
+          1.62456,
+          1.6269500999999997,
+          1.7169699
+        ],
+        "explicit-avx2-direct": [
+          0.76223,
+          1.0900500000000002,
+          1.83462,
+          1.2301399
+        ],
+        "runtime-dispatch": [
+          1.6209699,
+          1.10488,
+          2.7321,
+          1.2757399
+        ],
+        "forced-fallback": [
+          0.9296300000000001,
+          2.0232301,
+          1.52129,
+          1.03971
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.0219487556249427,
+          1.4903536535021327,
+          0.8868049514340843,
+          1.3957517352294646
+        ],
+        "runtime-dispatch": [
+          0.4805517980315365,
+          1.4703497212366954,
+          0.5954943450093334,
+          1.3458620366110678
+        ],
+        "forced-fallback": [
+          0.8379247657670256,
+          0.8029536531707392,
+          1.0694542789343253,
+          1.6513930807629051
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.2088502454272037,
+        "runtime-dispatch": 0.9706781908102007,
+        "forced-fallback": 0.9536895223506754
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.7626550000000001
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.5468599000000001,
+          0.71669,
+          0.9807500000000001,
+          0.80862
+        ]
+      }
+    },
+    {
+      "profile": "native",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.546885,
+        "explicit-avx2-direct": 0.41176,
+        "runtime-dispatch": 0.31847500000000006,
+        "forced-fallback": 0.32997
+      },
+      "captureMediansMs": {
+        "current": [
+          0.27815,
+          1.2119701,
+          0.7763899999999999,
+          0.31738
+        ],
+        "explicit-avx2-direct": [
+          0.24191,
+          0.44081000000000004,
+          0.84893,
+          0.38271
+        ],
+        "runtime-dispatch": [
+          0.32893000000000006,
+          0.30802,
+          1.3255899999999998,
+          0.29775
+        ],
+        "forced-fallback": [
+          0.30203,
+          0.30225,
+          1.4424199999999998,
+          0.35769
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.1498077797528008,
+          2.7494160749529275,
+          0.9145512586432332,
+          0.8292963340388284
+        ],
+        "runtime-dispatch": [
+          0.845620648770255,
+          3.9347123563404973,
+          0.5856939174254483,
+          1.0659277917716203
+        ],
+        "forced-fallback": [
+          0.9209350064563122,
+          4.009826633581472,
+          0.5382551545319672,
+          0.8873046492773071
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.032179519198017,
+        "runtime-dispatch": 0.9557742202709376,
+        "forced-fallback": 0.9041198278668097
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.0050747,
+        "explicit-avx2-direct": 0.0034161,
+        "runtime-dispatch": 0.0034319,
+        "forced-fallback": 0.00501715
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0058338,
+          0.0049013,
+          0.0051974,
+          0.004952
+        ],
+        "explicit-avx2-direct": [
+          0.0034169,
+          0.0034153,
+          0.0033746,
+          0.0034225
+        ],
+        "runtime-dispatch": [
+          0.0035881,
+          0.0033759,
+          0.0034087,
+          0.0034551
+        ],
+        "forced-fallback": [
+          0.0053106,
+          0.0049474,
+          0.0048049,
+          0.0050869
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.707337059908104,
+          1.4351008696161391,
+          1.5401529070112012,
+          1.4468955441928413
+        ],
+        "runtime-dispatch": [
+          1.625874418215769,
+          1.4518498770698185,
+          1.5247455041511424,
+          1.4332436108940407
+        ],
+        "forced-fallback": [
+          1.0985199412495763,
+          0.9906819743703763,
+          1.0816874440675144,
+          0.9734809019245513
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.4935242256020214,
+        "runtime-dispatch": 1.4882976906104806,
+        "forced-fallback": 1.0361847092189453
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.00223005
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0022483,
+          0.0021842,
+          0.002234,
+          0.0022261
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.0033698,
+        "explicit-avx2-direct": 0.00179945,
+        "runtime-dispatch": 0.00174105,
+        "forced-fallback": 0.0030543000000000002
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0040268,
+          0.0034667,
+          0.0032729,
+          0.0030513
+        ],
+        "explicit-avx2-direct": [
+          0.0018923,
+          0.0017066,
+          0.0019452,
+          0.0017042
+        ],
+        "runtime-dispatch": [
+          0.0017808,
+          0.0017389,
+          0.0016784,
+          0.0017432
+        ],
+        "forced-fallback": [
+          0.003803,
+          0.0031242,
+          0.0029844,
+          0.0029542
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          2.127992390212968,
+          2.031348880815657,
+          1.6825519226814722,
+          1.790458866330243
+        ],
+        "runtime-dispatch": [
+          2.2612309074573225,
+          1.9936166542066824,
+          1.9500119161105816,
+          1.7504015603487837
+        ],
+        "forced-fallback": [
+          1.0588482776755193,
+          1.1096280647845849,
+          1.0966693472724836,
+          1.032868458465913
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.9109038735729498,
+        "runtime-dispatch": 1.971814285158632,
+        "forced-fallback": 1.0777588124740014
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.051363500000000006,
+        "explicit-avx2-direct": 0.035374,
+        "runtime-dispatch": 0.034836,
+        "forced-fallback": 0.0507435
+      },
+      "captureMediansMs": {
+        "current": [
+          0.060187,
+          0.04516100000000001,
+          0.048475000000000004,
+          0.054252
+        ],
+        "explicit-avx2-direct": [
+          0.039644,
+          0.035445,
+          0.03321799,
+          0.035303
+        ],
+        "runtime-dispatch": [
+          0.044966,
+          0.035954,
+          0.033718,
+          0.03298
+        ],
+        "forced-fallback": [
+          0.062108,
+          0.046342999999999995,
+          0.052167000000000005,
+          0.049319999999999996
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.5181868630814246,
+          1.2741148257864299,
+          1.4592996144559018,
+          1.5367532504319745
+        ],
+        "runtime-dispatch": [
+          1.3385002001512254,
+          1.256077209768037,
+          1.4376594104039389,
+          1.6449969678593086
+        ],
+        "forced-fallback": [
+          0.9690700070844336,
+          0.9744945299182187,
+          0.9292272892824965,
+          1.1
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.4887432387686632,
+        "runtime-dispatch": 1.3880798052775822,
+        "forced-fallback": 0.9717822685013262
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.021148
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.022689,
+          0.020784000000000004,
+          0.021397,
+          0.020899
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.029804,
+        "explicit-avx2-direct": 0.0176995,
+        "runtime-dispatch": 0.018076500000000002,
+        "forced-fallback": 0.030926000000000002
+      },
+      "captureMediansMs": {
+        "current": [
+          0.033809,
+          0.030136,
+          0.028632000000000005,
+          0.029472
+        ],
+        "explicit-avx2-direct": [
+          0.019060999999999998,
+          0.017644,
+          0.017619,
+          0.017755
+        ],
+        "runtime-dispatch": [
+          0.018452,
+          0.021841,
+          0.017159999999999998,
+          0.017701
+        ],
+        "forced-fallback": [
+          0.045447999999999995,
+          0.030499000000000002,
+          0.031353,
+          0.028748
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.7737264571638425,
+          1.7080027204715484,
+          1.6250638515239233,
+          1.6599267811883978
+        ],
+        "runtime-dispatch": [
+          1.83226750487752,
+          1.3797903026418206,
+          1.668531468531469,
+          1.6649906784927404
+        ],
+        "forced-fallback": [
+          0.7439051223376166,
+          0.9880979704252598,
+          0.9132140465027272,
+          1.025184360651176
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.683964750829973,
+        "runtime-dispatch": 1.6667610735121046,
+        "forced-fallback": 0.9506560084639935
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.76197,
+        "explicit-avx2-direct": 0.68432,
+        "runtime-dispatch": 0.63589,
+        "forced-fallback": 0.651565
+      },
+      "captureMediansMs": {
+        "current": [
+          0.75544,
+          0.7685,
+          0.9694499000000001,
+          0.66889
+        ],
+        "explicit-avx2-direct": [
+          0.7304200000000001,
+          0.58691,
+          0.83482,
+          0.63822
+        ],
+        "runtime-dispatch": [
+          0.65857,
+          0.6391,
+          0.5961700000000001,
+          0.6326799999999999
+        ],
+        "forced-fallback": [
+          0.64773,
+          0.8878199999999999,
+          0.6455599999999999,
+          0.6554
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.034254264669642,
+          1.3094000783765822,
+          1.161268177571213,
+          1.0480555294412586
+        ],
+        "runtime-dispatch": [
+          1.1470914253610094,
+          1.202472226568612,
+          1.6261299629300365,
+          1.0572327242839983
+        ],
+        "forced-fallback": [
+          1.166288422645238,
+          0.8656033880741592,
+          1.5017192824834256,
+          1.0205828501678365
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.1046618535062358,
+        "runtime-dispatch": 1.1747818259648106,
+        "forced-fallback": 1.0934356364065372
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.31879
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.34518,
+          0.2924,
+          0.34734000000000004,
+          0.28026
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "existing-native-benchmark",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.447785,
+        "explicit-avx2-direct": 0.23185500000000003,
+        "runtime-dispatch": 0.308155,
+        "forced-fallback": 0.45843
+      },
+      "captureMediansMs": {
+        "current": [
+          0.44679,
+          0.46198000000000006,
+          0.44878,
+          0.38353
+        ],
+        "explicit-avx2-direct": [
+          0.24842000000000003,
+          0.21031999999999998,
+          0.28178000000000003,
+          0.21529000000000004
+        ],
+        "runtime-dispatch": [
+          0.34716,
+          0.26915,
+          0.45942999999999995,
+          0.23832
+        ],
+        "forced-fallback": [
+          0.44403999999999993,
+          0.41113,
+          0.47282,
+          0.50523
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.7985266886724094,
+          2.196557626473945,
+          1.5926609411597699,
+          1.7814575688606062
+        ],
+        "runtime-dispatch": [
+          1.2869858278603525,
+          1.7164406464796584,
+          0.9768191019306534,
+          1.6093068143672373
+        ],
+        "forced-fallback": [
+          1.0061931357535359,
+          1.1236835064334882,
+          0.949156127067383,
+          0.7591196088910002
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.789992128766508,
+        "runtime-dispatch": 1.448146321113795,
+        "forced-fallback": 0.9776746314104594
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.007907,
+        "explicit-avx2-direct": 0.00644575,
+        "runtime-dispatch": 0.006385399999999999,
+        "forced-fallback": 0.0078013495
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0086237,
+          0.0073912,
+          0.0080392,
+          0.0077748
+        ],
+        "explicit-avx2-direct": [
+          0.0066665,
+          0.006225,
+          0.0059481,
+          0.006779
+        ],
+        "runtime-dispatch": [
+          0.0066714,
+          0.0063681,
+          0.0060538,
+          0.0064027
+        ],
+        "forced-fallback": [
+          0.0078392,
+          0.008539,
+          0.007506,
+          0.007763499
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.293587339683492,
+          1.1873413654618474,
+          1.3515576402548715,
+          1.146894822245169
+        ],
+        "runtime-dispatch": [
+          1.2926372275684264,
+          1.1606601655124762,
+          1.327959298291982,
+          1.2143002170959127
+        ],
+        "forced-fallback": [
+          1.100073987141545,
+          0.86558144981848,
+          1.0710365041300294,
+          1.0014556580737628
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.2404643525726697,
+        "runtime-dispatch": 1.2534687223321694,
+        "forced-fallback": 1.036246081101896
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.0045273
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.0045912,
+          0.0047645,
+          0.0044634,
+          0.0042889
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 1000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.0029132,
+        "explicit-avx2-direct": 0.00170005,
+        "runtime-dispatch": 0.0016301,
+        "forced-fallback": 0.00316355
+      },
+      "captureMediansMs": {
+        "current": [
+          0.0030304,
+          0.002815,
+          0.0030114,
+          0.0027785
+        ],
+        "explicit-avx2-direct": [
+          0.0017914,
+          0.0017328,
+          0.0016618,
+          0.0016673
+        ],
+        "runtime-dispatch": [
+          0.0021098,
+          0.0016066,
+          0.0016201,
+          0.0016401
+        ],
+        "forced-fallback": [
+          0.003287,
+          0.0035713,
+          0.0029547,
+          0.0030401
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.6916378251646755,
+          1.6245383194829177,
+          1.8121314237573716,
+          1.6664667426377977
+        ],
+        "runtime-dispatch": [
+          1.4363446772205897,
+          1.752147392007967,
+          1.858774149743843,
+          1.69410401804768
+        ],
+        "forced-fallback": [
+          0.9219348950410708,
+          0.788228376221544,
+          1.019189765458422,
+          0.9139501990066117
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.6790522839012367,
+        "runtime-dispatch": 1.7231257050278237,
+        "forced-fallback": 0.9179425470238413
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 0.079084,
+        "explicit-avx2-direct": 0.06378149999999999,
+        "runtime-dispatch": 0.062130000000000005,
+        "forced-fallback": 0.083756
+      },
+      "captureMediansMs": {
+        "current": [
+          0.08040699999999999,
+          0.080167,
+          0.07438499999999999,
+          0.078001
+        ],
+        "explicit-avx2-direct": [
+          0.062536,
+          0.065027,
+          0.066132,
+          0.06028000000000001
+        ],
+        "runtime-dispatch": [
+          0.071369,
+          0.061507000000000006,
+          0.060837,
+          0.062753
+        ],
+        "forced-fallback": [
+          0.083735,
+          0.076665,
+          0.085976,
+          0.083777
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.2857713956760906,
+          1.2328263644332353,
+          1.124795862819815,
+          1.293978102189781
+        ],
+        "runtime-dispatch": [
+          1.1266376157715534,
+          1.3033801030776984,
+          1.2226934266975686,
+          1.2429843991522318
+        ],
+        "forced-fallback": [
+          0.9602555681614616,
+          1.0456792538968238,
+          0.8651833069693867,
+          0.931055062845411
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.259298880054663,
+        "runtime-dispatch": 1.2328389129249002,
+        "forced-fallback": 0.9456553155034363
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.046580500000000004
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.046671000000000004,
+          0.05098899999999999,
+          0.045638,
+          0.046490000000000004
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 10000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.033812499999999995,
+        "explicit-avx2-direct": 0.017599000000000004,
+        "runtime-dispatch": 0.017445,
+        "forced-fallback": 0.031926
+      },
+      "captureMediansMs": {
+        "current": [
+          0.048003,
+          0.032632999999999995,
+          0.034992,
+          0.030635
+        ],
+        "explicit-avx2-direct": [
+          0.018193,
+          0.017388,
+          0.017810000000000003,
+          0.017298
+        ],
+        "runtime-dispatch": [
+          0.018005,
+          0.018616999999999998,
+          0.015993999999999998,
+          0.016884999999999997
+        ],
+        "forced-fallback": [
+          0.038221000000000005,
+          0.032881,
+          0.030971000000000002,
+          0.028466
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          2.63854229648766,
+          1.876754083275822,
+          1.964738910724312,
+          1.7710139900566537
+        ],
+        "runtime-dispatch": [
+          2.6660927520133293,
+          1.7528602889831872,
+          2.1878204326622486,
+          1.8143322475570034
+        ],
+        "forced-fallback": [
+          1.2559326024960098,
+          0.9924576503147713,
+          1.1298311323496173,
+          1.0761961638445865
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.9207464970000672,
+        "runtime-dispatch": 2.001076340109626,
+        "forced-fallback": 1.103013648097102
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillKernelRelease",
+      "medianMs": {
+        "current": 1.1001349999999999,
+        "explicit-avx2-direct": 0.954515,
+        "runtime-dispatch": 0.93664,
+        "forced-fallback": 1.044535
+      },
+      "captureMediansMs": {
+        "current": [
+          0.96434,
+          1.1340299999999999,
+          1.2013299,
+          1.06624
+        ],
+        "explicit-avx2-direct": [
+          0.9905799,
+          0.9850199999999999,
+          0.92401,
+          0.8477399999999999
+        ],
+        "runtime-dispatch": [
+          0.9102600000000001,
+          0.96302,
+          1.19606,
+          0.8351900000000001
+        ],
+        "forced-fallback": [
+          1.04153,
+          1.18648,
+          1.04445,
+          1.0446199999999999
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          0.9735105668911715,
+          1.1512761162209904,
+          1.3001265137823184,
+          1.2577441196593298
+        ],
+        "runtime-dispatch": [
+          1.0594115966866609,
+          1.1775767896824572,
+          1.0044060498637193,
+          1.2766436379745925
+        ],
+        "forced-fallback": [
+          0.9258878764893953,
+          0.9557936079832782,
+          1.150203360620422,
+          1.0206965212230286
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.20451011794016,
+        "runtime-dispatch": 1.1184941931845591,
+        "forced-fallback": 0.9882450646031533
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "allocateFillRelease",
+      "medianMs": {
+        "shared-setup": 0.5325150000000001
+      },
+      "captureMediansMs": {
+        "shared-setup": [
+          0.4881500000000001,
+          0.54381,
+          0.52122,
+          0.60754
+        ]
+      }
+    },
+    {
+      "profile": "scalar",
+      "dataset": "mixed-clamps-resting",
+      "animals": 100000,
+      "metric": "metabolismBatch",
+      "medianMs": {
+        "current": 0.472935,
+        "explicit-avx2-direct": 0.28874,
+        "runtime-dispatch": 0.357865,
+        "forced-fallback": 0.46931999999999996
+      },
+      "captureMediansMs": {
+        "current": [
+          0.5274300000000001,
+          0.47235000000000005,
+          0.47352,
+          0.41412999999999994
+        ],
+        "explicit-avx2-direct": [
+          0.3582,
+          0.25995,
+          0.31753,
+          0.23174999999999998
+        ],
+        "runtime-dispatch": [
+          0.42363,
+          0.38314,
+          0.33259000000000005,
+          0.20956999999999998
+        ],
+        "forced-fallback": [
+          0.36429,
+          0.46342999999999995,
+          0.56486,
+          0.47521
+        ]
+      },
+      "pairedSpeedups": {
+        "explicit-avx2-direct": [
+          1.4724455611390286,
+          1.8170802077322563,
+          1.4912606682833118,
+          1.7869687162891046
+        ],
+        "runtime-dispatch": [
+          1.2450251398626162,
+          1.2328391710601871,
+          1.4237349288914276,
+          1.976093906570597
+        ],
+        "forced-fallback": [
+          1.4478300255291117,
+          1.0192477828366746,
+          0.8382962149913252,
+          0.8714673512762777
+        ]
+      },
+      "medianSpeedups": {
+        "explicit-avx2-direct": 1.639114692286208,
+        "runtime-dispatch": 1.334380034377022,
+        "forced-fallback": 0.9453575670564762
+      }
+    }
+  ]
+}
