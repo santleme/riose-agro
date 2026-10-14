@@ -41,7 +41,7 @@ async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],c
   source=source.slice(0,workerStart)+"const worker=new Worker();"+source.slice(workerEnd);
   vm.runInContext(source,context,{filename:'app.js'});
   const deliver=(type,value,engineImplementation='javascript-fallback')=>{if(type==='state')lastState=structuredClone(value);worker.onmessage({data:{type,...(type==='state'?{state:value,engineImplementation}:type==='error'?{message:value}:type==='view'?{...value,engineImplementation}:{data:value,engineImplementation})}});};
-  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),readViewState:()=>vm.runInContext('structuredClone(viewState)',context),fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
+  return {elements,messages,workerMessages,downloads,storage,deliver,readState:()=>vm.runInContext('structuredClone(state)',context),readViewState:()=>vm.runInContext('structuredClone(viewState)',context),setScientificPreviewActive(value){vm.runInContext('scientificPreviewActive='+Boolean(value),context);},renderLotSelection(){vm.runInContext('renderLotSelection()',context);},fetches:()=>fetches,renderMap(time=1000){mapDrawCalls=0;scheduledFrame(time);return mapDrawCalls;}};
 }
 async function waitFor(check,timeout=5000){const deadline=Date.now()+timeout;while(!check()&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));assert.ok(check(),'timed out waiting for the browser harness');}
 
@@ -232,6 +232,8 @@ test('the map runs, records and replays a one-factor comparison for only its reg
   const demoContext=createDemoLotContext(resolveDemoLot(baseline,0),'diet',request.referenceConfig,request.scenarioConfig);
   const demoManifest=createDemoLotManifestEnvelope(createConfiguredComparisonManifest(lotSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days}),demoContext);
   assert.equal(validateDemoLotManifestEnvelope(demoManifest),true);
+  const legacyEnvelope=structuredClone(demoManifest);legacyEnvelope.manifest.type='agroville-comparison';
+  assert.throws(()=>validateDemoLotManifestEnvelope(legacyEnvelope),/manifesto configurado/);
   validateConfiguredComparisonManifest(demoManifest.manifest);
   const result=compareConfiguredScenarios(lotSnapshot,{referenceConfig:request.referenceConfig,scenarioConfig:request.scenarioConfig,days:request.days});
   ui.deliver('comparison',result);
@@ -252,6 +254,20 @@ test('the map runs, records and replays a one-factor comparison for only its reg
   assert.deepEqual(ui.messages.at(-1).manifest,history[0].manifest);
   assert.equal(ui.elements.get('demo-lot-status').textContent.includes('não validado'),true);
   assert.equal(DEMO_LOT_MODEL.status,'demonstrative_unvalidated');
+});
+
+test('demo lot comparisons stay disabled during scientific preview',async()=>{
+  const ui=await openFarm(),snapshot=new FarmEngine(902,8).snapshot();ui.deliver('state',snapshot);
+  const patch={x:28,y:38,w:148,h:104};let point;
+  for(let y=patch.y+2;y<patch.y+patch.h-2&&!point;y+=2)for(let x=patch.x+2;x<patch.x+patch.w-2;x+=2)if(snapshot.animals.filter(animal=>animal.patch===0).every(animal=>Math.hypot(animal.x-x,animal.y-y)>=16)){point={x,y};break;}
+  assert.ok(point);
+  const map=ui.elements.get('map'),event={clientX:point.x,clientY:point.y,pointerId:1};map.onpointerdown(event);map.onpointerup(event);
+  assert.equal(ui.elements.get('demo-lot-compare').disabled,false);
+  ui.setScientificPreviewActive(true);ui.renderLotSelection();
+  assert.equal(ui.elements.get('demo-lot-compare').disabled,true);
+  assert.match(ui.elements.get('demo-lot-status').textContent,/prévia científica BR-CORTE/);
+  ui.elements.get('demo-lot-compare').onclick();
+  assert.equal(ui.messages.some(message=>message.type==='snapshot'),false);
 });
 
 test('lot metrics, environmental edits, THI and linked selection persist through the existing comparison and reload',async()=>{

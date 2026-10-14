@@ -1,3 +1,5 @@
+import {validateConfiguredComparisonManifest} from './engine.js';
+
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 export const DEMO_LOT_MODEL = Object.freeze({
@@ -89,6 +91,7 @@ export function validateDemoLotContext(context, snapshot, factor, referenceConfi
 }
 
 export function createDemoLotManifestEnvelope(manifest, lotContext) {
+  validateConfiguredComparisonManifest(manifest);
   validateDemoLotContext(lotContext,manifest?.initialSnapshot,manifest?.factor,manifest?.scenarios?.reference,manifest?.scenarios?.scenario);
   return {type:'riose-demo-lot-comparison-envelope',version:1,manifest:structuredClone(manifest),lotContext:structuredClone(lotContext)};
 }
@@ -97,6 +100,7 @@ export function validateDemoLotManifestEnvelope(envelope) {
   const keys=['lotContext','manifest','type','version'];
   if(!record(envelope)||envelope.type!=='riose-demo-lot-comparison-envelope'||envelope.version!==1
     ||Object.keys(envelope).sort().join(',')!==keys.sort().join(','))throw new Error('Envelope de comparação por lote inválido.');
+  validateConfiguredComparisonManifest(envelope.manifest);
   validateDemoLotContext(envelope.lotContext,envelope.manifest?.initialSnapshot,envelope.manifest?.factor,
     envelope.manifest?.scenarios?.reference,envelope.manifest?.scenarios?.scenario);
   return true;
