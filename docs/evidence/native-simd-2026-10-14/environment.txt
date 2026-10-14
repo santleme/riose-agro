@@ -60,6 +60,6 @@ Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and _
 Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
 Vulnerability Srbds:                  Unknown: Dependent on hypervisor status
 Vulnerability Tsx async abort:        Not affected
-ae21e8b0056ccb9a15353907168d6bb947cff083
+9d9b7e712904f6906ddd3d29e6fbad2038fa428b
 4ffe4f7e10d8b6b9765e92293374c1034a357fe1
-Wed Oct 14 18:12:14 UTC 2026
+Wed Oct 14 19:02:23 UTC 2026

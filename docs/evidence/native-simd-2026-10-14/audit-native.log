@@ -1,5 +1,5 @@
 
-/mnt/d/CodexTools/issue-91/study195/native/release/libriose_core.so:     file format elf64-x86-64
+/mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/native/release/libriose_core.so:     file format elf64-x86-64
 
 
 Disassembly of section .init:
@@ -61,24 +61,24 @@ Disassembly of section .text:
    11850:	48 01 f8             	add    %rdi,%rax
    11853:	45 31 c0             	xor    %r8d,%r8d
    11856:	c4 e2 7d 19 05 81 26 	vbroadcastsd -0xd97f(%rip),%ymm0        # 3ee0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e98>
-   1185d:	ff ff
+   1185d:	ff ff 
    1185f:	c4 e2 7d 19 0d 80 26 	vbroadcastsd -0xd980(%rip),%ymm1        # 3ee8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ea0>
-   11866:	ff ff
+   11866:	ff ff 
    11868:	c4 e2 7d 19 15 57 26 	vbroadcastsd -0xd9a9(%rip),%ymm2        # 3ec8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e80>
-   1186f:	ff ff
+   1186f:	ff ff 
    11871:	c4 e2 7d 19 1d 9e 26 	vbroadcastsd -0xd962(%rip),%ymm3        # 3f18 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ed0>
-   11878:	ff ff
+   11878:	ff ff 
    1187a:	c4 e2 7d 19 25 85 26 	vbroadcastsd -0xd97b(%rip),%ymm4        # 3f08 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ec0>
-   11881:	ff ff
+   11881:	ff ff 
    11883:	c5 d1 57 ed          	vxorpd %xmm5,%xmm5,%xmm5
    11887:	c4 e2 7d 19 35 30 26 	vbroadcastsd -0xd9d0(%rip),%ymm6        # 3ec0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e78>
-   1188e:	ff ff
+   1188e:	ff ff 
    11890:	c4 e2 7d 19 3d 37 26 	vbroadcastsd -0xd9c9(%rip),%ymm7        # 3ed0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e88>
-   11897:	ff ff
+   11897:	ff ff 
    11899:	c4 62 7d 19 05 56 26 	vbroadcastsd -0xd9aa(%rip),%ymm8        # 3ef8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb0>
-   118a0:	ff ff
+   118a0:	ff ff 
    118a2:	c4 62 7d 19 0d 55 26 	vbroadcastsd -0xd9ab(%rip),%ymm9        # 3f00 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb8>
-   118a9:	ff ff
+   118a9:	ff ff 
    118ab:	4c 89 db             	mov    %r11,%rbx
    118ae:	66 90                	xchg   %ax,%ax
    118b0:	c4 21 7d 10 14 47    	vmovupd (%rdi,%r8,2),%ymm10
@@ -123,27 +123,27 @@ Disassembly of section .text:
    1197c:	4f 8d 04 1b          	lea    (%r11,%r11,1),%r8
    11980:	48 83 c7 18          	add    $0x18,%rdi
    11984:	c5 fb 10 05 54 25 ff 	vmovsd -0xdaac(%rip),%xmm0        # 3ee0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e98>
-   1198b:	ff
+   1198b:	ff 
    1198c:	c5 fb 10 0d 54 25 ff 	vmovsd -0xdaac(%rip),%xmm1        # 3ee8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ea0>
-   11993:	ff
+   11993:	ff 
    11994:	c5 fb 10 15 2c 25 ff 	vmovsd -0xdad4(%rip),%xmm2        # 3ec8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e80>
-   1199b:	ff
+   1199b:	ff 
    1199c:	c5 fb 10 1d 74 25 ff 	vmovsd -0xda8c(%rip),%xmm3        # 3f18 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ed0>
-   119a3:	ff
+   119a3:	ff 
    119a4:	c5 fb 10 25 5c 25 ff 	vmovsd -0xdaa4(%rip),%xmm4        # 3f08 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ec0>
-   119ab:	ff
+   119ab:	ff 
    119ac:	c5 fb 10 2d 0c 25 ff 	vmovsd -0xdaf4(%rip),%xmm5        # 3ec0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e78>
-   119b3:	ff
+   119b3:	ff 
    119b4:	c5 fb 10 35 14 25 ff 	vmovsd -0xdaec(%rip),%xmm6        # 3ed0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e88>
-   119bb:	ff
+   119bb:	ff 
    119bc:	c5 c1 57 ff          	vxorpd %xmm7,%xmm7,%xmm7
    119c0:	c5 7b 12 05 30 25 ff 	vmovddup -0xdad0(%rip),%xmm8        # 3ef8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb0>
-   119c7:	ff
+   119c7:	ff 
    119c8:	c5 7b 10 0d 30 25 ff 	vmovsd -0xdad0(%rip),%xmm9        # 3f00 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb8>
-   119cf:	ff
+   119cf:	ff 
    119d0:	31 c0                	xor    %eax,%eax
    119d2:	66 66 66 66 66 2e 0f 	data16 data16 data16 data16 cs nopw 0x0(%rax,%rax,1)
-   119d9:	1f 84 00 00 00 00 00
+   119d9:	1f 84 00 00 00 00 00 
    119e0:	4d 39 d9             	cmp    %r11,%r9
    119e3:	74 7a                	je     11a5f <_ZN10riose_core17update_metabolism17h1e3ffff75ae06a40E+0x2af>
    119e5:	c5 7b 10 5f f8       	vmovsd -0x8(%rdi),%xmm11
@@ -189,3 +189,4 @@ Disassembly of section .text:
    11a88:	ff 15 72 a9 03 00    	call   *0x3a972(%rip)        # 4c400 <_DYNAMIC+0x270>
 
 Disassembly of section .plt:
+

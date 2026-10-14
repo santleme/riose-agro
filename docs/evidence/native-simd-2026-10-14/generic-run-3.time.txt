@@ -1,8 +1,8 @@
-	Command being timed: "env SIMD_STUDY_PROFILE=generic:  SIMD_STUDY_RUN=3 /mnt/d/CodexTools/issue-91/study195/generic/release/examples/simd_metabolism_study"
-	User time (seconds): 7.14
-	System time (seconds): 0.05
-	Percent of CPU this job got: 98%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.33
+	Command being timed: "env SIMD_STUDY_PROFILE=generic:  SIMD_STUDY_RUN=3 /mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/generic/release/examples/simd_metabolism_study"
+	User time (seconds): 8.06
+	System time (seconds): 0.04
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.27
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
@@ -10,9 +10,9 @@
 	Maximum resident set size (kbytes): 27648
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 586
-	Minor (reclaiming a frame) page faults: 11830
-	Voluntary context switches: 689
-	Involuntary context switches: 12
+	Minor (reclaiming a frame) page faults: 11857
+	Voluntary context switches: 690
+	Involuntary context switches: 16
 	Swaps: 0
 	File system inputs: 58024
 	File system outputs: 0

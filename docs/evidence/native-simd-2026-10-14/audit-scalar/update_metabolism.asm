@@ -1,5 +1,5 @@
 
-/mnt/d/CodexTools/issue-91/study195/scalar/release/libriose_core.so:     file format elf64-x86-64
+/mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/scalar/release/libriose_core.so:     file format elf64-x86-64
 
 
 Disassembly of section .init:
@@ -39,34 +39,34 @@ Disassembly of section .text:
    11803:	48 83 c6 fc          	add    $0xfffffffffffffffc,%rsi
    11807:	48 c1 ee 02          	shr    $0x2,%rsi
    1180b:	4c 8d 0c 75 02 00 00 	lea    0x2(,%rsi,2),%r9
-   11812:	00
+   11812:	00 
    11813:	49 89 ca             	mov    %rcx,%r10
    11816:	49 83 e2 fe          	and    $0xfffffffffffffffe,%r10
    1181a:	49 83 e0 fe          	and    $0xfffffffffffffffe,%r8
    1181e:	48 83 c7 18          	add    $0x18,%rdi
    11822:	31 c0                	xor    %eax,%eax
    11824:	f2 0f 10 05 b4 26 ff 	movsd  -0xd94c(%rip),%xmm0        # 3ee0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e98>
-   1182b:	ff
+   1182b:	ff 
    1182c:	f2 0f 10 0d b4 26 ff 	movsd  -0xd94c(%rip),%xmm1        # 3ee8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ea0>
-   11833:	ff
+   11833:	ff 
    11834:	f2 0f 10 15 8c 26 ff 	movsd  -0xd974(%rip),%xmm2        # 3ec8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e80>
-   1183b:	ff
+   1183b:	ff 
    1183c:	f2 0f 10 1d d4 26 ff 	movsd  -0xd92c(%rip),%xmm3        # 3f18 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ed0>
-   11843:	ff
+   11843:	ff 
    11844:	f2 0f 10 25 bc 26 ff 	movsd  -0xd944(%rip),%xmm4        # 3f08 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ec0>
-   1184b:	ff
+   1184b:	ff 
    1184c:	f2 0f 10 2d 6c 26 ff 	movsd  -0xd994(%rip),%xmm5        # 3ec0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e78>
-   11853:	ff
+   11853:	ff 
    11854:	f2 0f 10 35 74 26 ff 	movsd  -0xd98c(%rip),%xmm6        # 3ed0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e88>
-   1185b:	ff
+   1185b:	ff 
    1185c:	66 0f 57 ff          	xorpd  %xmm7,%xmm7
    11860:	f2 44 0f 10 05 8f 26 	movsd  -0xd971(%rip),%xmm8        # 3ef8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb0>
-   11867:	ff ff
+   11867:	ff ff 
    11869:	f2 44 0f 10 0d 8e 26 	movsd  -0xd972(%rip),%xmm9        # 3f00 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb8>
-   11870:	ff ff
+   11870:	ff ff 
    11872:	31 f6                	xor    %esi,%esi
    11874:	66 66 66 2e 0f 1f 84 	data16 data16 cs nopw 0x0(%rax,%rax,1)
-   1187b:	00 00 00 00 00
+   1187b:	00 00 00 00 00 
    11880:	49 39 f0             	cmp    %rsi,%r8
    11883:	0f 84 a1 00 00 00    	je     1192a <_ZN10riose_core17update_metabolism17h1e3ffff75ae06a40E+0x17a>
    11889:	f2 44 0f 10 5f f8    	movsd  -0x8(%rdi),%xmm11

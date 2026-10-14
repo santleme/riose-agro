@@ -1,5 +1,5 @@
 
-/mnt/d/CodexTools/issue-91/study195/generic/release/libriose_core.so:     file format elf64-x86-64
+/mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/generic/release/libriose_core.so:     file format elf64-x86-64
 
 
 Disassembly of section .init:
@@ -51,7 +51,7 @@ Disassembly of section .text:
    118ab:	45 31 db             	xor    %r11d,%r11d
    118ae:	e9 43 01 00 00       	jmp    119f6 <_ZN10riose_core17update_metabolism17h1e3ffff75ae06a40E+0x1c6>
    118b3:	49 bb fe ff ff ff ff 	movabs $0x7fffffffffffffe,%r11
-   118ba:	ff ff 07
+   118ba:	ff ff 07 
    118bd:	49 21 c3             	and    %rax,%r11
    118c0:	4d 89 d8             	mov    %r11,%r8
    118c3:	49 c1 e0 05          	shl    $0x5,%r8
@@ -60,26 +60,26 @@ Disassembly of section .text:
    118ce:	48 83 e0 e0          	and    $0xffffffffffffffe0,%rax
    118d2:	31 db                	xor    %ebx,%ebx
    118d4:	66 0f 28 05 b4 27 ff 	movapd -0xd84c(%rip),%xmm0        # 4090 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x4048>
-   118db:	ff
+   118db:	ff 
    118dc:	66 0f 28 0d 4c 26 ff 	movapd -0xd9b4(%rip),%xmm1        # 3f30 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ee8>
-   118e3:	ff
+   118e3:	ff 
    118e4:	66 0f 28 15 f4 26 ff 	movapd -0xd90c(%rip),%xmm2        # 3fe0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3f98>
-   118eb:	ff
+   118eb:	ff 
    118ec:	66 0f 28 1d fc 26 ff 	movapd -0xd904(%rip),%xmm3        # 3ff0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3fa8>
-   118f3:	ff
+   118f3:	ff 
    118f4:	66 0f 28 25 d4 27 ff 	movapd -0xd82c(%rip),%xmm4        # 40d0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x4088>
-   118fb:	ff
+   118fb:	ff 
    118fc:	66 0f 57 ed          	xorpd  %xmm5,%xmm5
    11900:	66 0f 28 35 98 26 ff 	movapd -0xd968(%rip),%xmm6        # 3fa0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3f58>
-   11907:	ff
+   11907:	ff 
    11908:	66 0f 28 3d f0 26 ff 	movapd -0xd910(%rip),%xmm7        # 4000 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3fb8>
-   1190f:	ff
+   1190f:	ff 
    11910:	66 44 0f 28 05 07 27 	movapd -0xd8f9(%rip),%xmm8        # 4020 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3fd8>
-   11917:	ff ff
+   11917:	ff ff 
    11919:	66 44 0f 28 0d fe 25 	movapd -0xda02(%rip),%xmm9        # 3f20 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ed8>
-   11920:	ff ff
+   11920:	ff ff 
    11922:	66 66 66 66 66 2e 0f 	data16 data16 data16 data16 cs nopw 0x0(%rax,%rax,1)
-   11929:	1f 84 00 00 00 00 00
+   11929:	1f 84 00 00 00 00 00 
    11930:	f2 44 0f 10 34 5f    	movsd  (%rdi,%rbx,2),%xmm14
    11936:	f2 44 0f 10 54 5f 08 	movsd  0x8(%rdi,%rbx,2),%xmm10
    1193d:	f2 44 0f 10 6c 5f 10 	movsd  0x10(%rdi,%rbx,2),%xmm13
@@ -121,28 +121,28 @@ Disassembly of section .text:
    119f9:	4f 8d 04 1b          	lea    (%r11,%r11,1),%r8
    119fd:	48 83 c7 18          	add    $0x18,%rdi
    11a01:	f2 0f 10 05 d7 24 ff 	movsd  -0xdb29(%rip),%xmm0        # 3ee0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e98>
-   11a08:	ff
+   11a08:	ff 
    11a09:	f2 0f 10 0d d7 24 ff 	movsd  -0xdb29(%rip),%xmm1        # 3ee8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ea0>
-   11a10:	ff
+   11a10:	ff 
    11a11:	f2 0f 10 15 af 24 ff 	movsd  -0xdb51(%rip),%xmm2        # 3ec8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e80>
-   11a18:	ff
+   11a18:	ff 
    11a19:	f2 0f 10 1d f7 24 ff 	movsd  -0xdb09(%rip),%xmm3        # 3f18 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ed0>
-   11a20:	ff
+   11a20:	ff 
    11a21:	f2 0f 10 25 df 24 ff 	movsd  -0xdb21(%rip),%xmm4        # 3f08 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3ec0>
-   11a28:	ff
+   11a28:	ff 
    11a29:	f2 0f 10 2d 8f 24 ff 	movsd  -0xdb71(%rip),%xmm5        # 3ec0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e78>
-   11a30:	ff
+   11a30:	ff 
    11a31:	f2 0f 10 35 97 24 ff 	movsd  -0xdb69(%rip),%xmm6        # 3ed0 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3e88>
-   11a38:	ff
+   11a38:	ff 
    11a39:	66 0f 57 ff          	xorpd  %xmm7,%xmm7
    11a3d:	f2 44 0f 10 05 b2 24 	movsd  -0xdb4e(%rip),%xmm8        # 3ef8 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb0>
-   11a44:	ff ff
+   11a44:	ff ff 
    11a46:	f2 44 0f 10 0d b1 24 	movsd  -0xdb4f(%rip),%xmm9        # 3f00 <_RNvNtNtNtCsjrHSEGnQ3l9_3std6thread7current2id2ID+0x3eb8>
-   11a4d:	ff ff
+   11a4d:	ff ff 
    11a4f:	31 c0                	xor    %eax,%eax
    11a51:	66 66 66 66 66 66 2e 	data16 data16 data16 data16 data16 cs nopw 0x0(%rax,%rax,1)
-   11a58:	0f 1f 84 00 00 00 00
-   11a5f:	00
+   11a58:	0f 1f 84 00 00 00 00 
+   11a5f:	00 
    11a60:	4d 39 d9             	cmp    %r11,%r9
    11a63:	0f 84 a4 00 00 00    	je     11b0d <_ZN10riose_core17update_metabolism17h1e3ffff75ae06a40E+0x2dd>
    11a69:	f2 44 0f 10 5f f8    	movsd  -0x8(%rdi),%xmm11
@@ -191,3 +191,4 @@ Disassembly of section .text:
    11b30:	ff 15 7a a9 03 00    	call   *0x3a97a(%rip)        # 4c4b0 <_DYNAMIC+0x270>
 
 Disassembly of section .plt:
+

@@ -1,18 +1,18 @@
-	Command being timed: "env SIMD_STUDY_PROFILE=scalar: -C no-vectorize-loops -C no-vectorize-slp SIMD_STUDY_RUN=4 /mnt/d/CodexTools/issue-91/study195/scalar/release/examples/simd_metabolism_study"
-	User time (seconds): 9.01
-	System time (seconds): 0.06
-	Percent of CPU this job got: 98%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:09.24
+	Command being timed: "env SIMD_STUDY_PROFILE=scalar: -C no-vectorize-loops -C no-vectorize-slp SIMD_STUDY_RUN=4 /mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/scalar/release/examples/simd_metabolism_study"
+	User time (seconds): 9.18
+	System time (seconds): 0.05
+	Percent of CPU this job got: 96%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:09.52
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 27648
+	Maximum resident set size (kbytes): 27264
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 586
-	Minor (reclaiming a frame) page faults: 11831
-	Voluntary context switches: 690
-	Involuntary context switches: 25
+	Minor (reclaiming a frame) page faults: 11859
+	Voluntary context switches: 689
+	Involuntary context switches: 21
 	Swaps: 0
 	File system inputs: 58016
 	File system outputs: 0
