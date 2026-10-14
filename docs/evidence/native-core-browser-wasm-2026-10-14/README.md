@@ -2,90 +2,72 @@
 
 ## Decision
 
-**NO-GO for changing the product default; continue optional evaluation.** Nine clean Chromium captures show repeatable full-scenario and Worker wins for WASM. Three clean Firefox captures show a different result: Rust engine time is lower, but full-scenario and Worker results are mixed or statistically close, and WASM does not win at every population. A3/B3 outputs match the official goldens exactly, and unavailable or malformed WASM falls back to JavaScript in all 12 captures.
+**Continue optional evaluation; do not change the product default.** Nine clean Chromium captures show lower full-scenario and Worker medians for WASM at 100, 1,000, and 10,000 animals. Three clean Firefox captures show ties at 100, a slight WASM regression at 1,000, and a modest win at 10,000. Exact A3/B3 fixture parity and missing/malformed-WASM fallback pass in all 12 captures. The measured result depends on browser engine and has not been repeated on another device.
 
-Startup costs vary sharply by browser version. Chrome 147 took 35.96 ms per warm WASM Worker versus 5.97 ms for JavaScript. Chrome 153/156 were closer, but WASM still started more slowly. These results support optional evaluation on the measured workload, not a product-wide performance claim.
+The current `?engine=wasm` product setting still selects the existing metabolism kernel; the experimental full-core Worker is not wired into live product simulation. The UI measurements below use a benchmark-only `?benchRender=1` hook in the existing app to apply equivalent final snapshots and measure presentation separately. This adds evidence about display cost without claiming a live full-core WASM integration.
 
 ## Workload and method
 
-The study builds `riose-core` with the isolated `browser-scenario-wasm` feature and runs the same 24-hour pasture baseline request through (1) the Rust core compiled to WASM and (2) the JavaScript `FarmEngine`. It uses engine-supported populations of 100, 1,000, and 10,000 animals, seed `20261012`, and fixed pasture configuration. Each browser build was measured in three independent processes with fresh profiles; every population used three warmups and 15 timed repetitions, alternating backend order. The new cross-engine runner uses Playwright 1.57.0 for Chromium or Firefox.
+The study builds `riose-core` with the isolated `browser-scenario-wasm` feature and runs the same 24-hour pasture baseline through (1) the Rust core compiled to WASM and (2) the JavaScript `FarmEngine`. It uses engine-supported populations of 100, 1,000, and 10,000 animals, seed `20261012`, and fixed pasture configuration. Each browser build was measured in three independent processes with fresh browser contexts; every population used three warmups and 15 timed repetitions, alternating backend order. The runner uses Playwright 1.57.0 for Chromium or Firefox.
 
-Before timing, the harness checks A3 `baseline-pasture` and B3 `housing-comparison` against their official goldens and compares JS with WASM exactly. It also checks both a missing WASM file and malformed WASM bytes, verifying that the Worker returns the equivalent JavaScript result with an explicit fallback reason. Every run validates against `docs/architecture/benchmark-report.schema.json` and includes source-file hashes.
+Before timing, the harness checks A3 `baseline-pasture` and B3 `housing-comparison` against their official goldens and compares JS with WASM exactly. It also checks a missing WASM file and malformed WASM bytes, verifying that the Worker returns the equivalent JavaScript result with an explicit fallback reason. All 12 reports validate against `docs/architecture/benchmark-report.schema.json` and include source-file hashes.
 
-The WASM ABI reports request JSON parsing, `run_native_scenario` execution, and result JSON serialization separately. JavaScript reports `FarmEngine` setup, tick, snapshot, and metrics time. The ABI's total call also includes response-envelope assembly; the envelope is built in place to avoid retaining a second copy of the large result. The response JSON decode and copy remain separate bridge measurements.
+For the UI phase, each final JS and WASM snapshot is verified equal and applied to the existing app's result view in alternating order. The harness times synchronous metric/list updates and waits for one completed product canvas draw. The animal list remains virtualized to 12 visible rows. Since identical snapshots go through the same renderer, UI timings are pooled as `shared-renderer`, not attributed to either engine. `workerToRenderedResultEstimate` adds the separately measured Worker median, UI update median, and canvas-frame median; it is a derived estimate, not a continuous trace.
 
-The Chromium captures identify clean source revision `4533668ad03665a242551df7c7d41eeaa05c2387` (`dirty: false`) and share source-tree digest `e08ef8eb84c0be97c0c56c146d450bf6568356fd5852d778742d92f087d0cace`. `run-1.json` through `run-3.json` cover Chromium 156; `chrome-147-run-1.json` through `chrome-147-run-3.json` and `chrome-153-run-1.json` through `chrome-153-run-3.json` contain the other captures. The Firefox captures use clean source revision `0a4916ba51d4502d62f38a3d327887e593b352af`, source-tree digest `3447db9e7524fd26c8e16a39e2838171522be17e5ef8cefae162473a97f86965`, and Firefox 144.0.2. `firefox-144-run-1.json` through `firefox-144-run-3.json` contain those results.
-
-## Engine time
-
-Each value is the median of three run-level medians; parentheses show the range across those run medians. Times are milliseconds. The request-parse samples were reported as 0.00 ms at the browser clock's observed 0.1 ms granularity; read these as below measurement resolution, not as zero work.
-
-| Chromium | Animals | FarmEngine JS | Native scenario WASM | WASM request parse | WASM result JSON serialization |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 147.0.7727.15 | 100 | 1.30 (1.20–1.30) | 0.10 (0.10–0.10) | <0.10 | 0.10 (0.10–0.10) |
-| 147.0.7727.15 | 1,000 | 11.10 (10.90–11.10) | 0.80 (0.80–0.90) | <0.10 | 1.00 (1.00–1.00) |
-| 147.0.7727.15 | 10,000 | 100.70 (99.20–102.50) | 7.50 (7.40–7.50) | <0.10 | 10.10 (10.00–10.20) |
-| 153.0.8010.12 | 100 | 1.20 (1.20–1.30) | 0.10 (0.10–0.10) | <0.10 | 0.10 (0.10–0.10) |
-| 153.0.8010.12 | 1,000 | 10.90 (10.90–11.20) | 0.80 (0.80–0.90) | <0.10 | 1.00 (1.00–1.00) |
-| 153.0.8010.12 | 10,000 | 107.50 (104.50–108.50) | 7.30 (7.20–7.40) | <0.10 | 9.80 (9.80–9.90) |
-| 156.0.8078.4 | 100 | 1.20 (1.20–1.30) | 0.10 (0.10–0.10) | <0.10 | 0.10 (0.10–0.10) |
-| 156.0.8078.4 | 1,000 | 11.40 (11.40–11.70) | 0.80 (0.80–0.90) | <0.10 | 1.00 (1.00–1.10) |
-| 156.0.8078.4 | 10,000 | 105.30 (102.00–106.20) | 7.50 (7.50–7.60) | <0.10 | 10.10 (9.70–10.10) |
-
-Firefox 144 engine-time medians are shown below. Each value is the median of the three process-level medians; parentheses show the range across processes. The browser timer has approximately 1 ms granularity for the sub-millisecond WASM measurements.
-
-| Firefox | Animals | FarmEngine JS | Native scenario WASM | WASM request parse | WASM result JSON serialization |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 144.0.2 | 100 | 2 (1–2) | <1 (0–1) | <1 | 1 (0–1) |
-| 144.0.2 | 1,000 | 14 (13–14) | 5 (5–6) | <1 | 5 (5–6) |
-| 144.0.2 | 10,000 | 149 (141–153) | 51 (50–53) | <1 | 51 (51–52) |
+All reports identify clean source revision `0939e1f981e2a2271440efd6e6cf6c7b0a969446` (`dirty: false`) and source-tree digest `9e15ab536746662394c32ecc5749b6a9a78da2604e04a5297c41f47da0771317`. `run-1.json` through `run-3.json` cover Chromium 156; `chrome-147-run-1.json` through `chrome-147-run-3.json` and `chrome-153-run-1.json` through `chrome-153-run-3.json` contain the other Chromium captures. `firefox-144-run-1.json` through `firefox-144-run-3.json` contain Firefox 144. The experimental scenario module is 347,758 bytes.
 
 ## Full scenario and Worker results
 
-Values are milliseconds with the same median/range convention. WASM linear memory is the median buffer size after the returned response is copied.
+Values are milliseconds. Each cell shows the median of the three process-level medians (range across those medians). Full-scenario time includes the engine or WASM ABI work. Worker time includes request scheduling and structured-clone transfer.
 
-| Chromium | Animals | Full scenario JS | Full scenario WASM | Worker JS | Worker WASM | WASM memory |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 147.0.7727.15 | 100 | 1.30 (1.20–1.30) | 0.60 (0.60–0.60) | 1.80 (1.70–1.80) | 1.00 (1.00–1.00) | 1.44 MiB |
-| 147.0.7727.15 | 1,000 | 11.10 (10.90–11.10) | 4.30 (4.20–4.50) | 15.50 (15.40–15.50) | 8.30 (8.20–8.50) | 3.50 MiB |
-| 147.0.7727.15 | 10,000 | 100.70 (99.20–102.50) | 42.50 (42.50–42.60) | 149.80 (147.90–152.70) | 83.80 (83.80–84.30) | 20.88 MiB |
-| 153.0.8010.12 | 100 | 1.20 (1.20–1.30) | 0.60 (0.50–0.60) | 1.80 (1.80–1.80) | 1.10 (1.00–1.10) | 1.44 MiB |
-| 153.0.8010.12 | 1,000 | 10.90 (10.90–11.20) | 4.00 (4.00–4.00) | 16.70 (16.30–16.90) | 8.40 (8.40–8.50) | 3.50 MiB |
-| 153.0.8010.12 | 10,000 | 107.50 (104.50–108.50) | 41.20 (40.90–41.60) | 168.50 (166.60–168.60) | 94.60 (93.60–95.20) | 20.88 MiB |
-| 156.0.8078.4 | 100 | 1.20 (1.20–1.30) | 0.60 (0.60–0.60) | 1.80 (1.80–1.90) | 1.10 (1.00–1.10) | 1.44 MiB |
-| 156.0.8078.4 | 1,000 | 11.40 (11.40–11.70) | 4.10 (3.90–4.40) | 16.90 (16.60–17.00) | 8.40 (8.40–9.00) | 3.50 MiB |
-| 156.0.8078.4 | 10,000 | 105.30 (102.00–106.20) | 41.90 (41.10–43.40) | 164.90 (161.90–168.20) | 92.20 (92.00–94.80) | 20.88 MiB |
+| Browser | Animals | Full scenario JS | Full scenario WASM | Worker JS | Worker WASM |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Chromium 147 | 100 | 1.3 (1.2–1.3) | 0.6 (0.6–0.6) | 1.9 (1.8–1.9) | 1.1 (1.0–1.1) |
+| Chromium 147 | 1,000 | 11.5 (11.5–11.5) | 4.4 (4.2–4.5) | 16.2 (16.0–16.3) | 8.2 (8.2–8.4) |
+| Chromium 147 | 10,000 | 108.5 (107.8–127.2) | 44.6 (43.2–45.8) | 160.6 (160.4–180.1) | 88.5 (85.7–89.0) |
+| Chromium 153 | 100 | 1.3 (1.2–1.3) | 0.6 (0.6–0.6) | 1.9 (1.9–1.9) | 1.0 (1.0–1.0) |
+| Chromium 153 | 1,000 | 11.7 (11.3–11.9) | 4.0 (4.0–4.1) | 16.7 (16.5–17.0) | 8.4 (8.2–8.5) |
+| Chromium 153 | 10,000 | 111.6 (110.4–114.6) | 42.6 (41.9–42.7) | 168.1 (166.5–171.4) | 87.8 (87.3–87.9) |
+| Chromium 156 | 100 | 1.3 (1.2–1.3) | 0.6 (0.6–0.6) | 1.8 (1.8–1.9) | 1.1 (1.0–1.2) |
+| Chromium 156 | 1,000 | 11.2 (10.7–11.4) | 4.0 (3.8–4.1) | 15.7 (14.9–15.9) | 7.9 (7.4–7.9) |
+| Chromium 156 | 10,000 | 108.8 (105.9–114.9) | 41.1 (40.6–41.5) | 160.5 (157.1–166.3) | 82.0 (81.7–84.1) |
+| Firefox 144 | 100 | 2 (1–2) | 1 (1–2) | 2 (2–2) | 2 (2–2) |
+| Firefox 144 | 1,000 | 14 (14–14) | 14 (14–14) | 19 (19–20) | 20 (20–20) |
+| Firefox 144 | 10,000 | 153 (151–154) | 144 (139–145) | 224 (219–226) | 215 (213–218) |
 
-| Firefox | Animals | Full scenario JS | Full scenario WASM | Worker JS | Worker WASM | WASM memory |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 144.0.2 | 100 | 2 (1–2) | 1 (1–2) | 2 (2–2) | 2 (2–2) | 1.44 MiB |
-| 144.0.2 | 1,000 | 14 (13–14) | 14 (14–16) | 20 (19–21) | 22 (21–25) | 3.50 MiB |
-| 144.0.2 | 10,000 | 149 (141–153) | 142 (138–146) | 223 (221–232) | 216 (208–217) | 20.88 MiB |
+## Existing UI presentation and Worker-to-display estimate
 
-Firefox's full-scenario medians do not show a repeatable gain at 100 or 1,000 animals; at 10,000, WASM is about 5% faster end to end. Worker round-trip improves at 10,000 but is slower at 1,000. Each capture consequently records **NO-GO for product adoption** under the all-population decision rule. Rust engine time is much lower at 1,000 and 10,000, while JSON serialization and response decode consume most of the WASM path at 10,000 animals.
+UI timings and derived totals are milliseconds, again reporting the median and range across three process-level medians. The UI column is shared between JS and WASM because the final snapshots match exactly. The derived total is Worker round trip + DOM/list update + next canvas draw.
 
-## Startup cost
+| Browser | Animals | UI DOM/list update | UI canvas frame | JS Worker-to-display estimate | WASM Worker-to-display estimate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Chromium 147 | 100 | 1.3 (1.2–1.4) | 15.3 (15.3–15.5) | 18.6 (18.4–18.6) | 17.8 (17.6–17.8) |
+| Chromium 147 | 1,000 | 1.7 (1.6–1.7) | 48.2 (48.1–48.3) | 66.0 (65.8–66.2) | 58.0 (58.0–58.3) |
+| Chromium 147 | 10,000 | 5.8 (5.8–5.9) | 43.8 (43.5–44.1) | 210.6 (209.8–229.7) | 137.9 (135.3–139.0) |
+| Chromium 153 | 100 | 1.3 (1.2–1.3) | 15.4 (15.4–15.4) | 18.6 (18.5–18.6) | 17.7 (17.6–17.7) |
+| Chromium 153 | 1,000 | 1.6 (1.6–1.7) | 48.1 (39.8–48.2) | 66.3 (58.4–66.5) | 58.0 (49.8–58.3) |
+| Chromium 153 | 10,000 | 4.7 (4.6–4.8) | 44.0 (34.1–45.1) | 217.9 (205.2–220.2) | 136.7 (126.5–137.1) |
+| Chromium 156 | 100 | 1.1 (1.0–1.1) | 15.6 (15.5–15.6) | 18.5 (18.4–18.5) | 17.8 (17.6–17.8) |
+| Chromium 156 | 1,000 | 1.4 (1.4–1.5) | 48.3 (47.9–48.5) | 65.4 (64.3–65.8) | 57.6 (56.8–57.8) |
+| Chromium 156 | 10,000 | 4.7 (4.5–5.0) | 44.3 (44.0–44.7) | 209.3 (205.9–216.0) | 131.7 (130.5–132.8) |
+| Firefox 144 | 100 | 2 (2–2) | 15 (15–15) | 19 (19–19) | 19 (19–19) |
+| Firefox 144 | 1,000 | 2 (2–2) | 47 (47–47) | 68 (68–69) | 69 (69–69) |
+| Firefox 144 | 10,000 | 10 (9.5–10) | 39.5 (39–40) | 274 (268–275) | 265 (262–267) |
 
-Startup values are medians of the three run-level medians. Warm startup is the average per Worker across batches of ten new Workers after the initial WASM fetch.
+Chromium's Worker-to-display estimate favors WASM at all three populations and all three tested Chromium versions. Firefox ties at 100, favors JS at 1,000, and favors WASM at 10,000, so it fails the all-population rule. The UI cost is a large share of the measured time at smaller populations, while the full-core WASM path has its clearest advantage for larger cohorts.
 
-| Chromium | Cold WASM | Cold JS | Warm WASM | Warm JS |
+## Startup, memory, and limits
+
+Cold/warm startup medians are milliseconds. Values are the median of the three process-level medians (range shown).
+
+| Browser | Cold WASM | Cold JS | Warm WASM | Warm JS |
 | --- | ---: | ---: | ---: | ---: |
-| 147.0.7727.15 | 40.1 ms | 6.2 ms | 35.96 ms | 5.97 ms |
-| 153.0.8010.12 | 11.7 ms | 6.5 ms | 7.55 ms | 5.12 ms |
-| 156.0.8078.4 | 9.9 ms | 5.2 ms | 5.62 ms | 3.90 ms |
-| Firefox 144.0.2 | 33 ms (32–38) | 19 ms (17–22) | 16.6 ms (15.6–21.5) | 10.1 ms (9.3–13.8) |
+| Chromium 147 | 13.9 (12.7–15.0) | 7.0 (6.5–7.2) | 9.3 (8.9–9.3) | 6.1 (5.7–6.2) |
+| Chromium 153 | 14.8 (13.5–18.6) | 8.1 (7.2–8.2) | 9.4 (9.4–9.8) | 6.2 (6.2–6.3) |
+| Chromium 156 | 10.8 (10.2–11.5) | 5.7 (5.6–5.9) | 7.0 (6.8–8.0) | 4.4 (4.3–4.5) |
+| Firefox 144 | 37 (30–41) | 12 (11–13) | 16.3 (15.8–19.9) | 9.5 (9.4–10.3) |
 
-At 100 animals, the warm Worker saves about 0.7–0.8 ms per run. The warm-start penalty implies roughly 38 runs to break even on Chrome 147, four on Chrome 153, and three on Chrome 156. At 1,000 animals, the corresponding estimates are five, one, and one run; at 10,000 animals, one run repays the measured penalty for each version. This estimate uses only measured Worker round-trip and startup medians; it is not a browser-session workload model.
-
-Worker round trips include request scheduling, structured-clone transfer, scenario execution, and response transfer. The WASM path adds request encoding, allocation/copy, JSON parsing, result serialization, output copy, response decode, and envelope assembly. The internal engine and bridge subphases above let these costs be interpreted separately from the full Worker path.
-
-## Limits
-
-- One host was measured: Linux WSL2 x86_64, AMD Ryzen 7 7700X, and 16 reported hardware threads. Chromium and Firefox were tested, but all captures use this same device; Firefox does not expose `navigator.deviceMemory`.
-- Chromium uses Blink/V8; Firefox uses Gecko/SpiderMonkey. Results vary by engine, and the Firefox runs do not show a uniform end-to-end WASM win.
-- The dedicated benchmark Worker has no product UI. The `ui` phase is explicitly not measured; this is not a rendered-page or user-interaction result.
-- WASM memory is the linear-memory buffer size after the result is returned; it is not transient peak allocation. Page JS heap excludes Worker heap attribution. Process RSS and GPU memory are not measured.
-- The simulated outputs remain demonstrative and unvalidated. Timing and parity establish implementation equivalence to existing fixtures, not scientific accuracy.
+WASM linear memory is 1.44 MiB after 100 animals, 3.50 MiB after 1,000, and 20.88 MiB after 10,000. Chromium also records main-thread JS heap after UI rendering and forced page GC; that reading excludes dedicated Worker heap attribution. Process RSS, GPU memory, transient allocation peaks, GPU compositor presentation, and user interaction are not measured. All captures use one Linux WSL2 x86_64 host (AMD Ryzen 7 7700X, 16 reported hardware threads); Firefox does not expose `navigator.deviceMemory`. The simulated outputs remain demonstrative and unvalidated. Timing and parity establish implementation equivalence to existing fixtures, not scientific accuracy or performance across other machines.
 
 ## Reproduce
 
@@ -96,19 +78,17 @@ npm run build:wasm-scenario
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-In a second terminal, choose an installed Chromium binary and capture one run:
+In a second terminal, capture one Chromium run (set `CHROME_BIN` to select a particular installed version):
 
 ```sh
-CHROME_BIN=/path/to/chrome NATIVE_WASM_REPETITIONS=15 NATIVE_WASM_WARMUPS=3 node scripts/benchmark-native-wasm-browser.mjs > /tmp/native-core-browser-wasm.json
+NATIVE_WASM_REPETITIONS=15 NATIVE_WASM_WARMUPS=3 node scripts/benchmark-native-wasm-browser.mjs > /tmp/native-core-browser-wasm.json
 node scripts/validate-benchmark-report.mjs < /tmp/native-core-browser-wasm.json
 ```
 
-The harness uses the local Chromium cache or `CHROME_BIN` and serves the working tree at `RIOSE_URL` (default `http://127.0.0.1:8000/`).
-
-For Firefox, install the browser build pinned by Playwright, then run the same report harness:
+The runner uses the local Chromium cache or `CHROME_BIN`, and serves the working tree at `RIOSE_URL` (default `http://127.0.0.1:8000/`). For Firefox, install the Playwright-pinned browser and run:
 
 ```sh
 npx playwright install firefox
-npm run bench:wasm-scenario-browser:firefox > /tmp/native-core-browser-wasm-firefox.json
+NATIVE_WASM_REPETITIONS=15 NATIVE_WASM_WARMUPS=3 npm run bench:wasm-scenario-browser:firefox > /tmp/native-core-browser-wasm-firefox.json
 node scripts/validate-benchmark-report.mjs < /tmp/native-core-browser-wasm-firefox.json
 ```
