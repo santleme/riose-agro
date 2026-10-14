@@ -234,6 +234,14 @@ try {
   const summary = values => summarizeSamples(values);
   const populations = [100, 1000, 10000].map(animals => ({animals, scope: 'full-core browser scenario and Worker', limit: 'FarmEngine supported maximum 10000'}));
   const phases = {
+    engine: {status: 'measured', measurements: [100, 1000, 10000].flatMap(animals => {
+      const wasmRows = browserResult.bridgeRuns.filter(row => row.count === animals);
+      const jsRows = browserResult.jsRuns.filter(row => row.count === animals);
+      return [
+        measurement('engine', 'nativeScenarioExecution', 'ms', summary(wasmRows.map(row => row.nativeScenarioEngineMs)), {population: {animals, scope: 'full-core scenario engine'}, implementation: 'full-core-wasm', observations: wasmRows.map(row => row.nativeScenarioEngineMs), source: 'riose_scenario_run_json timing around run_native_scenario after request JSON parse'}),
+        measurement('engine', 'farmEngineBaseline24h', 'ms', summary(jsRows.map(row => row.elapsedMs)), {population: {animals, scope: 'full-core scenario engine'}, implementation: 'javascript', observations: jsRows.map(row => row.elapsedMs), source: 'benchmark Worker timing around FarmEngine setup, tick, snapshot, and metrics'}),
+      ];
+    })},
     startup: {status: 'measured', measurements: [
       measurement('startup', 'workerAndWasmColdStartup', 'ms', summary([browserResult.wasmColdStartup.workerToReadyMs]), {implementation: 'full-core-wasm', memory: {wasmLinearBytes: browserResult.wasmColdStartup.memoryBytes}, observations: [browserResult.wasmColdStartup.workerToReadyMs]}),
       measurement('startup', 'workerAndJsColdStartup', 'ms', summary([browserResult.jsColdStartup.workerToReadyMs]), {implementation: 'javascript', observations: [browserResult.jsColdStartup.workerToReadyMs]}),
@@ -258,7 +266,7 @@ try {
     ])},
     bridgeMarshaling: {status: 'measured', measurements: [100, 1000, 10000].flatMap(animals => {
       const rows = browserResult.bridgeRuns.filter(row => row.count === animals);
-      return ['requestJsonEncodeMs', 'inputAllocateMs', 'inputCopyMs', 'outputCopyMs', 'responseJsonDecodeMs', 'coreAndJsonAbiMs'].map(field => measurement('bridgeMarshaling', field, 'ms', summary(rows.map(row => row[field])), {population: {animals, scope: 'full-core scenario request'}, implementation: 'full-core-wasm', observations: rows.map(row => row[field]), detail: field === 'coreAndJsonAbiMs' ? 'includes Rust JSON parse, simulation, and JSON serialization' : undefined}));
+      return ['requestJsonEncodeMs', 'inputAllocateMs', 'inputCopyMs', 'requestJsonParseMs', 'resultJsonSerializeMs', 'outputCopyMs', 'responseJsonDecodeMs', 'coreAndJsonAbiMs'].map(field => measurement('bridgeMarshaling', field, 'ms', summary(rows.map(row => row[field])), {population: {animals, scope: 'full-core scenario request'}, implementation: 'full-core-wasm', observations: rows.map(row => row[field]), detail: field === 'requestJsonParseMs' ? 'measured inside riose_scenario_run_json before native scenario execution' : field === 'resultJsonSerializeMs' ? 'measured inside riose_scenario_run_json after native scenario execution' : field === 'coreAndJsonAbiMs' ? 'total Rust ABI call including request parsing, native execution, result serialization, and response envelope' : undefined}));
     })},
     memory: {status: 'measured', measurements: [100, 1000, 10000].map(animals => {
       const rows = browserResult.memoryRuns.filter(row => row.count === animals);
@@ -288,14 +296,15 @@ try {
       {phase: 'startup', timed: ['Worker construction through ready message; WASM fetch and compile are included for WASM.'], notTimed: ['Browser process launch and initial page navigation.']},
       {phase: 'coldStartup', timed: ['First dedicated Worker startup and first WASM fetch/compile in an isolated browser profile.'], notTimed: ['Chrome process startup.']},
       {phase: 'warmStartup', timed: ['New Worker startup after the first WASM module has been fetched and compiled by Chromium.'], notTimed: ['A guaranteed HTTP cache hit across devices/browsers.']},
-      {phase: 'fullScenario', timed: ['Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, and result serialization.'], notTimed: ['Page rendering and Chrome process launch.']},
+      {phase: 'engine', timed: ['JavaScript FarmEngine setup, 24-hour tick, snapshot, and metrics; Rust run_native_scenario after request JSON parsing.'], notTimed: ['Worker scheduling/transport, WASM request parsing and result serialization, and page rendering.']},
+      {phase: 'fullScenario', timed: ['Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode.'], notTimed: ['Page rendering and Chrome process launch.']},
       {phase: 'worker', timed: ['Page request through Worker response including structured-clone transfer and scheduling.'], notTimed: ['UI rendering; the study uses a dedicated benchmark Worker.']},
-      {phase: 'bridgeMarshaling', timed: ['WASM request JSON encode, input allocation/copy, combined ABI call, output copy, and JSON decode.'], notTimed: ['Separating Rust JSON parse/serialize from the simulation inside the combined ABI call.']},
+      {phase: 'bridgeMarshaling', timed: ['WASM request JSON encode, input allocation/copy, Rust request JSON parse, result JSON serialization, output copy, response JSON decode, and total ABI call.'], notTimed: ['UI rendering; response-envelope assembly is included in the total ABI call but not timed as a separate subphase.']},
       {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario and page JS heap after forced GC.'], notTimed: ['Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation.']},
     ],
     results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToEndGo ? 'GO candidate: WASM was faster end-to-end for each tested population; requires independent repeat before adoption' : 'NO-GO for product adoption: no repeatable end-to-end benefit across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, sourceArtifactBytes: (await stat(new URL('../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
     limitations: [
-      'One Linux x86_64 host and one Chromium build were measured; the result does not generalize to other browsers, operating systems, or devices.',
+      'One Linux x86_64 host and one Chromium build are measured per report; combined evidence across multiple Chromium releases still uses one browser engine and does not generalize to other devices.',
       'The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity; no product UI is rendered.',
       'Worker JS heap and process RSS are not attributed. WASM linear memory is reported separately and is not GPU memory.',
       'The baseline workload is a 24-hour demonstrative pasture scenario; it is not scientific model validation or evidence for model accuracy.',

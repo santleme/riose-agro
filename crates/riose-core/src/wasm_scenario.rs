@@ -7,9 +7,19 @@ use core::ptr;
 const MAX_REQUEST_BYTES: usize = 32 * 1024 * 1024;
 const MAX_RESPONSE_BYTES: usize = 256 * 1024 * 1024;
 
+#[link(wasm_import_module = "env")]
+unsafe extern "C" {
+    fn riose_scenario_now_ms() -> f64;
+}
+
+fn now_ms() -> f64 {
+    // SAFETY: the isolated browser adapter provides this monotonic clock import.
+    unsafe { riose_scenario_now_ms() }
+}
+
 #[no_mangle]
 pub extern "C" fn riose_scenario_abi_version() -> u32 {
-    1
+    2
 }
 
 /// Allocates a byte buffer for a JSON request from JavaScript.
@@ -42,8 +52,9 @@ pub unsafe extern "C" fn riose_scenario_free_input(pointer: *mut u8, length: usi
 ///
 /// The low 32 bits contain a pointer to the allocated UTF-8 JSON response and
 /// the high 32 bits contain its byte length. Zero indicates a failed ABI call.
-/// The response is the same `NativeRunResult` used by `riose-run`. Release it
-/// with `riose_scenario_free_output(pointer, length)` after copying the bytes.
+/// The response contains the unchanged `NativeRunResult` under `result` and
+/// stage timings under `timings`. Release it with
+/// `riose_scenario_free_output(pointer, length)` after copying the bytes.
 ///
 /// # Safety
 /// `input` must point to `length` readable bytes from a live WebAssembly memory
@@ -55,21 +66,47 @@ pub unsafe extern "C" fn riose_scenario_run_json(input: *const u8, length: usize
     }
     // SAFETY: pointer validity and byte length are the caller's ABI contract.
     let request_bytes = unsafe { core::slice::from_raw_parts(input, length) };
+    let parse_started = now_ms();
     let Ok(request) = serde_json::from_slice::<NativeScenarioRequest>(request_bytes) else {
         return 0;
     };
+    let request_json_parse_ms = now_ms() - parse_started;
+
+    let engine_started = now_ms();
     let Ok(result) = run_native_scenario(request) else {
         return 0;
     };
+    let native_scenario_engine_ms = now_ms() - engine_started;
+
+    let serialize_started = now_ms();
     let Ok(encoded) = serde_json::to_vec(&result) else {
         return 0;
     };
+    let result_json_serialize_ms = now_ms() - serialize_started;
     if encoded.is_empty() || encoded.len() > MAX_RESPONSE_BYTES || encoded.len() > u32::MAX as usize
     {
         return 0;
     }
-    let length = encoded.len() as u32;
-    let pointer = Box::into_raw(encoded.into_boxed_slice()) as *mut u8;
+
+    let timings = serde_json::json!({
+        "requestJsonParseMs": request_json_parse_ms,
+        "nativeScenarioEngineMs": native_scenario_engine_ms,
+        "resultJsonSerializeMs": result_json_serialize_ms,
+    });
+    let Ok(timings_json) = serde_json::to_vec(&timings) else {
+        return 0;
+    };
+    let mut response = Vec::with_capacity(encoded.len() + timings_json.len() + 24);
+    response.extend_from_slice(b"{\"result\":");
+    response.extend_from_slice(&encoded);
+    response.extend_from_slice(b",\"timings\":");
+    response.extend_from_slice(&timings_json);
+    response.push(b'}');
+    if response.len() > MAX_RESPONSE_BYTES || response.len() > u32::MAX as usize {
+        return 0;
+    }
+    let length = response.len() as u32;
+    let pointer = Box::into_raw(response.into_boxed_slice()) as *mut u8;
     ((length as u64) << 32) | (pointer as u32 as u64)
 }
 

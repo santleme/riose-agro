@@ -14,6 +14,14 @@ async function loadFixtureWasm(bytes = wasmBytes) {
     new Response(bytes, {headers: {'content-type': 'application/wasm'}}));
 }
 
+function assertSeparatedStageTimings(run) {
+  assert.equal(run.abiVersion, 2);
+  for (const field of ['requestJsonParseMs', 'nativeScenarioEngineMs', 'resultJsonSerializeMs']) {
+    assert.ok(Number.isFinite(run.lastTimings[field]), `${field} should be reported by the Rust ABI`);
+    assert.ok(run.lastTimings[field] >= 0, `${field} should not be negative`);
+  }
+}
+
 test('full-core WASM replays the official baseline fixture exactly', async t => {
   const run = await loadFixtureWasm();
   t.after(() => run.dispose?.());
@@ -25,6 +33,7 @@ test('full-core WASM replays the official baseline fixture exactly', async t => 
     configuration: baselineGolden.configuration,
     hours: baselineGolden.horizon.value,
   });
+  assertSeparatedStageTimings(run);
   assert.equal(result.engine.provenance, 'native-rust-core');
   assert.deepEqual(result.result, {
     type: 'baseline',
@@ -42,6 +51,7 @@ test('full-core WASM replays the official housing comparison fixture exactly', a
     snapshot: housingGolden.replayManifest.baseline,
     days: housingGolden.horizon.value,
   });
+  assertSeparatedStageTimings(run);
   assert.equal(result.engine.provenance, 'native-rust-core');
   assert.deepEqual(result.result, {
     type: 'housing-comparison',

@@ -4,7 +4,7 @@ const MAX_RESPONSE_JSON_BYTES = 256 * 1024 * 1024;
 function exportsMatch(exports) {
   return exports.memory instanceof WebAssembly.Memory
     && typeof exports.riose_scenario_abi_version === 'function'
-    && exports.riose_scenario_abi_version() === 1
+    && exports.riose_scenario_abi_version() === 2
     && typeof exports.riose_scenario_alloc_input === 'function'
     && typeof exports.riose_scenario_free_input === 'function'
     && typeof exports.riose_scenario_run_json === 'function'
@@ -12,12 +12,13 @@ function exportsMatch(exports) {
 }
 
 async function instantiate(response) {
+  const imports = {env: {riose_scenario_now_ms: () => performance.now()}};
   if (typeof WebAssembly.instantiateStreaming === 'function'
       && response.headers.get('content-type')?.includes('application/wasm')) {
-    return WebAssembly.instantiateStreaming(response, {});
+    return WebAssembly.instantiateStreaming(response, imports);
   }
   const bytes = await response.arrayBuffer();
-  return WebAssembly.instantiate(bytes, {});
+  return WebAssembly.instantiate(bytes, imports);
 }
 
 /** Load the isolated full-core WASM build used by browser research benchmarks. */
@@ -80,10 +81,18 @@ export async function loadNativeScenarioWasm(
       const outputBytes = new Uint8Array(memory.buffer, outputPointer, outputLength).slice();
       timings.outputCopyMs = performance.now() - started;
       started = performance.now();
-      const result = JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(outputBytes));
+      const response = JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(outputBytes));
       timings.responseJsonDecodeMs = performance.now() - started;
+      if (!response || typeof response !== 'object' || !response.result
+          || !response.timings || typeof response.timings !== 'object'
+          || !Number.isFinite(response.timings.requestJsonParseMs)
+          || !Number.isFinite(response.timings.nativeScenarioEngineMs)
+          || !Number.isFinite(response.timings.resultJsonSerializeMs)) {
+        throw new Error('Scenario WASM returned an invalid response envelope');
+      }
+      Object.assign(timings, response.timings);
       run.lastTimings = timings;
-      return result;
+      return response.result;
     } finally {
       if (outputPointer && outputLength) {
         instance.exports.riose_scenario_free_output(outputPointer, outputLength);
@@ -93,7 +102,7 @@ export async function loadNativeScenarioWasm(
   };
 
   run.memoryBytes = () => memory.buffer.byteLength;
-  run.abiVersion = 1;
+  run.abiVersion = 2;
   run.lastTimings = null;
   return run;
 }
