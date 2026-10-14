@@ -4,6 +4,10 @@ set -euo pipefail
 out=$(realpath -m "${1:?provide an output directory outside the repository}")
 target=$(realpath -m "${SIMD_STUDY_TARGET_ROOT:?set an external build directory}")
 runs=${SIMD_STUDY_RUNS:-4}
+if ! [[ "$runs" =~ ^[0-9]+$ ]] || (( runs < 4 )); then
+  echo "At least four captures per profile are required." >&2
+  exit 1
+fi
 if [[ "$out/" == "$(pwd)/"* || "$target/" == "$(pwd)/"* ]]; then
   echo 'Output and target directories must be outside the source checkout.' >&2
   exit 1

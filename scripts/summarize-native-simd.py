@@ -37,8 +37,8 @@ def main():
     parser.add_argument("--runs", type=int, default=4,
                         help="expected captures per compiler profile (default: 4)")
     args = parser.parse_args()
-    if args.runs < 1:
-        parser.error("--runs must be at least one")
+    if args.runs < 4:
+        parser.error("--runs must be at least four")
 
     reports = load_reports(args.directory, args.runs)
     revision = reports[0][1]["benchmark"]["source"]["revision"]

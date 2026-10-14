@@ -92,3 +92,4 @@ python3 scripts/summarize-native-simd.py /path/to/external/captures > summary.js
 
 The capture revision in each JSON is the source commit used for the measurements. Before opening the PR, `origin/main` advanced to `9c5838e2a1fbafbf5d3c3a73c3613338dc70261f`; its update did not modify `update_metabolism`, the study example, capture scripts, or CI changes relevant to this study. Those benchmark-relevant files were verified identical after rebasing the study onto that current main. The captures retain their original source revision and base as provenance.
 The summarizer validates the complete expected profile/run matrix before reading report contents, rejects missing or extra captures, and checks each report's declared profile and order rotation. Its `--runs` option must match the runner's capture count.
+The runner and summarizer both enforce a minimum of four captures per compiler profile; larger counts can be requested for deeper studies.
