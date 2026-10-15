@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4"><meta name="description" content="Configure, compare e examine experimentos de simulação pecuária Riose.">
+  <title>Riose — Experimentos</title><link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/client/home.css"><link rel="stylesheet" href="product.css">
+</head>
+<body class="experiment-body">
+  <a class="skip-link" href="#experiment-main">Pular para o experimento</a>
+  <header class="site-header" aria-label="Riose"><a class="header-manifesto" href="manifesto.html">manifesto</a><div class="header-mark-group"><a class="header-wordmark" href="home.html">Riose</a><a class="header-product" href="product.html">· produto</a><a class="header-product" href="experiments.html" aria-current="page">· experimentos</a></div><span class="header-place">são paulo, brasil</span></header>
+  <main id="experiment-main" class="experiment-shell">
+    <section class="page-intro"><div><p class="eyebrow">SIMULAÇÃO · EXPERIMENTOS</p><h1>Compare cenários.</h1><p class="lede">Configure uma referência e altere um único fator. O motor registra as entradas, as saídas e as limitações de cada execução.</p></div><span class="model-status">MODELO DEMONSTRATIVO<br>SEM VALIDAÇÃO PREDITIVA</span></section>
+    <section class="workspace" aria-label="Configuração e resultados">
+      <form id="experiment-form" class="control-panel">
+        <div class="section-heading"><span>01 / DESENHO DO EXPERIMENTO</span><span>mesmas condições iniciais</span></div>
+        <div class="field-grid field-grid--three">
+          <label>Tamanho do lote<input id="herd-size" type="number" min="1" max="10000" step="1" value="24" required></label>
+          <label>Seed<input id="seed" type="number" min="0" max="4294967295" step="1" value="2026" required></label>
+          <label>Horizonte<select id="days"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option><option value="180">180 dias</option></select></label>
+        </div>
+        <h2>Referência</h2>
+        <div class="field-grid field-grid--four">
+          <label>Dieta<select id="base-diet"><option value="pasture">Pasto</option><option value="balanced">Balanceada</option><option value="concentrate">Concentrado</option></select></label>
+          <label>Alojamento<select id="base-housing"><option value="pasture">Pasto</option><option value="barn">Confinamento</option></select></label>
+          <label>Clima<select id="base-weather"><option value="normal">Normal</option><option value="hot">Quente</option><option value="rain">Chuvoso</option></select></label>
+          <label>Suplemento<input id="base-supplement" type="number" min="0" max="4" step="0.1" value="0"><small>kg MS/cabeça/dia</small></label>
+        </div>
+        <div class="intervention-heading"><h2>Intervenção</h2><label>Fator<select id="factor"><option value="housing">Alojamento</option><option value="diet">Dieta</option><option value="weather">Clima</option><option value="supplement">Suplemento</option></select></label></div>
+        <div id="intervention-control" class="intervention-control"></div>
+        <p class="rule-note">A comparação muda somente o fator selecionado. Seed, rebanho, estado inicial, horizonte e demais configurações permanecem iguais.</p>
+        <button class="primary-button" type="submit">Executar comparação <span aria-hidden="true">→</span></button>
+        <p id="run-status" role="status" aria-live="polite"></p>
+      </form>
+      <section class="results-panel" aria-labelledby="results-title">
+        <div class="section-heading"><span>02 / RESULTADOS</span><span id="result-meta">aguardando execução</span></div>
+        <div id="empty-state" class="empty-state"><span class="empty-mark">R</span><h2>Configure os dois cenários.</h2><p>Os resultados aparecerão aqui com suas unidades e o status demonstrativo do motor.</p></div>
+        <div id="comparison-output" hidden>
+          <div id="metric-cards" class="metric-grid"></div>
+          <section class="chart-section"><div class="chart-heading"><div><h2>Peso médio do lote</h2><p>kg por animal · série temporal calculada pelo motor</p></div><div class="chart-legend"><span><i class="legend-reference"></i> Referência</span><span><i class="legend-intervention"></i> Intervenção</span></div></div><svg id="weight-chart" viewBox="0 0 720 260" role="img" aria-label="Série temporal do peso médio"></svg></section>
+          <div class="table-scroll"><table><caption>Resultados por dia do horizonte</caption><thead><tr><th>Dia</th><th>Peso ref. (kg)</th><th>Peso interv. (kg)</th><th>Consumo ref. (kg MS)</th><th>Consumo interv. (kg MS)</th><th>Pasto ref. (kg MS)</th><th>Pasto interv. (kg MS)</th><th>Custo ref.</th><th>Custo interv.</th></tr></thead><tbody id="result-rows"></tbody></table></div>
+          <details class="assumptions"><summary>Entradas, premissas e limitações</summary><div id="assumption-details"></div></details>
+          <div class="action-row"><button id="export-csv" type="button">Baixar CSV</button><button id="export-manifest" type="button">Baixar manifesto JSON</button><button id="export-report" type="button">Baixar relatório</button></div>
+        </div>
+      </section>
+    </section>
+    <section class="below-grid">
+      <section class="card-section"><div class="section-heading"><span>03 / SENSIBILIDADE</span><span>um fator por vez</span></div><h2>Explore uma entrada.</h2><p>Variações locais calculadas pelo motor, sem inferência causal ou calibração.</p><form id="sensitivity-form" class="sensitivity-form"><label>Variável<select id="sensitivity-factor"><option value="supplement">Suplemento (kg MS/cabeça/dia)</option><option value="diet">Dieta</option><option value="housing">Alojamento</option><option value="weather">Clima</option></select></label><button type="submit">Calcular sensibilidade</button></form><div id="sensitivity-output" aria-live="polite"></div></section>
+      <section class="card-section"><div class="section-heading"><span>04 / HISTÓRICO</span><span>armazenado neste navegador</span></div><h2>Execuções recentes.</h2><div id="run-history" class="history-list"></div><div class="action-row"><button id="export-history" type="button">Exportar histórico JSON</button><button id="clear-history" type="button">Limpar histórico</button></div></section>
+    </section>
+    <section class="sources-note"><div><p class="eyebrow">MODELO E EVIDÊNCIA</p><h2>Resultados não são medições.</h2><p>O motor geral usa regras simplificadas e hipóteses fixas. Peso, consumo, pastagem e custo são saídas demonstrativas; não são previsões nem recomendações de manejo. A equação BR-CORTE 2023 disponível no projeto calcula CMS sob seu domínio declarado; GMD e estoque de forragem são entradas, não previsões dessa equação.</p></div><div class="source-links"><a href="docs/modelos/interface-modelos-cientificos.md">Modelos, fontes e limitações ↗</a><a href="docs/historico-execucoes.md">Formato do histórico ↗</a><a href="adult-data.html">Dados observados de animais ↗</a><button id="snapshot-review-open" type="button">Revisar snapshot observado ↗</button></div></section>
+  </main>
+  <dialog id="snapshot-review" class="review-dialog"><div class="dialog-heading"><div><p class="eyebrow">DADOS OBSERVADOS · REVISÃO</p><h2>Validar snapshot</h2></div><button id="snapshot-review-close" class="close-button" type="button" aria-label="Fechar">×</button></div><p>A revisão valida estrutura, proveniência e elegibilidade. Dados observados não são aplicados à simulação nem transformados em previsão.</p><form id="snapshot-review-form"><label>Snapshot JSON<input id="snapshot-review-file" type="file" accept="application/json,.json" required></label><label>Manifesto ligado (se houver)<input id="snapshot-review-manifest" type="file" accept="application/json,.json"></label><button class="primary-button" type="submit">Validar localmente</button></form><p id="snapshot-review-status" role="status" aria-live="polite">Selecione um snapshot.</p><div id="snapshot-review-result"></div></dialog>
+  <script type="module" src="src/client/product-app.js"></script><script type="module" src="src/client/snapshot-review.js"></script>
+</body></html>

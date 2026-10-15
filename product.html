@@ -1,41 +1,89 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7f7f4">
-  <meta name="description" content="Configure experimentos agropecuários demonstrativos e compare resultados quantitativos reproduzíveis.">
-  <title>Experimentos — Riose Agro</title><link rel="icon" href="riose-mark.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="product.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3eb">
+  <meta name="description" content="Explore uma fazenda de referência e compare cenários de simulação pecuária.">
+  <title>Riose — Simulação da fazenda</title>
+  <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="src/client/farm-scene.css">
 </head>
-<body class="experiment-body">
-  <a class="skip-link" href="#experiment-main">Pular para os experimentos</a>
-  <header class="site-header" aria-label="Riose Agro"><a class="header-manifesto" href="manifesto.html">sobre a Riose</a><div class="header-mark-group"><a class="header-wordmark" href="home.html">Riose</a><a class="header-product" href="product.html" aria-current="page">· experimentos</a></div><span class="header-place">são paulo, brasil</span></header>
-  <main id="experiment-main" class="experiment-shell">
-    <section class="page-intro"><div><p class="eyebrow">SIMULAÇÃO QUANTITATIVA · VERSÃO DEMONSTRATIVA</p><h1>Compare cenários.<br>Examine as premissas.</h1><p class="lede">Configure uma referência e altere um fator por vez. Os resultados vêm do motor local e são reproduzíveis pela seed e pelo manifesto exportado.</p></div><div class="model-status">DEMONSTRATIVO<br>SEM VALIDAÇÃO PREDITIVA</div></section>
-    <section class="workspace" aria-label="Configuração e resultados de experimento">
-      <form class="control-panel" id="experiment-form"><div class="section-heading"><span>01 · CONFIGURAÇÃO</span><span>uma intervenção por comparação</span></div>
-        <h2>Cenário de referência</h2><div class="field-grid field-grid--four">
-          <label for="base-diet">Dieta<select id="base-diet"><option value="pasture">Pasto</option><option value="balanced">Balanceada</option><option value="concentrate">Concentrado</option></select></label>
-          <label for="base-housing">Alojamento<select id="base-housing"><option value="pasture">Pasto</option><option value="barn">Confinamento</option></select></label>
-          <label for="base-weather">Clima<select id="base-weather"><option value="normal">Ameno</option><option value="hot">Quente</option><option value="rain">Chuvoso</option></select></label>
-          <label for="base-supplement">Suplemento (kg MS/dia)<input id="base-supplement" type="number" min="0" max="4" step="0.1" value="0"></label>
-        </div>
-        <h2>Intervenção</h2><div class="field-grid field-grid--three"><label for="factor">Fator alterado<select id="factor"><option value="housing">Alojamento</option><option value="diet">Dieta</option><option value="weather">Clima</option><option value="supplement">Suplemento</option></select></label><label for="intervention-value">Valor da intervenção<span id="intervention-control"></span></label></div>
-        <div class="field-grid field-grid--three run-settings"><label for="seed">Seed<input id="seed" type="number" min="0" max="4294967295" value="2026"></label><label for="herd-size">Animais<input id="herd-size" type="number" min="1" max="10000" value="24"></label><label for="days">Horizonte (dias)<input id="days" type="number" min="1" max="365" value="30"></label></div>
-        <button class="primary-button" type="submit">Executar comparação</button><p id="run-status" class="run-status" role="status" aria-live="polite">A execução ocorre localmente no navegador.</p>
-      </form>
-      <section class="results-panel" aria-label="Resultados quantitativos"><div class="section-heading"><span>02 · RESULTADOS</span><span id="result-meta">Aguardando execução</span></div>
-        <div id="empty-state" class="empty-state"><strong>Os resultados aparecerão aqui.</strong><p>Execute uma comparação para ver séries de peso, consumo, estoque de forragem e custos do modelo.</p></div>
-        <div id="comparison-output" hidden><div id="metric-cards" class="metric-grid"></div>
-          <section class="chart-section"><div class="chart-heading"><h2>Peso médio por animal</h2><div class="chart-legend"><span><i class="legend-reference"></i>Referência</span><span><i class="legend-intervention"></i>Intervenção</span></div></div><svg id="weight-chart" viewBox="0 0 720 260" role="img" aria-label="Série temporal comparando o peso médio dos cenários"></svg></section>
-          <div class="result-actions"><button id="export-csv" type="button">Baixar tabela CSV</button><button id="export-manifest" type="button">Baixar manifesto JSON</button><button id="export-report" type="button">Baixar relatório</button></div>
-          <details class="table-details"><summary>Tabela diária completa</summary><div class="table-scroll"><table><thead><tr><th>Dia</th><th>Peso ref. (kg)</th><th>Peso intervenção (kg)</th><th>Consumo ref. (kg MS)</th><th>Consumo intervenção (kg MS)</th><th>Forragem ref. (kg MS)</th><th>Forragem intervenção (kg MS)</th><th>Custo ref.</th><th>Custo intervenção</th></tr></thead><tbody id="result-rows"></tbody></table></div></details>
-        </div><section class="assumptions"><h2>Premissas desta execução</h2><div id="assumption-details"><p>Execute uma comparação para ver as entradas e limitações registradas.</p></div></section>
-      </section>
+<body class="farm-page">
+  <a class="skip-link" href="#farm-main">Pular para a fazenda</a>
+  <header class="farm-header">
+    <a class="farm-brand" href="home.html" aria-label="Riose, início"><span class="brand-mark">R</span><span>riose</span></a>
+    <nav aria-label="Navegação principal">
+      <a href="manifesto.html">Manifesto</a>
+      <a href="adult-data.html">Dados</a>
+      <a class="current" href="product.html" aria-current="page">Fazenda</a>
+      <a href="experiments.html">Experimentos</a>
+    </nav>
+    <span class="farm-location">Brasil · piloto visual</span>
+  </header>
+
+  <main id="farm-main" class="farm-main">
+    <section class="farm-intro">
+      <div>
+        <p class="eyebrow">SIMULAÇÃO PECUÁRIA · CENA DE REFERÊNCIA</p>
+        <h1>Teste um cenário nesta fazenda.</h1>
+        <p class="intro-copy">Explore o ambiente e compare o que muda quando uma condição do lote muda.</p>
+      </div>
+      <div class="scene-count"><strong>10</strong><span>bovinos<br>na cena</span></div>
     </section>
-    <section class="below-grid"><section class="card-section"><div class="section-heading"><span>03 · SENSIBILIDADE</span><span>análise one-at-a-time</span></div><h2>Explore entradas explícitas</h2><form id="sensitivity-form" class="sensitivity-form"><label for="sensitivity-factor">Fator<select id="sensitivity-factor"><option value="supplement">Suplemento</option><option value="diet">Dieta</option><option value="housing">Alojamento</option><option value="weather">Clima</option></select></label><button class="secondary-button" type="submit">Calcular sensibilidade</button></form><div id="sensitivity-output" aria-live="polite"></div></section>
-      <section class="card-section"><div class="section-heading"><span>04 · HISTÓRICO LOCAL</span><span>armazenado neste navegador</span></div><h2>Execuções recentes</h2><div class="history-actions"><button id="export-history" type="button">Exportar histórico JSON</button><button id="clear-history" type="button">Limpar histórico</button></div><div id="run-history" class="history-list">Carregando histórico…</div></section></section>
-    <section class="sources-note"><div><p class="eyebrow">ESCOPO CIENTÍFICO</p><h2>Resultados demonstrativos não são recomendações.</h2><p>O motor conserva suas regras e parâmetros registrados, mas a simulação completa não foi calibrada nem validada para previsão. Forragem e custos usam aproximações internas descritas junto aos resultados. Dados observados são exibidos em páginas separadas e não substituem automaticamente entradas simuladas.</p></div><nav class="source-links" aria-label="Dados e governança"><a href="adult-data.html">Explorar dados observados USDA/CPER ↗</a><a href="adult-cow-data.html">Explorar coorte pública de vacas ↗</a><a href="docs/parametros-e-fontes.md">Fontes, parâmetros e limitações ↗</a><a href="outcome-review.html">Registrar um resultado observado ↗</a></nav></section>
-  </main><script type="module" src="src/client/product-app.js"></script>
-</body></html>
+
+    <section class="farm-workspace" aria-label="Fazenda e simulação">
+      <div class="scene-column">
+        <div class="scene-toolbar">
+          <div><span class="live-dot"></span><span id="scene-status">Carregando fazenda…</span></div>
+          <div class="camera-controls" aria-label="Controles da câmera">
+            <button id="zoom-out" type="button" aria-label="Afastar câmera">−</button>
+            <span id="zoom-label">100%</span>
+            <button id="zoom-in" type="button" aria-label="Aproximar câmera">+</button>
+            <button id="camera-reset" type="button">Centralizar</button>
+          </div>
+        </div>
+        <div id="scene-viewport" class="scene-viewport" aria-label="Cena interativa da fazenda. Arraste para mover e use a roda do mouse para aproximar.">
+          <div id="scene-loading" class="scene-loading"><span class="loading-sun"></span><p>Preparando a fazenda</p></div>
+        </div>
+        <div class="scene-caption"><span>FAZENDA PILOTO · CENA ESTÁTICA</span><span id="selected-object">Selecione um bovino</span></div>
+      </div>
+
+      <aside class="scenario-panel" aria-labelledby="scenario-title">
+        <div class="panel-kicker"><span>01</span><span>TESTE RÁPIDO</span></div>
+        <h2 id="scenario-title">O que você quer mudar?</h2>
+        <p class="panel-copy">Compare duas possibilidades para o mesmo lote, com o mesmo estado inicial.</p>
+        <form id="scenario-form">
+          <label for="scenario-factor">Condição</label>
+          <select id="scenario-factor">
+            <option value="supplement">Adicionar 0,5 kg de suplemento</option>
+            <option value="diet">Mudar para dieta balanceada</option>
+            <option value="housing">Levar o lote ao confinamento</option>
+          </select>
+          <label for="scenario-days">Período</label>
+          <select id="scenario-days">
+            <option value="7">7 dias</option>
+            <option value="30" selected>30 dias</option>
+            <option value="90">90 dias</option>
+          </select>
+          <button class="run-button" type="submit"><span>Comparar cenários</span><span aria-hidden="true">↗</span></button>
+          <p id="simulation-status" class="simulation-status" role="status" aria-live="polite">A comparação usa o motor local do projeto.</p>
+        </form>
+        <section id="scenario-result" class="scenario-result" hidden aria-live="polite">
+          <div class="result-heading"><span>RESULTADO DA SIMULAÇÃO</span><span id="result-period"></span></div>
+          <p id="result-summary" class="result-summary"></p>
+          <div class="result-metrics">
+            <div><span>Diferença de peso</span><strong id="weight-delta">—</strong></div>
+            <div><span>Diferença de custo</span><strong id="cost-delta">—</strong></div>
+          </div>
+          <p id="result-limitation" class="result-limitation"></p>
+        </section>
+        <div class="panel-footnote"><span class="footnote-mark">i</span><p>Resultado demonstrativo. O motor ainda não está validado para previsão ou recomendação de manejo.</p></div>
+        <a class="advanced-link" href="experiments.html">Abrir formulário de experimentos <span aria-hidden="true">→</span></a>
+      </aside>
+    </section>
+    <footer class="farm-footer"><span>Assets visuais do piloto aprovados para composição de referência.</span><span>Simulação e cena visual são sistemas independentes.</span></footer>
+  </main>
+  <script type="module" src="src/client/farm-scene.js"></script>
+</body>
+</html>

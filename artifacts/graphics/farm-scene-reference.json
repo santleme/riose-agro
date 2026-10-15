@@ -1,0 +1,20 @@
+{
+  "route": "/product.html",
+  "viewport": {
+    "width": 1500,
+    "height": 1000
+  },
+  "sceneId": "fazenda-piloto-10-bovinos",
+  "sceneObjects": 17,
+  "cattle": 10,
+  "comparison": {
+    "factor": "supplement",
+    "days": 30,
+    "weightDeltaKgPerAnimal": 4.1,
+    "costDeltaBRL": 270
+  },
+  "notes": [
+    "Visual capture from a local Chromium run.",
+    "Model output is demonstrative and not validated for prediction or management recommendation."
+  ]
+}

@@ -1,6 +1,6 @@
 # Riose Agro — experimentos científicos
 
-Riose Agro is a browser-based scientific simulation and experiment workspace. The institutional home introduces the project; `product.html` configures a baseline and one-factor intervention, compares deterministic runs, and provides quantitative summaries and exports. Current outputs are demonstrative model results, not validated predictions or recommendations.
+Riose Agro is a browser-based livestock simulation and experiment workspace. The institutional home introduces the project; `product.html` presents a navigable reference farm with a small what-if comparison, while `experiments.html` keeps the quantitative forms, history, sensitivity analysis, and exports. Current outputs are demonstrative model results, not validated predictions or recommendations.
 
 See the [repository layout guide](docs/architecture/repository-layout.md) for directory responsibilities and the reason browser page URLs remain at the root.
 
@@ -14,7 +14,9 @@ Requires Node.js 20 or newer. From this directory:
 npm start
 ```
 
-Open the printed local URL. `product.html` is the experiment workspace and `simulator.html` remains a compatibility redirect. Snapshot review validates a linked file locally and never applies an uploaded file to a simulation. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
+Open the printed local URL. `product.html` is the reference farm; `experiments.html` is the quantitative workspace, and `simulator.html` remains a compatibility redirect. Snapshot review validates a linked file locally and never applies an uploaded file to a simulation. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
+
+The farm scene is a static reference composition of ten cattle, a barn, fencing, vegetation, and water/feed troughs. Its declarative contract is `public/assets/farm-scene/scene.json`; validate its object counts and local asset references with `npm run validate:farm-scene`. The scene renderer is separate from the scientific simulation engine. The JSON contract is the input to future scene generation; procedural generation is not part of this pilot.
 
 The product runs comparisons in a Web Worker; when the local native runner is available it can use Rust and otherwise falls back to JavaScript. To select the optional WASM metabolism kernel in that Worker, open `product.html?engine=wasm`. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
 
