@@ -10,7 +10,7 @@ Audit date: 2026-10-13. This is a source/readiness audit only; no model was fit.
 
 ## Source records
 
-- Dryad raw archive and processed cohort: `data/raw/dryad-79cnp5ht4/version-6.zip`, `data/dryad-mob-rotational-biomass/manifest.json`, and `docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json`. The 623 available sample rows and 64 aligned paddock-time records are produced by `scripts/process_dryad_mob_rotational_biomass.py`; all 17 missing target slots remain absent.
+- Dryad raw archive and processed cohort: `data/raw/dryad-79cnp5ht4/version-6.zip`, `data/dryad-mob-rotational-biomass/manifest.json`, and `docs/evidence/dryad-mob-rotational-biomass-quality-2026-10.json`. The 623 available sample rows and 64 aligned paddock-time records are produced by `scripts/science/data_pipelines/process_dryad_mob_rotational_biomass.py`; all 17 missing target slots remain absent.
 - Rothamsted legacy CKAN record: <https://data.rothamsted.ac.uk/dataset/individual-animal-liveweight-and-daily-liveweight-gain-contrasting-grazing-methods>. It explicitly marks the legacy dataset private and says it is superseded. Use the public current repository record above, already captured in the local manifest, rather than redownloading.
 - Current Rothamsted local audit: `data/rothamsted/manifest.json`, `docs/evidence/rothamsted-adg-audit.json`, and `scripts/audit_rothamsted_adg.py`.
 - Teagasc official dataset page: <https://opendata.teagasc.ie/en_GB/dataset/ayaf-pgsh-plot-trial>.

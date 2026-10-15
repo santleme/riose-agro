@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ActivityHistoryColumns} from '../scripts/activity-history-columns.mjs';
+import {ActivityHistoryColumns} from '../scripts/experiments/activity-history-columns.mjs';
 
 test('typed activity columns retain the latest ring entries and materialize the same JSON shape', () => {
   const store = new ActivityHistoryColumns(2, 2);

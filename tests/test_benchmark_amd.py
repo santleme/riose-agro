@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from scripts.benchmark_amd import (
+from scripts.benchmarks.benchmark_amd import (
     calculate_speedup,
     calculate_statistics,
     make_values,

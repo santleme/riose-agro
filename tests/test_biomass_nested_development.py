@@ -13,7 +13,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
-    "evaluate_biomass_nested_development", ROOT / "scripts/evaluate_biomass_nested_development.py"
+    "evaluate_biomass_nested_development", ROOT / "scripts/science/evaluations/evaluate_biomass_nested_development.py"
 )
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)

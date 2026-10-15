@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {maxRssKiBToBytes} from '../scripts/benchmark-memory-metrics.mjs';
+import {maxRssKiBToBytes} from '../scripts/benchmarks/benchmark-memory-metrics.mjs';
 
 test('normalizes Node resourceUsage maxRSS KiB to bytes', () => {
   assert.equal(maxRssKiBToBytes(1), 1024);

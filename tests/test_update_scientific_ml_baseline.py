@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.update_scientific_ml_baseline import (
+from scripts.science.evaluations.update_scientific_ml_baseline import (
     ALLOWED_REPORT,
     BASELINE_PATH,
     CPER_REPORT,

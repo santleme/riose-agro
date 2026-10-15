@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts/evaluate_cper_preoutcome_adg_candidates.py"
+SCRIPT = ROOT / "scripts/science/evaluations/evaluate_cper_preoutcome_adg_candidates.py"
 spec = importlib.util.spec_from_file_location("cper_preoutcome_adg_candidates", SCRIPT)
 experiment = importlib.util.module_from_spec(spec)
 assert spec and spec.loader

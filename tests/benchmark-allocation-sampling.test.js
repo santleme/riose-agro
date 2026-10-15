@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {normalizeProfileUrl,sampleAllocations} from '../scripts/benchmark-allocation-sampling.mjs';
+import {normalizeProfileUrl,sampleAllocations} from '../scripts/benchmarks/benchmark-allocation-sampling.mjs';
 
 test('normalizes profiler file URLs to repository-relative paths without changing filter URLs',()=>{
   const repositoryRootUrl=new URL('../',import.meta.url);
-  const sourceUrl=new URL('../scripts/benchmark-animal-layout.mjs',import.meta.url).href;
-  assert.equal(normalizeProfileUrl(sourceUrl,repositoryRootUrl),'scripts/benchmark-animal-layout.mjs');
+  const sourceUrl=new URL('../scripts/benchmarks/benchmark-animal-layout.mjs',import.meta.url).href;
+  assert.equal(normalizeProfileUrl(sourceUrl,repositoryRootUrl),'scripts/benchmarks/benchmark-animal-layout.mjs');
   assert.equal(normalizeProfileUrl(new URL('./outside.mjs',new URL('file:///tmp/')).href,repositoryRootUrl),'outside-repository:outside.mjs');
   assert.equal(normalizeProfileUrl(sourceUrl),'local-file:benchmark-animal-layout.mjs');
 });

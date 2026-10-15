@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
+import {assertBenchmarkReport} from '../scripts/benchmarks/benchmark-report.mjs';
 
 test('resumable journal benchmark retains raw heap samples and summarizes them for a small workload', () => {
-  const result = spawnSync(process.execPath, ['scripts/benchmark-resumable-journal.mjs', '--run-count', '2', '--repetitions', '2'], {
+  const result = spawnSync(process.execPath, ['scripts/experiments/benchmark-resumable-journal.mjs', '--run-count', '2', '--repetitions', '2'], {
     cwd: new URL('..', import.meta.url),
     encoding: 'utf8',
   });

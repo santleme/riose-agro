@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import os from 'node:os';
-import {createExecutorProfile} from '../scripts/create-executor-profile.mjs';
+import {createExecutorProfile} from '../scripts/benchmarks/create-executor-profile.mjs';
 import {selectExperimentExecutor} from '../src/server/experiment-executor.js';
 
 function report() {

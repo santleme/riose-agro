@@ -20,7 +20,7 @@ Reconsiderar Parquet se medições repetidas com a carga representativa mostrare
 
 ## Carga e método
 
-O script [`research_experiment_format.mjs`](../../scripts/research_experiment_format.mjs) executa o runner atual sobre 25 cenários determinísticos com 100 animais e 24 horas por cenário, derivados do fixture `tests/scenarios/baseline-pasture.json` com seeds de 417 a 441. A comparação liga cada resultado ao manifesto de lote pelo `runId` e verifica unidades, valores nulos de proveniência, identidade/build do engine, digest do cenário e do resultado, seed e status.
+O script [`research_experiment_format.mjs`](../../scripts/experiments/research_experiment_format.mjs) executa o runner atual sobre 25 cenários determinísticos com 100 animais e 24 horas por cenário, derivados do fixture `tests/scenarios/baseline-pasture.json` com seeds de 417 a 441. A comparação liga cada resultado ao manifesto de lote pelo `runId` e verifica unidades, valores nulos de proveniência, identidade/build do engine, digest do cenário e do resultado, seed e status.
 
 O lote ocupa 44.273 bytes como JSON e 44.271 bytes como JSONL; após gzip nível 6, ambos ocupam 5.133 bytes. Parquet + Zstandard ocupa 25.856 bytes. Foram feitas 31 repetições por operação após uma execução de aquecimento para escrita, leitura completa e leitura seletiva em cada formato. Tempos incluem serialização e IO local. JSONL lê linha a linha e retém apenas a projeção solicitada, mas ainda faz parse de cada linha completa. JSON lê e faz parse do array completo. Os três formatos preservaram todos os campos e passaram round-trip normalizado exato; SHA-256 do conteúdo normalizado nesta captura limpa: `161ad6c96d27b5063962c8e01bfe3cdca35ed2b546cd8686191b928365d04f0e`.
 

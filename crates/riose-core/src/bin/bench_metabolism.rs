@@ -93,7 +93,7 @@ fn main() {
         "limitations": ["This is an isolated numeric kernel measurement. It does not measure FarmEngine, Worker, UI, rendering, or GPU memory."],
     });
     let validator = format!(
-        "{}/../../scripts/validate-benchmark-report.mjs",
+        "{}/../../scripts/benchmarks/validate-benchmark-report.mjs",
         env!("CARGO_MANIFEST_DIR")
     );
     let mut child = Command::new("node")

@@ -44,6 +44,9 @@ jobs:
       - name: Install JavaScript dependencies
         run: npm ci
 
+      - name: Validate Product world scene contract
+        run: npm run validate:product-scene
+
       - name: Install data-audit dependencies
         run: python -m pip install -r requirements-data-audit.txt
 

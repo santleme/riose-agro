@@ -74,4 +74,4 @@ Cumulative nested-search and outer-refit costs (CPU seconds; environment-depende
 
 Timings are environment-dependent and intended only as inference-cost diagnostics. Fit seconds include nested candidate search and outer refits; engine row time includes helper-process startup.
 
-Reproduce with `python3 scripts/evaluate_cper_adg_candidate_v2.py` under `requirements-data-processing.txt`.
+Reproduce with `python3 scripts/science/evaluations/evaluate_cper_adg_candidate_v2.py` under `requirements-data-processing.txt`.

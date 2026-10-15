@@ -4,9 +4,9 @@ import os from 'node:os';
 import {mkdtemp, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {digestResultRecordBytes, sha256Digest} from '../experiments/batch-manifest.js';
-import {executeScenario, parseExecutorResourceLimits, runScenarioDirectoryResumable} from '../scripts/run-scenarios.js';
-import {ScenarioWorkerPool} from '../scripts/scenario-worker-pool.js';
+import {digestResultRecordBytes, sha256Digest} from '../scripts/experiments/batch-manifest.js';
+import {executeScenario, parseExecutorResourceLimits, runScenarioDirectoryResumable} from '../scripts/experiments/run-scenarios.js';
+import {ScenarioWorkerPool} from '../scripts/experiments/scenario-worker-pool.js';
 import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
 
 test('automatic executor limits reject malformed, negative and non-finite cost or RSS values', () => {

@@ -2,7 +2,7 @@ import unittest
 
 import pyarrow.parquet as pq
 
-from scripts.process_dryad_mob_rotational_biomass import PADDOCK_PARQUET, SAMPLE_PARQUET, process
+from scripts.science.data_pipelines.process_dryad_mob_rotational_biomass import PADDOCK_PARQUET, SAMPLE_PARQUET, process
 
 
 class DryadMobRotationalBiomassProcessingTest(unittest.TestCase):

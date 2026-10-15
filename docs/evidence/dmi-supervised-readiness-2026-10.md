@@ -29,4 +29,4 @@ O conjunto local de vacas Angus [mdpi-angus-cow-grazing-audit.json](mdpi-angus-c
 
 ## Assinatura e limite de atribuição
 
-Não houve signoff nem parecer zootécnico independente. A issue #22 foi encerrada como `NOT_PLANNED`; sua revisão não é dependência operacional. O no-go decorre especificamente da ausência de uma coorte aberta elegível, não da falta de parecer. Isso não aprova previsões individuais nem impede o uso da simulação como exploração mecanística claramente identificada. Consulte o JSON versionado e `scripts/validate_dmi_supervised_readiness.py` para os campos auditáveis do gate.
+Não houve signoff nem parecer zootécnico independente. A issue #22 foi encerrada como `NOT_PLANNED`; sua revisão não é dependência operacional. O no-go decorre especificamente da ausência de uma coorte aberta elegível, não da falta de parecer. Isso não aprova previsões individuais nem impede o uso da simulação como exploração mecanística claramente identificada. Consulte o JSON versionado e `scripts/science/readiness/validate_dmi_supervised_readiness.py` para os campos auditáveis do gate.

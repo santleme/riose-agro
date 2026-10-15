@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {validateIssue15ReadinessContract, validateOutcomeUncertaintyClassifications} from '../scripts/uncertainty-readiness-validation.mjs';
+import {validateIssue15ReadinessContract, validateOutcomeUncertaintyClassifications} from '../scripts/validation/uncertainty-readiness-validation.mjs';
 
 const fixture = JSON.parse(await readFile(new URL('../docs/evidence/uncertainty-readiness-issue-15.json', import.meta.url), 'utf8'));
 const dryadEligibility = JSON.parse(await readFile(new URL('../docs/evidence/issue-15-dryad-yearling-eligibility.json', import.meta.url), 'utf8'));

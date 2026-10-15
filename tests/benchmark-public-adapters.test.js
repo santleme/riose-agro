@@ -5,7 +5,7 @@ import os from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import test from 'node:test';
-import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
+import {assertBenchmarkReport} from '../scripts/benchmarks/benchmark-report.mjs';
 
 const root = new URL('..', import.meta.url);
 const repo = fileURLToPath(root);
@@ -32,7 +32,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   t.after(() => rm(temp, {recursive: true, force: true}));
 
   const animalPath = join(temp, 'animal.json');
-  const animalSummary = JSON.parse(run('scripts/benchmark-animal-layout.mjs', [], {
+  const animalSummary = JSON.parse(run('scripts/benchmarks/benchmark-animal-layout.mjs', [], {
     ANIMAL_LAYOUT_REPETITIONS: '5',
     ANIMAL_LAYOUT_OUTPUT: animalPath,
   }, ['--expose-gc']));
@@ -60,7 +60,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
 });
 
 test('simulation and history benchmark adapters emit schema-valid reports with raw samples', () => {
-  const simulation = JSON.parse(run('scripts/benchmark-simulation.mjs', [], {
+  const simulation = JSON.parse(run('scripts/benchmarks/benchmark-simulation.mjs', [], {
     BENCH_REPETITIONS: '1',
     BENCH_SIMULATION_WARMUPS: '0',
     BENCH_KERNEL_WARMUPS: '0',
@@ -73,7 +73,7 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
   assert.ok(simulation.phases.engine.measurements.every(item => item.statistics.observationsMs?.length === 1));
   assert.ok(simulation.phases.engine.measurements.some(item => item.population === 100_000 && item.scope === 'numeric-kernel'));
 
-  const historyReports = run('scripts/benchmark-history.mjs', [], {BENCH_REPETITIONS: '1', BENCH_HERDS: '1000'})
+  const historyReports = run('scripts/benchmarks/benchmark-history.mjs', [], {BENCH_REPETITIONS: '1', BENCH_HERDS: '1000'})
     .trim().split('\n').map(line => JSON.parse(line));
   assert.equal(historyReports.length, 1);
   const [history] = historyReports;
@@ -86,7 +86,7 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
 });
 
 test('history storage adapter preserves typed memory observations separately from timing', () => {
-  const reports = run('scripts/benchmark-history-storage.mjs', [], {
+  const reports = run('scripts/benchmarks/benchmark-history-storage.mjs', [], {
     BENCH_REPETITIONS: '2', BENCH_HISTORY_HERDS: '1000', BENCH_HISTORY_HOURS: '24',
   }).trim().split('\n').map(line => JSON.parse(line));
   assert.equal(reports.length, 1);
@@ -99,7 +99,7 @@ test('history storage adapter preserves typed memory observations separately fro
 });
 
 test('scenario scheduler emits computational benchmark observations', async () => {
-  const scheduler = JSON.parse(run('scripts/benchmark-scenario-scheduler.mjs', [], {RIOSE_SCHEDULER_REPETITIONS: '1'}));
+  const scheduler = JSON.parse(run('scripts/benchmarks/benchmark-scenario-scheduler.mjs', [], {RIOSE_SCHEDULER_REPETITIONS: '1'}));
   assertMeasurements(scheduler);
   assert.equal(scheduler.configuration.repetitions, 1);
   assert.equal(scheduler.results.rows.length, scheduler.configuration.concurrencyCases.length);

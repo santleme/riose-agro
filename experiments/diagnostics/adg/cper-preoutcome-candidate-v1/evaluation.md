@@ -39,4 +39,4 @@ All tuning of the Ridge alpha occurs in inner leave-one-year-out folds inside th
 - The small univariate candidate set did not use CGREC or any previously reported external metrics for fitting, tuning or selection.
 - Results do not validate mature cows, DMI, causal treatment effects, new sites, or the complete simulator.
 
-Reproduce with `python3 scripts/evaluate_cper_preoutcome_adg_candidates.py`. The JSON report and OOF predictions are stored beside this report.
+Reproduce with `python3 scripts/science/evaluations/evaluate_cper_preoutcome_adg_candidates.py`. The JSON report and OOF predictions are stored beside this report.

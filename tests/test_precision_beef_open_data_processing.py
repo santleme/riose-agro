@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts/process_precision_beef_open_data.py"
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts/science/data_pipelines/process_precision_beef_open_data.py"
 SPEC = importlib.util.spec_from_file_location("precision_beef_processing", MODULE_PATH)
 PROCESSOR = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

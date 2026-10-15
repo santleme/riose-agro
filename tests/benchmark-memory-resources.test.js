@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
-import {cleanupMemoryBenchmarkResources} from '../scripts/benchmark-memory-resources.mjs';
+import {cleanupMemoryBenchmarkResources} from '../scripts/benchmarks/benchmark-memory-resources.mjs';
 
-const memoryHarness = readFileSync(new URL('../scripts/benchmark-memory.mjs', import.meta.url), 'utf8');
+const memoryHarness = readFileSync(new URL('../scripts/benchmarks/benchmark-memory.mjs', import.meta.url), 'utf8');
 
 test('memory harness cleanup disposes WASM allocations and detaches owned view buffers', () => {
   let disposed = false;

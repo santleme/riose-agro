@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('USDA CPER feasibility audit groups periods by animal and does not claim engine validation', () => {
-  const raw = execFileSync('python3', ['scripts/audit_usda_cper_validation.py'], {encoding: 'utf8'});
+  const raw = execFileSync('python3', ['scripts/science/source-audits/usda/audit_usda_cper_validation.py'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
 
   assert.equal(report.coverage.rowCount, 36);
@@ -33,7 +33,7 @@ test('USDA CPER feasibility audit groups periods by animal and does not claim en
 });
 
 test('default engine ADG range check stays explicitly descriptive and verifies equal housing gain', () => {
-  const raw = execFileSync('node', ['scripts/audit_engine_adg_range.js'], {encoding: 'utf8'});
+  const raw = execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_range.js'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
   const [pasture, barn] = report.defaultEngineRuns;
   assert.equal(report.classification, 'face_validity_range_check_only_not_validation_or_calibration');
@@ -50,7 +50,7 @@ test('default engine ADG range check stays explicitly descriptive and verifies e
 });
 
 test('USDA HPGRS long-term audit checks public hashes and reports missing identity/outlier limits', () => {
-  const raw = execFileSync('python3', ['scripts/audit_usda_hpgrs_longterm.py'], {encoding: 'utf8'});
+  const raw = execFileSync('python3', ['scripts/science/source-audits/usda/audit_usda_hpgrs_longterm.py'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
   assert.equal(report.dataset.doi, '10.15482/USDA.ADC/1528521');
   assert.equal(report.dataset.sha256Verified, true);

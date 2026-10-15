@@ -8,7 +8,7 @@ const reportPath = new URL('../docs/evidence/dmi-supervised-readiness-2026-10.js
 const report = JSON.parse(await readFile(reportPath, 'utf8'));
 
 test('supervised DMI readiness report validates its target, evidence links, and no-go decision', () => {
-  const result = spawnSync('python3', ['scripts/validate_dmi_supervised_readiness.py'], {
+  const result = spawnSync('python3', ['scripts/science/readiness/validate_dmi_supervised_readiness.py'], {
     cwd: new URL('..', import.meta.url),
     encoding: 'utf8',
   });

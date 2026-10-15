@@ -3,7 +3,7 @@ import {spawnSync} from 'node:child_process';
 import {test} from 'node:test';
 
 test('format study round-trips the batch manifest/result contract with units and provenance', () => {
-  const execution = spawnSync(process.execPath, ['--expose-gc', 'scripts/research_experiment_format.mjs'], {
+  const execution = spawnSync(process.execPath, ['--expose-gc', 'scripts/experiments/research_experiment_format.mjs'], {
     encoding: 'utf8',
     env: {...process.env, FORMAT_STUDY_RECORDS: '3', FORMAT_STUDY_REPETITIONS: '3'},
   });

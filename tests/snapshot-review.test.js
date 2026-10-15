@@ -72,7 +72,7 @@ test('CLI and API both reject a digest-matching but invalid comparison manifest'
     const manifestPath = join(directory, 'manifest.json');
     writeFileSync(snapshotPath, JSON.stringify(snapshot));
     writeFileSync(manifestPath, manifestBytes);
-    const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
+    const scriptPath = new URL('../scripts/validation/validate-farm-snapshot.js', import.meta.url);
     const run = spawnSync(process.execPath, [scriptPath.pathname, snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(run.status, 1, run.stderr);
     const cliReport = JSON.parse(run.stdout);

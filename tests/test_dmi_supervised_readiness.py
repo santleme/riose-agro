@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts/validate_dmi_supervised_readiness.py"
+SCRIPT = ROOT / "scripts/science/readiness/validate_dmi_supervised_readiness.py"
 REPORT = ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.json"
 SPEC = importlib.util.spec_from_file_location("dmi_supervised_readiness", SCRIPT)
 VALIDATOR = importlib.util.module_from_spec(SPEC)

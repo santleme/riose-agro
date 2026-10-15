@@ -4,7 +4,7 @@ import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {executeScenario, runScenarioDirectory, validateScenario} from '../scripts/run-scenarios.js';
+import {executeScenario, runScenarioDirectory, validateScenario} from '../scripts/experiments/run-scenarios.js';
 
 const fixturePath = fileURLToPath(new URL('./scenarios/baseline-pasture.json', import.meta.url));
 const fixture = JSON.parse(await readFile(fixturePath, 'utf8'));
