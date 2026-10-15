@@ -66,7 +66,7 @@ Implementation scope: Separate commits by responsibility, push task branch, open
 Acceptance criteria: PR contains tests, limitations, screenshots, and clean task handoff.
 Required tests: clean diff check and PR linkage check
 Evidence: PR URL in `handoff.md`
-Status: IN_PROGRESS
+Status: DONE
 
 ## P2-007
 ID: P2-007
