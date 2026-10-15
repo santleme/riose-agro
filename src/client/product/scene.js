@@ -1,14 +1,15 @@
-import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, productFenceRuns, productWorldFrontEdges, productWorldOutline, worldToScreen, screenToWorld, animalWorldPosition, separateAnimalVisuals} from './spatial.js';
+import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, worldToScreen, screenToWorld, animalWorldPosition, separateAnimalVisuals} from './spatial.js';
+import {productSceneGeometry} from './scene-geometry.js';
 
 export const PRODUCT_SCENE_SIZE=Object.freeze({width:800,height:416});
 export const PRODUCT_TILE=PRODUCT_WORLD.tile;
 export const PRODUCT_SCENE_PREFABS=PRODUCT_PREFABS;
-const center=(item)=>worldToScreen(item.x+item.w/2,item.y+item.h/2);
 const corners=(x,y,w,h)=>[worldToScreen(x,y),worldToScreen(x+w,y),worldToScreen(x+w,y+h),worldToScreen(x,y+h)];
+const geometry=productSceneGeometry();
 function path(ctx,points,fill,stroke=null,width=1){ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();}}
 function drawTerrain(ctx){
-  const top=productWorldOutline().map(point=>worldToScreen(point.x,point.y));
-  for(const edge of productWorldFrontEdges()){
+  const top=geometry.outline;
+  for(const edge of geometry.frontEdges){
     const d=PRODUCT_WORLD.soilDepth,shade=edge.shade==='side'?'#765039':'#8d6040';
     path(ctx,[edge.from,edge.to,{x:edge.to.x,y:edge.to.y+d},{x:edge.from.x,y:edge.from.y+d}],shade,'rgba(96,72,51,.62)',.7);
   }
@@ -32,8 +33,8 @@ function drawTerrain(ctx){
   }
 }
 function drawPaths(ctx){
-  for(const route of PRODUCT_BLOCKOUT.paths){
-    const points=route.cells.map(([x,y])=>worldToScreen(x+.5,y+.5));
+  for(const route of geometry.paths){
+    const points=route.points;
     ctx.save();ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);
     ctx.strokeStyle='rgba(80,60,40,.28)';ctx.lineWidth=13;ctx.stroke();ctx.strokeStyle='#b89a6b';ctx.lineWidth=9;ctx.stroke();ctx.restore();
   }
@@ -41,10 +42,10 @@ function drawPaths(ctx){
 function drawZoneHighlights(ctx,selectedId,hoverId){
   for(const zone of PRODUCT_BLOCKOUT.zones){const selected=zone.id===selectedId,hovered=zone.id===hoverId;if(!selected&&!hovered)continue;path(ctx,corners(zone.x,zone.y,zone.w,zone.h),selected?'rgba(246,220,146,.17)':'rgba(250,244,212,.1)',selected?'#f4d98c':'#fff4d4',1.7);}
 }
-const fenceSegments=productFenceRuns().map(run=>({id:run.id,zone:run.zoneId,a:run.from,b:run.to,gate:false}));
-const FENCES=[...fenceSegments,...PRODUCT_BLOCKOUT.gates.map(gate=>({...gate,gate:true}))];
+const fenceSegments=geometry.fenceRuns.map(run=>({id:run.id,zone:run.zoneId,a:run.from,b:run.to,screenA:run.screenFrom,screenB:run.screenTo,gate:false}));
+const FENCES=[...fenceSegments,...geometry.gates.map(gate=>({...gate,gate:true}))];
 function drawFence(ctx,fence){
-  const a=worldToScreen(fence.a.x,fence.a.y),b=worldToScreen(fence.b.x,fence.b.y);
+  const a=fence.screenA??worldToScreen(fence.a.x,fence.a.y),b=fence.screenB??worldToScreen(fence.b.x,fence.b.y);
   ctx.save();ctx.lineCap='round';ctx.strokeStyle=fence.gate?'#69492f':'#8a6948';ctx.lineWidth=fence.gate?1.8:1;
   const rails=fence.gate?[-4,1]:[-5,-2,-.5];
   for(const offset of rails){ctx.beginPath();ctx.moveTo(a.x,a.y+offset);ctx.lineTo(b.x,b.y+offset);ctx.stroke();}
