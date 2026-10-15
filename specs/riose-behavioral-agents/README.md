@@ -1,6 +1,6 @@
 # Riose Behavioral Agents — SDD v0.1
 
-**Status:** SDD initialized; no behavioral model has been validated or enabled.
+**Status:** BEH-001–BEH-012 research/audit work complete; no behavioral model has been validated or enabled. Semi-Markov v1 is NO-GO for Perea. No new candidate was selected.
 **Started:** 2026-10-15.
 **Parent:** Product V2 PR #190, head `983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc`. This is a follow-on branch; do not merge into `main` until Product V2 dependencies land or the review is explicitly retargeted.
 **Target:** evidence-grounded cattle behavior generation, opt-in only, with conversational research orchestration.
@@ -25,5 +25,5 @@
 - [Autonomous SDD loops](RUN_LOOP.md)
 - [Session handoff](handoff.md)
 
-## Scope of initial PR
-Specification + reproducible development instructions only. It does **not** assert scientific performance, complete tests, deploy trained models or modify production simulation outcomes. Next action: BEH-001 data/readiness audit with programmatic tests, then BEH-002 frozen baselines.
+## Scope and current boundary
+This follow-on SDD records reproducible sequence evaluation, a post-NO-GO diagnosis, versioned component contracts, dataset access screening and bounded evidence retrieval. It does **not** validate a behavioral generator, train on external data, integrate a behavioral policy into Product, or modify production simulation outcomes. No behavioral task is READY: the next candidate requires eligible data/rights and a newly frozen protocol; promotion remains blocked.
