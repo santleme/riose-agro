@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from '../src/server/server.js';
 
-test('farm reference scene and experiment dashboard are served separately', async t => {
+test('experiment dashboard is served and old product routes no longer serve graphics', async t => {
   const server = createServer({env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
@@ -14,11 +14,9 @@ test('farm reference scene and experiment dashboard are served separately', asyn
   assert.match(homeHtml, /href="experiments\.html"/);
   const product = await fetch(`${root}/product.html`);
   assert.equal(product.status, 200);
-  const farmHtml = await product.text();
-  assert.match(farmHtml, /class="scene-count"/);
-  assert.match(farmHtml, /<strong>10<\/strong>/);
-  assert.match(farmHtml, /farm-scene\.js/);
-  assert.match(farmHtml, /experiments\.html/);
+  const productHtml = await product.text();
+  assert.match(productHtml, /url=experiments\.html/);
+  assert.doesNotMatch(productHtml, /farm-scene|canvas|fazenda/i);
   const experiments = await fetch(`${root}/experiments.html`);
   assert.equal(experiments.status, 200);
   const html = await experiments.text();
@@ -27,8 +25,10 @@ test('farm reference scene and experiment dashboard are served separately', asyn
   assert.match(html, /SENSIBILIDADE/);
   assert.match(html, /HISTÓRICO/);
   assert.doesNotMatch(html, /<canvas|isométr|mapa da fazenda/i);
-  for (const path of ['/product.css', '/src/client/product-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/simulation-report.js', '/src/client/farm-scene.js', '/src/client/farm-scene.css', '/assets/farm-scene/scene.json']) {
+  for (const path of ['/product.css', '/src/client/product-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/simulation-report.js']) {
     assert.equal((await fetch(`${root}${path}`)).status, 200, `${path} should be served`);
   }
-  assert.match((await fetch(`${root}/assets/farm-scene/vendor/pixi.min.mjs`)).headers.get('content-type'), /javascript/);
+  for (const path of ['/src/client/farm-scene.js', '/src/client/farm-scene.css', '/assets/farm-scene/scene.json', '/assets/farm-scene/vendor/pixi.min.mjs', '/assets/riose-cow-cutout.png']) {
+    assert.equal((await fetch(`${root}${path}`)).status, 404, `${path} should no longer be served`);
+  }
 });
