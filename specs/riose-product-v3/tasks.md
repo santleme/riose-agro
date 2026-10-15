@@ -100,3 +100,15 @@ Acceptance criteria: signed scientific/domain review, reproducible external evid
 Required tests: scientific protocol and audit reproduction, not just unit tests.  
 Evidence: future independent review artifact.  
 Status: BLOCKED (the current equation audit and reference reproduction do not establish Riose independent validation or commercial readiness).
+
+## P3-009 — Deterministic natural-language draft fallback
+
+ID: P3-009
+Title: Turn explicitly supported natural-language requests into a review draft without an LLM
+Specification reference: LAB-001/LAB-002; `05-ai-orchestration.md`.
+Dependencies: P3-003; P3-006. Independent of P3-007 provider spend integration.
+Implementation scope: Versioned narrow intent envelope; parse only explicit animal count, duration, 3–10 supplement levels and supported demonstrative weather; surface missing/unsupported requests; fill structured review form only.
+Acceptance criteria: English/Portuguese known format produces a validated review; missing inputs request clarification; unsupported biological outcomes block draft; no prompt executes, calls a provider, or creates scientific values.
+Required tests: parser contract/unit tests, prompt injection inertness, app asset test and browser E2E from prompt through review with no automatic run.
+Evidence: `src/client/scenario-lab-intent.js`; `tests/scenario-lab-intent.test.js`; `scripts/e2e/scenario-lab.mjs`.
+Status: DONE (`npm run test:scenario-lab-intent` 4/4; Product V3 and Product V2 E2E pass; full suite 486/486).

@@ -11,6 +11,16 @@ try {
   await page.goto('http://127.0.0.1:8000/scenario-lab.html', {waitUntil: 'networkidle'});
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-initial.png', fullPage: true});
 
+  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg, 1.0 kg, and 1.5 kg for cattle.');
+  await page.getByRole('button', {name: 'Draft for review'}).click();
+  assert.match(await page.locator('#prompt-result').textContent(), /population count, duration/);
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 8 cattle over 3 days in hot weather.');
+  await page.getByRole('button', {name: 'Draft for review'}).click();
+  assert.match(await page.locator('#prompt-result').textContent(), /local deterministic parser/);
+  assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
+  assert.equal(await page.locator('#results:not([hidden])').count(), 0);
+
   await page.locator('#scenario-form [name="animalCount"]').fill('8');
   await page.locator('#scenario-form [name="durationDays"]').fill('3');
   await page.locator('[name="alternativeLevels"]').fill('1.0, 1.5');
@@ -20,6 +30,7 @@ try {
   assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.locator('#results:not([hidden])').waitFor();
+  assert.match(await page.locator('#prompt-result').textContent(), /illustrative FarmEngine outputs/);
   assert.match(await page.locator('#run-meta').textContent(), /3 scenarios/);
   assert.equal(await page.locator('#scenario-legend span').count(), 3);
   assert.equal(await page.locator('#scenario-population [role="gridcell"]').count(), 8);
@@ -87,7 +98,7 @@ try {
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.getByRole('button', {name: 'Cancel run'}).waitFor();
   await page.getByRole('button', {name: 'Cancel run'}).click();
-  await page.getByText(/Scenario run cancelled/).waitFor();
+  await page.locator('#lab-status').getByText(/Scenario run cancelled/).waitFor();
   assert.equal(await page.locator('#results:not([hidden])').count(), 0);
   assert.deepEqual(errors, []);
   const mobile = await browser.newPage({viewport: {width: 390, height: 844}, deviceScaleFactor: 1});

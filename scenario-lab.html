@@ -28,6 +28,15 @@
       <p class="lab-limit">FarmEngine outputs are deterministic demonstrations, not validated livestock forecasts or management recommendations.</p>
     </header>
 
+    <section class="lab-card prompt-card" aria-labelledby="prompt-title">
+      <div class="lab-card-heading"><div><p class="eyebrow">LOCAL DRAFT · NO AI SERVICE</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Deterministic parser</span></div>
+      <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels. Known fields fill the review form; missing or unsupported requests are reported for clarification.</p>
+      <label class="prompt-label" for="scenario-prompt">Scenario request</label>
+      <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather."></textarea>
+      <div class="prompt-actions"><button id="draft-scenario" class="primary-button" type="button">Draft for review <span aria-hidden="true">↗</span></button><button id="fill-prompt-example" class="text-button" type="button">Use example</button><span>Parsing is rule-based; no LLM is configured or simulated.</span></div>
+      <p id="prompt-result" class="prompt-result" role="status" aria-live="polite"></p>
+    </section>
+
     <section class="lab-layout" aria-label="Scenario laboratory">
       <form id="scenario-form" class="lab-card setup-card">
         <div class="lab-card-heading"><div><p class="eyebrow">1 · CONFIGURE</p><h2>Experiment inputs</h2></div><span class="engine-badge">Illustrative engine</span></div>

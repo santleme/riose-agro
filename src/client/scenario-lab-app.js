@@ -2,6 +2,7 @@ import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
 import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
 import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
+import {interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
 import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
 
 const $ = id => document.getElementById(id);
@@ -338,13 +339,18 @@ $('run-scenarios').addEventListener('click', async () => {
   if (!reviewedManifest || activeWorker) return;
   const budget = scenarioSetResultBudgetStatus({animalCount: reviewedManifest.initialSnapshot.animals.length, durationDays: reviewedManifest.durationDays, scenarioCount: reviewedManifest.scenarios.length});
   if (!budget.withinBudget) { status('This scenario set exceeds the estimated-result resource budget. Reduce animals, duration or arms.'); return; }
+  $('prompt-result').textContent = 'The reviewed scenario set is running in the FarmEngine Worker.';
   $('run-scenarios').disabled = true;
   status(`Running ${reviewedManifest.scenarios.length} reproducible scenarios…`);
   try {
     const result = await requestScenarioSet(reviewedManifest);
     renderResults(result);
+    $('prompt-result').textContent = 'The reviewed scenario set completed. These are illustrative FarmEngine outputs; the prompt parser did not calculate them.';
     status('Scenario set complete. All displayed values came from the Worker result.');
   } catch (error) {
+    $('prompt-result').textContent = error.message.includes('cancelled')
+      ? 'Scenario run cancelled. No partial result was created; the reviewed inputs are still available.'
+      : `Scenario run failed: ${error.message}`;
     status(error.message);
   } finally {
     $('run-scenarios').disabled = false;
@@ -394,6 +400,45 @@ $('manifest-file').addEventListener('change', async event => {
     status(`Could not open saved experiment: ${error.message}`);
   } finally {
     input.value = '';
+  }
+});
+
+const promptExample = 'Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather.';
+$('fill-prompt-example').addEventListener('click', () => {
+  $('scenario-prompt').value = promptExample;
+  $('scenario-prompt').focus();
+});
+$('scenario-prompt').addEventListener('input', () => { $('prompt-result').textContent = ''; });
+$('draft-scenario').addEventListener('click', () => {
+  const result = $('prompt-result');
+  result.className = 'prompt-result';
+  try {
+    const intent = interpretScenarioLabPrompt($('scenario-prompt').value);
+    validateScenarioLabIntent(intent);
+    if (!intent.ready) {
+      result.classList.add('needs-input');
+      result.textContent = [
+        intent.missingInputs.length ? `Please specify: ${intent.missingInputs.join(', ')}.` : '',
+        intent.unsupportedRequests.join(' '),
+        'This deterministic parser does not execute or invent missing scientific inputs.',
+      ].filter(Boolean).join(' ');
+      return;
+    }
+    const form = $('scenario-form');
+    form.elements.animalCount.value = String(intent.population.count);
+    form.elements.durationDays.value = String(intent.duration.days);
+    form.elements.baselineSupplement.value = String(intent.supplementLevelsKgDMPerHeadPerDay[0]);
+    form.elements.alternativeLevels.value = intent.supplementLevelsKgDMPerHeadPerDay.slice(1).join(', ');
+    form.elements.weather.value = intent.weather;
+    form.dispatchEvent(new Event('input', {bubbles: true}));
+    form.requestSubmit();
+    const assumptions = intent.assumptions.filter(item => item.origin === 'scenario-lab default')
+      .map(item => `${item.field}: ${item.value} (${item.origin})`);
+    result.classList.add('draft-ready');
+    result.textContent = `Draft prepared by the local deterministic parser. ${intent.population.count} animals · ${intent.duration.days} days · supplement levels ${intent.supplementLevelsKgDMPerHeadPerDay.join(', ')} kg DM/head/day. ${assumptions.length ? `Assumption: ${assumptions.join('; ')}. ` : ''}No simulation was run. Review the structured settings and confirm explicitly.`;
+  } catch (error) {
+    result.classList.add('needs-input');
+    result.textContent = error.message;
   }
 });
 
