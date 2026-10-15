@@ -4,16 +4,17 @@ Date: 2026-10-15
 Source PR: https://github.com/santleme/riose-agro/pull/190
 Source PR head: 983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc
 Working branch: codex/behavioral-agents-sdd
-Last verified commit: 8bfda3382f05d0bbb416f610a80d1fbdf485011c (BEH-004 NO-GO evidence).
+Last verified commit: update after committing BEH-005 implementation.
 Completed tasks: BEH-000; BEH-001; BEH-002; BEH-003.
-Task in progress: BEH-005 — frozen security contract; implementation and provider-mocked security tests in progress. BEH-006 is blocked by the BEH-004 NO-GO; BEH-007/008 remain blocked by rights/external evidence.
-Files changed in BEH-004: pinned confirmatory evaluator, partition/result tests, deterministic report, separate host resource sidecar, human evidence summary and SDD status/decision records.
-Tests executed: confirmatory partition and result tests 4/4; confirmatory evaluator run twice with byte-identical JSON SHA-256 `499d7d0c0952428c9f305bab7c73123f70770f20599d9f779a645739bb23a94f`; full `npm test` 446/446 after BEH-004 tests.
-Passing checks: frozen SHA-256 identities match; 20 train/4 confirmatory animals disjoint; expected NO-GO gate asserted; no model promotion/external validity; resource sidecar separate from scientific result.
+Task in progress: none.
+Next READY: none. BEH-006 is blocked by the BEH-004 NO-GO; BEH-007/008 remain blocked by rights/external evidence.
+Files changed in BEH-005: server research-assistant module and routes, provider-mocked/security tests, package script, contract/status/decision/handoff records.
+Tests executed: BEH-005 provider/security suite 13/13; readiness tests 3/3; sequence baseline and schema 9/9; confirmatory partition/results 4/4; full `npm test` 459/459.
+Passing checks: strict schema; bounded provider input/output/time; deterministic fallback; 4-tool server allowlist; no raw corpus upload; credentials server-only; confirmation and NO-GO fail-closed; rate limiting; FarmEngine/JS-WASM regression.
 Known failures: none.
 Scientific limitations: sampled annotation windows only; no complete 24-hour windows; annotations may carry forward under-30-second events; local Mountain timestamps have no UTC offset/fold; CC BY 4.0 is from prior repository audit, not a new live rights review. No behavior model promoted.
 Visual limitations: no UI changed.
-Next action: implement BEH-005's secure research assistant from existing server/provider code, or re-audit that scope and record any satisfied criteria before changing it. Preserve allowlisted evidence/tools, server-only keys, confirmation, bounded responses, deterministic fallback, and no model-generated metrics. Do not resume the failed semi-Markov candidate from confirmatory labels.
+Next action: no READY behavioral-agent task remains. Resume only if the independent rights/data blocker changes, a new candidate is preregistered, or a future task explicitly authorizes Product integration. Do not resume the failed semi-Markov candidate from confirmatory labels.
 Blocked dependencies: BEH-007 lacks confirmed rights and independent compatible data; BEH-008 awaits evaluation and independent review.
 Blocked: BEH-007 (independent external data reuse/population fit); BEH-008 scientific promotion.
 Implementation constraints: default FarmEngine and Product V2 remain unchanged; no model-trained claims; no unauthorized paid inference or research data upload.

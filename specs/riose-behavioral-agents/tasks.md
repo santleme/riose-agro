@@ -41,7 +41,8 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-000; may run independently of BEH-002.
 - Scope: allowlisted evidence/model/tools, bounded structured response, server-only keys, confirmation, audit/provenance, deterministic fallback.
 - Acceptance: provider-mocked integration tests, prompt-injection and invalid-tool negative tests, budget/timeouts, no raw restricted data upload and no LLM-generated simulation metrics.
-- Status: IN_PROGRESS (frozen server trust boundary; implementing allowlisted assistant and provider-mocked tests).
+- Evidence: `10-beh005-security-contract.md`; `src/server/behavior-research-assistant.js`; `tests/behavior-research-assistant.test.js`.
+- Status: DONE (read-only allowlist and provider-mocked security checks pass; no credentials or raw datasets sent).
 
 ## BEH-006 — Product V2 opt-in Behavior inspector
 - Depends on: BEH-003, BEH-004 and maintained Product V2 integration.

@@ -9,6 +9,7 @@ import {validateFarmSnapshot} from '../client/snapshot-validator.js';
 import {validateFarmSnapshotManifestReference} from '../client/snapshot-manifest-link.js';
 import {executeNativeConfiguredComparison, nativeComparisonAvailable, nativeComparisonRunner} from './native-comparison.js';
 import {validateExperimentSpecification} from '../client/population-experiment.js';
+import {consumeBehaviorResearchRateLimit, requestBehaviorExperimentExecution, runBehaviorResearchAssistant, validateBehaviorExecutionRequest} from './behavior-research-assistant.js';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
@@ -389,6 +390,44 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
         return sendJson(response,200,result);
       }catch(error){
         return sendJson(response,error.status??503,{available:false,error:error.status===413?'request_too_large':'intent_interpretation_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/behavior-research-assistant' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {error: 'research_assistant_rate_limit'});
+      }
+      try {
+        const input = await readJson(request);
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const providerSettings = {
+          openai: {apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL ?? 'gpt-6-luna'},
+          groq: {apiKey: env.GROQ_API_KEY, model: env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.HF_MODEL ?? 'openai/gpt-oss-120b:cheapest'},
+        }[provider] ?? {};
+        const result = await runBehaviorResearchAssistant(input, {
+          provider, apiKey: providerSettings.apiKey,
+          model: env.LLM_MODEL ?? providerSettings.model,
+          fetchImpl,
+        });
+        return sendJson(response, result.status === 'invalid_request' ? 400 : 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {status: 'unavailable', reason: error.status === 413 ? 'request_too_large' : 'research_assistant_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/behavior-experiments/execute' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      try {
+        const input = await readJson(request);
+        if (!validateBehaviorExecutionRequest(input)) return sendJson(response, 400, {status: 'invalid_request', executed: false});
+        const result = requestBehaviorExperimentExecution(input);
+        return sendJson(response, result.status === 'behavior_model_not_eligible' ? 409 : 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 400, {status: 'invalid_request', executed: false, reason: error.status === 413 ? 'request_too_large' : 'invalid_json'});
       }
     }
     if (url.pathname === '/api/explain' && request.method === 'POST') {
