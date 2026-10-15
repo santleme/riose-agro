@@ -1,20 +1,13 @@
 import {SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS} from '../patch-bounds.js';
 import {projectIso, unprojectIso} from '../visualization/isometric.js';
+import productScene from './scene.json' with {type: 'json'};
 export {SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS};
 
-// Canonical Product scene space. One world unit is one logical grid cell; it
-// intentionally has no conversion to metres until the farm model defines one.
-export const PRODUCT_WORLD = Object.freeze({
-  unit: 'cell', width: 34, height: 16,
-  tile: {width: 26, height: 14}, origin: {x: 283, y: 32}, soilDepth: 18,
-});
-// Irregular playable land perimeter in world-grid coordinates. Keeping it as
-// scene data prevents the renderer from framing the farm as a rectangular slab.
-export const PRODUCT_WORLD_OUTLINE = Object.freeze([
-  [0, 3], [2, 1], [5, 0], [12, 0], [15, 1], [19, 0], [29, 0], [32, 1], [34, 3],
-  [33, 5], [34, 7], [33, 9], [34, 12], [32, 14], [29, 15], [24, 16], [18, 15],
-  [13, 16], [8, 15], [4, 16], [1, 14], [0, 11], [1, 8], [0, 6],
-]);
+// ProductBlockout remains the compatibility API. The scene's authored source
+// now lives in versioned JSON governed by schemas/product-world-scene.schema.json.
+export const PRODUCT_BLOCKOUT = productScene;
+export const PRODUCT_WORLD = Object.freeze(productScene.world);
+export const PRODUCT_WORLD_OUTLINE = Object.freeze(productScene.outline);
 export const PRODUCT_CANVAS_SIZE=Object.freeze({width:800,height:416});
 export const PRODUCT_PREFABS = Object.freeze({
   pasture: {footprint: [6, 4], physicalClearance: 0, visualClearance: 0},
@@ -42,56 +35,6 @@ export const PRODUCT_PREFAB_RECIPES = Object.freeze({
   service:{footprint:[2,2],parts:['asset selected by service role','utility connection point']},
 });
 
-// Editable blockout positions (cells), not screen coordinates. Placed assets
-// are intentionally sparse; approved art is layered only after this plan passes.
-export const PRODUCT_BLOCKOUT = {
-  version: 1,
-  world: PRODUCT_WORLD,
-  zones: [
-    {id:'paddock-a', kind:'pasture', patch:0, x:1, y:1, w:6, h:4},
-    {id:'paddock-b', kind:'pasture', patch:1, x:8, y:1, w:6, h:4},
-    {id:'paddock-c', kind:'pasture', patch:2, x:1, y:6, w:6, h:4},
-    {id:'paddock-d', kind:'pasture', patch:3, x:8, y:6, w:6, h:4},
-    {id:'working-pen', kind:'holdingPen', x:20, y:8, w:8, h:6},
-  ],
-  structures: [
-    {id:'farmstead', kind:'farmstead', x:17, y:1, w:4, h:3, asset:'building-farmhouse-imagegen-v1', hero:true},
-    {id:'pond', kind:'pond', x:24, y:2, w:3, h:2, asset:'water-pond-imagegen-v1'},
-    {id:'barn-corral', kind:'barnCorral', x:16, y:9, w:4, h:3, asset:'building-shed-imagegen-v1', hero:true},
-    {id:'crop-block', kind:'crops', x:29, y:8, w:5, h:3, asset:'field-soybean-growing'},
-  ],
-  // The spine connects the west paddock gates to the service yard and all hero zones.
-  paths: [
-    {id:'main-lane', destinations:['farmstead'], cells:[[7,3],[7,2],[7,1],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[14,1],[14,2],[14,3],[15,3],[15,4],[16,4]]},
-    {id:'south-lane', cells:[[7,8],[7,9],[7,10],[8,10],[9,10],[10,10],[11,10],[12,10],[13,10],[14,10],[14,9],[14,8]]},
-    {id:'yard-connector', destinations:['barn-corral'], cells:[[15,4],[15,5],[15,6],[15,7],[15,8],[14,8],[14,9],[14,10],[14,11],[15,10]]},
-    {id:'crop-connector', destinations:['pond','crop-block'], cells:[[16,4],[17,4],[18,4],[19,4],[20,4],[21,4],[22,4],[23,4],[23,5],[23,6],[23,7],[24,7],[25,7],[26,7],[27,7],[28,7]]},
-  ],
-  gates: [
-    {id:'gate-a', zone:'paddock-a', a:{x:7,y:2}, b:{x:7,y:3}, connects:'main-lane'},
-    {id:'gate-b', zone:'paddock-b', a:{x:14,y:2}, b:{x:14,y:3}, connects:'main-lane'},
-    {id:'gate-c', zone:'paddock-c', a:{x:7,y:7}, b:{x:7,y:8}, connects:'south-lane'},
-    {id:'gate-d', zone:'paddock-d', a:{x:14,y:8}, b:{x:14,y:9}, connects:'south-lane'},
-    {id:'yard-gate', zone:'working-pen', a:{x:23,y:8}, b:{x:24,y:8}, connects:'crop-connector'},
-  ],
-  // Decorative placements are part of the scene data, not renderer constants.
-  // These are visual props only; they do not affect grazing or simulation state.
-  vegetation: [
-    {id:'tree-north-west', asset:'vegetation-tree-shade-imagegen-v1', x:1.6, y:2.8},
-    {id:'tree-north-west-inner', asset:'vegetation-tree-shade-imagegen-v1', x:4, y:1.2},
-    {id:'tree-north-mid', asset:'vegetation-tree-shade-imagegen-v1', x:11, y:.4},
-    {id:'tree-north-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:15, y:1.6},
-    {id:'tree-north-east', asset:'vegetation-tree-shade-imagegen-v1', x:23, y:.25},
-    {id:'tree-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:30, y:1},
-    {id:'tree-east', asset:'vegetation-tree-shade-imagegen-v1', x:32, y:3},
-    {id:'tree-west', asset:'vegetation-tree-shade-imagegen-v1', x:1, y:12},
-    {id:'tree-south-west', asset:'vegetation-tree-shade-imagegen-v1', x:7, y:14},
-    {id:'tree-south-mid', asset:'vegetation-tree-shade-imagegen-v1', x:15, y:15},
-    {id:'tree-south-east-inner', asset:'vegetation-tree-shade-imagegen-v1', x:25, y:14},
-    {id:'tree-east-south', asset:'vegetation-tree-shade-imagegen-v1', x:31, y:11},
-  ],
-};
-
 export function worldToScreen(x, y, world = PRODUCT_WORLD) {
   return projectIso(x, y, world.tile.width, world.tile.height, world.origin);
 }
@@ -99,7 +42,7 @@ export function worldToScreen(x, y, world = PRODUCT_WORLD) {
 export function productWorldOutline(scene = PRODUCT_BLOCKOUT) {
   const world = scene.world ?? PRODUCT_WORLD;
   const scaleX = world.width / PRODUCT_WORLD.width, scaleY = world.height / PRODUCT_WORLD.height;
-  return PRODUCT_WORLD_OUTLINE.map(([x, y]) => ({x: x * scaleX, y: y * scaleY}));
+  return (scene.outline ?? PRODUCT_WORLD_OUTLINE).map(([x, y]) => ({x: x * scaleX, y: y * scaleY}));
 }
 
 // Only the southern half of the contour gets a visible soil face in this
