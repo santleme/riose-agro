@@ -64,10 +64,10 @@ function renderReview(manifest) {
   $('review-panel').hidden = false;
   $('review-meta').textContent = `${manifest.durationDays} days · ${manifest.initialSnapshot.animals.length.toLocaleString()} generated engine animals · seed ${manifest.seed} · one factor: supplementation`;
   const budget = scenarioSetResultBudgetStatus({animalCount: manifest.initialSnapshot.animals.length, durationDays: manifest.durationDays, scenarioCount: manifest.scenarios.length});
-  const mib = bytes => `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
+  const size = bytes => bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KiB` : `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
   $('resource-budget').textContent = budget.withinBudget
-    ? `Estimated result JSON ${mib(budget.estimatedBytes)} / ${mib(SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES)} planning limit. ${budget.source}`
-    : `This combination is over the ${mib(budget.budgetBytes)} estimated-result planning limit (${mib(budget.estimatedBytes)} projected). Reduce animals, duration or scenario arms, then review again. ${budget.source}`;
+    ? `Estimated result JSON ${size(budget.estimatedBytes)} / ${size(SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES)} planning limit. ${budget.source}`
+    : `This combination is over the ${size(budget.budgetBytes)} estimated-result planning limit (${size(budget.estimatedBytes)} projected). Reduce animals, duration or scenario arms, then review again. ${budget.source}`;
   $('resource-budget').dataset.withinBudget = String(budget.withinBudget);
   $('run-scenarios').disabled = !budget.withinBudget;
   const host = $('scenario-list');

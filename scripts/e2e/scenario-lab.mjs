@@ -16,6 +16,7 @@ try {
   await page.locator('[name="alternativeLevels"]').fill('1.0, 1.5');
   await page.getByRole('button', {name: /Review scenarios/}).click();
   assert.equal(await page.locator('#scenario-list article').count(), 3);
+  assert.match(await page.locator('#resource-budget').textContent(), /Estimated result JSON .* KiB/);
   assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.locator('#results:not([hidden])').waitFor();
