@@ -1,15 +1,28 @@
 # Product V3 session handoff
 
 Date: 2026-10-15
-Last verified code commit: `8588074` (`test: assert scientific evidence status accurately`). P3-010 is split across `fc5a01e` (strict deterministic PT/EN intent parser) and `d4fa4ea` (review/Worker/archive integrity). P3-011 code fixes are in `d7238ea` (BR-CORTE evidence classification) and `9a3de50` (mobile nav); stale provenance assertions were updated in `8588074`.
+Last verified commit: pending final P3-011 evidence/documentation commit; benchmark was executed against clean source commit `7391758131771a08ee497c9baabceefeea1fa89d`.
 Current branch: `codex/behavioral-agents-sdd`; all commits are local and unpushed. Do not rewrite history, force-push, or work around network policy.
-Completed tasks: P3-001 audit/rescope; P3-002 multi-scenario manifest/replay; P3-003 Worker/UI; P3-004 isolated BR-CORTE calculator; P3-005 cancellation; P3-006 browser performance and JS/Rust/WASM parity evidence; P3-009 deterministic prompt-to-review; P3-010 confirmed intent and replay integrity. P3-011 packet and UI fixes are implemented; browser population benchmark is still pending final verification.
-Task in progress: P3-011 validation. P3-007 and P3-008 remain BLOCKED as recorded below.
-Files changed: BR-CORTE adapter provenance classification, scientific-model/report tests and saved reference output; scenario-lab mobile navigation and E2E check; `scripts/e2e/product-v3-review-capture.mjs`; reviewer package and product audit/screenshot artifacts; package script and Product V3 task/progress/decision/handoff records.
-Tests executed for P3-011 so far: focused BR-CORTE/scientific registry/report tests (30/30); `npm run test:perea-no-go-diagnostics` (3/3); `npm test` (497/497); `npm run test:parity` (24 pasture checkpoints; 1,440 housing hourly checkpoints / 31 daily rows); Product V2 E2E pass; Product V3 E2E pass; `npm run audit:product-v3` pass at desktop 1440×1000/mobile 390×844 with zero console/page errors; `git diff --check` was previously clean before documentation packaging.
-Passing checks: reviewed canonical manifest digest is independently checked by the Worker; result identity/units/horizon and archive provenance are checked before display/export; replay must reproduce the archived result; edits and clarifications only invalidate/rebuild review and cannot start execution. Existing Product V2 flow and JS/Rust/WASM parity checks pass. The browser E2E-generated screenshots were visually inspected; T3 preview automation was unavailable in this session, so the actual Playwright capture was used.
-Known failures: none in verified scopes. SHA-256 digests detect byte changes but do not authenticate a signer. The benchmark’s JSON projection is not a transfer or total-browser-memory guarantee.
-Scientific limitations: FarmEngine remains demonstrative; no result here validates its livestock predictions. Behavioral Research remains NO-GO. BR-CORTE remains separate and conditional on supplied ADG and its published domain; no equation or scientific status was changed.
-Visual limitations: screenshots cover desktop initial/results states; 390px mobile E2E passes. Assistive-technology and broader browser matrix remain unverified.
-Next action: run and record `npm run bench:scenario-lab` at 100/1,000/10,000 animals on committed source, including Worker-to-render, result JSON size and page-renderer heap limitations. Then mark P3-011 DONE and make a final handoff. No other task is READY without bypassing a gate; do not start P3-007 before persistent spend controls or present P3-008/commercial readiness as GO without an independent review.
-Blocked dependencies: P3-007 AI orchestration remains blocked by shared provider spend controls; P3-008 quantitative feature readiness remains blocked pending independent domain review; behavior model integration remains NO-GO and independent of Product V3.
+
+Completed tasks: P3-001 through P3-006, P3-009, P3-010, and P3-011. P3-007 and P3-008 remain BLOCKED; behavioral model integration remains NO-GO.
+Task in progress: none. No next task is READY without bypassing the blocked provider/scientific gates; hand off for external product/user evaluation and independent scientific review rather than inventing more tasks.
+Files changed in P3-011: BR-CORTE adapter provenance classification, scientific-model/report tests and saved reference output; scenario-lab mobile navigation and E2E check; repeatable review capture script; reviewer package, audit report, desktop/mobile screenshots, browser benchmark artifact; Product V3 SDD records.
+
+Tests and evidence:
+- Focused BR-CORTE/scientific registry/report tests: 30/30.
+- Perea post-NO-GO diagnostics: 3/3; frozen NO-GO preserved.
+- Full `npm test`: 497/497.
+- `npm run test:parity`: pass, 24 pasture checkpoints and 1,440 hourly housing checkpoints / 31 daily rows.
+- Product V2 E2E pass; Product V3 E2E pass, including explicit confirmation, review invalidation/no-auto-run, archive tampering, replay, keyboard navigation, reduced motion and mobile layout.
+- `npm run audit:product-v3`: pass at desktop 1440×1000 and mobile 390×844; 8 screenshots; zero console/page errors and no horizontal overflow.
+- `npm run bench:scenario-lab`: one warmup + three measured runs per size; 100, 1,000, 10,000 animals; three arms, seven days, seed `20261015`; clean source `7391758`. Confirmed-run-to-visible-grid medians: 227 ms, 1.382 s, 16.524 s. Result JSON projection: 322,714 B, 3,147,288 B, 31,580,825 B. Worker-result-to-grid medians: 31.8 ms, 259.7 ms, 2,683.8 ms. Grid: 100, 1,000 and capped 1,200 cells. Raw artifact: `docs/evidence/product-v3-scenario-lab-p3-011-benchmark-2026-10.json`.
+- `git diff --check`: pass before final docs commit (rerun before commit).
+
+Quality boundaries: benchmark is one Linux/Chromium host only. JSON is a structured-clone size proxy. Page-renderer heap varied materially at 10k (385,480,484; 385,476,080; 181,419,344 bytes) and excludes Worker heaps, browser-process RSS and GPU. No cross-device latency or memory guarantee follows. The benchmark measures illustrative FarmEngine output, not biology. Product screenshots and audit: `docs/evidence/product-v3-review-2026-10-15/`; full audit: `docs/evidence/product-v3-review-report-2026-10-15.md`; reviewer packet: `docs/scientific-review/product-v3-independent-review-package-2026-10.md`.
+
+Defects corrected: BR-CORTE provenance no longer misclassifies a published equation with source-reported external validation as merely demonstrative (no equation or output changed); mobile product navigation no longer wraps labels at 390 px.
+Known limits: FarmEngine remains demonstrative and not authorized for livestock management decisions; BR-CORTE calculation is conditional on user-supplied ADG and stated Zebu/tropical-pasture domain and has no Riose calibration; behavioral generator remains NO-GO; independent external review is `NOT_PERFORMED`; no user interviews or willingness-to-pay validation were conducted. Accessibility review is not WCAG certification; screen-reader quality, high zoom, color contrast measurement and wider browser/OS matrix remain unverified.
+
+Current disposition: capabilities ready for controlled demonstration are documented separately from decision-use capabilities. No external approval is claimed. Preserve P3-007 shared provider-spend gate, P3-008 independent domain-review gate, and behavioral NO-GO.
+Next action: solicit real user evaluation of the narrow conditional DMI/cost use case and an independent reviewer for the scientific packet. Record their evidence and decisions in new review records; do not change gate status until its acceptance criteria are met.
+Blocked dependencies: persistent provider-spend controls for P3-007; signed independent domain review and remaining quantitative-feature evidence for P3-008; new appropriately sampled and authorized behavior data for any future behavioral research.

@@ -26,6 +26,18 @@ The task was to enter a supported experiment, see unsupported-input recovery, re
 - Mobile layout has no horizontal overflow in the tested 390px viewport.
 - This is not a WCAG conformance audit. Screen-reader announcement quality, zoom at 200–400%, contrast measurements, browser/OS assistive technology, and keyboard traversal of the entire page were not fully evaluated.
 
+## Population performance evidence
+
+The benchmark was run from clean source revision `7391758131771a08ee497c9baabceefeea1fa89d` using `npm run bench:scenario-lab`: 1 warmup and 3 repetitions each at 100, 1,000 and 10,000 animals; 3 arms; 7 days; seed `20261015`. Environment: Linux 6.6.87.2-WSL2, AMD Ryzen 7 7700X, headless Chromium 143.0.7499.4, viewport 1440×1000.
+
+| Animals | Confirmed run to visible grid (median) | Result JSON projection | Worker result to painted grid (median) | Rendered cells | Page renderer heap (observations) |
+|---:|---:|---:|---:|---:|---:|
+| 100 | 227 ms | 322,714 bytes | 31.8 ms | 100 | 4.73–4.75 MB |
+| 1,000 | 1.382 s | 3,147,288 bytes | 259.7 ms | 1,000 | 21.15 MB, 21.16 MB, 69.32 MB |
+| 10,000 | 16.524 s | 31,580,825 bytes | 2.684 s | 1,200 cap | 385.48 MB, 385.48 MB, 181.42 MB |
+
+The complete observations and measurement boundaries are in [`product-v3-scenario-lab-p3-011-benchmark-2026-10.json`](product-v3-scenario-lab-p3-011-benchmark-2026-10.json). Heap variation is material and likely sensitive to collection/timing; these measurements do not establish a stable memory budget. CDP samples only the page renderer, not Worker heaps, browser-process RSS or GPU memory. JSON length is a proxy, not actual structured-clone bytes. The 10,000-animal result completed and respected the 1,200-cell render cap in all three runs. These are one-host measurements of illustrative FarmEngine output, not biological evidence or a cross-device service-level guarantee.
+
 ## Defects fixed
 
 | Finding | Change | Verification |
