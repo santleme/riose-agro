@@ -1,11 +1,11 @@
 # Product V4 handoff
 
 Date: 2026-10-15
-Last verified commit: `a014014` (P4-004 user discovery materials); P4-005 source and SDD updates are validated and awaiting commit.
+Last verified commit: `04e2379` (P4-005 sensitivity archive and replay).
 Current branch: `codex/behavioral-agents-sdd`.
 
 Completed tasks: P4-001 audit/bootstrap; P4-002 registered BR-CORTE sensitivity sweep; P4-003 explicit empty/example state; P4-004 discovery protocol/demo/blank record prepared; P4-005 versioned sensitivity archive and explicit replay.
-Task in progress: none.
+Task in progress: none; working tree is clean after the verified P4-005 implementation commit.
 READY: none in the current local V4 queue. Do not invent duplicate work. Existing V3 comparison/replay and conditional cost functions are reused. P3-007 remains blocked by the shared spend gate; P3-008 remains blocked pending independent review. Behavioral semi-Markov remains NO-GO.
 
 Files changed for P4-005: `src/client/br-corte-sensitivity-archive.js`, `schemas/br-corte-dmi-sensitivity-archive-v1.schema.json`, `src/client/scenario-lab-app.js`, `scenario-lab.html`, `tests/br-corte-sensitivity.test.js`, `scripts/e2e/scenario-lab.mjs`, and V4 task/progress/decision/acceptance docs.
