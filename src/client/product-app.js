@@ -17,9 +17,34 @@ function requestState(message){stateRequests.push(message.type);worker.postMessa
 function updateComputeStatus(execution){
   const status=$('compute-status');if(!status)return;
   const backend=execution?.backend??'cpu';
-  status.textContent=backend==='amd_rocm'?'AMD · '+(execution.device??'ROCm'):
-    backend==='amd-requested'?'AMD requested':backend==='wasm-cpu'?'WASM · CPU':'CPU';
-  status.title=execution?.rocmVersion?'AMD ROCm '+execution.rocmVersion+(execution.device?' · '+execution.device:''):backend;
+  const labels={amd_rocm:'AMD · ROCm',cuda:'NVIDIA · CUDA','wasm-cpu':'WASM · CPU',cpu:'CPU',auto:'Auto',pending:'Pending'};
+  const label=labels[backend]??backend;
+  status.textContent=execution?.fallbackUsed?`${label} · fallback (${execution.fallbackReason??'accelerator unavailable'})`:
+    backend==='pending'?`${labels[execution.requestedBackend]??execution.requestedBackend} · not run yet`:
+    execution?.device?`${label} · ${execution.device}`:label;
+  status.title=[execution?.device,execution?.rocmVersion&&`ROCm ${execution.rocmVersion}`,
+    execution?.cudaVersion&&`CUDA ${execution.cudaVersion}`,execution?.fallbackReason].filter(Boolean).join(' · ')||backend;
+}
+async function refreshComputeAvailability(){
+  const select=$('compute-backend');if(!select)return;
+  const labels={cuda:'NVIDIA · CUDA',rocm:'AMD · ROCm'};
+  try{
+    const response=await fetch('/api/compute/backends');
+    if(!response.ok)throw new Error('compute_service_unavailable');
+    const availability=await response.json();
+    for(const [backend,label] of Object.entries(labels)){
+      const option=select.querySelector(`option[value="${backend}"]`),runtime=availability[backend];
+      if(!option)continue;
+      const ready=runtime?.available===true;
+      option.textContent=`${label} · ${ready?'available':'unavailable'}`;
+      option.title=ready?[runtime.device_name,runtime.runtime_version].filter(Boolean).join(' · '):runtime?.reason??'Runtime unavailable';
+    }
+  }catch{
+    for(const [backend,label] of Object.entries(labels)){
+      const option=select.querySelector(`option[value="${backend}"]`);
+      if(option){option.textContent=`${label} · status unavailable`;option.title='Compute service did not return runtime availability.';}
+    }
+  }
 }
 function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=productExperience?(loadingScenario?'Loading world…':value?'Comparing…':'Compare 30 days'):(loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗');}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
@@ -215,7 +240,7 @@ $                  ('supplement').onchange=e=>configure({supplement:Number((e.ta
 $('pasturebtn').onclick=()=>configure({housing:'pasture'});$('barnbtn').onclick=()=>configure({housing:'barn'});
 function setRunning(value        ){running=value;if(productExperience)$('play').dataset.running=String(value);else $('play').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',productExperience?(value?'Pause simulation':'Continue simulation'):(value?'Pausar simulação':'Continuar simulação'));lastTick=performance.now();}
 if(productExperience&&manifestoMotionPreference.matches)setRunning(false);manifestoMotionPreference.addEventListener?.('change',event=>{if(productExperience)setRunning(!event.matches);});$('play').onclick=()=>{if(scientificPreviewActive)return;setRunning(!running);};$('day').onclick=()=>{if(loadingScenario||scientificPreviewActive)return;setRunning(false);requestState({type:'tick',hours:24});};$('reset').onclick=()=>{if(loadingScenario)return;scientificPreviewActive=false;scientificResult=null;renderScientificPanel();$('play').disabled=false;$('day').disabled=false;document.querySelector('.map-location').textContent='HORIZONTE / 24 ANIMAIS';selected=1;positions.clear();requestState({type:'reset'});setRunning(false);};
-if($('compute-backend'))$('compute-backend').addEventListener('change',event=>{setRunning(false);requestState({type:'setBackend',backend:event.target.value});if(event.target.value==='amd')notify('AMD ROCm selected. The next simulation step will fail visibly if the local ROCm service is unavailable.');});
+if($('compute-backend')){$('compute-backend').addEventListener('change',event=>{setRunning(false);requestState({type:'setBackend',backend:event.target.value});});void refreshComputeAvailability();}
 document.addEventListener('riose:seek-day',(event)=>{if(!productExperience||!state||pending||loadingScenario||scientificPreviewActive)return;const targetHour=6+(Math.max(1,Math.min(30,Number(event.detail?.day)||1))-1)*24;const hours=targetHour-state.hour;if(hours>0){setRunning(false);requestState({type:'tick',hours});pending=true;}});
 document.addEventListener('riose:timeline-horizon',()=>{if(productExperience)setRunning(false);});
 $('scientific-open').onclick=()=>{$('scientific-result').replaceChildren();if(!$('science-paddock-inputs').children.length)$('science-paddock-inputs').innerHTML=Array.from({length:4},(_,i)=>'<label>Piquete '+String.fromCharCode(65+i)+'<input type="number" min="0" step="100" value="16000" data-science-stock="'+i+'"><span><input type="checkbox" checked data-science-water="'+i+'"> Água disponível</span></label>').join('');$('scientific-simulation').showModal();};

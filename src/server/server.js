@@ -340,7 +340,21 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
       response.setHeader('allow', 'GET, POST');
       return sendJson(response, 405, {error: 'method_not_allowed'});
     }
-    if (url.pathname === '/api/amd/metabolism-batch') {
+    if (url.pathname === '/api/compute/backends') {
+      if (request.method !== 'GET') {
+        response.setHeader('allow', 'GET');
+        return sendJson(response, 405, {error: 'method_not_allowed'});
+      }
+      try {
+        const upstream = await fetchImpl(`${env.COMPUTE_SERVICE_URL ?? 'http://127.0.0.1:8766'}/api/compute/backends`, {
+          signal: AbortSignal.timeout(5_000),
+        });
+        return sendJson(response, upstream.status, await upstream.json());
+      } catch {
+        return sendJson(response, 503, {error: 'compute_service_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/amd/metabolism-batch' || url.pathname === '/api/compute/livestock-metabolism') {
       if (request.method !== 'POST') {
         response.setHeader('allow', 'POST');
         return sendJson(response, 405, {error: 'method_not_allowed'});
@@ -355,17 +369,22 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
           || !Array.isArray(input.values) || input.values.length !== input.count * 4) {
           return sendJson(response, 400, {error: 'invalid_metabolism_batch'});
         }
+        const legacyAmdRoute = url.pathname === '/api/amd/metabolism-batch';
+        const backend = legacyAmdRoute ? 'amd' : input.backend ?? 'auto';
+        if (!['auto', 'cpu', 'cuda', 'rocm', 'amd'].includes(backend)) {
+          return sendJson(response, 400, {error: 'unsupported_compute_backend'});
+        }
         const upstream = await fetchImpl(`${env.COMPUTE_SERVICE_URL ?? 'http://127.0.0.1:8766'}/api/compute/v1`, {
           method: 'POST', headers: {'content-type': 'application/json'},
           body: JSON.stringify({contract_version: '1', operation: 'livestock_metabolism_batch',
-            payload: {count: input.count, values: input.values}, preferred_backend: 'amd'}),
+            payload: {count: input.count, values: input.values}, preferred_backend: backend}),
           signal: AbortSignal.timeout(30_000),
         });
         const result = await upstream.json();
         return sendJson(response, upstream.status, result);
       } catch (error) {
         return sendJson(response, error.status ?? 503, {
-          error: error.status === 413 ? 'request_too_large' : 'amd_compute_service_unavailable',
+          error: error.status === 413 ? 'request_too_large' : 'compute_service_unavailable',
         });
       }
     }

@@ -1,0 +1,323 @@
+{
+  "status": "COMPUTE_BACKEND_PARITY_CAPTURED",
+  "workload": "riose-livestock-metabolism-batch",
+  "seed": 2026,
+  "animalCount": 24,
+  "steps": 1,
+  "input": {
+    "values": [
+      331.48744331439957,
+      75,
+      0.3069328178837033,
+      0,
+      333.1076590437442,
+      75,
+      0.3084330176330965,
+      0,
+      332.6945464243181,
+      75,
+      0.3080505059484427,
+      0,
+      376.41169619280845,
+      75,
+      0.3485293483266745,
+      0,
+      375.13009258313105,
+      75,
+      0.347342678317714,
+      0,
+      363.88169430196285,
+      75,
+      0.3369274947240397,
+      0,
+      373.73273281613365,
+      75,
+      0.34604882668160525,
+      0,
+      383.6155329598114,
+      75,
+      0.3551995675553809,
+      0,
+      341.5246881521307,
+      75,
+      0.31622656310382474,
+      0,
+      398.0711834412068,
+      75,
+      0.3685844291122285,
+      0,
+      333.1422328692861,
+      75,
+      0.30846503043452417,
+      0,
+      341.6915065282956,
+      75,
+      0.31638102456323663,
+      0,
+      381.42876929370686,
+      75,
+      0.3531747863830619,
+      0,
+      348.73336551710963,
+      75,
+      0.3229012643676941,
+      0,
+      371.7621250101365,
+      75,
+      0.34422418982420044,
+      0,
+      387.6572555815801,
+      75,
+      0.3589419033162779,
+      0,
+      399.87168771913275,
+      75,
+      0.37025156270290066,
+      0,
+      337.5254475418478,
+      75,
+      0.31252356253874797,
+      0,
+      352.0943523501046,
+      75,
+      0.32601328921305983,
+      0,
+      348.3703159587458,
+      75,
+      0.32256510736920907,
+      0,
+      376.6959894145839,
+      75,
+      0.3487925827912814,
+      0,
+      388.3050683513284,
+      75,
+      0.35954172995493366,
+      0,
+      350.4222529591061,
+      75,
+      0.3244650490362094,
+      0,
+      367.13151420932263,
+      75,
+      0.33993658723085424,
+      0
+    ],
+    "sha256": "745e61c6734e2dc61f577b1c936fa492a0e94e3f581a4cd82bea06f25740f102"
+  },
+  "cpuReference": {
+    "backendUsed": "cpu",
+    "output": [
+      331.51023307612746,
+      74.72773127153481,
+      333.1305601953035,
+      74.73373207053238,
+      332.71741917438476,
+      74.73220202379377,
+      376.4375744969217,
+      74.8941173933067,
+      375.1558827769961,
+      74.88937071327085,
+      363.9067111684461,
+      74.84770997889616,
+      373.75842694151476,
+      74.88419530672643,
+      383.64190652770236,
+      74.92079827022152,
+      341.5481679744411,
+      74.7649062524153,
+      398.0985508350684,
+      74.97433771644891,
+      333.16513639779583,
+      74.73386012173809,
+      341.7149978193694,
+      74.76552409825295,
+      381.4549925215958,
+      74.91269914553224,
+      348.7573409359889,
+      74.79160505747078,
+      371.78768365623097,
+      74.8768967592968,
+      387.68390701790133,
+      74.93576761326511,
+      399.89917889766343,
+      74.9810062508116,
+      337.54865241636634,
+      74.75009425015499,
+      352.1185588368287,
+      74.80405315685223,
+      348.39426641796797,
+      74.79026042947683,
+      376.72188726385616,
+      74.89517033116512,
+      388.3317643247775,
+      74.93816691981974,
+      350.44634448899706,
+      74.79786019614484,
+      367.15675450092454,
+      74.85974634892342
+    ],
+    "outputSha256": "d49c1dce2ad6f479eeb72dcfef869fbfe0e6acd31ee36e6e9af454d8c47c0eb1",
+    "elapsedMs": 7.992232999999999
+  },
+  "availability": {
+    "cpu": {
+      "available": true
+    },
+    "cuda": {
+      "available": false,
+      "reason": "pytorch_unavailable",
+      "device_name": null,
+      "runtime_version": null
+    },
+    "rocm": {
+      "available": false,
+      "reason": "pytorch_unavailable",
+      "device_name": null,
+      "runtime_version": null
+    },
+    "torch_version": null,
+    "auto_order": [
+      "cuda",
+      "rocm"
+    ]
+  },
+  "parityContract": {
+    "absoluteTolerance": 1e-12,
+    "relativeTolerance": 1e-12,
+    "fields": [
+      "weight",
+      "energy"
+    ],
+    "ordering": "input animal order"
+  },
+  "repeatedRuns": 3,
+  "backends": {
+    "auto": {
+      "requestedBackend": "auto",
+      "expectedBackend": "cpu",
+      "availability": {
+        "cpu": {
+          "available": true
+        },
+        "cuda": {
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "device_name": null,
+          "runtime_version": null
+        },
+        "rocm": {
+          "available": false,
+          "reason": "pytorch_unavailable",
+          "device_name": null,
+          "runtime_version": null
+        },
+        "torch_version": null,
+        "auto_order": [
+          "cuda",
+          "rocm"
+        ]
+      },
+      "backendUsed": [
+        "cpu"
+      ],
+      "fallbackUsed": true,
+      "fallbackReasons": [
+        "no_accelerator_available"
+      ],
+      "runs": 3,
+      "deterministic": true,
+      "parity": {
+        "passed": true,
+        "absoluteTolerance": 1e-12,
+        "relativeTolerance": 1e-12,
+        "maxAbsoluteError": 0,
+        "maxRelativeError": 0
+      },
+      "outputSha256": "d49c1dce2ad6f479eeb72dcfef869fbfe0e6acd31ee36e6e9af454d8c47c0eb1",
+      "elapsedMs": [
+        2.625974999999997,
+        3.3233749999999986,
+        2.8063749999999885
+      ],
+      "device": null,
+      "runtimeVersion": null,
+      "torchVersion": null
+    },
+    "cuda": {
+      "requestedBackend": "cuda",
+      "expectedBackend": "cuda",
+      "availability": {
+        "available": false,
+        "reason": "pytorch_unavailable",
+        "device_name": null,
+        "runtime_version": null
+      },
+      "backendUsed": [
+        "cpu"
+      ],
+      "fallbackUsed": true,
+      "fallbackReasons": [
+        "pytorch_unavailable"
+      ],
+      "runs": 3,
+      "deterministic": true,
+      "parity": {
+        "passed": true,
+        "absoluteTolerance": 1e-12,
+        "relativeTolerance": 1e-12,
+        "maxAbsoluteError": 0,
+        "maxRelativeError": 0
+      },
+      "outputSha256": "d49c1dce2ad6f479eeb72dcfef869fbfe0e6acd31ee36e6e9af454d8c47c0eb1",
+      "elapsedMs": [
+        3.2383999999999986,
+        3.2327159999999964,
+        3.58059200000001
+      ],
+      "device": null,
+      "runtimeVersion": null,
+      "torchVersion": null
+    },
+    "rocm": {
+      "requestedBackend": "rocm",
+      "expectedBackend": "rocm",
+      "availability": {
+        "available": false,
+        "reason": "pytorch_unavailable",
+        "device_name": null,
+        "runtime_version": null
+      },
+      "backendUsed": [
+        "cpu"
+      ],
+      "fallbackUsed": true,
+      "fallbackReasons": [
+        "pytorch_unavailable"
+      ],
+      "runs": 3,
+      "deterministic": true,
+      "parity": {
+        "passed": true,
+        "absoluteTolerance": 1e-12,
+        "relativeTolerance": 1e-12,
+        "maxAbsoluteError": 0,
+        "maxRelativeError": 0
+      },
+      "outputSha256": "d49c1dce2ad6f479eeb72dcfef869fbfe0e6acd31ee36e6e9af454d8c47c0eb1",
+      "elapsedMs": [
+        4.7907749999999965,
+        14.827724999999987,
+        2.7867590000000177
+      ],
+      "device": null,
+      "runtimeVersion": null,
+      "torchVersion": null
+    }
+  },
+  "physicalEvidence": {
+    "cuda": "not_executed",
+    "rocm": "not_executed"
+  },
+  "timingScope": "end-to-end local service request latency; not an accelerator speedup claim"
+}

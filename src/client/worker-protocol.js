@@ -66,7 +66,7 @@ function validateCommandPayload(message) {
       if (message.hours != null) requireInteger(message.hours, 'tick.hours', 1, 8760, command);
       break;
     case 'setBackend':
-      if (!['cpu', 'amd'].includes(message.backend)) fail('INVALID_COMMAND_PAYLOAD', 'setBackend.backend must be cpu or amd.', command);
+      if (!['auto', 'cpu', 'cuda', 'rocm', 'amd'].includes(message.backend)) fail('INVALID_COMMAND_PAYLOAD', 'setBackend.backend must be auto, cpu, cuda, or rocm.', command);
       break;
     case 'compare':
       if (message.snapshot != null && !isRecord(message.snapshot)) fail('INVALID_COMMAND_PAYLOAD', 'compare.snapshot must be an object.', command);
