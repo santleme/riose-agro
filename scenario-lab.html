@@ -67,6 +67,35 @@
         <details class="provenance"><summary>Model provenance and limitations</summary><div id="scenario-provenance"></div></details>
       </section>
     </section>
+    <section id="br-corte-calculator" class="lab-card scientific-card" aria-labelledby="br-corte-title">
+      <div class="lab-card-heading"><div><p class="eyebrow">SCIENTIFIC MODULE · BR-CORTE 2023</p><h2 id="br-corte-title">Conditional pasture intake estimate</h2></div><span class="scientific-badge">Published Eq. 2.6</span></div>
+      <p class="scientific-intro">Estimate total dry matter intake for growing Zebu cattle on tropical pasture from body weight, user-supplied average daily gain, and supplement. This module is independent of FarmEngine.</p>
+      <form id="br-corte-form">
+        <div class="lab-fields scientific-fields">
+          <label>Representative body weight<input name="bodyWeightKg" type="number" min="133" max="474" step="any" value="400" required><small>133–474 kg · kg</small></label>
+          <label>Supplied average daily gain<input name="adgKgPerDay" type="number" min="-0.18" max="1.34" step="any" value="0.5" required><small>−0.18–1.34 kg/day · an input, not predicted</small></label>
+          <label>Animals represented<input name="animalCount" type="number" min="1" max="10000" step="1" value="200" required><small>Representative inputs apply to all</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" value="30" required><small>Days · inputs held constant for arithmetic totals</small></label>
+          <label class="lab-wide">Supplement levels<input name="supplementLevels" type="text" maxlength="120" value="0.5, 1.0, 1.5" required><small>3–10 distinct levels · 0–5.32 kg DM/head/day</small></label>
+          <label>Optional supplement price<input name="supplementPrice" type="number" min="0" step="any" placeholder="Leave blank to omit cost"><small>Price per kg dry matter</small></label>
+          <label>Currency<input name="currency" type="text" maxlength="3" pattern="[A-Za-z]{3}" placeholder="BRL"><small>ISO 4217 code, required with price</small></label>
+        </div>
+        <div class="lab-actions"><button class="primary-button" type="submit">Review BR-CORTE scenarios <span aria-hidden="true">↗</span></button></div>
+      </form>
+      <div class="saved-manifest scientific-saved"><button id="br-corte-load" class="text-button" type="button">Open exported BR-CORTE JSON</button><input id="br-corte-file" type="file" accept="application/json,.json" hidden><span>Reopens the versioned inputs and recalculates them for review.</span></div>
+      <section id="br-corte-review" class="review-panel" hidden aria-labelledby="br-corte-review-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">REVIEW</p><h3 id="br-corte-review-title">Conditional inputs</h3></div><span class="review-status">User confirmation required</span></div>
+        <p id="br-corte-review-meta" class="review-meta"></p>
+        <div id="br-corte-review-list" class="scenario-list"></div>
+        <p class="review-limit">This equation does not predict gain. The supplied ADG and representative body weight are held constant for total calculations. Supplement level is an equation input; the result is total DMI and must not be presented as measured forage intake. No individual animal distribution, weight path, ration cost, or profit is inferred.</p>
+        <div class="lab-actions"><button id="br-corte-run" class="primary-button" type="button">Calculate conditional estimates</button></div>
+      </section>
+      <section id="br-corte-results" class="scientific-results" hidden aria-live="polite">
+        <div class="lab-card-heading"><div><p class="eyebrow">COMPUTED OUTPUT</p><h3>Conditional dry matter intake</h3></div><div class="scientific-result-actions"><span class="review-status">Not Riose-calibrated</span><button id="br-corte-export" class="quiet-button" type="button">Export inputs + results ↓</button></div></div>
+        <div class="lab-table-scroll"><table><thead id="br-corte-table-head"></thead><tbody id="br-corte-table-body"></tbody></table></div>
+        <details class="provenance" open><summary>Model provenance and limitations</summary><div id="br-corte-provenance"></div></details>
+      </section>
+    </section>
     <p id="lab-status" class="live-status" role="status" aria-live="polite"></p>
   </main>
   <script type="module" src="src/client/scenario-lab-app.js"></script>

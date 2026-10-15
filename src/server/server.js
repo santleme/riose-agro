@@ -28,6 +28,7 @@ const PUBLIC_FILES = new Set([
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
   'index.html', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
+  'scientific/br_corte_dmi_adapter.js', 'scientific/model-contract.js',
   'snapshot-review.js', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',

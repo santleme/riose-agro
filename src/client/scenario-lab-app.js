@@ -1,5 +1,6 @@
 import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
+import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
 import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
 
 const $ = id => document.getElementById(id);
@@ -13,6 +14,8 @@ let visibleAnimals = MAX_VISIBLE_ANIMALS;
 let selectedAnimalId = null;
 let activeWorker = null;
 let cancelActiveRun = null;
+let reviewedBrCorteManifest = null;
+let brCorteResult = null;
 
 function status(message) {
   $('lab-status').textContent = message;
@@ -381,5 +384,146 @@ $('manifest-file').addEventListener('change', async event => {
     status(`Could not open saved experiment: ${error.message}`);
   } finally {
     input.value = '';
+  }
+});
+
+function createBrCorteManifest(form) {
+  const values = new FormData(form);
+  const parse = (name, label, min, max, integer = false) => {
+    const value = Number(values.get(name));
+    if (!Number.isFinite(value) || value < min || value > max || (integer && !Number.isInteger(value))) {
+      throw new Error(`${label} must be ${integer ? 'an integer' : 'a number'} from ${min} to ${max}.`);
+    }
+    return value;
+  };
+  const rawPrice = String(values.get('supplementPrice') ?? '').trim();
+  const rawCurrency = String(values.get('currency') ?? '').trim().toUpperCase();
+  const levels = String(values.get('supplementLevels') ?? '').split(/[,;\s]+/).filter(Boolean).map((value, index) => {
+    const number = Number(value);
+    if (!Number.isFinite(number)) throw new Error(`Supplement level ${index + 1} must be numeric.`);
+    return number;
+  });
+  return createBrCorteDmiScenarioManifest({
+    bodyWeightKg: parse('bodyWeightKg', 'Body weight', 133, 474),
+    adgKgPerDay: parse('adgKgPerDay', 'Supplied average daily gain', -0.18, 1.34),
+    animalCount: parse('animalCount', 'Animals', 1, 10000, true),
+    durationDays: parse('durationDays', 'Duration', 1, 365, true),
+    supplementLevelsKgDMPerHeadPerDay: levels,
+    supplementPricePerKgDM: rawPrice === '' ? null : Number(rawPrice),
+    currency: rawPrice === '' ? null : rawCurrency,
+  });
+}
+
+function renderBrCorteReview(manifest) {
+  $('br-corte-review').hidden = false;
+  const {inputs} = manifest;
+  const costBasis = inputs.supplementPricePerKgDM === null ? 'cost omitted (no price supplied)' : `price ${inputs.currency} ${inputs.supplementPricePerKgDM}/kg DM`;
+  $('br-corte-review-meta').textContent = `${inputs.animalCount.toLocaleString()} represented animals · ${inputs.durationDays} days · BW ${inputs.bodyWeightKg} kg · supplied ADG ${inputs.adgKgPerDay} kg/day · ${costBasis}`;
+  $('br-corte-review-list').replaceChildren(...inputs.supplementLevelsKgDMPerHeadPerDay.map((level, index) => {
+    const article = document.createElement('article');
+    const label = document.createElement('span'); label.textContent = index === 0 ? 'Baseline' : `Scenario ${String.fromCharCode(64 + index)}`;
+    const value = document.createElement('strong'); value.textContent = `${level} kg DM/head/day`;
+    article.append(label, value); return article;
+  }));
+}
+
+function renderBrCorteResults(result) {
+  const head = $('br-corte-table-head'); const body = $('br-corte-table-body');
+  const headings = ['Scenario', 'Supplement · kg DM/head/day', 'Total DMI · kg DM/head/day', 'Herd total · kg DM', 'Supplement total · kg DM', ...(result.scenarios[0].totals.supplementCost === null ? [] : ['Supplement cost'])];
+  const tr = document.createElement('tr');
+  for (const text of headings) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; tr.append(th); }
+  head.replaceChildren(tr);
+  body.replaceChildren(...result.scenarios.map(scenario => {
+    const row = document.createElement('tr');
+    const values = [scenario.label, scenario.input.supplementKgDMPerHeadPerDay.toFixed(2), scenario.outputs.totalDmiKgDMPerHeadPerDay.toFixed(3), scenario.totals.herdDmiKgDM.toFixed(1), scenario.totals.supplementKgDM.toFixed(1), ...(scenario.totals.supplementCost === null ? [] : [`${scenario.totals.currency} ${scenario.totals.supplementCost.toFixed(2)}`])];
+    for (const value of values) { const cell = document.createElement('td'); cell.textContent = value; row.append(cell); }
+    return row;
+  }));
+  const lines = [
+    `${result.model.id}@${result.model.version}; ${result.model.equation}.`,
+    `Application domain: ${result.model.applicationDomain}. Published input ranges: BW ${result.model.publishedInputRanges.bodyWeightKg.join('–')} kg, supplied ADG ${result.model.publishedInputRanges.adgKgPerDay.join('–')} kg/day, supplement ${result.model.publishedInputRanges.supplementKgDMPerDay.join('–')} kg DM/day.`,
+    'Published validation in the BR-CORTE chapter: 174 Zebu experimental units, R² 0.670, mean bias +0.761 kg/day, CCC 0.741. This is source-reported validation, not Riose calibration or validation.',
+    'BR-CORTE 2023, Chapter 2: Table 2.14 worked example; development fit (R² 0.638, 1,069 experimental units) is not independent validation. The model estimates total intake conditional on supplied ADG; it does not forecast gain.',
+    'Inputs are treated as representative and constant. Herd totals are arithmetic multiplication, not a cohort distribution. The supplement input is already DM. No forage intake observation, gain trajectory, uncertainty interval, or profit is produced.',
+    ...result.scenarios.map(scenario => `${scenario.label}: implementation hash ${scenario.provenance.implementationHash}; registry evidence status ${scenario.provenance.evidenceStatus}.`),
+  ];
+  const list = document.createElement('ul');
+  list.replaceChildren(...lines.map(line => { const item = document.createElement('li'); item.textContent = line; return item; }));
+  $('br-corte-provenance').replaceChildren(list);
+  $('br-corte-results').hidden = false;
+}
+
+$('br-corte-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    reviewedBrCorteManifest = createBrCorteManifest(event.currentTarget);
+    brCorteResult = null;
+    $('br-corte-results').hidden = true;
+    renderBrCorteReview(reviewedBrCorteManifest);
+    status('Review the BR-CORTE inputs and assumptions before calculating.');
+  } catch (error) {
+    reviewedBrCorteManifest = null;
+    $('br-corte-review').hidden = true;
+    status(error.message);
+  }
+});
+
+$('br-corte-form').addEventListener('input', () => {
+  reviewedBrCorteManifest = null;
+  brCorteResult = null;
+  $('br-corte-review').hidden = true;
+  $('br-corte-results').hidden = true;
+});
+
+$('br-corte-run').addEventListener('click', () => {
+  if (!reviewedBrCorteManifest) return;
+  try {
+    brCorteResult = evaluateBrCorteDmiScenarioManifest(reviewedBrCorteManifest);
+    renderBrCorteResults(brCorteResult);
+    status('BR-CORTE conditional estimates calculated from the reviewed inputs.');
+  } catch (error) {
+    brCorteResult = null;
+    $('br-corte-results').hidden = true;
+    status(error.message);
+  }
+});
+
+$('br-corte-export').addEventListener('click', () => {
+  if (!reviewedBrCorteManifest || !brCorteResult) return;
+  const blob = new Blob([JSON.stringify({manifest: reviewedBrCorteManifest, results: brCorteResult}, null, 2)], {type: 'application/json'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob); link.download = `${reviewedBrCorteManifest.modelId}-scenario-set-v1.json`; link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 0);
+});
+
+$('br-corte-load').addEventListener('click', () => $('br-corte-file').click());
+$('br-corte-file').addEventListener('change', async event => {
+  const fileInput = event.currentTarget;
+  const file = fileInput.files?.[0];
+  if (!file) return;
+  try {
+    if (file.size > 2 * 1024 * 1024) throw new Error('Saved BR-CORTE JSON must be 2 MB or smaller.');
+    const saved = JSON.parse(await file.text());
+    const manifest = saved?.manifest;
+    validateBrCorteDmiScenarioManifest(manifest);
+    const form = $('br-corte-form');
+    form.elements.bodyWeightKg.value = String(manifest.inputs.bodyWeightKg);
+    form.elements.adgKgPerDay.value = String(manifest.inputs.adgKgPerDay);
+    form.elements.animalCount.value = String(manifest.inputs.animalCount);
+    form.elements.durationDays.value = String(manifest.inputs.durationDays);
+    form.elements.supplementLevels.value = manifest.inputs.supplementLevelsKgDMPerHeadPerDay.join(', ');
+    form.elements.supplementPrice.value = manifest.inputs.supplementPricePerKgDM === null ? '' : String(manifest.inputs.supplementPricePerKgDM);
+    form.elements.currency.value = manifest.inputs.currency ?? '';
+    reviewedBrCorteManifest = manifest;
+    brCorteResult = null;
+    $('br-corte-results').hidden = true;
+    renderBrCorteReview(manifest);
+    status('Saved BR-CORTE inputs loaded and validated. Review, then calculate to reproduce the result.');
+  } catch (error) {
+    reviewedBrCorteManifest = null;
+    $('br-corte-review').hidden = true;
+    status(`Could not open saved BR-CORTE experiment: ${error.message}`);
+  } finally {
+    fileInput.value = '';
   }
 });

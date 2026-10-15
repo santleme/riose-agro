@@ -46,9 +46,10 @@ Specification reference: LAB-002/LAB-007; `04-scientific-gates.md`; `../../docs/
 Dependencies: P3-001; P3-003 review surface may be reused but this calculator remains separate from FarmEngine.  
 Implementation scope: Provide BW, supplied ADG and supplement inputs; compare 3+ supplement values; optional explicit supplement DM price/currency; provenance and domain disclosure.  
 Acceptance criteria: Reproduces published worked vector; rejects or clearly blocks out-of-domain values; labels population totals as explicit arithmetic; never predicts ADG/weight gain, forage intake, profit or heat response.  
-Required tests: scientific reference vectors, boundaries, unit/scaling and UI tests.  
-Evidence: model audit, saved input manifest and screenshots.  
-Status: READY
+Required tests: scientific reference vectors, boundaries, unit/scaling, persistence/replay and UI tests.
+
+Evidence: [`docs/evidence/br-corte-pasture-dmi-domain-audit-2026-10.md`](../../docs/evidence/br-corte-pasture-dmi-domain-audit-2026-10.md), [`docs/evidence/br-corte-product-v3-reference-scenario-v1.json`](../../docs/evidence/br-corte-product-v3-reference-scenario-v1.json), [`docs/evidence/product-v3-scenario-lab-initial.png`](../../docs/evidence/product-v3-scenario-lab-initial.png), [`docs/evidence/product-v3-scenario-lab-results.png`](../../docs/evidence/product-v3-scenario-lab-results.png).
+Status: DONE (`npm run test:br-corte-scenarios`; Product V3 browser E2E including import/replay; full suite 477/477; JS/Rust parity).
 
 ## P3-005 — Cancellable scenario Worker
 

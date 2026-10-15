@@ -11,8 +11,8 @@ try {
   await page.goto('http://127.0.0.1:8000/scenario-lab.html', {waitUntil: 'networkidle'});
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-initial.png', fullPage: true});
 
-  await page.locator('[name="animalCount"]').fill('8');
-  await page.locator('[name="durationDays"]').fill('3');
+  await page.locator('#scenario-form [name="animalCount"]').fill('8');
+  await page.locator('#scenario-form [name="durationDays"]').fill('3');
   await page.locator('[name="alternativeLevels"]').fill('1.0, 1.5');
   await page.getByRole('button', {name: /Review scenarios/}).click();
   assert.equal(await page.locator('#scenario-list article').count(), 3);
@@ -37,8 +37,46 @@ try {
   await page.locator('#results:not([hidden])').waitFor();
   assert.match(await page.locator('#run-meta').textContent(), /3 scenarios/);
 
-  await page.locator('[name="animalCount"]').fill('10000');
-  await page.locator('[name="durationDays"]').fill('365');
+  await page.locator('[name="bodyWeightKg"]').fill('400');
+  await page.locator('[name="adgKgPerDay"]').fill('0.5');
+  await page.locator('[name="animalCount"]').last().fill('200');
+  await page.locator('[name="durationDays"]').last().fill('30');
+  await page.locator('[name="supplementLevels"]').fill('0.5, 1.0, 1.5');
+  await page.locator('[name="supplementPrice"]').fill('4');
+  await page.locator('[name="currency"]').fill('brl');
+  await page.getByRole('button', {name: /Review BR-CORTE scenarios/}).click();
+  assert.equal(await page.locator('#br-corte-review-list article').count(), 3);
+  assert.match(await page.locator('#br-corte-review-meta').textContent(), /supplied ADG 0.5 kg\/day/);
+  await page.getByRole('button', {name: 'Calculate conditional estimates'}).click();
+  await page.locator('#br-corte-results:not([hidden])').waitFor();
+  assert.equal(await page.locator('#br-corte-table-body tr').count(), 3);
+  assert.match(await page.locator('#br-corte-table-body tr').first().textContent(), /6\.726/);
+  assert.match(await page.locator('#br-corte-table-body tr').first().textContent(), /BRL 12000\.00/);
+  assert.match(await page.locator('#br-corte-provenance').textContent(), /does not forecast gain/);
+  await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-results.png', fullPage: true});
+  const [brCorteDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', {name: /Export inputs \+ results/}).click(),
+  ]);
+  const savedBrCorte = JSON.parse(await (await import('node:fs/promises')).readFile(await brCorteDownload.path(), 'utf8'));
+  assert.equal(savedBrCorte.manifest.modelId, 'br-corte-2023-eq-2.6');
+  assert.equal(savedBrCorte.results.scenarios.length, 3);
+  await page.locator('#br-corte-file').setInputFiles(await brCorteDownload.path());
+  await page.getByText(/Saved BR-CORTE inputs loaded and validated/).waitFor();
+  await page.getByRole('button', {name: 'Calculate conditional estimates'}).click();
+  assert.match(await page.locator('#br-corte-table-body tr').first().textContent(), /BRL 12000\.00/);
+  await page.locator('[name="bodyWeightKg"]').fill('500');
+  assert.equal(await page.locator('[name="bodyWeightKg"]').evaluate(input => input.checkValidity()), false);
+  assert.equal(await page.locator('#br-corte-review:not([hidden])').count(), 0);
+  await page.locator('[name="bodyWeightKg"]').fill('400');
+  await page.locator('[name="supplementPrice"]').fill('');
+  await page.locator('[name="currency"]').fill('');
+  await page.getByRole('button', {name: /Review BR-CORTE scenarios/}).click();
+  await page.getByRole('button', {name: 'Calculate conditional estimates'}).click();
+  assert.doesNotMatch(await page.locator('#br-corte-table-head').textContent(), /cost/i);
+  assert.match(await page.locator('#br-corte-provenance').textContent(), /not a cohort distribution/);
+  await page.locator('#scenario-form [name="animalCount"]').fill('10000');
+  await page.locator('#scenario-form [name="durationDays"]').fill('365');
   await page.getByRole('button', {name: /Review scenarios/}).click();
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.getByRole('button', {name: 'Cancel run'}).waitFor();
