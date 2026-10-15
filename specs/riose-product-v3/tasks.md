@@ -124,3 +124,15 @@ Acceptance criteria: ambiguous, conflicting, incompatible-unit, multi-factor and
 Required tests: parser contract/unit matrix, archive tamper and round-trip replay tests, app/Worker binding tests, browser E2E including clarify→review→confirm, post-review edit, no-auto-run, export/reload/replay, accessible live status and reduced-motion behavior; `npm test`, Product V2 E2E and `npm run test:parity`.
 Evidence: `tests/scenario-lab-intent.test.js`, `tests/scenario-lab-integrity.test.js`, `tests/worker-protocol.test.js`, `scripts/e2e/scenario-lab.mjs`, `docs/evidence/product-v3-scenario-lab-initial.png`, `docs/evidence/product-v3-scenario-lab-results.png`.
 Status: DONE (`npm test` 497/497; intent 10/10; archive 4/4; Worker/app 8/8; Product V2 and V3 E2E pass; parity passes 24 + 1,440 checkpoints).
+
+## P3-011 — Product & scientific review readiness
+
+ID: P3-011
+Title: Prepare a reproducible Product V3 package for external product and scientific review
+Specification reference: `README.md`; `04-scientific-gates.md`; `07-testing-strategy.md`; `08-acceptance-criteria.md`; Product V2 review/accessibility conventions.
+Dependencies: P3-010; P3-004; P3-006. Independent of P3-007 and P3-008; those gates must remain blocked.
+Implementation scope: Build a reviewer-ready inventory of contracts, model/evidence boundaries, domains, cases, seeds, expected values/tolerances, NO-GO history, and claim matrix. Audit and capture the real Product V3 flow on desktop/mobile; correct only objective provenance or responsive defects. Re-run regressions, parity, NO-GO reproduction and current supported population benchmark. Make no scientific formula, FarmEngine or behavioral-model changes.
+Acceptance criteria: a third party can locate the immutable inputs, outputs, commands and tolerances without verbal explanation; FarmEngine demonstrations are distinguished from the published conditional BR-CORTE calculation; the behavior candidate's NO-GO and commercial/provider gates remain unchanged; the actual UI states are captured and reviewed; benchmark report states what its measures omit; the external reviewer status is `NOT_PERFORMED` until a real independent evaluator responds.
+Required tests: `npm test`; Product V2 and V3 E2E; `npm run test:parity`; `npm run test:perea-no-go-diagnostics`; BR-CORTE reference tests; `npm run audit:product-v3`; `npm run bench:scenario-lab` on 100/1,000/10,000 animals.
+Evidence: `docs/scientific-review/product-v3-independent-review-package-2026-10.md`; `docs/evidence/product-v3-review-report-2026-10-15.md`; `docs/evidence/product-v3-review-2026-10-15/`; P3-011 benchmark report to be appended after capture.
+Status: VALIDATING (current benchmark capture remains).
