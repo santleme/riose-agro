@@ -30,6 +30,13 @@ test('Worker command decoder accepts v1 and only adapts known unversioned comman
   });
 });
 
+test('Worker backend selector accepts Auto, CPU, CUDA and ROCm and rejects unknown vendors',()=>{
+  for(const backend of ['auto','cpu','cuda','rocm','amd']){
+    assert.equal(decodeWorkerCommand({protocolVersion:1,type:'setBackend',backend}).command.backend,backend);
+  }
+  protocolError(()=>decodeWorkerCommand({protocolVersion:1,type:'setBackend',backend:'metal'}),'INVALID_COMMAND_PAYLOAD');
+});
+
 test('Worker command decoder rejects malformed versions, commands and payloads deterministically', () => {
   protocolError(() => decodeWorkerCommand(null), 'INVALID_COMMAND');
   protocolError(() => decodeWorkerCommand({type: 'snapshot', protocolVersion: null}), 'INVALID_PROTOCOL_VERSION');
@@ -192,7 +199,7 @@ test('module Worker emits versioned responses and deterministic errors while ret
   assert.equal(worker.messages.at(-1).state.hour, hourBeforeInvalidTick, 'invalid commands are rejected before mutating engine state');
 });
 
-test('Product worker routes a livestock tick through the AMD adapter and preserves CPU parity',async t=>{
+test('Product worker routes a livestock tick through ROCm and verifies complete CPU parity',async t=>{
   const originalSelf=globalThis.self,originalFetch=globalThis.fetch;
   t.after(()=>{globalThis.self=originalSelf;globalThis.fetch=originalFetch;});
   const worker={messages:[],postMessage(message){this.messages.push(message);}};
@@ -208,25 +215,78 @@ test('Product worker routes a livestock tick through the AMD adapter and preserv
       const gain=(intake-5.3*(weight/360)/24)*.22;
       result.push(Math.max(200,weight+gain),Math.max(0,Math.min(100,energy+(resting!==0?5:intake*4-1.5))));
     }
-    return {ok:true,json:async()=>({backend_requested:'amd',backend_used:'amd_rocm',fallback_used:false,
-      result:{values:result},execution_metadata:{device_name:'AMD test device',rocm_version:'test'}})};
+    return {ok:true,json:async()=>({backend_requested:'rocm',backend_selected:'rocm',backend_used:'amd_rocm',fallback_used:false,
+      backend_availability:{rocm:{available:true}},result:{values:result},
+      execution_metadata:{device_name:'AMD test device',rocm_version:'test',torch_version:'test torch'}})};
   };
-  await worker.onmessage({data:{type:'setBackend',backend:'amd'}});
+  await worker.onmessage({data:{type:'setBackend',backend:'rocm'}});
   await worker.onmessage({data:{type:'tick',hours:1}});
   const actual=worker.messages.at(-1);
   assert.equal(actual.type,'view');
-  assert.equal(actual.engineImplementation,'pytorch-rocm/livestock-metabolism-v1');
-  assert.deepEqual(actual.execution,{backend:'amd_rocm',device:'AMD test device',rocmVersion:'test'});
-  for(let index=0;index<4;index++){
-    assert.equal(actual.animalValues[index*4+2],expected.state.animals[index].weight);
-  }
+  assert.equal(actual.engineImplementation,'javascript-fallback');
+  assert.equal(actual.execution.backend,'amd_rocm');
+  assert.equal(actual.execution.device,'AMD test device');
+  assert.equal(actual.execution.rocmVersion,'test');
+  assert.equal(actual.execution.fallbackUsed,false);
 
   await worker.onmessage({data:{type:'snapshot'}});
-  const beforeFailure=worker.messages.at(-1).state;
-  globalThis.fetch=async()=>({ok:false,status:503,json:async()=>({error:'amd_compute_service_unavailable'})});
-  await worker.onmessage({data:{type:'tick',hours:1}});
-  assert.equal(worker.messages.at(-1).type,'error');
-  assert.match(worker.messages.at(-1).message,/amd_compute_service_unavailable/);
+  const amdState=worker.messages.at(-1).state;
+  for(let index=0;index<4;index++){
+    assert.equal(amdState.animals[index].weight,expected.state.animals[index].weight);
+    assert.equal(amdState.animals[index].energy,expected.state.animals[index].energy);
+  }
+
+  const expectedCpu=FarmEngine.from(amdState);expectedCpu.tick(2);
+  let calls=0;
+  globalThis.fetch=async(_url,options)=>{
+    calls++;
+    const request=JSON.parse(options.body),values=request.values,result=[];
+    for(let index=0;index<request.count;index++){
+      const [weight,energy,intake,resting]=values.slice(index*4,index*4+4);
+      result.push(Math.max(200,weight+(intake-5.3*(weight/360)/24)*.22),Math.max(0,Math.min(100,energy+(resting!==0?5:intake*4-1.5))));
+    }
+    if(calls===2)return {ok:false,status:503,json:async()=>({error:'compute_service_unavailable'})};
+    return {ok:true,json:async()=>({backend_requested:'rocm',backend_used:'amd_rocm',fallback_used:false,
+      result:{values:result},execution_metadata:{device_name:'AMD test device',rocm_version:'test'}})};
+  };
+  await worker.onmessage({data:{type:'tick',hours:2}});
+  assert.equal(worker.messages.at(-1).type,'view');
+  assert.equal(worker.messages.at(-1).execution.backend,'cpu');
+  assert.equal(worker.messages.at(-1).execution.requestedBackend,'rocm');
+  assert.equal(worker.messages.at(-1).execution.fallbackUsed,true);
+  assert.match(worker.messages.at(-1).execution.fallbackReason,/compute_service_unavailable/);
   await worker.onmessage({data:{type:'snapshot'}});
-  assert.deepEqual(worker.messages.at(-1).state,beforeFailure,'failed AMD execution leaves the Product simulation state unchanged');
+  assert.deepEqual(worker.messages.at(-1).state,expectedCpu.snapshot(),'the full requested interval is recalculated on CPU after a later GPU failure');
+});
+
+test('Product worker routes the same livestock batch through CUDA when selected',async t=>{
+  const originalSelf=globalThis.self,originalFetch=globalThis.fetch;
+  t.after(()=>{globalThis.self=originalSelf;globalThis.fetch=originalFetch;});
+  const worker={messages:[],postMessage(message){this.messages.push(message);}};
+  globalThis.self=worker;
+  await import(`../src/client/worker.js?cuda-product-test=${Math.random()}`);
+  await worker.onmessage({data:{type:'reset',seed:2026,count:3}});
+  const before=worker.messages.at(-1).state,expected=FarmEngine.from(before);expected.tick(1);
+  let requested;
+  globalThis.fetch=async(url,options)=>{
+    assert.equal(url,'/api/compute/livestock-metabolism');
+    const input=JSON.parse(options.body);requested=input.backend;
+    const values=[];
+    for(let index=0;index<input.count;index++){
+      const [weight,energy,intake,resting]=input.values.slice(index*4,index*4+4);
+      values.push(Math.max(200,weight+(intake-5.3*(weight/360)/24)*.22),Math.max(0,Math.min(100,energy+(resting!==0?5:intake*4-1.5))));
+    }
+    return {ok:true,json:async()=>({backend_requested:'cuda',backend_selected:'cuda',backend_used:'cuda',fallback_used:false,
+      result:{values},execution_metadata:{device_name:'NVIDIA test device',cuda_version:'test CUDA'}})};
+  };
+  await worker.onmessage({data:{type:'setBackend',backend:'cuda'}});
+  await worker.onmessage({data:{type:'tick',hours:1}});
+  assert.equal(requested,'cuda');
+  assert.equal(worker.messages.at(-1).execution.backend,'cuda');
+  await worker.onmessage({data:{type:'snapshot'}});
+  const actual=worker.messages.at(-1).state;
+  for(let index=0;index<3;index++){
+    assert.equal(actual.animals[index].weight,expected.state.animals[index].weight);
+    assert.equal(actual.animals[index].energy,expected.state.animals[index].energy);
+  }
 });
