@@ -8,7 +8,7 @@ The Apache License below applies to project code and does not override third-par
 
 # Third-party data notices
 
-These notices identify third-party datasets redistributed with this project. Dataset licenses do not apply to the project source code or other assets.
+These notices provide selected attribution details for third-party datasets redistributed with this project. For complete source and license metadata, see each dataset's `data/**/manifest.json`. Dataset licenses do not apply to the project source code or other assets.
 
 ## A dataset on the ingestive behaviour of grazing ruminants collated from the literature
 
