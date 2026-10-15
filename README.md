@@ -135,6 +135,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `docs/registro-desfecho.md` and `tests/outcome-record.test.js` — outcome contract, limits, and review/consent/comparability checks
 - `data/usda-cper/period.csv` and `daily.csv` — public-domain yearling-steer ADG-by-period and daily grazing observations from USDA/CPER; used for read-only exploration, not engine calibration
 - `data/perea-rangeland-behavior/` — Figshare v2 behavior labels and source README, CC BY 4.0; audit records repeated animal/timestamp rows and keeps this sample separate from USDA/CPER
+- `THIRD-PARTY-NOTICES.md` — required attribution and license terms for redistributed datasets
 - `data/usda-cper/manifest.json` — DOI, license, direct source URLs, and pinned SHA-256 checksums for both data tables and dictionaries
 - `data/usda-grasscast/` and `scripts/audit_usda_grasscast.py` — public CPER/Grass-Cast historical gain, ANPP, NDVI files with pinned checksums; summaries remain group/site-level and separate from the individual 2019–2020 CPER cohort (`npm run audit:usda-grasscast`)
 - `data/mendeley-nellore-feedlot/` — public CC BY 4.0 workbook and SHA-256 provenance manifest for a separate adult feedlot cohort

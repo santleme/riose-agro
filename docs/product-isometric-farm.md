@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Terrain and ground | `grass-light`, `grass-mid`, `soil-dry`, `soil-damp`; `pasture.grass.medium.tile-01`, `pasture.grass.native.imagegen.v1`, `terrain.soil.dry.imagegen.v1`, `terrain.mud.imagegen.v1` | Ground cells and meadow/soil variation |
 | Fences and gates | `fence.wood.modular.straight.ne.v1`, `fence.wood.gate.closed.ne.v1`, `fence.wire.wood-post.imagegen.v1`, `fence.gate.wood.imagegen.v1` | Grid-edge boundaries, gates and corral edges |
-| Trees and vegetation | `shade-tree`, `fruit-tree`, `shrub`, `vegetation.tree.shade.imagegen.v1` | Orchard clusters, shelter rows, pond banks and edge dressing |
+| Trees and vegetation | `shade-tree`, `shrub`, `vegetation.tree.shade.imagegen.v1` | Shelter rows, pond banks and edge dressing |
 | Water | `water.pond.imagegen.v1`, `water.trough.round.imagegen.v1`, `water.reservoir.imagegen.v1`, `water.trough.cattle.galvanized.01` | Selectable pond, pasture trough and service water |
 | Buildings and corrals | `building.farmhouse.imagegen.v1`, `building.shed.imagegen.v1`, `building.workshop.imagegen.v1`, `corral.wood.standard.imagegen.v1`, handling chute and alley | Farmstead, barn yard and cattle handling |
 | Roads and paths | `road.rural.dirt.imagegen.v1`, `road-straight`, `road-turn` | Curved route connectors layered over terrain cells |

@@ -1700,10 +1700,10 @@
   ],
   "processing": {
     "sourceCount": 28,
-    "inputFileCount": 48,
-    "elapsedSeconds": 0.025229,
+    "inputFileCount": 46,
+    "elapsedSeconds": 0.070092,
     "elapsedTimeKind": "observed_wall_clock_seconds",
-    "componentAssessmentCount": 7
+    "componentAssessmentCount": 6
   },
   "componentAssessments": [
     {
@@ -1995,46 +1995,6 @@
         "docs/evidence/usda-cper-ltgi-audit.json",
         "experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json",
         "experiments/diagnostics/adg/cper-internal-cv-2026-10.json"
-      ]
-    },
-    {
-      "id": "xgain-cattle-hourly-behavior",
-      "module": "behavior_descriptive_profiles",
-      "decision": "CONDITIONAL",
-      "source": {
-        "doi": "10.5281/zenodo.15600573",
-        "manifest": "data/xgain-cattle-behavior/manifest.json",
-        "quality": "docs/evidence/xgain-hourly-behavior-quality-2026-10.json",
-        "access": "public_anonymous_downloaded_and_md5_verified",
-        "license": "Zenodo metadata says CC BY 4.0; embedded README says CC BY-NC (conflict)",
-        "reuseStatus": "not cleared for commercial training"
-      },
-      "population": "10 adult lactating Holstein cows with pasture access at ILVO, Belgium.",
-      "target": "Hourly counts of one-minute classifier outputs for grazing, ruminating, resting, and other activity; not human reference labels.",
-      "groups": [
-        "animal_id"
-      ],
-      "repeatedDimensions": [
-        "hour",
-        "calendar_day"
-      ],
-      "metrics": {
-        "records": 5760,
-        "animals": 10,
-        "hoursPerAnimal": 576,
-        "missingValues": 0,
-        "duplicateAnimalHourKeys": 0,
-        "predictiveMetrics": "not_available; no independent human reference outcomes in archive"
-      },
-      "limitations": [
-        "The released outcomes are decision-tree predictions; raw IMU and human-reference labels are absent.",
-        "License conflict means commercial training is not cleared.",
-        "Source time zone is unspecified; preserve timestamps as naive local time.",
-        "Descriptive profiles and ingestion tests only; no classifier validation, DMI, or ADG assessment."
-      ],
-      "references": [
-        "data/xgain-cattle-behavior/manifest.json",
-        "docs/evidence/xgain-hourly-behavior-quality-2026-10.json"
       ]
     }
   ]

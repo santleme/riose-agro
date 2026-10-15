@@ -16,27 +16,27 @@ const [scene, fixtureConfig, sourceManifest, renderManifest] = await Promise.all
   readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8').then(JSON.parse),
 ]);
 
-test('audits every image asset referenced by the current benchmark scene', () => {
+test('the current benchmark scene uses only released project-owned runtime assets', () => {
   const assets = classifyBenchmarkSceneAssets(scene, sourceManifest, renderManifest);
   const byStatus = assets.reduce((groups, asset) => ((groups[asset.classification] ??= []).push(asset), groups), {});
 
   assert.equal(assets.find(asset => asset.assetId === 'nelore-adult')?.classification, 'APPROVED');
   assert.equal(assets.find(asset => asset.assetId === 'nelore-adult-low')?.classification, 'APPROVED');
-  assert.ok(byStatus.REVIEW?.length > 0);
-  assert.ok(byStatus.UNRESOLVED?.length > 0);
+  assert.equal(byStatus.REVIEW?.length ?? 0, 0);
+  assert.equal(byStatus.UNRESOLVED?.length ?? 0, 0);
   assert.equal(byStatus.REJECTED?.length ?? 0, 0);
 });
 
-test('classifies eager legacy image and atlas loads separately from scene draws', () => {
+test('legacy image paths are not classified as runtime release inputs', () => {
   const resources = classifyLegacyBenchmarkImageResources(sourceManifest, renderManifest);
   const byId = new Map(resources.map(resource => [resource.resourceId, resource]));
 
   assert.equal(byId.get('nelore-adult')?.classification, 'APPROVED');
-  assert.equal(byId.get('farm')?.classification, 'UNRESOLVED');
-  assert.equal(byId.get('handling-review')?.classification, 'REVIEW');
-  assert.equal(byId.get('dairy')?.classification, 'REVIEW');
-  assert.ok(resources.some(resource => resource.classification === 'REVIEW'));
-  assert.ok(resources.some(resource => resource.classification === 'UNRESOLVED'));
+  assert.equal(byId.get('farm-starter-atlas')?.classification, 'UNRESOLVED');
+  assert.equal(byId.get('handling-review-atlas-v1')?.classification, 'UNRESOLVED');
+  assert.equal(byId.has('dairy-heifer'), false, 'retired direct-image IDs are not exposed as release resources');
+  assert.equal(byId.has('dairy-activity-collar'), false, 'retired direct-image IDs are not exposed as release resources');
+  assert.ok(resources.some(resource => resource.resourceId === 'synthetic-release' && resource.classification === 'APPROVED'));
 });
 
 test('builds an approved-only fixture while preserving simulation, projection, and culling geometry', () => {
@@ -53,8 +53,7 @@ test('builds an approved-only fixture while preserving simulation, projection, a
   assert.deepEqual(fixture.scene.prefabs, []);
   assert.deepEqual(fixture.scene.entities, []);
   assert.deepEqual(fixture.scene.terrainTiles, []);
-  assert.ok(fixture.excludedSceneAssets.some(asset => asset.classification === 'REVIEW'));
-  assert.ok(fixture.excludedSceneAssets.some(asset => asset.classification === 'UNRESOLVED'));
+  assert.ok(fixture.excludedSceneAssets.every(asset => asset.classification === 'APPROVED'));
   assert.deepEqual(scene, original, 'building the fixture does not mutate the product/source scene');
 });
 

@@ -11,3 +11,6 @@ This folder is the review and production workspace for the livestock visual syst
 - `approved/` and `atlases/` remain empty of production assets until the art, technical, and provenance gates pass.
 
 Candidate PNGs are not wired into the simulator. Do not promote an item based only on schema, alpha-channel presence, or appearance in a composed preview. See [`docs/asset-pipeline/production-workflow.md`](../docs/asset-pipeline/production-workflow.md) and [`docs/art/asset-quality-standard.md`](../docs/art/asset-quality-standard.md).
+# Runtime release assets
+
+`synthetic/runtime/` contains project-authored geometric sprite sources for public runtime use. `manifests/actiii-release-v1.json` records each source and release basis. The candidate catalogs remain authoring inputs and are excluded from the public runtime asset set.

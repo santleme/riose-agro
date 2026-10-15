@@ -6,34 +6,23 @@
     "verification": "Copied atlas SHA-256 values match the source files. Asset review joins the semantic manifest by ID; unlinked runtime tiles remain UNRESOLVED."
   },
   "atlases": {
-    "farm": "/graphics-poc/assets/farm-starter-atlas.png",
-    "handling-review": "/graphics-poc/assets/handling-review-atlas-v1.png",
-    "environment-review": "/graphics-poc/assets/main-composer/environment-review-atlas-v1.png",
-    "infrastructure-review": "/graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png",
-    "technology-review": "/graphics-poc/assets/main-composer/technology-review-atlas-v1.png",
-    "animals-review": "/graphics-poc/assets/main-composer/animals-review-atlas-v1.png",
-    "dairy": "/graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png"
+    "synthetic-release": "/assets/atlas/synthetic-release-atlas-v1.png"
   },
   "atlasSha256": {
-    "farm": "07597a5daf37a56c869badd9356aedc135b1a67cd079ae49ae415c3cd5b9bd14",
-    "handling-review": "16ef1b2f852468ab2dcc9265147d2dac4a048644bf4cd878725069ca4a2180c0",
-    "environment-review": "cedc123183a779addaf68ecd939a6ae8c818c69c58b8e1fa789baf0c15b264ec",
-    "infrastructure-review": "f5aa03d2fe2e936a9e320a8b5426f3189017f70636c6bdaf77557393c7f9d98d",
-    "technology-review": "e14fccdabb06c35d201ab094fc1a50a4e5d371cbf127b446c97ba8387e260963",
-    "animals-review": "8c942056c9d94aa45b83c9c22701dfc4beee2454d5858b521d9cedcba4bab141",
-    "dairy": "814024e40ab718e0edeadb451f3cd3ef13e7ad9e607e693faedd1fcd2228adca"
+    "synthetic-release": "f7a9c34cf8cf1a4a90b2168de9f6bf976e243009fd35281d2804ce3cbb12f072"
   },
-  "unresolvedAssetIds": ["fruit-tree", "grain-silo"],
+  "unresolvedAssetIds": [],
   "assets": [
     {
       "assetId": "building-farmhouse-imagegen-v1",
       "category": "building",
-      "atlasKey": "infrastructure-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 8,
-        "w": 547,
-        "h": 414
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -47,27 +36,33 @@
         1,
         1
       ],
-      "scale": 0.30917874396135264,
+      "scale": 0.8958333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "building.farmhouse.imagegen.v1",
-      "sourceFile": "assets/candidates/infrastructure/building-farmhouse-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-farmhouse-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-farmhouse-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "building-shed-imagegen-v1",
       "category": "building",
-      "atlasKey": "infrastructure-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 563,
-        "y": 8,
-        "w": 505,
-        "h": 407
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -81,27 +76,33 @@
         1,
         1
       ],
-      "scale": 0.3144963144963145,
+      "scale": 0.8958333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "building.shed.imagegen.v1",
-      "sourceFile": "assets/candidates/infrastructure/building-shed-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-shed-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-shed-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "building-workshop-imagegen-v1",
       "category": "building",
-      "atlasKey": "infrastructure-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 430,
-        "w": 485,
-        "h": 392
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -115,27 +116,33 @@
         1,
         1
       ],
-      "scale": 0.32653061224489793,
+      "scale": 0.8958333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "building.workshop.imagegen.v1",
-      "sourceFile": "assets/candidates/infrastructure/building-workshop-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-workshop-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-workshop-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "corral-wood-standard-imagegen-v1",
       "category": "corral",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 8,
-        "w": 580,
-        "h": 371
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -149,27 +156,33 @@
         1,
         1
       ],
-      "scale": 0.24797843665768193,
+      "scale": 0.6770833333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "corral.wood.standard.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/corral-wood-standard-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.corral-wood-standard-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/corral-wood-standard-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-barn",
       "category": "building",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 3087,
-        "w": 843,
-        "h": 514
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 896,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -184,27 +197,33 @@
         2,
         2
       ],
-      "scale": 0.26459143968871596,
+      "scale": 0.9791666666666666,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.barn.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-barn.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-barn.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-barn.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-girolando-cow",
       "category": "livestock",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 8,
-        "w": 1164,
-        "h": 831
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 896,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -219,27 +238,33 @@
         1,
         1
       ],
-      "scale": 0.05535499398315283,
+      "scale": 0.3125,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-girolando-cow.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-girolando-cow.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-girolando-cow.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-heifer-calf",
       "category": "livestock",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1103,
-        "y": 1637,
-        "w": 909,
-        "h": 750
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 896,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -254,27 +279,33 @@
         1,
         1
       ],
-      "scale": 0.07733333333333334,
+      "scale": 0.3958333333333333,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-heifer-calf.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-heifer-calf.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-heifer-calf.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-holstein-cow",
       "category": "livestock",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 1637,
-        "w": 1087,
-        "h": 771
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 896,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -289,27 +320,33 @@
         1,
         1
       ],
-      "scale": 0.05966277561608301,
+      "scale": 0.3125,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/animals/dairy-holstein-cow.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-milk-chilling-tank",
       "category": "building",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 859,
-        "y": 3087,
-        "w": 580,
-        "h": 439
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -324,27 +361,33 @@
         2,
         2
       ],
-      "scale": 0.1867881548974943,
+      "scale": 0.5625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.milk.chilling.tank.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milk-chilling-tank.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-milk-chilling-tank.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-milk-chilling-tank.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-milking-parlor",
       "category": "building",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1136,
-        "y": 2416,
-        "w": 894,
-        "h": 559
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -359,27 +402,33 @@
         2,
         2
       ],
-      "scale": 0.24329159212880144,
+      "scale": 0.9791666666666666,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.milking.parlor.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-milking-parlor.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-milking-parlor.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-milking-parlor.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "dairy-waiting-pen",
       "category": "building",
-      "atlasKey": "dairy",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 3609,
-        "w": 688,
-        "h": 424
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -394,27 +443,33 @@
         2,
         2
       ],
-      "scale": 0.2358490566037736,
+      "scale": 0.8541666666666666,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "dairy.waiting.pen.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/assets/infrastructure/dairy-waiting-pen.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-waiting-pen.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-waiting-pen.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "ImageGen candidate; original preserved, sprite cropped from isolated component, alpha cleaned with soft edges retained."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "feed-salt-roofed-imagegen-v1",
       "category": "feed",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 387,
-        "w": 279,
-        "h": 314
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -428,27 +483,33 @@
         1,
         1
       ],
-      "scale": 0.2929936305732484,
+      "scale": 0.6770833333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "feed.salt.roofed.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/feed-salt-roofed-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.feed-salt-roofed-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/feed-salt-roofed-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "feed-trough-hay-imagegen-v1",
       "category": "feed",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1106,
-        "y": 387,
-        "w": 423,
-        "h": 261
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -462,27 +523,33 @@
         1,
         1
       ],
-      "scale": 0.3524904214559387,
+      "scale": 0.6770833333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "feed.trough.hay.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/feed-trough-hay-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.feed-trough-hay-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/feed-trough-hay-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "fence-gate-wood-imagegen-v1",
       "category": "fence",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 295,
-        "y": 387,
-        "w": 379,
-        "h": 303
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -496,27 +563,33 @@
         1,
         1
       ],
-      "scale": 0.19141914191419143,
+      "scale": 0.4791666666666667,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "fence.gate.wood.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/fence-gate-wood-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.fence-gate-wood-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/fence-gate-wood-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "fence-wire-wood-post-imagegen-v1",
       "category": "fence",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 682,
-        "y": 387,
-        "w": 416,
-        "h": 299
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -530,27 +603,33 @@
         1,
         1
       ],
-      "scale": 0.1939799331103679,
+      "scale": 0.4791666666666667,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "fence.wire.wood-post.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/fence-wire-wood-post-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.fence-wire-wood-post-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/fence-wire-wood-post-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "grass-light",
       "category": "terrain",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
+        "atlas": "synthetic-release",
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 256
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -564,23 +643,33 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.grass-light.v1",
+      "sourceFile": "assets/synthetic/runtime/grass-light.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "grass-mid",
       "category": "terrain",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 384,
+        "atlas": "synthetic-release",
+        "x": 192,
         "y": 0,
-        "w": 384,
-        "h": 256
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -594,23 +683,33 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.grass-mid.v1",
+      "sourceFile": "assets/synthetic/runtime/grass-mid.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "handling-chute-cattle-imagegen-v1",
       "category": "corral",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1045,
-        "y": 8,
-        "w": 369,
-        "h": 349
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -624,27 +723,33 @@
         1,
         1
       ],
-      "scale": 0.2636103151862464,
+      "scale": 0.6770833333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "handling.chute.cattle.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/handling-chute-cattle-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.handling-chute-cattle-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/handling-chute-cattle-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "livestock-nelore-calf-idle-imagegen-v1",
       "category": "livestock",
-      "atlasKey": "animals-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1117,
-        "y": 1834,
-        "w": 981,
-        "h": 751
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -658,27 +763,33 @@
         1,
         1
       ],
-      "scale": 0.07723035952063914,
+      "scale": 0.3958333333333333,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "livestock.nelore.calf.idle.imagegen.v1",
-      "sourceFile": "assets/candidates/livestock/livestock-nelore-calf-idle-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-calf-idle-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/livestock-nelore-calf-idle-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "livestock-nelore-cow-idle-imagegen-v1",
       "category": "livestock",
-      "atlasKey": "animals-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 942,
-        "w": 1219,
-        "h": 884
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -692,27 +803,33 @@
         1,
         1
       ],
-      "scale": 0.06561085972850679,
+      "scale": 0.3958333333333333,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "livestock.nelore.cow.idle.imagegen.v1",
-      "sourceFile": "assets/candidates/livestock/livestock-nelore-cow-idle-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-cow-idle-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/livestock-nelore-cow-idle-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "livestock-nelore-heifer-idle-imagegen-v1",
       "category": "livestock",
-      "atlasKey": "animals-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 1834,
-        "w": 1101,
-        "h": 809
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 512,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -726,27 +843,33 @@
         1,
         1
       ],
-      "scale": 0.07169344870210136,
+      "scale": 0.3958333333333333,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "livestock.nelore.heifer.idle.imagegen.v1",
-      "sourceFile": "assets/candidates/livestock/livestock-nelore-heifer-idle-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-heifer-idle-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/livestock-nelore-heifer-idle-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "road-straight",
       "category": "infrastructure",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 0,
-        "y": 256,
-        "w": 384,
-        "h": 256
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 0,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -760,23 +883,33 @@
         2,
         1
       ],
-      "scale": 0.2421875,
+      "scale": 0.5,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.road-straight.v1",
+      "sourceFile": "assets/synthetic/runtime/road-straight.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "road-turn",
       "category": "infrastructure",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 384,
-        "y": 256,
-        "w": 384,
-        "h": 256
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 0,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -790,23 +923,33 @@
         2,
         1
       ],
-      "scale": 0.2421875,
+      "scale": 0.5,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.road-turn.v1",
+      "sourceFile": "assets/synthetic/runtime/road-turn.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "shade-tree",
       "category": "vegetation",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
+        "atlas": "synthetic-release",
         "x": 0,
-        "y": 512,
-        "w": 384,
-        "h": 256
+        "y": 128,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -820,23 +963,33 @@
         1,
         1
       ],
-      "scale": 0.5,
+      "scale": 0.5833333333333334,
       "blocking": true,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.shade-tree.v1",
+      "sourceFile": "assets/synthetic/runtime/shade-tree.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "shrub",
       "category": "vegetation",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 768,
-        "y": 512,
-        "w": 384,
-        "h": 256
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 128,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -850,23 +1003,33 @@
         1,
         1
       ],
-      "scale": 0.5,
+      "scale": 0.5833333333333334,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.shrub.v1",
+      "sourceFile": "assets/synthetic/runtime/shrub.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "soil-dry",
       "category": "terrain",
-      "atlasKey": "farm",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 768,
+        "atlas": "synthetic-release",
+        "x": 384,
         "y": 0,
-        "w": 384,
-        "h": 256
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -880,23 +1043,33 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
-      "reviewStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceReview": null,
-      "manifestSource": "public/assets/manifest.json"
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.soil-dry.v1",
+      "sourceFile": "assets/synthetic/runtime/soil-dry.png",
+      "sourceReview": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "technology-gateway-antenna-imagegen-v1",
       "category": "technology",
-      "atlasKey": "technology-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 8,
-        "w": 320,
-        "h": 507
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -910,27 +1083,33 @@
         1,
         1
       ],
-      "scale": 0.16962524654832348,
+      "scale": 0.40625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "technology.gateway.antenna.imagegen.v1",
-      "sourceFile": "assets/candidates/technology/technology-gateway-antenna-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-gateway-antenna-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-gateway-antenna-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "technology-monitor-station-imagegen-v1",
       "category": "technology",
-      "atlasKey": "technology-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 834,
-        "y": 8,
-        "w": 318,
-        "h": 502
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -944,27 +1123,33 @@
         1,
         1
       ],
-      "scale": 0.17131474103585656,
+      "scale": 0.40625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "technology.monitor.station.imagegen.v1",
-      "sourceFile": "assets/candidates/technology/technology-monitor-station-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-monitor-station-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-monitor-station-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "technology-scale-electronic-full-imagegen-v1",
       "category": "technology",
-      "atlasKey": "technology-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1473,
-        "y": 8,
-        "w": 485,
-        "h": 392
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -978,27 +1163,33 @@
         1,
         1
       ],
-      "scale": 0.2193877551020408,
+      "scale": 0.40625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "technology.scale.electronic.full.imagegen.v1",
-      "sourceFile": "assets/candidates/technology/technology-scale-electronic-full-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-scale-electronic-full-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-scale-electronic-full-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "technology-traceability-system-imagegen-v1",
       "category": "technology",
-      "atlasKey": "technology-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 336,
-        "y": 8,
-        "w": 490,
-        "h": 504
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1012,27 +1203,33 @@
         1,
         1
       ],
-      "scale": 0.17063492063492064,
+      "scale": 0.40625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "technology.traceability.system.imagegen.v1",
-      "sourceFile": "assets/candidates/technology/technology-traceability-system-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-traceability-system-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-traceability-system-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "vegetation-tree-shade-imagegen-v1",
       "category": "vegetation",
-      "atlasKey": "environment-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 8,
-        "y": 8,
-        "w": 492,
-        "h": 432
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1046,27 +1243,33 @@
         1,
         1
       ],
-      "scale": 0.2962962962962963,
+      "scale": 0.5833333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "vegetation.tree.shade.imagegen.v1",
-      "sourceFile": "assets/candidates/environment/vegetation-tree-shade-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vegetation-tree-shade-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vegetation-tree-shade-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "vehicle-pickup-rural-imagegen-v1",
       "category": "vehicle",
-      "atlasKey": "infrastructure-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 902,
-        "y": 430,
-        "w": 497,
-        "h": 287
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1080,27 +1283,33 @@
         1,
         1
       ],
-      "scale": 0.445993031358885,
+      "scale": 0.8958333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "vehicle.pickup.rural.imagegen.v1",
-      "sourceFile": "assets/candidates/infrastructure/vehicle-pickup-rural-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vehicle-pickup-rural-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vehicle-pickup-rural-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "vehicle-tractor-imagegen-v1",
       "category": "vehicle",
-      "atlasKey": "infrastructure-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 501,
-        "y": 430,
-        "w": 393,
-        "h": 318
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 768,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1114,27 +1323,33 @@
         1,
         1
       ],
-      "scale": 0.4025157232704403,
+      "scale": 0.8958333333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "vehicle.tractor.imagegen.v1",
-      "sourceFile": "assets/candidates/infrastructure/vehicle-tractor-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vehicle-tractor-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vehicle-tractor-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "water-pond-imagegen-v1",
       "category": "water",
-      "atlasKey": "environment-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1500,
-        "y": 8,
-        "w": 444,
-        "h": 320
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1148,27 +1363,33 @@
         1,
         1
       ],
-      "scale": 0.2875,
+      "scale": 0.6770833333333334,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "water.pond.imagegen.v1",
-      "sourceFile": "assets/candidates/environment/water-pond-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.water-pond-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/water-pond-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     },
     {
       "assetId": "water-trough-round-imagegen-v1",
       "category": "water",
-      "atlasKey": "handling-review",
+      "atlasKey": "synthetic-release",
       "frame": {
-        "x": 1537,
-        "y": 387,
-        "w": 462,
-        "h": 237
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 640,
+        "w": 192,
+        "h": 128
       },
       "anchor": {
         "x": 0.5,
@@ -1182,17 +1403,22 @@
         1,
         1
       ],
-      "scale": 0.3459915611814346,
+      "scale": 0.5625,
       "blocking": false,
-      "reviewStatus": "REVIEW",
-      "sourceSemanticId": "water.trough.round.imagegen.v1",
-      "sourceFile": "assets/candidates/handling/water-trough-round-imagegen-v1.png",
+      "reviewStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.water-trough-round-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/water-trough-round-imagegen-v1.png",
       "sourceReview": {
-        "art": "pending",
+        "art": "pass",
         "technical": "pass",
-        "decisionNote": "Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
       },
-      "manifestSource": "public/assets/manifest.json"
+      "manifestSource": "/assets/manifests/actiii-release-v1.json",
+      "sourceStatus": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      }
     }
   ]
 }

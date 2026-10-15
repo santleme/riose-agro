@@ -24,6 +24,52 @@ test('shared Composer tools remain available in both production-system scenes', 
   assert.equal(toolAvailableInSystem('dairy', 'beef'), false);
 });
 
+test('saved dairy scenes migrate retired asset IDs before they can reach a renderer', () => {
+  const saved = structuredClone(dairyScene);
+  saved.assets.push({assetId: 'dairy-heifer', reviewStatus: 'REVIEW'});
+  saved.assets.push({assetId: 'dairy-activity-collar', reviewStatus: 'UNRESOLVED'});
+  const heiferPrefab = structuredClone(saved.prefabs[0]);
+  heiferPrefab.prefabId = 'old-heifer'; heiferPrefab.assetId = 'dairy-heifer';
+  saved.prefabs.push(heiferPrefab);
+  const collarPrefab = structuredClone(saved.prefabs[1]);
+  collarPrefab.prefabId = 'old-collar'; collarPrefab.assetId = 'dairy-activity-collar';
+  saved.prefabs.push(collarPrefab);
+  const heiferEntity = structuredClone(saved.entities.find(entity => entity.asset?.assetId));
+  heiferEntity.entityId = 'old-heifer-entity'; heiferEntity.asset.assetId = 'dairy-heifer';
+  saved.entities.push(heiferEntity);
+  const collarEntity = structuredClone(heiferEntity);
+  collarEntity.entityId = 'old-collar-entity'; collarEntity.asset.assetId = 'dairy-activity-collar';
+  saved.entities.push(collarEntity);
+  const collarTile = structuredClone(saved.terrainTiles[0]);
+  collarTile.tileId = 'retired-collar-tile'; collarTile.assetId = 'dairy-activity-collar';
+  saved.terrainTiles.push(collarTile);
+
+  normalizeSceneAssetReferences(saved, renderManifest, assetSourceManifest);
+
+  const allAssetIds = [
+    ...saved.assets.map(asset => asset.assetId),
+    ...saved.prefabs.map(prefab => prefab.assetId),
+    ...saved.entities.map(entity => entity.asset?.assetId),
+    ...saved.terrainTiles.map(tile => tile.assetId),
+  ];
+  assert.equal(allAssetIds.includes('dairy-heifer'), false);
+  assert.equal(allAssetIds.includes('dairy-activity-collar'), false);
+  assert.ok(allAssetIds.includes('dairy-holstein-cow'), 'saved heifer references move to the released Holstein visual');
+  assert.equal(saved.prefabs.some(prefab => prefab.prefabId === 'old-collar'), false);
+  assert.equal(saved.entities.some(entity => entity.entityId === 'old-collar-entity'), false);
+  assert.equal(saved.terrainTiles.some(tile => tile.tileId === 'retired-collar-tile'), false);
+  assert.equal(validate(saved), true, JSON.stringify(validate.errors));
+});
+
+test('dairy toolbar only exposes assets available in the renderer manifest', async () => {
+  const html = await readFile(new URL('../graphics-poc/index.html', import.meta.url), 'utf8');
+  const toolIds = [...html.matchAll(/data-tool="([^"]+)"/g)].map((match) => match[1]);
+  const released = new Set(renderManifest.assets.map(asset => asset.assetId));
+  assert.ok(toolIds.every(assetId => released.has(assetId)), 'every exposed placement tool has a release renderer entry');
+  assert.equal(toolIds.includes('dairy-heifer'), false);
+  assert.equal(toolIds.includes('dairy-activity-collar'), false);
+});
+
 test('screen-space LOD distance is measured from the viewport center, not camera translation', () => {
   assert.equal(distanceToViewportCenter(367.5, 189, 735, 378), 0);
   assert.equal(distanceToViewportCenter(0, 0, 735, 378), Math.hypot(367.5, 189));
@@ -43,7 +89,7 @@ test('renderer-independent scene schema supports beef and in-progress dairy scen
     assert.equal(candidate.terrainTiles.length, 36 * 24);
     assert.equal(candidate.provenance.sourceId, 'scenario-composer-v1');
     assert.match(candidate.provenance.sourceCommit, /^[a-f0-9]{40}$/);
-    assert.equal(candidate.assets.every(asset => ['APPROVED', 'REVIEW', 'UNRESOLVED'].includes(asset.reviewStatus)), true);
+    assert.equal(candidate.assets.every(asset => ['APPROVED', 'REVIEW', 'UNRESOLVED', 'RELEASED'].includes(asset.reviewStatus)), true);
   }
   assert.equal(scene.prefabs.length, 219);
   assert.equal(scene.entities.filter(entity => entity.kind === 'animal').length, 0, 'the Worker provides operational beef animals without visual duplicates');
@@ -276,8 +322,8 @@ test('terrain render order follows isometric depth and preserves authored source
 test('checked-in beef and dairy scenes are reproducible adaptations of pinned Composer exports', async () => {
   const [beefSource, dairySource, semanticManifest, dairyManifest] = await Promise.all([
     ...['beef', 'dairy'].map(name => readFile(new URL(`../graphics-poc/source/main-composer-v1/${name}.json`, import.meta.url), 'utf8').then(JSON.parse)),
-    readFile(new URL('../assets/manifests/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
-    readFile(new URL('../public/assets/modules/livestock-dairy/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+    readFile(new URL('../assets/manifests/actiii-release-v1.json', import.meta.url), 'utf8').then(JSON.parse),
+    Promise.resolve({assets: [], atlases: {}}),
   ]);
   const enrichedRendererManifest = enrichRendererManifest(renderManifest, {semanticManifest, dairyManifest});
   assert.deepEqual(adaptMainComposerScene(beefSource, enrichedRendererManifest), scene);
@@ -291,21 +337,21 @@ test('checked-in beef and dairy scenes are reproducible adaptations of pinned Co
 
 test('scene edits resolve canonical asset references and preserve review status in the shared manifest contract', () => {
   const scene = structuredClone(dairyScene);
-  scene.entities.push({entityId: 'heifer-tool-test', kind: 'animal', position: {x: 24.5, y: 8.5, unit: 'grid-cell'}, asset: sceneAssetReference('dairy-heifer', renderManifest, assetSourceManifest), state: {stateId: 'idle'}, representationMode: 'sampled-miniature'});
+  scene.entities.push({entityId: 'heifer-tool-test', kind: 'animal', position: {x: 24.5, y: 8.5, unit: 'grid-cell'}, asset: sceneAssetReference('dairy-heifer-calf', renderManifest, assetSourceManifest), state: {stateId: 'idle'}, representationMode: 'sampled-miniature'});
   scene.prefabs.push(
     {prefabId: 'headquarters-tool-test', assetId: 'farmhouse', position: {x: 0, y: 0, unit: 'grid-cell'}, footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: true},
-    {prefabId: 'fruit-tree-legacy', assetId: 'fruit-tree', position: {x: 1, y: 0, unit: 'grid-cell'}, footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: false},
+    {prefabId: 'shade-tree', assetId: 'shade-tree', position: {x: 1, y: 0, unit: 'grid-cell'}, footprint: {columns: 1, rows: 1}, layer: 'infrastructure', state: {stateId: 'default'}, blocking: false},
   );
   normalizeSceneAssetReferences(scene, renderManifest, assetSourceManifest);
   assert.equal(validate(scene), true, JSON.stringify(validate.errors));
   const editedHeifer = scene.entities.find(entity => entity.entityId === 'heifer-tool-test');
   assert.equal(scene.prefabs.find(prefab => prefab.prefabId === 'headquarters-tool-test')?.assetId, 'building-farmhouse-imagegen-v1', 'legacy tool IDs resolve to current semantic Composer IDs');
-  assert.equal(scene.assets.find(asset => asset.assetId === 'fruit-tree')?.reviewStatus, 'UNRESOLVED', 'unmapped legacy art stays explicitly unresolved');
-  assert.equal(editedHeifer.asset.manifestUri, '/graphics-poc/asset-sources.json');
-  assert.equal(editedHeifer.asset.manifestVersion, assetSourceManifest.sourceRevision.commit);
-  assert.equal(editedHeifer.asset.reviewStatus, 'REVIEW');
+  assert.equal(scene.assets.find(asset => asset.assetId === 'shade-tree')?.reviewStatus, 'RELEASED', 'scene IDs resolve to project-owned runtime sprites');
+  assert.equal(editedHeifer.asset.manifestUri, '/graphics-poc/assets/main-composer-render-manifest.json');
+  assert.equal(editedHeifer.asset.manifestVersion, 'main-composer-v1');
+  assert.equal(editedHeifer.asset.reviewStatus, 'RELEASED');
   assert.ok(scene.assets.some(asset => asset.assetId === 'building-farmhouse-imagegen-v1'));
-  assert.ok(scene.assets.some(asset => asset.assetId === 'dairy-heifer' && asset.reviewStatus === 'REVIEW'));
+  assert.ok(scene.assets.some(asset => asset.assetId === 'dairy-heifer-calf' && asset.reviewStatus === 'RELEASED'));
   assert.ok(scene.assets.every(asset => !asset.manifestUri.startsWith('parallel:')));
 });
 
@@ -340,39 +386,36 @@ test('composer palette exposes corral and technology prefabs through the shared 
   assert.ok(assetIds.every(assetId => scene.assets.some(asset => asset.assetId === assetId)));
 });
 
-test('the Graphics Lab serves both editable schema-valid scenes and dairy source art with provenance', async t => {
+test('the Graphics Lab serves editable scenes and only the cleared runtime atlas', async t => {
   const server = createServer(); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
   for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/graphics-poc/assets/main-composer-render-manifest.json', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
+  assert.equal((await fetch(origin + '/assets/manifest.json')).status, 200, 'Graphics Lab can load the cleared runtime manifest');
   assert.match(await (await fetch(origin + '/graphics-poc/index.html')).text(), /id="rotate-selection"/, 'the composer exposes a selected-prefab rotation action');
-  const image = await fetch(origin + '/graphics-poc/assets/nelore-adult-idle-v1.png');
+  const image = await fetch(origin + '/assets/atlas/synthetic-release-atlas-v1.png');
   assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');
   const digest = createHash('sha256').update(Buffer.from(await image.arrayBuffer())).digest('hex');
-  assert.equal(digest, '975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43');
-  for (const file of ['dairy/dairy-holstein-cow.png', 'dairy/dairy-girolando-cow.png', 'dairy/dairy-heifer.png', 'dairy/dairy-heifer-calf.png', 'dairy/dairy-barn.png', 'dairy/dairy-milking-parlor.png', 'dairy/dairy-milk-chilling-tank.png', 'dairy/dairy-waiting-pen.png', 'dairy/dairy-activity-collar.png', 'handling-review-atlas-v1.png']) {
-    const response = await fetch(`${origin}/graphics-poc/assets/${file}`);
-    assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
+  assert.equal(digest, renderManifest.atlasSha256['synthetic-release']);
+  for (const path of ['/graphics-poc/assets/nelore-adult-idle-v1.png', '/graphics-poc/assets/handling-review-atlas-v1.png', '/assets/atlas/farm-starter-atlas.png', '/assets/modules/livestock-dairy/dairy-assets-atlas-v1.png']) {
+    assert.equal((await fetch(origin + path)).status, 404, `${path} is not exposed`);
   }
   for (const [atlasKey, url] of Object.entries(renderManifest.atlases)) {
-    const file = url.replace('/graphics-poc/assets/', ''), response = await fetch(`${origin}${url}`);
+    const file = url, response = await fetch(`${origin}${url}`);
     assert.equal(response.status, 200, file); assert.equal(response.headers.get('content-type'), 'image/png', file);
     const digest = createHash('sha256').update(Buffer.from(await response.arrayBuffer())).digest('hex');
     assert.equal(digest, renderManifest.atlasSha256[atlasKey], `${atlasKey} atlas matches its pinned SHA-256`);
   }
   const provenance = JSON.parse(await readFile(new URL('../graphics-poc/asset-sources.json', import.meta.url), 'utf8'));
-  assert.equal(provenance.sourceRevision.commit, '2a360cd60bfd3f98d598e12ad5774f5ff4bb8fb7');
+  assert.equal(provenance.sourceRevision.commit, 'actiii-release-synthetic-v1');
   assert.ok(provenance.assetSources.every(item => !('sourceWorktree' in item)), 'asset provenance must not depend on a temporary worktree name');
-  const dairySources = provenance.assetSources.filter(item => item.assetId.startsWith('dairy-'));
-  assert.equal(dairySources.length, 9);
-  assert.ok(dairySources.every(item => item.status === 'REVIEW' && /^[a-f0-9]{64}$/.test(item.sha256)));
-  assert.ok(dairySources.every(item => item.sourceManifest === 'public/assets/modules/livestock-dairy/manifest.json'
-    && item.sourceManifestStatus === 'candidate-integration'
-    && item.sourceReview?.art === 'pending' && item.sourceReview?.technical === 'pass'));
-  for (const item of [...dairySources, provenance.assetSources.find(source => source.assetId === 'handling-review-atlas-v1')]) {
-    const bytes = await readFile(new URL(`../graphics-poc/${item.file}`, import.meta.url));
+  assert.equal(provenance.assetSources.length, 60);
+  assert.ok(provenance.assetSources.every(item => item.status === 'RELEASED' && /^[a-f0-9]{64}$/.test(item.sha256)));
+  assert.ok(provenance.assetSources.every(item => item.sourceManifest === '/assets/manifests/actiii-release-v1.json'));
+  for (const item of provenance.assetSources) {
+    const bytes = await readFile(new URL(`../${item.sourceFile}`, import.meta.url));
     assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.assetId);
   }
   assert.equal((await fetch(origin + '/graphics-poc/app.js')).status, 404, 'source modules remain outside the static allowlist');

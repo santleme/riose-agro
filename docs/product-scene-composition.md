@@ -15,7 +15,7 @@ candidate atlases. Their IDs are reserved as future prefab bindings:
 | Terrain and soil | `grass-light`, `grass-mid`, `soil-dry`, `soil-damp` | Blockout ground is composed from canvas geometry, with a visible soil extrusion. |
 | Roads | `road-straight`, `road-turn`, `road-rural-dirt-imagegen-v1` | Logical path-cell routes are connected ground geometry; no candidate road art is loaded. |
 | Fences and gates | `fence-wire-wood-post-imagegen-v1`, `fence-gate-wood-imagegen-v1` | Each fence edge and gate opening is an independent vector geometry entity pending art approval. |
-| Vegetation | `vegetation-tree-shade-imagegen-v1`, `shade-tree`, `fruit-tree`, `shrub` | Reusable `treeCluster` prefab is defined; there is no vegetation in this blockout. |
+| Vegetation | `vegetation-tree-shade-imagegen-v1`, `shade-tree`, `shrub` | Reusable `treeCluster` prefab is defined; there is no vegetation in this blockout. |
 | Water | `water-pond-imagegen-v1`, `water-trough-round-imagegen-v1`, `water-reservoir-imagegen-v1` | Pond footprint uses a simple blue blockout surface, not the review PNG. |
 | Buildings and handling | `building-farmhouse-imagegen-v1`, `building-shed-imagegen-v1`, `building-workshop-imagegen-v1`, `corral-wood-standard-imagegen-v1`, handling alley and chute assets | House and shed footprints use neutral blockout volumes; the working pen is its own zone. |
 | Animals | `nelore-adult` is the approved asset; other listed variants remain in review | Live animals use the approved Nelore atlas frame as separate entities and keep their model IDs and patch fields. |

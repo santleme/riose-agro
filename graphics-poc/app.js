@@ -1,4 +1,4 @@
-import {Application, Assets, CanvasSource, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
+import {Application, Assets, Container, Graphics as PixiGraphicsClass, Rectangle, Sprite, Text as PixiText, Texture} from 'pixi.js';
 import {composePrefabs, distanceToViewportCenter, distributePrefab, intersectsViewport, paintZoneTerrainTiles, placementValidation, projectIso, rotatePrefab, simulationPositionToScene, sortTerrainCellsBackToFront, terrainCells, toolAvailableInSystem, unprojectIso, visualLod, visualUpdateInterval, zoneGridCorners} from './contract.js';
 import {accountAnimalVisibility, assertVisibleAnimalMembership, clusterFarAnimals, selectionForVisualEntry, visualEntryContainsSelection} from './herd-visual-model.js';
 import {normalizeSceneAssetReferences, sceneAssetReference} from './asset-contract.js';
@@ -10,8 +10,6 @@ import {initialGraphicsDomain, loadImageEntriesConcurrently} from './initializat
 const $ = id => document.getElementById(id);
 const sceneUrl = '/graphics-poc/scene.json';
 const dairySceneUrl = '/graphics-poc/scenes/dairy.json';
-const farmAtlasUrl = '/graphics-poc/assets/farm-starter-atlas.png';
-const neloreUrl = '/graphics-poc/assets/nelore-adult-idle-v1.png';
 const frames = {
   'grass-light': {x: 0, y: 0, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'terrain'},
   'grass-mid': {x: 384, y: 0, w: 384, h: 256, anchor: {x: .5, y: .82}, scale: 64 / 384, kind: 'terrain'},
@@ -21,23 +19,19 @@ const frames = {
   'fence-straight': {x: 768, y: 256, w: 384, h: 256, anchor: {x: .5, y: .86}, scale: .22, kind: 'infrastructure'},
   'fence-gate': {x: 1152, y: 256, w: 384, h: 256, anchor: {x: .5, y: .86}, scale: .22, kind: 'infrastructure'},
   'shade-tree': {x: 0, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .22, kind: 'infrastructure'},
-  'fruit-tree': {x: 384, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .2, kind: 'infrastructure'},
   'shrub': {x: 768, y: 512, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .16, kind: 'infrastructure'},
   'pond': {x: 1152, y: 512, w: 384, h: 256, anchor: {x: .5, y: .78}, scale: .24, kind: 'infrastructure'},
   'farmhouse': {x: 0, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .28, kind: 'infrastructure'},
   'farm-shed': {x: 384, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .25, kind: 'infrastructure'},
-  'grain-silo': {x: 768, y: 768, w: 384, h: 256, anchor: {x: .5, y: .9}, scale: .22, kind: 'infrastructure'},
   'nelore-adult': {x: 0, y: 0, w: 1536, h: 1024, anchor: {x: .5, y: 1}, scale: .04, kind: 'livestock'},
   'nelore-adult-low': {x: 0, y: 0, w: 384, h: 256, anchor: {x: .5, y: 1}, scale: .16, kind: 'livestock', lowResolution: true},
   'dairy-holstein-cow': {imageKey: 'dairy-holstein-cow', w: 1087, h: 771, anchor: {x: .5, y: 1}, scale: .045, kind: 'livestock'},
   'dairy-girolando-cow': {imageKey: 'dairy-girolando-cow', w: 1164, h: 831, anchor: {x: .5, y: 1}, scale: .042, kind: 'livestock'},
-  'dairy-heifer': {imageKey: 'dairy-heifer', w: 1070, h: 782, anchor: {x: .5, y: 1}, scale: .04, kind: 'livestock'},
   'dairy-heifer-calf': {imageKey: 'dairy-heifer-calf', w: 909, h: 750, anchor: {x: .5, y: 1}, scale: .032, kind: 'livestock'},
   'dairy-barn': {imageKey: 'dairy-barn', w: 843, h: 514, anchor: {x: .5, y: 1}, scale: .11, kind: 'infrastructure'},
   'dairy-milking-parlor': {imageKey: 'dairy-milking-parlor', w: 894, h: 559, anchor: {x: .5, y: 1}, scale: .09, kind: 'infrastructure'},
   'dairy-milk-chilling-tank': {imageKey: 'dairy-milk-chilling-tank', w: 580, h: 439, anchor: {x: .5, y: 1}, scale: .11, kind: 'infrastructure'},
   'dairy-waiting-pen': {imageKey: 'dairy-waiting-pen', w: 688, h: 424, anchor: {x: .5, y: 1}, scale: .1, kind: 'infrastructure'},
-  'dairy-activity-collar': {imageKey: 'dairy-activity-collar', w: 1120, h: 663, anchor: {x: .5, y: 1}, scale: .045, kind: 'infrastructure'},
   'water-trough': {x: 1537, y: 387, w: 462, h: 237, anchor: {x: .5, y: 1}, scale: .22, kind: 'infrastructure', atlasKey: 'handling'},
   'feed-trough': {x: 1106, y: 387, w: 423, h: 261, anchor: {x: .5, y: 1}, scale: .23, kind: 'infrastructure', atlasKey: 'handling'}
 };
@@ -49,13 +43,6 @@ function image(url) {
   return new Promise((resolve, reject) => {
     const result = new Image(); result.onload = () => resolve(result); result.onerror = reject; result.src = url;
   });
-}
-
-function makeLowResolutionCow(source) {
-  const canvas = document.createElement('canvas'); canvas.width = 384; canvas.height = 256;
-  const context = canvas.getContext('2d'); context.imageSmoothingEnabled = true; context.imageSmoothingQuality = 'high';
-  context.drawImage(source, 0, 0, canvas.width, canvas.height);
-  return canvas;
 }
 
 function readWebGlAdapterInfo(canvas) {
@@ -163,7 +150,8 @@ function prefabFlipX(entry) { return Boolean(entry.prefab?.flipX); }
 
 function screenBounds(entry) {
   const meta = frameBox(entry.assetId), p = screenPoint(entry.x, entry.y);
-  const visualScale = entry.visualScale ?? 1, width = meta.w * meta.scale * visualScale * state.camera.zoom, height = meta.h * meta.scale * visualScale * state.camera.zoom;
+  const visualScale = entry.visualScale ?? 1, {width: baseWidth, height: baseHeight} = spriteDimensions(meta);
+  const width = baseWidth * visualScale * state.camera.zoom, height = baseHeight * visualScale * state.camera.zoom;
   const rotation = prefabRotation(entry), flip = prefabFlipX(entry) ? -1 : 1;
   const motionEnvelope = entry.animalId ? .55 * state.camera.zoom : 0;
   if (rotation === 0 && flip === 1) {
@@ -229,11 +217,22 @@ function refreshScene() {
   if (state.renderer === 'pixi' && state.pixi) syncPixiScene();
 }
 
-function frameBox(assetId) { return state.assetFrames[assetId] ?? frames[assetId] ?? frames['grass-light']; }
+function frameBox(assetId) {
+  const meta = state.assetFrames[assetId] ?? frames[assetId];
+  if (!meta) throw new TypeError(`No runtime frame for ${assetId}`);
+  return meta;
+}
+
+function spriteDimensions(meta) {
+  if (Array.isArray(meta.displaySize) && meta.displaySize.length === 2) return {width: meta.displaySize[0], height: meta.displaySize[1]};
+  const scale = meta.scale ?? 1;
+  return {width: meta.w * scale, height: meta.h * scale};
+}
 
 function drawCanvasEntry(ctx, entry, time) {
   const meta = frameBox(entry.assetId), atlas = meta.imageKey ? state.assetImages[meta.imageKey] : meta.atlasKey ? state.assetImages[meta.atlasKey] : meta.kind === 'livestock' ? (meta.lowResolution ? state.assetImages.neloreLow : state.assetImages.nelore) : state.assetImages.farm;
-  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), scale = meta.scale * (entry.visualScale ?? 1) * state.camera.zoom, width = meta.w * scale, height = meta.h * scale;
+  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), visualScale = (entry.visualScale ?? 1) * state.camera.zoom;
+  const {width: baseWidth, height: baseHeight} = spriteDimensions(meta), width = baseWidth * visualScale, height = baseHeight * visualScale;
   const x = -width * meta.anchor.x, y = -height * meta.anchor.y, rotation = prefabRotation(entry);
   const screenY = p.y + y;
   if (rotation !== 0 || prefabFlipX(entry)) {
@@ -334,20 +333,12 @@ async function createPixi() {
   await app.init({background: state.benchmarkFixture?.renderPolicy.background ?? '#7c9562', resizeTo: $('stage'), antialias: false, autoDensity: true, resolution: Math.min(devicePixelRatio || 1, 1.5), preference: 'webgl', eventMode: 'static'});
   app.canvas.id = 'pixi-canvas'; app.canvas.setAttribute('aria-label', 'Mapa isométrico da fazenda em PixiJS'); $('stage').append(app.canvas); app.stop();
   state.pixi = app;
-  if (state.benchmarkFixture) {
-    const cowTexture = await Assets.load(neloreUrl);
-    state.pixiTextures.set('nelore-adult', cowTexture);
-  } else {
-    const farmTexture = await Assets.load(farmAtlasUrl), cowTexture = await Assets.load(neloreUrl), handlingTexture = await Assets.load('/graphics-poc/assets/handling-review-atlas-v1.png');
-    const atlasTextures = Object.fromEntries(await Promise.all(Object.entries(state.assetAtlasUrls).map(async ([key, url]) => [key, await Assets.load(url)])));
-    const makeFrame = meta => new Texture({source: (meta.atlasKey === 'handling' ? handlingTexture : meta.kind === 'livestock' ? cowTexture : farmTexture).source, frame: new Rectangle(meta.x, meta.y, meta.w, meta.h)});
-    for (const [id, meta] of Object.entries(frames)) if (!meta.lowResolution && !state.assetFrames[id]) state.pixiTextures.set(id, meta.imageKey ? Texture.from(state.assetImages[meta.imageKey]) : makeFrame(meta));
-    for (const [id, meta] of Object.entries(state.assetFrames)) {
-      const atlas = atlasTextures[meta.atlasKey];
-      if (atlas) state.pixiTextures.set(id, new Texture({source: atlas.source, frame: new Rectangle(meta.x, meta.y, meta.w, meta.h)}));
-    }
+  const atlasTextures = Object.fromEntries(await Promise.all(Object.entries(state.assetAtlasUrls).map(async ([key, url]) => [key, await Assets.load(url)])));
+  for (const [id, meta] of Object.entries(state.assetFrames)) {
+    const atlas = atlasTextures[meta.atlasKey];
+    if (atlas) state.pixiTextures.set(id, new Texture({source: atlas.source, frame: new Rectangle(meta.x, meta.y, meta.w, meta.h)}));
   }
-  state.pixiTextures.set('nelore-adult-low', new Texture({source: new CanvasSource({resource: state.assetImages.neloreLow})}));
+  if (state.pixiTextures.has('nelore-adult')) state.pixiTextures.set('nelore-adult-low', state.pixiTextures.get('nelore-adult'));
   const terrainLayer = new Container(), depthLayer = new Container(), overlayLayer = new Container();
   terrainLayer.label = 'terrain'; depthLayer.label = 'depth-sorted-world'; overlayLayer.label = 'interaction-overlays'; depthLayer.sortableChildren = true;
   app.stage.addChild(terrainLayer, depthLayer, overlayLayer);
@@ -412,7 +403,7 @@ function syncPixiScene() {
       const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: entry.count.toLocaleString('pt-BR'), style: {fontFamily: 'Arial', fontSize: 9, fontWeight: 'bold', fill: '#f7f4dc'}});
       label.anchor.set(.5); const badgeWidth = Math.max(18, label.width + 8);
       background.roundRect(-badgeWidth / 2, -7, badgeWidth, 14, 6).fill({color: 0x173e32, alpha: .94}); badge.addChild(background, label);
-      const meta = frameBox(entry.assetId), spriteHeight = meta.h * meta.scale;
+      const meta = frameBox(entry.assetId), {height: spriteHeight} = spriteDimensions(meta);
       badge.position.set(entry.x, entry.y - spriteHeight - 15 / state.camera.zoom); badge.scale.set(1 / state.camera.zoom); layers.overlays.addChild(badge);
     }
   }
@@ -421,7 +412,7 @@ function syncPixiScene() {
     for (const entry of selected) {
       const selected = entry;
       const meta = frameBox(selected.assetId), outline = new (awaitGraphics())();
-      const w = meta.w * meta.scale, h = meta.h * meta.scale;
+      const {width: w, height: h} = spriteDimensions(meta);
       outline.rect(selected.x - w * meta.anchor.x - 4, selected.y - h * meta.anchor.y - 4, w + 8, h + 8).stroke({color: 0xffeaa0, width: 2});
       layers.overlays.addChild(outline);
     }
@@ -432,7 +423,8 @@ let PixiGraphics;
 function awaitGraphics() { return PixiGraphics; }
 
 function setSprite(sprite, entry, terrain) {
-  const meta = frameBox(entry.assetId), scale = meta.scale * (entry.visualScale ?? 1); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(scale * (prefabFlipX(entry) ? -1 : 1), scale);
+  const meta = frameBox(entry.assetId), {width, height} = spriteDimensions(meta), visualScale = entry.visualScale ?? 1;
+  sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(width / meta.w * visualScale * (prefabFlipX(entry) ? -1 : 1), height / meta.h * visualScale);
   sprite.position.set(entry.x, entry.y + (entry.animationOffset ?? 0)); sprite.rotation = prefabRotation(entry); sprite.zIndex = entry.depth; sprite.visible = true; sprite.renderable = true;
   if (!terrain) sprite.eventMode = 'none';
 }
@@ -768,16 +760,17 @@ async function runGraphicsBenchmark({counts = [1000, 10000], durationMs = 3000, 
 async function initialize() {
   window.__graphicsInitStage = 'loading-assets';
   const benchmarkFixtureMode = new URLSearchParams(location.search).get('benchmark-fixture') === APPROVED_BENCHMARK_FIXTURE_ID;
-  const [scene, dairyScene, renderManifest, assetSourceManifest, fixtureConfig] = await Promise.all([
+  const [scene, dairyScene, renderManifest, runtimeManifest, assetSourceManifest, fixtureConfig] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
     fetch('/graphics-poc/assets/main-composer-render-manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de renderização do Composer ausente'); return response.json(); }),
+    fetch('/assets/manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de assets runtime ausente'); return response.json(); }),
     fetch('/graphics-poc/asset-sources.json').then(response => { if (!response.ok) throw new Error('Manifesto de proveniência local ausente'); return response.json(); }),
     benchmarkFixtureMode
       ? fetch('/graphics-poc/benchmark-approved-scene.json').then(response => { if (!response.ok) throw new Error('Benchmark fixture configuration missing'); return response.json(); })
       : Promise.resolve(null)
   ]);
-  state.renderManifest = renderManifest; state.assetSourceManifest = assetSourceManifest;
+  state.renderManifest = renderManifest; state.runtimeManifest = runtimeManifest; state.assetSourceManifest = assetSourceManifest;
   state.scenes = {beef: scene, dairy: dairyScene};
   const initialDomain = initialGraphicsDomain(location.search, benchmarkFixtureMode);
   const baseScene = state.scenes[initialDomain], stored = localStorage.getItem(`riose-graphics-scene-v1:${baseScene.sceneId}`) ?? (initialDomain === 'beef' ? localStorage.getItem('riose-graphics-scene-v1') : null);
@@ -794,31 +787,18 @@ async function initialize() {
     $('gpu-info-panel').classList.remove('hidden');
   }
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
-  if (benchmarkFixtureMode) {
-    const neloreImage = await image(neloreUrl);
-    state.assetImages = {nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage)};
-  } else {
-    const atlasEntries = Object.entries(renderManifest.atlases);
-    const loadedImages = await loadImageEntriesConcurrently([
-      ['farm', farmAtlasUrl],
-      ['nelore', neloreUrl],
-      ['handling', '/graphics-poc/assets/handling-review-atlas-v1.png'],
-      ['dairy-heifer', '/graphics-poc/assets/dairy/dairy-heifer.png'],
-      ['dairy-activity-collar', '/graphics-poc/assets/dairy/dairy-activity-collar.png'],
-      ...atlasEntries,
-    ], image);
-    state.assetImages = {
-      farm: loadedImages.farm,
-      nelore: loadedImages.nelore,
-      neloreLow: makeLowResolutionCow(loadedImages.nelore),
-      handling: loadedImages.handling,
-      'dairy-heifer': loadedImages['dairy-heifer'],
-      'dairy-activity-collar': loadedImages['dairy-activity-collar'],
-      ...Object.fromEntries(atlasEntries.map(([key]) => [key, loadedImages[key]])),
-    };
-  }
-  state.assetAtlasUrls = benchmarkFixtureMode ? {} : renderManifest.atlases;
-  state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
+  const runtimeAtlasEntries = Object.entries(runtimeManifest.atlases).map(([key, atlas]) => [key, atlas.image]);
+  const loadedImages = await loadImageEntriesConcurrently(runtimeAtlasEntries, image);
+  const runtimeFrames = runtimeManifest.assets.map(asset => [asset.id, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h,
+    anchor: asset.anchor, displaySize: asset.displaySize, scale: asset.displaySize[0] / asset.frame.w, atlasKey: asset.frame.atlas, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
+    reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.collision !== null}]);
+  const composerFrames = renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h,
+    anchor: asset.anchor, displaySize: asset.displaySize, scale: asset.displaySize[0] / asset.frame.w, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
+    reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]);
+  state.assetAtlasUrls = Object.fromEntries(runtimeAtlasEntries);
+  state.assetImages = {...loadedImages, farm: loadedImages['synthetic-release'], nelore: loadedImages['synthetic-release'], handling: loadedImages['synthetic-release']};
+  state.assetFrames = {...Object.fromEntries(runtimeFrames), ...Object.fromEntries(composerFrames)};
+  if (state.assetFrames['nelore-adult']) state.assetFrames['nelore-adult-low'] = state.assetFrames['nelore-adult'];
   state.imageLoadMs = performance.now() - startedAt;
   state.terrainCells = sceneTerrainCells(state.scene);
   state.context = $('canvas-renderer').getContext('2d', {alpha: false});

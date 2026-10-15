@@ -128,7 +128,7 @@ function buildTerrain(seed=9){
   drawSprite('farmhouse',413,99,75,65,'bottom');drawSprite('farmhouse',489,137,65,53,'bottom');
   drawSprite('shed',460,240,128,91,'bottom');if(crop)drawSprite('silo',553,241,42,77,'bottom');if(cattle)drawSprite('corral-wood-standard-imagegen-v1',453,259,93,74,'bottom');
   const trees=[[33,29,.56],[92,26,.62],[149,23,.55],[380,27,.56],[442,24,.62],[548,29,.57],[15,100,.55],[16,242,.61],[556,108,.55],[544,289,.58],[65,315,.5],[153,314,.5],[313,317,.5],[566,277,.52],[349,112,.48],[350,247,.5]];
-  trees.filter((_,i)=>worldScenarioId!=='dry-season'||i%3===0).filter((_,i)=>worldScenarioId!=='crop-farm'||i%2===0).forEach(([x,y,s],i)=>drawSprite(i%4===0?'fruit-tree':i%5===0?'shrub':'shade-tree',x,y,66*s,79*s,'bottom'));
+  trees.filter((_,i)=>worldScenarioId!=='dry-season'||i%3===0).filter((_,i)=>worldScenarioId!=='crop-farm'||i%2===0).forEach(([x,y,s],i)=>drawSprite(i%5===0?'shrub':'shade-tree',x,y,66*s,79*s,'bottom'));
   if(crop)drawSprite('tractor',361,226,49,39,'bottom');if(worldScenarioId==='crop-farm'||worldScenarioId==='mixed')drawSprite('pickup',398,235,42,34,'bottom');
   if(cattle){drawSprite('feed-trough',417,262,54,29,'bottom');drawSprite('nelore-adult',365,223,47,44,'bottom');}
   t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>{const cropField=cropTiles.some(([field])=>field===p);t.fillText((cropField?'TALHÃO ':'PIQUETE ')+String.fromCharCode(65+i),p.x+8,p.y+14);});if(cattle){t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);}
