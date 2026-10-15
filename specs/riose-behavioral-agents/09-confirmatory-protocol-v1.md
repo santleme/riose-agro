@@ -12,6 +12,7 @@ Run only the committed semi-Markov v1 candidate and the three committed simple b
 | Evaluator `scripts/science/behavior/evaluate_perea_sequence_baselines.py` | `0a2b984ee09c2d5f2a25ca028fbd1f237feb75b50d1a8f2945c6e15487a561b6` |
 | Output schema `schemas/perea-behavior-sequence-v1.schema.json` | `f1aa87b6cd17153891beb0fb665321337eee8ffa671fc9a720bf622676484934` |
 | Development evaluator `scripts/science/behavior/evaluate_perea_semimarkov_development.py` | `861010b9efb602c70514561cf911e4f293c4ed93fa8d9cf52236f3183b037113` |
+| Confirmatory evaluator `scripts/science/behavior/evaluate_perea_confirmatory.py` | `464ff39e1145f0cff1b70be90c2db28324f84f4a71c9f51d6ab30a6b43e65196` |
 
 Do not edit candidate, evaluator, seed schedule, metrics, threshold, or preprocessing after opening the holdout. A changed artifact invalidates this confirmatory run and requires a new frozen protocol and new eligible data.
 

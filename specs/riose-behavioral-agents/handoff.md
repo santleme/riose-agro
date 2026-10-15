@@ -4,7 +4,7 @@ Date: 2026-10-15
 Source PR: https://github.com/santleme/riose-agro/pull/190
 Source PR head: 983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc
 Working branch: codex/behavioral-agents-sdd
-Last verified commit: 1f9fe08fa9590f93fff5a90084dd40256859bf1e (BEH-003 candidate/evidence; compact artifacts).
+Last verified commit: 30244c939224847ea1db37dab47d9a8b67399ec3 (BEH-004 protocol; evaluator hash addition pending commit).
 Completed tasks: BEH-000; BEH-001; BEH-002; BEH-003.
 Task in progress: BEH-004 — confirmatory protocol v1 frozen; no reserved-animal scores generated yet. BEH-005 remains independently READY.
 Files changed in BEH-003: semi-Markov training/generation, versioned JSON schema and AJV test, development evaluator/evidence, package scripts, SDD status.
