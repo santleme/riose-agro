@@ -1,14 +1,78 @@
 <!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="0;url=experiments.html">
-    <link rel="canonical" href="experiments.html">
-    <title>Riose — Experimentos</title>
-    <script>location.replace(new URL('experiments.html', location.href));</script>
-  </head>
-  <body>
-    <p>Este endereço foi substituído pelo <a href="experiments.html">workspace de experimentos</a>.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafb">
+  <meta name="description" content="Describe a cattle experiment, review its assumptions, and compare reproducible scenarios with Riose.">
+  <title>Riose — What would happen if?</title>
+  <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="product.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html" aria-label="Riose home"><span class="brand-mark">r.</span><span>riose<span class="brand-light"> agro</span></span></a>
+    <nav aria-label="Main navigation"><a class="active" href="product.html">Product</a><a href="experiments.html">Experiments</a><a href="observed-data.html">Observed data</a></nav>
+    <span class="system-status"><i></i> Local engine ready</span>
+  </header>
+
+  <main id="product" class="product-shell">
+    <section id="welcome" class="welcome">
+      <div class="welcome-mark" aria-hidden="true">r.</div>
+      <p class="eyebrow">RIOSE · LIVESTOCK EXPERIMENTS</p>
+      <h1>What would happen if?</h1>
+      <p class="welcome-copy">Describe a population, a condition, or an intervention. Review the assumptions, then explore both scenarios animal by animal.</p>
+      <form id="prompt-form" class="prompt-form">
+        <label class="visually-hidden" for="prompt-input">Describe an experiment</label>
+        <textarea id="prompt-input" rows="3" maxlength="1200" placeholder="For example: I have 200 Nelore cattle on pasture for 30 days in hot weather. What changes if I increase supplementation from 0.5 to 1.5 kg per animal?"></textarea>
+        <div class="prompt-footer"><span>Natural language · deterministic local interpretation</span><button class="primary-button" type="submit">Review experiment <span aria-hidden="true">↗</span></button></div>
+      </form>
+      <div class="suggestions" aria-label="Example experiments">
+        <button type="button" data-prompt="Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, with supplementation changing from 0.5 to 1.5 kg dry matter per animal per day.">Supplementation under heat <span>↗</span></button>
+        <button type="button" data-prompt="I have 100 cattle on pasture for 15 days. Compare 0.5 with 1.0 kg of supplement per animal per day.">A short feed comparison <span>↗</span></button>
+        <button type="button" data-prompt="Compare 24 cattle on pasture for 7 days with 0 versus 1 kg supplement per animal per day.">A 7-day baseline <span>↗</span></button>
+      </div>
+      <section class="welcome-history" aria-labelledby="welcome-history-title"><div class="section-heading"><h2 id="welcome-history-title">Recent experiments</h2><span>Saved in this browser</span></div><div id="welcome-history-list" class="welcome-history-list"></div></section>
+    </section>
+
+    <section id="workspace" class="workspace" hidden>
+      <aside class="conversation-panel" aria-label="Experiment conversation">
+        <a class="back-link" href="product.html">← New experiment</a>
+        <div id="conversation" class="conversation" aria-live="polite"></div>
+        <form id="followup-form" class="followup-form">
+          <label for="followup-input">Change one experiment input</label>
+          <div class="followup-entry"><input id="followup-input" maxlength="400" placeholder="e.g. make it 15 days"><button aria-label="Send update" type="submit">↑</button></div>
+        </form>
+        <div class="engine-card"><span class="engine-dot"></span><div><strong>Riose farm engine</strong><small>JavaScript · deterministic · unvalidated demo</small></div></div>
+      </aside>
+
+      <section class="population-panel" aria-label="Population workspace">
+        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div>
+        <div class="control-row">
+          <label>View <select id="metric-select"><option value="weight">Live weight · kg</option><option value="delta">Weight difference · kg</option><option value="energy">Energy · index</option><option value="thirst">Thirst · index</option></select></label>
+          <label>Filter <select id="filter-select"><option value="all">All animals</option><option value="positive">Higher in intervention</option><option value="negative">Lower in intervention</option><option value="neutral">No difference</option></select></label>
+          <label>Activity <select id="activity-select"><option value="all">All activities</option><option value="grazing">Grazing</option><option value="feeding">Feeding</option><option value="drinking">Drinking</option><option value="resting">Resting</option></select></label>
+          <label>Sort <select id="sort-select"><option value="id">Animal ID</option><option value="weight">Weight</option><option value="delta">Difference</option></select></label>
+        </div>
+        <div class="timeline-row"><div class="timeline-label"><span>Time point</span><strong id="day-label">Day 0</strong></div><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available simulation day"><div id="timeline-points" class="timeline-points"></div></div>
+        <div class="grid-toolbar"><span id="grid-count">0 animals</span><span id="population-legend" class="legend" aria-live="polite"><i class="legend-low"></i><span id="legend-low-label">lower</span><i class="legend-mid"></i><span id="legend-mid-label">middle</span><i class="legend-high"></i><span id="legend-high-label">higher</span></span></div>
+        <div id="population-grid" class="population-grid" role="grid" aria-label="Cattle population observations"></div>
+        <div class="grid-footer"><span id="grid-note">Each square represents an animal returned by the engine.</span><button id="show-more" class="text-button" type="button" hidden>Show more</button></div>
+        <div id="analysis-area" class="analysis-area" hidden>
+          <div class="analysis-header"><div><p class="eyebrow">ANALYSIS</p><h2>Scenario outcomes</h2></div><span class="not-validated">Demonstration · not a prediction</span></div>
+          <div id="aggregate-cards" class="aggregate-cards"></div>
+          <div id="activity-counts" class="activity-counts" aria-label="Animal count by recorded activity"></div>
+          <div class="analysis-grid"><article class="analysis-card"><h3>Mean live weight</h3><div id="weight-chart" class="weight-chart" aria-label="Mean live weight by day"></div><p>Computed from engine animal states. ADG is not an input to this engine and the result is not biologically validated.</p></article><article class="analysis-card"><h3>Selected animal</h3><div id="animal-inspector" class="animal-inspector"><p>Select a cell to inspect available states and activity history.</p></div></article></div>
+          <details class="provenance"><summary>Model limits and provenance</summary><div id="provenance-details"></div></details>
+          <details class="daily-table"><summary>Daily aggregate results</summary><div class="table-scroll"><table><thead><tr><th>Day</th><th>Base mean weight (kg)</th><th>Intervention mean weight (kg)</th><th>Δ weight (kg)</th><th>Pasture stock (kg MS)</th></tr></thead><tbody id="daily-rows"></tbody></table></div></details>
+        </div>
+      </section>
+    </section>
+    <p id="live-status" class="live-status" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="src/client/product-app.js"></script>
+</body>
 </html>

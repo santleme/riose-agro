@@ -84,7 +84,7 @@ test('explains invalid report inputs',()=>{
 });
 
 test('experiment dashboard offers the portable Markdown report export', async () => {
-  const app = await readFile(new URL('../src/client/product-app.js', import.meta.url), 'utf8');
+  const app = await readFile(new URL('../src/client/experiments-app.js', import.meta.url), 'utf8');
   const html = await readFile(new URL('../experiments.html', import.meta.url), 'utf8');
   assert.match(html, /id="export-report"[^>]*>Baixar relatório/);
   assert.match(app, /renderSimulationReport\(latest\.result,latest\.manifest\)/);
