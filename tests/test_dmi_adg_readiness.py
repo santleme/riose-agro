@@ -180,10 +180,7 @@ class ReadinessFixtureTests(unittest.TestCase):
         self.assertIn("does not validate DMI consumption", " ".join(perea["limitations"]))
         self.assertIn("breed", perea["groups"])
 
-        xgain = records["xgain-cattle-hourly-behavior"]
-        self.assertEqual(xgain["decision"], "CONDITIONAL")
-        self.assertIn("conflict", xgain["source"]["license"])
-        self.assertIn("human reference", xgain["metrics"]["predictiveMetrics"])
+        self.assertNotIn("xgain-cattle-hourly-behavior", records)
 
         cper = records["usda-cper-ltgi-internal-adg"]
         self.assertEqual(cper["metrics"]["oofRows"], 320)
