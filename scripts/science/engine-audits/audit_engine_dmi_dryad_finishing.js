@@ -4,7 +4,7 @@ import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {predictDefaultBarnDmiKgPerDay} from './audit_engine_dmi_usda_ars.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
 const ROOT = resolve(new URL('../../../', import.meta.url).pathname);
 const DATA = resolve(ROOT, 'data/dryad-finishing-steers/Database_09-11-2025.csv');

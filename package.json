@@ -47,7 +47,7 @@
     "audit:engine-adg-range": "node scripts/science/engine-audits/audit_engine_adg_range.js",
     "audit:usda-cper-ltgi": "python3 scripts/audit_usda_cper_ltgi.py",
     "audit:engine-adg-cper-ltgi": "node scripts/science/engine-audits/audit_engine_adg_usda_cper_ltgi.js",
-    "audit:engine-adg-cgrec-transport": "node scripts/science/engine-audits/audit_engine_adg_usda_cgrec_external.js",
+    "audit:engine-adg-cgrec-transport": "node scripts/audit_engine_adg_usda_cgrec_external.js",
     "audit:engine-adg-rothamsted": "node scripts/science/engine-audits/audit_engine_adg_rothamsted.js",
     "audit:usda-hpgrs-longterm": "python3 scripts/audit_usda_hpgrs_longterm.py",
     "audit:usda-gund-ranch": "python3 scripts/audit_gund_ranch_public_data.py",

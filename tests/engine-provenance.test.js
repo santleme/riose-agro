@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {bundleEngineSources, ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
-import {engineSourceSha256, readEngineSourceBundle} from '../scripts/science/engine-audits/engine-source-hash.js';
+import {engineSourceSha256, readEngineSourceBundle} from '../scripts/engine-source-hash.js';
 
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 

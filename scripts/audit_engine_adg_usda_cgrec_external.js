@@ -5,16 +5,16 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {parseCgrecCsv} from '../../../src/client/adult-data-model.js';
-import {FarmEngine, metrics} from '../../../src/client/engine.js';
+import {parseCgrecCsv} from '../src/client/adult-data-model.js';
+import {FarmEngine, metrics} from '../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
-const dataDir = new URL('../../../data/usda-cgrec-longterm/', import.meta.url);
+const dataDir = new URL('../data/usda-cgrec-longterm/', import.meta.url);
 const sourcePath = new URL('Streeter-ND_1989-2015_compiled.csv', dataDir);
 const manifestPath = new URL('manifest.json', dataDir);
-const sourceAuditPath = new URL('../../../docs/evidence/usda-cgrec-longterm-audit.json', import.meta.url);
-const cperPath = new URL('../../../docs/evidence/engine-adg-usda-cper-ltgi-check.json', import.meta.url);
-const outputPath = new URL('../../../docs/evidence/engine-adg-usda-cgrec-transport-check.json', import.meta.url);
+const sourceAuditPath = new URL('../docs/evidence/usda-cgrec-longterm-audit.json', import.meta.url);
+const cperPath = new URL('../docs/evidence/engine-adg-usda-cper-ltgi-check.json', import.meta.url);
+const outputPath = new URL('../docs/evidence/engine-adg-usda-cgrec-transport-check.json', import.meta.url);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const md5 = bytes => createHash('md5').update(bytes).digest('hex');
 const currentEngineSha256 = engineSourceSha256();

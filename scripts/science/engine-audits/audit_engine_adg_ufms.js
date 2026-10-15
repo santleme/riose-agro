@@ -6,7 +6,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, renameSync, writeFileSync} from 'node:fs';
 import {FarmEngine} from '../../../src/client/engine.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
 const root = new URL('../../../', import.meta.url);
 const sourcePath = new URL('data/ufms-nelore-grazing/Complete_Dataset.csv', root);

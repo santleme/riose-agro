@@ -8,7 +8,7 @@ The root `scripts/` directory contains command-line tools for builds, data audit
 | `scripts/graphics/` | Graphics PoC tooling | Scene adaptation/build, screenshot regression and renderer benchmarks. |
 | `scripts/experiments/` | Scenario and batch-experiment tooling | Scenario runner, reusable manifest/journal/dispatch modules, replicate summaries and experiment-format tools. |
 | `scripts/benchmarks/` | Benchmark harnesses | Simulation, browser, memory, native/WASM and scientific benchmark entry points, plus their shared report schema and validator. |
-| `scripts/science/engine-audits/` | Engine and cohort comparisons | Fixed-configuration ADG/DMI comparisons against named external cohorts and the shared engine-source provenance helper. |
+| `scripts/science/engine-audits/` | Engine and cohort comparisons | Fixed-configuration ADG/DMI comparisons against named external cohorts; the frozen CGREC source stays at its pinned root path. |
 | `scripts/` | Remaining project commands | Data audits, scientific processing, build commands and validators whose ownership is not grouped yet. |
 | `experiments/` | Research records and experiment-specific code | Protocols, source snapshots, evaluation code, execution outputs, reports and model artifacts; reusable Node helpers belong under `scripts/experiments/`. |
 

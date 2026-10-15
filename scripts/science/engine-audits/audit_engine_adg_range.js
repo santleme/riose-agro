@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {FarmEngine, metrics} from '../../../src/client/engine.js';
 import {parseAdultCperCsv} from '../../../src/client/adult-data-model.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
 const root = new URL('../../../', import.meta.url);
 const cperBytes = readFileSync(new URL('data/usda-cper/period.csv', root));

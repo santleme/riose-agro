@@ -9,7 +9,7 @@ import {createServer} from '../src/server/server.js';
 import {calculateThi,THI_SOURCE} from '../src/client/thermal-index.js';
 import {environmentDiffRows,initialEnvironmentState} from '../src/client/environment-inputs.js';
 import {bundleEngineSources,ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
-import {engineSourceSha256} from '../scripts/science/engine-audits/engine-source-hash.js';
+import {engineSourceSha256} from '../scripts/engine-source-hash.js';
 import {WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 const source=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
