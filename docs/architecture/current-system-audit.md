@@ -1,4 +1,6 @@
-# Current system audit
+# Historical system audit
+
+This document records a snapshot at commit `913b36b` and is retained as historical context. It is not a description of the current checkout. See the [repository architecture audit](repository-architecture-audit-2026-10-14.md) for the current inventory and findings.
 
 Audit scope: committed tree at `913b36b` in the isolated Architecture V2 worktree, with parallel uncommitted work inventoried separately in [repository-wide-audit.md](repository-wide-audit.md). Findings below describe executable code, not planned work.
 

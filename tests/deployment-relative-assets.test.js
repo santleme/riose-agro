@@ -16,7 +16,7 @@ test('root HTML entrypoints resolve client assets below a deployment subpath', (
 
     for (const asset of assetReferences.filter(url => url.includes('src/client/'))) {
       assert.ok(!asset.startsWith('/'), `${entrypoint} must keep ${asset} relative to the deployment base`);
-      assert.ok(asset.startsWith('src/client/'), `${entrypoint} should reference a root client asset: ${asset}`);
+      assert.ok(asset.startsWith('src/client/'), `${entrypoint} should reference a client asset: ${asset}`);
 
       const resolved = new URL(asset, 'https://example.test/riose-agro/');
       assert.ok(resolved.pathname.startsWith('/riose-agro/src/client/'), `${asset} escaped the deployment subpath`);

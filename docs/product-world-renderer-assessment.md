@@ -38,7 +38,7 @@ This project already contains most of that pipeline, but in separate, overlappin
 
 - `public/assets/scenario-editor/scene-layout.js` creates/validates deterministic farm layouts, layers, zones, placements and isometric projection. `composer.js` is the scene composer around it.
 - `graphics-poc/contract.js` already has isometric projection/unprojection, terrain-cell expansion/sorting, zone painting, visual LOD and coordinate mapping from simulation positions. `graphics-poc/app.js` is its Pixi runtime, including camera, atlas frames, terrain/props/animals, culling and input.
-- `src/client/product-spatial.js` and `src/client/product-world-renderer.js` introduce a third Product-specific scene representation and renderer.
+- `src/client/product/spatial.js` and `src/client/product/world-renderer.js` introduce a third Product-specific scene representation and renderer.
 - `package.json` lists `pixi.js` 8.22; it does not list Phaser or an embedded Godot/Unity runtime.
 
 This means the research changes the recommendation from “pick an engine and build a renderer” to “choose one scene contract and adapt the existing Pixi runtime.” Specifically, reuse proven projection/terrain/asset logic and extract a Product-facing renderer interface from Graphics Lab; do not import its whole editing UI. Keep the Worker authoritative for simulation values and stable entity IDs. Tiled is an authoring-tool decision, not a replacement for the renderer: adopt it only if product/design needs to compose maps visually more often than the existing composer supports.

@@ -88,7 +88,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 
 - `index.html` — compatibility redirect to `home.html`; the canonical project entry
 - `home.html`, `src/client/home.css`, `src/client/home.js` — Riose landing page
-- `product.html`, `product.css`, `src/client/product-app.js` — canonical farm experience
+- `product.html`, `src/client/product/` — canonical farm experience, scene model, renderer and page interaction
 - `lab.html`, `src/client/style.css`, `src/client/app.js` — Agroville research laboratory and extended workflows
 - `simulator.html` — compatibility redirect to `product.html`
 - `assets/agroville-farm-worlds.png` — original generated hero illustration

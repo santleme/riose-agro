@@ -1,7 +1,7 @@
 import {build} from 'esbuild';
 
 await build({
-  entryPoints: ['src/client/product-world-renderer.js'],
+  entryPoints: ['src/client/product/world-renderer.js'],
   outfile: 'src/client/product-world-renderer.bundle.js',
   bundle: true,
   minify: true,

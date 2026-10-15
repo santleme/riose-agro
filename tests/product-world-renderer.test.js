@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {productFenceRuns, productGroundTiles, productWorldFrontEdges, productWorldOutline, PRODUCT_BLOCKOUT, worldToScreen} from '../src/client/product-spatial.js';
-import {productFarmEntityAt} from '../src/client/product-scene.js';
-import {productWorldAnimalAt, productWorldAnimalById, productWorldEntityFromHit, productWorldVegetationAt} from '../src/client/product-world-contract.js';
+import {productFenceRuns, productGroundTiles, productWorldFrontEdges, productWorldOutline, PRODUCT_BLOCKOUT, worldToScreen} from '../src/client/product/spatial.js';
+import {productFarmEntityAt} from '../src/client/product/scene.js';
+import {productWorldAnimalAt, productWorldAnimalById, productWorldEntityFromHit, productWorldVegetationAt} from '../src/client/product/world-contract.js';
 
 test('isometric scene hits resolve to the Product UI entity IDs and supported types', () => {
   const centers = [

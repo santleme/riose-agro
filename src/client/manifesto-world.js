@@ -1,5 +1,5 @@
 import {createProductWorldRenderer} from './product-world-renderer.bundle.js';
-import {SIMULATOR_PATCH_BOUNDS} from './product-spatial.js';
+import {SIMULATOR_PATCH_BOUNDS} from './product/spatial.js';
 
 const host = document.getElementById('manifesto-world-canvas');
 if (!host) throw new Error('Manifesto farm host is unavailable');

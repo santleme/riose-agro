@@ -288,7 +288,9 @@ async function serveStatic(pathname, response, env = process.env) {
   const relative = decoded === '/' ? 'home.html' : decoded.replace(/^\/+/, '');
   if (relative.startsWith('tools/') && env.NODE_ENV === 'production') return sendJson(response, 404, {error: 'not_found'});
   const isProjectAsset = relative.startsWith('assets/') && !PUBLIC_FILES.has(relative) && !relative.split('/').some(part => part === '.' || part === '..');
-  const isClientFile = relative.startsWith('src/client/') && CLIENT_FILES.has(relative.slice('src/client/'.length));
+  const clientPath = relative.startsWith('src/client/') ? relative.slice('src/client/'.length) : '';
+  const isClientFile = clientPath !== ''
+    && clientPath.split('/').every(part => part !== '' && part !== '.' && part !== '..');
   const isLegacyClientFile = CLIENT_FILES.has(relative) && PUBLIC_FILES.has(relative);
   if (!PUBLIC_FILES.has(relative) && !isProjectAsset && !isClientFile) return sendJson(response, 404, {error: 'not_found'});
   const path = isProjectAsset ? resolve(ROOT, 'public', relative)
