@@ -69,7 +69,7 @@ A decomposição espacial do LAMMPS e o runtime MPI foram comparados como mecani
 
 Hardware e compilação: WSL2, Linux `6.6.87.2-microsoft-standard-WSL2`, AMD Ryzen 7 7700X, x86-64; Rust 1.95.0; perfil Cargo release do workspace (thin LTO, um codegen unit, panic abort). A carga fornecida como baseline pelo usuário é de 10.000 animais/30 dias com mediana de 666 ms. Esse valor veio de outro revisionamento/harness e de um fluxo end-to-end de dois braços; não é comparável diretamente ao ensaio de um braço abaixo.
 
-No checkout atualizado, `scripts/benchmark-history-ring-matrix.py` compila os dois modos e intercala por caso 24 cargas (100/1.000/10.000 animais, 1/30 dias, seeds 417/2026, pasto/galpão). Cada processo faz 3 aquecimentos e 21 repetições. O trecho cronometrado inclui criação do estado, configuração, ticks e serialização do snapshot. p50/p95 usam nearest rank. `/usr/bin/time` registra o RSS máximo do processo inteiro, incluindo aquecimentos. Os resultados brutos, amostras, RSS e hashes estão em [`rea-history-ring-matrix-2026-10-13.json`](../performance/rea-history-ring-matrix-2026-10-13.json).
+No checkout atualizado, `scripts/benchmarks/benchmark-history-ring-matrix.py` compila os dois modos e intercala por caso 24 cargas (100/1.000/10.000 animais, 1/30 dias, seeds 417/2026, pasto/galpão). Cada processo faz 3 aquecimentos e 21 repetições. O trecho cronometrado inclui criação do estado, configuração, ticks e serialização do snapshot. p50/p95 usam nearest rank. `/usr/bin/time` registra o RSS máximo do processo inteiro, incluindo aquecimentos. Os resultados brutos, amostras, RSS e hashes estão em [`rea-history-ring-matrix-2026-10-13.json`](../performance/rea-history-ring-matrix-2026-10-13.json).
 
 | População | Casos | Mediana da razão p50 controle/anel | Casos com ganho | Diferença mediana de RSS máximo (controle − anel) |
 | ---: | ---: | ---: | ---: | ---: |
@@ -106,14 +106,14 @@ Paridade observada:
 Para repetir no mesmo checkout:
 
 ```sh
-python3 scripts/benchmark-history-ring-matrix.py > docs/performance/rea-history-ring-matrix-2026-10-13.json
+python3 scripts/benchmarks/benchmark-history-ring-matrix.py > docs/performance/rea-history-ring-matrix-2026-10-13.json
 
 cargo build --locked --release -p riose-core --bin bench-execution-30d --bin riose-run
 RIOSE_REQUEST_OUT=/tmp/riose-10k-30d-request.json target/release/bench-execution-30d
 cp target/release/riose-run /tmp/riose-run-sequential
 cargo build --locked --release -p riose-core --bin riose-run --features riose-core/history-ring
 cp target/release/riose-run /tmp/riose-run-history-ring
-python3 scripts/benchmark-rea-process.py --input /tmp/riose-10k-30d-request.json --baseline /tmp/riose-run-sequential --candidate /tmp/riose-run-history-ring --warmups 3 --repetitions 21
+python3 scripts/benchmarks/benchmark-rea-process.py --input /tmp/riose-10k-30d-request.json --baseline /tmp/riose-run-sequential --candidate /tmp/riose-run-history-ring --warmups 3 --repetitions 21
 ```
 
 ## Pendências e decisão de adoção

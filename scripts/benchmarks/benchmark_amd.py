@@ -16,7 +16,7 @@ from time import perf_counter_ns
 from typing import Any, Callable
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -482,7 +482,7 @@ def run_benchmark(
         "results": legacy_report,
         "limitations": legacy_report["limitations"],
     }
-    validator = ROOT / "scripts" / "validate-benchmark-report.mjs"
+    validator = ROOT / "scripts" / "benchmarks" / "validate-benchmark-report.mjs"
     try:
         subprocess.run(
             ["node", str(validator)],

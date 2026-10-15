@@ -1,15 +1,15 @@
 import {execFileSync} from 'node:child_process';
 import {readFile,writeFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
-import {FarmEngine,ASSUMPTIONS} from '../src/client/engine.js';
-import {calculateFeeding} from '../src/client/feeding-model.js';
-import {getWeatherRules} from '../src/client/environment-model.js';
+import {FarmEngine,ASSUMPTIONS} from '../../src/client/engine.js';
+import {calculateFeeding} from '../../src/client/feeding-model.js';
+import {getWeatherRules} from '../../src/client/environment-model.js';
 import {assertBenchmarkReport,benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 import {evaluateAnimalLayoutDecision} from './animal-layout-decision.mjs';
 import {normalizeProfileUrl,sampleAllocations} from './benchmark-allocation-sampling.mjs';
 
-const scenarioPath=new URL('../tests/scenarios/baseline-pasture.json',import.meta.url);
-const repositoryRootUrl=new URL('../',import.meta.url);
+const scenarioPath=new URL('../../tests/scenarios/baseline-pasture.json',import.meta.url);
+const repositoryRootUrl=new URL('../../',import.meta.url);
 const allocationAttributionPath=normalizeProfileUrl(import.meta.url,repositoryRootUrl);
 const scenario=JSON.parse(await readFile(scenarioPath,'utf8'));
 const repetitions=Number(process.env.ANIMAL_LAYOUT_REPETITIONS??31);
@@ -261,7 +261,7 @@ for(const row of rows){
 const limitations=['The checked-in baseline-pasture fixture provides the seed/configuration; its three-animal count is scaled to the supported benchmark populations. The one-hour transition input and expected output are generated from FarmEngine itself at active hour 7 and rest hour 22.','Native Rust measures the identical packed input in a pure kernel; it excludes JSON serialization, FFI, Worker queueing and process startup.','Heap/ArrayBuffer readings are process snapshots after GC; exact typed-buffer byte counts are attributable. V8 allocation sampling estimates allocated bytes and identifies sampled call sites, but is statistical and does not measure exact allocation counts or peak live memory. The separate profiling pass is excluded from all timing observations.','Snapshot materialization projects stable ID, weight and energy, not every public FarmEngine snapshot field. JSON serialization separately measures this output projection.'];
 const phaseMeasurements=[];
 for(const row of rows){
-  const details={population:{animals:row.animals,hour:row.hour},source:'scripts/benchmark-animal-layout.mjs'};
+  const details={population:{animals:row.animals,hour:row.hour},source:'scripts/benchmarks/benchmark-animal-layout.mjs'};
   for(const [key,value] of Object.entries(row.measurements)){
     const phase=key.startsWith('snapshot')||key==='objectSnapshotStructuredClone'?'snapshot':key==='jsonSerialization'?'serialization':'engine';
     const iterationsPerSample=['aosEndToEnd','typedColumnsKernel','typedColumnsGather','typedColumnsScatter','typedColumnsEndToEnd','snapshotMaterializationAos','snapshotMaterializationColumns'].includes(key)?row.iterationsPerSample:1;

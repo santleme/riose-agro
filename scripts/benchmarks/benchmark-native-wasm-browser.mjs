@@ -47,9 +47,9 @@ const fingerprintPaths = [
   'src/client/native-scenario-wasm.js',
   'src/client/native-scenario-wasm-bench-worker.js',
   'scripts/build-wasm-scenario.sh',
-  'scripts/benchmark-native-wasm-browser.mjs',
-  'scripts/browser-startup.mjs',
-  'scripts/benchmark-report.mjs',
+  'scripts/benchmarks/benchmark-native-wasm-browser.mjs',
+  'scripts/experiments/browser-startup.mjs',
+  'scripts/benchmarks/benchmark-report.mjs',
   'docs/architecture/benchmark-report.schema.json',
   'tests/scenario-goldens/baseline-pasture.json',
   'tests/scenario-goldens/housing-comparison.json',
@@ -66,7 +66,7 @@ const browserOptions = browserEngine === 'firefox'
   ? {headless: true}
   : {headless: true, executablePath: await findChrome(), args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu']};
 const sourceHashes = Object.fromEntries(await Promise.all(fingerprintPaths.map(async relativePath => {
-  const contents = await readFile(new URL(`../${relativePath}`, import.meta.url));
+  const contents = await readFile(new URL(`../../${relativePath}`, import.meta.url));
   return [relativePath, crypto.createHash('sha256').update(contents).digest('hex')];
 })));
 const sourceTreeDigest = crypto.createHash('sha256')
@@ -242,7 +242,7 @@ try {
       {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario; Chromium page JS heap after forced GC and product UI snapshot rendering when available.'], notTimed: ['Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation.']},
       {phase: 'ui', timed: ['Existing product UI synchronous metric/virtualized animal list update and time until the canvas completes a draw from an equivalent full-scenario result snapshot.'], notTimed: ['Scenario execution, benchmark Worker transport, user input, interactive simulation ticks, and GPU-compositor presentation. The UI-only hook applies the JS and WASM outputs separately after each scenario completes. workerToRenderedResultEstimate adds the separately measured worker and UI medians; it is not a single continuous trace.']},
     ],
-    results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToVisibleGo ? 'GO candidate: WASM was faster from Worker request through estimated UI display at each population; requires independent repeat before adoption' : 'NO-GO for product adoption: no repeatable Worker-to-display benefit across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, medianWorkerToRenderedResultBenefitAtEveryPopulation: endToVisibleGo, workerToRenderedResult: userVisibleEndToEnd, sourceArtifactBytes: (await stat(new URL('../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
+    results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToVisibleGo ? 'GO candidate: WASM was faster from Worker request through estimated UI display at each population; requires independent repeat before adoption' : 'NO-GO for product adoption: no repeatable Worker-to-display benefit across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, medianWorkerToRenderedResultBenefitAtEveryPopulation: endToVisibleGo, workerToRenderedResult: userVisibleEndToEnd, sourceArtifactBytes: (await stat(new URL('../../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
     limitations: [
       `One Linux x86_64 host and one ${browserEngine} build are measured per report; evidence from other browser releases or devices is not implied.`,
       'The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity. Their equal final snapshots are then applied to the existing product UI through a query-gated benchmark hook; this measures presentation cost but is not a live WASM UI integration.',

@@ -4,15 +4,15 @@ import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir, availableParallelism} from 'node:os';
 import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {runScenarioDirectoryResumable} from './experiments/run-scenarios.js';
-import {ScenarioWorkerPool} from './scenario-worker-pool.js';
+import {runScenarioDirectoryResumable} from '../experiments/run-scenarios.js';
+import {ScenarioWorkerPool} from '../experiments/scenario-worker-pool.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions = Number(process.env.RIOSE_SCHEDULER_REPETITIONS ?? 4);
 const warmupRuns = Number(process.env.RIOSE_SCHEDULER_WARMUPS ?? 1);
 const memoryPerWorkerMb = Number(process.env.RIOSE_SCHEDULER_WORKER_MEMORY_MB ?? 128);
 const rssPollIntervalMs = 5;
-const scenarioTemplate = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
+const scenarioTemplate = JSON.parse(await readFile(new URL('../../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
 const scenarioCount = Number(process.env.RIOSE_SCHEDULER_SCENARIO_COUNT ?? 6);
 const reportedAvailableParallelism = availableParallelism();
 const availableWorkers = Math.min(reportedAvailableParallelism, scenarioCount, 4);

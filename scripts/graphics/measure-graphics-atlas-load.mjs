@@ -6,7 +6,7 @@ import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createHash} from 'node:crypto';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const ORIGIN = process.env.RIOSE_ATLAS_URL ?? 'http://127.0.0.1:8000';

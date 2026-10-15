@@ -1,9 +1,9 @@
 import {performance} from 'node:perf_hooks';
 import {Worker} from 'node:worker_threads';
 import {readFile} from 'node:fs/promises';
-import {FarmEngine} from '../src/client/engine.js';
-import {encodeScenarioSnapshot} from '../src/client/scenario-storage.js';
-import {loadWasmMetabolism, updateMetabolismJS} from '../src/client/metabolism-wasm.js';
+import {FarmEngine} from '../../src/client/engine.js';
+import {encodeScenarioSnapshot} from '../../src/client/scenario-storage.js';
+import {loadWasmMetabolism, updateMetabolismJS} from '../../src/client/metabolism-wasm.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 import {cleanupMemoryBenchmarkResources} from './benchmark-memory-resources.mjs';
 import {maxRssKiBToBytes} from './benchmark-memory-metrics.mjs';
@@ -13,7 +13,7 @@ const repetitions = Number(process.env.BENCH_MEMORY_REPETITIONS ?? 3);
 const seed = 20261012;
 const tickHours = 24;
 const rssPollIntervalMs = Number(process.env.BENCH_MEMORY_RSS_POLL_MS ?? 2);
-const wasmUrl = new URL('../wasm/riose_core.wasm', import.meta.url);
+const wasmUrl = new URL('../../wasm/riose_core.wasm', import.meta.url);
 if (!Number.isInteger(repetitions) || repetitions < 1) throw new RangeError('BENCH_MEMORY_REPETITIONS must be a positive integer');
 if (!Number.isFinite(rssPollIntervalMs) || rssPollIntervalMs < 1) throw new RangeError('BENCH_MEMORY_RSS_POLL_MS must be at least 1');
 const wasmBytesFile = await readFile(wasmUrl);
@@ -266,7 +266,7 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
     ['jsHeapUsedImmediatelyAfterOperation', row => row.memory.bestAvailablePeakProxy.jsHeapUsedBytesImmediatelyAfterOperation, 'bytes', false, 'process.memoryUsage().heapUsed sampled immediately after the phase', 'process'],
     ['operationDuration', row => row.elapsedMs, 'ms', false, 'performance.now() around the phase operation'],
   ];
-  const metricSource = (source, row) => `scripts/benchmark-memory.mjs::${source}; ${row.method}`;
+  const metricSource = (source, row) => `scripts/benchmarks/benchmark-memory.mjs::${source}; ${row.method}`;
   const measurementPopulation = {count: population, unit: 'animals', scope};
   for (const [metric, getValue, unit, normalizePerAnimal, source, populationKind] of specs) {
     const values = rows.map(getValue).filter(Number.isFinite);
@@ -288,7 +288,7 @@ function addAggregatedMeasurements(phase, population, scope, rows, implementatio
   const peakIncreaseValues = rows.map(row => row.memory.bestAvailablePeakProxy.processRssObservedPeakIncreaseBytes).filter(Number.isFinite);
   measurements[phase].push(measurement(phase, 'processRssObservedPeakIncreaseDuringPhasePerAnimal', 'bytes/animal', summarizeSamples(peakIncreaseValues.map(value => value / population)), {
     population: measurementPopulation, scope,
-    source: `scripts/benchmark-memory.mjs sampled process RSS peak increase over each run's pre-phase baseline divided by ${population} animals; process-wide lower-bound proxy, not attributable memory`,
+    source: `scripts/benchmarks/benchmark-memory.mjs sampled process RSS peak increase over each run's pre-phase baseline divided by ${population} animals; process-wide lower-bound proxy, not attributable memory`,
     observations: peakIncreaseValues.map(value => value / population), normalizedFrom: 'processRssObservedPeakIncreaseDuringPhase',
     method: rows.at(-1).method,
   }));
@@ -319,7 +319,7 @@ for (const row of allResults) {
     const wasmSamples = kernelRows.map(sample => sample.memory.after.wasmLinearMemoryBytes).filter(Number.isFinite);
     measurements.engine.push(measurement('engine', 'wasmLinearMemoryBytesAfterKernel', 'bytes', summarizeSamples(wasmSamples), {
       population: {animals: row.animals, scope: row.scope}, scope: row.scope, implementation: variant,
-      source: 'scripts/benchmark-memory.mjs::WASM wrapper memoryBytes() after isolated numeric kernel call; input/output typed arrays preallocated', observations: wasmSamples,
+      source: 'scripts/benchmarks/benchmark-memory.mjs::WASM wrapper memoryBytes() after isolated numeric kernel call; input/output typed arrays preallocated', observations: wasmSamples,
     }));
   }
 }

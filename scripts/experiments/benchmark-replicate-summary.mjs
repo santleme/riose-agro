@@ -1,7 +1,7 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 import {summarizeReplicates} from './replicate-summary.js';
 
 const counts = [1_000, 10_000, 100_000];

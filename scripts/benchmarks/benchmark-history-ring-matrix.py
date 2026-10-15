@@ -13,7 +13,7 @@ import shutil
 import subprocess
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 TARGET = ROOT / "target" / "release" / "examples" / "history_ring_matrix"
 POPULATIONS = (100, 1_000, 10_000)
 DAYS = (1, 30)
@@ -84,7 +84,7 @@ def main() -> None:
     source_files = [
         "crates/riose-core/src/simulation.rs",
         "crates/riose-core/examples/history_ring_matrix.rs",
-        "scripts/benchmark-history-ring-matrix.py",
+        "scripts/benchmarks/benchmark-history-ring-matrix.py",
     ]
     with tempfile.TemporaryDirectory(prefix="riose-history-matrix-") as temp:
         scratch = Path(temp)

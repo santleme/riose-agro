@@ -3,7 +3,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {setTimeout as delay} from 'node:timers/promises';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 import {createBatchExperimentManifest, digestScenario, sha256Digest} from './batch-manifest.js';
 import {runResumableBatch} from './resumable-journal.js';
 

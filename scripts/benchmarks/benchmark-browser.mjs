@@ -6,7 +6,7 @@ import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
 import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
-import {waitForDevToolsActivePort} from './browser-startup.mjs';
+import {waitForDevToolsActivePort} from '../experiments/browser-startup.mjs';
 
 async function findChrome(){
   const candidates=[process.env.CHROME_BIN,'/usr/bin/chromium','/usr/bin/chromium-browser','/usr/bin/google-chrome'];

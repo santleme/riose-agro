@@ -9,7 +9,7 @@ import {ENGINE_SOURCE_FILES} from '../../src/client/engine-provenance.js';
 import {createBatchExperimentManifest, sha256Digest} from './batch-manifest.js';
 import {HARNESS_FORMAT, validateScenarioIdentity} from './scenario-dispatch.js';
 import {runResumableBatch} from './resumable-journal.js';
-import {ScenarioWorkerPool} from '../scenario-worker-pool.js';
+import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 import {selectExperimentExecutor} from '../../src/server/experiment-executor.js';
 
 const schemaPath = fileURLToPath(new URL('../../schemas/scenario.schema.json', import.meta.url));

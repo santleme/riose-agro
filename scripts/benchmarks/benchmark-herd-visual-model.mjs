@@ -2,8 +2,8 @@ import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
-import {clusterFarAnimals, assertVisibleAnimalMembership} from '../graphics-poc/herd-visual-model.js';
-import {distanceToViewportCenter, intersectsViewport, visualLod} from '../graphics-poc/contract.js';
+import {clusterFarAnimals, assertVisibleAnimalMembership} from '../../graphics-poc/herd-visual-model.js';
+import {distanceToViewportCenter, intersectsViewport, visualLod} from '../../graphics-poc/contract.js';
 
 const sizes = [100, 1000, 10000];
 const repeats = 9;

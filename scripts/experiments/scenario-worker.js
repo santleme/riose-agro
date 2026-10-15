@@ -1,5 +1,5 @@
 import {parentPort} from 'node:worker_threads';
-import {executeScenario} from './experiments/run-scenarios.js';
+import {executeScenario} from './run-scenarios.js';
 
 parentPort.postMessage({type: 'ready'});
 

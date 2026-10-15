@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {adaptGeneratedFarmLayoutDocument} from '../../graphics-poc/scene-adapter-v1.js';
 import {generateFarmLayout} from '../../src/client/scenario-editor/scene-layout.js';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 
 const warmupRuns = Number(process.env.GENERATED_SCENE_ADAPTER_WARMUPS ?? 5);
 const repetitions = Number(process.env.GENERATED_SCENE_ADAPTER_REPETITIONS ?? 21);

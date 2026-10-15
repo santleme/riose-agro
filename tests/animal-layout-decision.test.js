@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import test from 'node:test';
-import {evaluateAnimalLayoutDecision} from '../scripts/animal-layout-decision.mjs';
+import {evaluateAnimalLayoutDecision} from '../scripts/benchmarks/animal-layout-decision.mjs';
 
 const evidencePath=new URL('../docs/evidence/animal-layout-study-2026-10-13.json',import.meta.url);
 
@@ -67,7 +67,7 @@ test('checked-in animal layout evidence contains separate statistical allocation
   const attributionUrls=[report.results.allocationProfiling.attributedUrl,...report.results.rows.flatMap(row=>
     Object.values(row.allocationNotes.profiles).flatMap(profile=>profile.topSites.map(site=>site.url)))];
   assert.ok(attributionUrls.length>0);
-  assert.ok(attributionUrls.every(url=>url==='scripts/benchmark-animal-layout.mjs'));
+  assert.ok(attributionUrls.every(url=>url==='scripts/benchmarks/benchmark-animal-layout.mjs'));
   assert.ok(attributionUrls.every(url=>!url.includes('file://')&&!url.includes('/home/')&&!/^[A-Za-z]:[\\/]/.test(url)));
   assert.equal(report.results.rows.length,6);
 

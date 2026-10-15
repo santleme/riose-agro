@@ -10,7 +10,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, sha256Digest} from './batch-manifest.js';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 import {executeScenario} from './run-scenarios.js';
 
 const require = createRequire(import.meta.url);
