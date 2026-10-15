@@ -7,7 +7,7 @@ import test from 'node:test';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 test('scientific data manifest validates license, source checksums, and Parquet output', () => {
-  const output = execFileSync(process.execPath, ['scripts/validate_scientific_data_registry.js'], {
+  const output = execFileSync(process.execPath, ['scripts/validation/validate_scientific_data_registry.js'], {
     cwd: root,
     encoding: 'utf8',
   });

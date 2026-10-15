@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateOutcomeRecord} from '../src/client/outcome-record.js';
+import {validateOutcomeRecord} from '../../src/client/outcome-record.js';
 
 const args = process.argv.slice(2);
 const archiveIndex = args.indexOf('--archive');
@@ -23,8 +23,8 @@ if (!outcomePath || !archivePath || !manifestPath || !snapshotPath) {
   process.exitCode = 1;
 } else {
   try {
-    const schemaPath = fileURLToPath(new URL('../schemas/outcome-record.schema.json', import.meta.url));
-    const snapshotSchemaPath = fileURLToPath(new URL('../schemas/farm-snapshot.schema.json', import.meta.url));
+    const schemaPath = fileURLToPath(new URL('../../schemas/outcome-record.schema.json', import.meta.url));
+    const snapshotSchemaPath = fileURLToPath(new URL('../../schemas/farm-snapshot.schema.json', import.meta.url));
     const record = JSON.parse(readFileSync(resolve(outcomePath), 'utf8'));
     const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
     const snapshotSchema = JSON.parse(readFileSync(snapshotSchemaPath, 'utf8'));

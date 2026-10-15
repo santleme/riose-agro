@@ -43,7 +43,7 @@ The Dryad biomass cohort is a useful separate evaluation target but not a strict
 
 For the Mendeley Brazilian forage-biomass source, the acquisition pipeline fetched 20 measurement/spatial files through public API download URLs, checked all SHA-256 hashes, and left 16 unneeded package files un-downloaded, including the large photo archives. Processing produced 342 sample records across June 2018, November 2018, and March 2019. The unit conversion from source tonnes/ha to kg DM/ha was independently checked against dry mass from the 0.25 m² sampling area. There are no duplicate samples within a campaign; 108 spatial sampling keys recur across campaigns and must be grouped for validation.
 
-The explicit manifest and validator establish a reusable pattern for future sources: [`data/mendeley-pasture-biomass/manifest.json`](../../data/mendeley-pasture-biomass/manifest.json), [`scientific-data-manifest-v1.schema.json`](../../schemas/scientific-data-manifest-v1.schema.json), and [`validate_scientific_data_registry.js`](../../scripts/validate_scientific_data_registry.js).
+The explicit manifest and validator establish a reusable pattern for future sources: [`data/mendeley-pasture-biomass/manifest.json`](../../data/mendeley-pasture-biomass/manifest.json), [`scientific-data-manifest-v1.schema.json`](../../schemas/scientific-data-manifest-v1.schema.json), and [`validate_scientific_data_registry.js`](../../scripts/validation/validate_scientific_data_registry.js).
 
 ## Issue boundaries
 

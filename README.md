@@ -122,13 +122,13 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `docs/revisao-literatura-simile-agro-2026.md` — Simile/Smallville research, 2026 methods, livestock models, datasets, and limits
 - `schemas/farm-snapshot.schema.json` and `schemas/examples/` — versioned farm-state contract with field-level provenance and a public USDA example
 - `src/client/snapshot-validator.js` — cross-field checks that prevent missing required inputs from silently becoming simulation data
-- `src/client/snapshot-manifest-link.js`, `scripts/link-farm-snapshot.js` — validate and attach an exact manifest digest to a new snapshot copy without duplicating scenario fields
-- `scripts/validate-farm-snapshot.js` — command-line gate that runs JSON Schema and semantic checks together
+- `src/client/snapshot-manifest-link.js`, `scripts/validation/link-farm-snapshot.js` — validate and attach an exact manifest digest to a new snapshot copy without duplicating scenario fields
+- `scripts/validation/validate-farm-snapshot.js` — command-line gate that runs JSON Schema and semantic checks together
 - `docs/snapshot-fazenda.md` — snapshot contract, simulation eligibility, and known gaps
 - `docs/politica-incerteza.md` — uncertainty sources, current non-calibrated state, and gating rules for future ranges
 - `tests/farm-snapshot.test.js` — missing-data and provenance checks for the snapshot contract
 - `schemas/outcome-record.schema.json`, `src/client/comparison-archive.js`, and `src/client/outcome-record.js` — local projection archive and post-decision outcome sidecar for #16
-- `scripts/archive-comparison.js` and `scripts/validate-outcome-record.js` — reproducible archive and outcome-link validation commands
+- `scripts/validation/archive-comparison.js` and `scripts/validation/validate-outcome-record.js` — reproducible archive and outcome-link validation commands
 - `outcome-review.html`, `src/client/outcome-review.js`, `src/client/outcome-review.css` — browser-local post-decision capture and sidecar export
 - `docs/registro-desfecho.md` and `tests/outcome-record.test.js` — outcome contract, limits, and review/consent/comparability checks
 - `data/usda-cper/period.csv` and `daily.csv` — public-domain yearling-steer ADG-by-period and daily grazing observations from USDA/CPER; used for read-only exploration, not engine calibration

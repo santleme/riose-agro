@@ -133,7 +133,7 @@ test('numeric environmental inputs are optional, provenance checked and backward
 
 test('snapshot CLI reports valid but ineligible examples and can enforce eligibility', () => {
   const samplePath = new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url);
-  const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
+  const scriptPath = new URL('../scripts/validation/validate-farm-snapshot.js', import.meta.url);
   const reportRun = spawnSync(process.execPath, [fileURLToPath(scriptPath), fileURLToPath(samplePath)], {encoding: 'utf8'});
   assert.equal(reportRun.status, 0, reportRun.stderr);
   const report = JSON.parse(reportRun.stdout);
@@ -153,7 +153,7 @@ test('snapshot CLI rejects structurally invalid documents before eligibility can
     const invalid = structuredClone(example);
     delete invalid.operations;
     writeFileSync(invalidPath, JSON.stringify(invalid));
-    const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
+    const scriptPath = new URL('../scripts/validation/validate-farm-snapshot.js', import.meta.url);
     const run = spawnSync(process.execPath, [fileURLToPath(scriptPath), invalidPath, '--require-eligible'], {encoding: 'utf8'});
     assert.equal(run.status, 1, run.stderr);
     const report = JSON.parse(run.stdout);
@@ -327,7 +327,7 @@ test('snapshot links to the comparison manifest by exact file digest and version
     const manifestPath = join(directory, 'comparison.json');
     writeFileSync(snapshotPath, JSON.stringify(linked));
     writeFileSync(manifestPath, manifestBytes);
-    const scriptPath = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
+    const scriptPath = new URL('../scripts/validation/validate-farm-snapshot.js', import.meta.url);
     const matching = spawnSync(process.execPath, [fileURLToPath(scriptPath), snapshotPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(matching.status, 0, matching.stderr);
     assert.equal(JSON.parse(matching.stdout).manifestReferenceChecked, true);
@@ -406,7 +406,7 @@ test('snapshot link command validates and links the exact manifest bytes without
     writeFileSync(snapshotPath, JSON.stringify(source));
     writeFileSync(manifestPath, manifestBytes);
 
-    const scriptPath = new URL('../scripts/link-farm-snapshot.js', import.meta.url);
+    const scriptPath = new URL('../scripts/validation/link-farm-snapshot.js', import.meta.url);
     const run = spawnSync(process.execPath, [fileURLToPath(scriptPath), '--snapshot', snapshotPath, '--manifest', manifestPath, '--output', outputPath], {encoding: 'utf8'});
     assert.equal(run.status, 0, run.stderr);
     const linked = JSON.parse(readFileSync(outputPath, 'utf8'));
@@ -419,7 +419,7 @@ test('snapshot link command validates and links the exact manifest bytes without
     assert.deepEqual(JSON.parse(readFileSync(snapshotPath, 'utf8')), source);
     assert.equal(JSON.parse(run.stdout).simulationEligible, false);
 
-    const validationScript = new URL('../scripts/validate-farm-snapshot.js', import.meta.url);
+    const validationScript = new URL('../scripts/validation/validate-farm-snapshot.js', import.meta.url);
     const check = spawnSync(process.execPath, [fileURLToPath(validationScript), outputPath, '--manifest', manifestPath], {encoding: 'utf8'});
     assert.equal(check.status, 0, check.stderr);
     assert.equal(JSON.parse(check.stdout).manifestReferenceValid, true);

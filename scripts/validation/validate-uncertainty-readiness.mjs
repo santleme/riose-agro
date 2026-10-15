@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {validateIssue15ReadinessContract, validateOutcomeUncertaintyClassifications} from './uncertainty-readiness-validation.mjs';
 
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const inventoryPath=path.join(root,'docs/evidence/uncertainty-readiness-issue-15.json');
 const inventory=JSON.parse(await readFile(inventoryPath,'utf8'));
 const errors=[];
