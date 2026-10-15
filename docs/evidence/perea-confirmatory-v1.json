@@ -1,0 +1,553 @@
+{
+  "schemaVersion": "perea-generative-confirmatory.v1",
+  "studyType": "within_source_reserved_animal_confirmatory_comparison",
+  "candidate": {
+    "id": "perea-semi-markov-experimental",
+    "version": "1.0.0",
+    "status": "research_only"
+  },
+  "source": {
+    "file": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "sha256": "b4d6e14d6ff029dbf497287a774aaa27ec471e7ed1ef5884e9cf0207c784fe37",
+    "preprocessing": {
+      "sourceRows": 9222,
+      "animalMinuteKeys": 8918,
+      "animals": 24,
+      "repeatedAnimalMinuteKeys": 290,
+      "excessRowsAtRepeatedKeys": 304,
+      "conflictingLabelKeys": 54,
+      "rowsExcludedForConflictingLabels": 121,
+      "sameLabelKeysCollapsed": 236,
+      "analysisRows": 8864,
+      "duplicatePolicy": "Same-label rows for an animal-minute collapse to one row with mean motion index; all rows for conflicting-label minutes are excluded."
+    }
+  },
+  "protocol": {
+    "file": "specs/riose-behavioral-agents/09-confirmatory-protocol-v1.md",
+    "sha256": "a4b94c34a26285c5665bf75e5d82dd1e6dda235a7c4dc84ff8bedc1ac024051c",
+    "version": "1"
+  },
+  "implementation": {
+    "candidateFile": "scripts/science/behavior/perea_sequence_baselines.py",
+    "candidateSha256": "ba7fa908573a995d654d0442de80b4ebe5503bb0e0c5b63b5fb0be5a487c26b5",
+    "evaluatorFile": "scripts/science/behavior/evaluate_perea_confirmatory.py",
+    "evaluatorSha256": "464ff39e1145f0cff1b70be90c2db28324f84f4a71c9f51d6ab30a6b43e65196",
+    "baselineEvaluatorSha256": "0a2b984ee09c2d5f2a25ca028fbd1f237feb75b50d1a8f2945c6e15487a561b6",
+    "outputSchemaSha256": "f1aa87b6cd17153891beb0fb665321337eee8ffa671fc9a720bf622676484934"
+  },
+  "execution": {
+    "pythonVersion": "3.12.3",
+    "replicatesPerWindow": 20,
+    "seedSchedule": "BEH-002 SHA-256 schedule; fold id 5; no held-out labels or MI passed to generator"
+  },
+  "partition": {
+    "trainingAnimalIds": [
+      "AH:2003",
+      "AH:2004",
+      "AH:2009",
+      "AH:2013",
+      "AH:2019",
+      "BH:4071",
+      "BH:4085",
+      "BH:4511",
+      "BH:4589",
+      "BH:6495",
+      "BR:7001",
+      "BR:8063",
+      "BR:8071",
+      "BR:8073",
+      "BR:8089",
+      "RC:1067",
+      "RC:2024",
+      "RC:2061",
+      "RC:6",
+      "RC:9012"
+    ],
+    "confirmatoryAnimalIds": [
+      "AH:2008",
+      "BH:5111",
+      "BR:8065",
+      "RC:35"
+    ],
+    "trainingAnimals": 20,
+    "confirmatoryAnimals": 4,
+    "trainingWindows": 1079,
+    "confirmatoryWindows": 226
+  },
+  "support": {
+    "observedConfirmatoryClassMinutes": {
+      "GR": 572,
+      "RE": 348,
+      "RU": 83,
+      "WA": 346
+    },
+    "trainingDurationClasses": [
+      "GR",
+      "RE",
+      "RU",
+      "WA"
+    ],
+    "trainingCompleteDurationSamplesByClass": {
+      "GR": 160,
+      "RE": 79,
+      "RU": 2,
+      "WA": 102
+    },
+    "transitionStatesSupportedAt20TrainingTransitions": [
+      "GR",
+      "RE",
+      "RU",
+      "WA"
+    ]
+  },
+  "metrics": {
+    "iid": {
+      "animalMacroCompositionError": 0.36087886146844783,
+      "animalMacroTransitionTotalVariation": 0.8184056400156305,
+      "perClassAnimalMacroAbsoluteProportionError": {
+        "GR": 0.46158310250828827,
+        "RE": 0.4036470862263941,
+        "RU": 0.24547566450939381,
+        "WA": 0.33015880401858233
+      },
+      "animalMacroCompleteRunAbsoluteMedianErrorMinutes": {
+        "GR": 2.659343671679198,
+        "RE": 4.1125,
+        "RU": 9.0,
+        "WA": 2.9972222222222222
+      },
+      "perAnimal": {
+        "AH:2008": {
+          "windowCount": 37,
+          "compositionError": 0.32602283142728034,
+          "transitionTotalVariation": 0.7676745785724269,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.5052773032411556,
+            "RE": 0.33811008073520715,
+            "RU": 0.1527232237128597,
+            "WA": 0.30525717799858343
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 3.7249999999999996,
+            "RE": 7.525,
+            "RU": 9.0,
+            "WA": 3.975
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.30675675675675673,
+            "missingClassOccurrencesPerReplicateWindow": 1.6527027027027028,
+            "switchesPerMinute": 0.6165594855305466
+          }
+        },
+        "BH:5111": {
+          "windowCount": 68,
+          "compositionError": 0.3606408165492918,
+          "transitionTotalVariation": 0.8480883355017843,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.46883848478662715,
+            "RE": 0.5603725128715454,
+            "RU": 0.14361879316503928,
+            "WA": 0.26973347537395526
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.3948529411764706,
+            "missingClassOccurrencesPerReplicateWindow": 1.9176470588235295,
+            "switchesPerMinute": 0.5796675191815857
+          }
+        },
+        "BR:8065": {
+          "windowCount": 74,
+          "compositionError": 0.38186495385017344,
+          "transitionTotalVariation": 0.8626897402831517,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.45083879824673745,
+            "RE": 0.31480290312469367,
+            "RU": 0.3328598412382196,
+            "WA": 0.4273816962144665
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 1.6071428571428572,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.5202702702702703,
+            "missingClassOccurrencesPerReplicateWindow": 2.1385135135135136,
+            "switchesPerMinute": 0.5248366013071896
+          }
+        },
+        "RC:35": {
+          "windowCount": 47,
+          "compositionError": 0.3749868440470457,
+          "transitionTotalVariation": 0.7951699057051592,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.42137782375863275,
+            "RE": 0.4013028481741302,
+            "RU": 0.3527007999214567,
+            "WA": 0.31826286648732427
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 2.645888157894737,
+            "RE": 0.7,
+            "RU": null,
+            "WA": 2.0194444444444444
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.4819148936170213,
+            "missingClassOccurrencesPerReplicateWindow": 1.922340425531915,
+            "switchesPerMinute": 0.5928152492668621
+          }
+        }
+      }
+    },
+    "persistence": {
+      "animalMacroCompositionError": 0.37050192318240843,
+      "animalMacroTransitionTotalVariation": 0.712482742195552,
+      "perClassAnimalMacroAbsoluteProportionError": {
+        "GR": 0.470515192036151,
+        "RE": 0.399913374475522,
+        "RU": 0.2503958437130163,
+        "WA": 0.32886808069348794
+      },
+      "animalMacroCompleteRunAbsoluteMedianErrorMinutes": {
+        "GR": null,
+        "RE": null,
+        "RU": null,
+        "WA": null
+      },
+      "perAnimal": {
+        "AH:2008": {
+          "windowCount": 37,
+          "compositionError": 0.34279111328213957,
+          "transitionTotalVariation": 0.6729665966278258,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.5263989469752868,
+            "RE": 0.32144513067162206,
+            "RU": 0.16414637590067319,
+            "WA": 0.308093533371592
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 1.0,
+            "missingClassOccurrencesPerReplicateWindow": 3.0,
+            "switchesPerMinute": 0.0
+          }
+        },
+        "BH:5111": {
+          "windowCount": 68,
+          "compositionError": 0.35551470588235295,
+          "transitionTotalVariation": 0.691304347826087,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.47941176470588237,
+            "RE": 0.5654411764705882,
+            "RU": 0.12058823529411766,
+            "WA": 0.2566176470588235
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 1.0,
+            "missingClassOccurrencesPerReplicateWindow": 3.0,
+            "switchesPerMinute": 0.0
+          }
+        },
+        "BR:8065": {
+          "windowCount": 74,
+          "compositionError": 0.3903716216216216,
+          "transitionTotalVariation": 0.7269791666666666,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.4554054054054054,
+            "RE": 0.3141891891891892,
+            "RU": 0.3391891891891892,
+            "WA": 0.44527027027027033
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 1.0,
+            "missingClassOccurrencesPerReplicateWindow": 3.0,
+            "switchesPerMinute": 0.0
+          }
+        },
+        "RC:35": {
+          "windowCount": 47,
+          "compositionError": 0.3933302519435196,
+          "transitionTotalVariation": 0.7586808576616286,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.42084465105802954,
+            "RE": 0.39857800157068846,
+            "RU": 0.3776595744680851,
+            "WA": 0.3054908720732658
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 1.0,
+            "missingClassOccurrencesPerReplicateWindow": 3.0,
+            "switchesPerMinute": 0.0
+          }
+        }
+      }
+    },
+    "markov": {
+      "animalMacroCompositionError": 0.36941738147154957,
+      "animalMacroTransitionTotalVariation": 0.7640429891976925,
+      "perClassAnimalMacroAbsoluteProportionError": {
+        "GR": 0.4335988050606856,
+        "RE": 0.4075694760652959,
+        "RU": 0.29448018070001997,
+        "WA": 0.3377897983344936
+      },
+      "animalMacroCompleteRunAbsoluteMedianErrorMinutes": {
+        "GR": 2.4595953732370144,
+        "RE": 4.08125,
+        "RU": 8.475,
+        "WA": 2.98671875
+      },
+      "perAnimal": {
+        "AH:2008": {
+          "windowCount": 37,
+          "compositionError": 0.34332476325714445,
+          "transitionTotalVariation": 0.749890571571999,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.502251482109925,
+            "RE": 0.32976062774723036,
+            "RU": 0.21265840034419406,
+            "WA": 0.32533909311462395
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 3.575,
+            "RE": 7.525,
+            "RU": 8.475,
+            "WA": 3.8875
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.37972972972972974,
+            "missingClassOccurrencesPerReplicateWindow": 1.8027027027027027,
+            "switchesPerMinute": 0.45209003215434085
+          }
+        },
+        "BH:5111": {
+          "windowCount": 68,
+          "compositionError": 0.3690035768862201,
+          "transitionTotalVariation": 0.781379681372368,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.46081933127502017,
+            "RE": 0.5586566104174464,
+            "RU": 0.17954163548010296,
+            "WA": 0.2769967303723109
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.45955882352941174,
+            "missingClassOccurrencesPerReplicateWindow": 2.0433823529411765,
+            "switchesPerMinute": 0.4411764705882353
+          }
+        },
+        "BR:8065": {
+          "windowCount": 74,
+          "compositionError": 0.3853176918801919,
+          "transitionTotalVariation": 0.7847764679152547,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.40872755669630667,
+            "RE": 0.32404539169741875,
+            "RU": 0.36886908223817005,
+            "WA": 0.4380521603122955
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 1.2,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.572972972972973,
+            "missingClassOccurrencesPerReplicateWindow": 2.235135135135135,
+            "switchesPerMinute": 0.3919934640522876
+          }
+        },
+        "RC:35": {
+          "windowCount": 47,
+          "compositionError": 0.3800234938626418,
+          "transitionTotalVariation": 0.7401252359311483,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.3625968501614905,
+            "RE": 0.41781527439908817,
+            "RU": 0.41685160473761285,
+            "WA": 0.31077120953874393
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 2.6037861197110423,
+            "RE": 0.6375,
+            "RU": null,
+            "WA": 2.0859375
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.5159574468085106,
+            "missingClassOccurrencesPerReplicateWindow": 1.9946808510638299,
+            "switchesPerMinute": 0.44736070381231674
+          }
+        }
+      }
+    },
+    "semimarkov": {
+      "animalMacroCompositionError": 0.3711029343609265,
+      "animalMacroTransitionTotalVariation": 0.7074737895116022,
+      "perClassAnimalMacroAbsoluteProportionError": {
+        "GR": 0.45838101877344173,
+        "RE": 0.39272327389361567,
+        "RU": 0.31019007378206737,
+        "WA": 0.31260596307574984
+      },
+      "animalMacroCompleteRunAbsoluteMedianErrorMinutes": {
+        "GR": 2.1078642118115805,
+        "RE": 4.3321271929824565,
+        "RU": 5.157894736842105,
+        "WA": 3.091703216374269
+      },
+      "perAnimal": {
+        "AH:2008": {
+          "windowCount": 37,
+          "compositionError": 0.3359965650587491,
+          "transitionTotalVariation": 0.6158049182721498,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.4934271741210568,
+            "RE": 0.29819608277141135,
+            "RU": 0.2676121532087154,
+            "WA": 0.27698695631076825
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 2.5789473684210527,
+            "RE": 7.118421052631579,
+            "RU": 5.157894736842105,
+            "WA": 4.029605263157895
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.5554054054054054,
+            "missingClassOccurrencesPerReplicateWindow": 2.3162162162162163,
+            "switchesPerMinute": 0.1509646302250804
+          }
+        },
+        "BH:5111": {
+          "windowCount": 68,
+          "compositionError": 0.3707099266832239,
+          "transitionTotalVariation": 0.7062086238742965,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.47590164608353464,
+            "RE": 0.5641925231631114,
+            "RU": 0.19543915643180348,
+            "WA": 0.24730638105444605
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": null,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.6176470588235294,
+            "missingClassOccurrencesPerReplicateWindow": 2.4286764705882353,
+            "switchesPerMinute": 0.16483375959079283
+          }
+        },
+        "BR:8065": {
+          "windowCount": 74,
+          "compositionError": 0.3875297492561006,
+          "transitionTotalVariation": 0.7599714026599476,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.43625864002384274,
+            "RE": 0.3225916830308722,
+            "RU": 0.36344474932988446,
+            "WA": 0.42084194265782104
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 1.0,
+            "RE": null,
+            "RU": null,
+            "WA": null
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.6898648648648649,
+            "missingClassOccurrencesPerReplicateWindow": 2.54527027027027,
+            "switchesPerMinute": 0.16127450980392158
+          }
+        },
+        "RC:35": {
+          "windowCount": 47,
+          "compositionError": 0.3901754964456325,
+          "transitionTotalVariation": 0.7479102132400149,
+          "perClassAbsoluteProportionError": {
+            "GR": 0.4279366148653328,
+            "RE": 0.3859128066090677,
+            "RU": 0.41426423615786606,
+            "WA": 0.3052885722799641
+          },
+          "completeRunAbsoluteMedianErrorMinutes": {
+            "GR": 2.744645267013688,
+            "RE": 1.5458333333333334,
+            "RU": null,
+            "WA": 2.1538011695906434
+          },
+          "diagnostics": {
+            "singleClassReplicateWindowRate": 0.6382978723404256,
+            "missingClassOccurrencesPerReplicateWindow": 2.393617021276596,
+            "switchesPerMinute": 0.15293255131964809
+          }
+        }
+      }
+    }
+  },
+  "gate": {
+    "compositionAtMostBestSimpleBaselinePlus001": false,
+    "transitionTVAtLeast002BetterThanIIDAndPersistence": {
+      "iid": true,
+      "persistence": false
+    },
+    "classwiseCompositionAtMostBestBaselinePlus005": {
+      "GR": true,
+      "RE": true,
+      "RU": false,
+      "WA": true
+    },
+    "pass": false,
+    "decision": "NO_GO_FOR_THIS_CANDIDATE_AND_SOURCE",
+    "modelPromoted": false,
+    "productionEnabled": false,
+    "externalValidationEstablished": false
+  },
+  "limitations": [
+    "Four reserved animals from the same Perea source are an internal animal holdout, not independent external-site validation.",
+    "Source labels can carry forward events shorter than 30 seconds; durations describe annotations, not unbiased biological bouts.",
+    "No physiological, nutritional, weight, intake, or FarmEngine result is modeled or inferred.",
+    "Four confirmatory animals do not support confidence intervals or broad population claims."
+  ]
+}

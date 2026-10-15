@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "perea-confirmatory-execution-metadata.v1",
+  "evaluatorSha256": "464ff39e1145f0cff1b70be90c2db28324f84f4a71c9f51d6ab30a6b43e65196",
+  "pythonVersion": "3.12.3",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "wallTimeSeconds": 0.426784248000331,
+  "peakRssBytes": 29736960,
+  "initialProcessPeakRssBytes": 17825792,
+  "note": "Environment resource measurements are descriptive execution metadata, not scientific metrics."
+}

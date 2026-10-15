@@ -34,7 +34,8 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-003.
 - Scope: frozen evaluation over held-out animals and independent replicated sequences; publication of all metrics, failures, resource usage, support limits.
 - Acceptance: preregistered pass/fail vs baselines, clear NO-GO where applicable, no external validation claim.
-- Status: IN_PROGRESS (confirmatory protocol v1 frozen; now eligible to score reserved animals with code pinned; no promotion).
+- Evidence: `09-confirmatory-protocol-v1.md`; `docs/evidence/perea-confirmatory-v1.md`, `.json`, and `perea-confirmatory-execution-metadata.json`; frozen roster and result tests.
+- Status: DONE (frozen internal holdout evaluated; NO-GO for this candidate on this source; no promotion).
 
 ## BEH-005 — Secure AI research assistant (Groq / Hugging Face)
 - Depends on: BEH-000; may run independently of BEH-002.
@@ -46,7 +47,7 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-003, BEH-004 and maintained Product V2 integration.
 - Scope: observational/generative comparison in minimal interface with provenance and explicit unvalidated label.
 - Acceptance: E2E, desktop/mobile accessibility, fail-safe model-unavailable behavior, unchanged default engine results, screenshot inspection.
-- Status: BACKLOG.
+- Status: BLOCKED (BEH-004 NO-GO; do not integrate this candidate into Product without a new eligible candidate and independent review).
 
 ## BEH-007 — External dataset clearance and independent-domain check
 - Depends on: legal rights, suitable population, appropriate measured labels, preregistered independent evaluation.
