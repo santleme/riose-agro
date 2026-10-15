@@ -1,0 +1,3 @@
+# Design system
+
+Product direction: quiet editorial scientific tool. Light off-white page, white surfaces, muted blue quantitative accent, dark readable text, restrained status colors, system sans stack, tabular numerals, subtle borders, spacing-led hierarchy. Shared tokens are in `product.css`; no heavy framework/fonts, game rendering, map, sprite, or unrelated component system. Empty state centers “What would happen if?” and a large prompt, selectable prompt examples and local history. Workspace uses conversation sidebar and analysis/population canvas. Clearly label demo engine and unavailable metrics. Responsive CSS collapses sidebar on mobile. Keep labels in English for current UI consistency; a localization pass is not included.

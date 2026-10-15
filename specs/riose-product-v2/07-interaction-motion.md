@@ -1,0 +1,3 @@
+# Interaction and motion
+
+Explicit states and controls communicate interpretation, validation, running, completion and error. Prompt sends bounded text; Run is the only execution confirmation. Follow-up invalidates old results. Grid hover and selected outline are quiet; timeline selects retained computed points immediately. Render no simulated-progress values. CSS motion is short, functional, and disabled via `prefers-reduced-motion`. Keyboard can focus cells and use selection; buttons and inputs have visible focus. Preserve selection when changing indicator. On Worker error, preserve review state and make retry possible. Avoid layout changes caused by decorative animation.

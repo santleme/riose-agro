@@ -6,7 +6,7 @@
   <title>Riose — Experimentos</title><link rel="icon" href="riose-mark.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="src/client/home.css"><link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="src/client/home.css"><link rel="stylesheet" href="src/client/experiments.css">
 </head>
 <body class="experiment-body">
   <a class="skip-link" href="#experiment-main">Pular para o experimento</a>
@@ -53,5 +53,5 @@
     <section class="sources-note"><div><p class="eyebrow">MODELO E EVIDÊNCIA</p><h2>Resultados não são medições.</h2><p>O motor geral usa regras simplificadas e hipóteses fixas. Peso, consumo, pastagem e custo são saídas demonstrativas; não são previsões nem recomendações de manejo. A equação BR-CORTE 2023 disponível no projeto calcula CMS sob seu domínio declarado; GMD e estoque de forragem são entradas, não previsões dessa equação.</p></div><div class="source-links"><a href="docs/modelos/interface-modelos-cientificos.md">Modelos, fontes e limitações ↗</a><a href="docs/historico-execucoes.md">Formato do histórico ↗</a><a href="adult-data.html">Dados observados de animais ↗</a><button id="snapshot-review-open" type="button">Revisar snapshot observado ↗</button></div></section>
   </main>
   <dialog id="snapshot-review" class="review-dialog"><div class="dialog-heading"><div><p class="eyebrow">DADOS OBSERVADOS · REVISÃO</p><h2>Validar snapshot</h2></div><button id="snapshot-review-close" class="close-button" type="button" aria-label="Fechar">×</button></div><p>A revisão valida estrutura, proveniência e elegibilidade. Dados observados não são aplicados à simulação nem transformados em previsão.</p><form id="snapshot-review-form"><label>Snapshot JSON<input id="snapshot-review-file" type="file" accept="application/json,.json" required></label><label>Manifesto ligado (se houver)<input id="snapshot-review-manifest" type="file" accept="application/json,.json"></label><button class="primary-button" type="submit">Validar localmente</button></form><p id="snapshot-review-status" role="status" aria-live="polite">Selecione um snapshot.</p><div id="snapshot-review-result"></div></dialog>
-  <script type="module" src="src/client/product-app.js"></script><script type="module" src="src/client/snapshot-review.js"></script>
+  <script type="module" src="src/client/experiments-app.js"></script><script type="module" src="src/client/snapshot-review.js"></script>
 </body></html>

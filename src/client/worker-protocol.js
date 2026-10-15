@@ -9,13 +9,14 @@ const commandFields = {
   tick: ['hours'],
   compare: ['snapshot', 'days'],
   compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
+  populationCompare: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
   compareLotConfigured: ['manifest'],
   replayComparison: ['manifest'],
   replayConfigured: ['manifest'],
   replayLotConfigured: ['manifest'],
   snapshot: []
 };
-const responseTypes = new Set(['state', 'comparison', 'error']);
+const responseTypes = new Set(['state', 'comparison', 'population', 'progress', 'error']);
 const actions = new Set(['grazing', 'feeding', 'drinking', 'resting']);
 
 export class WorkerProtocolError extends Error {
@@ -69,6 +70,16 @@ function validateCommandPayload(message) {
       if (message.days != null) requireInteger(message.days, 'compareConfigured.days', 1, 365, command);
       if (!isValidConfig(message.referenceConfig) || !isValidConfig(message.scenarioConfig)) {
         fail('INVALID_COMMAND_PAYLOAD', 'compareConfigured requires two complete valid configurations.', command);
+      }
+      break;
+    case 'populationCompare':
+      if (!isRecord(message.snapshot)) fail('INVALID_COMMAND_PAYLOAD', 'populationCompare.snapshot must be an object.', command);
+      try {validateState(message.snapshot,{allowMissingAnimalName:true});} catch (error) {
+        fail('INVALID_COMMAND_PAYLOAD', `populationCompare.snapshot is invalid: ${error.message}`, command);
+      }
+      requireInteger(message.days, 'populationCompare.days', 1, 365, command);
+      if (!isValidConfig(message.referenceConfig) || !isValidConfig(message.scenarioConfig)) {
+        fail('INVALID_COMMAND_PAYLOAD', 'populationCompare requires two complete valid configurations.', command);
       }
       break;
     case 'replayComparison':
@@ -137,6 +148,10 @@ export function normalizeWorkerResponse(raw) {
   const response = {...raw, protocolVersion: WORKER_PROTOCOL_VERSION};
   if (raw.type === 'state') validateState(raw.state);
   if (raw.type === 'comparison') validateComparison(raw.data);
+  if (raw.type === 'population' && (!isRecord(raw.data) || !isRecord(raw.data.comparison) || !Array.isArray(raw.data.timeline))) {
+    fail('INVALID_RESPONSE', 'Population response must include a comparison and timeline.');
+  }
+  if(raw.type==='progress'&&(!Number.isInteger(raw.day)||!Number.isInteger(raw.days)||raw.day<0||raw.day>raw.days))fail('INVALID_RESPONSE','Progress response must contain a bounded day and horizon.');
   if (raw.type === 'comparison' && owns(raw, 'execution')) {
     const execution = raw.execution;
     if (!isRecord(execution) || !['local-rust','local-js'].includes(execution.backend) || typeof execution.fallbackUsed !== 'boolean'
@@ -162,7 +177,7 @@ export function normalizeWorkerResponse(raw) {
   return response;
 }
 
-function validateState(state) {
+function validateState(state,{allowMissingAnimalName=false}={}) {
   if (!isRecord(state)) fail('INVALID_RESPONSE', 'state.state must be an object.');
   if (!Number.isInteger(state.hour) || !Number.isFinite(state.cost) || !Array.isArray(state.animals) || state.animals.length < 1 || state.animals.length > 10000) {
     fail('INVALID_RESPONSE', 'state.state must contain a valid hour, cost and animal list.');
@@ -180,7 +195,7 @@ function validateState(state) {
       fail('INVALID_RESPONSE', 'state.state.animals must contain unique positive integer IDs.');
     }
     seen.add(animal.id);
-    if (typeof animal.name !== 'string' || !actions.has(animal.action) || !Number.isInteger(animal.patch) || animal.patch < 0 || animal.patch > 3
+    if ((!allowMissingAnimalName&&typeof animal.name!=='string')||(animal.name!==undefined&&typeof animal.name!=='string')||!actions.has(animal.action)||!Number.isInteger(animal.patch)||animal.patch<0||animal.patch>3
       || ![animal.weight, animal.initialWeight, animal.energy, animal.thirst].every(Number.isFinite)) {
       fail('INVALID_RESPONSE', 'state.state.animals must contain finite scientific values.');
     }

@@ -84,7 +84,7 @@ test('CLI and API both reject a digest-matching but invalid comparison manifest'
   }
 });
 
-test('snapshot review endpoint validates locally alongside the farm scene', async t => {
+test('snapshot review endpoint validates locally alongside current experiment workspaces', async t => {
   const server = createServer({env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));

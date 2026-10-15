@@ -1,0 +1,5 @@
+# AI orchestration
+
+LLM is an optional intent extractor. It cannot run tools, code, equations, data changes, scenarios, or scientific prediction. Server endpoint accepts bounded prompt text, calls configured OpenAI/Groq/Hugging Face using env-only credentials, requests strict JSON schema, bounds response bytes/tokens/time, and validates against the exact intent contract. Provider failure returns a clear unavailable/error response; client uses the bounded deterministic parser and labels its source. No fake LLM claims. Prompt injection is treated as untrusted content inside the user text; the system instruction and schema do not grant it privileges. Retries are bounded (currently no unbounded retry loop). Outputs require user review and explicit Run.
+
+Supported parser scope is narrow Portuguese/English aliases for count, days, Nelore metadata, hot/rain/normal weather and supplement contrast. Unsupported scientific targets and probabilistic requests are flagged. Expand only with tests and real engine capability. Follow-up parser supports count, duration, weather and supplement only.

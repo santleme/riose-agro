@@ -1,0 +1,5 @@
+# Riose Product V2 development constitution
+
+This folder is the persistent source of truth for Product V2 implementation. Existing scientific contracts and architecture documents remain authoritative for their domains; see [audit](../../docs/architecture/product-conversational-simulation-audit-2026-10-15.md). Keep changes small, reproducible, testable, and grounded in engine outputs. No UI/LLM may manufacture data, biology, confidence, or causal claims. LLM output is intent only and always passes a strict allowlisted validator. Keep credentials server-only. Preserve existing scenario manifests, seeds, history, export, Workers, JS/Rust/WASM paths, and observed data. A software test is not biological validation. Use the task loop in `tasks.md`, record evidence in `progress.md`, decisions in `decisions.md`, risks in `risks.md`, and resume from `handoff.md`.
+
+Task statuses are exactly `BACKLOG`, `READY`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`. `DONE` requires acceptance evidence and relevant passing tests. Do not merge a pull request automatically.

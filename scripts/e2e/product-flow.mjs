@@ -1,0 +1,79 @@
+import assert from 'node:assert/strict';
+import {createServer} from '../../src/server/server.js';
+import {chromium} from 'playwright';
+
+const server=createServer({env:{}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const root=`http://127.0.0.1:${server.address().port}`;
+let browser;
+try{
+  browser=await chromium.launch({headless:true});
+  const context=await browser.newContext({viewport:{width:1440,height:1100},deviceScaleFactor:1});
+  const page=await context.newPage();
+  await page.addInitScript(()=>{
+    const postMessage=Worker.prototype.postMessage;
+    Worker.prototype.postMessage=function(message,...args){
+      if(message?.type==='populationCompare'){
+        setTimeout(()=>postMessage.call(this,message,...args),300);
+        return;
+      }
+      return postMessage.call(this,message,...args);
+    };
+  });
+  const errors=[];
+  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(`${root}/product.html`,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('#analysis-area').isVisible(),false,'initial state must not show uncomputed analysis');
+  await page.screenshot({path:'docs/evidence/product-v2-initial.png',fullPage:true});
+  const prompt='Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, changing supplementation from 0.5 to 1.5 kg DM per animal per day.';
+  await page.locator('#prompt-input').fill(prompt);
+  await page.locator('#prompt-form button[type="submit"]').click();
+  await page.locator('.spec-card .primary-button').waitFor();
+  const review=await page.locator('.spec-card').innerText();
+  assert.match(review,/200 animals/);
+  assert.match(review,/Nelore · prompt metadata only/);
+  assert.match(review,/No AI provider is configured/);
+  assert.equal(await page.locator('.animal-cell').count(),0,'review must not execute');
+  await page.locator('.spec-card .primary-button').click();
+  await page.waitForFunction(()=>document.querySelector('#followup-input').disabled);
+  assert.equal(await page.locator('#followup-form button').isDisabled(),true,'follow-up must be disabled during a Worker run');
+  await page.locator('#followup-input').evaluate(input=>{input.value='make it 15 days';input.form.requestSubmit();});
+  assert.match(await page.locator('.spec-card').innerText(),/30 days/,'in-flight follow-up must not replace the specification for the running result');
+  await page.waitForFunction(()=>document.querySelectorAll('.animal-cell').length===200);
+  assert.equal(await page.locator('#analysis-area').isVisible(),true);
+  assert.match(await page.locator('#workspace-meta').innerText(),/200 engine animals · 30 days/);
+  assert.match(await page.locator('#legend-low-label').innerText(),/kg/);
+  await page.screenshot({path:'docs/evidence/product-v2-workspace.png',fullPage:true});
+  await page.locator('.animal-cell').nth(1).click();
+  assert.match(await page.locator('#animal-inspector').innerText(),/Animal 2/);
+  const downloadPromise=page.waitForEvent('download');
+  await page.locator('#export-json').click();
+  assert.equal((await downloadPromise).suggestedFilename(),'riose-population-comparison.json');
+  await page.locator('#timeline').evaluate(input=>{input.value=String(Number(input.max)-1);input.dispatchEvent(new Event('input',{bubbles:true}));});
+  await page.locator('#followup-input').fill('make it 15 days');
+  await page.locator('#followup-form button').click();
+  assert.equal(await page.locator('#analysis-area').isVisible(),false,'revision clears stale analysis and does not auto-run');
+  assert.match(await page.locator('.spec-card').innerText(),/15 days/);
+  await page.locator('.spec-card .primary-button').click();
+  await page.waitForFunction(()=>document.querySelectorAll('.animal-cell').length===200);
+  assert.match(await page.locator('#workspace-meta').innerText(),/200 engine animals · 15 days/);
+  await page.locator('.back-link').click();
+  await page.locator('.history-row').first().click();
+  await page.getByText(/Replayed with the same manifest snapshot and seed/).waitFor();
+  assert.match(await page.locator('#workspace-meta').innerText(),/200 engine animals · 15 days/);
+  await page.setViewportSize({width:1440,height:1100});
+  await page.goto(`${root}/experiments.html`,{waitUntil:'domcontentloaded'});
+  const experimentColumns=await page.locator('.workspace').evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(' ').map(Number.parseFloat));
+  assert.equal(experimentColumns.length,2,'legacy Experiments layout must keep its two-column stylesheet');
+  assert.ok(experimentColumns[0]>=310,'legacy Experiments layout must keep its minimum panel width after Product V2 is added');
+  await page.setViewportSize({width:390,height:844});
+  await page.goto(`${root}/product.html`,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'mobile page must not overflow horizontally');
+  await page.screenshot({path:'docs/evidence/product-v2-mobile.png',fullPage:true});
+  assert.deepEqual(errors,[],'browser console should be free of errors');
+  console.log('Product E2E PASS: prompt → review → explicit paired run → 200 animal grid → inspection/export → revision/re-run → local replay → mobile layout.');
+}finally{
+  await browser?.close();
+  await new Promise(resolve=>server.close(resolve));
+}
