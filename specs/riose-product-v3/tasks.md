@@ -74,8 +74,8 @@ Acceptance criteria: record 100/1,000/10,000 results for the same fixed 3-arm sc
 
 Required tests: JS/Rust trajectory parity, existing WASM golden parity/fallback benchmark, Product V3 browser-flow regression and repeatable `npm run bench:scenario-lab`.
 
-Evidence: `docs/evidence/product-v3-scenario-lab-benchmark-2026-10.json`, existing parity artifacts/results and browser E2E.
-Status: IN_PROGRESS
+Evidence: [`docs/evidence/product-v3-scenario-lab-benchmark-2026-10.json`](../../docs/evidence/product-v3-scenario-lab-benchmark-2026-10.json), [`docs/evidence/product-v3-native-wasm-browser-benchmark-2026-10.json`](../../docs/evidence/product-v3-native-wasm-browser-benchmark-2026-10.json), existing parity artifacts/results and browser E2E.
+Status: DONE (100/1,000/10,000 repeated browser profile; 40 MiB estimated-result guard and 1,200-cell cap tested; JS/Rust trajectories, WASM goldens and fallback pass).
 
 ## P3-007 — AI experiment planner and grounded explainer
 

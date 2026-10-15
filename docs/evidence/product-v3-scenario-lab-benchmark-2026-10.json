@@ -1,0 +1,877 @@
+{
+  "schemaVersion": 2,
+  "benchmark": {
+    "name": "product-v3-scenario-lab-population",
+    "source": {
+      "revision": "d0808dac263801b074bfd0f32373afa84b477900",
+      "dirty": false
+    }
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "platform": "linux",
+    "browser": "chromium",
+    "browserVersion": "143.0.7499.4",
+    "browserUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/143.0.7499.4 Safari/537.36"
+  },
+  "hardware": {
+    "os": "Linux 6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 7700X 8-Core Processor",
+    "gpuMemoryBytes": null,
+    "browserDevice": {
+      "hardwareConcurrency": 16,
+      "deviceMemoryGiB": 8,
+      "devicePixelRatio": 1,
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "devicePixelRatio": 1
+      }
+    }
+  },
+  "workload": {
+    "seed": 20261015,
+    "populations": [
+      {
+        "animals": 100,
+        "scope": "FarmEngine Product V3 scenario lab",
+        "limit": "supported maximum 10,000 animals"
+      },
+      {
+        "animals": 1000,
+        "scope": "FarmEngine Product V3 scenario lab",
+        "limit": "supported maximum 10,000 animals"
+      },
+      {
+        "animals": 10000,
+        "scope": "FarmEngine Product V3 scenario lab",
+        "limit": "supported maximum 10,000 animals"
+      }
+    ],
+    "scenario": {
+      "arms": 3,
+      "factor": "supplement",
+      "durationDays": 7,
+      "levelsKgDMPerHeadPerDay": [
+        0.5,
+        1,
+        1.5
+      ],
+      "selectedOutput": "actual rendered stable-ID population grid"
+    }
+  },
+  "configuration": {
+    "warmupRuns": 1,
+    "repetitions": 3,
+    "browserCacheState": "same isolated headless Chromium context; page navigated between runs"
+  },
+  "limits": {
+    "farmEngineMaxAnimals": 10000,
+    "numericKernelMaxAnimalsMeasured": 100000
+  },
+  "phases": {
+    "engine": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "snapshot": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "serialization": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "serialization",
+          "metric": "scenarioResultJsonProjection",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 322714,
+            "spread": {
+              "min": 322714,
+              "max": 322714,
+              "range": 0
+            },
+            "rawObservations": [
+              322714,
+              322714,
+              322714
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            322714,
+            322714,
+            322714
+          ],
+          "memoryType": "serialized-payload",
+          "source": "UTF-8 size of JSON.stringify over the actual Worker result. A size proxy, not the browser structured-clone wire size."
+        },
+        {
+          "phase": "serialization",
+          "metric": "scenarioResultJsonProjection",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 3147288,
+            "spread": {
+              "min": 3147288,
+              "max": 3147288,
+              "range": 0
+            },
+            "rawObservations": [
+              3147288,
+              3147288,
+              3147288
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            3147288,
+            3147288,
+            3147288
+          ],
+          "memoryType": "serialized-payload",
+          "source": "UTF-8 size of JSON.stringify over the actual Worker result. A size proxy, not the browser structured-clone wire size."
+        },
+        {
+          "phase": "serialization",
+          "metric": "scenarioResultJsonProjection",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 31580825,
+            "spread": {
+              "min": 31580825,
+              "max": 31580825,
+              "range": 0
+            },
+            "rawObservations": [
+              31580825,
+              31580825,
+              31580825
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            31580825,
+            31580825,
+            31580825
+          ],
+          "memoryType": "serialized-payload",
+          "source": "UTF-8 size of JSON.stringify over the actual Worker result. A size proxy, not the browser structured-clone wire size."
+        }
+      ]
+    },
+    "worker": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "ui": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "ui",
+          "metric": "selectedAnimalGridAndInspectorUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 9.199999999254942,
+            "spread": {
+              "min": 8.800000000745058,
+              "max": 10.199999999254942,
+              "range": 1.3999999985098839
+            },
+            "rawObservations": [
+              8.800000000745058,
+              9.199999999254942,
+              10.199999999254942
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            8.800000000745058,
+            9.199999999254942,
+            10.199999999254942
+          ],
+          "source": "Actual first animal cell click to next animation frame after the selected-animal inspector changes; includes rebuilding the visible grid."
+        },
+        {
+          "phase": "ui",
+          "metric": "selectedAnimalGridAndInspectorUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 10.600000001490116,
+            "spread": {
+              "min": 8.299999997019768,
+              "max": 12.099999997764826,
+              "range": 3.800000000745058
+            },
+            "rawObservations": [
+              10.600000001490116,
+              8.299999997019768,
+              12.099999997764826
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            10.600000001490116,
+            8.299999997019768,
+            12.099999997764826
+          ],
+          "source": "Actual first animal cell click to next animation frame after the selected-animal inspector changes; includes rebuilding the visible grid."
+        },
+        {
+          "phase": "ui",
+          "metric": "selectedAnimalGridAndInspectorUpdate",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 9,
+            "spread": {
+              "min": 8.800000000745058,
+              "max": 21.600000001490116,
+              "range": 12.800000000745058
+            },
+            "rawObservations": [
+              9,
+              21.600000001490116,
+              8.800000000745058
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            9,
+            21.600000001490116,
+            8.800000000745058
+          ],
+          "source": "Actual first animal cell click to next animation frame after the selected-animal inspector changes; includes rebuilding the visible grid."
+        }
+      ]
+    },
+    "layout": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "layout",
+          "metric": "visibleAnimalGridCells",
+          "unit": "cells",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 100,
+            "spread": {
+              "min": 100,
+              "max": 100,
+              "range": 0
+            },
+            "rawObservations": [
+              100,
+              100,
+              100
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            100,
+            100,
+            100
+          ],
+          "source": "Actual Product V3 grid DOM after render; current product cap is 1,200 cells per page."
+        },
+        {
+          "phase": "layout",
+          "metric": "visibleAnimalGridCells",
+          "unit": "cells",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 1000,
+            "spread": {
+              "min": 1000,
+              "max": 1000,
+              "range": 0
+            },
+            "rawObservations": [
+              1000,
+              1000,
+              1000
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            1000,
+            1000,
+            1000
+          ],
+          "source": "Actual Product V3 grid DOM after render; current product cap is 1,200 cells per page."
+        },
+        {
+          "phase": "layout",
+          "metric": "visibleAnimalGridCells",
+          "unit": "cells",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 1200,
+            "spread": {
+              "min": 1200,
+              "max": 1200,
+              "range": 0
+            },
+            "rawObservations": [
+              1200,
+              1200,
+              1200
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            1200,
+            1200,
+            1200
+          ],
+          "source": "Actual Product V3 grid DOM after render; current product cap is 1,200 cells per page."
+        },
+        {
+          "phase": "layout",
+          "metric": "pageRendererDomNodes",
+          "unit": "nodes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 2732,
+            "spread": {
+              "min": 1824,
+              "max": 3640,
+              "range": 1816
+            },
+            "rawObservations": [
+              1824,
+              2732,
+              3640
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            1824,
+            2732,
+            3640
+          ],
+          "source": "Chrome DevTools Protocol Performance.getMetrics Nodes count in page renderer after render; includes all document nodes, not just population cells."
+        },
+        {
+          "phase": "layout",
+          "metric": "pageRendererDomNodes",
+          "unit": "nodes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 11764,
+            "spread": {
+              "min": 9056,
+              "max": 14472,
+              "range": 5416
+            },
+            "rawObservations": [
+              9056,
+              11764,
+              14472
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            9056,
+            11764,
+            14472
+          ],
+          "source": "Chrome DevTools Protocol Performance.getMetrics Nodes count in page renderer after render; includes all document nodes, not just population cells."
+        },
+        {
+          "phase": "layout",
+          "metric": "pageRendererDomNodes",
+          "unit": "nodes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 3086,
+            "spread": {
+              "min": 3086,
+              "max": 3086,
+              "range": 0
+            },
+            "rawObservations": [
+              3086,
+              3086,
+              3086
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            3086,
+            3086,
+            3086
+          ],
+          "source": "Chrome DevTools Protocol Performance.getMetrics Nodes count in page renderer after render; includes all document nodes, not just population cells."
+        }
+      ]
+    },
+    "render": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "render",
+          "metric": "scenarioResultMessageToPaintedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 6.599999997764826,
+            "spread": {
+              "min": 5.5,
+              "max": 8.599999997764826,
+              "range": 3.099999997764826
+            },
+            "rawObservations": [
+              5.5,
+              6.599999997764826,
+              8.599999997764826
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            5.5,
+            6.599999997764826,
+            8.599999997764826
+          ],
+          "source": "Performance timestamp at Worker scenarioSet message capture through next animation frame after actual population grid appears; includes UI result projection, DOM creation, and paint scheduling."
+        },
+        {
+          "phase": "render",
+          "metric": "scenarioResultMessageToPaintedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 11.800000000745058,
+            "spread": {
+              "min": 11.800000000745058,
+              "max": 13.900000002235174,
+              "range": 2.100000001490116
+            },
+            "rawObservations": [
+              13.900000002235174,
+              11.800000000745058,
+              11.800000000745058
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            13.900000002235174,
+            11.800000000745058,
+            11.800000000745058
+          ],
+          "source": "Performance timestamp at Worker scenarioSet message capture through next animation frame after actual population grid appears; includes UI result projection, DOM creation, and paint scheduling."
+        },
+        {
+          "phase": "render",
+          "metric": "scenarioResultMessageToPaintedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 15.800000000745058,
+            "spread": {
+              "min": 14.600000001490116,
+              "max": 17.199999999254942,
+              "range": 2.599999997764826
+            },
+            "rawObservations": [
+              17.199999999254942,
+              14.600000001490116,
+              15.800000000745058
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            17.199999999254942,
+            14.600000001490116,
+            15.800000000745058
+          ],
+          "source": "Performance timestamp at Worker scenarioSet message capture through next animation frame after actual population grid appears; includes UI result projection, DOM creation, and paint scheduling."
+        }
+      ]
+    },
+    "startup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "coldStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "warmStartup": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "bridgeMarshaling": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "fullScenario": {
+      "status": "not-measured",
+      "measurements": []
+    },
+    "uiEndToEnd": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "uiEndToEnd",
+          "metric": "reviewedRunToRenderedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 227.20000000298023,
+            "spread": {
+              "min": 227.09999999776483,
+              "max": 227.80000000074506,
+              "range": 0.7000000029802322
+            },
+            "rawObservations": [
+              227.20000000298023,
+              227.09999999776483,
+              227.80000000074506
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            227.20000000298023,
+            227.09999999776483,
+            227.80000000074506
+          ],
+          "source": "Product V3 UI: click Run scenarios until actual results and population cells are visible; includes Worker execution and rendering."
+        },
+        {
+          "phase": "uiEndToEnd",
+          "metric": "reviewedRunToRenderedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 1354.699999999255,
+            "spread": {
+              "min": 1352.6000000014901,
+              "max": 1355.0999999977648,
+              "range": 2.4999999962747097
+            },
+            "rawObservations": [
+              1354.699999999255,
+              1352.6000000014901,
+              1355.0999999977648
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            1354.699999999255,
+            1352.6000000014901,
+            1355.0999999977648
+          ],
+          "source": "Product V3 UI: click Run scenarios until actual results and population cells are visible; includes Worker execution and rendering."
+        },
+        {
+          "phase": "uiEndToEnd",
+          "metric": "reviewedRunToRenderedGrid",
+          "unit": "ms",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 13569.199999999255,
+            "spread": {
+              "min": 13077.300000000745,
+              "max": 13634,
+              "range": 556.6999999992549
+            },
+            "rawObservations": [
+              13077.300000000745,
+              13634,
+              13569.199999999255
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            13077.300000000745,
+            13634,
+            13569.199999999255
+          ],
+          "source": "Product V3 UI: click Run scenarios until actual results and population cells are visible; includes Worker execution and rendering."
+        }
+      ]
+    },
+    "memory": {
+      "status": "measured",
+      "measurements": [
+        {
+          "phase": "memory",
+          "metric": "rendererJsHeapUsedAfterRender",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 7466860,
+            "spread": {
+              "min": 6079664,
+              "max": 9005524,
+              "range": 2925860
+            },
+            "rawObservations": [
+              6079664,
+              7466860,
+              9005524
+            ]
+          },
+          "population": {
+            "animals": 100,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            6079664,
+            7466860,
+            9005524
+          ],
+          "memoryType": "js-heap",
+          "source": "Chrome DevTools Protocol Performance.getMetrics JSHeapUsedSize in the page renderer after render; excludes separately running Worker heaps and browser-process/GPU memory."
+        },
+        {
+          "phase": "memory",
+          "metric": "rendererJsHeapUsedAfterRender",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 40856596,
+            "spread": {
+              "min": 30759848,
+              "max": 45596768,
+              "range": 14836920
+            },
+            "rawObservations": [
+              30759848,
+              40856596,
+              45596768
+            ]
+          },
+          "population": {
+            "animals": 1000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            30759848,
+            40856596,
+            45596768
+          ],
+          "memoryType": "js-heap",
+          "source": "Chrome DevTools Protocol Performance.getMetrics JSHeapUsedSize in the page renderer after render; excludes separately running Worker heaps and browser-process/GPU memory."
+        },
+        {
+          "phase": "memory",
+          "metric": "rendererJsHeapUsedAfterRender",
+          "unit": "bytes",
+          "statistics": {
+            "sampleCount": 3,
+            "median": 115682036,
+            "spread": {
+              "min": 113218988,
+              "max": 115730468,
+              "range": 2511480
+            },
+            "rawObservations": [
+              115730468,
+              113218988,
+              115682036
+            ]
+          },
+          "population": {
+            "animals": 10000,
+            "scope": "FarmEngine Product V3 scenario lab"
+          },
+          "observations": [
+            115730468,
+            113218988,
+            115682036
+          ],
+          "memoryType": "js-heap",
+          "source": "Chrome DevTools Protocol Performance.getMetrics JSHeapUsedSize in the page renderer after render; excludes separately running Worker heaps and browser-process/GPU memory."
+        }
+      ]
+    }
+  },
+  "timingBoundaries": [
+    {
+      "phase": "uiEndToEnd",
+      "timed": [
+        "User confirmation click until results and the actual population grid become visible."
+      ],
+      "notTimed": [
+        "Browser startup and initial navigation."
+      ],
+      "whatIsTimed": [
+        "User confirmation click until results and the actual population grid become visible."
+      ],
+      "whatIsNotTimed": [
+        "Browser startup and initial navigation."
+      ]
+    },
+    {
+      "phase": "render",
+      "timed": [
+        "Worker result receipt through the next animation frame after the population grid becomes visible."
+      ],
+      "notTimed": [
+        "Worker computation before its result message."
+      ],
+      "whatIsTimed": [
+        "Worker result receipt through the next animation frame after the population grid becomes visible."
+      ],
+      "whatIsNotTimed": [
+        "Worker computation before its result message."
+      ]
+    },
+    {
+      "phase": "ui",
+      "timed": [
+        "Selecting the first animal through the next animation frame after its inspector updates."
+      ],
+      "notTimed": [
+        "Keyboard interaction latency, assistive technology, and repeated high-frequency selection."
+      ],
+      "whatIsTimed": [
+        "Selecting the first animal through the next animation frame after its inspector updates."
+      ],
+      "whatIsNotTimed": [
+        "Keyboard interaction latency, assistive technology, and repeated high-frequency selection."
+      ]
+    },
+    {
+      "phase": "serialization",
+      "timed": [
+        "No timing; UTF-8 result JSON projection size is measured."
+      ],
+      "notTimed": [
+        "Structured-clone transfer bytes and serialization time."
+      ],
+      "whatIsTimed": [
+        "No timing; UTF-8 result JSON projection size is measured."
+      ],
+      "whatIsNotTimed": [
+        "Structured-clone transfer bytes and serialization time."
+      ]
+    },
+    {
+      "phase": "layout",
+      "timed": [
+        "Rendered population cells and total page DOM node count."
+      ],
+      "notTimed": [
+        "No geometric layout duration is isolated."
+      ],
+      "whatIsTimed": [
+        "Rendered population cells and total page DOM node count."
+      ],
+      "whatIsNotTimed": [
+        "No geometric layout duration is isolated."
+      ]
+    },
+    {
+      "phase": "memory",
+      "timed": [
+        "Page-renderer JSHeapUsedSize after render, when Chromium exposes the CDP metric."
+      ],
+      "notTimed": [
+        "Worker heaps, browser-process RSS and GPU memory."
+      ],
+      "whatIsTimed": [
+        "Page-renderer JSHeapUsedSize after render, when Chromium exposes the CDP metric."
+      ],
+      "whatIsNotTimed": [
+        "Worker heaps, browser-process RSS and GPU memory."
+      ]
+    }
+  ],
+  "results": {
+    "browser": {
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/143.0.7499.4 Safari/537.36",
+      "hardwareConcurrency": 16,
+      "deviceMemoryGiB": 8,
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "devicePixelRatio": 1
+      },
+      "workerToRenderMs": 15.800000000745058,
+      "resultJsonBytes": 31580825,
+      "scenarioCount": 3,
+      "checkpointCount": 3,
+      "gridCells": 1200,
+      "selectionRenderMs": 8.800000000745058,
+      "uiEndToEndMs": 13569.199999999255,
+      "rendererHeapBytes": 115682036,
+      "rendererDomNodes": 3086
+    },
+    "warmupRuns": 1,
+    "repetitions": 3,
+    "observationFormat": "riose-population-observations/v1-compact-history",
+    "outputOrigin": "actual deterministic illustrative FarmEngine Worker results; not cattle observations or scientific validation",
+    "populationGridCap": 1200
+  },
+  "limitations": [
+    "This benchmark measures one local Linux host and one Chromium version; it is not a cross-device performance guarantee.",
+    "FarmEngine outputs are illustrative. Performance evidence says nothing about biological validity.",
+    "Result JSON byte length is a proxy for structured-clone payload; browser implementation may transfer a different byte count.",
+    "The grid cap bounds rendered cell count, not the full Worker result retained by the page. The CDP JS heap is limited to the page renderer and does not include separately running Worker heaps, browser-process RSS or GPU memory.",
+    "The one-factor sweep uses a 7-day default horizon unless SCENARIO_LAB_DAYS is specified; no comparison with a different executor is implied."
+  ]
+}
