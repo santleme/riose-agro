@@ -24,7 +24,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 PROTOCOL_PATH = ROOT / "experiments/dmi-finishing-steers/protocol-v1.json"
 SOURCE_PATH = ROOT / "data/dryad-finishing-steers/Database_09-11-2025.csv"
 AUDIT_PATH = ROOT / "docs/evidence/dryad-finishing-steers-audit.json"

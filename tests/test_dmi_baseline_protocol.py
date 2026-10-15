@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts/science/evaluations"))
 from dmi_baseline_protocol import fit_standardizer, grouped_split, regression_metrics, transform_features  # noqa: E402
 
 
