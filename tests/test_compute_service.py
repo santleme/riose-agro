@@ -60,6 +60,88 @@ class ComputeServiceTests(unittest.TestCase):
         self.assertEqual(first["backend_used"], "cpu")
         self.assertFalse(first["fallback_used"])
 
+    def test_livestock_metabolism_batch_matches_the_client_kernel_and_preserves_order(self):
+        values = [
+            330.0, 75.0, 0.4, 0.0,
+            360.0, 98.0, 1.2, 1.0,
+            500.0, 10.0, 0.7, 0.0,
+        ]
+        body = {
+            "contract_version": "1", "operation": "livestock_metabolism_batch",
+            "payload": {"count": 3, "values": values}, "preferred_backend": "cpu",
+        }
+        _, first = self.post(body)
+        _, second = self.post(body)
+        expected = []
+        for index in range(3):
+            weight, energy, intake, resting = values[index * 4:index * 4 + 4]
+            gain = (intake - 5.3 * (weight / 360) / 24) * 0.22
+            expected.extend((max(200, weight + gain), max(0, min(100, energy + (5 if resting != 0 else intake * 4 - 1.5)))))
+        self.assertEqual(first["result"]["values"], expected)
+        self.assertEqual(first, second)
+        self.assertEqual(first["execution_metadata"]["animal_count"], 3)
+        self.assertEqual(first["execution_metadata"]["operation"], "livestock_metabolism_batch")
+        self.assertEqual(first["backend_used"], "cpu")
+
+    def test_livestock_metabolism_rejects_batch_length_mismatch(self):
+        with self.assertRaisesRegex(ValueError, "metabolism_values_must_match_animal_count"):
+            execute_compute({
+                "contract_version": "1", "operation": "livestock_metabolism_batch",
+                "payload": {"count": 2, "values": [330, 75, 1, 0]}, "preferred_backend": "cpu",
+            }, amd_detector=lambda: UNAVAILABLE)
+
+    def test_rocm_adapter_executes_the_livestock_batch_and_reports_its_device(self):
+        class Tensor:
+            def __init__(self, values): self.values = list(values)
+            def __getitem__(self, selection): return Tensor(self.values[selection])
+            def __add__(self, other): return Tensor([a + b for a, b in zip(self.values, _values(other, len(self.values)))])
+            def __sub__(self, other): return Tensor([a - b for a, b in zip(self.values, _values(other, len(self.values)))])
+            def __mul__(self, other): return Tensor([a * b for a, b in zip(self.values, _values(other, len(self.values)))])
+            def __rmul__(self, other): return self * other
+            def __truediv__(self, other): return Tensor([a / b for a, b in zip(self.values, _values(other, len(self.values)))])
+            def __ne__(self, other): return Tensor([a != other for a in self.values])
+            def reshape(self, *_): return self
+            def tolist(self): return self.values
+
+        def _values(value, length):
+            return value.values if isinstance(value, Tensor) else [value] * length
+
+        class FakeTorch:
+            float64 = object()
+            @staticmethod
+            def tensor(values, *, dtype, device):
+                if device != "cuda": raise AssertionError("expected ROCm's PyTorch device")
+                return Tensor(values)
+            @staticmethod
+            def clamp(value, min=None, max=None):
+                bounded = []
+                for item in value.values:
+                    lower = item if min is None or item >= min else min
+                    bounded.append(lower if max is None or lower <= max else max)
+                return Tensor(bounded)
+            @staticmethod
+            def where(condition, yes, no):
+                return Tensor([a if c else b for c, a, b in zip(condition.values, _values(yes, len(condition.values)), _values(no, len(condition.values)))])
+            @staticmethod
+            def stack(values, dim):
+                return Tensor([item for pair in zip(*(value.values for value in values)) for item in pair])
+
+        values = [330.0, 75.0, 0.4, 0.0, 360.0, 98.0, 1.2, 1.0]
+        hardware = {"available": True, "reason": None, "torch_version": "test", "rocm_version": "test-rocm", "device_name": "test AMD device"}
+        result = execute_compute({
+            "contract_version": "1", "operation": "livestock_metabolism_batch",
+            "payload": {"count": 2, "values": values}, "preferred_backend": "amd",
+        }, amd_detector=lambda: hardware, torch_module=FakeTorch)
+        expected = []
+        for index in range(2):
+            weight, energy, intake, resting = values[index * 4:index * 4 + 4]
+            gain = (intake - 5.3 * (weight / 360) / 24) * 0.22
+            expected.extend((max(200, weight + gain), max(0, min(100, energy + (5 if resting != 0 else intake * 4 - 1.5)))))
+        self.assertEqual(result["backend_used"], "amd_rocm")
+        self.assertFalse(result["fallback_used"])
+        self.assertEqual(result["result"]["values"], expected)
+        self.assertEqual(result["execution_metadata"]["device_name"], "test AMD device")
+
     def test_requested_amd_falls_back_explicitly_when_unavailable(self):
         body = {
             "contract_version": "1",

@@ -13,6 +13,7 @@ const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
 const MAX_SNAPSHOT_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_NATIVE_COMPARISON_BODY_BYTES = 8 * 1024 * 1024;
+const MAX_AMD_METABOLISM_BODY_BYTES = 4 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
@@ -342,6 +343,35 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
       }
       response.setHeader('allow', 'GET, POST');
       return sendJson(response, 405, {error: 'method_not_allowed'});
+    }
+    if (url.pathname === '/api/amd/metabolism-batch') {
+      if (request.method !== 'POST') {
+        response.setHeader('allow', 'POST');
+        return sendJson(response, 405, {error: 'method_not_allowed'});
+      }
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      try {
+        const input = await readJsonWithLimit(request, MAX_AMD_METABOLISM_BODY_BYTES);
+        if (!input || typeof input !== 'object' || Array.isArray(input)
+          || !Number.isInteger(input.count) || input.count < 1 || input.count > 10_000
+          || !Array.isArray(input.values) || input.values.length !== input.count * 4) {
+          return sendJson(response, 400, {error: 'invalid_metabolism_batch'});
+        }
+        const upstream = await fetchImpl(`${env.COMPUTE_SERVICE_URL ?? 'http://127.0.0.1:8766'}/api/compute/v1`, {
+          method: 'POST', headers: {'content-type': 'application/json'},
+          body: JSON.stringify({contract_version: '1', operation: 'livestock_metabolism_batch',
+            payload: {count: input.count, values: input.values}, preferred_backend: 'amd'}),
+          signal: AbortSignal.timeout(30_000),
+        });
+        const result = await upstream.json();
+        return sendJson(response, upstream.status, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {
+          error: error.status === 413 ? 'request_too_large' : 'amd_compute_service_unavailable',
+        });
+      }
     }
     if (url.pathname === '/api/explain' && request.method === 'POST') {
       if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {

@@ -8,6 +8,7 @@ const commandFields = {
   configure: ['patch'],
   select: ['animalId'],
   tick: ['hours'],
+  setBackend: ['backend'],
   compare: ['snapshot', 'days'],
   compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
   compareLotConfigured: ['manifest'],
@@ -63,6 +64,9 @@ function validateCommandPayload(message) {
       break;
     case 'tick':
       if (message.hours != null) requireInteger(message.hours, 'tick.hours', 1, 8760, command);
+      break;
+    case 'setBackend':
+      if (!['cpu', 'amd'].includes(message.backend)) fail('INVALID_COMMAND_PAYLOAD', 'setBackend.backend must be cpu or amd.', command);
       break;
     case 'compare':
       if (message.snapshot != null && !isRecord(message.snapshot)) fail('INVALID_COMMAND_PAYLOAD', 'compare.snapshot must be an object.', command);

@@ -17,6 +17,7 @@
     "bench:graphics-atlas-load": "node scripts/measure-graphics-atlas-load.mjs",
     "bench:memory": "node --expose-gc scripts/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmark_amd.py",
+    "verify:amd-livestock": "node scripts/verify-amd-livestock.mjs",
     "bench:history": "node scripts/benchmark-history.mjs",
     "bench:history-storage": "node --expose-gc scripts/benchmark-history-storage.mjs",
     "bench:browser": "node scripts/benchmark-browser.mjs",

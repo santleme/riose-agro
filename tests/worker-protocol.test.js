@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {FarmEngine} from '../src/client/engine.js';
 import {
   createViewLayout,
   decodeWorkerCommand,
@@ -189,4 +190,43 @@ test('module Worker emits versioned responses and deterministic errors while ret
   assert.equal(worker.messages.at(-1).error.code, 'INVALID_COMMAND_PAYLOAD');
   await worker.onmessage({data: {protocolVersion: 1, type: 'snapshot'}});
   assert.equal(worker.messages.at(-1).state.hour, hourBeforeInvalidTick, 'invalid commands are rejected before mutating engine state');
+});
+
+test('Product worker routes a livestock tick through the AMD adapter and preserves CPU parity',async t=>{
+  const originalSelf=globalThis.self,originalFetch=globalThis.fetch;
+  t.after(()=>{globalThis.self=originalSelf;globalThis.fetch=originalFetch;});
+  const worker={messages:[],postMessage(message){this.messages.push(message);}};
+  globalThis.self=worker;
+  await import(`../src/client/worker.js?amd-product-test=${Math.random()}`);
+  await worker.onmessage({data:{type:'reset',seed:129,count:4}});
+  const initial=worker.messages.at(-1).state;
+  const expected=FarmEngine.from(initial);expected.tick(1);
+  globalThis.fetch=async(_url,options)=>{
+    const request=JSON.parse(options.body),values=request.values,result=[];
+    for(let index=0;index<request.count;index++){
+      const [weight,energy,intake,resting]=values.slice(index*4,index*4+4);
+      const gain=(intake-5.3*(weight/360)/24)*.22;
+      result.push(Math.max(200,weight+gain),Math.max(0,Math.min(100,energy+(resting!==0?5:intake*4-1.5))));
+    }
+    return {ok:true,json:async()=>({backend_requested:'amd',backend_used:'amd_rocm',fallback_used:false,
+      result:{values:result},execution_metadata:{device_name:'AMD test device',rocm_version:'test'}})};
+  };
+  await worker.onmessage({data:{type:'setBackend',backend:'amd'}});
+  await worker.onmessage({data:{type:'tick',hours:1}});
+  const actual=worker.messages.at(-1);
+  assert.equal(actual.type,'view');
+  assert.equal(actual.engineImplementation,'pytorch-rocm/livestock-metabolism-v1');
+  assert.deepEqual(actual.execution,{backend:'amd_rocm',device:'AMD test device',rocmVersion:'test'});
+  for(let index=0;index<4;index++){
+    assert.equal(actual.animalValues[index*4+2],expected.state.animals[index].weight);
+  }
+
+  await worker.onmessage({data:{type:'snapshot'}});
+  const beforeFailure=worker.messages.at(-1).state;
+  globalThis.fetch=async()=>({ok:false,status:503,json:async()=>({error:'amd_compute_service_unavailable'})});
+  await worker.onmessage({data:{type:'tick',hours:1}});
+  assert.equal(worker.messages.at(-1).type,'error');
+  assert.match(worker.messages.at(-1).message,/amd_compute_service_unavailable/);
+  await worker.onmessage({data:{type:'snapshot'}});
+  assert.deepEqual(worker.messages.at(-1).state,beforeFailure,'failed AMD execution leaves the Product simulation state unchanged');
 });
