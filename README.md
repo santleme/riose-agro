@@ -2,6 +2,10 @@
 
 Riose Agro is a browser-based livestock simulation and experiment workspace. The institutional home introduces the project; `experiments.html` is the quantitative workspace for model comparisons, history, sensitivity analysis, and exports. `product.html` and `simulator.html` redirect older links to that workspace. Current outputs are demonstrative model results, not validated predictions or recommendations.
 
+## License and publication status
+
+Project code is licensed under [Apache License 2.0](LICENSE). Third-party data have separate terms listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). Read the [ACT III owner-publication readiness review](docs/evidence/actiii-owner-publication-readiness.md) before making the repository public; it records an unresolved dataset-rights gate on the current `main` branch.
+
 See the [repository layout guide](docs/architecture/repository-layout.md) for directory responsibilities and the reason browser page URLs remain at the root.
 
 Completed and failed comparisons can be listed and replayed from the browser's local history. See [the local execution history guide](docs/historico-execucoes.md) for its storage, retention, and compatibility behavior.
