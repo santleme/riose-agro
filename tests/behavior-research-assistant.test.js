@@ -51,6 +51,22 @@ test('no-key mode deterministically lists the ineligible Perea model with proven
   assert.match(result.audit.requestSha256, /^[a-f0-9]{64}$/);
 });
 
+test('no-key assistant explains the frozen NO-GO from local metrics and citations', async () => {
+  const result = await runBehaviorResearchAssistant({message: 'Why did the semi-Markov model fail?'}, {provider: 'none'});
+  assert.equal(result.source, 'deterministic');
+  assert.equal(result.results[0].tool, 'getBehaviorModelNoGoDiagnostic');
+  const diagnostic = result.results[0].result;
+  assert.equal(diagnostic.status, 'NO_GO');
+  assert.equal(diagnostic.promoted, false);
+  assert.equal(diagnostic.failedGates.composition.passed, false);
+  assert.equal(diagnostic.failedGates.transitionTV.passed.persistence, false);
+  assert.equal(diagnostic.failedGates.RU.passed, false);
+  assert.equal(diagnostic.generatedSequenceDiagnostics.ruTrainingCompleteDurationSamples, 2);
+  assert.match(diagnostic.explanation, /continua NO-GO/);
+  assert.equal(diagnostic.evidence[1].id, 'PEREA-POST-NOGO-DIAGNOSTIC-V1');
+  assert.match(diagnostic.evidence[1].sha256, /^[a-f0-9]{64}$/);
+});
+
 test('deterministic evidence search returns bounded local citations and never sends data remotely', async () => {
   let fetchCalls = 0;
   const result = await runBehaviorResearchAssistant({message: 'Perea behavior audit coverage'}, {

@@ -1,5 +1,8 @@
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {loadScientificCorpus, searchScientificSources} from '../../scripts/science/scientific-retrieval.js';
 import {interpretExperimentPrompt, validateExperimentSpecification} from '../client/population-experiment.js';
 
@@ -11,7 +14,10 @@ const MAX_REQUESTS_PER_MINUTE = 10;
 const RATE_WINDOW_MS = 60_000;
 const CLASSES = ['WA', 'GR', 'RE', 'RU'];
 const CORPUS_TOP_K = 3;
+const PROJECT_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
+const NO_GO_REPORT_PATH = resolve(PROJECT_ROOT, 'docs/evidence/perea-no-go-diagnostic-v1.json');
 let corpusCache;
+let noGoReportCache;
 const requestsByAddress = new Map();
 
 const proposalSchema = {
@@ -27,6 +33,7 @@ const proposalSchema = {
         {type: 'object', additionalProperties: false, required: ['id', 'arguments'], properties: {id: {const: 'searchScientificEvidence'}, arguments: {type: 'object', additionalProperties: false, required: ['query'], properties: {query: {type: 'string', minLength: 1, maxLength: 200}}}}},
         {type: 'object', additionalProperties: false, required: ['id', 'arguments'], properties: {id: {const: 'draftBehaviorExperiment'}, arguments: {type: 'object', additionalProperties: false, maxProperties: 0}}},
         {type: 'object', additionalProperties: false, required: ['id', 'arguments'], properties: {id: {const: 'validateBehaviorExperiment'}, arguments: {type: 'object', additionalProperties: false, maxProperties: 0}}},
+        {type: 'object', additionalProperties: false, required: ['id', 'arguments'], properties: {id: {const: 'getBehaviorModelNoGoDiagnostic'}, arguments: {type: 'object', additionalProperties: false, maxProperties: 0}}},
       ]},
     },
   },
@@ -82,6 +89,9 @@ export function consumeBehaviorResearchRateLimit(address, now = Date.now()) {
 }
 
 function deterministicProposal(message) {
+  if (/(?:no[- ]?go|reprovad\w*|rejeitad\w*|failed|failure|diagn[oó]stic|por que (?:o|a) (?:modelo|candidato)|why (?:did|was).*(?:fail|reject)|semi[- ]?markov.*(?:fail|reject))/i.test(message)) {
+    return {version: 'riose-research-tool-plan/v1', clarification: null, tool_calls: [{id: 'getBehaviorModelNoGoDiagnostic', arguments: {}}]};
+  }
   if (/\b(models?|modelos?|behavior models?|modelos? comportamentais?)\b/i.test(message)) {
     return {version: 'riose-research-tool-plan/v1', clarification: null, tool_calls: [{id: 'listEligibleBehaviorModels', arguments: {}}]};
   }
@@ -119,9 +129,45 @@ function listEligibleBehaviorModels() {
     id: 'perea-semi-markov-experimental', version: '1.0.0', ontology: CLASSES,
     domain: 'Perea v2 sampled mature beef-cow behavior annotations; two ranch contexts',
     status: 'NO_GO_AFTER_INTERNAL_CONFIRMATORY', eligible: false,
-    evidence: ['docs/evidence/perea-semimarkov-development-v1.json', 'docs/evidence/perea-confirmatory-v1.json'],
+    evaluation: 'docs/evidence/perea-confirmatory-v1.json',
+    diagnostic: 'docs/evidence/perea-no-go-diagnostic-v1.json',
     limitation: 'No external validation; no FarmEngine physiology or action coupling; not enabled.',
   }];
+}
+
+function getBehaviorModelNoGoDiagnostic() {
+  noGoReportCache ??= JSON.parse(readFileSync(NO_GO_REPORT_PATH, 'utf8'));
+  const report = noGoReportCache;
+  if (report.schemaVersion !== 'perea-post-nogo-diagnostic.v1'
+      || report.decision !== 'NO_GO_FOR_THIS_CANDIDATE_AND_SOURCE'
+      || report.diagnosticOnly !== true) throw new Error('invalid_registered_no_go_report');
+  const gates = report.gateDiagnostics;
+  const sequence = report.sequenceDiagnostics.semimarkov;
+  const c = gates.composition;
+  const t = gates.transitionTV;
+  const ru = gates.rareClassRU;
+  return {
+    candidate: 'perea-semi-markov-experimental@1.0.0', status: 'NO_GO', promoted: false,
+    explanation: `O semi-Markov falhou o gate de composição por ${(c.excessOverAllowed * 100).toFixed(3)} pontos percentuais além do limite; sua melhora de transição sobre persistência foi ${(t.improvementVsPersistence * 100).toFixed(3)} pontos percentuais, abaixo dos 2 pontos exigidos; o erro de composição de RU excedeu o limite em ${(ru.excessOverAllowed * 100).toFixed(3)} pontos percentuais. O resultado continua NO-GO.`,
+    failedGates: {
+      composition: {candidateMae: c.candidate, bestSimpleBaselineMae: c.bestSimpleBaseline, allowedMaximumMae: c.allowedMaximum, excessOverAllowed: c.excessOverAllowed, passed: c.passed},
+      transitionTV: {candidate: t.candidate, iid: t.iid, persistence: t.persistence, improvementVsIid: t.improvementVsIid, improvementVsPersistence: t.improvementVsPersistence, requiredImprovement: t.requiredImprovement, passed: t.passed},
+      RU: {candidateAbsoluteProportionError: ru.candidateAbsoluteProportionError, bestSimpleBaseline: ru.bestSimpleBaseline, allowedMaximum: ru.allowedMaximum, excessOverAllowed: ru.excessOverAllowed, passed: ru.passed},
+    },
+    generatedSequenceDiagnostics: {
+      singleClassWindowRate: sequence.singleClassReplicateWindowRate,
+      missingClassOccurrencesPerWindow: sequence.missingClassOccurrencesPerReplicateWindow,
+      switchesPerMinute: sequence.switchesPerMinute,
+      oneMinuteTargetWindows: report.coverage.confirmatoryWindowLengthCounts['1'],
+      allConfirmatoryWindows: report.partition.confirmatoryWindows,
+      ruTrainingCompleteDurationSamples: report.trainingCompleteDurationSupportByClass.RU.completeInteriorRuns,
+    },
+    evidence: [
+      {id: 'PEREA-CONFIRMATORY-V1', path: 'docs/evidence/perea-confirmatory-v1.json', sha256: report.artifactSha256.confirmatoryResult},
+      {id: 'PEREA-POST-NOGO-DIAGNOSTIC-V1', path: 'docs/evidence/perea-no-go-diagnostic-v1.json', sha256: sha256(readFileSync(NO_GO_REPORT_PATH))},
+    ],
+    limitations: report.limitations,
+  };
 }
 
 function getCorpus() {
@@ -167,6 +213,10 @@ const dispatch = {
   validateBehaviorExperiment: (args, message) => {
     if (Object.keys(args).length) throw new TypeError('invalid_tool_arguments');
     return validateBehaviorExperiment(message);
+  },
+  getBehaviorModelNoGoDiagnostic: args => {
+    if (Object.keys(args).length) throw new TypeError('invalid_tool_arguments');
+    return getBehaviorModelNoGoDiagnostic();
   },
 };
 
