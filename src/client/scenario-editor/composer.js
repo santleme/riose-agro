@@ -2,6 +2,7 @@ import {
   Application, Assets, Container, Graphics, Rectangle, Sprite, Texture,
 } from '../../../assets/scenario-editor/vendor/pixi.min.mjs';
 import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from './scene-layout.js';
+import {createCanvasSceneRenderer} from './canvas-scene-renderer.js';
 
 const URLS = {
   manifest: '/assets/manifest.json',
@@ -406,62 +407,19 @@ function updateTargetPosition(target) {
   target.sprite.rotation = (target.placement.rotation ?? 0) * Math.PI / 180;
 }
 
-function drawCanvasAsset(context, asset, placement, scale, offsetX, offsetY) {
-  const atlas = manifest.atlases[asset.frame.atlas];
-  const image = canvasAtlasImages.get(asset.frame.atlas);
-  if (!image || !atlas) return;
-  const p = pointFor(placement.position);
-  const tileBleed = placement.layer === 'terrain' && placement.properties?.tileKind === 'pasture' ? 2 : 0;
-  const width = (asset.displaySize?.[0] ?? 96) * scale + tileBleed * scale;
-  const height = (asset.displaySize?.[1] ?? 64) * scale + tileBleed * scale;
-  const anchor = placement.anchor ?? asset.anchor ?? {x: 0.5, y: 1};
-  context.save();
-  context.translate(offsetX + p.x * scale, offsetY + p.y * scale);
-  context.rotate((placement.rotation ?? 0) * Math.PI / 180);
-  context.drawImage(image, asset.frame.x, asset.frame.y, asset.frame.w, asset.frame.h, -width * anchor.x, -height * anchor.y, width, height);
-  context.restore();
-}
-
 const canvasAtlasImages = new Map();
+const canvasSceneRenderer = createCanvasSceneRenderer(canvasAtlasImages);
 function renderFallback(canvas = fallbackCanvas, viewport = stageElement) {
   if (!manifest || !scene || !canvas || rendererMode === 'pixi' && canvas === fallbackCanvas) return;
-  const bounds = viewport.getBoundingClientRect();
-  const ratio = Math.min(window.devicePixelRatio || 1, 2);
-  if (canvas.width !== Math.round(bounds.width * ratio) || canvas.height !== Math.round(bounds.height * ratio)) {
-    canvas.width = Math.round(bounds.width * ratio);
-    canvas.height = Math.round(bounds.height * ratio);
-  }
-  const context = canvas.getContext('2d');
-  context.setTransform(ratio, 0, 0, ratio, 0, 0);
-  context.clearRect(0, 0, bounds.width, bounds.height);
-  const visibleLayerIds = new Set(scene.layers.filter((layer) => layer.visible).map((layer) => layer.id));
-  const center = projectIso((scene.grid.width - 1) / 2, (scene.grid.height - 1) / 2, scene.grid);
-  const scale = canvas === fallbackCanvas ? zoom : Math.min((bounds.width * 0.84) / ((scene.grid.width + scene.grid.height) * scene.grid.tileWidth / 2), (bounds.height * 0.84) / ((scene.grid.width + scene.grid.height) * scene.grid.tileHeight / 2));
-  const offsetX = canvas === fallbackCanvas ? pan.x : bounds.width / 2 - center.x * scale;
-  const offsetY = canvas === fallbackCanvas ? pan.y : bounds.height / 2 - center.y * scale;
-  for (const placement of allPlacements().sort((a, b) => {
-    const la = scene.layers.find((layer) => layer.id === a.layer)?.order ?? 99;
-    const lb = scene.layers.find((layer) => layer.id === b.layer)?.order ?? 99;
-    if (la !== lb) return la - lb;
-    return pointFor(a.position).y - pointFor(b.position).y;
-  })) {
-    if (!visibleLayerIds.has(placement.layer)) continue;
-    const asset = assetById.get(placement.assetId);
-    if (asset) drawCanvasAsset(context, asset, placement, scale, offsetX, offsetY);
-  }
-  if (zonesVisible) {
-    for (const zone of scene.zones) {
-      const points = zone.polygon.map(({col, row}) => pointFor({col, row}));
-      context.beginPath();
-      points.forEach((point, index) => context[index ? 'lineTo' : 'moveTo'](offsetX + point.x * scale, offsetY + point.y * scale));
-      context.closePath();
-      context.fillStyle = `${zone.color}20`;
-      context.fill();
-      context.strokeStyle = `${zone.color}aa`;
-      context.lineWidth = 1;
-      context.stroke();
-    }
-  }
+  canvasSceneRenderer({
+    canvas,
+    viewport,
+    scene,
+    placements: allPlacements(),
+    assets: assetById,
+    camera: canvas === fallbackCanvas ? {scale: zoom, x: pan.x, y: pan.y} : null,
+    zonesVisible,
+  });
 }
 
 function renderComparison() {
