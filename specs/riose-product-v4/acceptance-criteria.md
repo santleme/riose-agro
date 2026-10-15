@@ -11,3 +11,4 @@
 | P4-ACC-007 | V2/V3, 497 baseline suite, parity as applicable, Perea NO-GO and provider/science gates remain unchanged. | Regression output and status records |
 | P4-ACC-008 | Product discovery materials are prepared without fabricating user feedback or contacting participants. | Demonstration script, question guide and blank structured record |
 | P4-ACC-009 | Sensitivity archive is versioned, verifies the exact registered-model result and provenance, opens without calculation, and replays only after explicit confirmation. | Archive unit/schema tests, tampering tests and Product V3 browser E2E |
+| P4-ACC-010 | Optional V4 AI interpretation returns only a strict validated intent, falls back deterministically, never starts execution, and archives provider/model plus the exact confirmed manifest while preserving v1 import. | Adapter security tests, AI-fixture and fallback browser E2E, archive compatibility, regression suite |

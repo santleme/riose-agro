@@ -68,3 +68,29 @@ Status: DONE (versioned archive schema/module; unit tests verify reproducible re
 - Conditional BR-CORTE scenario costs: DONE in P3-004; no new cost model unless an input or equation gap is demonstrated.
 - P3-007 AI providers/tool agent: BLOCKED by shared persistent spend ceiling; do not mark complete here.
 - P3-008 commercial/scientific readiness: BLOCKED pending independent domain review and evidence. Behavioral integration: NO-GO.
+
+## AI integration continuation
+
+### P4-006 — Product V4 interpretation adapter and archive provenance
+
+ID: P4-006
+Title: Connect optional server-side structured AI interpretation to the V4 draft flow without automatic execution
+Specification reference: `ai-orchestration.md`; `product-requirements.md` PRD-001/002/003/004; `testing-strategy.md`
+Dependencies: P4-001; existing Scenario Lab intent contract; P3-007 remains blocked for production-wide enablement
+Implementation scope: Add a bounded Groq/Hugging Face provider adapter for the existing V4 intent schema; deterministic safety reconciliation; no-key/failure fallback; explicit source/model display; preserve confirmed intent and interpreter provenance in archive v2 while retaining archive v1 reading.
+Acceptance criteria: Provider output is strict JSON, independently validated server-side and client-side; unsupported local-parser requests remain blocked; only interpretation occurs before review; the existing explicit Run action is still the sole execution path; archive binds the exact approved intent/manifest/execution and provider metadata; v1 replay remains readable; rate limiting is not represented as a shared monetary budget.
+Required tests: adapter/request bounds; malformed/out-of-domain/prompt-injection cases; no-key endpoint; V4 E2E no-autostart/review/confirm/export/replay; archive v1/v2 compatibility; Product V2 E2E; regression suite.
+Evidence: focused tests, E2E, complete regression, browser screenshots, and server-side provider response metadata when a new secure key is available.
+Status: DONE (strict provider adapter + deterministic fallback, archive v2 intent/provenance binding with v1 reader, provider-fixture UI E2E, local fallback UI E2E, full regression and parity pass; live account call is separated into P4-007).
+
+### P4-007 — One-off live provider validation
+
+ID: P4-007
+Title: Verify one authenticated real provider interpretation and full Product V4 experiment flow
+Specification reference: `ai-orchestration.md`; `acceptance-criteria.md`; provider integration mission
+Dependencies: P4-006; a newly rotated key provisioned through secure environment configuration; account/model availability check
+Implementation scope: Use the already authorized maximum of one manual inference request (USD 0.10) in this session, then complete review, explicit local execution, export, and replay; never activate production provider traffic.
+Acceptance criteria: Secret is absent from chat, logs, browser, response, and archive; selected provider/model is available and supports the required schema; one live interpretation reaches V4 review with no automatic execution; user confirmation runs the FarmEngine only; archive replay matches; P3-007 production/shared spend gate remains unchanged.
+Required tests: one live provider request; focused Product V4 E2E with the real interpretation response; export/replay; key-safe log review.
+Evidence: sanitized provider/model/status metadata, E2E output, and replay digest. Never store the secret or raw authorization headers.
+Status: BLOCKED (no secure provider credential is present in this session; the pasted credential is treated as exposed and must be rotated).
