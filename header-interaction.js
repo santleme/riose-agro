@@ -2,11 +2,8 @@ const nameControl = document.querySelector('.header-name-control');
 const definitionTrigger = document.querySelector('.meaning-trigger');
 const definitionPanel = document.querySelector('.name-definition');
 let definitionCloseTimer = 0;
-let definitionOpenOnPointerDown = false;
-
 function setDefinitionOpen(open) {
   nameControl.classList.toggle('is-open', open);
-  definitionTrigger.setAttribute('aria-expanded', String(open));
   definitionPanel.setAttribute('aria-hidden', String(!open));
   if (open) updateDefinitionPosition();
 }
@@ -43,19 +40,9 @@ nameControl.addEventListener('pointerleave', scheduleDefinitionClose);
 definitionTrigger.addEventListener('focus', () => {
   if (definitionTrigger.matches(':focus-visible')) setDefinitionOpen(true);
 });
-definitionTrigger.addEventListener('pointerdown', () => {
-  definitionOpenOnPointerDown = nameControl.classList.contains('is-open');
-});
 definitionTrigger.addEventListener('blur', (event) => {
   const pointerInsideDefinition = definitionTrigger.matches(':hover') || definitionPanel.matches(':hover');
   if (event.relatedTarget !== definitionTrigger && !pointerInsideDefinition) setDefinitionOpen(false);
-});
-definitionTrigger.addEventListener('click', (event) => {
-  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-    setDefinitionOpen(event.detail === 0
-      ? !nameControl.classList.contains('is-open')
-      : !definitionOpenOnPointerDown);
-  }
 });
 document.addEventListener('pointerdown', (event) => {
   if (window.matchMedia('(hover: none), (pointer: coarse)').matches && !nameControl.contains(event.target)) {
