@@ -93,24 +93,6 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
   font-weight: 600;
   line-height: 1;
 }
-.hero-scene {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: 3.3%;
-  width: clamp(620px, 66vw, 1010px);
-  transform: translateX(-50%);
-  transition: transform .8s cubic-bezier(.2,.72,.2,1), opacity .65s ease;
-}
-.hero-scene img { display: block; width: 100%; height: auto; filter: drop-shadow(0 22px 18px rgb(60 47 32 / .13)); }
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .hero-scene:hover img { animation: cow-curious .72s ease-in-out 2; transform-origin: 50% 76%; }
-}
-@keyframes cow-curious {
-  0%, 100% { transform: translateY(0) rotate(0); }
-  35% { transform: translateY(-5px) rotate(-.35deg); }
-  70% { transform: translateY(-1px) rotate(.2deg); }
-}
 .hero-footer { position: absolute; z-index: 3; inset: auto clamp(24px, 4.8vw, 70px) 5.1%; display: flex; align-items: end; justify-content: space-between; pointer-events: none; }
 .hero-copy { pointer-events: auto; padding-bottom: 1px; }
 .hero-copy p { max-width: 190px; margin: 0 0 17px; font-size: clamp(16px, 1.45vw, 21px); font-weight: 500; letter-spacing: -.035em; line-height: 1.28; }
@@ -148,13 +130,10 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 .publication-pages:hover .paper-image--back { transform: translateY(5px) rotate(5deg); }
 
 .hero-lockup.is-locking { filter: blur(var(--lockup-blur, 0px)); }
-body.is-scrolled .hero-scene { transform: translate3d(-50%, 55px, 0) scale(.96); opacity: 0; }
-
 @media (max-width: 900px) {
   .hero { min-height: 600px; }
   .hero-lockup { top: 20%; }
   .hero-wordmark { font-size: clamp(130px, 22vw, 210px); }
-  .hero-scene { width: min(82vw, 850px); bottom: 13%; }
   .hero-footer { bottom: 4.3%; }
   .experiment-preview { width: 255px; }
   .research-section { padding: 60px 5vw 42px; }
@@ -181,8 +160,6 @@ body.is-scrolled .hero-scene { transform: translate3d(-50%, 55px, 0) scale(.96);
   .hero-lockup { top: 20%; gap: 8px; }
   .hero-wordmark { font-size: clamp(108px, 35vw, 150px); letter-spacing: -.1em; }
   .hero-monogram { width: 22px; margin-bottom: .12em; font-size: 12px; }
-  .hero-scene { width: 112vw; max-width: 500px; bottom: 20%; }
-  .hero-scene img { filter: drop-shadow(0 12px 12px rgb(60 47 32 / .12)); }
   .hero-footer { inset: auto 20px 4.4%; align-items: end; gap: 10px; }
   .hero-copy { max-width: 46%; }
   .hero-copy p { max-width: 145px; margin-bottom: 11px; font-size: 14px; }

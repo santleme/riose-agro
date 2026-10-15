@@ -22,7 +22,6 @@
     "research:experiment-format": "node --expose-gc scripts/experiments/research_experiment_format.mjs",
     "archive:comparison": "node scripts/validation/archive-comparison.js",
     "validate:outcome": "node scripts/validation/validate-outcome-record.js",
-    "validate:farm-scene": "node scripts/validate-farm-scene.mjs",
     "link:snapshot": "node scripts/validation/link-farm-snapshot.js",
     "validate:snapshot": "node scripts/validation/validate-farm-snapshot.js",
     "build:observed-data": "python3 scripts/science/data_pipelines/build_observed_calf_dataset.py",

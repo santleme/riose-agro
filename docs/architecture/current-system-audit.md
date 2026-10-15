@@ -21,7 +21,7 @@ Observed farm snapshots in `schemas/farm-snapshot.schema.json` remain a separate
 
 ## User-facing flow
 
-The homepage remains the institutional entry point. `product.html` is the experiment workspace. It reports modeled weight, dry-matter intake, pasture stocks, and model costs using existing engine outputs, labels assumptions and limitations, and distinguishes output from observed measurements. The scenario history is local to the browser. Snapshot review validates an uploaded observational record without importing it into the simulator.
+The homepage remains the institutional entry point. `experiments.html` is the experiment workspace. It reports modeled weight, dry-matter intake, pasture stocks, and model costs using existing engine outputs, labels assumptions and limitations, and distinguishes output from observed measurements. The scenario history is local to the browser. Snapshot review validates an uploaded observational record without importing it into the simulator. `product.html` and `simulator.html` are compatibility redirects.
 
 ## Removed surface
 

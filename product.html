@@ -1,89 +1,14 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f3eb">
-  <meta name="description" content="Explore uma fazenda de referência e compare cenários de simulação pecuária.">
-  <title>Riose — Simulação da fazenda</title>
-  <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="src/client/farm-scene.css">
-</head>
-<body class="farm-page">
-  <a class="skip-link" href="#farm-main">Pular para a fazenda</a>
-  <header class="farm-header">
-    <a class="farm-brand" href="home.html" aria-label="Riose, início"><span class="brand-mark">R</span><span>riose</span></a>
-    <nav aria-label="Navegação principal">
-      <a href="manifesto.html">Manifesto</a>
-      <a href="adult-data.html">Dados</a>
-      <a class="current" href="product.html" aria-current="page">Fazenda</a>
-      <a href="experiments.html">Experimentos</a>
-    </nav>
-    <span class="farm-location">Brasil · piloto visual</span>
-  </header>
-
-  <main id="farm-main" class="farm-main">
-    <section class="farm-intro">
-      <div>
-        <p class="eyebrow">SIMULAÇÃO PECUÁRIA · CENA DE REFERÊNCIA</p>
-        <h1>Teste um cenário nesta fazenda.</h1>
-        <p class="intro-copy">Explore o ambiente e compare o que muda quando uma condição do lote muda.</p>
-      </div>
-      <div class="scene-count"><strong>10</strong><span>bovinos<br>na cena</span></div>
-    </section>
-
-    <section class="farm-workspace" aria-label="Fazenda e simulação">
-      <div class="scene-column">
-        <div class="scene-toolbar">
-          <div><span class="live-dot"></span><span id="scene-status">Carregando fazenda…</span></div>
-          <div class="camera-controls" aria-label="Controles da câmera">
-            <button id="zoom-out" type="button" aria-label="Afastar câmera">−</button>
-            <span id="zoom-label">100%</span>
-            <button id="zoom-in" type="button" aria-label="Aproximar câmera">+</button>
-            <button id="camera-reset" type="button">Centralizar</button>
-          </div>
-        </div>
-        <div id="scene-viewport" class="scene-viewport" aria-label="Cena interativa da fazenda. Arraste para mover e use a roda do mouse para aproximar.">
-          <div id="scene-loading" class="scene-loading"><span class="loading-sun"></span><p>Preparando a fazenda</p></div>
-        </div>
-        <div class="scene-caption"><span>FAZENDA PILOTO · CENA ESTÁTICA</span><span id="selected-object">Selecione um bovino</span></div>
-      </div>
-
-      <aside class="scenario-panel" aria-labelledby="scenario-title">
-        <div class="panel-kicker"><span>01</span><span>TESTE RÁPIDO</span></div>
-        <h2 id="scenario-title">O que você quer mudar?</h2>
-        <p class="panel-copy">Compare duas possibilidades para o mesmo lote, com o mesmo estado inicial.</p>
-        <form id="scenario-form">
-          <label for="scenario-factor">Condição</label>
-          <select id="scenario-factor">
-            <option value="supplement">Adicionar 0,5 kg de suplemento</option>
-            <option value="diet">Mudar para dieta balanceada</option>
-            <option value="housing">Levar o lote ao confinamento</option>
-          </select>
-          <label for="scenario-days">Período</label>
-          <select id="scenario-days">
-            <option value="7">7 dias</option>
-            <option value="30" selected>30 dias</option>
-            <option value="90">90 dias</option>
-          </select>
-          <button class="run-button" type="submit"><span>Comparar cenários</span><span aria-hidden="true">↗</span></button>
-          <p id="simulation-status" class="simulation-status" role="status" aria-live="polite">A comparação usa o motor local do projeto.</p>
-        </form>
-        <section id="scenario-result" class="scenario-result" hidden aria-live="polite">
-          <div class="result-heading"><span>RESULTADO DA SIMULAÇÃO</span><span id="result-period"></span></div>
-          <p id="result-summary" class="result-summary"></p>
-          <div class="result-metrics">
-            <div><span>Diferença de peso</span><strong id="weight-delta">—</strong></div>
-            <div><span>Diferença de custo</span><strong id="cost-delta">—</strong></div>
-          </div>
-          <p id="result-limitation" class="result-limitation"></p>
-        </section>
-        <div class="panel-footnote"><span class="footnote-mark">i</span><p>Resultado demonstrativo. O motor ainda não está validado para previsão ou recomendação de manejo.</p></div>
-        <a class="advanced-link" href="experiments.html">Abrir formulário de experimentos <span aria-hidden="true">→</span></a>
-      </aside>
-    </section>
-    <footer class="farm-footer"><span>Assets visuais do piloto aprovados para composição de referência.</span><span>Simulação e cena visual são sistemas independentes.</span></footer>
-  </main>
-  <script type="module" src="src/client/farm-scene.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="0;url=experiments.html">
+    <link rel="canonical" href="experiments.html">
+    <title>Riose — Experimentos</title>
+    <script>location.replace(new URL('experiments.html', location.href));</script>
+  </head>
+  <body>
+    <p>Este endereço foi substituído pelo <a href="experiments.html">workspace de experimentos</a>.</p>
+  </body>
 </html>
