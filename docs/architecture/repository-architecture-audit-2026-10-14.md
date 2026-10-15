@@ -29,10 +29,14 @@ O retrato e as contagens abaixo continuam descrevendo `main@27c5d29`. As etapas 
 - PR #164 conectou o Product Composer à cena Product versionada, com validação antes da abertura e exportação.
 - PRs #165 e #166 moveram o código-fonte do Scenario Editor para `src/client/scenario-editor/`, preservando as URLs públicas como fachadas compatíveis.
 - PR #167 extraiu o renderer Canvas do Scenario Editor para uma interface explícita de cena.
+- PR #168 isolou a pilha de undo do Composer em `scene-history.js`.
+- PR #169 separou a validação do contrato grid em `scene-validation.js`.
+- PR #170 centralizou leitura e escrita de cenas locais em `scene-storage.js`.
+- PR #171 agrupou builds, screenshots e benchmarks do Graphics PoC em `scripts/graphics/`.
 
 Essas mudanças conectam e documentam o fluxo interno do Product e reduzem o acoplamento do Scenario Editor; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
 
-O inventário de authoring já está registrado em `scene-authoring-inventory.md`. Os recortes seguintes devem continuar extraindo responsabilidades coesas do Composer, preservando o editor como dono do formato grid próprio; qualquer adaptador para o Product só deve ser criado quando um fluxo real exigir e especificar essa conversão.
+O inventário de authoring já está registrado em `scene-authoring-inventory.md`, e os fluxos de edição do Scenario Editor agora têm fronteiras explícitas para layout, validação, renderização, histórico e armazenamento. O próximo bloco é organizar tooling por responsabilidade, corrigindo junto os caminhos consumidos por `package.json`, testes, documentação e CI. As cenas do Product, Scenario Editor e Graphics Lab continuam contratos distintos até um consumidor exigir e especificar uma conversão.
 
 ## Retrato do repositório
 

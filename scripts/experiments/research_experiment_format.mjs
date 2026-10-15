@@ -9,8 +9,8 @@ import {createRequire} from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, sha256Digest} from './batch-manifest.js';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
 import {executeScenario} from './run-scenarios.js';
 
 const require = createRequire(import.meta.url);
@@ -28,7 +28,7 @@ const recordCount = Number(process.env.FORMAT_STUDY_RECORDS ?? 25);
 const pythonExecutable = process.env.FORMAT_STUDY_PYTHON ?? 'python3';
 const animalCount = 100;
 const hours = 24;
-const fixture = JSON.parse(await readFile(new URL('../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
+const fixture = JSON.parse(await readFile(new URL('../../tests/scenarios/baseline-pasture.json', import.meta.url), 'utf8'));
 
 if (!Number.isInteger(repetitions) || repetitions < 3) throw new RangeError('FORMAT_STUDY_REPETITIONS must be an integer >= 3');
 if (!Number.isInteger(recordCount) || recordCount < 1) throw new RangeError('FORMAT_STUDY_RECORDS must be a positive integer');
@@ -162,7 +162,7 @@ try {
   await writeFile(pythonFormatInputPath, JSON.stringify(records));
   const pythonParquet = pythonToolchain.packages.pyarrow.available
     ? spawnSync(pythonExecutable, [
-      'scripts/research_experiment_format_parquet.py', pythonFormatInputPath, String(repetitions),
+      'scripts/experiments/research_experiment_format_parquet.py', pythonFormatInputPath, String(repetitions),
     ], {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024})
     : null;
   if (pythonParquet && pythonParquet.status !== 0) {
@@ -250,7 +250,7 @@ for (const {run, result} of records) {
       threshold: 'Reconsider columnar storage only when repeated representative runs show at least 2x end-to-end benefit in the dominant workload or selective-column access is required at a volume where whole-record parsing is material, and the added dependency/runtime footprint is acceptable.',
     },
     workload: {
-      runner: 'scripts/run-scenarios.js executeScenario',
+      runner: 'scripts/experiments/run-scenarios.js executeScenario',
       fixture: 'tests/scenarios/baseline-pasture.json',
       comparedRecordShape: 'batch manifest run joined to riose-experiment-result v1 by runId',
       records: recordCount,
@@ -309,7 +309,7 @@ for (const {run, result} of records) {
     ],
   };
   const experimentPopulation = {count: recordCount, unit: 'experiment-run records', scope: 'serialized experiment batch'};
-  const source = 'scripts/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract';
+  const source = 'scripts/experiments/research_experiment_format.mjs; current FarmEngine scenario runner and batch manifest/result contract';
   const phaseMeasurements = [];
   const addSamples = (metric, unit, samples, population = experimentPopulation, method = source, memoryType = undefined) => {
     phaseMeasurements.push(measurement('serialization', metric, unit, {
@@ -345,7 +345,7 @@ for (const {run, result} of records) {
     const parquet = parquetResults;
     for (const [operation, detail] of [['write', parquet.write], ['full-read', parquet.fullRead], ['selective-read', parquet.selectiveMetricRead]]) {
       addSamples(`parquet-${operation}-duration`, 'ms', detail.durationsMs, experimentPopulation,
-        `scripts/research_experiment_format_parquet.py using PyArrow ${parquet.engine.version}; local file IO included`);
+        `scripts/experiments/research_experiment_format_parquet.py using PyArrow ${parquet.engine.version}; local file IO included`);
       addSamples(`parquet-${operation}-rss-process-peak`, 'bytes',
         detail.processMemorySamples.map(sample => sample.peakBytes ?? 0), experimentPopulation,
         'Python process cumulative peak RSS; not a per-operation allocation measure');

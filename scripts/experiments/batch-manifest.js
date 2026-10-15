@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import schema from '../schemas/batch-experiment-manifest-v1.schema.json' with {type: 'json'};
+import schema from '../../schemas/batch-experiment-manifest-v1.schema.json' with {type: 'json'};
 
 const MANIFEST_TYPE = 'riose-batch-experiment';
 const MANIFEST_VERSION = 1;

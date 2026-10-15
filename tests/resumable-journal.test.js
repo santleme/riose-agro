@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createBatchExperimentManifest, digestResultRecordBytes, digestScenario, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../experiments/batch-manifest.js';
-import {runResumableBatch} from '../experiments/resumable-journal.js';
+import {createBatchExperimentManifest, digestResultRecordBytes, digestScenario, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../scripts/experiments/batch-manifest.js';
+import {runResumableBatch} from '../scripts/experiments/resumable-journal.js';
 
 function plannedRun(runId) {
   const scenario = {scenarioId: runId, hours: 24};

@@ -14,7 +14,7 @@ The runner rejects a resume if a scenario digest, seed, engine build identity, i
 
 ## Overhead measurement
 
-`node --expose-gc scripts/benchmark-resumable-journal.mjs` runs five synthetic batches of 25 records with zero and 2 ms simulated execution per run:
+`node --expose-gc scripts/experiments/benchmark-resumable-journal.mjs` runs five synthetic batches of 25 records with zero and 2 ms simulated execution per run:
 
 | Simulated run duration | Batch median | Approximate journal overhead | Heap after batch |
 | ---: | ---: | ---: | ---: |

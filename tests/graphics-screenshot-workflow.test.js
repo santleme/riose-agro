@@ -19,6 +19,10 @@ test('visual regression workflow watches scene, asset, manifest, and simulation 
     'src/client/feeding-model.js',
     'assets/**',
     'public/assets/**',
+    'scripts/graphics/graphics-screenshot-regression.mjs',
+    'scripts/graphics/graphics-screenshot-utils.mjs',
+    'scripts/graphics/build-composer-scenes.mjs',
+    'scripts/graphics/build-graphics-poc.mjs',
   ]) {
     assert.ok(watchedPaths.has(requiredPath), `visual regression workflow must run when ${requiredPath} changes`);
   }
