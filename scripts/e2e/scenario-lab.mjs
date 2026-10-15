@@ -124,6 +124,28 @@ try {
   assert.match(await page.locator('#br-corte-provenance').textContent(), /does not forecast gain/);
   assert.match(await page.locator('#br-corte-provenance').textContent(), /published-equation-with-external-validation; no Riose-specific calibration/);
   assert.doesNotMatch(await page.locator('#br-corte-provenance').textContent(), /registry evidence status demonstrative/);
+  await page.locator('#br-corte-sensitivity-form [name="minimumSupplement"]').fill('0.5');
+  await page.locator('#br-corte-sensitivity-form [name="maximumSupplement"]').fill('2');
+  await page.locator('#br-corte-sensitivity-form [name="sweepStep"]').fill('0.25');
+  await page.getByRole('button', {name: 'Review sensitivity'}).click();
+  assert.equal(await page.locator('#br-corte-sensitivity-review:not([hidden])').count(), 1);
+  assert.equal(await page.locator('#br-corte-sensitivity-review-list article').count(), 4);
+  assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Calculate sensitivity'}).click();
+  await page.locator('#br-corte-sensitivity-results:not([hidden])').waitFor();
+  assert.equal(await page.locator('#br-corte-sensitivity-table-body tr').count(), 7);
+  assert.match(await page.locator('#br-corte-sensitivity-table-body tr').first().textContent(), /0\.50.*6\.726/);
+  assert.match(await page.locator('#br-corte-sensitivity-provenance').textContent(), /not a causal effect/);
+  assert.match(await page.locator('#br-corte-sensitivity-chart').getAttribute('aria-label'), /total DMI/);
+  await page.waitForTimeout(5100);
+  await page.screenshot({path: 'docs/evidence/product-v4-br-corte-sensitivity-desktop.png', fullPage: true});
+  await page.locator('#br-corte-sensitivity-form [name="minimumSupplement"]').fill('0.75');
+  assert.equal(await page.locator('#br-corte-sensitivity-review:not([hidden])').count(), 0);
+  assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Review sensitivity'}).click();
+  assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Calculate sensitivity'}).click();
+  await page.locator('#br-corte-sensitivity-results:not([hidden])').waitFor();
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-results.png', fullPage: true});
   const [brCorteDownload] = await Promise.all([
     page.waitForEvent('download'),
@@ -166,8 +188,27 @@ try {
   assert.ok(dimensions.scroll <= dimensions.client, `mobile horizontal overflow: ${JSON.stringify(dimensions)}`);
   const navLinkHeights = await mobile.locator('.topbar nav a').evaluateAll(links => links.map(link => Math.round(link.getBoundingClientRect().height)));
   assert.ok(navLinkHeights.every(height => height <= 28), `mobile navigation links should stay on one line: ${JSON.stringify(navLinkHeights)}`);
+  await mobile.locator('[name="bodyWeightKg"]').fill('400');
+  await mobile.locator('[name="adgKgPerDay"]').fill('0.5');
+  await mobile.locator('[name="animalCount"]').last().fill('200');
+  await mobile.locator('[name="durationDays"]').last().fill('30');
+  await mobile.locator('#br-corte-sensitivity-form [name="minimumSupplement"]').fill('0.5');
+  await mobile.locator('#br-corte-sensitivity-form [name="maximumSupplement"]').fill('2');
+  await mobile.locator('#br-corte-sensitivity-form [name="sweepStep"]').fill('0.25');
+  await mobile.getByRole('button', {name: 'Review sensitivity'}).click();
+  await mobile.getByRole('button', {name: 'Calculate sensitivity'}).click();
+  await mobile.locator('#br-corte-sensitivity-results:not([hidden])').waitFor();
+  const sensitivityFormColumns = await mobile.locator('.sensitivity-fields').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+  assert.equal(sensitivityFormColumns, 1);
+  const sensitivityMobileControls = await mobile.locator('#br-corte-sensitivity-form button').evaluate(button => ({height: button.getBoundingClientRect().height, labelFont: parseFloat(getComputedStyle(button.closest('form').querySelector('label')).fontSize)}));
+  assert.ok(sensitivityMobileControls.height >= 42, `mobile sensitivity button target is too small: ${JSON.stringify(sensitivityMobileControls)}`);
+  assert.ok(sensitivityMobileControls.labelFont >= 12, `mobile sensitivity labels are too small: ${JSON.stringify(sensitivityMobileControls)}`);
+  const resultDimensions = await mobile.evaluate(() => ({scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth}));
+  assert.ok(resultDimensions.scroll <= resultDimensions.client, `mobile sensitivity overflow: ${JSON.stringify(resultDimensions)}`);
+  await mobile.waitForTimeout(5100);
+  await mobile.screenshot({path: 'docs/evidence/product-v4-br-corte-sensitivity-mobile.png', fullPage: true});
   await mkdir('docs/evidence', {recursive: true});
-  console.log(JSON.stringify({scenarioCount: 3, animalCount: 8, selectedDay: 1, cancellation: 'passed', mobile: dimensions, consoleErrors: errors}));
+  console.log(JSON.stringify({scenarioCount: 3, animalCount: 8, selectedDay: 1, cancellation: 'passed', sensitivityPoints: 7, mobile: dimensions, mobileSensitivity: resultDimensions, sensitivityFormColumns, consoleErrors: errors}));
 } finally {
   await browser.close();
 }

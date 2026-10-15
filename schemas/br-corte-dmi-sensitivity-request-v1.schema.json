@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.agro/schemas/br-corte-dmi-sensitivity-request-v1.schema.json",
+  "title": "BR-CORTE 2023 Eq. 2.6 deterministic one-factor sensitivity request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "model", "inputs", "assumptions"],
+  "properties": {
+    "type": {"const": "riose-br-corte-dmi-sensitivity"},
+    "version": {"const": 1},
+    "model": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version"],
+      "properties": {"id": {"const": "br-corte-2023-eq-2.6"}, "version": {"const": "2023"}}
+    },
+    "inputs": {
+      "type": "object", "additionalProperties": false,
+      "required": ["bodyWeightKg", "adgKgPerDay", "animalCount", "durationDays", "sweep", "supplementPricePerKgDM", "currency"],
+      "properties": {
+        "bodyWeightKg": {"type": "number", "minimum": 133, "maximum": 474},
+        "adgKgPerDay": {"type": "number", "minimum": -0.18, "maximum": 1.34},
+        "animalCount": {"type": "integer", "minimum": 1, "maximum": 10000},
+        "durationDays": {"type": "integer", "minimum": 1, "maximum": 365},
+        "sweep": {
+          "type": "object", "additionalProperties": false,
+          "required": ["input", "minimum", "maximum", "step", "unit", "values"],
+          "properties": {
+            "input": {"const": "supplementKgDMPerDay"},
+            "minimum": {"type": "number", "minimum": 0, "maximum": 5.32},
+            "maximum": {"type": "number", "minimum": 0, "maximum": 5.32},
+            "step": {"type": "number", "exclusiveMinimum": 0},
+            "unit": {"const": "kg DM/head/day"},
+            "values": {"type": "array", "minItems": 2, "maxItems": 101, "items": {"type": "number", "minimum": 0, "maximum": 5.32}}
+          }
+        },
+        "supplementPricePerKgDM": {"type": ["number", "null"], "minimum": 0},
+        "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$"}
+      }
+    },
+    "assumptions": {
+      "type": "object", "additionalProperties": false, "required": ["fixedInputs", "population", "price"],
+      "properties": {"fixedInputs": {"type": "string"}, "population": {"type": "string"}, "price": {"type": "string"}}
+    }
+  }
+}

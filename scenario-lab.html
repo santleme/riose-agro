@@ -93,6 +93,29 @@
         <div class="lab-actions"><button class="primary-button" type="submit">Review BR-CORTE scenarios <span aria-hidden="true">↗</span></button></div>
       </form>
       <div class="saved-manifest scientific-saved"><button id="br-corte-load" class="text-button" type="button">Open exported BR-CORTE JSON</button><input id="br-corte-file" type="file" accept="application/json,.json" hidden><span>Reopens the versioned inputs and recalculates them for review.</span></div>
+      <form id="br-corte-sensitivity-form" class="sensitivity-request" aria-labelledby="sensitivity-request-title">
+        <div><p class="eyebrow">ONE-FACTOR SENSITIVITY</p><h3 id="sensitivity-request-title">Sweep supplementation</h3><p>Uses the reviewed body weight and supplied ADG above; those values stay fixed.</p></div>
+        <div class="lab-fields sensitivity-fields">
+          <label>Minimum · kg DM/head/day<input name="minimumSupplement" type="number" min="0" max="5.32" step="any" placeholder="0.5" required></label>
+          <label>Maximum · kg DM/head/day<input name="maximumSupplement" type="number" min="0" max="5.32" step="any" placeholder="2.0" required></label>
+          <label>Step · kg DM/head/day<input name="sweepStep" type="number" min="0.000001" max="5.32" step="any" placeholder="0.25" required></label>
+        </div>
+        <div class="lab-actions"><button class="quiet-button" type="submit">Review sensitivity</button><span>2–101 points · inside BR-CORTE published supplement range</span></div>
+      </form>
+      <section id="br-corte-sensitivity-review" class="review-panel" hidden aria-labelledby="sensitivity-review-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">REVIEW</p><h3 id="sensitivity-review-title">Sensitivity inputs</h3></div><span class="review-status">User confirmation required</span></div>
+        <p id="br-corte-sensitivity-review-meta" class="review-meta"></p>
+        <div id="br-corte-sensitivity-review-list" class="scenario-list"></div>
+        <p class="review-limit">This is deterministic variation of the published equation with BW and supplied ADG held constant. It is not a causal supplement effect, prediction interval, probability, or forecast of gain.</p>
+        <div class="lab-actions"><button id="br-corte-sensitivity-run" class="primary-button" type="button">Calculate sensitivity</button></div>
+      </section>
+      <section id="br-corte-sensitivity-results" class="scientific-results" hidden aria-labelledby="sensitivity-results-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">COMPUTED SENSITIVITY</p><h3 id="sensitivity-results-title">Conditional equation response</h3></div><span class="scientific-badge">Deterministic · not causal</span></div>
+        <p id="br-corte-sensitivity-summary" class="results-caption"></p>
+        <figure class="sensitivity-figure"><div id="br-corte-sensitivity-chart" role="img"></div><figcaption>Each point is calculated from BR-CORTE 2023 Eq. 2.6. No uncertainty distribution is applied.</figcaption></figure>
+        <div class="lab-table-scroll"><table><thead id="br-corte-sensitivity-table-head"></thead><tbody id="br-corte-sensitivity-table-body"></tbody></table></div>
+        <p id="br-corte-sensitivity-provenance" class="sensitivity-limitation"></p>
+      </section>
       <section id="br-corte-review" class="review-panel" hidden aria-labelledby="br-corte-review-title">
         <div class="lab-card-heading"><div><p class="eyebrow">REVIEW</p><h3 id="br-corte-review-title">Conditional inputs</h3></div><span class="review-status">User confirmation required</span></div>
         <p id="br-corte-review-meta" class="review-meta"></p>

@@ -24,7 +24,7 @@ Implementation scope: Versioned strict sweep input/result contract, validated mi
 Acceptance criteria: Every row is an actual registered-model output inside published input ranges; fixed values remain unchanged; repeat is deterministic; review required; mathematical sensitivity has unit; no FarmEngine merge or altered formula.
 Required tests: new contract tests from public seam; existing BR-CORTE vectors; Product V3 browser E2E; accessibility/mobile/reduced-motion.
 Evidence: test output, capture, benchmark only if measured necessary; `progress.md`.
-Status: READY
+Status: DONE (sensitivity contract 5/5; existing BR-CORTE scenario 3/3; Product V3 E2E PASS with review/confirm/edit invalidation and 390 px mobile layout).
 
 ## P4-003 — Explicit example and empty-input state
 

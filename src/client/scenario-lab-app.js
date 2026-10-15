@@ -1,6 +1,7 @@
 import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
 import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
+import {createBrCorteSensitivityManifest, evaluateBrCorteSensitivityManifest} from './br-corte-sensitivity.js';
 import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
 import {combineScenarioLabClarification, interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
 import {canonicalScenarioLabJson, createScenarioLabArchive, sha256ScenarioLabJson, validateScenarioLabArchive, validateScenarioLabResultBinding} from './scenario-lab-integrity.js';
@@ -27,6 +28,8 @@ let activeWorker = null;
 let cancelActiveRun = null;
 let reviewedBrCorteManifest = null;
 let brCorteResult = null;
+let reviewedBrCorteSensitivityManifest = null;
+let brCorteSensitivityResult = null;
 
 function status(message) {
   $('lab-status').textContent = message;
@@ -626,8 +629,93 @@ function renderBrCorteResults(result) {
   $('br-corte-results').hidden = false;
 }
 
+function resetBrCorteSensitivity() {
+  reviewedBrCorteSensitivityManifest = null;
+  brCorteSensitivityResult = null;
+  $('br-corte-sensitivity-review').hidden = true;
+  $('br-corte-sensitivity-results').hidden = true;
+}
+
+function createBrCorteSensitivityFromForms() {
+  const scenario = new FormData($('br-corte-form'));
+  const sweep = new FormData($('br-corte-sensitivity-form'));
+  const rawPrice = String(scenario.get('supplementPrice') ?? '').trim();
+  return createBrCorteSensitivityManifest({
+    bodyWeightKg: Number(scenario.get('bodyWeightKg')),
+    adgKgPerDay: Number(scenario.get('adgKgPerDay')),
+    animalCount: Number(scenario.get('animalCount')),
+    durationDays: Number(scenario.get('durationDays')),
+    minimumSupplementKgDMPerHeadPerDay: Number(sweep.get('minimumSupplement')),
+    maximumSupplementKgDMPerHeadPerDay: Number(sweep.get('maximumSupplement')),
+    stepKgDMPerHeadPerDay: Number(sweep.get('sweepStep')),
+    supplementPricePerKgDM: rawPrice === '' ? null : Number(rawPrice),
+    currency: rawPrice === '' ? null : String(scenario.get('currency') ?? '').trim().toUpperCase(),
+  });
+}
+
+function renderBrCorteSensitivityReview(manifest) {
+  const {inputs} = manifest;
+  $('br-corte-sensitivity-review-meta').textContent = `${inputs.sweep.values.length} calculated points · ${inputs.animalCount.toLocaleString()} represented animals · ${inputs.durationDays} days · BR-CORTE Eq. 2.6`;
+  const price = inputs.supplementPricePerKgDM === null ? 'cost omitted · no price supplied' : `${inputs.currency} ${inputs.supplementPricePerKgDM}/kg DM`;
+  const lines = [
+    ['Fixed body weight', `${inputs.bodyWeightKg} kg`],
+    ['Fixed supplied ADG', `${inputs.adgKgPerDay} kg/day · input, not predicted`],
+    ['Supplement input sweep', `${inputs.sweep.minimum}–${inputs.sweep.maximum} by ${inputs.sweep.step} kg DM/head/day`],
+    ['Cost basis', price],
+  ];
+  $('br-corte-sensitivity-review-list').replaceChildren(...lines.map(([label, value]) => {
+    const article = document.createElement('article');
+    const name = document.createElement('span'); name.textContent = label;
+    const detail = document.createElement('strong'); detail.textContent = value;
+    article.append(name, detail); return article;
+  }));
+  $('br-corte-sensitivity-review').hidden = false;
+}
+
+function renderBrCorteSensitivityResults(result) {
+  const head = $('br-corte-sensitivity-table-head'); const body = $('br-corte-sensitivity-table-body');
+  const headings = ['Supplement · kg DM/head/day', 'Total DMI · kg DM/head/day', 'Herd DMI total · kg DM', 'Supplement total · kg DM', ...(result.rows[0].supplementCost === null ? [] : ['Supplement cost'])];
+  const header = document.createElement('tr');
+  for (const label of headings) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = label; header.append(th); }
+  head.replaceChildren(header);
+  body.replaceChildren(...result.rows.map(row => {
+    const tr = document.createElement('tr');
+    const values = [row.supplementKgDMPerHeadPerDay.toFixed(2), row.totalDmiKgDMPerHeadPerDay.toFixed(3), row.herdTotalDmiKgDM.toFixed(1), row.supplementKgDM.toFixed(1), ...(row.supplementCost === null ? [] : [`${row.currency} ${row.supplementCost.toFixed(2)}`])];
+    for (const value of values) { const td = document.createElement('td'); td.textContent = value; tr.append(td); }
+    return tr;
+  }));
+  const xMin = result.rows[0].supplementKgDMPerHeadPerDay;
+  const xMax = result.rows.at(-1).supplementKgDMPerHeadPerDay;
+  const yValues = result.rows.map(row => row.totalDmiKgDMPerHeadPerDay);
+  const yMin = Math.min(...yValues); const yMax = Math.max(...yValues);
+  const left = 54; const right = 620; const top = 18; const bottom = 174;
+  const x = value => left + ((value - xMin) / (xMax - xMin)) * (right - left);
+  const y = value => bottom - ((value - yMin) / (yMax - yMin)) * (bottom - top);
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 660 220'); svg.setAttribute('aria-hidden', 'true');
+  const axis = document.createElementNS(svg.namespaceURI, 'path'); axis.setAttribute('d', `M${left} ${top}V${bottom}H${right}`); axis.setAttribute('fill', 'none'); axis.setAttribute('stroke', '#dce7eb');
+  const line = document.createElementNS(svg.namespaceURI, 'polyline');
+  line.setAttribute('points', result.rows.map(row => `${x(row.supplementKgDMPerHeadPerDay)},${y(row.totalDmiKgDMPerHeadPerDay)}`).join(' '));
+  line.setAttribute('fill', 'none'); line.setAttribute('stroke', '#4b9cba'); line.setAttribute('stroke-width', '2.5'); line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
+  svg.append(axis, line);
+  for (const row of result.rows) {
+    const point = document.createElementNS(svg.namespaceURI, 'circle');
+    point.setAttribute('cx', String(x(row.supplementKgDMPerHeadPerDay))); point.setAttribute('cy', String(y(row.totalDmiKgDMPerHeadPerDay))); point.setAttribute('r', '3.5'); point.setAttribute('fill', '#147eaa');
+    const title = document.createElementNS(svg.namespaceURI, 'title'); title.textContent = `${row.supplementKgDMPerHeadPerDay} kg DM/head/day supplement → ${row.totalDmiKgDMPerHeadPerDay.toFixed(3)} kg DM/head/day total DMI`; point.append(title); svg.append(point);
+  }
+  const label = (text, tx, ty, anchor = 'middle') => { const node = document.createElementNS(svg.namespaceURI, 'text'); node.textContent = text; node.setAttribute('x', String(tx)); node.setAttribute('y', String(ty)); node.setAttribute('text-anchor', anchor); node.setAttribute('fill', '#75858c'); node.setAttribute('font-size', '10'); svg.append(node); };
+  label(yMax.toFixed(3), left - 8, top + 4, 'end'); label(yMin.toFixed(3), left - 8, bottom + 4, 'end');
+  label(`${xMin} kg DM/head/day`, left, 199, 'start'); label(`${xMax} kg DM/head/day`, right, 199, 'end');
+  $('br-corte-sensitivity-chart').replaceChildren(svg);
+  $('br-corte-sensitivity-chart').setAttribute('aria-label', `BR-CORTE total DMI sensitivity curve, ${result.rows.length} points. Horizontal axis supplement in kg dry matter per head per day from ${xMin} to ${xMax}. Vertical axis total DMI in kg dry matter per head per day from ${yMin.toFixed(3)} to ${yMax.toFixed(3)}.`);
+  $('br-corte-sensitivity-summary').textContent = `Body weight ${result.fixedInputs.bodyWeightKg} kg and supplied ADG ${result.fixedInputs.adgKgPerDay} kg/day held constant. Exact equation derivative: ${result.localSensitivity.derivative} kg DMI per kg DM supplement, within the declared input domain.`;
+  $('br-corte-sensitivity-provenance').textContent = `${result.model.id}@${result.model.version}. ${result.interpretation} ${result.model.evidenceStatus}. The equation does not predict gain; this is not measured intake.`;
+  $('br-corte-sensitivity-results').hidden = false;
+}
+
 $('br-corte-form').addEventListener('submit', event => {
   event.preventDefault();
+  resetBrCorteSensitivity();
   try {
     reviewedBrCorteManifest = createBrCorteManifest(event.currentTarget);
     brCorteResult = null;
@@ -642,10 +730,40 @@ $('br-corte-form').addEventListener('submit', event => {
 });
 
 $('br-corte-form').addEventListener('input', () => {
+  resetBrCorteSensitivity();
   reviewedBrCorteManifest = null;
   brCorteResult = null;
   $('br-corte-review').hidden = true;
   $('br-corte-results').hidden = true;
+});
+
+$('br-corte-sensitivity-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    reviewedBrCorteSensitivityManifest = createBrCorteSensitivityFromForms();
+    brCorteSensitivityResult = null;
+    $('br-corte-sensitivity-results').hidden = true;
+    renderBrCorteSensitivityReview(reviewedBrCorteSensitivityManifest);
+    status('Review the BR-CORTE sensitivity inputs before calculating.');
+  } catch (error) {
+    resetBrCorteSensitivity();
+    status(error.message);
+  }
+});
+
+$('br-corte-sensitivity-form').addEventListener('input', resetBrCorteSensitivity);
+
+$('br-corte-sensitivity-run').addEventListener('click', () => {
+  if (!reviewedBrCorteSensitivityManifest) return;
+  try {
+    brCorteSensitivityResult = evaluateBrCorteSensitivityManifest(reviewedBrCorteSensitivityManifest);
+    renderBrCorteSensitivityResults(brCorteSensitivityResult);
+    status('BR-CORTE deterministic sensitivity calculated from the reviewed inputs.');
+  } catch (error) {
+    brCorteSensitivityResult = null;
+    $('br-corte-sensitivity-results').hidden = true;
+    status(error.message);
+  }
 });
 
 $('br-corte-run').addEventListener('click', () => {

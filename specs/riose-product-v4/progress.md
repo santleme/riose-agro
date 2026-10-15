@@ -10,3 +10,13 @@
 - Baseline `npm test`: 497/497 pass, 0 fail (41.5 s). P3-011 benchmark baseline and exact machine-specific limits are in the V3 handoff.
 - P4-001 complete: V4 specs and audit baseline are recorded; P3 gates and scientific boundaries are preserved.
 - Next: implement P4-002 bounded BR-CORTE sensitivity sweep at a strict versioned public seam.
+
+
+## P4-002 — BR-CORTE deterministic sensitivity slice
+
+- Added `riose-br-corte-dmi-sensitivity/v1` request and JSON Schema; only eligible input is supplement at 0–5.32 kg DM/head/day, while body weight and user-supplied ADG remain fixed. Interval must be step-divisible and produce 2–101 points.
+- Each row calls registered `br-corte-2023-eq-2.6@2023`, returns actual total DMI, arithmetic represented-herd totals and optional user-priced supplement cost, with source/model implementation provenance. Exact derivative 0.7732 is labeled equation sensitivity, not intervention causality. Prediction interval remains null; validated remains false. No formula or FarmEngine behavior changed.
+- Added a distinct sensitivity review and explicit Calculate action, chart, table, units and limitation text. Editing the sweep revokes reviewed and computed state. Mobile scientific controls reflow to one column, 42 px action target, 12 px labels, and 390 px has no horizontal overflow. New UI adds no animation; existing reduced-motion behavior remains unchanged.
+- Tests: sensitivity contract/schema 5/5; existing BR-CORTE scenario/cost 3/3; Product V3 E2E pass with seven calculated points, range edit invalidation/no automatic execution, desktop capture, mobile result, 390 px no overflow and no browser console errors; Product V2 E2E pass. Captures: `docs/evidence/product-v4-br-corte-sensitivity-desktop.png`, `docs/evidence/product-v4-br-corte-sensitivity-mobile.png`.
+- The initial mobile E2E caught 10 px labels on the new sweep (style selector missed its class). Scoped mobile typography was corrected and the rerun passed.
+- P4-003 is next READY: replace implicit numeric/scientific form values with empty inputs and an explicitly loaded example. Full regression/parity run follows P4-003.
