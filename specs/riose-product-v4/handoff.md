@@ -1,14 +1,14 @@
 # Product V4 handoff
 
 Date: 2026-10-15
-Last verified commit: P4-001 SDD bootstrap at `021b978`; P4-002 implementation is being finalized.
+Last verified commit: `62200f8` (P4-002 sensitivity slice); P4-003 changes are validated and pending commit.
 Branch: `codex/behavioral-agents-sdd`.
 
-Completed tasks: P4-001 audit/spec bootstrap; P4-002 sensitivity slice has passed focused/unit and browser E2E checks; baseline full suite was 497/497 before V4 changes.
-Task in progress: none; P4-002 implementation has completed focused checks and is ready to commit.
-READY: P4-003 explicit example/empty-input state; P4-004 user discovery protocol.
+Completed tasks: P4-001 audit/spec bootstrap; P4-002 BR-CORTE sensitivity; P4-003 explicit empty/example inputs. Full suite currently 502/502; parity and V2/V3 E2E pass.
+Task in progress: P4-004 product-discovery protocol.
+READY: none after P4-004; review its evidence and then hand off for real participant recruitment. P3-007/P3-008 gates remain blocked.
 BLOCKED: remote AI agent/tools until P3-007 persistent spend gate; paid decision-use until P3-008 independent review. Behavioral model remains NO-GO.
 Files/evidence: V4 specification directory created; see `progress.md` for audited modules and baseline.
-Tests executed: starting checkout `npm test` 497/497, 0 fail; P4-002 sensitivity 5/5; BR-CORTE scenarios 3/3; Product V3 E2E pass (desktop/mobile sensitivity and edit invalidation); Product V2 E2E pass.
+Tests executed: starting checkout `npm test` 497/497, 0 fail; P4-002 sensitivity 5/5; BR-CORTE scenarios 3/3; Product V3 E2E pass (desktop/mobile sensitivity and edit invalidation; empty/example input state); Product V2 E2E pass; `npm test` 502/502; `npm run test:parity` pass.
 Scientific boundaries: BR-CORTE Eq. 2.6 consumes supplied ADG; it estimates total DMI within its declared domain. FarmEngine is demonstrative. Perea semi-Markov is not connected. No formulas, thresholds or scientific status changed.
-Next action: commit P4-002 evidence, then select P4-003 and test empty forms/example loading/no-auto-run.
+Next action: finish P4-004 demonstration guide, interview script and blank feedback template; no outreach.

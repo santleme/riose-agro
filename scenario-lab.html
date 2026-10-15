@@ -32,7 +32,7 @@
       <div class="lab-card-heading"><div><p class="eyebrow">LOCAL DRAFT · NO AI SERVICE</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Deterministic parser</span></div>
       <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels in kg DM/head/day. Missing values can be added in a clarification; ambiguous units or multiple intervention factors remain blocked.</p>
       <label class="prompt-label" for="scenario-prompt">Scenario request</label>
-      <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather."></textarea>
+      <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Write an experiment request, or select “Use example”."></textarea>
       <div class="prompt-actions"><button id="draft-scenario" class="primary-button" type="button">Draft for review <span aria-hidden="true">↗</span></button><button id="fill-prompt-example" class="text-button" type="button">Use example</button><span>Parsing is rule-based; no LLM is configured or simulated.</span></div>
       <p id="prompt-result" class="prompt-result" role="status" aria-live="polite"></p>
     </section>
@@ -41,12 +41,12 @@
       <form id="scenario-form" class="lab-card setup-card">
         <div class="lab-card-heading"><div><p class="eyebrow">1 · CONFIGURE</p><h2>Experiment inputs</h2></div><span class="engine-badge">Illustrative engine</span></div>
         <div class="lab-fields">
-          <label>Animals<input name="animalCount" type="number" min="1" max="10000" step="1" value="200" required><small>Seeded engine population</small></label>
-          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" value="30" required><small>Days</small></label>
-          <label>Baseline supplement<input name="baselineSupplement" type="number" min="0" max="4" step="0.1" value="0.5" required><small>kg DM/head/day</small></label>
-          <label>Shared weather<select name="weather"><option value="normal">Normal</option><option value="hot">Hot rule set</option><option value="rain">Rain rule set</option></select><small>Demonstrative engine rule</small></label>
-          <label class="lab-wide">Alternative supplement levels<input name="alternativeLevels" type="text" value="1.0, 1.5" maxlength="120" required><small>Enter 2–9 distinct values from 0 to 4 kg DM/head/day, separated by commas.</small></label>
-          <label>Seed<input name="seed" type="number" min="0" max="4294967295" step="1" value="20261015" required><small>Unsigned 32-bit seed</small></label>
+          <label>Animals<input name="animalCount" type="number" min="1" max="10000" step="1" placeholder="e.g. 200" required><small>Required input · generated illustrative population, not observed cattle</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" placeholder="e.g. 30" required><small>Days · required input</small></label>
+          <label>Baseline supplement<input name="baselineSupplement" type="number" min="0" max="4" step="0.1" placeholder="e.g. 0.5" required><small>kg DM/head/day · required input</small></label>
+          <label>Shared weather<select name="weather" required><option value="" selected disabled>Select a demonstrative rule</option><option value="normal">Normal rule set</option><option value="hot">Hot rule set</option><option value="rain">Rain rule set</option></select><small>Required demonstrative engine rule · not weather observation</small></label>
+          <label class="lab-wide">Alternative supplement levels<input name="alternativeLevels" type="text" placeholder="e.g. 1.0, 1.5" maxlength="120" required><small>2–9 distinct values from 0 to 4 kg DM/head/day, separated by commas.</small></label>
+          <label>Seed (reproducibility)<input name="seed" type="number" min="0" max="4294967295" step="1" value="20261015" required><small>Visible default seed · replay setting, not animal data</small></label>
         </div>
         <div class="lab-actions"><button class="primary-button" type="submit">Review scenarios <span aria-hidden="true">↗</span></button><span>Only supplementation varies across arms.</span></div>
         <div class="saved-manifest"><button id="load-manifest" class="text-button" type="button">Open exported experiment JSON</button><input id="manifest-file" type="file" accept="application/json,.json" hidden><span>Replay uses the saved manifest and recalculates every arm.</span></div>
@@ -82,15 +82,16 @@
       <p class="scientific-intro">Estimate total dry matter intake for growing Zebu cattle on tropical pasture from body weight, user-supplied average daily gain, and supplement. This module is independent of FarmEngine.</p>
       <form id="br-corte-form">
         <div class="lab-fields scientific-fields">
-          <label>Representative body weight<input name="bodyWeightKg" type="number" min="133" max="474" step="any" value="400" required><small>133–474 kg · kg</small></label>
-          <label>Supplied average daily gain<input name="adgKgPerDay" type="number" min="-0.18" max="1.34" step="any" value="0.5" required><small>−0.18–1.34 kg/day · an input, not predicted</small></label>
-          <label>Animals represented<input name="animalCount" type="number" min="1" max="10000" step="1" value="200" required><small>Representative inputs apply to all</small></label>
-          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" value="30" required><small>Days · inputs held constant for arithmetic totals</small></label>
-          <label class="lab-wide">Supplement levels<input name="supplementLevels" type="text" maxlength="120" value="0.5, 1.0, 1.5" required><small>3–10 distinct levels · 0–5.32 kg DM/head/day</small></label>
+          <label>Representative body weight<input name="bodyWeightKg" type="number" min="133" max="474" step="any" placeholder="e.g. 400" required><small>133–474 kg · required representative input</small></label>
+          <label>Supplied average daily gain<input name="adgKgPerDay" type="number" min="-0.18" max="1.34" step="any" placeholder="e.g. 0.5" required><small>−0.18–1.34 kg/day · input, not predicted</small></label>
+          <label>Animals represented<input name="animalCount" type="number" min="1" max="10000" step="1" placeholder="e.g. 200" required><small>Representative inputs apply to all</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" placeholder="e.g. 30" required><small>Days · inputs held constant for arithmetic totals</small></label>
+          <label class="lab-wide">Supplement levels<input name="supplementLevels" type="text" maxlength="120" placeholder="e.g. 0.5, 1.0, 1.5" required><small>3–10 distinct levels · 0–5.32 kg DM/head/day</small></label>
           <label>Optional supplement price<input name="supplementPrice" type="number" min="0" step="any" placeholder="Leave blank to omit cost"><small>Price per kg dry matter</small></label>
-          <label>Currency<input name="currency" type="text" maxlength="3" pattern="[A-Za-z]{3}" placeholder="BRL"><small>ISO 4217 code, required with price</small></label>
+          <label>Currency<input name="currency" type="text" maxlength="3" pattern="[A-Za-z]{3}" placeholder="e.g. BRL"><small>ISO 4217 code, required with price</small></label>
         </div>
-        <div class="lab-actions"><button class="primary-button" type="submit">Review BR-CORTE scenarios <span aria-hidden="true">↗</span></button></div>
+        <div class="lab-actions"><button class="primary-button" type="submit">Review BR-CORTE scenarios <span aria-hidden="true">↗</span></button><button id="fill-br-corte-example" class="text-button" type="button">Load BR-CORTE example</button><span>Example values are not observations; review is still required.</span></div>
+        <p id="br-corte-example-status" class="prompt-result" role="status" aria-live="polite"></p>
       </form>
       <div class="saved-manifest scientific-saved"><button id="br-corte-load" class="text-button" type="button">Open exported BR-CORTE JSON</button><input id="br-corte-file" type="file" accept="application/json,.json" hidden><span>Reopens the versioned inputs and recalculates them for review.</span></div>
       <form id="br-corte-sensitivity-form" class="sensitivity-request" aria-labelledby="sensitivity-request-title">

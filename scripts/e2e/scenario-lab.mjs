@@ -19,6 +19,33 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await page.goto('http://127.0.0.1:8000/scenario-lab.html', {waitUntil: 'networkidle'});
+  for (const name of ['animalCount', 'durationDays', 'baselineSupplement', 'alternativeLevels']) {
+    assert.equal(await page.locator(`#scenario-form [name="${name}"]`).inputValue(), '', `${name} must not look like user-provided data on first load`);
+  }
+  assert.equal(await page.locator('#scenario-form [name="weather"]').inputValue(), '', 'demonstrative weather rule must be explicitly selected');
+  assert.equal(await page.locator('#scenario-form [name="animalCount"]').evaluate(input => input.checkValidity()), false);
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Use example'}).click();
+  assert.match(await page.locator('#prompt-result').textContent(), /Example loaded/);
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
+  await page.locator('#scenario-prompt').fill('');
+  for (const name of ['bodyWeightKg', 'adgKgPerDay', 'animalCount', 'durationDays', 'supplementLevels', 'supplementPrice', 'currency']) {
+    assert.equal(await page.locator(`#br-corte-form [name="${name}"]`).inputValue(), '', `${name} must start empty instead of implying recorded cattle data`);
+  }
+  for (const name of ['minimumSupplement', 'maximumSupplement', 'sweepStep']) {
+    assert.equal(await page.locator(`#br-corte-sensitivity-form [name="${name}"]`).inputValue(), '');
+  }
+  assert.equal(await page.locator('#br-corte-form [name="bodyWeightKg"]').evaluate(input => input.checkValidity()), false);
+  await page.screenshot({path: 'docs/evidence/product-v4-empty-state.png', fullPage: true});
+  await page.getByRole('button', {name: 'Load BR-CORTE example'}).click();
+  assert.equal(await page.locator('#br-corte-form [name="bodyWeightKg"]').inputValue(), '400');
+  assert.match(await page.locator('#br-corte-example-status').textContent(), /not observations/);
+  assert.equal(await page.locator('#br-corte-review:not([hidden])').count(), 0);
+  assert.equal(await page.locator('#br-corte-results:not([hidden])').count(), 0);
+  assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
+  await page.screenshot({path: 'docs/evidence/product-v4-empty-and-example-state.png', fullPage: true});
+  await page.locator('#br-corte-form [name="bodyWeightKg"]').fill('400');
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-initial.png', fullPage: true});
 
   await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for cattle.');

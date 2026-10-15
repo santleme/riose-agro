@@ -36,7 +36,7 @@ Implementation scope: Clear initial numeric inputs or mark/load examples explici
 Acceptance criteria: Initial state contains no silently supplied scientific inputs; example selection is visibly labeled and editable; examples cannot be called observed data; invalid/missing values block review.
 Required tests: Product V3 browser E2E, input and accessibility checks.
 Evidence: screenshots and test output.
-Status: READY
+Status: DONE (`npm test` 502/502; parity pass; Product V2 and V3 E2E pass; empty/example state captured and visually inspected).
 
 ## P4-004 — Product discovery protocol
 
@@ -48,7 +48,7 @@ Implementation scope: Demonstrate conditional CMS/cost use case, ask about an ac
 Acceptance criteria: protocol distinguishes product demand from scientific validation; blank records only; no contacts or findings fabricated.
 Required tests: document consistency review; no software test needed.
 Evidence: `docs/product-research/` materials.
-Status: READY
+Status: IN_PROGRESS
 
 ## Reused / gated capabilities
 

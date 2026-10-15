@@ -20,3 +20,12 @@
 - Tests: sensitivity contract/schema 5/5; existing BR-CORTE scenario/cost 3/3; Product V3 E2E pass with seven calculated points, range edit invalidation/no automatic execution, desktop capture, mobile result, 390 px no overflow and no browser console errors; Product V2 E2E pass. Captures: `docs/evidence/product-v4-br-corte-sensitivity-desktop.png`, `docs/evidence/product-v4-br-corte-sensitivity-mobile.png`.
 - The initial mobile E2E caught 10 px labels on the new sweep (style selector missed its class). Scoped mobile typography was corrected and the rerun passed.
 - P4-003 is next READY: replace implicit numeric/scientific form values with empty inputs and an explicitly loaded example. Full regression/parity run follows P4-003.
+
+
+## P4-003 — Explicit example and empty-input state
+
+- Cleared population, duration, intervention and BR-CORTE numeric form values on initial load; blank inputs and blank weather rule now block review. The visible reproducibility seed remains and is labeled as configuration, not animal data. Examples are explicit; loading fills editable inputs only and never runs a calculation.
+- Added a BR-CORTE example button using representative values and no price. Inline message says inputs are illustrative and not observations. Prompt example button remains draft-only.
+- E2E asserts initial inputs are empty/invalid, no review/results/Worker post is created, examples load explicitly, and calculation still needs explicit review/confirmation. Product V3 flow passes. Full suite `npm test` 502/502; JS/Rust parity passes 24 pasture and 1,440 hourly housing checkpoints; Product V2 E2E passes.
+- Visual captures: `docs/evidence/product-v4-empty-state.png` and `docs/evidence/product-v4-empty-and-example-state.png`; reviewed at 1440×1000. Sensitivity mobile result capture continues to show 390 px width and no overflow.
+- P4-004 user discovery materials are the next independent READY task; no users were contacted or feedback fabricated.

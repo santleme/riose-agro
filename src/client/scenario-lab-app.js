@@ -731,10 +731,31 @@ $('br-corte-form').addEventListener('submit', event => {
 
 $('br-corte-form').addEventListener('input', () => {
   resetBrCorteSensitivity();
+  $('br-corte-example-status').textContent = '';
   reviewedBrCorteManifest = null;
   brCorteResult = null;
   $('br-corte-review').hidden = true;
   $('br-corte-results').hidden = true;
+});
+
+$('fill-br-corte-example').addEventListener('click', () => {
+  const form = $('br-corte-form');
+  const example = {
+    bodyWeightKg: '400',
+    adgKgPerDay: '0.5',
+    animalCount: '200',
+    durationDays: '30',
+    supplementLevels: '0.5, 1.0, 1.5',
+    supplementPrice: '',
+    currency: '',
+  };
+  for (const [name, value] of Object.entries(example)) form.elements[name].value = value;
+  $('br-corte-sensitivity-form').elements.minimumSupplement.value = '0.5';
+  $('br-corte-sensitivity-form').elements.maximumSupplement.value = '2';
+  $('br-corte-sensitivity-form').elements.sweepStep.value = '0.25';
+  form.dispatchEvent(new Event('input', {bubbles: true}));
+  $('br-corte-sensitivity-form').dispatchEvent(new Event('input', {bubbles: true}));
+  $('br-corte-example-status').textContent = 'BR-CORTE example inputs loaded for review. These are illustrative inputs, not observations. No calculation was run.';
 });
 
 $('br-corte-sensitivity-form').addEventListener('submit', event => {
