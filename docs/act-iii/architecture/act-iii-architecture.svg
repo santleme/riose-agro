@@ -1,56 +1,67 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1120" viewBox="0 0 1440 1120" role="img" aria-labelledby="title desc">
-  <title id="title">RIOSE ACT III execution architecture</title>
-  <desc id="desc">The Product UI sends scenario changes to a browser Worker and Canvas renderer. The Product Worker uses the JavaScript FarmEngine. A local Node server may run native Rust configured comparisons, with JavaScript fallback. The separate lab app can opt into a Rust/WASM metabolism batch with JavaScript fallback. Explanations do not change simulation state. AMD compute is a separate vector service with CPU fallback and is not integrated into Product. Hosted deployment is unverified.</desc>
+  <title id="title">RIOSE ACT III Product architecture at release 5c5f070</title>
+  <desc id="desc">The Product UI configures deterministic livestock scenarios and sends simulation steps to a browser Worker. CPU JavaScript is the default. A selected AMD route sends a parity-checked metabolism batch through the Product server proxy to the Python PyTorch ROCm service and returns backend and device metadata. AMD hardware execution evidence is pending. Native Rust comparison and WASM remain separate lab paths. Explanations return text only. The public deployment SHA binding is unverified.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#547456"/></marker>
     <marker id="arrowMuted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#87928a"/></marker>
     <style>
-      text{font-family:Inter,Arial,sans-serif;fill:#202722}.title{font-size:34px;font-weight:700}.subtitle{font-size:16px;fill:#5c675f}.label{font-size:14px;font-weight:700;letter-spacing:1px;fill:#657068}.box-title{font-size:19px;font-weight:700}.box-title-sm{font-size:16px;font-weight:700}.box-copy{font-size:14px;fill:#425047}.small{font-size:12px;fill:#657068}.solid{stroke:#547456;stroke-width:3;fill:none;marker-end:url(#arrow)}.optional{stroke:#87928a;stroke-width:2.5;stroke-dasharray:8 7;fill:none;marker-end:url(#arrowMuted)}
+      text{font-family:Inter,Arial,sans-serif;fill:#202722}.title{font-size:32px;font-weight:700}.subtitle{font-size:15px;fill:#5c675f}.label{font-size:13px;font-weight:700;letter-spacing:1px;fill:#657068}.box-title{font-size:17px;font-weight:700}.box-title-sm{font-size:15px;font-weight:700}.box-copy{font-size:13px;fill:#425047}.small{font-size:11px;fill:#657068}.solid{stroke:#547456;stroke-width:3;fill:none;marker-end:url(#arrow)}.optional{stroke:#87928a;stroke-width:2.5;stroke-dasharray:8 7;fill:none;marker-end:url(#arrowMuted)}
     </style>
   </defs>
   <rect width="1440" height="1120" fill="#f5f6f1"/>
-  <text x="64" y="66" class="title">RIOSE · ACT III execution architecture</text>
-  <text x="64" y="96" class="subtitle">Current Product flow, with separate optional paths and unintegrated work shown explicitly.</text>
+  <text x="64" y="62" class="title">RIOSE · ACT III Product architecture</text>
+  <text x="64" y="91" class="subtitle">Release 5c5f070 · Product AMD route integrated by #137; physical ROCm evidence and public deployment remain unverified.</text>
 
-  <rect x="48" y="132" width="820" height="824" rx="22" fill="#fff" stroke="#d9dfd7" stroke-width="2"/>
-  <text x="76" y="168" class="label">BROWSER · PRODUCT FLOW</text>
-  <rect x="100" y="198" width="270" height="80" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
-  <text x="124" y="230" class="box-title">User</text><text x="124" y="254" class="box-copy">asks or changes a supported scenario</text>
-  <rect x="510" y="198" width="300" height="100" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
-  <text x="534" y="228" class="box-title">Product UI + Canvas renderer</text><text x="534" y="253" class="box-copy">product.html · product-app.js</text><text x="534" y="277" class="small">product-scene.js · product-world-renderer.js</text>
-  <path d="M370 238H500" class="solid"/>
-  <rect x="510" y="342" width="300" height="96" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
-  <text x="534" y="374" class="box-title">Scenario &amp; lot configuration</text><text x="534" y="399" class="box-copy">housing · diet · climate · supplement</text><text x="534" y="421" class="small">Unsupported requests do not change model state.</text>
-  <path d="M660 298V332" class="solid"/>
-  <rect x="270" y="492" width="300" height="92" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
-  <text x="294" y="526" class="box-title">Product Simulation Worker</text><text x="294" y="552" class="box-copy">state updates · ticks · comparisons</text>
-  <path d="M550 438L490 482" class="solid"/>
-  <rect x="270" y="646" width="300" height="110" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
-  <text x="294" y="680" class="box-title">JavaScript FarmEngine · default</text><text x="294" y="706" class="box-copy">simulation runs in browser Worker</text><text x="294" y="730" class="small">CPU path used by the captured Product flow.</text>
-  <path d="M370 584V636" class="solid"/>
-  <rect x="270" y="824" width="300" height="96" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
-  <text x="294" y="858" class="box-title">Results · comparison · reporting</text><text x="294" y="884" class="box-copy">chart · modeled metrics · CSV / manifest</text>
-  <path d="M420 756V814" class="solid"/>
+  <rect x="48" y="122" width="820" height="842" rx="22" fill="#fff" stroke="#d9dfd7" stroke-width="2"/>
+  <text x="76" y="158" class="label">BROWSER · PRODUCT FLOW</text>
+  <rect x="100" y="196" width="270" height="78" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
+  <text x="124" y="228" class="box-title">User</text><text x="124" y="251" class="box-copy">asks or changes a supported scenario</text>
+  <rect x="510" y="190" width="300" height="96" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
+  <text x="534" y="220" class="box-title">Product UI + Canvas renderer</text><text x="534" y="244" class="box-copy">scenario controls · CPU / AMD selector</text><text x="534" y="267" class="small">status shows backend/device after execution</text>
+  <path d="M370 235H500" class="solid"/>
+  <rect x="510" y="322" width="300" height="82" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
+  <text x="534" y="354" class="box-title">Scenario &amp; lot configuration</text><text x="534" y="379" class="box-copy">housing · diet · climate · supplement</text>
+  <path d="M660 286V312" class="solid"/>
+  <rect x="510" y="440" width="300" height="94" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
+  <text x="534" y="474" class="box-title">Product Simulation Worker</text><text x="534" y="499" class="box-copy">deterministic livestock engine · metabolism batch</text><text x="534" y="521" class="small">AMD result must pass contract/parity checks to commit</text>
+  <path d="M660 404V430" class="solid"/>
 
+  <rect x="100" y="620" width="320" height="118" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
+  <text x="124" y="654" class="box-title">CPU path · default</text><text x="124" y="680" class="box-copy">JavaScript FarmEngine in the Worker.</text><text x="124" y="704" class="box-copy">CPU can be selected explicitly; normal Product flow.</text><text x="124" y="726" class="small">The lab-only WASM option is not this Product path.</text>
+  <path d="M540 534C475 558 450 620 420 654" class="solid"/>
+  <rect x="490" y="620" width="320" height="118" rx="14" fill="#fff9ed" stroke="#e8c98b" stroke-width="2"/>
+  <text x="514" y="654" class="box-title">AMD · ROCm path · optional selection</text><text x="514" y="680" class="box-copy">Worker sends a livestock batch via Product proxy.</text><text x="514" y="704" class="box-copy">A reported CPU fallback/error is not committed.</text><text x="514" y="726" class="small">No silent CPU result under an AMD identity.</text>
+  <path d="M690 534V610" class="optional"/>
+  <rect x="285" y="820" width="380" height="94" rx="14" fill="#edf4ec" stroke="#aebfac" stroke-width="2"/>
+  <text x="309" y="854" class="box-title">Results · comparison · reporting</text><text x="309" y="880" class="box-copy">modeled metrics · charts · CSV / manifest</text><text x="309" y="902" class="small">comparison remains browser JavaScript</text>
+  <path d="M260 738C270 780 365 790 400 810" class="solid"/>
+  <path d="M650 738V810" class="solid"/>
 
+  <rect x="918" y="122" width="474" height="842" rx="22" fill="#fff" stroke="#d9dfd7" stroke-width="2"/>
+  <text x="946" y="158" class="label">CONNECTED ROUTES / SEPARATE LAB PATHS</text>
 
-  <rect x="918" y="132" width="474" height="824" rx="22" fill="#fff" stroke="#d9dfd7" stroke-width="2"/>
-  <text x="946" y="168" class="label">OPTIONAL SERVICES / STATUS</text>
-  <rect x="958" y="202" width="390" height="154" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
-  <text x="982" y="236" class="box-title-sm">Bundled Node server · lab only</text><text x="982" y="262" class="box-copy">/api/native/configured-comparison (loopback)</text><text x="982" y="286" class="box-copy">Native Rust runner when available.</text><text x="982" y="310" class="box-copy">Lab Worker uses JavaScript if unavailable or failed.</text><text x="982" y="337" class="small">Product comparison uses JS and makes no server call.</text>
+  <rect x="958" y="500" width="390" height="142" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
+  <text x="982" y="532" class="box-title-sm">Product server · AMD proxy #137</text><text x="982" y="557" class="box-copy">/api/amd/metabolism-batch → Python service</text><text x="982" y="581" class="box-copy">PyTorch Float64 → ROCm device when available</text><text x="982" y="605" class="small">returns batch + backend/device metadata</text><text x="982" y="627" class="small">#138 real-device execution evidence pending</text>
 
-  <rect x="958" y="384" width="390" height="104" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
-  <text x="982" y="418" class="box-title">Explanation · separate endpoint</text><text x="982" y="444" class="box-copy">Optional /api/explain; describes current state.</text><text x="982" y="468" class="small">It does not change simulation state or outputs.</text>
-  <path d="M810 248C900 248 880 436 948 436" class="optional"/>
-  <rect x="958" y="516" width="390" height="124" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2" stroke-dasharray="8 6"/>
-  <text x="982" y="550" class="box-title-sm">Lab app · optional Rust / WASM</text><text x="982" y="576" class="box-copy">riose-core metabolism batch with ?engine=wasm.</text><text x="982" y="600" class="box-copy">JavaScript fallback; not wired into Product UI.</text><text x="982" y="624" class="small">src/client/app.js selects this path.</text>
-  <rect x="958" y="668" width="390" height="142" rx="14" fill="#fff9ed" stroke="#e8c98b" stroke-width="2" stroke-dasharray="8 6"/>
-  <text x="982" y="702" class="box-title-sm">AMD integration · pending #137/#138</text><text x="982" y="728" class="box-copy">Separate experimental scale_vector service.</text><text x="982" y="752" class="box-copy">ROCm path with CPU fallback; no Product connection.</text><text x="982" y="780" class="small">No AMD execution or acceleration claim in this flow.</text>
-  <rect x="958" y="838" width="390" height="92" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2" stroke-dasharray="8 6"/>
-  <text x="982" y="872" class="box-title">Hosted deployment</text><text x="982" y="898" class="box-copy">Binding to this ACT III source SHA is unverified.</text><text x="982" y="920" class="small">Screenshots use local loopback only.</text>
+  <rect x="958" y="190" width="390" height="120" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
+  <text x="982" y="222" class="box-title-sm">Native Rust configured comparison · lab only</text><text x="982" y="247" class="box-copy">Loopback Node endpoint; Lab Worker may use it.</text><text x="982" y="271" class="box-copy">Product comparison uses JavaScript; no endpoint call.</text><text x="982" y="295" class="small">No connection from the Product comparison flow.</text>
 
-  <rect x="48" y="984" width="1344" height="106" rx="20" fill="#e9eee7" stroke="#d0d8cf" stroke-width="2"/>
-  <text x="76" y="1020" class="label">PATH KEY</text><path d="M180 1016H290" class="solid"/><text x="310" y="1021" class="box-copy">active Product path in current code</text><path d="M620 1016H730" class="optional"/><text x="750" y="1021" class="box-copy">optional, conditional, pending, or outside Product</text>
-  <text x="76" y="1064" class="small">Product simulation defaults to browser JavaScript. WASM and native Rust are optional CPU paths; AMD is a separate, currently unintegrated compute service.</text>
-  <text x="76" y="1083" class="small">Refs: src/client/product-app.js · src/client/worker.js · src/client/engine.js · src/server/server.js · src/server/compute_service.py</text>
+  <rect x="958" y="680" width="390" height="108" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2"/>
+  <text x="982" y="712" class="box-title-sm">Optional AI / explanation boundary</text><text x="982" y="737" class="box-copy">State in → explanatory text out (/api/explain).</text><text x="982" y="761" class="small">LLM or deterministic fallback; no simulation mutation.</text>
+  <path d="M810 238C900 238 880 743 948 743" class="optional"/>
+
+  <rect x="958" y="344" width="390" height="112" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="982" y="378" class="box-title-sm">Rust / WASM metabolism · Lab only</text><text x="982" y="403" class="box-copy">Optional lab app batch with JavaScript fallback.</text><text x="982" y="427" class="box-copy">Not wired into Product UI.</text><text x="982" y="449" class="small">Separate from the Product AMD route.</text>
+
+  <rect x="958" y="820" width="390" height="106" rx="14" fill="#f6f7f4" stroke="#c9d1c8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="982" y="854" class="box-title">Public deployment · #142</text><text x="982" y="880" class="box-copy">Release SHA binding remains unverified.</text><text x="982" y="904" class="small">No public URL/evidence represented here.</text>
+
+  <path d="M810 661C878 661 878 560 948 560" class="optional"/>
+  <path d="M948 600C884 606 884 693 810 693" class="optional"/>
+  <text x="846" y="646" class="small">AMD batch + result metadata</text>
+
+  <rect x="48" y="988" width="1344" height="96" rx="20" fill="#e9eee7" stroke="#d0d8cf" stroke-width="2"/>
+  <text x="76" y="1020" class="label">PATH KEY</text><path d="M180 1016H280" class="solid"/><text x="300" y="1021" class="box-copy">active/default Product route</text><path d="M580 1016H680" class="optional"/><text x="700" y="1021" class="box-copy">optional, conditional, pending, or separate</text>
+  <text x="76" y="1058" class="small">Refs: product-app.js · worker.js · amd-metabolism.js · compute_service.py · server.js · app.js. Source: release/amd-act-iii 5c5f07095bf1c8bddb652eb02342ff15b5cc0d56.</text>
+  <text x="76" y="1077" class="small">All livestock comparison outputs remain illustrative, deterministic model outputs; no calibration, real-world prediction, or verified AMD performance claim.</text>
 </svg>
