@@ -5,6 +5,7 @@ The root `scripts/` directory contains command-line tools for builds, data audit
 | Path | Responsibility | Contents |
 | --- | --- | --- |
 | `scripts/assets/` | Asset pipeline | Asset composition, validation, provenance and release gates. |
+| `scripts/build/` | Product and runtime builds | Product renderer bundling, WASM compilation and editor vendor asset copying. |
 | `scripts/graphics/` | Graphics PoC tooling | Scene adaptation/build, screenshot regression and renderer benchmarks. |
 | `scripts/experiments/` | Scenario and batch-experiment tooling | Scenario runner, reusable manifest/journal/dispatch modules, replicate summaries and experiment-format tools. |
 | `scripts/benchmarks/` | Benchmark harnesses | Simulation, browser, memory, native/WASM and scientific benchmark entry points, plus their shared report schema and validator. |
