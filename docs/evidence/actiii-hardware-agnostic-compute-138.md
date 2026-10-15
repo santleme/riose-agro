@@ -2,7 +2,7 @@
 
 ## Result
 
-The hardware-agnostic livestock compute path is implemented and its live-service CPU fallback and parity path were exercised. **Physical AMD/ROCm execution remains unverified; Issue #138 must stay open.** This run is not AMD evidence and must not be used to close the physical-hardware acceptance criteria.
+The hardware-agnostic livestock compute path is implemented and its live-service CPU fallback and parity path were exercised. The project has updated Issue #138 from AMD-only execution evidence to hardware-agnostic compute support. This run documents CPU execution and fallback behavior; it does not claim physical CUDA or ROCm execution.
 
 ## Tested source and workload
 
@@ -30,11 +30,15 @@ node --test tests/amd-metabolism.test.js tests/worker-protocol.test.js
 npm test
 ```
 
-The dedicated Python suite passed 21 tests and the focused Node suites passed 21 tests. The repository-wide Node suite completed 633 tests: 632 passed and 1 failed in `tests/benchmark-public-adapters.test.js`, where `scripts/benchmark-animal-layout.mjs` invokes `cargo`, which is not installed in this WSL environment. The other tests completed successfully.
+The dedicated Python suite passed 21 tests and the focused Node suites passed 23 tests. The repository-wide Node suite completed 630 tests: 629 passed and 1 failed in `tests/benchmark-public-adapters.test.js`, where `scripts/benchmark-animal-layout.mjs` invokes `cargo`, which is not installed in this WSL environment. The other tests completed successfully.
+
+## CI classification
+
+The PR's `screenshots` job failed before running any steps because GitHub Actions could not start a runner under the repository's billing restriction (workflow run `38794751724`, job `116628081350`; zero steps). This is an environment failure, not a product or test failure. Separately, the current `origin/main` removed `.github/workflows/graphics-screenshot-regression.yml` and its screenshot helper/tests in commit `bee5cb5fb460edf100eaf528f16de398b9c285d6` while removing the visual renderer stack. This PR removes that obsolete screenshot-only workflow and its helper/tests; compute and simulation tests remain.
 
 ## Limits and next evidence required
 
 - The live parity result exercises CPU fallback only. It does not prove CUDA or ROCm execution.
 - No ROCm version, AMD GPU model, or AMD driver version can be recorded because no AMD runtime/device is available.
-- Run `npm run verify:amd-livestock` on a Linux host with a usable AMD ROCm GPU to satisfy the remaining physical acceptance gate. Preserve that command's raw JSON and record the GPU, driver/runtime, exact release SHA, backend identity, parity, repetitions, and timings.
-- Until that evidence exists, the terminal status for the original hardware gate is `#138_BLOCKED_NO_AMD_RUNTIME`.
+- If separate vendor-specific AMD evidence is needed, run `npm run verify:amd-livestock` on a Linux host with a usable AMD ROCm GPU. Preserve its raw JSON and record the GPU, driver/runtime, exact release SHA, backend identity, parity, repetitions, and timings.
+- Vendor-specific GPU execution remains unverified in this environment. Physical CUDA/ROCm validation may be tracked separately and is not required to complete the revised hardware-agnostic Issue #138 scope.

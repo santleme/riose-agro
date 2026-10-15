@@ -7,8 +7,10 @@ import {createViewLayout,createWorkerError,createWorkerResponse,decodeWorkerComm
 let engine=new FarmEngine();
 let metabolismKernel=updateMetabolismJS;
 let engineImplementation='javascript-fallback';
-let backendPreference='auto';
-let execution={backend:'pending',device:null,requestedBackend:'auto',availability:'not_checked'};
+const productWorker=new URL(import.meta.url).searchParams.get('product')==='1';
+let backendPreference=productWorker?'auto':'cpu';
+let execution={backend:productWorker?'pending':'cpu',device:null,
+  requestedBackend:backendPreference,availability:productWorker?'not_checked':'local'};
 let selectedAnimalId=1;
 const wasmRequested=new URL(import.meta.url).searchParams.get('engine')==='wasm';
 const wasmReady=wasmRequested?loadWasmMetabolism().then(kernel=>{
@@ -19,7 +21,7 @@ const nativeComparisonReady=typeof fetch==='function'
     .then(status=>status?.available===true).catch(()=>false)
   :Promise.resolve(false);
 const scope=self                                                                                      ;
-const fullStateUpdates=new URL(import.meta.url).searchParams.get('product')==='1';
+const fullStateUpdates=productWorker;
 const actionCodes={grazing:0,feeding:1,drinking:2,resting:3};
 async function configuredComparison(snapshot,options){
   const available=await nativeComparisonReady;
@@ -63,14 +65,14 @@ async function tickWithCompute(hours){
     try{
       result=await runComputeMetabolismBatch(batch,candidate.state.animals.length,backendPreference);
     }catch(error){
-      candidateExecution={backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
+      candidateExecution={...candidateExecution,backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
         requestedBackend:backendPreference,fallbackUsed:true,fallbackReason:error?.message??'compute_service_unavailable'};
       break;
     }
     candidateExecution={backend:result.backend,device:result.device,rocmVersion:result.rocmVersion,
       cudaVersion:result.cudaVersion,torchVersion:result.torchVersion,backendSelected:result.backendSelected,
       requestedBackend:result.requestedBackend,fallbackUsed:result.fallbackUsed,fallbackReason:result.fallbackReason,
-      backendAvailability:result.backendAvailability};
+      backendAvailability:result.backendAvailability,serviceBackendUsed:result.backend};
     if(result.backend==='cpu')break;
     for(let index=0;index<candidate.state.animals.length;index++){
       const animal=candidate.state.animals[index],offset=index*2;
@@ -81,7 +83,8 @@ async function tickWithCompute(hours){
     const cpuCandidate=FarmEngine.from(engine.snapshot());
     cpuCandidate.tick(hours,metabolismKernel,false);
     engine=cpuCandidate;
-    execution=candidateExecution;
+    execution={...candidateExecution,backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
+      rocmVersion:null,cudaVersion:null};
   }else{
     engine=candidate;
     execution=candidateExecution??{backend:'cpu',device:null,requestedBackend:backendPreference,fallbackUsed:false};
@@ -105,8 +108,9 @@ async function handleMessage(event){await wasmReady;let command;try{
   command=decodeWorkerCommand(event.data).command;
   const m=command;
   if(m.type==='setBackend'){
-    backendPreference=m.backend;
-    execution={backend:m.backend==='cpu'?'cpu':'pending',device:null,requestedBackend:m.backend,availability:'not_checked'};
+    backendPreference=m.backend==='amd'?'rocm':m.backend;
+    execution={backend:backendPreference==='cpu'?'cpu':'pending',device:null,
+      requestedBackend:backendPreference,availability:'not_checked'};
     postSnapshot();return;
   }
   if(m.type==='reset'){engine=new FarmEngine(m.seed??2026,m.count??24);selectedAnimalId=1;}

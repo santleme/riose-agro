@@ -13,7 +13,6 @@
     "build:wasm-scenario": "sh scripts/build-wasm-scenario.sh",
     "bench:simulation": "node scripts/benchmark-simulation.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",
-    "test:graphics-screenshots": "npm run build:graphics-poc && node scripts/graphics-screenshot-regression.mjs",
     "bench:graphics-atlas-load": "node scripts/measure-graphics-atlas-load.mjs",
     "bench:memory": "node --expose-gc scripts/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmark_amd.py",
