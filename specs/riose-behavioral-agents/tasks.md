@@ -20,13 +20,14 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-001.
 - Scope: preregister candidate families, group splits, primary metrics, stop thresholds and evaluation code; IID, persistence and first-order Markov policies.
 - Acceptance: per-animal held-out comparisons, gap-aware bout extraction, no future observed signal input; deterministic seeded repeatability and negative controls.
-- Status: IN_PROGRESS (protocol v1 frozen; implementation/tests in progress; confirmatory outcomes remain unopened).
+- Evidence: `07-baseline-preregistration-v1.md`; `docs/evidence/perea-generative-baselines-v1.md` and `.json`; deterministic seeded evaluator and negative-control tests.
+- Status: DONE (development folds evaluated; confirmatory holdout remains unopened; no model promotion).
 
 ## BEH-003 — Semi-Markov behavior generator
 - Depends on: BEH-002.
 - Scope: conditional transitions and sampled durations; learned from train-only observed behaviors; feature-availability checks; explicit behavior ontology.
 - Acceptance: deterministic outputs and JSON schema; class and duration support; no leakage; transparent outcome and model provenance; no physiology coupling.
-- Status: BACKLOG.
+- Status: READY (BEH-002 baseline API and training-only data boundary available; confirmation remains gated by development thresholds).
 
 ## BEH-004 — Comparative evaluation and scientific gate
 - Depends on: BEH-003.
