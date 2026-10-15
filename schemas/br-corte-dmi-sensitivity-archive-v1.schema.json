@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.agro/schemas/br-corte-dmi-sensitivity-archive-v1.schema.json",
+  "title": "Riose BR-CORTE DMI Sensitivity Archive v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "version", "manifest", "results", "provenance"],
+  "properties": {
+    "type": {"const": "riose-br-corte-dmi-sensitivity-archive"},
+    "version": {"const": 1},
+    "manifest": {"$ref": "br-corte-dmi-sensitivity-request-v1.schema.json"},
+    "results": {"type": "object", "required": ["type", "version", "status", "validated", "model", "sweep", "fixedInputs", "population", "localSensitivity", "assumptions", "units", "interpretation", "predictionInterval", "rows"]},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifestSha256", "resultsSha256", "modelId", "modelVersion", "modelImplementationHash", "executor", "seed", "units", "assumptions", "validated"],
+      "properties": {
+        "manifestSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "resultsSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "modelId": {"type": "string", "minLength": 1},
+        "modelVersion": {"type": "string", "minLength": 1},
+        "modelImplementationHash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "executor": {"const": "registered-scientific-model"},
+        "seed": {"type": "null"},
+        "units": {"type": "object"},
+        "assumptions": {"type": "object"},
+        "validated": {"const": false}
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import Ajv2020 from 'ajv/dist/2020.js';
 import {createBrCorteSensitivityManifest, evaluateBrCorteSensitivityManifest, validateBrCorteSensitivityManifest} from '../src/client/br-corte-sensitivity.js';
+import {createBrCorteSensitivityArchive, validateBrCorteSensitivityArchive} from '../src/client/br-corte-sensitivity-archive.js';
 
 const reference = JSON.parse(readFileSync(new URL('./fixtures/scientific-numeric-reference-v1.json', import.meta.url), 'utf8')).fixtures.brCorte2023Eq26Table214;
 const schema = JSON.parse(readFileSync(new URL('../schemas/br-corte-dmi-sensitivity-request-v1.schema.json', import.meta.url), 'utf8'));
@@ -76,4 +77,30 @@ test('sensitivity validation rejects unsupported fields, out-of-domain ranges, a
   assert.throws(() => createBrCorteSensitivityManifest({...base, currency: 'BRL'}), /currency/);
   assert.throws(() => createBrCorteSensitivityManifest({...base, supplementPricePerKgDM: 4}), /currency/);
   assert.throws(() => validateBrCorteSensitivityManifest({...manifest, assumptions: {...manifest.assumptions, adg: 'predicted'}}), /assumptions/);
+});
+
+test('sensitivity archive binds the reviewed manifest, calculated results and model implementation', async () => {
+  const manifest = createBrCorteSensitivityManifest(base);
+  const results = evaluateBrCorteSensitivityManifest(manifest);
+  const archive = await createBrCorteSensitivityArchive({manifest, results});
+  assert.equal(archive.type, 'riose-br-corte-dmi-sensitivity-archive');
+  assert.equal(archive.version, 1);
+  assert.match(archive.provenance.manifestSha256, /^[a-f0-9]{64}$/);
+  assert.match(archive.provenance.resultsSha256, /^[a-f0-9]{64}$/);
+  assert.equal(archive.provenance.modelImplementationHash, results.rows[0].provenance.implementationHash);
+  assert.equal(await validateBrCorteSensitivityArchive(archive), true);
+  const archiveSchema = JSON.parse(readFileSync(new URL('../schemas/br-corte-dmi-sensitivity-archive-v1.schema.json', import.meta.url), 'utf8'));
+  const validator = new Ajv2020({allErrors: true});
+  validator.addSchema(schema);
+  assert.equal(validator.validate(archiveSchema, archive), true, JSON.stringify(validator.errors));
+});
+
+test('sensitivity archive rejects changed inputs, changed outputs and malformed provenance', async () => {
+  const manifest = createBrCorteSensitivityManifest(base);
+  const results = evaluateBrCorteSensitivityManifest(manifest);
+  const archive = await createBrCorteSensitivityArchive({manifest, results});
+  const changedManifest = createBrCorteSensitivityManifest({...base, animalCount: 201});
+  await assert.rejects(validateBrCorteSensitivityArchive({...archive, manifest: changedManifest}), /result|digest|manifest/i);
+  await assert.rejects(validateBrCorteSensitivityArchive({...archive, results: {...results, rows: results.rows.map((row, index) => index ? row : {...row, totalDmiKgDMPerHeadPerDay: 999})}}), /result|digest/i);
+  await assert.rejects(validateBrCorteSensitivityArchive({...archive, provenance: {...archive.provenance, modelImplementationHash: 'unknown'}}), /provenance/i);
 });

@@ -6,3 +6,5 @@
 - P4-ADR-004: FarmEngine and BR-CORTE outputs remain separate; the same visualization may not imply shared scientific status.
 - P4-ADR-005: Empty scientific inputs are preferred to silent prefilled numbers; sample values must be explicitly loaded and labeled as examples.
 - P4-ADR-006: Any LLM planning integration remains behind P3-007's persistent cost gate. Deterministic local validation and computation can ship without it.
+- P4-ADR-007: BR-CORTE sensitivity uses its own v1 archive contract instead of changing the V3 scenario-set archive or the existing BR-CORTE scenario export. Reproduction is deterministic through the registered Eq. 2.6 implementation; `seed` is explicitly null because that calculation is not stochastic. Canonical hashes detect accidental/tampered content but are not signatures or evidence of scientific validity.
+- P4-ADR-008: A valid sensitivity archive opens into review only. Recalculation requires the user's explicit Calculate action; imported expected output is compared canonically after re-execution.

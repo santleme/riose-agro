@@ -2,6 +2,7 @@ import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
 import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
 import {createBrCorteSensitivityManifest, evaluateBrCorteSensitivityManifest} from './br-corte-sensitivity.js';
+import {createBrCorteSensitivityArchive, validateBrCorteSensitivityArchive} from './br-corte-sensitivity-archive.js';
 import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
 import {combineScenarioLabClarification, interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
 import {canonicalScenarioLabJson, createScenarioLabArchive, sha256ScenarioLabJson, validateScenarioLabArchive, validateScenarioLabResultBinding} from './scenario-lab-integrity.js';
@@ -30,6 +31,7 @@ let reviewedBrCorteManifest = null;
 let brCorteResult = null;
 let reviewedBrCorteSensitivityManifest = null;
 let brCorteSensitivityResult = null;
+let brCorteSensitivityReplayExpectation = null;
 
 function status(message) {
   $('lab-status').textContent = message;
@@ -632,6 +634,7 @@ function renderBrCorteResults(result) {
 function resetBrCorteSensitivity() {
   reviewedBrCorteSensitivityManifest = null;
   brCorteSensitivityResult = null;
+  brCorteSensitivityReplayExpectation = null;
   $('br-corte-sensitivity-review').hidden = true;
   $('br-corte-sensitivity-results').hidden = true;
 }
@@ -778,12 +781,38 @@ $('br-corte-sensitivity-run').addEventListener('click', () => {
   if (!reviewedBrCorteSensitivityManifest) return;
   try {
     brCorteSensitivityResult = evaluateBrCorteSensitivityManifest(reviewedBrCorteSensitivityManifest);
+    if (brCorteSensitivityReplayExpectation
+        && canonicalScenarioLabJson(brCorteSensitivityResult) !== canonicalScenarioLabJson(brCorteSensitivityReplayExpectation)) {
+      throw new Error('Replayed sensitivity results differ from the saved calculation.');
+    }
     renderBrCorteSensitivityResults(brCorteSensitivityResult);
-    status('BR-CORTE deterministic sensitivity calculated from the reviewed inputs.');
+    status(brCorteSensitivityReplayExpectation
+      ? 'Sensitivity replay matches the saved results exactly.'
+      : 'BR-CORTE deterministic sensitivity calculated from the reviewed inputs.');
   } catch (error) {
     brCorteSensitivityResult = null;
     $('br-corte-sensitivity-results').hidden = true;
     status(error.message);
+  }
+});
+
+$('br-corte-sensitivity-export').addEventListener('click', async () => {
+  if (!reviewedBrCorteSensitivityManifest || !brCorteSensitivityResult) return;
+  const button = $('br-corte-sensitivity-export');
+  button.disabled = true;
+  try {
+    const archive = await createBrCorteSensitivityArchive({manifest: reviewedBrCorteSensitivityManifest, results: brCorteSensitivityResult});
+    const blob = new Blob([JSON.stringify(archive, null, 2)], {type: 'application/json'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${archive.type}-v${archive.version}.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 0);
+    status('BR-CORTE sensitivity archive exported with verified inputs, results and provenance.');
+  } catch (error) {
+    status(`Could not export sensitivity archive: ${error.message}`);
+  } finally {
+    button.disabled = false;
   }
 });
 
@@ -816,6 +845,32 @@ $('br-corte-file').addEventListener('change', async event => {
   try {
     if (file.size > 2 * 1024 * 1024) throw new Error('Saved BR-CORTE JSON must be 2 MB or smaller.');
     const saved = JSON.parse(await file.text());
+    if (saved?.type === 'riose-br-corte-dmi-sensitivity-archive') {
+      await validateBrCorteSensitivityArchive(saved);
+      resetBrCorteSensitivity();
+      const inputs = saved.manifest.inputs;
+      const scenarioForm = $('br-corte-form');
+      scenarioForm.elements.bodyWeightKg.value = String(inputs.bodyWeightKg);
+      scenarioForm.elements.adgKgPerDay.value = String(inputs.adgKgPerDay);
+      scenarioForm.elements.animalCount.value = String(inputs.animalCount);
+      scenarioForm.elements.durationDays.value = String(inputs.durationDays);
+      scenarioForm.elements.supplementPrice.value = inputs.supplementPricePerKgDM === null ? '' : String(inputs.supplementPricePerKgDM);
+      scenarioForm.elements.currency.value = inputs.currency ?? '';
+      $('br-corte-sensitivity-form').elements.minimumSupplement.value = String(inputs.sweep.minimum);
+      $('br-corte-sensitivity-form').elements.maximumSupplement.value = String(inputs.sweep.maximum);
+      $('br-corte-sensitivity-form').elements.sweepStep.value = String(inputs.sweep.step);
+      reviewedBrCorteManifest = null;
+      brCorteResult = null;
+      $('br-corte-review').hidden = true;
+      $('br-corte-results').hidden = true;
+      $('br-corte-sensitivity-results').hidden = true;
+      reviewedBrCorteSensitivityManifest = structuredClone(saved.manifest);
+      brCorteSensitivityReplayExpectation = structuredClone(saved.results);
+      renderBrCorteSensitivityReview(reviewedBrCorteSensitivityManifest);
+      status('Sensitivity archive validated and inputs loaded. Nothing was calculated; review and explicitly replay to compare results.');
+      return;
+    }
+    resetBrCorteSensitivity();
     const manifest = saved?.manifest;
     validateBrCorteDmiScenarioManifest(manifest);
     const form = $('br-corte-form');

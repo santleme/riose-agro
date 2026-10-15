@@ -164,6 +164,28 @@ try {
   assert.match(await page.locator('#br-corte-sensitivity-table-body tr').first().textContent(), /0\.50.*6\.726/);
   assert.match(await page.locator('#br-corte-sensitivity-provenance').textContent(), /not a causal effect/);
   assert.match(await page.locator('#br-corte-sensitivity-chart').getAttribute('aria-label'), /total DMI/);
+  const [sensitivityDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', {name: /Export sensitivity archive/}).click(),
+  ]);
+  const sensitivityArchivePath = await sensitivityDownload.path();
+  const sensitivityArchive = JSON.parse(await (await import('node:fs/promises')).readFile(sensitivityArchivePath, 'utf8'));
+  assert.equal(sensitivityArchive.type, 'riose-br-corte-dmi-sensitivity-archive');
+  assert.equal(sensitivityArchive.provenance.seed, null);
+  assert.equal(sensitivityArchive.provenance.modelId, 'br-corte-2023-eq-2.6');
+  assert.equal(sensitivityArchive.provenance.resultsSha256.length, 64);
+  const alteredSensitivity = structuredClone(sensitivityArchive);
+  alteredSensitivity.results.rows[0].totalDmiKgDMPerHeadPerDay += 1;
+  await page.locator('#br-corte-file').setInputFiles({name: 'altered-sensitivity.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(alteredSensitivity))});
+  await page.getByText(/Could not open saved BR-CORTE experiment/).waitFor();
+  assert.equal(await page.locator('#br-corte-sensitivity-table-body tr').count(), 7, 'invalid archive must not replace the already calculated result');
+  await page.locator('#br-corte-file').setInputFiles(sensitivityArchivePath);
+  await page.getByText(/Nothing was calculated; review and explicitly replay/).waitFor();
+  assert.equal(await page.locator('#br-corte-sensitivity-review:not([hidden])').count(), 1);
+  assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Calculate sensitivity'}).click();
+  await page.locator('#br-corte-sensitivity-results:not([hidden])').waitFor();
+  await page.getByText(/Sensitivity replay matches the saved results exactly/).waitFor();
   await page.waitForTimeout(5100);
   await page.screenshot({path: 'docs/evidence/product-v4-br-corte-sensitivity-desktop.png', fullPage: true});
   await page.locator('#br-corte-sensitivity-form [name="minimumSupplement"]').fill('0.75');
@@ -173,6 +195,9 @@ try {
   assert.equal(await page.locator('#br-corte-sensitivity-results:not([hidden])').count(), 0);
   await page.getByRole('button', {name: 'Calculate sensitivity'}).click();
   await page.locator('#br-corte-sensitivity-results:not([hidden])').waitFor();
+  await page.getByRole('button', {name: /Review BR-CORTE scenarios/}).click();
+  await page.getByRole('button', {name: 'Calculate conditional estimates'}).click();
+  await page.locator('#br-corte-results:not([hidden])').waitFor();
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-results.png', fullPage: true});
   const [brCorteDownload] = await Promise.all([
     page.waitForEvent('download'),

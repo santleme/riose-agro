@@ -35,4 +35,17 @@
 - Prepared an exploratory protocol for a recurring pasture supplementation and cost-comparison decision, a seven-minute neutral product demonstration, and an empty anonymized feedback instrument.
 - The materials distinguish user-workflow evidence from scientific validation and commercial readiness. They prohibit invented participant data/prices, require consent, and do not authorize outreach. No interviews or external contact occurred.
 - Reviewed all three documents for consistency and blank response fields; `git diff --check` passes. No software tests apply to this document-only task.
-- P4-005 is READY: sensitivity results currently have no dedicated scientific archive/replay contract. The existing scenario-set archive must remain unchanged.
+- P4-005 was selected next because sensitivity output had no dedicated scientific archive/replay contract. The existing scenario-set archive remains unchanged.
+
+## P4-005 — BR-CORTE sensitivity archive and explicit replay
+
+- Added `riose-br-corte-dmi-sensitivity-archive/v1` and a strict JSON Schema. The archive records the complete reviewed sensitivity manifest, computed rows, model ID/version, registered implementation hash, canonical SHA-256 digests, executor, units, assumptions, and `seed: null` (the equation has no stochastic seed). `validated` remains false.
+- Archive creation and opening recompute Eq. 2.6 through the registered model and compare canonical result content. A changed input, output, implementation identity, digest, or provenance is rejected. This is integrity/reproducibility evidence, not a cryptographic signature or model validation.
+- Product export emits this archive. Opening one loads editable/reviewable inputs and the expected result but does not calculate. The explicit Calculate action re-executes and compares canonical outputs. Invalid import leaves the prior valid visible result intact. Existing `riose-scenario-lab-archive` v1 and BR-CORTE scenario export formats remain unchanged.
+- Tests: sensitivity contract/archive/schema 7/7; BR-CORTE scenario 3/3; scenario-lab archive integrity 4/4; Product V3 E2E PASS (download, tampered-result rejection, no-run open, explicit exact replay, edit invalidation, 390 px responsive check, no console errors); Product V2 E2E PASS; full `npm test` 504/504 (baseline was 497; seven sensitivity checks total); `npm run test:parity` PASS for pasture seed 417 (24 checkpoints) and housing seed 2026 (1,440 hourly checkpoints and 31 daily rows).
+- Browser visual review: T3 collaborative preview reported no automation host for this headless environment, so the existing local Chromium Playwright E2E was used. Desktop and 390 px mobile captures are in `docs/evidence/product-v4-br-corte-sensitivity-desktop.png` and `...-mobile.png`; mobile page has no horizontal overflow. Export action is present below the actual calculated table/provenance. No new motion was added; reduced-motion styling remains in force.
+- No scientific equation, domain, threshold, FarmEngine output, evidence status, behavioral gate, or paid-provider configuration changed. `P3-007` remains blocked and Perea semi-Markov remains NO-GO.
+
+## Queue review
+
+- No additional code task is READY without duplicating V3 comparison/replay, the existing cost calculator, or P4 sensitivity/archives. Remote AI remains behind P3-007; scientific/commercial approval remains behind P3-008; collecting user feedback requires real recruited participants and consent. These are gates/dependencies, not work that can be represented as completed locally.

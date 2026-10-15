@@ -54,13 +54,13 @@ Status: DONE (protocol, neutral demo script and blank feedback instrument review
 
 ID: P4-005
 Title: Export, validate, reopen and explicitly replay a scientific sensitivity calculation
-Specification reference: `product-requirements.md` PRD-006; `scientific-contracts.md`; P4-ACC-005
+Specification reference: `product-requirements.md` PRD-006; `scientific-contracts.md`; P4-ACC-009
 Dependencies: P4-002
 Implementation scope: Add a versioned BR-CORTE sensitivity archive with strict manifest/result binding and hashes; allow opening a saved sensitivity archive into a review state; require explicit recalculation and compare the regenerated result to the archived result. Preserve existing scenario-set and BR-CORTE scenario archives.
 Acceptance criteria: Export includes exact reviewed manifest, calculated result, model implementation provenance and canonical digests; modified manifest/result is rejected; reopening never calculates; an explicit replay reproduces byte-canonical result content; existing archive formats continue to work.
 Required tests: archive contract/unit tests; Product V3 browser E2E for export/open/no-auto-run/replay/tampering; existing scenario archive and BR-CORTE scenario tests.
 Evidence: `progress.md`, focused test output, E2E output.
-Status: READY
+Status: DONE (versioned archive schema/module; unit tests verify reproducible result binding, hashes, and tamper rejection; Product E2E verifies export, invalid archive isolation, open-without-run, and explicit exact replay; existing scenario archive remains unchanged).
 
 ## Reused / gated capabilities
 
