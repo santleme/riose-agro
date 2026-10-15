@@ -93,4 +93,28 @@ Implementation scope: Use provider credentials available through the authorized 
 Acceptance criteria: Credentials come from secure runtime configuration and are not copied into logs, browser state, responses or archives; the selected provider/model is verified by an actual response; live intents pass server/client scientific validation; no request executes automatically; the explicit user action runs only the selected executor; FarmEngine remains demonstrative and BR-CORTE remains conditional on its declared inputs; unsupported biological claims are rejected; export/replay matches; sanitized latency/status/token metadata is recorded when available; P3-007 production/shared spend gate remains unchanged.
 Required tests: controlled live provider requests within provider quota; focused Product V4 E2E using a real interpretation; review, explicit confirmation, execution, explanation, export and replay; safe failure/fallback checks; key-safe log review.
 Evidence: sanitized provider/model/status/latency and token metadata when provided, E2E output and replay digest. Never store the secret or raw authorization headers. A live provider response validates integration only, not scientific validity or production reliability.
-Status: BLOCKED (`GROQ_API_KEY` and `HF_TOKEN` were absent in the current process; no configured provider is available to call. The user authorized a controlled live test battery within real account quotas, without a per-call approval prompt. No provider request has been made.)
+Status: VALIDATING (authorized credentials injected into the Node environment in memory; authenticated Groq/HF HTTP 200, Groq gpt-oss-20b available; first real structured interpretation succeeded. Full live UI flow and grounded conversation validation pending.)
+
+### P4-008 — Experimental Laya CPU routing evaluation
+
+ID: P4-008
+Title: Install and measure the pinned multilingual Laya classifier independently of scientific execution
+Specification reference: `hybrid-ai-protocol.md`
+Dependencies: official SDK/license audit; frozen evaluation labels and protocol before inference
+Implementation scope: Isolated CPU venv, pinned checkpoint, structured choice worker, deterministic routing baseline, EN/PT per-case evaluation against Groq; default OFF; never a chat-completions model or execution authority.
+Acceptance criteria: Actual local inference or measured concrete failure; fixed final labels; reproducible model/version/checksum and per-class metrics; cold/startup/latency/RSS measurements; no automatic promotion or probability calibration claims.
+Required tests: router contracts, worker invalid/oversized input, frozen fixture/metrics checks; actual CPU evaluation; no-key fallback.
+Evidence: official source audit, evaluation JSON and environment lock; `progress.md`.
+Status: IN_PROGRESS (protocol and labels frozen before inference).
+
+### P4-009 — Grounded decision conversation
+
+ID: P4-009
+Title: Connect live conversational planning and evidence inspection to existing reviewed experiment capabilities
+Specification reference: `hybrid-ai-protocol.md`; `scientific-contracts.md`; P4-006 archive compatibility
+Dependencies: P4-006; existing FarmEngine/BR-CORTE scenario and sensitivity contracts
+Implementation scope: Strict non-executing plan schema, model applicability, clarification and conversation context, grounded explanations and explicit fallback display in the existing Product workspace.
+Acceptance criteria: User prompts select existing capability, missing/ambiguous inputs remain missing, no model-generated scientific outputs; all execution remains explicit; current results survive provider failure; example/default provenance preserved.
+Required tests: malicious/invalid plans, applicability and missing data, follow-up edits, safe errors, browser real provider flow and regression.
+Evidence: actual provider metadata, E2E and screenshots, tests and `progress.md`.
+Status: READY.
