@@ -1,7 +1,8 @@
 import {Application, Assets, Container, Graphics, Rectangle, Sprite, Texture} from 'pixi.js';
 import {productFarmEntityAt, PRODUCT_SCENE_SIZE} from './scene.js';
 import {productWorldAnimalAt, productWorldAnimalById, productWorldEntityFromHit, productWorldVegetationAt} from './world-contract.js';
-import {animalWorldPosition, productFenceRuns, productWorldFrontEdges, productWorldOutline, PRODUCT_BLOCKOUT, PRODUCT_WORLD, separateAnimalVisuals, worldToScreen} from './spatial.js';
+import {animalWorldPosition, PRODUCT_BLOCKOUT, PRODUCT_WORLD, separateAnimalVisuals, worldToScreen} from './spatial.js';
+import {productSceneGeometry} from './scene-geometry.js';
 
 const ARTWORK = {
   'nelore-adult': {scale: .36},
@@ -116,11 +117,11 @@ function sizeSprite(sprite, asset, factor = 1) {
   sprite.height = height * factor;
 }
 
-function buildFences(depthLayer, scene) {
+function buildFences(depthLayer, geometry) {
   const postPositions = new Map();
   const rememberPost = point => postPositions.set(`${point.x.toFixed(4)},${point.y.toFixed(4)}`, point);
-  for (const run of productFenceRuns(scene)) {
-    const from = worldToScreen(run.from.x, run.from.y), to = worldToScreen(run.to.x, run.to.y);
+  for (const run of geometry.fenceRuns) {
+    const from = run.screenFrom, to = run.screenTo;
     rememberPost(from); rememberPost(to);
     const rails = new Graphics();
     for (const offset of [-5, -2, -.5]) {
@@ -131,8 +132,8 @@ function buildFences(depthLayer, scene) {
     rails.label = run.id;
     depthLayer.addChild(rails);
   }
-  for (const gate of scene.gates ?? []) {
-    const from = worldToScreen(gate.a.x, gate.a.y), to = worldToScreen(gate.b.x, gate.b.y);
+  for (const gate of geometry.gates) {
+    const from = gate.screenA, to = gate.screenB;
     rememberPost(from); rememberPost(to);
     const rails = new Graphics();
     for (const offset of [-4, 1]) rails.moveTo(from.x, from.y + offset).lineTo(to.x, to.y + offset)
@@ -150,10 +151,10 @@ function buildFences(depthLayer, scene) {
   }
 }
 
-function addTerrain(terrainLayer, scene, textures) {
-  const outline = productWorldOutline(scene).map(point => worldToScreen(point.x, point.y));
+function addTerrain(terrainLayer, scene, geometry) {
+  const outline = geometry.outline;
   const sideFaces = new Graphics(), depth = (scene.world ?? PRODUCT_WORLD).soilDepth ?? 18;
-  for (const edge of productWorldFrontEdges(scene)) {
+  for (const edge of geometry.frontEdges) {
     const offset = {x: 0, y: depth};
     const quad = [edge.from, edge.to, {x: edge.to.x + offset.x, y: edge.to.y + offset.y}, {x: edge.from.x + offset.x, y: edge.from.y + offset.y}];
     drawPoly(sideFaces, quad, edge.shade === 'side' ? 0x765039 : 0x8d6040, {color: 0x604833, alpha: .55, width: .7});
@@ -168,8 +169,8 @@ function addTerrain(terrainLayer, scene, textures) {
   terrainLayer.addChild(groundTexture);
 
   const paths = new Graphics();
-  for (const route of scene.paths) {
-    const points = route.cells.map(([x, y]) => worldToScreen(x + .5, y + .5));
+  for (const route of geometry.paths) {
+    const points = route.points;
     paths.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < points.length; i++) paths.lineTo(points[i].x, points[i].y);
     paths.stroke({color: 0x53432f, alpha: .22, width: 13, cap: 'round', join: 'round'});
@@ -197,6 +198,7 @@ function projectAnimals(animals, housing, scene) {
 }
 
 export async function createProductWorldRenderer({host, scene = PRODUCT_BLOCKOUT, onAnimalSelect = () => {}, onEntitySelect = () => {}}) {
+  const geometry = productSceneGeometry(scene);
   const {manifest, assetBase} = await fetchAssetManifest();
   const manifestAssets = new Map((manifest.assets ?? []).map(asset => [asset.id, asset]));
   const atlasKeys = new Set(Object.values(ARTWORK).map(({atlas}) => atlas).filter(Boolean));
@@ -231,7 +233,7 @@ export async function createProductWorldRenderer({host, scene = PRODUCT_BLOCKOUT
   depthLayer.sortableChildren = true;
   camera.addChild(terrainLayer, depthLayer, overlayLayer);
   app.stage.addChild(camera);
-  addTerrain(terrainLayer, scene, textures);
+  addTerrain(terrainLayer, scene, geometry);
 
   const staticSprites = [];
   for (const vegetation of scene.vegetation ?? []) {
@@ -268,7 +270,7 @@ export async function createProductWorldRenderer({host, scene = PRODUCT_BLOCKOUT
     tractor.anchor.set(asset.anchor.x, asset.anchor.y); sizeSprite(tractor, asset, ARTWORK['vehicle-tractor-imagegen-v1'].scale);
     tractor.position.set(point.x, point.y); tractor.zIndex = point.y; depthLayer.addChild(tractor); staticSprites.push(tractor);
   }
-  buildFences(depthLayer, scene);
+  buildFences(depthLayer, geometry);
 
   const animalSprites = new Map(), animalRings = new Map();
   const animalTexture = textures.get('nelore-adult');
