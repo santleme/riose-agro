@@ -1,14 +1,15 @@
 # Repository layout
 
-The repository keeps browser page URLs at the project root for static-host compatibility. Their implementation files live under `src/client/`; the optional HTTP service and standalone Python compute service live under `src/server/`.
-
 ```text
-index.html, home.html, product.html, lab.html, *-data.html   browser entry points
-src/client/                                          browser modules and stylesheets
-src/server/                                          local HTTP and Python compute services
-assets/, public/                                     shipped browser assets
-data/, schemas/, scientific/                         input data and domain contracts
-scripts/, tests/, examples/, docs/                  development and project material
+home.html, product.html, *-data.html   browser entry points
+src/client/                            simulation, worker, product interface, data adapters
+src/server/                            local API and static-file allowlist
+crates/riose-core/                     deterministic native Rust core and CLI
+wasm/                                  browser WASM modules
+scientific/, experiments/              model contracts and reproducible experiments
+data/, schemas/                         source data, manifests, and data contracts
+scripts/, tests/, docs/evidence/       research tooling, validation, and evidence
+assets/                                institutional identity and research-page images
 ```
 
-`index.html` and `/` lead to the Riose landing page. `product.html` is the canonical farm experience. `lab.html` preserves the former Agroville research interface for embedded and specialist workflows; `simulator.html` is a compatibility redirect to Product. The root HTML pages load implementation assets through relative `src/client/` URLs, preserving deployment under a repository subpath. Browser module imports within `src/client/` stay relative to that directory. Node scripts and tests import the same modules from their new location. `npm start` remains the supported entry point for the Node server.
+`/` and `index.html` lead to `home.html`. `product.html` hosts the quantitative experiment workspace, and `simulator.html` redirects there for old links. Research and observed-data pages remain separate from model-generated results. `npm start` starts the local API and serves allowlisted assets; browser modules are loaded from relative paths so deployments can live under a repository subpath.

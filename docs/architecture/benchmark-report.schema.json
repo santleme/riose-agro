@@ -57,7 +57,7 @@
       },
       "additionalProperties": true
     },
-    "limits": {"type": "object", "required": ["farmEngineMaxAnimals", "rendererMaxAnimals", "numericKernelMaxAnimalsMeasured"], "properties": {"farmEngineMaxAnimals": {"type": ["integer", "null"]}, "rendererMaxAnimals": {"type": ["integer", "null"]}, "numericKernelMaxAnimalsMeasured": {"type": ["integer", "null"]}}, "additionalProperties": true},
+    "limits": {"type": "object", "required": ["farmEngineMaxAnimals", "numericKernelMaxAnimalsMeasured"], "properties": {"farmEngineMaxAnimals": {"type": ["integer", "null"]}, "numericKernelMaxAnimalsMeasured": {"type": ["integer", "null"]}}, "additionalProperties": true},
     "phases": {
       "type": "object",
       "required": ["engine", "snapshot", "serialization", "worker", "ui", "layout", "render", "startup"],

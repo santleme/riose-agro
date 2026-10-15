@@ -12,16 +12,15 @@ comparison request has its own v2 contract. The scalar
 equation is limited to growing Zebu cattle grazing tropical pasture with
 supplementation; it is not an adult-cow model and does not independently
 validate Riose predictions. It preserves the four-paddock model, the existing diet, housing,
-weather, and supplement values, stable animal order and IDs, both RNG states,
-activity and event ordering, and the snapshot fields currently emitted by
+weather, and supplement values, stable animal order and IDs, the model RNG state,
+activity and event ordering, and the scientific snapshot fields emitted by
 `FarmEngine.snapshot()`. Serde DTOs reject unknown fields so an input that
 requires a model the native core does not implement fails with the field name.
 
 Weather values `normal`, `hot`, and `rain` are valid configuration inputs. The
 separate `heat` intervention preset remains unsupported, as do reduced-feed and
 limited-trough-access interventions, additional paddocks, time-series climate,
-and scientific observed-farm snapshots. Map coordinates remain in the state
-snapshot for deterministic compatibility; rendering stays in JavaScript.
+and scientific observed-farm snapshots. Legacy map coordinates are accepted when reading old engine snapshots and discarded; they are not part of new simulation state.
 
 The typed entry points are `FarmEngine::new`, `FarmEngine::from_snapshot`,
 `FarmEngine::configure`, `FarmEngine::tick`, `FarmEngine::snapshot`,
@@ -49,8 +48,7 @@ The configured comparison variant is
 `{"type":"configured-comparison","version":2,"snapshot":<FarmSnapshot>,"days":2,"referenceConfig":<FarmConfig>,"scenarioConfig":<FarmConfig>}`.
 Both complete configurations start from the same snapshot and must differ in
 exactly one factor: diet, housing, weather, or supplement. Each arm advances
-the configured number of simulated days from the same initial model and
-locomotion RNG states. This reproduces the demonstrative JS comparison
+the configured number of simulated days from the same initial model RNG state. This reproduces the demonstrative JS comparison
 contract; it does not establish scientific validation.
 The scalar BR-CORTE variant is
 `{"type":"br-corte-pasture-dmi","version":1,"bodyWeightKg":300,"adgKgPerDay":0.5,"supplementKgDMPerDay":1.6}`.
@@ -65,8 +63,7 @@ either `{type:"baseline", snapshot, metrics}`,
 `{type:"housing-comparison", comparison}`,
 `{type:"configured-comparison", comparison}`, or
 `{type:"br-corte-pasture-dmi", metadata, prediction}`. The baseline snapshot is also the
-snapshot output format: current JS camel-case fields, including `initialSeed`,
-`locomotionSeed`, and `*KgDM` intake names. Snapshot JSON helpers are
+snapshot output format: current JS camel-case fields, including `initialSeed` and `*KgDM` intake names. Legacy `locomotionSeed` and per-animal coordinate fields are accepted on input and omitted from output. Snapshot JSON helpers are
 `encode_farm_snapshot(&FarmSnapshot) -> Result<String, serde_json::Error>` and
 `decode_farm_snapshot(&str) -> Result<FarmSnapshot, FarmSnapshotDecodeError>`;
 the decode error distinguishes malformed JSON from invalid snapshot contents.
@@ -80,9 +77,10 @@ the crate version and does not claim a source commit. `provenance` identifies
 the native Rust implementation only; `validated` remains false.
 
 The snapshot top-level fields are `hour`, `animals`, `pastures`, `intake`,
-`config`, `cost`, `events`, `seed`, `initialSeed`, and `locomotionSeed`. Animal
-objects contain `id`, `name`, `weight`, `initialWeight`, `energy`, `thirst`,
-`action`, `patch`, `x`, `y`, `targetX`, `targetY`, and `history`. The intake
+`config`, `cost`, `events`, `seed`, and `initialSeed`. Animal objects contain
+`id`, `name`, `weight`, `initialWeight`, `energy`, `thirst`, `action`, `patch`,
+and `history`. The decoder accepts and discards the historical `locomotionSeed`,
+`x`, `y`, `targetX`, and `targetY` properties. The intake
 object contains `pastureKgDM`, `barnBaseKgDM`, `supplementKgDM`, and
 `dietExtraKgDM`; config contains `diet`, `housing`, `weather`, and `supplement`;
 events contain `hour`, `text`, and optional `animalId`. Metrics contain
@@ -102,23 +100,21 @@ DTO boundaries. The separate `heat` intervention, reduced-feed and limited-troug
 interventions, and observed scientific snapshots are unsupported.
 
 The seed is an explicit unsigned 32-bit integer, and baseline initialization
-allocates stable animal IDs in order, starting at 1. The model and locomotion
-streams use the JS LCG recurrence `state = (state * 1664525 + 1013904223) mod 2^32`, with
-`next_f64 = state / 2^32`. The model stream starts at `seed`; locomotion starts
-at the first LCG successor of `seed XOR 0x9e3779b9`. Initialization consumes
-one model draw for each animal weight and two locomotion draws per animal for
-coordinates, in animal order. Each simulated hour consumes two locomotion draws
-per animal, in animal order. The snapshot records both current stream states;
-legacy snapshots missing `initialSeed` or `locomotionSeed` use the current
-`seed` and the same locomotion derivation, respectively.
+allocates stable animal IDs in order, starting at 1. The model RNG uses the JS
+LCG recurrence `state = (state * 1664525 + 1013904223) mod 2^32`, with
+`next_f64 = state / 2^32`. It starts at `seed` and initialization consumes one
+draw for each animal weight, in animal order. The simulation does not consume
+random values for presentation or movement. Historical visual RNG metadata is
+ignored when decoding older snapshots; it does not influence scientific replay.
 
 The Rust integration tests consume the official
 [`baseline-pasture`](../tests/scenario-goldens/baseline-pasture.json) and
 [`housing-comparison`](../tests/scenario-goldens/housing-comparison.json)
 fixtures, plus frozen JS configured-comparison vectors across all four factors.
-They assert exact JSON equality for the complete supported baseline
-snapshot and metrics, the complete 30-day comparison output, and the comparison
-endpoint projections including both RNG stream states. They also rerun each
+They compare scientific fields in the complete supported baseline snapshot,
+metrics, 30-day comparison output, and endpoint projections. Archived golden
+files may contain historical visual coordinates; those fields are excluded
+from scientific parity while model values and event ordering remain checked. They also rerun each
 request to verify deterministic output. The Rust CI job runs formatting,
 workspace tests, and a release build; JavaScript remains the browser authority
 and executable fallback.
