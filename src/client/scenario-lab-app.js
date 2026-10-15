@@ -2,7 +2,8 @@ import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
 import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
 import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
-import {interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
+import {combineScenarioLabClarification, interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
+import {canonicalScenarioLabJson, createScenarioLabArchive, sha256ScenarioLabJson, validateScenarioLabArchive, validateScenarioLabResultBinding} from './scenario-lab-integrity.js';
 import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
 
 const $ = id => document.getElementById(id);
@@ -10,7 +11,15 @@ const MAX_VISIBLE_ANIMALS = 1200;
 const COLORS = ['#397f9c', '#65a8c5', '#8fbfce', '#66a68b', '#c39a69', '#947faf', '#cf8076', '#7d96b3', '#93a765', '#d28fa5'];
 
 let reviewedManifest = null;
+let reviewedManifestSha256 = null;
 let completedResult = null;
+let lastArchive = null;
+let replayExpectation = null;
+let requestSourcePrompt = null;
+let requestIntent = null;
+let requestRelationship = 'structured-only';
+let pendingClarificationPrompt = null;
+let applyingPromptIntent = false;
 let selectedDayIndex = 0;
 let visibleAnimals = MAX_VISIBLE_ANIMALS;
 let selectedAnimalId = null;
@@ -63,6 +72,8 @@ function createManifest(form) {
 
 function renderReview(manifest) {
   $('review-panel').hidden = false;
+  $('review-state').dataset.state = 'review';
+  $('review-state').textContent = 'Requires confirmation';
   $('review-meta').textContent = `${manifest.durationDays} days · ${manifest.initialSnapshot.animals.length.toLocaleString()} generated engine animals · seed ${manifest.seed} · one factor: supplementation`;
   const budget = scenarioSetResultBudgetStatus({animalCount: manifest.initialSnapshot.animals.length, durationDays: manifest.durationDays, scenarioCount: manifest.scenarios.length});
   const size = bytes => bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KiB` : `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
@@ -83,7 +94,7 @@ function renderReview(manifest) {
   }));
 }
 
-function requestScenarioSet(manifest) {
+function requestScenarioSet(manifest, manifestSha256) {
   if (activeWorker) return Promise.reject(new Error('A scenario set is already running.'));
   const worker = new Worker(new URL('./worker.js', import.meta.url), {type: 'module'});
   activeWorker = worker;
@@ -113,7 +124,7 @@ function requestScenarioSet(manifest) {
         }
         cleanup();
         if (response.type === 'error') reject(new Error(response.error.message));
-        else if (response.type === 'scenarioSet') resolve(response.data);
+        else if (response.type === 'scenarioSet') resolve(response);
         else reject(new Error('Unexpected Worker response.'));
       } catch (error) {
         cleanup();
@@ -129,7 +140,7 @@ function requestScenarioSet(manifest) {
     worker.addEventListener('message', onMessage);
     worker.addEventListener('error', onError, {once: true});
     try {
-      worker.postMessage({protocolVersion: WORKER_PROTOCOL_VERSION, type: 'replayScenarioSet', manifest});
+      worker.postMessage({protocolVersion: WORKER_PROTOCOL_VERSION, type: 'replayScenarioSet', manifest, manifestSha256});
     } catch (error) {
       cleanup();
       reject(error);
@@ -286,6 +297,9 @@ function renderProvenance() {
     'Animal identities, weights and actions are outputs of the deterministic illustrative FarmEngine, not observed cattle.',
     `Units: ${completedResult.units.meanWeightKg}; herd feed ${completedResult.units.cumulativeFeedIntakeKgDM}; ${completedResult.units.cumulativeCostUnits}; ${completedResult.units.pastureStockKgDM}.`,
     `Illustrative engine assumptions: ${Object.entries(completedResult.assumptions).map(([key, value]) => `${key}=${value}`).join(', ')}.`,
+    `Request provenance: ${lastArchive.request.relationship}; hypothesis status: ${lastArchive.provenance.hypothesis.status}.`,
+    `Confirmed and executed manifest SHA-256: ${lastArchive.provenance.confirmedManifestSha256}; results SHA-256: ${lastArchive.provenance.resultsSha256}.`,
+    `Scientific model: ${lastArchive.provenance.scientificModel.status}; no BR-CORTE equation was used.`,
     'No result is independently validated as a weight, intake, activity, weather, pasture or economic prediction. BR-CORTE is not used by this run.',
   ];
   const list = document.createElement('ul');
@@ -313,25 +327,40 @@ function renderResults(result) {
 
 $('scenario-form').addEventListener('submit', event => {
   event.preventDefault();
-  try {
-    reviewedManifest = createManifest(event.currentTarget);
-    renderReview(reviewedManifest);
-    $('results').hidden = true;
-    completedResult = null;
-    status('Review the shared snapshot, seed and intervention levels before running.');
-  } catch (error) {
-    reviewedManifest = null;
-    $('review-panel').hidden = true;
-    status(error.message);
-  }
+  void (async () => {
+    try {
+      reviewedManifest = createManifest(event.currentTarget);
+      reviewedManifestSha256 = await sha256ScenarioLabJson(reviewedManifest);
+      lastArchive = null;
+      replayExpectation = null;
+      renderReview(reviewedManifest);
+      $('results').hidden = true;
+      completedResult = null;
+      status('Review the shared snapshot, seed and intervention levels before running.');
+    } catch (error) {
+      reviewedManifest = null;
+      reviewedManifestSha256 = null;
+      $('review-panel').hidden = true;
+      $('review-state').dataset.state = 'error';
+      $('review-state').textContent = 'Review failed';
+      status(error.message);
+    }
+  })();
 });
 
 $('scenario-form').addEventListener('input', event => {
-  if (!reviewedManifest || activeWorker || event.target.type === 'submit') return;
+  if (applyingPromptIntent || activeWorker || event.target.type === 'submit') return;
+  if (requestIntent) {
+    requestIntent = null;
+    requestRelationship = 'manual-revision';
+  }
   reviewedManifest = null;
+  reviewedManifestSha256 = null;
   $('review-panel').hidden = true;
   $('results').hidden = true;
   completedResult = null;
+  lastArchive = null;
+  replayExpectation = null;
   status('Inputs changed. Review the updated scenario set before running.');
 });
 
@@ -339,15 +368,39 @@ $('run-scenarios').addEventListener('click', async () => {
   if (!reviewedManifest || activeWorker) return;
   const budget = scenarioSetResultBudgetStatus({animalCount: reviewedManifest.initialSnapshot.animals.length, durationDays: reviewedManifest.durationDays, scenarioCount: reviewedManifest.scenarios.length});
   if (!budget.withinBudget) { status('This scenario set exceeds the estimated-result resource budget. Reduce animals, duration or arms.'); return; }
+  const manifest = structuredClone(reviewedManifest);
+  const manifestSha256 = reviewedManifestSha256;
   $('prompt-result').textContent = 'The reviewed scenario set is running in the FarmEngine Worker.';
+  $('review-state').dataset.state = 'running';
+  $('review-state').textContent = 'Running confirmed inputs';
   $('run-scenarios').disabled = true;
-  status(`Running ${reviewedManifest.scenarios.length} reproducible scenarios…`);
+  status(`Verifying the approved manifest, then running ${manifest.scenarios.length} scenarios…`);
   try {
-    const result = await requestScenarioSet(reviewedManifest);
+    if (!manifestSha256 || await sha256ScenarioLabJson(manifest) !== manifestSha256) throw new Error('Reviewed inputs changed after confirmation. Review the scenario set again.');
+    const response = await requestScenarioSet(manifest, manifestSha256);
+    if (response.manifestSha256 !== manifestSha256) throw new Error('Worker execution digest does not match the confirmed manifest.');
+    const result = response.data;
+    validateScenarioLabResultBinding(manifest, result);
+    if (replayExpectation && canonicalScenarioLabJson(result) !== canonicalScenarioLabJson(replayExpectation)) {
+      throw new Error('Recalculated output does not match the exported result. The recovered run was withheld.');
+    }
+    lastArchive = await createScenarioLabArchive({
+      manifest,
+      results: result,
+      sourcePrompt: requestSourcePrompt,
+      intent: requestIntent,
+      relationship: requestRelationship,
+      executedManifestSha256: response.manifestSha256,
+    });
+    replayExpectation = null;
     renderResults(result);
+    $('review-state').dataset.state = 'complete';
+    $('review-state').textContent = 'Completed · reproducible';
     $('prompt-result').textContent = 'The reviewed scenario set completed. These are illustrative FarmEngine outputs; the prompt parser did not calculate them.';
-    status('Scenario set complete. All displayed values came from the Worker result.');
+    status('Scenario set complete. The Worker inputs match the reviewed manifest and the result is bound to its seed and executor.');
   } catch (error) {
+    $('review-state').dataset.state = error.message.includes('cancelled') ? 'cancelled' : 'error';
+    $('review-state').textContent = error.message.includes('cancelled') ? 'Cancelled · no partial result' : 'Run not accepted';
     $('prompt-result').textContent = error.message.includes('cancelled')
       ? 'Scenario run cancelled. No partial result was created; the reviewed inputs are still available.'
       : `Scenario run failed: ${error.message}`;
@@ -372,10 +425,10 @@ $('result-day').addEventListener('input', event => {
 $('population-scenario').addEventListener('change', () => { renderPopulation(); renderAnimalDetail(); });
 $('show-more-cells').addEventListener('click', () => { visibleAnimals += MAX_VISIBLE_ANIMALS; renderPopulation(); });
 $('export-results').addEventListener('click', () => {
-  if (!reviewedManifest || !completedResult) return;
-  const blob = new Blob([JSON.stringify({manifest: reviewedManifest, results: completedResult}, null, 2)], {type: 'application/json'});
+  if (!lastArchive || !completedResult) return;
+  const blob = new Blob([JSON.stringify(lastArchive, null, 2)], {type: 'application/json'});
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob); link.download = `${reviewedManifest.scenarioId}.json`; link.click();
+  link.href = URL.createObjectURL(blob); link.download = `${lastArchive.manifest.scenarioId}.json`; link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 0);
 });
 
@@ -384,19 +437,41 @@ $('manifest-file').addEventListener('change', async event => {
   const input = event.currentTarget;
   const file = input.files?.[0];
   if (!file) return;
+  reviewedManifest = null;
+  reviewedManifestSha256 = null;
+  completedResult = null;
+  lastArchive = null;
+  replayExpectation = null;
+  requestSourcePrompt = null;
+  requestIntent = null;
+  requestRelationship = 'structured-only';
+  $('review-panel').hidden = true;
+  $('results').hidden = true;
   try {
     if (file.size > 4 * 1024 * 1024) throw new Error('Saved experiment JSON must be 4 MB or smaller.');
     const saved = JSON.parse(await file.text());
+    const archive = saved?.type === 'riose-scenario-lab-archive' ? await validateScenarioLabArchive(saved) : null;
     const manifest = saved?.manifest;
     validateScenarioSetManifest(manifest);
-    reviewedManifest = manifest;
+    if (saved?.results) validateScenarioLabResultBinding(manifest, saved.results);
+    reviewedManifest = structuredClone(manifest);
+    reviewedManifestSha256 = await sha256ScenarioLabJson(reviewedManifest);
+    replayExpectation = saved?.results ? structuredClone(saved.results) : null;
+    lastArchive = null;
+    requestSourcePrompt = archive?.request.sourcePrompt ?? null;
+    requestIntent = archive?.request.intent ?? null;
+    requestRelationship = archive?.request.relationship ?? 'legacy-import';
     completedResult = null;
     $('results').hidden = true;
-    renderReview(manifest);
-    status('Saved manifest loaded. Review it, then run to recalculate the scenarios.');
+    renderReview(reviewedManifest);
+    status(archive ? 'Archive hashes verified. Review the original inputs, then explicitly recalculate and compare the stored result.' : 'Saved manifest loaded. Review it, then run to recalculate and verify any stored result.');
   } catch (error) {
     reviewedManifest = null;
+    reviewedManifestSha256 = null;
+    replayExpectation = null;
     $('review-panel').hidden = true;
+    $('review-state').dataset.state = 'error';
+    $('review-state').textContent = 'Import rejected';
     status(`Could not open saved experiment: ${error.message}`);
   } finally {
     input.value = '';
@@ -406,25 +481,64 @@ $('manifest-file').addEventListener('change', async event => {
 const promptExample = 'Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather.';
 $('fill-prompt-example').addEventListener('click', () => {
   $('scenario-prompt').value = promptExample;
+  pendingClarificationPrompt = null;
+  requestSourcePrompt = null;
+  requestIntent = null;
+  requestRelationship = 'structured-only';
+  if (reviewedManifest) {
+    reviewedManifest = null;
+    reviewedManifestSha256 = null;
+    $('review-panel').hidden = true;
+  }
   $('scenario-prompt').focus();
+  $('prompt-result').textContent = 'Example loaded. Draft it to create a new review; no run has started.';
 });
-$('scenario-prompt').addEventListener('input', () => { $('prompt-result').textContent = ''; });
+$('scenario-prompt').addEventListener('input', () => {
+  $('prompt-result').textContent = pendingClarificationPrompt
+    ? 'Add the missing details or restate the complete request, then draft again. The prior text is only context; nothing runs automatically.'
+    : '';
+  if (reviewedManifest) {
+    reviewedManifest = null;
+    reviewedManifestSha256 = null;
+    $('review-panel').hidden = true;
+    $('review-state').dataset.state = 'review';
+    $('review-state').textContent = 'Request changed · review again';
+    requestIntent = null;
+    requestRelationship = requestSourcePrompt ? 'manual-revision' : 'structured-only';
+    status('The request changed after review. Draft and review it again before a new run.');
+  }
+});
 $('draft-scenario').addEventListener('click', () => {
   const result = $('prompt-result');
   result.className = 'prompt-result';
   try {
-    const intent = interpretScenarioLabPrompt($('scenario-prompt').value);
+    const enteredText = $('scenario-prompt').value;
+    const prompt = pendingClarificationPrompt
+      ? combineScenarioLabClarification(pendingClarificationPrompt, enteredText)
+      : enteredText;
+    const intent = interpretScenarioLabPrompt(prompt);
     validateScenarioLabIntent(intent);
     if (!intent.ready) {
+      pendingClarificationPrompt = intent.missingInputs.length && !intent.unsupportedRequests.length ? prompt : null;
+      requestSourcePrompt = pendingClarificationPrompt;
+      requestIntent = null;
+      requestRelationship = pendingClarificationPrompt ? 'clarification-pending' : 'manual-revision';
+      $('review-state').dataset.state = 'error';
+      $('review-state').textContent = 'Clarification required';
       result.classList.add('needs-input');
       result.textContent = [
         intent.missingInputs.length ? `Please specify: ${intent.missingInputs.join(', ')}.` : '',
         intent.unsupportedRequests.join(' '),
-        'This deterministic parser does not execute or invent missing scientific inputs.',
+        'Add the missing details or restate the full request. This deterministic parser does not execute or invent missing scientific inputs.',
       ].filter(Boolean).join(' ');
       return;
     }
+    pendingClarificationPrompt = null;
+    requestSourcePrompt = prompt;
+    requestIntent = intent;
+    requestRelationship = 'validated-prompt-draft';
     const form = $('scenario-form');
+    applyingPromptIntent = true;
     form.elements.animalCount.value = String(intent.population.count);
     form.elements.durationDays.value = String(intent.duration.days);
     form.elements.baselineSupplement.value = String(intent.supplementLevelsKgDMPerHeadPerDay[0]);
@@ -432,13 +546,17 @@ $('draft-scenario').addEventListener('click', () => {
     form.elements.weather.value = intent.weather;
     form.dispatchEvent(new Event('input', {bubbles: true}));
     form.requestSubmit();
+    applyingPromptIntent = false;
     const assumptions = intent.assumptions.filter(item => item.origin === 'scenario-lab default')
       .map(item => `${item.field}: ${item.value} (${item.origin})`);
     result.classList.add('draft-ready');
-    result.textContent = `Draft prepared by the local deterministic parser. ${intent.population.count} animals · ${intent.duration.days} days · supplement levels ${intent.supplementLevelsKgDMPerHeadPerDay.join(', ')} kg DM/head/day. ${assumptions.length ? `Assumption: ${assumptions.join('; ')}. ` : ''}No simulation was run. Review the structured settings and confirm explicitly.`;
+    result.textContent = `Draft prepared from the request. ${intent.population.count} animals · ${intent.duration.days} days · supplement levels ${intent.supplementLevelsKgDMPerHeadPerDay.join(', ')} kg DM/head/day. ${assumptions.length ? `Assumption: ${assumptions.join('; ')}. ` : ''}No simulation was run. Review the structured settings and confirm explicitly.`;
   } catch (error) {
+    applyingPromptIntent = false;
     result.classList.add('needs-input');
     result.textContent = error.message;
+    $('review-state').dataset.state = 'error';
+    $('review-state').textContent = 'Draft rejected';
   }
 });
 

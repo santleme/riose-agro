@@ -5,31 +5,52 @@ import {chromium} from 'playwright';
 const browser = await chromium.launch({headless: true});
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, deviceScaleFactor: 1});
+  await page.addInitScript(() => {
+    window.__scenarioWorkerPosts = [];
+    const NativeWorker = window.Worker;
+    window.Worker = class extends NativeWorker {
+      postMessage(message, ...rest) {
+        if (message?.type === 'replayScenarioSet') window.__scenarioWorkerPosts.push(message);
+        return super.postMessage(message, ...rest);
+      }
+    };
+  });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await page.goto('http://127.0.0.1:8000/scenario-lab.html', {waitUntil: 'networkidle'});
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-initial.png', fullPage: true});
 
-  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg, 1.0 kg, and 1.5 kg for cattle.');
+  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for cattle.');
   await page.getByRole('button', {name: 'Draft for review'}).click();
   assert.match(await page.locator('#prompt-result').textContent(), /population count, duration/);
   assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
-  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 8 cattle over 3 days in hot weather.');
+  await page.locator('#scenario-prompt').fill('8 cattle over 3 days in hot weather.');
   await page.getByRole('button', {name: 'Draft for review'}).click();
-  assert.match(await page.locator('#prompt-result').textContent(), /local deterministic parser/);
+  assert.match(await page.locator('#prompt-result').textContent(), /Draft prepared from the request/);
   assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
   assert.equal(await page.locator('#results:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
+  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for 9 cattle over 3 days in hot weather.');
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
+  await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for 8 cattle over 3 days in hot weather.');
+  await page.getByRole('button', {name: 'Draft for review'}).click();
+  await page.locator('#review-state').getByText(/Requires confirmation/).waitFor();
 
   await page.locator('#scenario-form [name="animalCount"]').fill('8');
   await page.locator('#scenario-form [name="durationDays"]').fill('3');
   await page.locator('[name="alternativeLevels"]').fill('1.0, 1.5');
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
   await page.getByRole('button', {name: /Review scenarios/}).click();
   assert.equal(await page.locator('#scenario-list article').count(), 3);
   assert.match(await page.locator('#resource-budget').textContent(), /Estimated result JSON .* KiB/);
   assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.locator('#results:not([hidden])').waitFor();
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 1);
+  assert.match(await page.locator('#review-state').textContent(), /Completed · reproducible/);
   assert.match(await page.locator('#prompt-result').textContent(), /illustrative FarmEngine outputs/);
   assert.match(await page.locator('#run-meta').textContent(), /3 scenarios/);
   assert.equal(await page.locator('#scenario-legend span').count(), 3);
@@ -38,16 +59,52 @@ try {
   await page.locator('#population-scenario').selectOption('alternative-2');
   await page.locator('#scenario-population [role="gridcell"]').first().click();
   assert.match(await page.locator('#animal-detail').textContent(), /Animal 1/);
+  await page.locator('#scenario-population [role="gridcell"]').first().focus();
+  await page.keyboard.press('ArrowRight');
+  assert.match(await page.locator('#animal-detail').textContent(), /Animal 2/);
+  assert.equal(await page.locator('#scenario-population [aria-selected="true"]').count(), 1);
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  assert.equal(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), true);
+  assert.equal(await page.locator('#scenario-population [role="gridcell"]').first().evaluate(cell => getComputedStyle(cell).transitionDuration), '0s');
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-results.png', fullPage: true});
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     page.getByRole('button', {name: /Export manifest \+ results/}).click(),
   ]);
-  await page.locator('#manifest-file').setInputFiles(await download.path());
-  await page.getByText(/Saved manifest loaded/).waitFor();
+  const downloadedPath = await download.path();
+  const downloadedArchive = JSON.parse(await (await import('node:fs/promises')).readFile(downloadedPath, 'utf8'));
+  assert.equal(downloadedArchive.type, 'riose-scenario-lab-archive');
+  assert.equal(downloadedArchive.provenance.confirmedManifestSha256, downloadedArchive.provenance.executedManifestSha256);
+  assert.equal(downloadedArchive.provenance.scientificModel.status, 'not-used');
+  assert.equal(downloadedArchive.request.relationship, 'manual-revision');
+  await page.locator('#manifest-file').setInputFiles({name: 'tampered.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({...downloadedArchive, results: {...downloadedArchive.results, seed: downloadedArchive.results.seed + 1}}))});
+  await page.locator('#lab-status').getByText(/Could not open saved experiment/).waitFor();
+  assert.match(await page.locator('#review-state').textContent(), /Import rejected/);
+  assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 1);
+  const legacyArchive = {manifest: downloadedArchive.manifest, results: downloadedArchive.results};
+  await page.locator('#manifest-file').setInputFiles({name: 'legacy-export.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(legacyArchive))});
+  await page.locator('#lab-status').getByText(/Saved manifest loaded/).waitFor();
+  assert.equal(await page.locator('#results:not([hidden])').count(), 0);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 1);
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.locator('#results:not([hidden])').waitFor();
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 2);
+  await page.locator('#manifest-file').setInputFiles(downloadedPath);
+  await page.locator('#lab-status').getByText(/Archive hashes verified/).waitFor();
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 2);
+  assert.equal(await page.locator('#results:not([hidden])').count(), 0);
+  await page.getByRole('button', {name: 'Run scenarios'}).click();
+  await page.locator('#results:not([hidden])').waitFor();
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 3);
   assert.match(await page.locator('#run-meta').textContent(), /3 scenarios/);
+  const [replayDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', {name: /Export manifest \+ results/}).click(),
+  ]);
+  const replayedArchive = JSON.parse(await (await import('node:fs/promises')).readFile(await replayDownload.path(), 'utf8'));
+  assert.equal(replayedArchive.provenance.resultsSha256, downloadedArchive.provenance.resultsSha256);
+  assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 3);
 
   await page.locator('[name="bodyWeightKg"]').fill('400');
   await page.locator('[name="adgKgPerDay"]').fill('0.5');

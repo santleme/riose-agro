@@ -15,6 +15,7 @@
     "test:scenario-set": "node --test tests/scenario-set.test.js",
     "test:scenario-set-budget": "node --test tests/scenario-set-budget.test.js",
     "test:scenario-lab-intent": "node --test tests/scenario-lab-intent.test.js",
+    "test:scenario-lab-integrity": "node --test tests/scenario-lab-integrity.test.js",
     "test:product-v3-benchmarks": "node --test tests/product-v3-benchmark-evidence.test.js",
     "test:br-corte-scenarios": "node --test tests/br-corte-scenario.test.js",
     "bench:memory": "node --expose-gc scripts/benchmarks/benchmark-memory.mjs",

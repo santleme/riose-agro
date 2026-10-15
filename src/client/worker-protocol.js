@@ -14,7 +14,7 @@ const commandFields = {
   replayComparison: ['manifest'],
   replayConfigured: ['manifest'],
   replayLotConfigured: ['manifest'],
-  replayScenarioSet: ['manifest'],
+  replayScenarioSet: ['manifest', 'manifestSha256'],
   snapshot: []
 };
 const responseTypes = new Set(['state', 'comparison', 'population', 'scenarioSet', 'progress', 'error']);
@@ -97,6 +97,9 @@ function validateCommandPayload(message) {
       if (!isRecord(message.manifest) || message.manifest.type !== 'riose-scenario-set' || message.manifest.version !== 1) {
         fail('INVALID_COMMAND_PAYLOAD', 'replayScenarioSet.manifest must be a riose-scenario-set/v1 object.', command);
       }
+      if (message.manifestSha256 !== undefined && (typeof message.manifestSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(message.manifestSha256))) {
+        fail('INVALID_COMMAND_PAYLOAD', 'replayScenarioSet.manifestSha256 must be a lowercase SHA-256 hex digest.', command);
+      }
       break;
     case 'snapshot':
       break;
@@ -159,7 +162,8 @@ export function normalizeWorkerResponse(raw) {
   }
   if (raw.type === 'scenarioSet' && (!isRecord(raw.data) || raw.data.type !== 'riose-scenario-results' || raw.data.version !== 1
       || raw.data.validated !== false || !isRecord(raw.data.baseline) || !Array.isArray(raw.data.baseline.timeline)
-      || !Array.isArray(raw.data.scenarios) || raw.data.scenarios.length < 2 || raw.data.scenarios.some(scenario => !isRecord(scenario) || !Array.isArray(scenario.rows) || !Array.isArray(scenario.timeline)))) {
+      || !Array.isArray(raw.data.scenarios) || raw.data.scenarios.length < 2 || raw.data.scenarios.some(scenario => !isRecord(scenario) || !Array.isArray(scenario.rows) || !Array.isArray(scenario.timeline))
+      || (raw.manifestSha256 !== undefined && (typeof raw.manifestSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(raw.manifestSha256))))) {
     fail('INVALID_RESPONSE', 'scenarioSet response must include validated-false baseline and aligned intervention results.');
   }
   if (raw.type === 'progress') {

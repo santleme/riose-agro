@@ -30,7 +30,7 @@
 
     <section class="lab-card prompt-card" aria-labelledby="prompt-title">
       <div class="lab-card-heading"><div><p class="eyebrow">LOCAL DRAFT · NO AI SERVICE</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Deterministic parser</span></div>
-      <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels. Known fields fill the review form; missing or unsupported requests are reported for clarification.</p>
+      <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels in kg DM/head/day. Missing values can be added in a clarification; ambiguous units or multiple intervention factors remain blocked.</p>
       <label class="prompt-label" for="scenario-prompt">Scenario request</label>
       <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather."></textarea>
       <div class="prompt-actions"><button id="draft-scenario" class="primary-button" type="button">Draft for review <span aria-hidden="true">↗</span></button><button id="fill-prompt-example" class="text-button" type="button">Use example</button><span>Parsing is rule-based; no LLM is configured or simulated.</span></div>
@@ -52,7 +52,7 @@
         <div class="saved-manifest"><button id="load-manifest" class="text-button" type="button">Open exported experiment JSON</button><input id="manifest-file" type="file" accept="application/json,.json" hidden><span>Replay uses the saved manifest and recalculates every arm.</span></div>
 
         <section id="review-panel" class="review-panel" hidden aria-labelledby="review-title">
-          <div class="lab-card-heading"><div><p class="eyebrow">2 · REVIEW</p><h2 id="review-title">Scenario set</h2></div><span class="review-status">Requires confirmation</span></div>
+          <div class="lab-card-heading"><div><p class="eyebrow">2 · REVIEW</p><h2 id="review-title">Scenario set</h2></div><span id="review-state" class="review-status" role="status" aria-live="polite" data-state="review">Requires confirmation</span></div>
           <p id="review-meta" class="review-meta"></p>
           <p id="resource-budget" class="resource-budget" role="status"></p>
           <div id="scenario-list" class="scenario-list"></div>

@@ -2,6 +2,7 @@ import {FarmEngine,compare,compareConfiguredScenarios,replayComparisonManifest,v
 import {addLotComparisonContext,createLotScopedSnapshot,validateLotComparisonManifest} from './lot-comparison.js';
 import {runPopulationComparison} from './population-experiment.js';
 import {replayScenarioSetManifest} from './scenario-set.js';
+import {sha256ScenarioLabJson} from './scenario-lab-integrity.js';
 import {loadWasmMetabolism,updateMetabolismJS} from './metabolism-wasm.js';
 import {createWorkerError,createWorkerResponse,decodeWorkerCommand,normalizeWorkerResponse} from './worker-protocol.js';
 
@@ -57,7 +58,7 @@ scope.onmessage=async(event)=>{await wasmReady;let command;try{
   else if(m.type==='compare'){scope.postMessage(createWorkerResponse('comparison',{data:compare(m.snapshot??engine.snapshot(),m.days??30,metabolismKernel)},engineImplementation));return;}
   else if(m.type==='compareConfigured'){const result=await configuredComparison(m.snapshot,{referenceConfig:m.referenceConfig,scenarioConfig:m.scenarioConfig,days:m.days??30});scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
   else if(m.type==='populationCompare'){const data=runPopulationComparison(m.snapshot,{referenceConfig:m.referenceConfig,scenarioConfig:m.scenarioConfig,days:m.days,onProgress:progress=>scope.postMessage(createWorkerResponse('progress',progress,'javascript-population-observations'))});scope.postMessage(createWorkerResponse('population',{data},'javascript-population-observations'));return;}
-  else if(m.type==='replayScenarioSet'){const data=replayScenarioSetManifest(m.manifest,{onProgress:progress=>scope.postMessage(createWorkerResponse('progress',progress,'javascript-scenario-set'))});scope.postMessage(createWorkerResponse('scenarioSet',{data},'javascript-scenario-set'));return;}
+  else if(m.type==='replayScenarioSet'){const manifestSha256=await sha256ScenarioLabJson(m.manifest);if(m.manifestSha256&&manifestSha256!==m.manifestSha256)throw new Error('Worker input does not match the reviewed manifest digest.');const data=replayScenarioSetManifest(m.manifest,{onProgress:progress=>scope.postMessage(createWorkerResponse('progress',progress,'javascript-scenario-set'))});scope.postMessage(createWorkerResponse('scenarioSet',{data,manifestSha256},'javascript-scenario-set'));return;}
   else if(m.type==='compareLotConfigured'){validateLotComparisonManifest(m.manifest);const snapshot=createLotScopedSnapshot(m.manifest.initialSnapshot,m.manifest.lot);const result=await configuredComparison(snapshot,{referenceConfig:m.manifest.scenarios.reference,scenarioConfig:m.manifest.scenarios.scenario,days:m.manifest.periodDays});result.data=addLotComparisonContext(m.manifest,result.data);scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
   else if(m.type==='replayComparison'){scope.postMessage(createWorkerResponse('comparison',{data:replayComparisonManifest(m.manifest,metabolismKernel)},engineImplementation));return;}
   else if(m.type==='replayConfigured'){const result=await replayConfiguredComparison(m.manifest);scope.postMessage(createWorkerResponse('comparison',result,result.engineImplementation));return;}
