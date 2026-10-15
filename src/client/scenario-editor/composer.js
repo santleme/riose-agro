@@ -4,6 +4,7 @@ import {
 import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from './scene-layout.js';
 import {createCanvasSceneRenderer} from './canvas-scene-renderer.js';
 import {createSceneHistory} from './scene-history.js';
+import {createSceneStorage} from './scene-storage.js';
 import {validateGridScene} from './scene-validation.js';
 
 const URLS = {
@@ -37,8 +38,7 @@ const CATEGORY_ALIASES = {
 };
 const ZONE_LABELS = {pasture: 'Pastagem', handling: 'Manejo', dairy: 'Leite', service: 'Serviço', tech: 'Tecnologia', support: 'Apoio'};
 const PREFAB_GLYPHS = {'dairy-milking-base': '◫', 'farmstead': '⌂', 'corral-scale': '▤', 'supplement-area': '◉', 'gateway-antenna': '⌁', 'paddock-water': '◇', 'basic-corral': '▧'};
-const storeKey = 'riose-world-scene-v1';
-const activeSceneKey = 'riose-active-scene-v1';
+const sceneStorage = createSceneStorage();
 const stageElement = document.querySelector('#stage');
 const pixiHost = document.querySelector('#pixi-stage');
 const fallbackCanvas = document.querySelector('#fallback-stage');
@@ -700,12 +700,7 @@ function pushHistory() {
 }
 
 function persistSceneDraft() {
-  try {
-    const text = JSON.stringify(scene);
-    localStorage.setItem(`${storeKey}:${scene.metadata.id}`, text);
-    localStorage.setItem(activeSceneKey, scene.metadata.id);
-    localStorage.setItem(storeKey, text);
-  } catch {}
+  sceneStorage.write(scene);
 }
 
 function restoreHistory() {
@@ -1155,7 +1150,7 @@ async function saveScene() {
   const errors = validateScene(scene);
   if (errors.length) { showToast(errors[0]); return; }
   const text = `${JSON.stringify(scene, null, 2)}\n`;
-  try { localStorage.setItem(`${storeKey}:${scene.metadata.id}`, text); localStorage.setItem(activeSceneKey, scene.metadata.id); localStorage.setItem(storeKey, text); } catch { showToast('Não foi possível atualizar o armazenamento local.'); }
+  if (!sceneStorage.write(scene, {pretty: true})) showToast('Não foi possível atualizar o armazenamento local.');
   const blob = new Blob([text], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -1280,20 +1275,19 @@ async function loadEditor() {
     dairy: generateFarmLayout({scenarioType: 'dairy', seed: dairyScene.metadata.seed, prefabs: prefabLibrary, manifest}),
     beef: generateFarmLayout({scenarioType: 'beef', seed: beefScene.metadata.seed, prefabs: prefabLibrary, manifest}),
   };
-  const activeId = localStorage.getItem(activeSceneKey);
+  const activeId = sceneStorage.activeSceneId();
   const preset = activeId === 'riose-beef-composer-v1' ? 'beef' : activeId === 'riose-dairy-composer-v1' ? 'dairy' : activeId ? 'custom' : 'dairy';
   $('scene-preset').value = preset;
   let customScene;
   if (preset === 'custom') {
-    try { customScene = JSON.parse(localStorage.getItem(`${storeKey}:${activeId}`) ?? 'null'); } catch {}
+    customScene = sceneStorage.read(activeId);
     if (!customScene) $('scene-preset').value = 'dairy';
   }
   loadedScene = preset === 'custom' && customScene ? customScene : loadedScenes[preset === 'custom' ? 'dairy' : preset];
   assetById = new Map(manifest.assets.map((asset) => [asset.id, asset]));
   const errors = validateScene(loadedScene);
   if (errors.length) throw new Error(errors[0]);
-  let saved;
-  try { saved = preset === 'custom' ? customScene : JSON.parse(localStorage.getItem(`${storeKey}:${loadedScene.metadata.id}`) ?? (preset === 'dairy' ? localStorage.getItem(storeKey) : 'null') ?? 'null'); } catch {}
+  const saved = preset === 'custom' ? customScene : sceneStorage.read(loadedScene.metadata.id, {legacyFallback: preset === 'dairy'});
   scene = saved && validateScene(saved).length === 0 ? saved : loadedScene;
   sceneHistory.reset(scene);
   const atlasCount = await loadAssets();
@@ -1351,7 +1345,7 @@ $('scene-preset').addEventListener('change', async (event) => {
   if (key === 'custom') return;
   const source = loadedScenes[key];
   if (!source) return;
-  const saved = (() => { try { return JSON.parse(localStorage.getItem(`${storeKey}:${source.metadata.id}`) ?? 'null'); } catch { return null; } })();
+  const saved = sceneStorage.read(source.metadata.id);
   scene = saved && validateScene(saved).length === 0 ? saved : deepClone(source);
   persistSceneDraft();
   sceneHistory.reset(scene); selectedId = null;
