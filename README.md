@@ -62,7 +62,7 @@ Run the preset scenario harness and write one `*.result.json` file per scenario:
 npm run test:scenarios
 ```
 
-Add a JSON file under `tests/scenarios/` to add a case; the runner discovers files without code changes. Each case declares an `engine` seed and animal count, optional `configuration`, `run.hours`, and JSON Pointer assertions over `/state` and `/metrics`. Supported operators are `equals`, `greaterThan`, `lessThan`, and `approximatelyEquals` (optional numeric `tolerance`). Results go to `.test-results/scenarios/`. To use another fixture and result directory, run `node scripts/run-scenarios.js <scenario-directory> <result-directory>`. Each invalid or failed case receives its own diagnostic result while other files still run. The harness checks reproducible engine behavior only; its assertions are not scientific validation.
+Add a JSON file under `tests/scenarios/` to add a case; the runner discovers files without code changes. Each case declares an `engine` seed and animal count, optional `configuration`, `run.hours`, and JSON Pointer assertions over `/state` and `/metrics`. Supported operators are `equals`, `greaterThan`, `lessThan`, and `approximatelyEquals` (optional numeric `tolerance`). Results go to `.test-results/scenarios/`. To use another fixture and result directory, run `node scripts/experiments/run-scenarios.js <scenario-directory> <result-directory>`. Each invalid or failed case receives its own diagnostic result while other files still run. The harness checks reproducible engine behavior only; its assertions are not scientific validation.
 
 Validate a versioned farm snapshot against JSON Schema and cross-field provenance rules:
 
@@ -95,7 +95,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `src/client/app.js` — map rendering, controls, charts, and CSV export
 - `src/client/engine.js`, `src/client/feeding-model.js` — deterministic farm simulation and extracted feeding calculation
 - `src/client/scenario-presets.js` — versioned reproducible scenario catalog; see [`docs/catalogo-cenarios.md`](docs/catalogo-cenarios.md)
-- `scripts/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
+- `scripts/experiments/run-scenarios.js`, `schemas/scenario.schema.json`, `tests/scenarios/` — file-driven deterministic scenario execution, validation, result capture, and assertions
 - `src/client/worker.js` — simulation worker, isolated from rendering
 - `crates/riose-core/`, `src/client/metabolism-wasm.js`, `wasm/riose_core.wasm` — opt-in Rust/WASM batch kernel and JavaScript fallback; rebuild with `npm run build:wasm`
 - `docs/architecture/` — repository/system audits, V2 boundaries, data contracts, decisions and measured migration plan

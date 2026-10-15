@@ -3,9 +3,9 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {setTimeout as delay} from 'node:timers/promises';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
-import {createBatchExperimentManifest, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
-import {runResumableBatch} from '../experiments/resumable-journal.js';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {createBatchExperimentManifest, digestScenario, sha256Digest} from './batch-manifest.js';
+import {runResumableBatch} from './resumable-journal.js';
 
 const args = process.argv.slice(2);
 let runCount = 25, repetitions = 5;
@@ -13,7 +13,7 @@ for (let index = 0; index < args.length; index++) {
   const arg = args[index];
   const [name, inlineValue] = arg.split('=', 2);
   if (name !== '--run-count' && name !== '--repetitions') {
-    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/benchmark-resumable-journal.mjs [--run-count <positive integer>] [--repetitions <positive integer>]`);
+    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/experiments/benchmark-resumable-journal.mjs [--run-count <positive integer>] [--repetitions <positive integer>]`);
   }
   const value = inlineValue ?? args[++index];
   const parsed = Number(value);

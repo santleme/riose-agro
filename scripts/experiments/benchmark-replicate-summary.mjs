@@ -1,8 +1,8 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
-import {summarizeReplicates} from '../experiments/replicate-summary.js';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {summarizeReplicates} from './replicate-summary.js';
 
 const counts = [1_000, 10_000, 100_000];
 const repetitions = 7;
@@ -43,7 +43,7 @@ for (let index = 0; index < args.length; index++) {
     outputPath = arg.slice('--output='.length);
     if (!outputPath) throw new TypeError('--output requires a file path');
   } else {
-    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/benchmark-replicate-summary.mjs [--output <report.json>]`);
+    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/experiments/benchmark-replicate-summary.mjs [--output <report.json>]`);
   }
 }
 outputPath = resolve(outputPath);

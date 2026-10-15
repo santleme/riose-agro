@@ -1,6 +1,6 @@
 import Ajv2020 from 'ajv/dist/2020.js';
-import schema from '../schemas/scenario.schema.json' with {type: 'json'};
-import {validateReproducibilityManifest} from '../src/client/scenario-contract.js';
+import schema from '../../schemas/scenario.schema.json' with {type: 'json'};
+import {validateReproducibilityManifest} from '../../src/client/scenario-contract.js';
 import {canonicalJson, sha256Digest} from './batch-manifest.js';
 
 export const HARNESS_FORMAT = 'riose-scenario-harness';

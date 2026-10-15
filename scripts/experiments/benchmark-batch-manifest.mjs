@@ -1,5 +1,5 @@
 import {performance} from 'node:perf_hooks';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, serializeExperimentResultJsonl} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestResultRecordBytes, digestScenario, serializeExperimentResultJsonl} from './batch-manifest.js';
 
 const runCount = Number.parseInt(process.env.RIOSE_EXPERIMENT_RUNS ?? '100', 10);
 const repetitions = Number.parseInt(process.env.RIOSE_EXPERIMENT_REPETITIONS ?? '7', 10);

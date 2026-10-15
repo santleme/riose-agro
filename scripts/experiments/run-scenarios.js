@@ -4,19 +4,19 @@ import {basename, dirname, resolve} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
-import {FarmEngine} from '../src/client/engine.js';
-import {ENGINE_SOURCE_FILES} from '../src/client/engine-provenance.js';
-import {createBatchExperimentManifest, sha256Digest} from '../experiments/batch-manifest.js';
-import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
-import {runResumableBatch} from '../experiments/resumable-journal.js';
-import {ScenarioWorkerPool} from './scenario-worker-pool.js';
-import {selectExperimentExecutor} from '../src/server/experiment-executor.js';
+import {FarmEngine} from '../../src/client/engine.js';
+import {ENGINE_SOURCE_FILES} from '../../src/client/engine-provenance.js';
+import {createBatchExperimentManifest, sha256Digest} from './batch-manifest.js';
+import {HARNESS_FORMAT, validateScenarioIdentity} from './scenario-dispatch.js';
+import {runResumableBatch} from './resumable-journal.js';
+import {ScenarioWorkerPool} from '../scenario-worker-pool.js';
+import {selectExperimentExecutor} from '../../src/server/experiment-executor.js';
 
-const schemaPath = fileURLToPath(new URL('../schemas/scenario.schema.json', import.meta.url));
+const schemaPath = fileURLToPath(new URL('../../schemas/scenario.schema.json', import.meta.url));
 const schema = JSON.parse(await readFile(schemaPath, 'utf8'));
 const validateShape = new Ajv2020({allErrors: true, strict: true}).compile(schema);
-const defaultScenarioDirectory = fileURLToPath(new URL('../tests/scenarios/', import.meta.url));
-const defaultResultDirectory = fileURLToPath(new URL('../.test-results/scenarios/', import.meta.url));
+const defaultScenarioDirectory = fileURLToPath(new URL('../../tests/scenarios/', import.meta.url));
+const defaultResultDirectory = fileURLToPath(new URL('../../.test-results/scenarios/', import.meta.url));
 
 function formatValidationError(error) {
   return `${error.instancePath || '/'} ${error.message}`;
@@ -172,7 +172,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   await mkdir(resultDirectory, {recursive: true});
   const engineSourceFiles = ENGINE_SOURCE_FILES;
   const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
-    name, await readFile(fileURLToPath(new URL(`../src/client/${name}`, import.meta.url)), 'utf8'),
+    name, await readFile(fileURLToPath(new URL(`../../src/client/${name}`, import.meta.url)), 'utf8'),
   ])));
   const engineDigest = sha256Digest(engineSources);
   const plans = [];
@@ -228,7 +228,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   const resultsPath = resolve(resultDirectory, 'batch-results.jsonl');
   const manifest = createBatchExperimentManifest({
     experimentId: `scenario-directory:${basename(resolve(scenarioDirectory))}`,
-    description: 'Resumable execution journal for scripts/run-scenarios.js',
+    description: 'Resumable execution journal for scripts/experiments/run-scenarios.js',
     runs: plans,
   });
   if (suppliedWorkerPool && (concurrency < 2 || typeof suppliedWorkerPool.execute !== 'function' || suppliedWorkerPool.size !== concurrency)) {
@@ -279,7 +279,7 @@ async function main() {
   try {
     let executorOptions = {};
     if (automatic) {
-      const executorProfilePath = fileURLToPath(new URL('../docs/performance/executor-profile-v2.json', import.meta.url));
+      const executorProfilePath = fileURLToPath(new URL('../../docs/performance/executor-profile-v2.json', import.meta.url));
       const executorProfile = JSON.parse(await readFile(executorProfilePath, 'utf8'));
       const resourceLimits = parseExecutorResourceLimits();
       executorOptions = {concurrency: 'auto', executorProfile,

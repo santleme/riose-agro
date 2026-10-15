@@ -10,7 +10,7 @@ test('replicate summary benchmark preserves raw timing and process-heap observat
   const tempDirectory = await mkdtemp(join(tmpdir(), 'riose-replicate-benchmark-'));
   const reportPath = join(tempDirectory, 'report.json');
   try {
-    const result = spawnSync(process.execPath, ['scripts/benchmark-replicate-summary.mjs', '--output', reportPath], {
+    const result = spawnSync(process.execPath, ['scripts/experiments/benchmark-replicate-summary.mjs', '--output', reportPath], {
       cwd: new URL('..', import.meta.url),
       encoding: 'utf8',
     });

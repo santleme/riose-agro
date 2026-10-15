@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {summarizeExperimentReplicates, summarizeReplicates, summarizeReplicatesAsync} from '../experiments/replicate-summary.js';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../experiments/batch-manifest.js';
+import {summarizeExperimentReplicates, summarizeReplicates, summarizeReplicatesAsync} from '../scripts/experiments/replicate-summary.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestScenario, sha256Digest} from '../scripts/experiments/batch-manifest.js';
 
 const record = (runId, status, supplement, weight) => ({
   runId, status,

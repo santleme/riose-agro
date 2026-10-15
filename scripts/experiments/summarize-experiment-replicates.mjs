@@ -2,8 +2,8 @@
 import {readFile, writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parseExperimentResultJsonl} from '../experiments/batch-manifest.js';
-import {summarizeExperimentReplicates} from '../experiments/replicate-summary.js';
+import {parseExperimentResultJsonl} from './batch-manifest.js';
+import {summarizeExperimentReplicates} from './replicate-summary.js';
 
 export async function summarizeExperimentFiles(manifestPath, resultsPath, outputPath, {groupBy = [], outputs} = {}) {
   const [manifestText, resultText] = await Promise.all([readFile(manifestPath, 'utf8'), readFile(resultsPath, 'utf8')]);
@@ -14,7 +14,7 @@ export async function summarizeExperimentFiles(manifestPath, resultsPath, output
 
 async function main() {
   const [manifestPath, resultsPath, outputPath, ...groupBy] = process.argv.slice(2);
-  if (!manifestPath || !resultsPath) throw new Error('Usage: node scripts/summarize-experiment-replicates.mjs <batch-manifest.json> <batch-results.jsonl> [summary.json] [group-input-field ...]');
+  if (!manifestPath || !resultsPath) throw new Error('Usage: node scripts/experiments/summarize-experiment-replicates.mjs <batch-manifest.json> <batch-results.jsonl> [summary.json] [group-input-field ...]');
   const summary = await summarizeExperimentFiles(resolve(manifestPath), resolve(resultsPath), outputPath ? resolve(outputPath) : undefined, {groupBy});
   process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
 }

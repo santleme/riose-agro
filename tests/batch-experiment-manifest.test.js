@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {createBatchExperimentManifest, createExperimentResultRecord, digestExperimentManifest, digestScenario, parseExperimentResultJsonl, serializeExperimentResultJsonl, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../experiments/batch-manifest.js';
+import {createBatchExperimentManifest, createExperimentResultRecord, digestExperimentManifest, digestScenario, parseExperimentResultJsonl, serializeExperimentResultJsonl, sha256Digest, validateBatchExperimentManifest, verifyExperimentResults} from '../scripts/experiments/batch-manifest.js';
 import {FarmEngine, createComparisonManifest, validateComparisonManifest} from '../src/client/engine.js';
 import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
 import {createScenarioContract} from '../src/client/scenario-contract.js';
-import {HARNESS_FORMAT, validateScenarioIdentity} from '../experiments/scenario-dispatch.js';
+import {HARNESS_FORMAT, validateScenarioIdentity} from '../scripts/experiments/scenario-dispatch.js';
 
 const validRun = (overrides = {}) => {
   const scenario = {type: 'agroville-comparison', version: 1, scenarioId: 'pasture-baseline', durationDays: 14};

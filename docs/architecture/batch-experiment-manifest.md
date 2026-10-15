@@ -1,6 +1,6 @@
 # Batch experiment manifest v1
 
-`riose-batch-experiment` v1 identifies a batch of independent, reproducible scenario runs. It is a separate contract from `agroville-comparison` v1/v2 and farm snapshots; it does not change either older persisted format. The JSON Schema is [batch-experiment-manifest-v1.schema.json](../../schemas/batch-experiment-manifest-v1.schema.json), and the Node reader/writer helpers are [experiments/batch-manifest.js](../../experiments/batch-manifest.js).
+`riose-batch-experiment` v1 identifies a batch of independent, reproducible scenario runs. It is a separate contract from `agroville-comparison` v1/v2 and farm snapshots; it does not change either older persisted format. The JSON Schema is [batch-experiment-manifest-v1.schema.json](../../schemas/batch-experiment-manifest-v1.schema.json), and the Node reader/writer helpers are [scripts/experiments/batch-manifest.js](../../scripts/experiments/batch-manifest.js).
 
 Each run records `scenarioFormat` and `scenarioVersion` together; a version is never interpreted without its format. The explicit dispatch supports comparison/reproducibility `agroville-comparison` v1/v2, the distinct `riose-scenario-harness` v1 used by #104, and native Rust requests identified by their `baseline` or `housing-comparison` type at version 1. Unknown formats and versions fail closed. Each run requires a safe relative scenario reference, the seed validated from that input, and a semantic digest computed only after the selected validator accepts the scenario. `scenarioId` is required when the source declares one (comparison v2 and harness); comparison v1 and native requests record null because those contracts have no scenario ID. Missing or invalid input receives no fallback digest or seed.
 
@@ -12,4 +12,4 @@ An experiment is reproducible only when its scenario digest, seed, exact engine/
 
 ## Isolated serialization measurement
 
-Run `node scripts/benchmark-batch-manifest.mjs`. The script reports manifest and JSONL result bytes and their construction/serialization time separately. It deliberately does not run a simulation, so those timings are metadata overhead and cannot be interpreted as engine performance. Workload size and repetition count can be set with `RIOSE_EXPERIMENT_RUNS` (1–10,000) and `RIOSE_EXPERIMENT_REPETITIONS` (1–100).
+Run `node scripts/experiments/benchmark-batch-manifest.mjs`. The script reports manifest and JSONL result bytes and their construction/serialization time separately. It deliberately does not run a simulation, so those timings are metadata overhead and cannot be interpreted as engine performance. Workload size and repetition count can be set with `RIOSE_EXPERIMENT_RUNS` (1–10,000) and `RIOSE_EXPERIMENT_REPETITIONS` (1–100).
