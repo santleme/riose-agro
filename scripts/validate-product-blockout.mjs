@@ -1,5 +1,5 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {PRODUCT_BLOCKOUT,PRODUCT_WORLD,PRODUCT_PREFABS,PRODUCT_PREFAB_RECIPES,SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS,validateProductBlockout} from '../src/client/product-spatial.js';
+import {PRODUCT_BLOCKOUT,PRODUCT_WORLD,PRODUCT_PREFABS,PRODUCT_PREFAB_RECIPES,SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS,validateProductBlockout} from '../src/client/product/spatial.js';
 
 const manifest=JSON.parse(await readFile(new URL('../public/assets/manifest.json',import.meta.url),'utf8'));
 const library=JSON.parse(await readFile(new URL('../assets/manifests/manifest.json',import.meta.url),'utf8'));

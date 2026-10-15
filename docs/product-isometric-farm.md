@@ -31,7 +31,7 @@
 
 ## Prefabs and composition
 
-`src/client/product-scene.js` defines the reusable recipes and their instances:
+`src/client/product/scene.js` defines the reusable recipes and their instances:
 
 - **Pasture block:** grass cells, one pasture zone, wire boundaries and a gate. Four blocks form two loose pairs for herd movement.
 - **Farmstead block:** farmhouse, workshop, fruit trees and shade at the edge of the yard.

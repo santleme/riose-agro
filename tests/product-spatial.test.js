@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, SIMULATOR_PATCH_BOUNDS, SIMULATOR_BARN_BOUNDS, worldToScreen, screenToWorld, displayToScenePoint, assetGeometry, animalWorldPosition, separateAnimalVisuals, validateProductBlockout, validateAnimalPlacement, validateAnimalMovement} from '../src/client/product-spatial.js';
-import {productFarmEntityAt} from '../src/client/product-scene.js';
+import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, SIMULATOR_PATCH_BOUNDS, SIMULATOR_BARN_BOUNDS, worldToScreen, screenToWorld, displayToScenePoint, assetGeometry, animalWorldPosition, separateAnimalVisuals, validateProductBlockout, validateAnimalPlacement, validateAnimalMovement} from '../src/client/product/spatial.js';
+import {productFarmEntityAt} from '../src/client/product/scene.js';
 import {FarmEngine} from '../src/client/engine.js';
 import {createServer} from '../src/server/server.js';
 
@@ -117,8 +117,8 @@ test('24 confined animals remain individually spaced inside the holding pen with
 test('composition editor is a development-only tool and is not linked from the Product page',async()=>{
   const html=await readFile(new URL('../tools/product-composer.html',import.meta.url),'utf8');
   const product=await readFile(new URL('../product.html',import.meta.url),'utf8');
-  const productCss=await readFile(new URL('../product.css',import.meta.url),'utf8');
-  const app=await readFile(new URL('../src/client/product-app.js',import.meta.url),'utf8');
+  const productCss=await readFile(new URL('../src/client/product/styles.css',import.meta.url),'utf8');
+  const app=await readFile(new URL('../src/client/product/app.js',import.meta.url),'utf8');
   const editor=await readFile(new URL('../tools/product-composer.js',import.meta.url),'utf8');
   assert.match(html,/Exportar JSON/);assert.match(html,/Editor de composição/);assert.doesNotMatch(product,/product-composer/);
   assert.match(productCss,/\.product-body #map\{[^}]*image-rendering:auto/);

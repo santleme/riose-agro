@@ -37,7 +37,7 @@ manifest. No new art was generated for this blockout.
 
 ## Canonical world geometry
 
-`src/client/product-spatial.js` is the single source of truth consumed by the
+`src/client/product/spatial.js` is the single source of truth consumed by the
 renderer, simulation mapping, development editor, and validator. The world has
 34 columns × 16 rows. A world unit is one logical **cell**; no metres-per-cell
 conversion is assumed. The isometric tile basis is 26 × 14 render pixels with

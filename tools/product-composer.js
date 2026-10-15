@@ -1,4 +1,4 @@
-import {PRODUCT_BLOCKOUT as baseline, PRODUCT_WORLD, worldToScreen, screenToWorld, validateProductBlockout} from '../src/client/product-spatial.js';
+import {PRODUCT_BLOCKOUT as baseline, PRODUCT_WORLD, worldToScreen, screenToWorld, validateProductBlockout} from '../src/client/product/spatial.js';
 const canvas=document.querySelector('#scene'),ctx=canvas.getContext('2d'),report=document.querySelector('#report'),selection=document.querySelector('#selection'),entityList=document.querySelector('#entities');
 let scene=structuredClone(baseline),showGrid=true,selected=null,drag=null,pointerWorld=null,manifest={assets:[]};
 const corners=(x,y,w,h)=>[worldToScreen(x,y),worldToScreen(x+w,y),worldToScreen(x+w,y+h),worldToScreen(x,y+h)];

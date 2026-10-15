@@ -2,11 +2,11 @@
 
 ## Current runtime
 
-The Product world is composed in `src/client/product-scene.js`. Terrain, pasture zones, paths, fences, gates, structures, water, and crop beds are drawn as Canvas geometry and remain separate selectable scene entities. The scene does not render those objects from sprite atlas frames.
+The Product world is composed in `src/client/product/scene.js`. Terrain, pasture zones, paths, fences, gates, structures, water, and crop beds are drawn as Canvas geometry and remain separate selectable scene entities. The scene does not render those objects from sprite atlas frames.
 
-`src/client/product-app.js` reads `/assets/manifest.json` to resolve the approved Nelore frame and loads the `livestock-approved` atlas. That is the only published atlas currently drawn in the Product scene. Other sprite IDs and atlases remain available in the asset library and validation metadata for later approved bindings; their presence in the manifest does not mean the Product scene renders them.
+`src/client/product/app.js` reads `/assets/manifest.json` to resolve the approved Nelore frame and loads the `livestock-approved` atlas. That is the only published atlas currently drawn in the Product scene. Other sprite IDs and atlases remain available in the asset library and validation metadata for later approved bindings; their presence in the manifest does not mean the Product scene renders them.
 
-The visual appearance and object sizes are therefore defined by the geometry in `product-scene.js` and the entity footprints in `product-spatial.js`, not by the source-image dimensions or display-size hints in the asset manifest. The animal sprite is drawn at its configured scene size from the approved atlas frame.
+The visual appearance and object sizes are therefore defined by the geometry in `scene.js` and the entity footprints in `spatial.js`, not by the source-image dimensions or display-size hints in the asset manifest. The animal sprite is drawn at its configured scene size from the approved atlas frame.
 
 ## Canvas sampling
 
