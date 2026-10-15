@@ -27,13 +27,11 @@ const frames = {
   'nelore-adult-low': {x: 0, y: 0, w: 384, h: 256, anchor: {x: .5, y: 1}, scale: .16, kind: 'livestock', lowResolution: true},
   'dairy-holstein-cow': {imageKey: 'dairy-holstein-cow', w: 1087, h: 771, anchor: {x: .5, y: 1}, scale: .045, kind: 'livestock'},
   'dairy-girolando-cow': {imageKey: 'dairy-girolando-cow', w: 1164, h: 831, anchor: {x: .5, y: 1}, scale: .042, kind: 'livestock'},
-  'dairy-heifer': {imageKey: 'dairy-heifer', w: 1070, h: 782, anchor: {x: .5, y: 1}, scale: .04, kind: 'livestock'},
   'dairy-heifer-calf': {imageKey: 'dairy-heifer-calf', w: 909, h: 750, anchor: {x: .5, y: 1}, scale: .032, kind: 'livestock'},
   'dairy-barn': {imageKey: 'dairy-barn', w: 843, h: 514, anchor: {x: .5, y: 1}, scale: .11, kind: 'infrastructure'},
   'dairy-milking-parlor': {imageKey: 'dairy-milking-parlor', w: 894, h: 559, anchor: {x: .5, y: 1}, scale: .09, kind: 'infrastructure'},
   'dairy-milk-chilling-tank': {imageKey: 'dairy-milk-chilling-tank', w: 580, h: 439, anchor: {x: .5, y: 1}, scale: .11, kind: 'infrastructure'},
   'dairy-waiting-pen': {imageKey: 'dairy-waiting-pen', w: 688, h: 424, anchor: {x: .5, y: 1}, scale: .1, kind: 'infrastructure'},
-  'dairy-activity-collar': {imageKey: 'dairy-activity-collar', w: 1120, h: 663, anchor: {x: .5, y: 1}, scale: .045, kind: 'infrastructure'},
   'water-trough': {x: 1537, y: 387, w: 462, h: 237, anchor: {x: .5, y: 1}, scale: .22, kind: 'infrastructure', atlasKey: 'handling'},
   'feed-trough': {x: 1106, y: 387, w: 423, h: 261, anchor: {x: .5, y: 1}, scale: .23, kind: 'infrastructure', atlasKey: 'handling'}
 };
@@ -152,7 +150,8 @@ function prefabFlipX(entry) { return Boolean(entry.prefab?.flipX); }
 
 function screenBounds(entry) {
   const meta = frameBox(entry.assetId), p = screenPoint(entry.x, entry.y);
-  const visualScale = entry.visualScale ?? 1, width = meta.w * meta.scale * visualScale * state.camera.zoom, height = meta.h * meta.scale * visualScale * state.camera.zoom;
+  const visualScale = entry.visualScale ?? 1, {width: baseWidth, height: baseHeight} = spriteDimensions(meta);
+  const width = baseWidth * visualScale * state.camera.zoom, height = baseHeight * visualScale * state.camera.zoom;
   const rotation = prefabRotation(entry), flip = prefabFlipX(entry) ? -1 : 1;
   const motionEnvelope = entry.animalId ? .55 * state.camera.zoom : 0;
   if (rotation === 0 && flip === 1) {
@@ -218,11 +217,22 @@ function refreshScene() {
   if (state.renderer === 'pixi' && state.pixi) syncPixiScene();
 }
 
-function frameBox(assetId) { return state.assetFrames[assetId] ?? frames[assetId] ?? frames['grass-light']; }
+function frameBox(assetId) {
+  const meta = state.assetFrames[assetId] ?? frames[assetId];
+  if (!meta) throw new TypeError(`No runtime frame for ${assetId}`);
+  return meta;
+}
+
+function spriteDimensions(meta) {
+  if (Array.isArray(meta.displaySize) && meta.displaySize.length === 2) return {width: meta.displaySize[0], height: meta.displaySize[1]};
+  const scale = meta.scale ?? 1;
+  return {width: meta.w * scale, height: meta.h * scale};
+}
 
 function drawCanvasEntry(ctx, entry, time) {
   const meta = frameBox(entry.assetId), atlas = meta.imageKey ? state.assetImages[meta.imageKey] : meta.atlasKey ? state.assetImages[meta.atlasKey] : meta.kind === 'livestock' ? (meta.lowResolution ? state.assetImages.neloreLow : state.assetImages.nelore) : state.assetImages.farm;
-  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), scale = meta.scale * (entry.visualScale ?? 1) * state.camera.zoom, width = meta.w * scale, height = meta.h * scale;
+  const p = screenPoint(entry.x, entry.y + (entry.animationOffset ?? 0)), visualScale = (entry.visualScale ?? 1) * state.camera.zoom;
+  const {width: baseWidth, height: baseHeight} = spriteDimensions(meta), width = baseWidth * visualScale, height = baseHeight * visualScale;
   const x = -width * meta.anchor.x, y = -height * meta.anchor.y, rotation = prefabRotation(entry);
   const screenY = p.y + y;
   if (rotation !== 0 || prefabFlipX(entry)) {
@@ -393,7 +403,7 @@ function syncPixiScene() {
       const badge = new Container(), background = new PixiGraphicsClass(), label = new PixiText({text: entry.count.toLocaleString('pt-BR'), style: {fontFamily: 'Arial', fontSize: 9, fontWeight: 'bold', fill: '#f7f4dc'}});
       label.anchor.set(.5); const badgeWidth = Math.max(18, label.width + 8);
       background.roundRect(-badgeWidth / 2, -7, badgeWidth, 14, 6).fill({color: 0x173e32, alpha: .94}); badge.addChild(background, label);
-      const meta = frameBox(entry.assetId), spriteHeight = meta.h * meta.scale;
+      const meta = frameBox(entry.assetId), {height: spriteHeight} = spriteDimensions(meta);
       badge.position.set(entry.x, entry.y - spriteHeight - 15 / state.camera.zoom); badge.scale.set(1 / state.camera.zoom); layers.overlays.addChild(badge);
     }
   }
@@ -402,7 +412,7 @@ function syncPixiScene() {
     for (const entry of selected) {
       const selected = entry;
       const meta = frameBox(selected.assetId), outline = new (awaitGraphics())();
-      const w = meta.w * meta.scale, h = meta.h * meta.scale;
+      const {width: w, height: h} = spriteDimensions(meta);
       outline.rect(selected.x - w * meta.anchor.x - 4, selected.y - h * meta.anchor.y - 4, w + 8, h + 8).stroke({color: 0xffeaa0, width: 2});
       layers.overlays.addChild(outline);
     }
@@ -413,7 +423,8 @@ let PixiGraphics;
 function awaitGraphics() { return PixiGraphics; }
 
 function setSprite(sprite, entry, terrain) {
-  const meta = frameBox(entry.assetId), scale = meta.scale * (entry.visualScale ?? 1); sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(scale * (prefabFlipX(entry) ? -1 : 1), scale);
+  const meta = frameBox(entry.assetId), {width, height} = spriteDimensions(meta), visualScale = entry.visualScale ?? 1;
+  sprite.anchor.set(meta.anchor.x, meta.anchor.y); sprite.scale.set(width / meta.w * visualScale * (prefabFlipX(entry) ? -1 : 1), height / meta.h * visualScale);
   sprite.position.set(entry.x, entry.y + (entry.animationOffset ?? 0)); sprite.rotation = prefabRotation(entry); sprite.zIndex = entry.depth; sprite.visible = true; sprite.renderable = true;
   if (!terrain) sprite.eventMode = 'none';
 }
@@ -779,10 +790,10 @@ async function initialize() {
   const runtimeAtlasEntries = Object.entries(runtimeManifest.atlases).map(([key, atlas]) => [key, atlas.image]);
   const loadedImages = await loadImageEntriesConcurrently(runtimeAtlasEntries, image);
   const runtimeFrames = runtimeManifest.assets.map(asset => [asset.id, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h,
-    anchor: asset.anchor, scale: asset.scaleHints?.default ?? .3, atlasKey: asset.frame.atlas, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
+    anchor: asset.anchor, displaySize: asset.displaySize, scale: asset.displaySize[0] / asset.frame.w, atlasKey: asset.frame.atlas, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
     reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.collision !== null}]);
   const composerFrames = renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h,
-    anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
+    anchor: asset.anchor, displaySize: asset.displaySize, scale: asset.displaySize[0] / asset.frame.w, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure',
     reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]);
   state.assetAtlasUrls = Object.fromEntries(runtimeAtlasEntries);
   state.assetImages = {...loadedImages, farm: loadedImages['synthetic-release'], nelore: loadedImages['synthetic-release'], handling: loadedImages['synthetic-release']};

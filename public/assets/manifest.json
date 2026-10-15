@@ -50,7 +50,7 @@
       ],
       "scaleHints": {
         "min": 0.2,
-        "default": 0.27,
+        "default": 0.5104166666666666,
         "max": 0.42
       },
       "collision": null,
@@ -126,7 +126,7 @@
       ],
       "scaleHints": {
         "min": 0.2,
-        "default": 0.27,
+        "default": 0.5104166666666666,
         "max": 0.42
       },
       "collision": null,
@@ -200,7 +200,7 @@
       ],
       "scaleHints": {
         "min": 0.2,
-        "default": 0.27,
+        "default": 0.5104166666666666,
         "max": 0.42
       },
       "collision": null,
@@ -274,7 +274,7 @@
       ],
       "scaleHints": {
         "min": 0.2,
-        "default": 0.27,
+        "default": 0.5104166666666666,
         "max": 0.42
       },
       "collision": null,
@@ -345,7 +345,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.26,
+        "default": 0.5,
         "max": 0.4
       },
       "collision": null,
@@ -422,7 +422,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.26,
+        "default": 0.5,
         "max": 0.4
       },
       "collision": null,
@@ -502,7 +502,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.16,
+        "default": 0.4791666666666667,
         "max": 0.28
       },
       "collision": {
@@ -577,7 +577,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.18,
+        "default": 0.4791666666666667,
         "max": 0.3
       },
       "collision": {
@@ -650,7 +650,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.23,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": {
@@ -722,7 +722,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.2,
+        "default": 0.5833333333333334,
         "max": 0.36
       },
       "collision": null,
@@ -794,7 +794,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.18,
-        "default": 0.24,
+        "default": 0.6770833333333334,
         "max": 0.5
       },
       "collision": {
@@ -869,7 +869,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.16,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.38
       },
       "collision": {
@@ -946,7 +946,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.16,
-        "default": 0.25,
+        "default": 0.8958333333333334,
         "max": 0.42
       },
       "collision": {
@@ -1021,7 +1021,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.13,
-        "default": 0.2,
+        "default": 0.8958333333333334,
         "max": 0.36
       },
       "collision": {
@@ -1095,7 +1095,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.12,
-        "default": 0.18,
+        "default": 0.8958333333333334,
         "max": 0.3
       },
       "collision": {
@@ -1170,7 +1170,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.18,
+        "default": 0.5625,
         "max": 0.28
       },
       "collision": {
@@ -1246,7 +1246,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.19,
+        "default": 0.6770833333333334,
         "max": 0.32
       },
       "collision": {
@@ -1322,7 +1322,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.3958333333333333,
         "max": 0.4
       },
       "collision": {
@@ -1401,7 +1401,7 @@
       ],
       "scaleHints": {
         "min": 0.05,
-        "default": 0.14,
+        "default": 0.3958333333333333,
         "max": 0.24
       },
       "collision": {
@@ -1479,7 +1479,7 @@
       ],
       "scaleHints": {
         "min": 0.05,
-        "default": 0.14,
+        "default": 0.3958333333333333,
         "max": 0.24
       },
       "collision": {
@@ -1554,7 +1554,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.04,
-        "default": 0.11,
+        "default": 0.3958333333333333,
         "max": 0.2
       },
       "collision": {
@@ -1628,7 +1628,7 @@
       ],
       "scaleHints": {
         "min": 0.07,
-        "default": 0.13,
+        "default": 0.8958333333333334,
         "max": 0.23
       },
       "collision": {
@@ -1705,7 +1705,7 @@
       ],
       "scaleHints": {
         "min": 0.07,
-        "default": 0.13,
+        "default": 0.8958333333333334,
         "max": 0.23
       },
       "collision": {
@@ -1781,7 +1781,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -1853,7 +1853,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -1925,7 +1925,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -1997,7 +1997,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -2069,7 +2069,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -2141,7 +2141,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -2213,7 +2213,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -2285,7 +2285,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.15,
-        "default": 0.25,
+        "default": 0.5833333333333334,
         "max": 0.42
       },
       "collision": null,
@@ -2358,7 +2358,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.1,
-        "default": 0.24,
+        "default": 0.3958333333333333,
         "max": 0.38
       },
       "collision": {
@@ -2433,7 +2433,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.3958333333333333,
         "max": 0.4
       },
       "collision": null,
@@ -2504,7 +2504,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.3958333333333333,
         "max": 0.4
       },
       "collision": null,
@@ -2575,7 +2575,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.3958333333333333,
         "max": 0.4
       },
       "collision": null,
@@ -2646,7 +2646,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.6770833333333334,
         "max": 0.4
       },
       "collision": null,
@@ -2718,7 +2718,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.6770833333333334,
         "max": 0.4
       },
       "collision": null,
@@ -2790,7 +2790,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.4791666666666667,
         "max": 0.4
       },
       "collision": null,
@@ -2868,7 +2868,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.4791666666666667,
         "max": 0.4
       },
       "collision": null,
@@ -2946,7 +2946,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.6770833333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3018,7 +3018,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.5625,
         "max": 0.4
       },
       "collision": null,
@@ -3090,7 +3090,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.6770833333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3162,7 +3162,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.6770833333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3234,7 +3234,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.5833333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3305,7 +3305,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3376,7 +3376,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3447,7 +3447,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3518,7 +3518,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3589,7 +3589,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.8958333333333334,
         "max": 0.4
       },
       "collision": null,
@@ -3660,7 +3660,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.40625,
         "max": 0.4
       },
       "collision": null,
@@ -3731,7 +3731,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.40625,
         "max": 0.4
       },
       "collision": null,
@@ -3802,7 +3802,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.40625,
         "max": 0.4
       },
       "collision": null,
@@ -3873,7 +3873,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.22,
+        "default": 0.40625,
         "max": 0.4
       },
       "collision": null,
@@ -3962,7 +3962,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.9791666666666666,
         "max": 0.3
       },
       "defaultLayer": "buildings",
@@ -4047,7 +4047,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.5625,
         "max": 0.3
       },
       "defaultLayer": "water",
@@ -4132,7 +4132,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.8541666666666666,
         "max": 0.3
       },
       "defaultLayer": "handling",
@@ -4217,7 +4217,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.9791666666666666,
         "max": 0.3
       },
       "defaultLayer": "buildings",
@@ -4303,7 +4303,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.3125,
         "max": 0.3
       },
       "defaultLayer": "animals",
@@ -4390,7 +4390,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.3125,
         "max": 0.3
       },
       "defaultLayer": "animals",
@@ -4475,7 +4475,7 @@
       "randomVariants": [],
       "scaleHints": {
         "min": 0.08,
-        "default": 0.14,
+        "default": 0.3958333333333333,
         "max": 0.3
       },
       "defaultLayer": "animals",

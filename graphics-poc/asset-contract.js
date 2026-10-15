@@ -8,8 +8,11 @@ const LEGACY_ASSET_IDS = {
   'fence-straight': 'fence-wire-wood-post-imagegen-v1',
   'fence-gate': 'fence-gate-wood-imagegen-v1',
 };
+const RETIRED_ASSET_REPLACEMENTS = {'dairy-heifer': 'dairy-holstein-cow'};
+const RETIRED_ASSET_IDS = new Set(['dairy-activity-collar']);
 
-function canonicalAssetId(assetId) { return LEGACY_ASSET_IDS[assetId] ?? assetId; }
+function canonicalAssetId(assetId) { return RETIRED_ASSET_REPLACEMENTS[assetId] ?? LEGACY_ASSET_IDS[assetId] ?? assetId; }
+function isRetiredAssetId(assetId) { return RETIRED_ASSET_IDS.has(assetId); }
 
 export function sceneAssetReference(assetId, rendererManifest, sourceManifest) {
   const rendererAsset = rendererManifest.assets.find(asset => asset.assetId === assetId);
@@ -38,17 +41,28 @@ export function sceneAssetReference(assetId, rendererManifest, sourceManifest) {
 }
 
 export function normalizeSceneAssetReferences(scene, rendererManifest, sourceManifest) {
+  scene.assets = scene.assets.filter(asset => !isRetiredAssetId(asset.assetId));
   for (const asset of scene.assets) asset.assetId = canonicalAssetId(asset.assetId);
+  scene.prefabs = scene.prefabs.filter(prefab => !isRetiredAssetId(prefab.assetId));
   for (const prefab of scene.prefabs) {
     prefab.assetId = canonicalAssetId(prefab.assetId);
-    if (prefab.placementRules?.adjacentTo) prefab.placementRules.adjacentTo = prefab.placementRules.adjacentTo.map(canonicalAssetId);
+    if (prefab.placementRules?.adjacentTo) {
+      prefab.placementRules.adjacentTo = prefab.placementRules.adjacentTo.filter(assetId => !isRetiredAssetId(assetId)).map(canonicalAssetId);
+      if (!prefab.placementRules.adjacentTo.length) delete prefab.placementRules.adjacentTo;
+    }
   }
+  scene.entities = scene.entities.filter(entity => !isRetiredAssetId(entity.asset?.assetId));
   for (const entity of scene.entities) if (entity.asset?.assetId) entity.asset.assetId = canonicalAssetId(entity.asset.assetId);
   for (const zone of scene.zones) {
-    if (zone.groundAssetId) zone.groundAssetId = canonicalAssetId(zone.groundAssetId);
-    for (const [edge, assetId] of Object.entries(zone.transitionAssetIds ?? {})) zone.transitionAssetIds[edge] = canonicalAssetId(assetId);
+    if (isRetiredAssetId(zone.groundAssetId)) delete zone.groundAssetId;
+    else if (zone.groundAssetId) zone.groundAssetId = canonicalAssetId(zone.groundAssetId);
+    for (const [edge, assetId] of Object.entries(zone.transitionAssetIds ?? {})) {
+      if (isRetiredAssetId(assetId)) delete zone.transitionAssetIds[edge];
+      else zone.transitionAssetIds[edge] = canonicalAssetId(assetId);
+    }
   }
-  for (const tile of scene.terrainTiles ?? []) tile.assetId = canonicalAssetId(tile.assetId);
+  scene.terrainTiles = (scene.terrainTiles ?? []).filter(tile => !isRetiredAssetId(tile.assetId));
+  for (const tile of scene.terrainTiles) tile.assetId = canonicalAssetId(tile.assetId);
   const assetIds = new Set(scene.assets.map(asset => asset.assetId));
   for (const prefab of scene.prefabs) assetIds.add(prefab.assetId);
   for (const entity of scene.entities) if (entity.asset?.assetId) assetIds.add(entity.asset.assetId);

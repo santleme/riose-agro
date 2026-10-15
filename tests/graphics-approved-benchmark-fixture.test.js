@@ -34,7 +34,8 @@ test('legacy image paths are not classified as runtime release inputs', () => {
   assert.equal(byId.get('nelore-adult')?.classification, 'APPROVED');
   assert.equal(byId.get('farm-starter-atlas')?.classification, 'UNRESOLVED');
   assert.equal(byId.get('handling-review-atlas-v1')?.classification, 'UNRESOLVED');
-  assert.equal(byId.get('dairy-heifer')?.classification, 'UNRESOLVED');
+  assert.equal(byId.has('dairy-heifer'), false, 'retired direct-image IDs are not exposed as release resources');
+  assert.equal(byId.has('dairy-activity-collar'), false, 'retired direct-image IDs are not exposed as release resources');
   assert.ok(resources.some(resource => resource.resourceId === 'synthetic-release' && resource.classification === 'APPROVED'));
 });
 

@@ -36,7 +36,7 @@
         1,
         1
       ],
-      "scale": 0.30917874396135264,
+      "scale": 0.8958333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.building-farmhouse-imagegen-v1.v1",
@@ -76,7 +76,7 @@
         1,
         1
       ],
-      "scale": 0.3144963144963145,
+      "scale": 0.8958333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.building-shed-imagegen-v1.v1",
@@ -116,7 +116,7 @@
         1,
         1
       ],
-      "scale": 0.32653061224489793,
+      "scale": 0.8958333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.building-workshop-imagegen-v1.v1",
@@ -156,7 +156,7 @@
         1,
         1
       ],
-      "scale": 0.24797843665768193,
+      "scale": 0.6770833333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.corral-wood-standard-imagegen-v1.v1",
@@ -197,7 +197,7 @@
         2,
         2
       ],
-      "scale": 0.26459143968871596,
+      "scale": 0.9791666666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-barn.v1",
@@ -238,7 +238,7 @@
         1,
         1
       ],
-      "scale": 0.05535499398315283,
+      "scale": 0.3125,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-girolando-cow.v1",
@@ -279,7 +279,7 @@
         1,
         1
       ],
-      "scale": 0.07733333333333334,
+      "scale": 0.3958333333333333,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-heifer-calf.v1",
@@ -320,7 +320,7 @@
         1,
         1
       ],
-      "scale": 0.05966277561608301,
+      "scale": 0.3125,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
@@ -361,7 +361,7 @@
         2,
         2
       ],
-      "scale": 0.1867881548974943,
+      "scale": 0.5625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-milk-chilling-tank.v1",
@@ -402,7 +402,7 @@
         2,
         2
       ],
-      "scale": 0.24329159212880144,
+      "scale": 0.9791666666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-milking-parlor.v1",
@@ -443,7 +443,7 @@
         2,
         2
       ],
-      "scale": 0.2358490566037736,
+      "scale": 0.8541666666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.dairy-waiting-pen.v1",
@@ -483,7 +483,7 @@
         1,
         1
       ],
-      "scale": 0.2929936305732484,
+      "scale": 0.6770833333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.feed-salt-roofed-imagegen-v1.v1",
@@ -523,7 +523,7 @@
         1,
         1
       ],
-      "scale": 0.3524904214559387,
+      "scale": 0.6770833333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.feed-trough-hay-imagegen-v1.v1",
@@ -563,7 +563,7 @@
         1,
         1
       ],
-      "scale": 0.19141914191419143,
+      "scale": 0.4791666666666667,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.fence-gate-wood-imagegen-v1.v1",
@@ -603,7 +603,7 @@
         1,
         1
       ],
-      "scale": 0.1939799331103679,
+      "scale": 0.4791666666666667,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.fence-wire-wood-post-imagegen-v1.v1",
@@ -643,7 +643,7 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.grass-light.v1",
@@ -683,7 +683,7 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.grass-mid.v1",
@@ -723,7 +723,7 @@
         1,
         1
       ],
-      "scale": 0.2636103151862464,
+      "scale": 0.6770833333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.handling-chute-cattle-imagegen-v1.v1",
@@ -763,7 +763,7 @@
         1,
         1
       ],
-      "scale": 0.07723035952063914,
+      "scale": 0.3958333333333333,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-calf-idle-imagegen-v1.v1",
@@ -803,7 +803,7 @@
         1,
         1
       ],
-      "scale": 0.06561085972850679,
+      "scale": 0.3958333333333333,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-cow-idle-imagegen-v1.v1",
@@ -843,7 +843,7 @@
         1,
         1
       ],
-      "scale": 0.07169344870210136,
+      "scale": 0.3958333333333333,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.livestock-nelore-heifer-idle-imagegen-v1.v1",
@@ -883,7 +883,7 @@
         2,
         1
       ],
-      "scale": 0.2421875,
+      "scale": 0.5,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.road-straight.v1",
@@ -923,7 +923,7 @@
         2,
         1
       ],
-      "scale": 0.2421875,
+      "scale": 0.5,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.road-turn.v1",
@@ -963,7 +963,7 @@
         1,
         1
       ],
-      "scale": 0.5,
+      "scale": 0.5833333333333334,
       "blocking": true,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.shade-tree.v1",
@@ -1003,7 +1003,7 @@
         1,
         1
       ],
-      "scale": 0.5,
+      "scale": 0.5833333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.shrub.v1",
@@ -1043,7 +1043,7 @@
         1,
         1
       ],
-      "scale": 0.2578125,
+      "scale": 0.5104166666666666,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.soil-dry.v1",
@@ -1083,7 +1083,7 @@
         1,
         1
       ],
-      "scale": 0.16962524654832348,
+      "scale": 0.40625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.technology-gateway-antenna-imagegen-v1.v1",
@@ -1123,7 +1123,7 @@
         1,
         1
       ],
-      "scale": 0.17131474103585656,
+      "scale": 0.40625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.technology-monitor-station-imagegen-v1.v1",
@@ -1163,7 +1163,7 @@
         1,
         1
       ],
-      "scale": 0.2193877551020408,
+      "scale": 0.40625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.technology-scale-electronic-full-imagegen-v1.v1",
@@ -1203,7 +1203,7 @@
         1,
         1
       ],
-      "scale": 0.17063492063492064,
+      "scale": 0.40625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.technology-traceability-system-imagegen-v1.v1",
@@ -1243,7 +1243,7 @@
         1,
         1
       ],
-      "scale": 0.2962962962962963,
+      "scale": 0.5833333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.vegetation-tree-shade-imagegen-v1.v1",
@@ -1283,7 +1283,7 @@
         1,
         1
       ],
-      "scale": 0.445993031358885,
+      "scale": 0.8958333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.vehicle-pickup-rural-imagegen-v1.v1",
@@ -1323,7 +1323,7 @@
         1,
         1
       ],
-      "scale": 0.4025157232704403,
+      "scale": 0.8958333333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.vehicle-tractor-imagegen-v1.v1",
@@ -1363,7 +1363,7 @@
         1,
         1
       ],
-      "scale": 0.2875,
+      "scale": 0.6770833333333334,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.water-pond-imagegen-v1.v1",
@@ -1403,7 +1403,7 @@
         1,
         1
       ],
-      "scale": 0.3459915611814346,
+      "scale": 0.5625,
       "blocking": false,
       "reviewStatus": "RELEASED",
       "sourceSemanticId": "riose.synthetic.runtime.water-trough-round-imagegen-v1.v1",

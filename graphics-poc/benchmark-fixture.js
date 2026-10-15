@@ -7,8 +7,6 @@ const LEGACY_DIRECT_IMAGE_IDS = Object.freeze([
   'farm-starter-atlas',
   'nelore-adult',
   'handling-review-atlas-v1',
-  'dairy-heifer',
-  'dairy-activity-collar',
 ]);
 
 function normalizeStatus(status) {

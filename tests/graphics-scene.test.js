@@ -24,6 +24,52 @@ test('shared Composer tools remain available in both production-system scenes', 
   assert.equal(toolAvailableInSystem('dairy', 'beef'), false);
 });
 
+test('saved dairy scenes migrate retired asset IDs before they can reach a renderer', () => {
+  const saved = structuredClone(dairyScene);
+  saved.assets.push({assetId: 'dairy-heifer', reviewStatus: 'REVIEW'});
+  saved.assets.push({assetId: 'dairy-activity-collar', reviewStatus: 'UNRESOLVED'});
+  const heiferPrefab = structuredClone(saved.prefabs[0]);
+  heiferPrefab.prefabId = 'old-heifer'; heiferPrefab.assetId = 'dairy-heifer';
+  saved.prefabs.push(heiferPrefab);
+  const collarPrefab = structuredClone(saved.prefabs[1]);
+  collarPrefab.prefabId = 'old-collar'; collarPrefab.assetId = 'dairy-activity-collar';
+  saved.prefabs.push(collarPrefab);
+  const heiferEntity = structuredClone(saved.entities.find(entity => entity.asset?.assetId));
+  heiferEntity.entityId = 'old-heifer-entity'; heiferEntity.asset.assetId = 'dairy-heifer';
+  saved.entities.push(heiferEntity);
+  const collarEntity = structuredClone(heiferEntity);
+  collarEntity.entityId = 'old-collar-entity'; collarEntity.asset.assetId = 'dairy-activity-collar';
+  saved.entities.push(collarEntity);
+  const collarTile = structuredClone(saved.terrainTiles[0]);
+  collarTile.tileId = 'retired-collar-tile'; collarTile.assetId = 'dairy-activity-collar';
+  saved.terrainTiles.push(collarTile);
+
+  normalizeSceneAssetReferences(saved, renderManifest, assetSourceManifest);
+
+  const allAssetIds = [
+    ...saved.assets.map(asset => asset.assetId),
+    ...saved.prefabs.map(prefab => prefab.assetId),
+    ...saved.entities.map(entity => entity.asset?.assetId),
+    ...saved.terrainTiles.map(tile => tile.assetId),
+  ];
+  assert.equal(allAssetIds.includes('dairy-heifer'), false);
+  assert.equal(allAssetIds.includes('dairy-activity-collar'), false);
+  assert.ok(allAssetIds.includes('dairy-holstein-cow'), 'saved heifer references move to the released Holstein visual');
+  assert.equal(saved.prefabs.some(prefab => prefab.prefabId === 'old-collar'), false);
+  assert.equal(saved.entities.some(entity => entity.entityId === 'old-collar-entity'), false);
+  assert.equal(saved.terrainTiles.some(tile => tile.tileId === 'retired-collar-tile'), false);
+  assert.equal(validate(saved), true, JSON.stringify(validate.errors));
+});
+
+test('dairy toolbar only exposes assets available in the renderer manifest', async () => {
+  const html = await readFile(new URL('../graphics-poc/index.html', import.meta.url), 'utf8');
+  const toolIds = [...html.matchAll(/data-tool="([^"]+)"/g)].map((match) => match[1]);
+  const released = new Set(renderManifest.assets.map(asset => asset.assetId));
+  assert.ok(toolIds.every(assetId => released.has(assetId)), 'every exposed placement tool has a release renderer entry');
+  assert.equal(toolIds.includes('dairy-heifer'), false);
+  assert.equal(toolIds.includes('dairy-activity-collar'), false);
+});
+
 test('screen-space LOD distance is measured from the viewport center, not camera translation', () => {
   assert.equal(distanceToViewportCenter(367.5, 189, 735, 378), 0);
   assert.equal(distanceToViewportCenter(0, 0, 735, 378), Math.hypot(367.5, 189));

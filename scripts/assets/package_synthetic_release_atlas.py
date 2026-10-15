@@ -49,7 +49,11 @@ def main():
     asset_sources = {"sourceRevision": {"commit": "actiii-release-synthetic-v1"}, "assetSources": []}
     for asset in assets:
         record = records[asset["id"]]
+        display_size = asset.get("displaySize")
+        if not isinstance(display_size, list) or len(display_size) != 2 or any(value <= 0 for value in display_size):
+            raise ValueError(f"{asset['id']} must declare a positive displaySize")
         asset.update({"file": atlas_record["image"], "frame": frames[asset["id"]], "reviewStatus": "RELEASED", "status": "RELEASED", "semanticId": record["id"]})
+        asset.setdefault("scaleHints", {})["default"] = display_size[0] / CELL[0]
         asset["provenance"] = {"sourceSemanticId": record["id"], "sourceFile": record["source"]["sourceFile"],
             "sourceManifest": "/assets/manifests/actiii-release-v1.json", "sourceSha256": record["source"]["sha256"],
             "sourceStatus": "RELEASED", "rights": copy.deepcopy(record["rights"]), "review": copy.deepcopy(record["review"])}
@@ -63,10 +67,14 @@ def main():
     renderer["unresolvedAssetIds"] = []
     for asset in renderer["assets"]:
         record = records[asset["assetId"]]
+        display_size = asset.get("displaySize")
+        if not isinstance(display_size, list) or len(display_size) != 2 or any(value <= 0 for value in display_size):
+            raise ValueError(f"{asset['assetId']} must declare a positive displaySize")
         asset.update({"sourceSemanticId": record["id"], "sourceFile": record["source"]["sourceFile"],
             "manifestSource": "/assets/manifests/actiii-release-v1.json", "reviewStatus": "RELEASED", "sourceStatus": "RELEASED",
             "atlasKey": "synthetic-release", "frame": frames[asset["assetId"]], "rights": copy.deepcopy(record["rights"]),
-            "sourceReview": copy.deepcopy(record["review"])})
+            "sourceReview": copy.deepcopy(record["review"]),
+            "scale": display_size[0] / CELL[0]})
     release["assets"] = [dict(record, sourceManifest="assets/manifests/actiii-release-v1.json") for record in release["assets"]]
     paths = [(RUNTIME, runtime), (RELEASE, release), (PUBLIC_RELEASE, release), (RENDERER, renderer), (ASSET_SOURCES, asset_sources)]
     for path, value in paths:
