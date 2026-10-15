@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('public SDSU supplement audit derives individual DMI without treating it as CPER validation', () => {
-  execFileSync('python3', ['scripts/audit_sdsu_individual_dmi.py'], {encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/audit_sdsu_individual_dmi.py'], {encoding: 'utf8'});
   const report = JSON.parse(readFileSync('docs/evidence/sdsu-individual-dmi-audit.json', 'utf8'));
   assert.equal(report.source.article_doi, '10.3389/fvets.2025.1625448');
   assert.equal(report.source.license, 'CC BY');

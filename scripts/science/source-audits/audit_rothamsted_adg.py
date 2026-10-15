@@ -16,7 +16,7 @@ from datetime import date
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/rothamsted"
 MANIFEST_PATH = DATA_DIR / "manifest.json"
 WEIGHTS_PATH = DATA_DIR / "Cattle_LWt_collated_2018-2025.csv"

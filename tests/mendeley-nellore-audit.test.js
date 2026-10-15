@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {auditDmi} from '../scripts/science/engine-audits/audit_engine_dmi_mendeley.js';
 
 test('Mendeley Nellore feedlot audit verifies the public workbook and preserves missing DMI', () => {
-  const raw = execFileSync('python3', ['scripts/audit_mendeley_nellore_feedlot.py'], {encoding: 'utf8'});
+  const raw = execFileSync('python3', ['scripts/science/source-audits/audit_mendeley_nellore_feedlot.py'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
 
   assert.equal(report.source.sha256Verified, true);

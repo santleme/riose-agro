@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv"
 OUT = ROOT / "docs/evidence/perea-rangeland-behavior-audit.json"
 SOURCE = "https://figshare.com/articles/dataset/Labeled_sensor_dataset_of_beef_cattle_behavior_grazing_desert_rangelands/28801181"

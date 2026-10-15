@@ -21,7 +21,7 @@
     "ScaleWeights.xlsx": "e4b828960143e007ab221b92ad69557f1eb63ec418c394540bd3c55613e42e79"
   },
   "derivation": {
-    "script": "scripts/audit_sdsu_individual_dmi.py",
+    "script": "scripts/science/source-audits/audit_sdsu_individual_dmi.py",
     "output": "individual-dmi-derived.csv",
     "formula": "DMI_kg_day = IntakeLb * (period_mean_DM_pct / 100) * 0.45359237",
     "periodMatching": "trim surrounding whitespace for key matching; preserve raw label in output",

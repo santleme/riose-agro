@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {createServer} from '../src/server/server.js';
 
 test('Perea public mature-cow behavior explorer preserves source rows and reports repeated timestamps', async t => {
-  execFileSync('python3', ['scripts/audit_perea_rangeland_behavior.py'], {encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/audit_perea_rangeland_behavior.py'], {encoding: 'utf8'});
   const report = JSON.parse(readFileSync(new URL('../docs/evidence/perea-rangeland-behavior-audit.json', import.meta.url), 'utf8'));
   const page = readFileSync(new URL('../rangeland-behavior.html', import.meta.url), 'utf8');
   const adultPage = readFileSync(new URL('../adult-data.html', import.meta.url), 'utf8');

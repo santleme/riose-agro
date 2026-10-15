@@ -17,7 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 RAW_DIR = ROOT / "data/raw/zenodo-4064802"
 README_PATH = RAW_DIR / "Readme.md"
 OUTPUT_PATH = ROOT / "data/precision-beef/alignment-audit.json"

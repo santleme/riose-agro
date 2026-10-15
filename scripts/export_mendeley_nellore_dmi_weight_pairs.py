@@ -5,9 +5,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts/science/source-audits"))
 from audit_mendeley_nellore_feedlot import (
     DATA_DIR,
     MANIFEST_PATH,

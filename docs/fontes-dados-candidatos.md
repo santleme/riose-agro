@@ -126,7 +126,7 @@ Este conjunto não corresponde à coorte adulta aprovada: o `DOB` e o início da
 
 ## Auditoria de conjunto aberto: Nelore em confinamento, Mendeley Data
 
-O registro Mendeley cctgpznjrc declara CC BY 4.0 e expõe anonimamente um XLSX de aproximadamente 1,8 MB. O manifesto local guarda DOI, artigo, versão, arquivo e SHA-256 do repositório; [`npm run audit:mendeley-nellore`](../scripts/audit_mendeley_nellore_feedlot.py) confirma o checksum antes de ler as cinco abas com a biblioteca XML padrão do Python. Nenhuma dependência de planilha é necessária.
+O registro Mendeley cctgpznjrc declara CC BY 4.0 e expõe anonimamente um XLSX de aproximadamente 1,8 MB. O manifesto local guarda DOI, artigo, versão, arquivo e SHA-256 do repositório; [`npm run audit:mendeley-nellore`](../scripts/science/source-audits/audit_mendeley_nellore_feedlot.py) confirma o checksum antes de ler as cinco abas com a biblioteca XML padrão do Python. Nenhuma dependência de planilha é necessária.
 
 O artigo descreve 47 novilhos Nelore em quatro piquetes coletivos de confinamento por 83 dias após adaptação, com acesso ad libitum a dieta total e água. O consumo individual de matéria seca foi registrado por GrowSafe, as pesagens foram feitas em seis momentos, e água/comportamento por Intergado. A publicação informa que DMI e ADG não diferiram significativamente entre grupos de sombra naquele estudo; o Agroville não recalcula nem reinterpreta esse teste. A unidade de exposição é o grupo/piquete, não cada linha diária: não trate milhares de registros repetidos como milhares de réplicas independentes para testar sombra. O relatório reproduzível de cobertura está em [`docs/evidence/mendeley-nellore-feedlot-audit.json`](evidence/mendeley-nellore-feedlot-audit.json).
 

@@ -7,7 +7,7 @@ import statistics
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/dryad-finishing-steers"
 CSV_PATH = DATA / "Database_09-11-2025.csv"
 MANIFEST_PATH = DATA / "manifest.json"

@@ -7,7 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data" / "usda-gund-ranch"
 REPORT = ROOT / "docs" / "evidence" / "usda-gund-ranch-public-data-screen.json"
 

@@ -16,7 +16,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/nanp-modeling"
 MANIFEST = DATA_DIR / "manifest.json"
 ARCHIVE = DATA_DIR / "animal-nutrition-metabolism-2026-10-12.zip"

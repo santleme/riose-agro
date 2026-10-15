@@ -10,7 +10,7 @@ from collections import Counter
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data" / "grazing-ingestive-behavior-rdgv"
 OUTPUT = ROOT / "docs" / "evidence" / "grazing-ingestive-behavior-audit.json"
 

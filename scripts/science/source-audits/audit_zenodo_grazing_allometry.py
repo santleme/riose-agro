@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data" / "zenodo-grazing-allometry"
 MANIFEST = DATA / "manifest.json"
 API_METADATA = DATA / "zenodo-record-api-metadata.json"

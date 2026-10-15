@@ -11,7 +11,7 @@ const DATA = resolve(ROOT, 'data/dryad-finishing-steers/Database_09-11-2025.csv'
 const REPORT = resolve(ROOT, 'docs/evidence/engine-dmi-dryad-finishing-check.json');
 
 export function auditDryadFinishingDmi() {
-  execFileSync('python3', ['scripts/audit_dryad_finishing_steers.py'], {cwd: ROOT, encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/audit_dryad_finishing_steers.py'], {cwd: ROOT, encoding: 'utf8'});
   const source = JSON.parse(readFileSync(resolve(ROOT, 'docs/evidence/dryad-finishing-steers-audit.json'), 'utf8'));
   const lines = readFileSync(DATA, 'utf8').replace(/^\uFEFF/, '').trimEnd().split(/\r?\n/);
   const headers = lines.shift().split(',');

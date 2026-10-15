@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync, writeFileSync} from 'node:fs';
 
 test('frozen engine ADG diagnostic uses the public Rothamsted cohort holdout without fitting', () => {
-  const sourceAudit = execFileSync('python3', ['scripts/audit_rothamsted_adg.py'], {encoding: 'utf8'});
+  const sourceAudit = execFileSync('python3', ['scripts/science/source-audits/audit_rothamsted_adg.py'], {encoding: 'utf8'});
   writeFileSync('docs/evidence/rothamsted-adg-audit.json', `${JSON.stringify(JSON.parse(sourceAudit), null, 2)}\n`);
   execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
   const path = 'docs/evidence/engine-adg-rothamsted-check.json';

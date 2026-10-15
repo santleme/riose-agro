@@ -15,7 +15,7 @@ from collections import Counter
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/dryad-grazing-yearlings"
 REPORT = ROOT / "docs/evidence/dryad-grazing-yearlings-audit.json"
 
