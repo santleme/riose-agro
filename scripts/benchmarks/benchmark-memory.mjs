@@ -112,39 +112,11 @@ async function observe(action, wasmBytes = () => null) {
   }
 }
 
-function makeWorkerView(engine, selectedAnimalId = 1) {
-  // Mirrors worker.js's current packed view projection. This measures its payload
-  // construction in Node; it does not claim to measure browser Worker transport.
-  const state = engine.state, animals = state.animals;
-  const ids = new Uint32Array(animals.length);
-  const values = new Float64Array(animals.length * 4);
-  const actions = new Uint8Array(animals.length);
-  const actionCodes = {grazing: 0, feeding: 1, drinking: 2, resting: 3};
-  for (let index = 0; index < animals.length; index++) {
-    const animal = animals[index], offset = index * 4;
-    ids[index] = animal.id;
-    const position = engine.viewState.get(animal.id);
-    if (!position || !Number.isFinite(position.x) || !Number.isFinite(position.y)) {
-      throw new Error(`Missing finite view position for animal ${animal.id}`);
-    }
-    values[offset] = position.x; values[offset + 1] = position.y;
-    values[offset + 2] = animal.weight; values[offset + 3] = animal.initialWeight;
-    actions[index] = actionCodes[animal.action] ?? 0;
-  }
-  const selected = animals.find(animal => animal.id === selectedAnimalId) ?? animals[0];
-  return {
-    type: 'view', hour: state.hour, pastures: state.pastures, cost: state.cost,
-    intake: state.intake, config: state.config, events: state.events.slice(0, 20),
-    animalIds: ids, animalValues: values, animalActions: actions,
-    selectedAnimalId: selected?.id ?? null, selectedHistory: engine.historyFor(selected),
-  };
-}
-
 async function measureHerd(count) {
   const wasm = await loadBenchmarkWasm();
   const wasmBytes = () => wasm.memoryBytes();
   const phases = {};
-  let engine, snapshot, encoded, storageEnvelope, view;
+  let engine, snapshot, encoded, storageEnvelope;
   try {
     const startup = await observe(() => {
       engine = new FarmEngine(seed, count);
@@ -153,7 +125,7 @@ async function measureHerd(count) {
     phases.startup = {...startup, payloadBytes: null, method: 'FarmEngine construction; post-GC retained delta from pre-construction baseline.'};
 
     const tick = await observe(() => engine.tick(tickHours, wasm, false), wasmBytes);
-    phases.engine = {...tick, payloadBytes: null, method: '24-hour FarmEngine tick with WASM metabolism; no snapshot or renderer.'};
+    phases.engine = {...tick, payloadBytes: null, method: '24-hour FarmEngine tick with WASM metabolism; no snapshot or browser presentation.'};
 
     const snap = await observe(() => { snapshot = engine.snapshot(); return snapshot; }, wasmBytes);
     const jsonUtf8Bytes = Buffer.byteLength(JSON.stringify(snapshot));
@@ -183,33 +155,17 @@ async function measureHerd(count) {
       method: 'Existing gzip-plus-base64 snapshot encoder plus a representative single-scenario localStorage JSON envelope; both outputs retained for post-GC memory sampling.',
     };
 
-    // End the serialization phase's object lifetimes before measuring the Worker view.
     snapshot = null;
     encoded = null;
     storageEnvelope = null;
-
-    const workerView = await observe(() => { view = makeWorkerView(engine); return view; }, wasmBytes);
-    phases.worker = {
-      ...workerView,
-      payloadBytes: {
-        transferableArrayBuffers: view.animalIds.byteLength + view.animalValues.byteLength + view.animalActions.byteLength,
-        animalIdsBytes: view.animalIds.byteLength,
-        animalValuesBytes: view.animalValues.byteLength,
-        animalActionsBytes: view.animalActions.byteLength,
-        metadataJsonUtf8Bytes: Buffer.byteLength(JSON.stringify({type: view.type, hour: view.hour, pastures: view.pastures, cost: view.cost, intake: view.intake, config: view.config, events: view.events, selectedAnimalId: view.selectedAnimalId, selectedHistory: view.selectedHistory})),
-      },
-      method: 'Node-side projection matching worker.js view fields; transferable buffer lengths are exact, browser structured-clone/transport cost is not measured.',
-    };
     return phases;
   } finally {
     cleanupMemoryBenchmarkResources({
       wasm,
-      views: [view?.animalIds, view?.animalValues, view?.animalActions],
     });
     engine = null;
     snapshot = null;
     encoded = null;
-    view = null;
   }
 }
 
@@ -251,7 +207,7 @@ for (const count of herds) {
   allResults.push({animals: count, scope: 'FarmEngine', runs});
 }
 
-const phaseNames = ['startup', 'engine', 'snapshot', 'serialization', 'worker'];
+const phaseNames = ['startup', 'engine', 'snapshot', 'serialization'];
 const measurements = Object.fromEntries(phaseNames.map(phase => [phase, []]));
 function addAggregatedMeasurements(phase, population, scope, rows, implementation = undefined) {
   const specs = [
@@ -335,10 +291,9 @@ console.log(JSON.stringify(benchmarkReport({
   phases: Object.fromEntries(phaseNames.map(phase => [phase, {status: measurements[phase].length ? 'measured' : 'not-measured', measurements: measurements[phase]}])),
   timingBoundaries:[
     {phase:'startup',timed:['FarmEngine construction.'],notTimed:['RSS monitor Worker startup and shutdown; browser startup.']},
-    {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['RSS monitor Worker startup and shutdown; full snapshot and renderer.']},
+    {phase:'engine',timed:['24-hour FarmEngine tick without snapshot and separate preallocated numeric-kernel calls.'],notTimed:['RSS monitor Worker startup and shutdown; full snapshot and browser presentation.']},
     {phase:'snapshot',timed:['Full FarmEngine snapshot clone.'],notTimed:['RSS monitor Worker startup and shutdown; JSON serialization and compression.']},
     {phase:'serialization',timed:['Existing gzip-plus-base64 encoder and a representative single-scenario localStorage JSON envelope serialization.'],notTimed:['RSS monitor Worker startup and shutdown; actual browser localStorage writes and quota measurement.']},
-    {phase:'worker',timed:['Node-side construction of the packed Worker view projection.'],notTimed:['RSS monitor Worker startup and shutdown; actual browser Worker transport, renderer and GPU work.']},
   ],
   results: {samples: allResults, memoryFields: ['jsHeapUsedBytes', 'externalBytes', 'arrayBuffersBytes', 'rssProcessBytes', 'rssProcessHighWaterBytes', 'wasmLinearMemoryBytes', 'gpuMemoryBytes']},
   limitations: [
@@ -346,9 +301,8 @@ console.log(JSON.stringify(benchmarkReport({
     `process.resourceUsage().maxRSS remains a cumulative process high-water mark. A separate Worker samples whole-process RSS every ${rssPollIntervalMs}ms during each phase and records per-run peak and increase over that phase's pre-operation baseline. It includes the monitor thread and all live process memory and can miss short transients between polls; synchronous transient JS-heap peaks and allocation counts are unavailable here.`,
     'Post-GC retained deltas are measured after forced GC when available; without --expose-gc they are observational deltas, not retained-memory estimates.',
     'WASM linear memory is reported separately from JS ArrayBuffer and heap fields; GPU memory is null because this Node harness has no GPU memory instrumentation.',
-    'Worker view reports the current packed projection and transferable payload sizes in Node; it does not measure browser Worker transport, renderer, or GPU allocations.',
     'This Node.js harness creates no Browser Page; browser page creation and cleanup are unavailable and are not measured.',
-    '100000 animals measures only preallocated numeric-kernel input/output and JS/WASM kernel behavior; FarmEngine, snapshots, compressed storage and Worker view are unsupported at that size.',
+    '100000 animals measures only preallocated numeric-kernel input/output and JS/WASM kernel behavior; FarmEngine and snapshots are unsupported at that size.',
     'Compression payload bytes are JSON UTF-8, gzip bytes, base64 UTF-8 and a representative scenario-envelope JSON string; actual localStorage writes, quota and browser-specific behavior are not measured.',
   ],
 }), null, 2));

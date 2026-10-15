@@ -71,7 +71,7 @@ the request schema before spawning the CLI. Native errors or invalid native
 responses fall back to the JavaScript comparison in the Worker. The saved run
 keeps its existing comparison manifest and result shape and adds an `execution`
 record with the selected backend, build, native run ID, input digest, and
-fallback state. The ordinary simulation ticks, Canvas/diorama rendering, and
+fallback state. The ordinary simulation ticks and
 Scene Composer continue to run in their existing browser paths.
 
 After building the release CLI, run
@@ -87,8 +87,8 @@ ordered as `type`, `version`, `requestVersion`, `scenario`, optional `seed`, `st
 `runId`, `inputSha256`, `nativeResult`. The `nativeResult` value is the typed
 `NativeRunResult` from #84 and includes the native engine metadata. For a
 housing comparison, `seed` is the snapshot's `initialSeed`; the complete
-snapshot, including current model and locomotion RNG states, remains inside the
-input digest and native request.
+snapshot, including the model RNG state, remains inside the
+input digest and native request. Legacy locomotion metadata in archived snapshots is accepted and discarded.
 
 `inputSha256` hashes the exact input bytes, including whitespace and key order.
 `runId` hashes the UTF-8 identity record

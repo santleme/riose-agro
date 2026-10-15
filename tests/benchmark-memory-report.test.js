@@ -32,9 +32,10 @@ test('checked-in memory capture keeps FarmEngine peak, retained heap and payload
   for (const herd of memorySamples.filter(row => row.scope === 'FarmEngine')) {
     assert.equal(herd.runs.length, committedCapture.configuration.repetitions);
     for (const run of herd.runs) {
-      for (const phase of ['startup', 'engine', 'snapshot', 'serialization', 'worker']) {
+      for (const phase of ['startup', 'engine', 'snapshot', 'serialization']) {
         assertPeakProxy(run, phase, herd.animals);
       }
+      assert.ok(run.worker, 'the archived report retains its historical Worker projection measurement');
       assert.ok(Number.isInteger(run.serialization.payloadBytes.jsonUtf8Bytes));
       assert.ok(Number.isInteger(run.serialization.payloadBytes.gzipBytes));
       assert.ok(Number.isInteger(run.worker.payloadBytes.transferableArrayBuffers));
@@ -73,9 +74,10 @@ test('memory harness emits schema-valid repeated phase peak evidence for a small
   const herd = report.results.samples[0];
   assert.equal(herd.runs.length, 2);
   for (const run of herd.runs) {
-    for (const phase of ['startup', 'engine', 'snapshot', 'serialization', 'worker']) {
+    for (const phase of ['startup', 'engine', 'snapshot', 'serialization']) {
       assertPeakProxy(run, phase, 100);
     }
+    assert.equal(Object.hasOwn(run, 'worker'), false, 'current memory runs exclude the retired visual Worker projection');
   }
   const engineMetric = report.phases.engine.measurements.find(item => item.metric === 'processRssObservedPeakIncreaseDuringPhasePerAnimal');
   assert.deepEqual(engineMetric.observations, herd.runs.map(run => run.engine.memory.bestAvailablePeakProxy.processRssObservedPeakIncreaseBytes / 100));

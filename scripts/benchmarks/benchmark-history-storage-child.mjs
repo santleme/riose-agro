@@ -1,6 +1,5 @@
 import {createHash} from 'node:crypto';
 import {FarmEngine} from '../../src/client/engine.js';
-import {separateLegacySnapshot} from '../../src/client/animal-view-state.js';
 import {ColumnHistoryEngine} from '../experiments/column-history-engine.mjs';
 
 const [variant, countText, hoursText, repetitionsText] = process.argv.slice(2);
@@ -22,8 +21,7 @@ function oneRun() {
   const tickStarted = performance.now(); engine.tick(hours, undefined, false); const tickMs = performance.now() - tickStarted;
   collect(); const retained = sampleMemory();
   const snapshotStarted = performance.now(), rawSnapshot = engine.snapshot(), snapshotMs = performance.now() - snapshotStarted;
-  // Both engines expose the legacy snapshot shape; compare domain state only.
-  const snapshot = separateLegacySnapshot(rawSnapshot).state;
+  const snapshot = rawSnapshot;
   const digest = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
   const historyEntries = snapshot.animals.reduce((sum, animal) => sum + animal.history.length, 0);
   collect(); const materialized = sampleMemory();

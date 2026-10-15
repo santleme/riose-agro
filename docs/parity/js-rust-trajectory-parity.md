@@ -8,11 +8,11 @@ A trajectory is the ordered sequence of authoritative simulation snapshots and m
 
 The harness compares all 24 baseline hourly checkpoints and all 720 hourly checkpoints in each housing arm. It also runs the `housing-comparison` CLI request and compares all 31 daily comparison rows, including day 0. This hourly cadence avoids hiding a transient mismatch between day boundaries. The CLI does not expose the configured initial state as a baseline result; initial inputs are the versioned JavaScript golden/preset state, and the native housing request consumes the exact official snapshot. Initial full-state snapshots are therefore recorded on the JS side but are not counted as independent native output checkpoints.
 
-The simulation state is authoritative. Renderer, animation, and visual-position caches are not read by the harness. The engine's state coordinates and RNG-driven targets remain in the snapshots because they are part of `FarmEngine` state and use the locomotion RNG stream.
+The simulation state is authoritative. Renderer, animation, and visual-position caches are not read by the harness. Older golden snapshots include coordinates and a locomotion RNG seed; the parity projection now ignores these legacy visual fields while preserving the original golden files.
 
 ## Compared data and policy
 
-At every hourly checkpoint the harness compares the complete serialized state and metrics: hour, stable animal IDs and array order, names, weights, energy, thirst, actions, patch, coordinates, activity histories, pasture stocks, intake totals, cost, config, ordered events, model RNG state, initial seed, locomotion RNG state, and all metric fields. Housing daily rows and the comparison summary are compared structurally as well.
+At every hourly checkpoint the harness compares the complete serialized state and metrics: hour, stable animal IDs and array order, names, weights, energy, thirst, actions, patch, activity histories, pasture stocks, intake totals, cost, config, ordered events, model RNG state, initial seed, and all metric fields. Legacy visual coordinates and their RNG metadata are excluded from parity. Housing daily rows and the comparison summary are compared structurally as well.
 
 Object key order is ignored. Object field sets, JSON types, array lengths and array order must match. Animals, events, and histories are never sorted before comparison. Numbers compare by exact JavaScript numeric value: JSON `0` and `0.0` are the same value; `0` and `0.0000000001` differ. No rounding, epsilon, or tolerance is used.
 

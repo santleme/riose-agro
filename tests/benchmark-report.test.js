@@ -203,8 +203,8 @@ test('shared schema and adapter enforce separate FarmEngine and numeric-kernel c
   }
 });
 
-test('benchmark report enforces the separate FarmEngine, renderer, and numeric-kernel population limits', () => {
-  for (const scope of ['FarmEngine', 'FarmEngine and Worker', 'renderer', 'FarmEngine and renderer', 'farmengine', 'RenderER']) {
+test('benchmark report enforces FarmEngine and numeric-kernel population limits', () => {
+  for (const scope of ['FarmEngine', 'FarmEngine and Worker', 'farmengine']) {
     const report = sampleReport();
     report.workload.populations[0] = {animals: 10_001, scope};
     assert.equal(validate(report), false, `${scope} must remain within the 10000-animal ceiling`);
@@ -227,7 +227,7 @@ test('benchmark report enforces the separate FarmEngine, renderer, and numeric-k
     limits: {farmEngineMaxAnimals: 6_000},
     timingBoundaries: [{phase: 'engine', timed: ['Engine tick.'], notTimed: []}],
     results: {},
-  }), /exceeds its FarmEngine\/renderer limit of 6000/);
+  }), /exceeds its FarmEngine limit of 6000/);
 });
 
 test('benchmark adapter requires a timing boundary for every measured phase', () => {

@@ -134,12 +134,9 @@ export function benchmarkReport({
     if (Number.isInteger(population.animals)) {
       const scope = population.scope.toLowerCase();
       const isNumericKernel = scope === 'numeric-kernel-only';
-      const engineOrRendererLimit = Math.min(
-        ...(scope.includes('farmengine') ? [limits.farmEngineMaxAnimals ?? 10_000] : []),
-        ...(scope.includes('renderer') ? [limits.rendererMaxAnimals ?? 10_000] : []),
-      );
-      if (engineOrRendererLimit !== Infinity && population.animals > engineOrRendererLimit) {
-        throw new TypeError(`Benchmark population ${index} exceeds its FarmEngine/renderer limit of ${engineOrRendererLimit} animals.`);
+      const farmEngineLimit = scope.includes('farmengine') ? (limits.farmEngineMaxAnimals ?? 10_000) : Infinity;
+      if (population.animals > farmEngineLimit) {
+        throw new TypeError(`Benchmark population ${index} exceeds its FarmEngine limit of ${farmEngineLimit} animals.`);
       }
       if (isNumericKernel) {
         const numericLimit = limits.numericKernelMaxAnimalsMeasured ?? 100_000;
@@ -168,7 +165,6 @@ export function benchmarkReport({
       cpu,
       gpuMemoryBytes: null,
       ...hardware,
-      // Software-rendered/headless contexts do not expose memory allocated by the GPU.
       gpuMemoryBytes: hardware.gpuMemoryBytes ?? null,
     },
     workload: {
@@ -183,7 +179,6 @@ export function benchmarkReport({
     },
     limits: {
       farmEngineMaxAnimals: 10_000,
-      rendererMaxAnimals: 10_000,
       numericKernelMaxAnimalsMeasured: 100_000,
       ...limits,
     },

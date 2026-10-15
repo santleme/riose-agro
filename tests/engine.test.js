@@ -5,10 +5,10 @@ import {DEFAULT_CONFIG, FarmEngine, compare, createComparisonManifest, replayCom
 
 test('fixed-seed feeding cases preserve pre-extraction engine outputs', () => {
   const cases = [
-    {name: 'pasture-normal', seed: 417, count: 4, config: {}, hours: 48, hash: '31fcf1cc89eb8ae3f24d74f349fcc7cb6219e8682b06d3b4135b5405ae041ffe'},
-    {name: 'balanced-pasture-rain', seed: 12, count: 5, config: {housing: 'pasture', diet: 'balanced', supplement: 1.5, weather: 'rain'}, hours: 72, hash: '217f33889555ecfe090d001249c60dafbfcd0021d5700abdd597af9e52c795ad'},
-    {name: 'concentrate-barn-hot-boundary-supplement', seed: 81, count: 3, config: {housing: 'barn', diet: 'concentrate', supplement: 4, weather: 'hot'}, hours: 72, hash: '49ea107eaa6a03e58a59aaf8a8edf35b3b03c5c9eeb0115ae4b23a344f040a2f'},
-    {name: 'zero-pasture-stock', seed: 93, count: 4, config: {diet: 'balanced', supplement: 0}, hours: 24, emptyPasture: true, hash: '4e0bc549741d2bffd9601aa1cc4f8e0f3613317a0aef918ef9a0902c7e193ccc'}
+    {name: 'pasture-normal', seed: 417, count: 4, config: {}, hours: 48, hash: '956d1fa4dbf1f6ed2dac161584180a1b4bd780d82f08a8d05391ef3a8b28de63'},
+    {name: 'balanced-pasture-rain', seed: 12, count: 5, config: {housing: 'pasture', diet: 'balanced', supplement: 1.5, weather: 'rain'}, hours: 72, hash: 'bb1cddba8b9e2969317c3ed68367c512406003f3035f784a3862ab07f8e05f03'},
+    {name: 'concentrate-barn-hot-boundary-supplement', seed: 81, count: 3, config: {housing: 'barn', diet: 'concentrate', supplement: 4, weather: 'hot'}, hours: 72, hash: '61d007c2c8747e68398d2a727ea7c860cb90fabd4ee99633aedd27a6fb11c7d0'},
+    {name: 'zero-pasture-stock', seed: 93, count: 4, config: {diet: 'balanced', supplement: 0}, hours: 24, emptyPasture: true, hash: 'b7546e853bf54489bf8c97c6241622766cb3ed34e46d0707619903bfe2739a38'}
   ];
 
   for (const scenario of cases) {
@@ -45,33 +45,31 @@ test('tick can skip its deep snapshot copy when the caller only needs current st
   assert.deepEqual(noSnapshot.snapshot(), returnedSnapshot);
 });
 
-test('housing changes consume locomotion randomness without advancing the model seed', () => {
-  const changed = new FarmEngine(417, 8);
-  const unchanged = new FarmEngine(417, 8);
-  const modelSeed = changed.state.seed;
-  const locomotionSeed = changed.viewState.locomotionSeed;
-
-  changed.configure({housing: 'barn'});
-  changed.tick(3);
-
-  assert.equal(changed.state.seed, modelSeed);
-  assert.notEqual(changed.viewState.locomotionSeed, locomotionSeed);
-  assert.equal(changed.random(), unchanged.random());
+test('visual movement no longer changes scientific RNG or snapshot state', () => {
+  const engine = new FarmEngine(417, 8);
+  const modelSeed = engine.state.seed;
+  engine.configure({housing: 'barn'});
+  engine.tick(3);
+  assert.equal(engine.state.seed, modelSeed);
+  const snapshot = engine.snapshot();
+  assert.equal(Object.hasOwn(snapshot, 'locomotionSeed'), false);
+  assert.equal(Object.hasOwn(snapshot.animals[0], 'x'), false);
+  assert.equal(Object.hasOwn(snapshot.animals[0], 'targetX'), false);
 });
 
-test('legacy snapshots get a deterministic locomotion stream without being mutated', () => {
+test('legacy visual fields are accepted, discarded, and do not mutate the input', () => {
   const legacySnapshot = new FarmEngine(81, 3).snapshot();
-  delete legacySnapshot.locomotionSeed;
+  legacySnapshot.locomotionSeed = 123;
+  Object.assign(legacySnapshot.animals[0], {x: 12, y: 18, targetX: 13, targetY: 19});
   const original = structuredClone(legacySnapshot);
-  const first = FarmEngine.from(legacySnapshot);
-  const second = FarmEngine.from(legacySnapshot);
-
+  const restored = FarmEngine.from(legacySnapshot);
   assert.deepEqual(legacySnapshot, original);
-  assert.ok(Number.isInteger(first.viewState.locomotionSeed));
-  assert.equal(first.viewState.locomotionSeed, second.viewState.locomotionSeed);
-  first.tick(24);
-  second.tick(24);
-  assert.deepEqual(first.snapshot(), second.snapshot());
+  const snapshot = restored.snapshot();
+  assert.equal(Object.hasOwn(snapshot, 'locomotionSeed'), false);
+  assert.equal(Object.hasOwn(snapshot.animals[0], 'x'), false);
+  assert.equal(snapshot.animals[0].weight, legacySnapshot.animals[0].weight);
+  restored.tick(24);
+  assert.equal(Object.hasOwn(restored.snapshot().animals[0], 'targetX'), false);
 });
 
 test('comparison keeps the initial snapshot and changes housing only', () => {

@@ -12,6 +12,13 @@ const baselineSource=execFileSync('git',['show',`${baselineCommit}:engine.js`],{
 const {FarmEngine:BaselineFarmEngine}=await import(`data:text/javascript;base64,${Buffer.from(baselineSource).toString('base64')}`);
 const wasmKernel=await loadWasmMetabolism(new URL('http://local.test/wasm/riose_core.wasm'),async()=>
   new Response(wasmBytes,{headers:{'content-type':'application/wasm'}}));
+function scientificOnly(value){
+  if(Array.isArray(value))return value.map(scientificOnly);
+  if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value)
+    .filter(([key])=>!['locomotionSeed','locomotionRngState','x','y','targetX','targetY'].includes(key))
+    .map(([key,item])=>[key,scientificOnly(item)]));
+  return value;
+}
 
 test('WASM metabolism batch matches the legacy JavaScript formula across clamps and states',()=>{
   const input=Float64Array.from([
@@ -267,14 +274,14 @@ test('WASM-backed ticks and comparison replay match the original JavaScript engi
   const original=new BaselineFarmEngine(917,40),js=new FarmEngine(917,40),wasm=new FarmEngine(917,40);
   for(const engine of [original,js,wasm])engine.configure({housing:'barn',weather:'hot',diet:'balanced',supplement:1.5});
   original.tick(48);js.tick(48);wasm.tick(48,wasmKernel);
-  assert.deepEqual(js.snapshot(),original.snapshot());
-  assert.deepEqual(wasm.snapshot(),js.snapshot());
+  assert.deepEqual(scientificOnly(js.snapshot()),scientificOnly(original.snapshot()));
+  assert.deepEqual(scientificOnly(wasm.snapshot()),scientificOnly(js.snapshot()));
   assert.deepEqual(compare(js.snapshot(),3),compare(original.snapshot(),3));
   assert.deepEqual(compare(wasm.snapshot(),3,wasmKernel),compare(original.snapshot(),3));
   wasmKernel.dispose();
 });
 
-test('WASM batch accepts a 100000 animal numeric workload independent of renderer limits',()=>{
+test('WASM batch accepts a 100000 animal numeric workload independent of FarmEngine limits',()=>{
   const input=new Float64Array(100_000*4);
   for(let index=0;index<100_000;index++){
     const offset=index*4;input[offset]=360;input[offset+1]=75;input[offset+2]=.4;input[offset+3]=0;
@@ -341,7 +348,8 @@ test('Worker runs the JavaScript default and falls back for unavailable or inval
       {type:'tick',hours:48},
       {type:'snapshot'},
     ])await harness.onmessage({data});
-    return {snapshot:harness.messages.at(-1),views:harness.messages.filter(message=>message.type==='view'),transfers:harness.transfers};
+    const state=harness.messages.filter(message=>message.type==='state').at(-1);
+    return {snapshot:{state:state.state,engineImplementation:state.engineImplementation},messages:harness.messages,transfers:harness.transfers};
   };
   t.after(()=>{globalThis.fetch=originalFetch;globalThis.self=originalSelf;WebAssembly.instantiateStreaming=originalInstantiate;});
   const fetchWasm=async()=>new Response(wasmBytes,{headers:{'content-type':'application/wasm'}});
@@ -358,12 +366,8 @@ test('Worker runs the JavaScript default and falls back for unavailable or inval
   assert.deepEqual(wasm.snapshot.state,javascript.snapshot.state);
   assert.deepEqual(unavailableWasm.snapshot.state,javascript.snapshot.state);
   for(const failed of [compilationFailure,invalidExports,invalidAbi])assert.deepEqual(failed.snapshot.state,javascript.snapshot.state);
-  const withoutImplementation=views=>views.map(({engineImplementation,...view})=>view);
-  assert.deepEqual(withoutImplementation(wasm.views),withoutImplementation(javascript.views));
-  assert.deepEqual(withoutImplementation(unavailableWasm.views),withoutImplementation(javascript.views));
-  assert.equal(javascript.views.at(-1).animalValues.length,40*4);
-  assert.equal(javascript.views.at(-1).animalActions.length,40);
-  assert.deepEqual(Array.from(javascript.views.at(-1).animalIds),Array.from({length:40},(_,index)=>index+1));
-  assert.equal(javascript.transfers.at(-2).length,3,'entity IDs and packed view buffers are transferred instead of copied');
-  assert.equal(javascript.views.at(-1).selectedHistory.length,javascript.snapshot.state.animals[0].history.length);
+  assert.equal(javascript.messages.every(message=>message.type!=='view'),true,'Worker exposes scientific state without a graphics projection');
+  assert.equal(javascript.transfers.every(transfer=>transfer.length===0),true,'scientific snapshots require no graphics buffer transfers');
+  assert.equal(javascript.snapshot.state.animals.length,40);
+  assert.equal(Object.hasOwn(javascript.snapshot.state.animals[0],'x'),false);
 });

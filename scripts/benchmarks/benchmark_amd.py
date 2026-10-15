@@ -453,7 +453,6 @@ def run_benchmark(
         "configuration": {**legacy_report["configuration"], "warmupRuns": warmup_runs, "repetitions": repetitions},
         "limits": {
             "farmEngineMaxAnimals": None,
-            "rendererMaxAnimals": None,
             "numericKernelMaxAnimalsMeasured": None,
         },
         "phases": {

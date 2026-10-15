@@ -28,7 +28,7 @@ function sanitizedSnapshot(source){
   const animals=source.animals.map(animal=>({
     id:animal.id,weight:animal.weight,initialWeight:animal.initialWeight,
     energy:animal.energy,thirst:animal.thirst,action:animal.action,patch:animal.patch,
-    x:animal.x,y:animal.y,targetX:animal.targetX,targetY:animal.targetY,history:[]
+    history:[]
   }));
   const intake={
     pastureKgDM:source.intake.pastureKgDM,
@@ -45,7 +45,7 @@ function sanitizedSnapshot(source){
   return {
     hour:source.hour,animals,pastures:[...source.pastures],intake,
     config,cost:source.cost,events:[],seed:source.seed,
-    initialSeed:source.initialSeed,locomotionSeed:source.locomotionSeed
+    initialSeed:source.initialSeed
   };
 }
 

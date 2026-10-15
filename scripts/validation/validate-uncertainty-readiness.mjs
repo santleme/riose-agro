@@ -48,10 +48,10 @@ for(const ref of inventory.references??[]){
 }
 
 const engine=await readFile(path.join(root,'src/client/engine.js'),'utf8');
-const app=await readFile(path.join(root,'src/client/app.js'),'utf8');
+const app=await readFile(path.join(root,'src/client/product-app.js'),'utf8');
 const policy=await readFile(path.join(root,'docs/politica-incerteza.md'),'utf8');
 requireCondition(/validated\s*:\s*false/.test(engine),'engine source no longer explicitly marks comparison output unvalidated');
-requireCondition(app.includes("'demonstrativo_nao_validado','nao_disponivel_sem_calibracao'"),'comparison CSV no longer exports non-calibrated status');
+requireCondition(app.includes('Status: demonstrativo, não validado como previsão ou recomendação'),'experiment interface no longer states the model validation limit');
 requireCondition(policy.includes('Sem calibração suficiente'),'uncertainty policy no longer states the current non-calibrated label');
 
 requireCondition(inventory.evaluationGate?.mustFreezeBeforeHoldout?.length>=4,'holdout freeze requirements are missing');

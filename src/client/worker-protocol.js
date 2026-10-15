@@ -4,9 +4,8 @@ export const WORKER_PROTOCOL_VERSION = 1;
 
 const commandFields = {
   reset: ['seed', 'count'],
-  load: ['snapshot', 'selectedAnimalId'],
+  load: ['snapshot'],
   configure: ['patch'],
-  select: ['animalId'],
   tick: ['hours'],
   compare: ['snapshot', 'days'],
   compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
@@ -16,10 +15,8 @@ const commandFields = {
   replayLotConfigured: ['manifest'],
   snapshot: []
 };
-const responseTypes = new Set(['state', 'view', 'comparison', 'error']);
-const actionCodes = {grazing: 0, feeding: 1, drinking: 2, resting: 3};
-const actions = new Set(Object.keys(actionCodes));
-const valueFields = ['x', 'y', 'weight', 'initialWeight'];
+const responseTypes = new Set(['state', 'comparison', 'error']);
+const actions = new Set(['grazing', 'feeding', 'drinking', 'resting']);
 
 export class WorkerProtocolError extends Error {
   constructor(code, message, command) {
@@ -53,13 +50,9 @@ function validateCommandPayload(message) {
       try {validateState(message.snapshot);} catch (error) {
         fail('INVALID_COMMAND_PAYLOAD', `load.snapshot is invalid: ${error.message}`, command);
       }
-      if (message.selectedAnimalId != null) requireInteger(message.selectedAnimalId, 'load.selectedAnimalId', 1, 0xffffffff, command);
       break;
     case 'configure':
       if (!isRecord(message.patch)) fail('INVALID_COMMAND_PAYLOAD', 'configure.patch must be an object.', command);
-      break;
-    case 'select':
-      requireInteger(message.animalId, 'select.animalId', 1, 0xffffffff, command);
       break;
     case 'tick':
       if (message.hours != null) requireInteger(message.hours, 'tick.hours', 1, 8760, command);
@@ -112,23 +105,6 @@ export function decodeWorkerCommand(raw) {
   return {command, legacy};
 }
 
-export function createViewLayout(animalCount) {
-  return {
-    version: 1,
-    animalCount,
-    animalIds: {elementType: 'Uint32Array', count: animalCount, stride: 1, byteLength: animalCount * Uint32Array.BYTES_PER_ELEMENT},
-    animalValues: {
-      elementType: 'Float64Array',
-      count: animalCount * valueFields.length,
-      stride: valueFields.length,
-      byteLength: animalCount * valueFields.length * Float64Array.BYTES_PER_ELEMENT,
-      fields: [...valueFields],
-      units: ['map-unit', 'map-unit', 'kg', 'kg']
-    },
-    animalActions: {elementType: 'Uint8Array', count: animalCount, stride: 1, byteLength: animalCount * Uint8Array.BYTES_PER_ELEMENT, codes: {...actionCodes}}
-  };
-}
-
 export function createWorkerResponse(type, fields, engineImplementation) {
   return {protocolVersion: WORKER_PROTOCOL_VERSION, type, ...fields, engineImplementation};
 }
@@ -145,61 +121,6 @@ export function createWorkerError(error, command, engineImplementation) {
     message,
     ...(engineImplementation ? {engineImplementation} : {})
   };
-}
-
-function validateViewLayout(message) {
-  const ids = message.animalIds;
-  const values = message.animalValues;
-  const actions = message.animalActions;
-  if (!(ids instanceof Uint32Array)) fail('INVALID_RESPONSE', 'view.animalIds must be a Uint32Array.');
-  const count = ids.length;
-  if (count < 1 || count > 10000) fail('INVALID_RESPONSE', 'view.animalIds length must be between 1 and 10000.');
-  if (ids.byteOffset !== 0 || ids.byteLength !== count * Uint32Array.BYTES_PER_ELEMENT || ids.buffer.byteLength !== ids.byteLength) {
-    fail('INVALID_RESPONSE', 'view.animalIds must use an exact, densely packed buffer.');
-  }
-  if (!(values instanceof Float64Array) || values.length !== count * valueFields.length) {
-    fail('INVALID_RESPONSE', 'view.animalValues must be a Float64Array with length animalIds.length × 4.');
-  }
-  if (values.byteOffset !== 0 || values.byteLength !== values.length * Float64Array.BYTES_PER_ELEMENT || values.buffer.byteLength !== values.byteLength) {
-    fail('INVALID_RESPONSE', 'view.animalValues must use an exact, densely packed buffer.');
-  }
-  if (!(actions instanceof Uint8Array) || actions.length !== count) {
-    fail('INVALID_RESPONSE', 'view.animalActions must be a Uint8Array with length animalIds.length.');
-  }
-  if (actions.byteOffset !== 0 || actions.byteLength !== actions.length * Uint8Array.BYTES_PER_ELEMENT || actions.buffer.byteLength !== actions.byteLength) {
-    fail('INVALID_RESPONSE', 'view.animalActions must use an exact, densely packed buffer.');
-  }
-
-  const expected = createViewLayout(count);
-  const layout = message.viewLayout;
-  if (!isRecord(layout) || layout.version !== expected.version || layout.animalCount !== count) {
-    fail('INVALID_RESPONSE', 'view.viewLayout must declare layout version 1 and the animal count.');
-  }
-  for (const field of ['animalIds', 'animalValues', 'animalActions']) {
-    if (!sameMetadata(layout[field], expected[field])) {
-      fail('INVALID_RESPONSE', `view.viewLayout.${field} does not match the protocol v1 layout.`);
-    }
-  }
-
-  const seen = new Set();
-  for (const id of ids) {
-    if (id === 0 || seen.has(id)) fail('INVALID_RESPONSE', 'view.animalIds must contain unique non-zero IDs.');
-    seen.add(id);
-  }
-  for (const value of values) if (!Number.isFinite(value)) fail('INVALID_RESPONSE', 'view.animalValues must contain only finite numbers.');
-  for (const action of actions) if (action > 3) fail('INVALID_RESPONSE', 'view.animalActions contains an unknown action code.');
-  if (!Number.isInteger(message.hour) || !Array.isArray(message.pastures) || message.pastures.length !== 4 || message.pastures.some(value => !Number.isFinite(value))) {
-    fail('INVALID_RESPONSE', 'view.hour and view.pastures must contain valid simulation values.');
-  }
-  if (!Number.isFinite(message.cost) || !isValidConfig(message.config) || !Array.isArray(message.events) || !Array.isArray(message.selectedHistory)) {
-    fail('INVALID_RESPONSE', 'view is missing valid state fields.');
-  }
-  validateEvents(message.events, 'view.events');
-  validateHistory(message.selectedHistory, 'view.selectedHistory');
-  if (message.selectedAnimalId != null && !seen.has(message.selectedAnimalId)) {
-    fail('INVALID_RESPONSE', 'view.selectedAnimalId must identify an animal in view.animalIds.');
-  }
-  return count;
 }
 
 export function normalizeWorkerResponse(raw) {
@@ -235,10 +156,6 @@ export function normalizeWorkerResponse(raw) {
     }
     response.message = response.error.message;
   }
-  if (raw.type === 'view') {
-    if (legacy) response.viewLayout = createViewLayout(raw.animalIds?.length);
-    validateViewLayout(response);
-  }
   if (raw.type !== 'error' && typeof raw.engineImplementation !== 'string') {
     fail('INVALID_RESPONSE', `${raw.type}.engineImplementation must identify the active engine.`);
   }
@@ -264,22 +181,12 @@ function validateState(state) {
     }
     seen.add(animal.id);
     if (typeof animal.name !== 'string' || !actions.has(animal.action) || !Number.isInteger(animal.patch) || animal.patch < 0 || animal.patch > 3
-      || ![animal.x, animal.y, animal.weight, animal.initialWeight, animal.energy, animal.thirst].every(Number.isFinite)) {
-      fail('INVALID_RESPONSE', 'state.state.animals must contain finite positions and weights.');
+      || ![animal.weight, animal.initialWeight, animal.energy, animal.thirst].every(Number.isFinite)) {
+      fail('INVALID_RESPONSE', 'state.state.animals must contain finite scientific values.');
     }
     if (animal.history !== undefined) validateHistory(animal.history, 'state.state.animals.history');
   }
   validateEvents(state.events, 'state.state.events');
-}
-
-function sameMetadata(actual, expected) {
-  if (!isRecord(actual) || Object.keys(actual).length !== Object.keys(expected).length) return false;
-  return Object.keys(expected).every(key => {
-    const wanted = expected[key], found = actual[key];
-    if (isRecord(wanted)) return sameMetadata(found, wanted);
-    if (Array.isArray(wanted)) return Array.isArray(found) && wanted.length === found.length && wanted.every((value, index) => value === found[index]);
-    return found === wanted;
-  });
 }
 
 function isValidConfig(config) {

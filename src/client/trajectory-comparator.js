@@ -1,4 +1,5 @@
 const RNG_FIELDS = new Set(['seed', 'initialSeed', 'locomotionSeed']);
+const LEGACY_VISUAL_FIELDS = new Set(['locomotionSeed', 'x', 'y', 'targetX', 'targetY']);
 
 function pointerPart(value) {
   return String(value).replaceAll('~', '~0').replaceAll('/', '~1');
@@ -26,7 +27,7 @@ export function classifyTrajectoryDivergence(pointer, jsValue, rustValue) {
 }
 
 /** Compare JSON values exactly, ignoring object key order and preserving array order. */
-export function compareExactJson(jsValue, rustValue) {
+export function compareExactJson(jsValue, rustValue, {ignoreLegacyVisualFields = false} = {}) {
   let comparedFieldCount = 0;
 
   function firstMismatch(js, rust, pointer = '') {
@@ -56,8 +57,11 @@ export function compareExactJson(jsValue, rustValue) {
       }
       return null;
     }
-    const jsKeys = Object.keys(js).sort();
-    const rustKeys = Object.keys(rust).sort();
+    const keys = object => Object.keys(object)
+      .filter(key => !ignoreLegacyVisualFields || !LEGACY_VISUAL_FIELDS.has(key))
+      .sort();
+    const jsKeys = keys(js);
+    const rustKeys = keys(rust);
     const extraJs = jsKeys.find(key => !Object.hasOwn(rust, key));
     const extraRust = rustKeys.find(key => !Object.hasOwn(js, key));
     if (extraJs !== undefined || extraRust !== undefined) {
@@ -80,7 +84,7 @@ export function compareExactJson(jsValue, rustValue) {
 }
 
 export function compareTrajectoryCheckpoint({scenario, seed, checkpoint, previousMatchingCheckpoint, jsValue, rustValue}) {
-  const {comparedFieldCount, mismatch} = compareExactJson(jsValue, rustValue);
+  const {comparedFieldCount, mismatch} = compareExactJson(jsValue, rustValue, {ignoreLegacyVisualFields: true});
   if (!mismatch) return {parity: 'PASS', comparedFieldCount, firstDivergence: null};
   return {
     parity: 'FAIL',

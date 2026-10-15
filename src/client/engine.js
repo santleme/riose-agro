@@ -1,5 +1,4 @@
 import {METABOLISM_GAIN_FACTOR,METABOLISM_MAINTENANCE_KG_DM,updateMetabolismJS} from './metabolism-wasm.js';
-import {AnimalViewState} from './animal-view-state.js';
 
 
 
@@ -18,22 +17,15 @@ export const DEFAULT_CONFIG        = {diet:'pasture',housing:'pasture',weather:D
 export const FARM_ENGINE_VERSION='agroville-engine/1';
 const names=['Aurora','Bento','Cacau','Dália','Estrela','Figo','Gaia','Hugo','Íris','Joca','Kiara','Luna','Milo','Nina','Oliva','Pingo','Quinoa','Rubi','Sol','Teca','Uva','Vento','Wally','Zara'];
 const clamp=(v       ,min       ,max       )=>Math.max(min,Math.min(max,v));
-const patchBounds = [{x:35,y:45,w:135,h:100},{x:200,y:45,w:135,h:100},{x:35,y:180,w:135,h:100},{x:200,y:180,w:135,h:100}];
-const RNG_MULTIPLIER=1664525;
-const RNG_INCREMENT=1013904223;
-const LOCOMOTION_SEED_SALT=0x9e3779b9;
-function deriveLocomotionSeed(seed){return (Math.imul((seed>>>0)^LOCOMOTION_SEED_SALT,RNG_MULTIPLIER)+RNG_INCREMENT)>>>0;}
-function advanceRandom(state,key){state[key]=(Math.imul(RNG_MULTIPLIER,state[key])+RNG_INCREMENT)>>>0;return state[key]/4294967296;}
+function advanceRandom(state,key){state[key]=(Math.imul(1664525,state[key])+1013904223)>>>0;return state[key]/4294967296;}
 export class FarmEngine {
   state         ;
   constructor(seed=2026,count=24){
     if(!Number.isInteger(count)||count<1||count>10000)throw new Error('Animal count must be 1–10000');
     this.state={hour:6,animals:[],pastures:Array(4).fill(ASSUMPTIONS.initialPastureKgDM),intake:{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0},config:{...DEFAULT_CONFIG},cost:0,events:[{hour:6,text:'Fazenda iniciada. Os animais estão no pasto.'}],seed:seed>>>0,initialSeed:seed>>>0};
-    this.viewState=new AnimalViewState(deriveLocomotionSeed(seed));
-    for(let i=0;i<count;i++){const weight=330+this.random()*70;const patch=i%4;const b=patchBounds[patch];const x=b.x+10+this.randomLocomotion()*(b.w-20),y=b.y+10+this.randomLocomotion()*(b.h-20);const animal={id:i+1,name:names[i%names.length]+(i>=names.length?' '+(i+1):''),weight,initialWeight:weight,energy:75,thirst:20,action:'grazing',patch,history:[]};this.viewState.set(animal.id,{x,y,targetX:x,targetY:y});this.state.animals.push(animal);this.recordActivity(animal,'pasture_housing',20,false);}
+    for(let i=0;i<count;i++){const weight=330+this.random()*70;const patch=i%4;const animal={id:i+1,name:names[i%names.length]+(i>=names.length?' '+(i+1):''),weight,initialWeight:weight,energy:75,thirst:20,action:'grazing',patch,history:[]};this.state.animals.push(animal);this.recordActivity(animal,'pasture_housing',20,false);}
   }
   random(){return advanceRandom(this.state,'seed');}
-  randomLocomotion(){return this.viewState.random();}
   log(text       ,animalId        ){this.state.events.unshift({hour:this.state.hour,text,...(animalId===undefined?{}:{animalId})});this.state.events.length=Math.min(this.state.events.length,100);}
   recordActivity(animal,reason,observedThirst=animal.thirst,announce=true){
     const record={hour:this.state.hour,action:animal.action,reason,observed:{hour:this.state.hour%24,thirst:observedThirst,housing:this.state.config.housing}};
@@ -55,12 +47,11 @@ export class FarmEngine {
     const c={...previous,...patch};
     if(!['pasture','balanced','concentrate'].includes(c.diet)||!['pasture','barn'].includes(c.housing)||!isWeather(c.weather)||!Number.isFinite(c.supplement)||c.supplement<0||c.supplement>4)throw new Error('Invalid configuration');
     this.state.config=c;
-    if(c.housing!==previous.housing){for(const a of this.state.animals){this.place(a);}this.log(c.housing==='barn'?'Rebanho transferido para o confinamento.':'Rebanho voltou ao pasto.');}
+    if(c.housing!==previous.housing)this.log(c.housing==='barn'?'Rebanho transferido para o confinamento.':'Rebanho voltou ao pasto.');
     if(c.diet!==previous.diet)this.log('Dieta alterada: '+({pasture:'volumoso / pasto',balanced:'balanceada',concentrate:'concentrado'}[c.diet])+'.');
     if(c.supplement!==previous.supplement)this.log('Suplementação: '+c.supplement+' kg de MS/animal/dia.');
     if(c.weather!==previous.weather)this.log('Clima alterado: '+getWeatherRules(c.weather).label+'.');
   }
-  place(a       ){const b=this.state.config.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch];const x=b.x+10+this.randomLocomotion()*(b.w-20),y=b.y+10+this.randomLocomotion()*(b.h-20);this.viewState.set(a.id,{x,y,targetX:x,targetY:y});}
   tick(hours=1,metabolismKernel=updateMetabolismJS,includeSnapshot=true,feedingModel=calculateFeeding){
     if(!Number.isInteger(hours)||hours<1||hours>8760)throw new Error('Tick hours must be 1–8760');
     const useBatchKernel=metabolismKernel!==updateMetabolismJS;
@@ -98,9 +89,6 @@ export class FarmEngine {
           a.energy=clamp(a.energy+(a.action==='resting'?5:energyIntake*4-1.5),0,100);
         }
         if(a.action!==previous)this.recordActivity(a,reason,observedThirst);
-        const b=c.housing==='barn'?{x:392,y:186,w:132,h:98}:patchBounds[a.patch],view=this.viewState.get(a.id);
-        view.targetX=b.x+10+this.randomLocomotion()*(b.w-20);view.targetY=b.y+10+this.randomLocomotion()*(b.h-20);
-        view.x=clamp(view.x+(view.targetX-view.x)*0.15,b.x+8,b.x+b.w-8);view.y=clamp(view.y+(view.targetY-view.y)*0.15,b.y+8,b.y+b.h-8);
       }
       if(useBatchKernel){
         const metabolismResults=metabolismKernel(metabolismInput,s.animals.length,metabolismOutput);
@@ -115,7 +103,7 @@ export class FarmEngine {
     return includeSnapshot?this.snapshot():undefined;
   }
   snapshot(){
-    const state=this.state,snapshot={hour:state.hour,animals:this.viewState.toSnapshotAnimals(state.animals),pastures:structuredClone(state.pastures),intake:structuredClone(state.intake),config:structuredClone(state.config),cost:state.cost,events:structuredClone(state.events),seed:state.seed,initialSeed:state.initialSeed,locomotionSeed:this.viewState.locomotionSeed};
+    const state=this.state,snapshot={hour:state.hour,animals:structuredClone(state.animals),pastures:structuredClone(state.pastures),intake:structuredClone(state.intake),config:structuredClone(state.config),cost:state.cost,events:structuredClone(state.events),seed:state.seed,initialSeed:state.initialSeed};
     for(const animal of snapshot.animals){
       const next=animal.historyNext??0;
       if(animal.history?.length===40&&next)animal.history=animal.history.slice(next).concat(animal.history.slice(0,next));
@@ -124,7 +112,7 @@ export class FarmEngine {
     return snapshot;
   }
   metrics()         {return metrics(this.state);}
-  static from(snapshot         ){const engine=new FarmEngine(1,1),legacy=structuredClone(snapshot),animals=legacy.animals;const savedLocomotionSeed=legacy.locomotionSeed;delete legacy.locomotionSeed;engine.state={...legacy,animals:animals.map(animal=>{const {x,y,targetX,targetY,...domain}=animal;return domain;})};if(!Number.isInteger(engine.state.initialSeed))engine.state.initialSeed=engine.state.seed>>>0;else engine.state.initialSeed>>>=0;engine.viewState=AnimalViewState.fromSnapshot({...snapshot,locomotionSeed:Number.isInteger(savedLocomotionSeed)?savedLocomotionSeed:deriveLocomotionSeed(engine.state.seed)},engine.state.animals);return engine;}
+  static from(snapshot         ){const engine=new FarmEngine(1,1),legacy=structuredClone(snapshot);delete legacy.locomotionSeed;engine.state={...legacy,animals:legacy.animals.map(animal=>{const {x,y,targetX,targetY,...domain}=animal;return domain;})};if(!Number.isInteger(engine.state.initialSeed))engine.state.initialSeed=engine.state.seed>>>0;else engine.state.initialSeed>>>=0;return engine;}
 }
 export function metrics(s         )        {const n=s.animals.length,intake=s.intake??{pastureKgDM:0,barnBaseKgDM:0,supplementKgDM:0,dietExtraKgDM:0};return {weight:s.animals.reduce((v,a)=>v+a.weight,0)/n,gain:s.animals.reduce((v,a)=>v+a.weight-a.initialWeight,0)/n,cost:s.cost,pasture:s.pastures.reduce((v,p)=>v+p,0),pastureByPaddock:[...s.pastures],intake:{...intake,totalKgDM:intake.pastureKgDM+intake.barnBaseKgDM+intake.supplementKgDM+intake.dietExtraKgDM},stress:getEnvironmentalStress(s.config.weather,s.config.housing)};}
 export function compare(snapshot         ,days=30,metabolismKernel=updateMetabolismJS){

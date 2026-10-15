@@ -474,14 +474,14 @@ def main() -> None:
                                "accelerator": hardware},
                   "workload": {"seed": "deterministic-animal-state-index-v1",
                                "populations": [{"animals": count, "scope": "numeric-kernel-only",
-                                                **({"limit": "isolated numeric kernel only; not FarmEngine or renderer"} if count == 100_000 else {})}
+                                                **({"limit": "isolated numeric kernel only; not FarmEngine or full simulation"} if count == 100_000 else {})}
                                                for count in SIZES],
                                "inputLayout": ["weightKg", "energyPercent", "intakeKgDMPerDay", "restingFlag"],
                                "outputLayout": ["weightKg", "energyPercent"],
                                "inputSha256": hashlib.sha256(cattle_input(100_000).tobytes()).hexdigest()},
                   "configuration": {"warmupRuns": WARMUPS, "repetitions": REPETITIONS, "dtype": "float64",
                                     "correctnessTolerance": {"relative": REL_TOLERANCE, "absolute": ABS_TOLERANCE}},
-                  "limits": {"farmEngineMaxAnimals": 10_000, "rendererMaxAnimals": 10_000,
+                  "limits": {"farmEngineMaxAnimals": 10_000,
                              "numericKernelMaxAnimalsMeasured": 100_000},
                   "phases": {"engine": {"status": "measured", "measurements": measurements},
                              "snapshot": {"status": "not-measured", "measurements": []},
@@ -510,8 +510,8 @@ def main() -> None:
                               "gpuExecutionClaim": True,
                               "interpretation": "Use warmEndToEndSpeedup and gpuSteadyStateWithTransfers for accelerator decisions; kernelOnlySpeedup excludes transfers, allocation, host input setup, synchronization and device-buffer frees."},
                   "limitations": ["Hardware tested: one NVIDIA GeForce GTX 1060 6GB; this is not AMD/ROCm evidence and supports no cross-vendor claim.",
-                                  "The workload is the native metabolism numeric kernel used by FarmEngine, not a full farm simulation or renderer.",
-                                  "The 100,000-animal case exceeds current FarmEngine and renderer limits and is isolated kernel research only.",
+                                  "The workload is the native metabolism numeric kernel used by FarmEngine, not a full farm simulation or interface.",
+                                  "The 100,000-animal case exceeds current FarmEngine limits and is isolated kernel research only.",
                                   "CUDA kernel is an isolated PTX implementation of the existing Rust formula; it is not integrated into production and adds no product dependency/default change.",
                                   "CUDA event timing measures the queued kernel; host synchronization wall time includes waiting for queued work and should not be added to event time.",
                                   "Host-side cattle input creation is the deterministic benchmark harness, not FarmEngine packing; it is included in CPU total and GPU total to compare equivalent starting data."]}

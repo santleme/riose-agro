@@ -716,10 +716,6 @@ fn validate_snapshot_unknown_fields(value: &Value, path: &str) -> Result<(), Cli
                     "thirst",
                     "action",
                     "patch",
-                    "x",
-                    "y",
-                    "targetX",
-                    "targetY",
                 ],
                 &animal_path,
             )?;

@@ -35,7 +35,7 @@ O mecanismo de sensibilidade determinística entregue na [#21](https://github.co
 - A trajetória de peso é `peso inicial + GMD informado × dias`; ela é uma hipótese do cenário, **não** uma previsão independente do BR-CORTE.
 - A forragem pedida é o resíduo de balanço de MS `CMS total − suplemento`. Essa diferença não é outra equação validada de CMS de forragem.
 - A retirada por piquete nunca excede o estoque. Qualquer déficit é reportado; não se ajusta o GMD nem se finge que o CMS previsto foi ingerido.
-- O mapa isométrico existente e os painéis mostram o estado final da execução selecionada. Reiniciar retorna ao motor demonstrativo anterior.
+- O workspace quantitativo apresenta os resultados retornados pelo contrato do modelo. A interface não promove o status de evidência nem altera a execução selecionada.
 
 Pastagem não cresce nem se recupera neste protótipo. Área, biomassa utilizável, seletividade/qualidade da forragem, consumo e demanda de água, resposta à falta d'água, energia, proteína e conversão alimentar também não estão modelados. Água é configurável e exibida, mas não altera CMS ou ganho. Parâmetros de estoque de pasto são hipóteses de cenário, sem referência a observação de fazenda.
 

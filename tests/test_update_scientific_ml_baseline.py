@@ -50,6 +50,14 @@ class UpdateScientificMlBaselineTest(unittest.TestCase):
             shutil.copyfile(ROOT / "src/client" / filename, self.engine_directory / filename)
         self.baseline = json.loads(self.baseline_path.read_text(encoding="utf-8"))
         self.report = json.loads(self.report_path.read_text(encoding="utf-8"))
+        current_engine_sha256 = engine_source_sha256(self.root)
+        self.report["transferFromCper"]["engineSourceFiles"] = list(ENGINE_SOURCE_FILES)
+        self.report["transferFromCper"]["engineSha256"] = current_engine_sha256
+        self.report["transferFromCper"]["cperEngineSha256"] = current_engine_sha256
+        cper_report = json.loads(cper_path.read_text(encoding="utf-8"))
+        cper_report["engine"]["sourceFiles"] = list(ENGINE_SOURCE_FILES)
+        cper_report["engine"]["sha256"] = current_engine_sha256
+        cper_path.write_text(json.dumps(cper_report, indent=2) + "\n", encoding="utf-8")
         self.report["source"]["integrityAuditSha256"] = hashlib.sha256(
             source_audit_path.read_bytes()
         ).hexdigest()

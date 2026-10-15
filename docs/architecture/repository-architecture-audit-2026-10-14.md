@@ -4,6 +4,10 @@
 **Revisão observada:** `main` em `27c5d29`, merge do PR #135
 **Escopo:** estrutura rastreada, manifests, caminhos de execução, imports locais, contratos, documentação arquitetural e duplicação exata de imagens. Auditoria estática; nenhum teste ou benchmark foi executado.
 
+## Estado atual após remoção da camada visual
+
+Este documento é um retrato histórico de `main@27c5d29`, anterior à mudança de direção. O Product renderer, Graphics PoC, Scenario Editor, sprites, atlas, schemas visuais e ferramentas de composição descritos abaixo foram removidos; a interface ativa é `product.html`, focada em experimentos quantitativos. Use [current-system-audit.md](current-system-audit.md) para a arquitetura atual.
+
 ## Resumo
 
 O repositório já possui divisões úteis por intenção — runtime, dados, pesquisa, ativos visuais e contratos —, mas cresceu como um monorepositório de várias frentes. A sensação de “coisas espalhadas” vem principalmente de quatro causas:
@@ -76,7 +80,7 @@ O projeto também combina JavaScript/HTML/CSS, Python, Rust, JSON Schemas e dado
 
 Há um pipeline de fonte/candidato/aprovado em `assets/`, ativos servidos em `public/assets/`, cópias de trabalho/manifestos em `graphics-poc/`, cenas do Product em `src/client/product-spatial.js` e o renderer em `src/client/product-world-renderer.js`. Além disso, o editor standalone vive sob `public/assets/scenario-editor/` e há um blockout separado em `tools/product-composer.*`.
 
-As responsabilidades de authoring, esquema de cena, adaptação de cenas e renderização estão sobrepostas. O documento existente [avaliação do renderer do Product](../product-world-renderer-assessment.md) já identifica essa duplicação e recomenda escolher um contrato de cena comum e adaptar o renderer existente. Essa conclusão continua sendo a prioridade arquitetural mais concreta.
+As responsabilidades de authoring, esquema de cena, adaptação de cenas e renderização estão sobrepostas. O documento de avaliação do renderer citado neste retrato histórico foi removido junto com a camada visual. Essa recomendação deixou de ser aplicável após a mudança de direção do produto.
 
 ## Evidências de acoplamento e dispersão
 

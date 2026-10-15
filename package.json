@@ -3,10 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prestart": "npm run build:product-renderer",
     "start": "node src/server/server.js",
-    "build:product-renderer": "node scripts/build/build-product-renderer.mjs",
-    "validate:product-scene": "node scripts/validation/validate-product-blockout.mjs",
     "test": "node --test --test-concurrency=1",
     "test:parity": "node scripts/validation/run-trajectory-parity.js",
     "test:wasm-scenario": "node --test tests/native-scenario-wasm.test.js",
@@ -14,19 +11,12 @@
     "build:wasm-scenario": "sh scripts/build-wasm-scenario.sh",
     "bench:simulation": "node scripts/benchmarks/benchmark-simulation.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",
-    "test:graphics-screenshots": "npm run build:graphics-poc && node scripts/graphics/graphics-screenshot-regression.mjs",
-    "bench:graphics-atlas-load": "node scripts/graphics/measure-graphics-atlas-load.mjs",
     "bench:memory": "node --expose-gc scripts/benchmarks/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmarks/benchmark_amd.py",
     "bench:history": "node scripts/benchmarks/benchmark-history.mjs",
     "bench:history-storage": "node --expose-gc scripts/benchmarks/benchmark-history-storage.mjs",
-    "bench:browser": "node scripts/benchmarks/benchmark-browser.mjs",
     "bench:wasm-scenario-browser": "node scripts/benchmarks/benchmark-native-wasm-browser.mjs",
     "bench:wasm-scenario-browser:firefox": "node scripts/benchmarks/benchmark-native-wasm-browser.mjs --browser=firefox",
-    "build:graphics-poc": "node scripts/graphics/build-composer-scenes.mjs && node scripts/graphics/build-graphics-poc.mjs",
-    "build:graphics-release": "node scripts/graphics/build-composer-scenes.mjs --release && node scripts/graphics/build-graphics-poc.mjs",
-    "bench:farm-layout": "node scripts/benchmarks/benchmark-farm-layout.mjs",
-    "bench:graphics-poc": "npm run build:graphics-poc && node scripts/graphics/benchmark-graphics-poc.mjs",
     "bench:farm-core": "cargo run --release -p riose-core --bin bench-farm-core",
     "bench:rust-native": "cargo run --release -p riose-core --bin bench-metabolism",
     "research:experiment-format": "node --expose-gc scripts/experiments/research_experiment_format.mjs",
@@ -79,10 +69,6 @@
   "devDependencies": {
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "esbuild": "^0.28.2",
     "playwright": "1.57.0"
-  },
-  "dependencies": {
-    "pixi.js": "^8.22.0"
   }
 }

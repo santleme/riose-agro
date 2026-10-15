@@ -51,8 +51,8 @@ function validateNativeRequest(scenario, version) {
     if (typeof snapshot.cost !== 'number' || !Number.isFinite(snapshot.cost)) throw new Error('Native snapshot cost is invalid');
     const enums = {action: ['grazing', 'feeding', 'drinking', 'resting'], reason: ['pasture_housing', 'barn_housing', 'thirst_threshold', 'rest_window']};
     for (const [index, animalValue] of snapshot.animals.entries()) {
-      const animal = object(animalValue, ['id', 'name', 'weight', 'initialWeight', 'energy', 'thirst', 'action', 'patch', 'x', 'y', 'targetX', 'targetY'], ['history']);
-      if (!integer(animal.id, 0xffffffff) || typeof animal.name !== 'string' || !integer(animal.patch, 0xffffffff) || !['weight', 'initialWeight', 'energy', 'thirst', 'x', 'y', 'targetX', 'targetY'].every(key => typeof animal[key] === 'number' && Number.isFinite(animal[key])) || !enums.action.includes(animal.action)) throw new Error(`Native snapshot animal ${index} is invalid`);
+      const animal = object(animalValue, ['id', 'name', 'weight', 'initialWeight', 'energy', 'thirst', 'action', 'patch'], ['history', 'x', 'y', 'targetX', 'targetY']);
+      if (!integer(animal.id, 0xffffffff) || typeof animal.name !== 'string' || !integer(animal.patch, 0xffffffff) || !['weight', 'initialWeight', 'energy', 'thirst'].every(key => typeof animal[key] === 'number' && Number.isFinite(animal[key])) || !['x', 'y', 'targetX', 'targetY'].every(key => animal[key] === undefined || (typeof animal[key] === 'number' && Number.isFinite(animal[key]))) || !enums.action.includes(animal.action)) throw new Error(`Native snapshot animal ${index} is invalid`);
       if (animal.history !== undefined) {
         if (!Array.isArray(animal.history)) throw new Error(`Native snapshot animal ${index} history is invalid`);
         for (const recordValue of animal.history) {
