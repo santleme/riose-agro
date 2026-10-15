@@ -47,7 +47,7 @@ execFileSync('tar', [
 console.log(`Sites archive: ${relative(repositoryRoot, archivePath).split(sep).join('/')}`);
 
 function isHostedFile(file) {
-  if (/^(index|home|experiments|product|simulator|manifesto)\.html$/.test(file)) return true;
+  if (/^(index|home|product|simulator|manifesto)\.html$/.test(file)) return true;
   if (/^[^/]+\.(css|js|svg)$/.test(file)) return true;
   if (file.startsWith('src/client/')) return true;
   if (file.startsWith('wasm/')) return true;
