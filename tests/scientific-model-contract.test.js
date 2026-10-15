@@ -62,9 +62,9 @@ test('registered model lookup records immutable ID/version/input/evidence/hash p
   assert.deepEqual(provenance.evidenceReferences, [{
     id: 'https://brcorte.com.br/assets/book2023/br/02.pdf',
     locator: 'https://brcorte.com.br/assets/book2023/br/02.pdf',
-    status: 'demonstrative'
+    status: 'published-equation-with-external-validation; no Riose-specific calibration'
   }]);
-  assert.equal(provenance.evidenceStatus, 'demonstrative');
+  assert.equal(provenance.evidenceStatus, 'published-equation-with-external-validation; no Riose-specific calibration');
   assert.match(provenance.implementationHash, /^sha256:[a-f0-9]{64}$/);
   assert.deepEqual(result.scientificProvenance, [provenance]);
   assert.throws(() => runRegisteredScientificModel({id: BR_CORTE_PASTURE_DMI_MODEL.id, version: 'unknown', inputs}), /Unknown scientific model version/);

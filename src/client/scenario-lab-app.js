@@ -618,7 +618,7 @@ function renderBrCorteResults(result) {
     'Published validation in the BR-CORTE chapter: 174 Zebu experimental units, R² 0.670, mean bias +0.761 kg/day, CCC 0.741. This is source-reported validation, not Riose calibration or validation.',
     'BR-CORTE 2023, Chapter 2: Table 2.14 worked example; development fit (R² 0.638, 1,069 experimental units) is not independent validation. The model estimates total intake conditional on supplied ADG; it does not forecast gain.',
     'Inputs are treated as representative and constant. Herd totals are arithmetic multiplication, not a cohort distribution. The supplement input is already DM. No forage intake observation, gain trajectory, uncertainty interval, or profit is produced.',
-    ...result.scenarios.map(scenario => `${scenario.label}: implementation hash ${scenario.provenance.implementationHash}; registry evidence status ${scenario.provenance.evidenceStatus}.`),
+    ...result.scenarios.map(scenario => `${scenario.label}: implementation hash ${scenario.provenance.implementationHash}; evidence classification ${scenario.provenance.evidenceStatus}.`),
   ];
   const list = document.createElement('ul');
   list.replaceChildren(...lines.map(line => { const item = document.createElement('li'); item.textContent = line; return item; }));

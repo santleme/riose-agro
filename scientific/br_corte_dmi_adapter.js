@@ -24,7 +24,7 @@ export const BR_CORTE_PASTURE_DMI_MODEL = defineScientificModel({
   },
   evidence: {
     source: BR_CORTE_PASTURE_DMI.source,
-    status: 'demonstrative',
+    status: 'published-equation-with-external-validation; no Riose-specific calibration',
     sourceVersion: BR_CORTE_PASTURE_DMI.version,
     evidenceType: 'published-equation-with-independent-validation-ranges',
     validationRanges: BR_CORTE_PASTURE_DMI.validatedDomain,

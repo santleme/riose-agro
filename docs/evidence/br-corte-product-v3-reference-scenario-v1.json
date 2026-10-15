@@ -127,10 +127,10 @@
             {
               "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
               "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
-              "status": "demonstrative"
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
             }
           ],
-          "evidenceStatus": "demonstrative",
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
           "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
         }
       },
@@ -174,10 +174,10 @@
             {
               "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
               "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
-              "status": "demonstrative"
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
             }
           ],
-          "evidenceStatus": "demonstrative",
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
           "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
         },
         "baselineDeltas": {
@@ -225,10 +225,10 @@
             {
               "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
               "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
-              "status": "demonstrative"
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
             }
           ],
-          "evidenceStatus": "demonstrative",
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
           "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
         },
         "baselineDeltas": {
