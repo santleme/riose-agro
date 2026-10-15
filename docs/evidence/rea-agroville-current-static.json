@@ -3,13 +3,13 @@
   "data": {
     "evidence_id": "ev_6b70508e91d2af65bee7e123d5f430e63cb58af1b86919fa57cd41171ff228b7",
     "subject": {
-      "name": "\\<workspace>/tmp/agroville-rea-current-review",
+      "name": "<workspace>/tmp/agroville-rea-current-review",
       "digest": {
         "sha256": "d2856623acb4d41df1be270f2f90253e984842f69c172b5cd3583c7bf3a8a8d1"
       },
       "format": "directory",
       "architecture": null,
-      "local_path": "\\<workspace>/tmp/agroville-rea-current-review"
+      "local_path": "<workspace>/tmp/agroville-rea-current-review"
     },
     "normalized_result": {
       "graph": {
