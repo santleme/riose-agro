@@ -28,7 +28,8 @@ mkdirSync(outputRoot, { recursive: true });
 
 for (const file of hostedFiles) {
   const source = join(repositoryRoot, file);
-  const destination = join(outputRoot, file);
+  const destinationPath = file.startsWith('public/') ? file.slice('public/'.length) : file;
+  const destination = join(outputRoot, destinationPath);
   mkdirSync(dirname(destination), { recursive: true });
   cpSync(source, destination);
 }
