@@ -1,5 +1,16 @@
 # Product V4 progress
 
+## 2026-10-15 — Live provider readiness recheck
+
+- Rechecked environment safely by reporting only presence: `GROQ_API_KEY`, `HF_TOKEN`, `LLM_PROVIDER`, `GROQ_MODEL`, `HF_MODEL`, and `LLM_MODEL` were all absent from the process environment. No secret values were read or emitted. No cloud-runtime secret configuration control is exposed in this session.
+- The user authorized a controlled live integration battery within the providers' actual available quotas/rate limits, without a per-call approval prompt and without unlimited retries. No credential was available, so no live provider call, model discovery, latency, or token usage is claimed. Chat-pasted credential values were not used.
+- `npm test`: PASS, 510/510 (45.1 s).
+- `npm run test:e2e:scenario-lab-ai`: PASS, fixture-backed V4 review → explicit run → archive export/import → explicit replay. The script states no provider was contacted. First attempt correctly failed because the local server was stopped; rerun passed after `npm start`.
+- `npm run test:e2e:scenario-lab`: PASS; 3 scenarios, cancellation, sensitivity, 390 px mobile without horizontal overflow, zero console errors.
+- `npm run test:e2e:product`: PASS; Product flow including prompt/review, explicit paired run, population inspection/export, revision/re-run, local replay and mobile layout.
+- `npm run test:parity`: PASS; pasture seed 417 (24 checkpoints), housing seed 2026 (1,440 hourly checkpoints, 31 daily rows).
+- P4-007 remains blocked only on secure provider configuration for this run. P3-007 remains blocked for production/shared usage; Perea behavioral NO-GO remains unchanged. Local fixture coverage is not reported as live AI validation.
+
 ## 2026-10-15 — Context recovery and baseline
 
 - Branch: `codex/behavioral-agents-sdd`; starting HEAD `93cfbd7`; working tree clean. Prior local commits preserved, no reset/push/merge.

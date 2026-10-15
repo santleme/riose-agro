@@ -80,17 +80,17 @@ Dependencies: P4-001; existing Scenario Lab intent contract; P3-007 remains bloc
 Implementation scope: Add a bounded Groq/Hugging Face provider adapter for the existing V4 intent schema; deterministic safety reconciliation; no-key/failure fallback; explicit source/model display; preserve confirmed intent and interpreter provenance in archive v2 while retaining archive v1 reading.
 Acceptance criteria: Provider output is strict JSON, independently validated server-side and client-side; unsupported local-parser requests remain blocked; only interpretation occurs before review; the existing explicit Run action is still the sole execution path; archive binds the exact approved intent/manifest/execution and provider metadata; v1 replay remains readable; rate limiting is not represented as a shared monetary budget.
 Required tests: adapter/request bounds; malformed/out-of-domain/prompt-injection cases; no-key endpoint; V4 E2E no-autostart/review/confirm/export/replay; archive v1/v2 compatibility; Product V2 E2E; regression suite.
-Evidence: focused tests, E2E, complete regression, browser screenshots, and server-side provider response metadata when a new secure key is available.
+Evidence: focused tests, E2E, complete regression, browser screenshots, and server-side provider response metadata when a credential is available in secure runtime configuration.
 Status: DONE (strict provider adapter + deterministic fallback, archive v2 intent/provenance binding with v1 reader, provider-fixture UI E2E, local fallback UI E2E, full regression and parity pass; live account call is separated into P4-007).
 
-### P4-007 — One-off live provider validation
+### P4-007 — Live provider and Product V4 validation
 
 ID: P4-007
-Title: Verify one authenticated real provider interpretation and full Product V4 experiment flow
+Title: Verify authenticated real provider interpretation and full Product V4 experiment flow
 Specification reference: `ai-orchestration.md`; `acceptance-criteria.md`; provider integration mission
-Dependencies: P4-006; a newly rotated key provisioned through secure environment configuration; account/model availability check
-Implementation scope: Use the already authorized maximum of one manual inference request (USD 0.10) in this session, then complete review, explicit local execution, export, and replay; never activate production provider traffic.
-Acceptance criteria: Secret is absent from chat, logs, browser, response, and archive; selected provider/model is available and supports the required schema; one live interpretation reaches V4 review with no automatic execution; user confirmation runs the FarmEngine only; archive replay matches; P3-007 production/shared spend gate remains unchanged.
-Required tests: one live provider request; focused Product V4 E2E with the real interpretation response; export/replay; key-safe log review.
-Evidence: sanitized provider/model/status metadata, E2E output, and replay digest. Never store the secret or raw authorization headers.
-Status: BLOCKED (no secure provider credential is present in this session; the pasted credential is treated as exposed and must be rotated).
+Dependencies: P4-006; a provider credential available through secure runtime configuration; account/model availability check. Rotation is not a prerequisite when an otherwise valid authorized runtime credential is present.
+Implementation scope: Use provider credentials available through the authorized secure runtime to run a bounded live integration battery within the account's actual quota and rate limits. Avoid unnecessary requests and unbounded retries. Exercise interpretation, clarification, multi-arm and BR-CORTE intent, unsupported requests, follow-up edits, then complete review, explicit local execution, export, explanation and replay; never activate production provider traffic.
+Acceptance criteria: Credentials come from secure runtime configuration and are not copied into logs, browser state, responses or archives; the selected provider/model is verified by an actual response; live intents pass server/client scientific validation; no request executes automatically; the explicit user action runs only the selected executor; FarmEngine remains demonstrative and BR-CORTE remains conditional on its declared inputs; unsupported biological claims are rejected; export/replay matches; sanitized latency/status/token metadata is recorded when available; P3-007 production/shared spend gate remains unchanged.
+Required tests: controlled live provider requests within provider quota; focused Product V4 E2E using a real interpretation; review, explicit confirmation, execution, explanation, export and replay; safe failure/fallback checks; key-safe log review.
+Evidence: sanitized provider/model/status/latency and token metadata when provided, E2E output and replay digest. Never store the secret or raw authorization headers. A live provider response validates integration only, not scientific validity or production reliability.
+Status: BLOCKED (`GROQ_API_KEY` and `HF_TOKEN` were absent in the current process; no configured provider is available to call. The user authorized a controlled live test battery within real account quotas, without a per-call approval prompt. No provider request has been made.)
