@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import test from 'node:test';
-import {evaluateAnimalLayoutDecision} from '../scripts/animal-layout-decision.mjs';
+import {evaluateAnimalLayoutDecision} from '../scripts/benchmarks/animal-layout-decision.mjs';
 
 const evidencePath=new URL('../docs/evidence/animal-layout-study-2026-10-13.json',import.meta.url);
 

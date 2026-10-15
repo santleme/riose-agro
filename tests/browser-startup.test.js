@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {waitForDevToolsActivePort} from '../scripts/browser-startup.mjs';
+import {waitForDevToolsActivePort} from '../scripts/experiments/browser-startup.mjs';
 
 test('DevTools startup waits for a delayed active-port file', async () => {
   let attempts = 0;

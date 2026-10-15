@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import os from 'node:os';
 import {dirname, resolve} from 'node:path';
-import {generateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
+import {generateFarmLayout} from '../../src/client/scenario-editor/scene-layout.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions = Number(process.env.FARM_LAYOUT_REPETITIONS ?? 50);
@@ -23,12 +23,12 @@ for (let index = 0; index < args.length; index++) {
     outputPath = arg.slice('--output='.length);
     if (!outputPath) throw new TypeError('--output requires a file path');
   } else {
-    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/benchmark-farm-layout-generator.mjs [--output <report.json>]`);
+    throw new TypeError(`Unknown argument: ${arg}\nUsage: node scripts/benchmarks/benchmark-farm-layout-generator.mjs [--output <report.json>]`);
   }
 }
 
-const prefabs = JSON.parse(await readFile(new URL('../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8')).prefabs;
-const manifest = JSON.parse(await readFile(new URL('../public/assets/manifest.json', import.meta.url), 'utf8'));
+const prefabs = JSON.parse(await readFile(new URL('../../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8')).prefabs;
+const manifest = JSON.parse(await readFile(new URL('../../public/assets/manifest.json', import.meta.url), 'utf8'));
 const cases = [
   {name: 'beef', scenarioType: 'beef'},
   {name: 'dairy', scenarioType: 'dairy'},
@@ -91,7 +91,7 @@ const report = benchmarkReport({
     layout: {status: 'measured', measurements: results.map(row => measurement(
       'layout', 'farm-layout-generation', 'ms', summarizeSamples(row.observations.generationMs), {
         population: {count: row.totalEditableItems, unit: 'editable-items', scope: row.name},
-        source: 'scripts/benchmark-farm-layout-generator.mjs',
+        source: 'scripts/benchmarks/benchmark-farm-layout-generator.mjs',
         scenarioType: row.scenarioType,
         seedRange: row.seeds,
         observations: row.observations.generationMs,

@@ -8,8 +8,8 @@ from pathlib import Path
 
 
 REPOSITORY = Path(__file__).resolve().parents[1]
-SUMMARIZER = REPOSITORY / "scripts" / "summarize-native-simd.py"
-RUNNER = REPOSITORY / "scripts" / "run-native-simd-study.sh"
+SUMMARIZER = REPOSITORY / "scripts" / "benchmarks" / "summarize-native-simd.py"
+RUNNER = REPOSITORY / "scripts" / "benchmarks" / "run-native-simd-study.sh"
 
 
 class NativeSimdSummaryTests(unittest.TestCase):

@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 from statistics import median
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SIZES = (100, 1_000, 10_000, 100_000)
 REPETITIONS = int(os.environ.get("METABOLISM_BENCH_REPETITIONS", "21"))
 WARMUPS = int(os.environ.get("METABOLISM_BENCH_WARMUPS", "3"))
@@ -227,7 +227,7 @@ def report() -> dict:
                         "A CPU-only environment is an explicit no-go; CPU measurements are never labeled as GPU results.",
                         "The PyTorch HIP implementation evaluates the same formula but is not integrated into production."]
     }
-    validator = ROOT / "scripts" / "validate-benchmark-report.mjs"
+    validator = ROOT / "scripts" / "benchmarks" / "validate-benchmark-report.mjs"
     validation = subprocess.run(["node", str(validator)], input=json.dumps(result, allow_nan=False),
                                 text=True, capture_output=True)
     if validation.returncode:

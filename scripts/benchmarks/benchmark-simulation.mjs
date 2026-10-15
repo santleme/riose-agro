@@ -1,8 +1,8 @@
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {FarmEngine} from '../src/client/engine.js';
-import {loadWasmMetabolism,updateMetabolismJS} from '../src/client/metabolism-wasm.js';
+import {FarmEngine} from '../../src/client/engine.js';
+import {loadWasmMetabolism,updateMetabolismJS} from '../../src/client/metabolism-wasm.js';
 import {benchmarkReport,measurement,summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions=Number(process.env.BENCH_REPETITIONS??25);
@@ -12,7 +12,7 @@ const snapshotWarmups=Number(process.env.BENCH_SNAPSHOT_WARMUPS??10);
 const baselineCommit='913b36b9fe5c0877c7b857af3e0488cedcfd0e03';
 const baselineSource=execFileSync('git',['show',`${baselineCommit}:engine.js`],{encoding:'utf8'});
 const {FarmEngine:BaselineFarmEngine}=await import(`data:text/javascript;base64,${Buffer.from(baselineSource).toString('base64')}`);
-const wasmBytes=await readFile(new URL('../wasm/riose_core.wasm',import.meta.url));
+const wasmBytes=await readFile(new URL('../../wasm/riose_core.wasm',import.meta.url));
 const wasmKernel=await loadWasmMetabolism(new URL('http://benchmark.local/riose_core.wasm'),async()=>
   new Response(wasmBytes,{headers:{'content-type':'application/wasm'}}));
 

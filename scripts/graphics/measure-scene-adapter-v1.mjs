@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
 import {adaptComposerDocument} from '../../graphics-poc/scene-adapter-v1.js';
-import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmarks/benchmark-report.mjs';
 
 const manifestPath = new URL('../../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url);
 const fixtures = [

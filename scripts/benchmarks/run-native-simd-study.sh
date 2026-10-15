@@ -43,7 +43,7 @@ for profile in generic native scalar; do
     /usr/bin/time -v -o "$out/$profile-run-$run.time.txt" \
       env SIMD_STUDY_PROFILE="$profile: $flags" SIMD_STUDY_RUN="$run" \
       "$CARGO_TARGET_DIR/release/examples/simd_metabolism_study" > "$out/$profile-run-$run.json"
-    node scripts/validate-benchmark-report.mjs < "$out/$profile-run-$run.json"
+    node scripts/benchmarks/validate-benchmark-report.mjs < "$out/$profile-run-$run.json"
   done
 done
 RUSTFLAGS='-C target-feature=-avx,-avx2' CARGO_TARGET_DIR="$target/portable" \

@@ -23,7 +23,7 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SIZES = (100, 1_000, 10_000, 100_000)
 WARMUPS = int(os.environ.get("METABOLISM_BENCH_WARMUPS", "3"))
 REPETITIONS = int(os.environ.get("METABOLISM_BENCH_REPETITIONS", "21"))
@@ -515,7 +515,7 @@ def main() -> None:
                                   "CUDA kernel is an isolated PTX implementation of the existing Rust formula; it is not integrated into production and adds no product dependency/default change.",
                                   "CUDA event timing measures the queued kernel; host synchronization wall time includes waiting for queued work and should not be added to event time.",
                                   "Host-side cattle input creation is the deterministic benchmark harness, not FarmEngine packing; it is included in CPU total and GPU total to compare equivalent starting data."]}
-        validation = subprocess.run(["node", str(ROOT / "scripts/validate-benchmark-report.mjs")],
+        validation = subprocess.run(["node", str(ROOT / "scripts/benchmarks/validate-benchmark-report.mjs")],
                                     input=json.dumps(report, allow_nan=False), text=True, capture_output=True)
         if validation.returncode:
             raise ValueError(f"benchmark_report_schema_validation_failed: {validation.stderr.strip()}")

@@ -4,7 +4,7 @@ import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import {fileURLToPath} from 'node:url';
 
-const script=fileURLToPath(new URL('../scripts/benchmark-scenario-scheduler.mjs',import.meta.url));
+const script=fileURLToPath(new URL('../scripts/benchmarks/benchmark-scenario-scheduler.mjs',import.meta.url));
 const availableWorkers=Math.min(os.availableParallelism(),4);
 const defaultConcurrencyCases=[...new Set([1,Math.min(2,availableWorkers),availableWorkers])];
 

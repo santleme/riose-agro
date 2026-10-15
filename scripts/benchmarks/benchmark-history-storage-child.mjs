@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
-import {FarmEngine} from '../src/client/engine.js';
-import {separateLegacySnapshot} from '../src/client/animal-view-state.js';
-import {ColumnHistoryEngine} from './column-history-engine.mjs';
+import {FarmEngine} from '../../src/client/engine.js';
+import {separateLegacySnapshot} from '../../src/client/animal-view-state.js';
+import {ColumnHistoryEngine} from '../experiments/column-history-engine.mjs';
 
 const [variant, countText, hoursText, repetitionsText] = process.argv.slice(2);
 const Engine = variant === 'typedColumns' ? ColumnHistoryEngine : FarmEngine;

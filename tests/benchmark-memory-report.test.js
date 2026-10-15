@@ -60,7 +60,7 @@ test('checked-in memory capture keeps FarmEngine peak, retained heap and payload
 });
 
 test('memory harness emits schema-valid repeated phase peak evidence for a small run', () => {
-  const result = spawnSync(process.execPath, ['--expose-gc', 'scripts/benchmark-memory.mjs'], {
+  const result = spawnSync(process.execPath, ['--expose-gc', 'scripts/benchmarks/benchmark-memory.mjs'], {
     cwd: new URL('..', import.meta.url),
     encoding: 'utf8',
     timeout: 30_000,

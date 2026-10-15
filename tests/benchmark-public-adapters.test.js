@@ -5,7 +5,7 @@ import os from 'node:os';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import test from 'node:test';
-import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
+import {assertBenchmarkReport} from '../scripts/benchmarks/benchmark-report.mjs';
 
 const root = new URL('..', import.meta.url);
 const repo = decodeURIComponent(root.pathname);
@@ -46,7 +46,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   t.after(() => rm(temp, {recursive: true, force: true}));
 
   const animalPath = join(temp, 'animal.json');
-  const animalSummary = JSON.parse(run('scripts/benchmark-animal-layout.mjs', [], {
+  const animalSummary = JSON.parse(run('scripts/benchmarks/benchmark-animal-layout.mjs', [], {
     ANIMAL_LAYOUT_REPETITIONS: '5',
     ANIMAL_LAYOUT_OUTPUT: animalPath,
   }, ['--expose-gc']));
@@ -87,7 +87,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
   assert.ok(generated.results.results[0].observations.adaptationMs.length >= 5);
 
   const farmPath = join(temp, 'farm.json');
-  const farm = JSON.parse(run('scripts/benchmark-farm-layout-generator.mjs', ['--output', farmPath], {
+  const farm = JSON.parse(run('scripts/benchmarks/benchmark-farm-layout-generator.mjs', ['--output', farmPath], {
     FARM_LAYOUT_WARMUPS: '1',
     FARM_LAYOUT_REPETITIONS: '5',
   }));
@@ -99,7 +99,7 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
 });
 
 test('simulation and history benchmark adapters emit schema-valid reports with raw samples', () => {
-  const simulation = JSON.parse(run('scripts/benchmark-simulation.mjs', [], {
+  const simulation = JSON.parse(run('scripts/benchmarks/benchmark-simulation.mjs', [], {
     BENCH_REPETITIONS: '1',
     BENCH_SIMULATION_WARMUPS: '0',
     BENCH_KERNEL_WARMUPS: '0',
@@ -112,7 +112,7 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
   assert.ok(simulation.phases.engine.measurements.every(item => item.statistics.observationsMs?.length === 1));
   assert.ok(simulation.phases.engine.measurements.some(item => item.population === 100_000 && item.scope === 'numeric-kernel'));
 
-  const historyReports = run('scripts/benchmark-history.mjs', [], {BENCH_REPETITIONS: '1', BENCH_HERDS: '1000'})
+  const historyReports = run('scripts/benchmarks/benchmark-history.mjs', [], {BENCH_REPETITIONS: '1', BENCH_HERDS: '1000'})
     .trim().split('\n').map(line => JSON.parse(line));
   assert.equal(historyReports.length, 1);
   const [history] = historyReports;
@@ -125,7 +125,7 @@ test('simulation and history benchmark adapters emit schema-valid reports with r
 });
 
 test('history storage adapter preserves typed memory observations separately from timing', () => {
-  const reports = run('scripts/benchmark-history-storage.mjs', [], {
+  const reports = run('scripts/benchmarks/benchmark-history-storage.mjs', [], {
     BENCH_REPETITIONS: '2', BENCH_HISTORY_HERDS: '1000', BENCH_HISTORY_HOURS: '24',
   }).trim().split('\n').map(line => JSON.parse(line));
   assert.equal(reports.length, 1);
@@ -152,7 +152,7 @@ test('graphics evidence and scenario scheduler use the shared benchmark envelope
     && row.visualUpdateAndGrouping.samplesMs.length === herd.configuration.repetitions
     && row.drawUnitPreparation.samplesMs.length === herd.configuration.repetitions));
 
-  const scheduler = JSON.parse(run('scripts/benchmark-scenario-scheduler.mjs', [], {RIOSE_SCHEDULER_REPETITIONS: '1'}));
+  const scheduler = JSON.parse(run('scripts/benchmarks/benchmark-scenario-scheduler.mjs', [], {RIOSE_SCHEDULER_REPETITIONS: '1'}));
   assertMeasurements(scheduler);
   assert.equal(scheduler.configuration.repetitions, 1);
   assert.equal(scheduler.results.rows.length, scheduler.configuration.concurrencyCases.length);
@@ -191,7 +191,7 @@ test('browser and graphics PoC adapters emit valid reports when Chromium is avai
   }
   assert.equal(ready, true, 'local server starts for browser benchmark smoke');
 
-  const browser = JSON.parse(run('scripts/benchmark-browser.mjs', [], {
+  const browser = JSON.parse(run('scripts/benchmarks/benchmark-browser.mjs', [], {
     CHROME_BIN: chrome,
     RIOSE_URL: new URL('product.html', origin).href,
     BENCH_REPETITIONS: '1',

@@ -4,7 +4,7 @@ import {mkdtemp, readFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {assertBenchmarkReport} from '../scripts/benchmark-report.mjs';
+import {assertBenchmarkReport} from '../scripts/benchmarks/benchmark-report.mjs';
 
 test('replicate summary benchmark preserves raw timing and process-heap observations', async () => {
   const tempDirectory = await mkdtemp(join(tmpdir(), 'riose-replicate-benchmark-'));
