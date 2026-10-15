@@ -3,10 +3,10 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
-import {FarmEngine} from '../src/client/engine.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {FarmEngine} from '../../../src/client/engine.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = resolve(new URL('../../../', import.meta.url).pathname);
 const REPORT = resolve(ROOT, 'docs/evidence/usda-ars-feedlot-engine-dmi-check.json');
 
 export function predictDefaultBarnDmiKgPerDay(weightKg) {

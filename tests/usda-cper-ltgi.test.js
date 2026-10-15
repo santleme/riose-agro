@@ -13,7 +13,7 @@ test('public USDA-ARS CPER LTGI source and frozen engine ADG holdout are reprodu
   assert.equal(source.coverage.uniqueAnimalSeasonKeys, 1283);
   assert.equal(source.coverage.allFinitePositiveWeightsAndDays, true);
 
-  execFileSync('node', ['scripts/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
   const reportPath = 'docs/evidence/engine-adg-usda-cper-ltgi-check.json';
   const firstRun = readFileSync(reportPath, 'utf8');
   const model = JSON.parse(firstRun);
@@ -75,6 +75,6 @@ test('public USDA-ARS CPER LTGI source and frozen engine ADG holdout are reprodu
   assert.equal(model.evaluation.rows.every(row => model.evaluation.temporalHoldoutYears.includes(row.year)), true);
   assert.equal(model.evaluation.rows.length, model.evaluation.n);
 
-  execFileSync('node', ['scripts/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
   assert.equal(readFileSync(reportPath, 'utf8'), firstRun);
 });

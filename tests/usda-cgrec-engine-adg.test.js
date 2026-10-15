@@ -10,7 +10,7 @@ test('CPER-only ADG scale is evaluated unchanged on public external-site CGREC s
   assert.equal(integrity.dataset.public_md5_verified, true);
   assert.equal(integrity.steer_validation_rows.length, 291);
 
-  execFileSync('node', ['scripts/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_usda_cper_ltgi.js'], {encoding: 'utf8'});
   execFileSync('node', ['scripts/audit_engine_adg_usda_cgrec_external.js'], {encoding: 'utf8'});
   const reportPath = 'docs/evidence/engine-adg-usda-cgrec-transport-check.json';
   const firstRun = readFileSync(reportPath, 'utf8');

@@ -4,10 +4,10 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 
-const dataDir = new URL('../data/zenodo-grazing-allometry/', import.meta.url);
-const reportPath = new URL('../docs/evidence/engine-adg-zenodo-cows-check.json', import.meta.url);
+const dataDir = new URL('../../../data/zenodo-grazing-allometry/', import.meta.url);
+const reportPath = new URL('../../../docs/evidence/engine-adg-zenodo-cows-check.json', import.meta.url);
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 const manifest = JSON.parse(readFileSync(new URL('manifest.json', dataDir), 'utf8'));
 const api = JSON.parse(readFileSync(new URL('zenodo-record-api-metadata.json', dataDir), 'utf8'));

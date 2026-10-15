@@ -5,11 +5,11 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../src/client/engine.js';
-import {parseAdultCperCsv} from '../src/client/adult-data-model.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
+import {parseAdultCperCsv} from '../../../src/client/adult-data-model.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
-const root = new URL('../', import.meta.url);
+const root = new URL('../../../', import.meta.url);
 const cperBytes = readFileSync(new URL('data/usda-cper/period.csv', root));
 const manifest = JSON.parse(readFileSync(new URL('data/usda-cper/manifest.json', root), 'utf8'));
 const sourceFile = manifest.files.find(file => file.path === 'period.csv');
@@ -56,5 +56,5 @@ const report = {
     'Do not fit assumptions to these rows or promote the engine output from demonstrative status on this check.'
   ],
 };
-writeFileSync(new URL('../docs/evidence/engine-adg-range-check.json', import.meta.url), `${JSON.stringify(report, null, 2)}\n`);
+writeFileSync(new URL('../../../docs/evidence/engine-adg-range-check.json', import.meta.url), `${JSON.stringify(report, null, 2)}\n`);
 process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {predictDefaultBarnDmiKgPerDay} from '../scripts/audit_engine_dmi_usda_ars.js';
+import {predictDefaultBarnDmiKgPerDay} from '../scripts/science/engine-audits/audit_engine_dmi_usda_ars.js';
 
 test('public USDA-ARS feedlot DMI workbook is hashed and audited independently of grazing case', () => {
-  execFileSync('node', ['scripts/audit_engine_dmi_usda_ars.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_dmi_usda_ars.js'], {encoding: 'utf8'});
   const source = JSON.parse(readFileSync('docs/evidence/usda-ars-feedlot-dmi-audit.json', 'utf8'));
   const model = JSON.parse(readFileSync('docs/evidence/usda-ars-feedlot-engine-dmi-check.json', 'utf8'));
 

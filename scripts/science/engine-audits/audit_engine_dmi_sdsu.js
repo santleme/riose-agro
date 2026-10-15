@@ -3,9 +3,9 @@ import {readFileSync, writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {predictDefaultBarnDmiKgPerDay} from './audit_engine_dmi_mendeley.js';
-import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
+import {engineSourceSha256, ENGINE_SOURCE_FILES} from '../../engine-source-hash.js';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = resolve(new URL('../../../', import.meta.url).pathname);
 const INPUT = resolve(ROOT, 'data/sdsu-individual-dmi/individual-dmi-derived.csv');
 const REPORT = resolve(ROOT, 'docs/evidence/sdsu-engine-dmi-check.json');
 const LB_TO_KG = 0.45359237;

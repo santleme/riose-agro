@@ -24,7 +24,7 @@ test('UFMS Nelore v1 audit preserves coverage and flags ADG incompatibility', ()
 test('UFMS frozen ADG transfer diagnostic is reproducible, animal-clustered, and kept separate from adult validation', () => {
   const path = 'docs/evidence/engine-adg-ufms-check.json';
   const before = readFileSync(path, 'utf8');
-  execFileSync('node', ['scripts/audit_engine_adg_ufms.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_ufms.js'], {encoding: 'utf8'});
   const report = JSON.parse(readFileSync(path, 'utf8'));
   assert.equal(readFileSync(path, 'utf8'), before);
   assert.equal(report.source.license, 'CC BY 4.0');
