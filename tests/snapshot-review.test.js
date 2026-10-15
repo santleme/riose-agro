@@ -84,7 +84,7 @@ test('CLI and API both reject a digest-matching but invalid comparison manifest'
   }
 });
 
-test('snapshot review endpoint validates locally without a map-specific review asset', async t => {
+test('snapshot review endpoint validates locally alongside the farm scene', async t => {
   const server = createServer({env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
@@ -93,8 +93,8 @@ test('snapshot review endpoint validates locally without a map-specific review a
   const page = await fetch(`${root}/`);
   assert.equal(page.status, 200);
   assert.match(await page.text(), /href="product\.html"/);
-  const retiredReviewScript = await fetch(`${root}/src/client/snapshot-review.js`);
-  assert.equal(retiredReviewScript.status, 404);
+  const reviewScript = await fetch(`${root}/src/client/snapshot-review.js`);
+  assert.equal(reviewScript.status, 200);
   const schema = await fetch(`${root}/schemas/farm-snapshot.schema.json`);
   assert.equal(schema.status, 200);
   const invalidContentType = await fetch(`${root}/api/validate-snapshot`, {method: 'POST', body: JSON.stringify({snapshot: snapshotExample})});

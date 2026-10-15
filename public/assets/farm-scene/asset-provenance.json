@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "pilotId": "riose-cattle-ranch-pilot-v1",
+  "artApprovalDate": "2026-10-13",
+  "approvalScope": "Visual appearance of the 12 selected pilot PNGs and composed pilot scene only. No public/commercial release rights, global style lock, or simulation validation implied.",
+  "assets": [
+    {
+      "id": "livestock.nelore.adult.walking.ne.v1",
+      "runtimeFile": "cattle-walking.png",
+      "sourceFile": "assets/candidates/livestock/nelore-adult-walking-imagegen-v2.png",
+      "sha256": "ac222ef29a7dae9ea5d414ee81806b4e8b086565c0162779eeba2a293b6bd5ee",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
+    },
+    {
+      "id": "livestock.nelore.adult.grazing.ne.v1",
+      "runtimeFile": "cattle-grazing.png",
+      "sourceFile": "assets/candidates/livestock/nelore-adult-grazing-imagegen-v2.png",
+      "sha256": "2fd0c7d932d9a8df85580458319b96422c100f66a79e2c649eff0d610c3ec0e0",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
+    },
+    {
+      "id": "livestock.nelore.calf.idle.ne.v1",
+      "runtimeFile": "calf-idle.png",
+      "sourceFile": "assets/candidates/livestock/nelore-calf-imagegen-edit-v2.png",
+      "sha256": "2838ae6530d19fdc2dbaea8a38196ec4aeeb5ac52f1ef8e1c99ccc2ea88ea575",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "Technical pass: hard alpha is binary (0/255), source RGB is preserved, and an sRGB ICC profile was assigned without transforming RGB via scripts/assets/assign_srgb_profile.py. The user approved the artwork on 2026-10-13."
+    },
+    {
+      "id": "livestock.nelore.adult.idle.imagegen.v1",
+      "runtimeFile": "cattle-idle.png",
+      "sourceFile": "assets/approved/livestock/nelore-adult-idle-v1.png",
+      "sha256": "975ed9aa2891ddd4991c19e50def5f55ad99466a8a2d3213d0d99d25c1d3ec43",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. User-approved ImageGen Nelore. Original preserved under assets/source; runtime copy normalizes alpha to binary to remove the faint background vignette without changing RGB artwork."
+    },
+    {
+      "id": "corral.wood.standard.imagegen.v1",
+      "runtimeFile": "corral.png",
+      "sourceFile": "assets/candidates/handling/corral-wood-standard-imagegen-v1.png",
+      "sha256": "64fcb6a5af48dc6c7bcd09fed139eae05d10299ef5d20ef7f4fb6df3137bf85f",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+    },
+    {
+      "id": "fence.wire.wood-post.imagegen.v1",
+      "runtimeFile": "fence.png",
+      "sourceFile": "assets/candidates/handling/fence-wire-wood-post-imagegen-v1.png",
+      "sha256": "85ede4f680e95b6e28238447e55941a7bcd97f70c8c5e7b509dc50bf3127ebc3",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated candidate. Alpha cleaned with a low-end cutoff and crop-only sprite preparation; raw ImageGen source preserved separately."
+    },
+    {
+      "id": "terrain.grass.pasture-base.imagegen.v4",
+      "runtimeFile": "pasture-plate.png",
+      "sourceFile": "assets/candidates/terrain-family-v3/pasture-base-edge-clean-v4.png",
+      "sha256": "148dabbdd5c00432cf02d5fba1d55aed321050d38ab4ae8001e4180bcc3e40e0",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual kit and composed scene on 2026-10-13. Technical pass: binary alpha (0/255), zero-alpha margins meet its 0px policy, ICC sRGB assigned with RGB preserved. The 3x3 proof shows tonal join lines, so this asset is approved only as a single ground plate and must not be auto-repeated. This limitation is recorded in assets/manifests/terrain-family.v3.json."
+    },
+    {
+      "id": "fence.gate.wood.imagegen.v2",
+      "runtimeFile": "gate.png",
+      "sourceFile": "assets/candidates/handling/modular-cattle-gate-v2-hard-alpha.png",
+      "sha256": "953f9ddd772482e61b5f6e9ca17040002b15c30867c13d4b3f1bd4a47e1674ac",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Generated isolated V2 from supplied urban and approved Riose rural visual references. Alpha threshold 128 produced a binary silhouette; crop retains 2px transparent padding; hidden RGB cleared; sRGB ICC embedded without RGB transform. Alpha, dimensions, padding and file integrity pass. Art fit and scene connectors remain pending human review."
+    },
+    {
+      "id": "water.trough.cattle.galvanized.imagegen.v2",
+      "runtimeFile": "water-trough.png",
+      "sourceFile": "assets/candidates/handling/water-trough-cattle-v2-hard-alpha.png",
+      "sha256": "ae6a0bb2de819167ae70b7488ac2084e83e290655b1112d1a9ccf01bc61e29fb",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Alpha threshold 128 created binary 0/255 transparency; visible bounds cropped with 2px clear padding; hidden RGB cleared; embedded sRGB profile assigned without RGB transform. Transparent-matte proof is clean. Art fit, water rendering, and scene scale remain pending human review."
+    },
+    {
+      "id": "feed.trough.hay.imagegen.v2",
+      "runtimeFile": "feed-trough.png",
+      "sourceFile": "assets/candidates/handling/feed-trough-hay-v2-hard-alpha.png",
+      "sha256": "f8cbb337576b52c86e2172d1fcb89a199f05568954bd59ea2f9f8b3a7bfe6ce2",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. Alpha threshold 128 gives binary 0/255 transparency; visible crop retains 2px clear padding; hidden RGB cleared; embedded sRGB profile assigned without RGB transform. Matte proof is clean. Art fit, hay cluster style and scene scale remain pending human review."
+    },
+    {
+      "id": "technology.ear-tag.rfid.imagegen.v2",
+      "runtimeFile": "ear-tag.png",
+      "sourceFile": "assets/candidates/technology/technology-ear-tag-rfid-v2-hard-alpha.png",
+      "sha256": "c730d188cfd10e02410aec6a34471b74165b476dfbac282355ca8952abac29d9",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. V2 candidate is an isolated wearable tag without the soil pedestal. Its small in-world render scale must be reviewed; art remains pending."
+    },
+    {
+      "id": "technology.monitor.station.imagegen.v2",
+      "runtimeFile": "monitor-station.png",
+      "sourceFile": "assets/candidates/technology/technology-monitor-station-v2-hard-alpha.png",
+      "sha256": "4abf1bf9dfe228a7ec040d6f4798f26a130d64d4dbc8857557522931dff0b2a2",
+      "status": "APPROVED",
+      "licenseState": "project-generated-review",
+      "review": "User approved the visual appearance of all 12 pilot assets on 2026-10-13, based on the pilot contact sheet and the composed ranch scene. This is an art-only decision for this pilot; it does not approve the global style lock or public/commercial release. Technical review remains pass. V2 removes the display ground tile and preserves the station as a modular sprite; art remains pending."
+    }
+  ],
+  "barn": {
+    "runtimeFile": "barn.png",
+    "source": "Generated specifically for the reference scene via OpenAI ImageGen edit output on 2026-10-15.",
+    "artReview": "Not separately reviewed."
+  },
+  "terrainPlate": {
+    "runtimeFile": "terrain.png",
+    "sourceFile": "assets/candidates/terrain-family-v5/rural-diorama-ground-v2.png",
+    "usage": "One composition plate; do not tile automatically."
+  }
+}

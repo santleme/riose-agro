@@ -17,7 +17,7 @@ const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'simulator.html', 'riose-mark.svg',
+  'product.html', 'product.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
   'assets/riose-cow-cutout.png',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
@@ -25,7 +25,7 @@ const PUBLIC_FILES = new Set([
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
   'index.html', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
-  'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
+  'snapshot-review.js', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',
   'montana-cow-data.html', 'montana-cow-data.js',
@@ -65,6 +65,7 @@ const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.wasm': 'application/wasm',
   '.csv': 'text/csv; charset=utf-8',
