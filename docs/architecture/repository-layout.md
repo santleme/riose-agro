@@ -6,7 +6,7 @@ The repository keeps browser page URLs at the project root for static-host compa
 index.html, home.html, product.html, lab.html, *-data.html   browser entry points
 src/client/                                                   browser modules and stylesheets
   product/                                                   Product experience: app, versioned world scene, shared geometry, static world drawing, Pixi orchestration, spatial model and interaction
-  scenario-editor/                                           shared grid-scene generation and validation for the standalone Composer and Graphics adapters
+  scenario-editor/                                           standalone Composer UI and shared grid-scene generation/validation
   visualization/                                             shared presentation geometry and visual adapters
 src/server/                                                   local HTTP and Python compute services
 crates/                                                       Rust core and WASM adapters
@@ -16,3 +16,4 @@ scripts/, tests/, tools/, experiments/, graphics-poc/, docs/ development and pro
 ```
 
 `index.html` and `/` lead to the Riose landing page. `product.html` is the canonical farm experience. `lab.html` preserves the former Agroville research interface for embedded and specialist workflows; `simulator.html` is a compatibility redirect to Product. The root HTML pages load implementation assets through relative `src/client/` URLs, preserving deployment under a repository subpath. Product-specific implementation belongs in `src/client/product/`; shared simulation, worker and view-state modules remain in `src/client/`. Renderer-independent projection utilities belong in `src/client/visualization/`; each scene and renderer remains owned by its feature. The old top-level Product module paths are temporary compatibility facades for scripts and consumers. Browser module imports are relative to their owning modules. `npm start` remains the supported entry point for the Node server.
+`public/assets/scenario-editor/index.html` remains the standalone editor's static entry. Its implementation now lives under `src/client/scenario-editor/`; the former `composer.js` and `scene-layout.js` module URLs re-export those sources for existing browser and tool consumers. The Pixi bundle and prefab catalog remain served assets.
