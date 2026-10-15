@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 
 test('Dryad grazing-yearling audit verifies source and keeps ADG evidence descriptive', () => {
-  const report = JSON.parse(execFileSync('python3', ['scripts/audit_dryad_grazing_yearlings.py'], {encoding: 'utf8'}));
+  const report = JSON.parse(execFileSync('python3', ['scripts/science/source-audits/audit_dryad_grazing_yearlings.py'], {encoding: 'utf8'}));
   assert.equal(report.source.doi, '10.5061/dryad.dbrv15fg8');
   assert.equal(report.source.license, 'CC0-1.0');
   assert.equal(report.source.sha256Verified, true);

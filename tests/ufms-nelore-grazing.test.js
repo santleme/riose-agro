@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('UFMS Nelore v1 audit preserves coverage and flags ADG incompatibility', () => {
-  const report = JSON.parse(execFileSync('python3', ['scripts/audit_ufms_nelore_grazing.py'], {encoding: 'utf8'}));
+  const report = JSON.parse(execFileSync('python3', ['scripts/science/source-audits/audit_ufms_nelore_grazing.py'], {encoding: 'utf8'}));
   assert.equal(report.source.doi, '10.17632/3wdjvxmvsp.1');
   assert.equal(report.source.articleDoi, '10.1016/j.dib.2024.110520');
   assert.equal(report.source.license, 'CC BY 4.0');

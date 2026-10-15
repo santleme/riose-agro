@@ -16,7 +16,7 @@ from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/mendeley-nellore-feedlot"
 MANIFEST_PATH = DATA_DIR / "manifest.json"
 WORKBOOK_PATH = DATA_DIR / "Data file.xlsx"

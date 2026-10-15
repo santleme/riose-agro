@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts/audit_precision_beef_alignment.py"
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts/science/source-audits/audit_precision_beef_alignment.py"
 SPEC = importlib.util.spec_from_file_location("precision_beef_alignment_audit", MODULE_PATH)
 AUDIT = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

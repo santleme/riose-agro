@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 
 test('Rothamsted audit verifies the cohort holdout and does not claim engine validation', () => {
-  const raw = execFileSync('python3', ['scripts/audit_rothamsted_adg.py'], {encoding: 'utf8'});
+  const raw = execFileSync('python3', ['scripts/science/source-audits/audit_rothamsted_adg.py'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
 
   assert.equal(report.source.doi, '10.23637/rothamsted.00033688');

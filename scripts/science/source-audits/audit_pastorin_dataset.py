@@ -12,7 +12,7 @@ from pathlib import Path
 import xlrd
 from openpyxl import load_workbook
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/pastorin-treatment-comparisons"
 MANIFEST = DATA / "manifest.json"
 REPORT = ROOT / "docs/evidence/pastorin-treatment-comparisons-audit.json"

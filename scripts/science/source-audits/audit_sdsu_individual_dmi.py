@@ -15,7 +15,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data" / "sdsu-individual-dmi"
 EVIDENCE = ROOT / "docs" / "evidence" / "sdsu-individual-dmi-audit.json"
 DERIVED = DATA / "individual-dmi-derived.csv"

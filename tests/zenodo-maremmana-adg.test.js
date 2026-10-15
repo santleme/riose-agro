@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 
 test('Maremmana public cohort audit preserves licensing, leakage, endpoint checks, and uncertainty limits', () => {
-  const report = JSON.parse(execFileSync('node', ['scripts/audit_zenodo_maremmana_adg.js'], {encoding: 'utf8'}));
+  const report = JSON.parse(execFileSync('node', ['scripts/science/source-audits/audit_zenodo_maremmana_adg.js'], {encoding: 'utf8'}));
 
   assert.equal(report.source.doi, '10.5281/zenodo.12568499');
   assert.equal(report.source.license, 'CC BY 4.0');
