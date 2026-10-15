@@ -2,7 +2,7 @@
 
 Date: 2026-10-15
 Branch: `codex/behavioral-agents-sdd` (local commits from earlier Behavioral SDD remain unpushed; do not rewrite/push around network policy).
-Last verified commit: P3-009 implementation commit (recorded after commit).
+Last verified commit: `80bdc69` (`feat: add deterministic scenario prompt drafting`).
 Current branch: `codex/behavioral-agents-sdd`; earlier behavioral/Product V3 commits remain local and unpushed under the network policy.
 Completed tasks: P3-001 audit/rescope; P3-002 multi-scenario manifest/replay; P3-003 Worker/UI; P3-004 isolated BR-CORTE calculator; P3-005 cancellation; P3-006 browser performance and JS/Rust/WASM parity evidence; P3-009 deterministic prompt-to-review.
 Task in progress: none currently eligible; P3-007 and P3-008 remain blocked by their documented gates.
