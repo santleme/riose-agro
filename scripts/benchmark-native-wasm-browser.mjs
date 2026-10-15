@@ -40,8 +40,8 @@ const fingerprintPaths = [
   'crates/riose-core/src/snapshot.rs',
   'crates/riose-core/src/state.rs',
   'crates/riose-core/src/wasm_scenario.rs',
-  'src/client/app.js',
-  'src/client/animal-view-state.js',
+  'src/client/product-app.js',
+  'src/client/worker.js',
   'src/client/engine.js',
   'src/client/metabolism-wasm.js',
   'src/client/native-scenario-wasm.js',
@@ -74,20 +74,20 @@ const sourceTreeDigest = crypto.createHash('sha256')
   .digest('hex');
 const browser = await browserType.launch(browserOptions);
 const page = await browser.newPage({viewport: {width: 1280, height: 720}});
-const appUrl = new URL(origin);
-appUrl.searchParams.delete('engine');
-appUrl.searchParams.set('benchRender', '1');
-let cdp;
+const appUrl = new URL('/home.html', origin);
+
+const baselineGolden = JSON.parse(await readFile(new URL('../tests/scenario-goldens/baseline-pasture.json', import.meta.url), 'utf8'));
+const housingGolden = JSON.parse(await readFile(new URL('../tests/scenario-goldens/housing-comparison.json', import.meta.url), 'utf8'));
 
 const requestSource = `
 const deepEqual=(a,b)=>{if(a===b)return true;if(typeof a!==typeof b||a===null||b===null)return false;if(Array.isArray(a)||Array.isArray(b))return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>deepEqual(v,b[i]));if(typeof a==='object'){const ak=Object.keys(a).sort(),bk=Object.keys(b).sort();return ak.length===bk.length&&ak.every((k,i)=>k===bk[i]&&deepEqual(a[k],b[k]));}return false;};
+const scientificOnly=value=>{if(Array.isArray(value))return value.map(scientificOnly);if(!value||typeof value!=='object')return value;return Object.fromEntries(Object.entries(value).filter(([key])=>!['locomotionSeed','locomotionRngState','x','y','targetX','targetY'].includes(key)).map(([key,item])=>[key,scientificOnly(item)]));};
 let workerId=0;
 function createWorker(backend,wasmUrl){const worker=new Worker('/src/client/native-scenario-wasm-bench-worker.js',{type:'module'});const pending=new Map();worker.onmessage=event=>{const entry=pending.get(event.data.id);if(entry){pending.delete(event.data.id);entry.resolve(event.data);}};const call=message=>new Promise((resolve,reject)=>{const id=++workerId;pending.set(id,{resolve,reject});worker.postMessage({...message,id});});return {worker,call,backend,wasmUrl};}
 async function startWorker(backend,wasmUrl){const started=performance.now(),client=createWorker(backend,wasmUrl);const response=await client.call({action:'init',backend,wasmUrl});return {...client,startup:{...response.startup,workerToReadyMs:performance.now()-started}};}
 async function run(client,backend,request){const started=performance.now(),response=await client.call({action:'run',backend,request});return {...response,roundTripMs:performance.now()-started};}
-async function renderSnapshotForUi(snapshot){const drawStart=window.__rioseBenchmarkDrawProbe.completed,started=performance.now(),view=window.__rioseBenchmarkApplySnapshot(snapshot),updateDomMs=performance.now()-started,frameStart=performance.now(),deadline=frameStart+2000;while(window.__rioseBenchmarkDrawProbe.completed===drawStart&&performance.now()<deadline)await new Promise(resolve=>requestAnimationFrame(resolve));if(window.__rioseBenchmarkDrawProbe.completed===drawStart)throw new Error('The product canvas did not render the benchmark snapshot');return {updateDomMs,canvasFrameMs:performance.now()-frameStart,domNodes:view.domNodes,animalRows:view.animalRows,drawFrames:window.__rioseBenchmarkDrawProbe.completed-drawStart};}
-const baselineGolden=await fetch('/tests/scenario-goldens/baseline-pasture.json').then(r=>r.json());
-const housingGolden=await fetch('/tests/scenario-goldens/housing-comparison.json').then(r=>r.json());
+const baselineGolden=${JSON.stringify(baselineGolden)};
+const housingGolden=${JSON.stringify(housingGolden)};
 const goldenBaselineRequest={type:'baseline',version:1,seed:baselineGolden.seed,animalCount:baselineGolden.animalCount,configuration:baselineGolden.configuration,hours:baselineGolden.horizon.value};
 const goldenHousingRequest={type:'housing-comparison',version:1,snapshot:housingGolden.replayManifest.baseline,days:housingGolden.horizon.value};
 const wasmCold=await startWorker('wasm');
@@ -97,29 +97,20 @@ const wasmGoldenBaseline=await run(wasmCold,'wasm',goldenBaselineRequest);
 const jsGoldenBaseline=await run(javaScriptCold,'javascript',goldenBaselineRequest);
 const wasmGoldenHousing=await run(wasmCold,'wasm',goldenHousingRequest);
 const jsGoldenHousing=await run(javaScriptCold,'javascript',goldenHousingRequest);
-const goldenParity={baselineWasmToGolden:deepEqual(wasmGoldenBaseline.result, {type:'baseline',snapshot:baselineGolden.output.state,metrics:baselineGolden.output.metrics}),baselineJsToGolden:deepEqual(jsGoldenBaseline.result,{type:'baseline',snapshot:baselineGolden.output.state,metrics:baselineGolden.output.metrics}),housingWasmToGolden:deepEqual(wasmGoldenHousing.result,{type:'housing-comparison',comparison:housingGolden.output}),housingJsToGolden:deepEqual(jsGoldenHousing.result,{type:'housing-comparison',comparison:housingGolden.output}),baselineWasmToJs:deepEqual(wasmGoldenBaseline.result,jsGoldenBaseline.result),housingWasmToJs:deepEqual(wasmGoldenHousing.result,jsGoldenHousing.result)};
+const goldenParity={baselineWasmToGolden:deepEqual(scientificOnly(wasmGoldenBaseline.result),scientificOnly({type:'baseline',snapshot:baselineGolden.output.state,metrics:baselineGolden.output.metrics})),baselineJsToGolden:deepEqual(scientificOnly(jsGoldenBaseline.result),scientificOnly({type:'baseline',snapshot:baselineGolden.output.state,metrics:baselineGolden.output.metrics})),housingWasmToGolden:deepEqual(wasmGoldenHousing.result,{type:'housing-comparison',comparison:housingGolden.output}),housingJsToGolden:deepEqual(jsGoldenHousing.result,{type:'housing-comparison',comparison:housingGolden.output}),baselineWasmToJs:deepEqual(scientificOnly(wasmGoldenBaseline.result),scientificOnly(jsGoldenBaseline.result)),housingWasmToJs:deepEqual(wasmGoldenHousing.result,jsGoldenHousing.result)};
 if(Object.values(goldenParity).some(value=>!value))throw new Error('A3/B3 browser parity failed: '+JSON.stringify(goldenParity));
 
 async function warmStartupBatch(backend){const started=performance.now();for(let workerIndex=0;workerIndex<10;workerIndex++){const client=await startWorker(backend);client.worker.terminate();}return (performance.now()-started)/10;}
 const wasmWarmStartup=[],jsWarmStartup=[];
 for(let i=0;i<3;i++){wasmWarmStartup.push(await warmStartupBatch('wasm'));jsWarmStartup.push(await warmStartupBatch('javascript'));}
-const wasmRuns=[],jsRuns=[],bridgeRuns=[],memoryRuns=[],uiRuns=[];
+const wasmRuns=[],jsRuns=[],bridgeRuns=[],memoryRuns=[];
 for(const count of [100,1000,10000]){
   const request={type:'baseline',version:1,seed:20261012,animalCount:count,configuration:{diet:'pasture',housing:'pasture',weather:'normal',supplement:0},hours:24};
   for(let i=0;i<${warmups};i++){const [w,j]=await Promise.all([run(wasmCold,'wasm',request),run(javaScriptCold,'javascript',request)]);if(!deepEqual(w.result,j.result))throw new Error('Full-core parity failed at '+count+' animals during warmup '+i);}
-  let wasmSnapshot,javascriptSnapshot;
   for(let repetition=0;repetition<${repetitions};repetition++){
     const order=repetition%2===0?['wasm','javascript']:['javascript','wasm'];
-    for(const backend of order){const client=backend==='wasm'?wasmCold:javaScriptCold;const result=await run(client,backend,request);if(!result.ok)throw new Error(backend+' scenario failed at '+count+' animals: '+result.error);if(backend==='wasm'){wasmRuns.push({count,elapsedMs:result.elapsedMs,roundTripMs:result.roundTripMs});bridgeRuns.push({count,...result.bridgeTimings});memoryRuns.push({count,memoryBytes:result.wasmMemoryBytes});if(repetition===${repetitions}-1)wasmSnapshot=result.result.snapshot;}else{jsRuns.push({count,elapsedMs:result.elapsedMs,roundTripMs:result.roundTripMs});if(repetition===${repetitions}-1)javascriptSnapshot=result.result.snapshot;}}
+    for(const backend of order){const client=backend==='wasm'?wasmCold:javaScriptCold;const result=await run(client,backend,request);if(!result.ok)throw new Error(backend+' scenario failed at '+count+' animals: '+result.error);if(backend==='wasm'){wasmRuns.push({count,elapsedMs:result.elapsedMs,roundTripMs:result.roundTripMs});bridgeRuns.push({count,...result.bridgeTimings});memoryRuns.push({count,memoryBytes:result.wasmMemoryBytes});}else{jsRuns.push({count,elapsedMs:result.elapsedMs,roundTripMs:result.roundTripMs});}}
   }
-  if(!deepEqual(wasmSnapshot,javascriptSnapshot))throw new Error('Final browser UI snapshots differ at '+count+' animals');
-  const uiSamples={javascript:{updateDomMs:[],canvasFrameMs:[],domNodes:[],animalRows:[],drawFrames:[]},wasm:{updateDomMs:[],canvasFrameMs:[],domNodes:[],animalRows:[],drawFrames:[]}};
-  for(let repetition=0;repetition<${repetitions};repetition++){
-    const order=repetition%2===0?['javascript','wasm']:['wasm','javascript'];
-    for(const backend of order){const snapshot=backend==='wasm'?wasmSnapshot:javascriptSnapshot,row=await renderSnapshotForUi(snapshot);for(const key of Object.keys(row))uiSamples[backend][key].push(row[key]);}
-  }
-  uiRuns.push({count,implementation:'shared-renderer',equivalentSnapshots:true,...Object.fromEntries(Object.keys(uiSamples.javascript).map(key=>[key,[...uiSamples.javascript[key],...uiSamples.wasm[key]]]))});
-  wasmSnapshot=null;javascriptSnapshot=null;
 }
 
 const missingWasm=await startWorker('wasm','/wasm/riose_scenario_core_missing.wasm');
@@ -129,7 +120,7 @@ const invalidWasm=await startWorker('wasm','data:application/wasm;base64,AAAAAA=
 const invalidFallback=await run(invalidWasm,'wasm',goldenBaselineRequest);
 const invalidFallbackVerified=invalidFallback.ok&&invalidFallback.backend==='javascript'&&invalidFallback.fallback?.used===true&&deepEqual(invalidFallback.result,jsGoldenBaseline.result);
 if(!fallbackVerified||!invalidFallbackVerified)throw new Error('Unavailable/invalid-WASM JavaScript fallback failed');
-const result={browser:{userAgent:navigator.userAgent,hardwareConcurrency:navigator.hardwareConcurrency??null,deviceMemoryGiB:navigator.deviceMemory??null,devicePixelRatio,screen:{width:screen.width,height:screen.height}},goldenParity,wasmColdStartup:wasmCold.startup,jsColdStartup:javaScriptCold.startup,wasmWarmStartup,jsWarmStartup,wasmRuns,jsRuns,bridgeRuns,memoryRuns,uiRuns,fallback:{verified:fallbackVerified&&invalidFallbackVerified,missing:{verified:fallbackVerified,reason:fallback.fallback.reason},invalid:{verified:invalidFallbackVerified,reason:invalidFallback.fallback.reason}}};
+const result={browser:{userAgent:navigator.userAgent,hardwareConcurrency:navigator.hardwareConcurrency??null,deviceMemoryGiB:navigator.deviceMemory??null,devicePixelRatio,screen:{width:screen.width,height:screen.height}},goldenParity,wasmColdStartup:wasmCold.startup,jsColdStartup:javaScriptCold.startup,wasmWarmStartup,jsWarmStartup,wasmRuns,jsRuns,bridgeRuns,memoryRuns,fallback:{verified:fallbackVerified&&invalidFallbackVerified,missing:{verified:fallbackVerified,reason:fallback.fallback.reason},invalid:{verified:invalidFallbackVerified,reason:invalidFallback.fallback.reason}}};
 wasmCold.worker.terminate();javaScriptCold.worker.terminate();missingWasm.worker.terminate();invalidWasm.worker.terminate();
 return result;
 `;
@@ -138,33 +129,14 @@ try {
   const ready = await fetch(appUrl);
   if (!ready.ok) throw new Error(`Benchmark origin returned HTTP ${ready.status}: ${appUrl}`);
   await page.goto(appUrl.toString(), {waitUntil: 'load'});
-  await page.waitForFunction(() => window.__rioseBenchmarkReady === true, null, {timeout: 30000});
-  if (browserEngine === 'chromium') {
-    cdp = await page.context().newCDPSession(page);
-    await cdp.send('HeapProfiler.enable');
-    await cdp.send('Performance.enable');
-    await cdp.send('HeapProfiler.collectGarbage');
-  }
-  const before = cdp ? Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value])) : null;
+
   const browserResult = await page.evaluate(`(async()=>{${requestSource}})()`);
   browserResult.browser.browserProduct = `${browserEngine === 'chromium' ? 'Chromium' : 'Firefox'} ${browser.version()}`;
   browserResult.browser.browserRevision = `Playwright ${process.env.npm_package_devDependencies_playwright ?? '1.57.0'}`;
-  if (cdp) await cdp.send('HeapProfiler.collectGarbage');
-  const after = cdp ? Object.fromEntries((await cdp.send('Performance.getMetrics')).metrics.filter(item => ['JSHeapUsedSize', 'JSHeapTotalSize'].includes(item.name)).map(item => [item.name, item.value])) : null;
 
   const byCount = (rows, count, field) => rows.filter(row => row.count === count).map(row => row[field]);
   const summary = values => summarizeSamples(values);
   const populations = [100, 1000, 10000].map(animals => ({animals, scope: 'full-core browser scenario and Worker', limit: 'FarmEngine supported maximum 10000'}));
-  const uiFor = animals => browserResult.uiRuns.find(row => row.count === animals);
-  const userVisibleEndToEnd = [100, 1000, 10000].map(animals => {
-    const wasmWorkerMs = summary(byCount(browserResult.wasmRuns, animals, 'roundTripMs')).median;
-    const jsWorkerMs = summary(byCount(browserResult.jsRuns, animals, 'roundTripMs')).median;
-    const sharedUi = uiFor(animals);
-    const sharedUiMs = summary(sharedUi.updateDomMs).median + summary(sharedUi.canvasFrameMs).median;
-    const wasmUiMs = sharedUiMs, jsUiMs = sharedUiMs;
-    return {animals, wasmWorkerMs, javascriptWorkerMs: jsWorkerMs, wasmUiMs, javascriptUiMs: jsUiMs, wasmRenderedResultMs: wasmWorkerMs + wasmUiMs, javascriptRenderedResultMs: jsWorkerMs + jsUiMs};
-  });
-  const endToVisibleGo = userVisibleEndToEnd.every(row => row.wasmRenderedResultMs < row.javascriptRenderedResultMs);
   const phases = {
     engine: {status: 'measured', measurements: [100, 1000, 10000].flatMap(animals => {
       const wasmRows = browserResult.bridgeRuns.filter(row => row.count === animals);
@@ -203,15 +175,9 @@ try {
     memory: {status: 'measured', measurements: [100, 1000, 10000].map(animals => {
       const rows = browserResult.memoryRuns.filter(row => row.count === animals);
       return measurement('memory', 'wasmLinearMemoryBytesAfterScenario', 'bytes', summary(rows.map(row => row.memoryBytes)), {population: {animals, scope: 'full-core scenario'}, implementation: 'full-core-wasm', memoryType: 'wasm-memory', observations: rows.map(row => row.memoryBytes), source: 'WebAssembly.Memory.buffer.byteLength after the scenario response has been copied'});
-    }).concat(after?.JSHeapUsedSize !== undefined ? [measurement('memory', 'pageJsHeapAfterGarbageCollection', 'bytes', summary([after.JSHeapUsedSize]), {population: {animals: 10000, scope: 'browser page after rendering a full scenario result'}, implementation: 'product-ui-and-benchmark-page', memoryType: 'js-heap', observations: [after.JSHeapUsedSize], deltaBytes: after.JSHeapUsedSize - before.JSHeapUsedSize, source: 'Chromium Performance.getMetrics after forced page garbage collection; includes main-thread displayed snapshot, excludes dedicated Worker heap attribution'})] : [])},
-    ui: {status: 'measured', measurements: browserResult.uiRuns.flatMap(row => [
-      measurement('ui', 'snapshotToDomUpdate', 'ms', summary(row.updateDomMs), {population: {animals: row.count, scope: 'existing product UI result display'}, implementation: row.implementation, observations: row.updateDomMs, detail: 'synchronous existing UI metric/animal list updates after equal JavaScript/WASM scenario snapshots are applied in alternating order'}),
-      measurement('ui', 'snapshotToCanvasFrame', 'ms', summary(row.canvasFrameMs), {population: {animals: row.count, scope: 'existing product UI result display'}, implementation: row.implementation, observations: row.canvasFrameMs, detail: 'wait from equivalent snapshot application to next completed product canvas draw'}),
-      measurement('ui', 'virtualizedAnimalRows', 'rows', summary(row.animalRows), {population: {animals: row.count, scope: 'existing product UI result display'}, implementation: row.implementation, observations: row.animalRows, domNodes: summary(row.domNodes), completedDrawFrames: row.drawFrames}),
-    ]).concat(userVisibleEndToEnd.flatMap(row => [
-      measurement('ui', 'workerToRenderedResultEstimate', 'ms', summary([row.wasmRenderedResultMs]), {population: {animals: row.animals, scope: 'scenario Worker response plus separately timed product UI display'}, implementation: 'full-core-wasm', observations: [row.wasmRenderedResultMs], detail: `derived as Worker round-trip median ${row.wasmWorkerMs} ms plus UI update/canvas medians ${row.wasmUiMs} ms; not measured as one continuous request`} ),
-      measurement('ui', 'workerToRenderedResultEstimate', 'ms', summary([row.javascriptRenderedResultMs]), {population: {animals: row.animals, scope: 'scenario Worker response plus separately timed product UI display'}, implementation: 'javascript', observations: [row.javascriptRenderedResultMs], detail: `derived as Worker round-trip median ${row.javascriptWorkerMs} ms plus UI update/canvas medians ${row.javascriptUiMs} ms; not measured as one continuous request`} ),
-    ]))},
+    })},
+    ui: {status: 'not-measured', measurements: []},
+    uiEndToEnd: {status: 'not-measured', measurements: []},
   };
   const parityFailed = Object.values(browserResult.goldenParity).some(value => !value);
   const wasmTimes = browserResult.wasmRuns.map(row => row.elapsedMs);
@@ -228,8 +194,8 @@ try {
     runtime: {browser: browserEngine, browserVersion: browserResult.browser.browserProduct, browserRevision: browserResult.browser.browserRevision, browserUserAgent: browserResult.browser.userAgent, node: process.version, rust: execFileSync('rustc', ['--version'], {encoding: 'utf8'}).trim()},
     hardware: {os: `${type()} ${release()}`, architecture: arch(), cpu: cpus()[0]?.model ?? null, gpuMemoryBytes: null, browserDevice: {hardwareConcurrency: browserResult.browser.hardwareConcurrency, deviceMemoryGiB: browserResult.browser.deviceMemoryGiB, devicePixelRatio: browserResult.browser.devicePixelRatio, screen: browserResult.browser.screen}},
     workload: {seed: 20261012, populations, scenario: 'baseline pasture; 24-hour horizon', fixtureChecks: 'baseline-pasture (A3) and housing-comparison (B3), exact JSON parity'},
-    configuration: {warmupRuns: warmups, repetitions, uiRepetitions: repetitions, startupWarmSamples: browserResult.wasmWarmStartup.length, workersPerWarmStartupSample: 10, browserCacheState: `isolated ${browserEngine} profile; warm samples divide batches of ten Worker startups after the initial cold WASM compile`},
-    limits: {farmEngineMaxAnimals: 10000, rendererMaxAnimals: 10000, numericKernelMaxAnimalsMeasured: 100000},
+    configuration: {warmupRuns: warmups, repetitions, startupWarmSamples: browserResult.wasmWarmStartup.length, workersPerWarmStartupSample: 10, browserCacheState: `isolated ${browserEngine} profile; warm samples divide batches of ten Worker startups after the initial cold WASM compile`},
+    limits: {farmEngineMaxAnimals: 10000, numericKernelMaxAnimalsMeasured: 100000},
     phases,
     timingBoundaries: [
       {phase: 'startup', timed: ['Worker construction through ready message; WASM fetch and compile are included for WASM.'], notTimed: ['Browser process launch and initial page navigation.']},
@@ -239,13 +205,12 @@ try {
       {phase: 'fullScenario', timed: ['Worker-side 24-hour baseline including JS engine work or WASM JSON ABI parse, native scenario, result serialization, response copy, and JSON decode.'], notTimed: ['Page rendering and browser process launch.']},
       {phase: 'worker', timed: ['Page request through Worker response including structured-clone transfer and scheduling.'], notTimed: ['UI rendering; the study uses a dedicated benchmark Worker.']},
       {phase: 'bridgeMarshaling', timed: ['WASM request JSON encode, input allocation/copy, Rust request JSON parse, result JSON serialization, output copy, response JSON decode, and total ABI call.'], notTimed: ['UI rendering; response-envelope assembly is included in the total ABI call but not timed as a separate subphase.']},
-      {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario; Chromium page JS heap after forced GC and product UI snapshot rendering when available.'], notTimed: ['Worker JS heap attribution, process RSS, GPU memory, and transient peak allocation.']},
-      {phase: 'ui', timed: ['Existing product UI synchronous metric/virtualized animal list update and time until the canvas completes a draw from an equivalent full-scenario result snapshot.'], notTimed: ['Scenario execution, benchmark Worker transport, user input, interactive simulation ticks, and GPU-compositor presentation. The UI-only hook applies the JS and WASM outputs separately after each scenario completes. workerToRenderedResultEstimate adds the separately measured worker and UI medians; it is not a single continuous trace.']},
+      {phase: 'memory', timed: ['WASM linear memory high-water size after each completed scenario.'], notTimed: ['Worker JS heap attribution, page heap, process RSS, GPU memory, and transient peak allocation.']},
     ],
-    results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToVisibleGo ? 'GO candidate: WASM was faster from Worker request through estimated UI display at each population; requires independent repeat before adoption' : 'NO-GO for product adoption: no repeatable Worker-to-display benefit across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, medianWorkerToRenderedResultBenefitAtEveryPopulation: endToVisibleGo, workerToRenderedResult: userVisibleEndToEnd, sourceArtifactBytes: (await stat(new URL('../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
+    results: {browser: browserResult.browser, goldenParity: browserResult.goldenParity, fallback: browserResult.fallback, warmupRuns: warmups, repetitions, decision: parityFailed ? 'NO-GO: scenario parity failed' : endToEndGo ? 'WASM compute and Worker path faster at each population in this run; repeat before adoption' : 'No consistent WASM compute and Worker advantage across all tested populations', aggregateMedianMs: {wasm: wasmMedian, javascript: jsMedian}, medianEndToEndBenefitAtEveryPopulation: endToEndGo, sourceArtifactBytes: (await stat(new URL('../wasm/riose_scenario_core.wasm', import.meta.url))).size, sourceFingerprint: {algorithm: 'sha256', treeDigest: sourceTreeDigest, files: sourceHashes}},
     limitations: [
       `One Linux x86_64 host and one ${browserEngine} build are measured per report; evidence from other browser releases or devices is not implied.`,
-      'The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity. Their equal final snapshots are then applied to the existing product UI through a query-gated benchmark hook; this measures presentation cost but is not a live WASM UI integration.',
+      'The JavaScript engine and Rust WASM core execute in separate dedicated module Workers with equivalent requests and exact output parity. This benchmark measures compute, Worker transport, startup, bridge costs, and WASM memory only; it does not measure product presentation.',
       'Worker JS heap and process RSS are not attributed. WASM linear memory is reported separately and is not GPU memory.',
       'The baseline workload is a 24-hour demonstrative pasture scenario; it is not scientific model validation or evidence for model accuracy.',
       'A single cold startup and three warm startups describe this host run; repeatability across hosts remains for review.',
@@ -253,6 +218,5 @@ try {
   });
   console.log(JSON.stringify(result, null, 2));
 } finally {
-  if (cdp) await cdp.detach();
   await browser.close();
 }

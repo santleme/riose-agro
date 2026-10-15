@@ -67,27 +67,6 @@ pub struct SeededRng {
     state: u32,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct SeedStreams {
-    pub model: SeededRng,
-    pub locomotion: SeededRng,
-}
-
-impl SeedStreams {
-    pub fn new(seed: u32) -> Self {
-        Self {
-            model: SeededRng::new(seed),
-            locomotion: SeededRng::new(derive_locomotion_seed(seed)),
-        }
-    }
-}
-
-pub fn derive_locomotion_seed(seed: u32) -> u32 {
-    (seed ^ 0x9e37_79b9)
-        .wrapping_mul(1_664_525)
-        .wrapping_add(1_013_904_223)
-}
-
 impl SeededRng {
     pub fn new(seed: u32) -> Self {
         Self { state: seed }
@@ -172,7 +151,8 @@ pub struct CoreSnapshot {
     pub tick: u64,
     pub model_seed: u32,
     pub model_rng_state: u32,
-    pub locomotion_rng_state: u32,
+    #[serde(rename = "locomotionRngState", default, skip_serializing)]
+    pub legacy_locomotion_rng_state: u32,
     pub next_entity_id: u32,
     pub metrics: SimulationMetrics,
     pub entities: Vec<EntitySnapshot>,
@@ -188,7 +168,7 @@ impl CoreSnapshot {
             tick: 0,
             model_seed: seed,
             model_rng_state: seed,
-            locomotion_rng_state: derive_locomotion_seed(seed),
+            legacy_locomotion_rng_state: 0,
             next_entity_id: 1,
             metrics: SimulationMetrics::default(),
             entities: Vec::new(),
@@ -277,10 +257,6 @@ mod tests {
         assert_eq!(second.next_u32(), 2_540_273_648);
         assert_eq!(first.next_f64(), 1_949_569_679.0 / 4_294_967_296.0);
         assert_eq!(first.state(), second.next_u32());
-        assert_eq!(derive_locomotion_seed(917), 1_312_403_355);
-        let streams = SeedStreams::new(917);
-        assert_eq!(streams.model.state(), 917);
-        assert_eq!(streams.locomotion.state(), 1_312_403_355);
 
         let mut metrics = SimulationMetrics::default();
         metrics.record_tick(24, 500);

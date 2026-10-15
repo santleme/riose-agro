@@ -14,6 +14,14 @@ async function loadFixtureWasm(bytes = wasmBytes) {
     new Response(bytes, {headers: {'content-type': 'application/wasm'}}));
 }
 
+function scientificOnly(value) {
+  if (Array.isArray(value)) return value.map(scientificOnly);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(Object.entries(value)
+    .filter(([key]) => !['locomotionSeed', 'locomotionRngState', 'x', 'y', 'targetX', 'targetY'].includes(key))
+    .map(([key, item]) => [key, scientificOnly(item)]));
+}
+
 function assertSeparatedStageTimings(run) {
   assert.equal(run.abiVersion, 2);
   for (const field of ['requestJsonParseMs', 'nativeScenarioEngineMs', 'resultJsonSerializeMs']) {
@@ -22,7 +30,7 @@ function assertSeparatedStageTimings(run) {
   }
 }
 
-test('full-core WASM replays the official baseline fixture exactly', async t => {
+test('full-core WASM replays the scientific state in the official baseline fixture exactly', async t => {
   const run = await loadFixtureWasm();
   t.after(() => run.dispose?.());
   const result = run({
@@ -35,11 +43,11 @@ test('full-core WASM replays the official baseline fixture exactly', async t => 
   });
   assertSeparatedStageTimings(run);
   assert.equal(result.engine.provenance, 'native-rust-core');
-  assert.deepEqual(result.result, {
+  assert.deepEqual(scientificOnly(result.result), scientificOnly({
     type: 'baseline',
     snapshot: baselineGolden.output.state,
     metrics: baselineGolden.output.metrics,
-  });
+  }));
 });
 
 test('full-core WASM replays the official housing comparison fixture exactly', async t => {
@@ -53,10 +61,10 @@ test('full-core WASM replays the official housing comparison fixture exactly', a
   });
   assertSeparatedStageTimings(run);
   assert.equal(result.engine.provenance, 'native-rust-core');
-  assert.deepEqual(result.result, {
+  assert.deepEqual(scientificOnly(result.result), scientificOnly({
     type: 'housing-comparison',
     comparison: housingGolden.output,
-  });
+  }));
 });
 
 test('invalid scenario WASM reports load failure so a caller can use the JS fallback', async () => {

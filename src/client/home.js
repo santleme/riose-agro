@@ -1,6 +1,5 @@
 const header = document.querySelector('.site-header');
 const hero = document.querySelector('.hero');
-const scene = document.querySelector('.hero-scene');
 const lockup = document.querySelector('.hero-lockup');
 const heroWordmark = document.querySelector('.hero-wordmark');
 const headerWordmark = document.querySelector('.header-wordmark');
@@ -45,22 +44,3 @@ window.addEventListener('scroll', () => {
   }
 }, {passive: true});
 updateScrollState();
-
-if (!reduceMotion.matches && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  let pointerFrame = 0;
-  hero.addEventListener('pointermove', (event) => {
-    if (pointerFrame) return;
-    pointerFrame = window.requestAnimationFrame(() => {
-      const bounds = hero.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-      scene.style.setProperty('--scene-x', `${(x * 9).toFixed(1)}px`);
-      scene.style.setProperty('--scene-y', `${(y * 5).toFixed(1)}px`);
-      pointerFrame = 0;
-    });
-  }, {passive: true});
-  hero.addEventListener('pointerleave', () => {
-    scene.style.setProperty('--scene-x', '0px');
-    scene.style.setProperty('--scene-y', '0px');
-  }, {passive: true});
-}

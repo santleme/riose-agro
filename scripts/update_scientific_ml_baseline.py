@@ -23,7 +23,6 @@ SOURCE_DATA = "data/usda-cgrec-longterm/Streeter-ND_1989-2015_compiled.csv"
 CPER_REPORT = "docs/evidence/engine-adg-usda-cper-ltgi-check.json"
 ENGINE_SOURCE_FILES = (
     "engine.js",
-    "animal-view-state.js",
     "feeding-model.js",
     "environment-model.js",
     "metabolism-wasm.js",

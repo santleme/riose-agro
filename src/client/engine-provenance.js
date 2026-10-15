@@ -1,6 +1,5 @@
 export const ENGINE_SOURCE_FILES = Object.freeze([
   'engine.js',
-  'animal-view-state.js',
   'feeding-model.js',
   'environment-model.js',
   'metabolism-wasm.js',

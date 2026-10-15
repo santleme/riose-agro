@@ -16,17 +16,16 @@ const MAX_NATIVE_COMPARISON_BODY_BYTES = 8 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const PUBLIC_FILES = new Set([
-  'tools/product-composer.html', 'tools/product-composer.css', 'tools/product-composer.js',
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'product-interaction.js', 'simulator.html', 'riose-mark.svg',
-  'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png',
+  'product.html', 'product.css', 'simulator.html', 'riose-mark.svg',
+  'assets/riose-cow-cutout.png',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
-  'index.html', 'lab.html', 'style.css', 'app.js', 'engine.js', 'animal-view-state.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
+  'index.html', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
-  'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
+  'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',
   'montana-cow-data.html', 'montana-cow-data.js',
@@ -59,22 +58,9 @@ const PUBLIC_FILES = new Set([
   'data/zenodo-grazing-allometry/Zenodo_Data_Allometry.txt', 'data/zenodo-grazing-allometry/manifest.json',
   'data/rothamsted/Cattle_LWt_collated_2018-2025.csv', 'data/rothamsted/2018-2025_Pasture_DM_herbage_mass.csv',
   'schemas/farm-snapshot.schema.json', 'schemas/outcome-record.schema.json',
+  'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'wasm/riose_scenario_core.wasm',
 ]);
 const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
-
-for (const file of [
-  'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
-  'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json',
-  'graphics-poc/asset-sources.json', 'graphics-poc/benchmark-approved-scene.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
-  'graphics-poc/assets/handling-review-atlas-v1.png', 'graphics-poc/assets/dairy/dairy-holstein-cow.png',
-  'graphics-poc/assets/dairy/dairy-girolando-cow.png', 'graphics-poc/assets/dairy/dairy-heifer.png',
-  'graphics-poc/assets/dairy/dairy-heifer-calf.png', 'graphics-poc/assets/dairy/dairy-barn.png',
-  'graphics-poc/assets/dairy/dairy-milking-parlor.png', 'graphics-poc/assets/dairy/dairy-milk-chilling-tank.png',
-  'graphics-poc/assets/dairy/dairy-waiting-pen.png', 'graphics-poc/assets/dairy/dairy-activity-collar.png',
-  'graphics-poc/assets/main-composer-render-manifest.json', 'graphics-poc/assets/main-composer/environment-review-atlas-v1.png',
-  'graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png', 'graphics-poc/assets/main-composer/technology-review-atlas-v1.png',
-  'graphics-poc/assets/main-composer/animals-review-atlas-v1.png', 'graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png',
-]) PUBLIC_FILES.add(file);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -84,6 +70,7 @@ const MIME_TYPES = {
   '.csv': 'text/csv; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
   '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   '.png': 'image/png',
 };

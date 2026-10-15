@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
-import {readFileSync} from 'node:fs';
+import {readFileSync, writeFileSync} from 'node:fs';
 
 test('UFMS Nelore v1 audit preserves coverage and flags ADG incompatibility', () => {
   const report = JSON.parse(execFileSync('python3', ['scripts/audit_ufms_nelore_grazing.py'], {encoding: 'utf8'}));
@@ -24,16 +24,29 @@ test('UFMS Nelore v1 audit preserves coverage and flags ADG incompatibility', ()
 test('UFMS frozen ADG transfer diagnostic is reproducible, animal-clustered, and kept separate from adult validation', () => {
   const path = 'docs/evidence/engine-adg-ufms-check.json';
   const before = readFileSync(path, 'utf8');
-  execFileSync('node', ['scripts/audit_engine_adg_ufms.js'], {encoding: 'utf8'});
-  const report = JSON.parse(readFileSync(path, 'utf8'));
-  assert.equal(readFileSync(path, 'utf8'), before);
-  assert.equal(report.source.license, 'CC BY 4.0');
-  assert.equal(report.overall.records, 390);
-  assert.equal(report.overall.animals, 26);
-  assert.equal(report.engine.fitted, false);
-  assert.equal(report.protocol.bootstrapReplicates, 5000);
-  assert.deepEqual(report.animalClusterBootstrap95Percent.maeKgPerDay.length, 2);
-  assert.equal(report.comparisonCaveats.some(item => /not mature adult cows/.test(item)), true);
-  assert.equal(report.comparisonCaveats.some(item => /not calibration/.test(item)), true);
-  assert.match(report.decision, /separate growing-male ADG transfer diagnostic/);
+  try {
+    execFileSync('node', ['scripts/audit_engine_adg_ufms.js'], {encoding: 'utf8'});
+    const report = JSON.parse(readFileSync(path, 'utf8'));
+    const archived = JSON.parse(before);
+    const withoutEngineProvenance = value => {
+      const copy = structuredClone(value);
+      delete copy.engine.sourceFiles;
+      delete copy.engine.sha256;
+      return copy;
+    };
+    assert.deepEqual(withoutEngineProvenance(report), withoutEngineProvenance(archived));
+    assert.deepEqual(report.engine.sourceFiles, ['engine.js', 'feeding-model.js', 'environment-model.js', 'metabolism-wasm.js']);
+    assert.notEqual(report.engine.sha256, archived.engine.sha256);
+    assert.equal(report.source.license, 'CC BY 4.0');
+    assert.equal(report.overall.records, 390);
+    assert.equal(report.overall.animals, 26);
+    assert.equal(report.engine.fitted, false);
+    assert.equal(report.protocol.bootstrapReplicates, 5000);
+    assert.deepEqual(report.animalClusterBootstrap95Percent.maeKgPerDay.length, 2);
+    assert.equal(report.comparisonCaveats.some(item => /not mature adult cows/.test(item)), true);
+    assert.equal(report.comparisonCaveats.some(item => /not calibration/.test(item)), true);
+    assert.match(report.decision, /separate growing-male ADG transfer diagnostic/);
+  } finally {
+    writeFileSync(path, before);
+  }
 });

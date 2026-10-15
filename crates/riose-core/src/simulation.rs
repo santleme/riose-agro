@@ -8,7 +8,7 @@ use crate::state::{
     CONCENTRATE_PRICE, DAILY_PASTURE_GROWTH_KG_DM, GAIN_FACTOR, INITIAL_PASTURE_KG_DM,
     MAINTENANCE_KG_DM, PASTURE_CAP_KG_DM, SUPPLEMENT_PRICE,
 };
-use crate::{update_metabolism, EntityId, EntityIdAllocator, Housing, SeedStreams, SeededRng};
+use crate::{update_metabolism, EntityId, EntityIdAllocator, Housing, SeededRng};
 use serde::{Deserialize, Serialize};
 
 const NAMES: [&str; 24] = [
@@ -16,52 +16,10 @@ const NAMES: [&str; 24] = [
     "Kiara", "Luna", "Milo", "Nina", "Oliva", "Pingo", "Quinoa", "Rubi", "Sol", "Teca", "Uva",
     "Vento", "Wally", "Zara",
 ];
-const PATCH_BOUNDS: [Bounds; 4] = [
-    Bounds {
-        x: 35.0,
-        y: 45.0,
-        w: 135.0,
-        h: 100.0,
-    },
-    Bounds {
-        x: 200.0,
-        y: 45.0,
-        w: 135.0,
-        h: 100.0,
-    },
-    Bounds {
-        x: 35.0,
-        y: 180.0,
-        w: 135.0,
-        h: 100.0,
-    },
-    Bounds {
-        x: 200.0,
-        y: 180.0,
-        w: 135.0,
-        h: 100.0,
-    },
-];
-const BARN_BOUNDS: Bounds = Bounds {
-    x: 392.0,
-    y: 186.0,
-    w: 132.0,
-    h: 98.0,
-};
-
-#[derive(Clone, Copy)]
-struct Bounds {
-    x: f64,
-    y: f64,
-    w: f64,
-    h: f64,
-}
-
 #[derive(Clone, Debug)]
 pub struct FarmEngine {
     state: FarmSnapshot,
     model_rng: SeededRng,
-    locomotion_rng: SeededRng,
     #[cfg(feature = "history-ring")]
     /// Physical index of the oldest entry in each animal's bounded history.
     history_starts: Vec<u8>,
@@ -104,15 +62,12 @@ impl FarmEngine {
         if !(1..=10_000).contains(&count) {
             return Err("animal count must be between 1 and 10000".into());
         }
-        let mut streams = SeedStreams::new(seed);
+        let mut model_rng = SeededRng::new(seed);
         let mut id_allocator = EntityIdAllocator::new(1);
         let mut animals = Vec::with_capacity(count);
         for index in 0..count {
-            let weight = 330.0 + streams.model.next_f64() * 70.0;
+            let weight = 330.0 + model_rng.next_f64() * 70.0;
             let patch = (index % 4) as u32;
-            let bounds = PATCH_BOUNDS[patch as usize];
-            let x = bounds.x + 10.0 + streams.locomotion.next_f64() * (bounds.w - 20.0);
-            let y = bounds.y + 10.0 + streams.locomotion.next_f64() * (bounds.h - 20.0);
             let id = id_allocator
                 .allocate()
                 .map_err(|_| "animal id space exhausted".to_owned())?;
@@ -130,10 +85,6 @@ impl FarmEngine {
                 thirst: 20.0,
                 action: Activity::Grazing,
                 patch,
-                x,
-                y,
-                target_x: x,
-                target_y: y,
                 history: Vec::new(),
             };
             record_activity_vec(
@@ -161,10 +112,8 @@ impl FarmEngine {
                 }],
                 seed,
                 initial_seed: seed,
-                locomotion_seed: streams.locomotion.state(),
             },
-            model_rng: streams.model,
-            locomotion_rng: streams.locomotion,
+            model_rng,
             #[cfg(feature = "history-ring")]
             history_starts: vec![0; count],
         };
@@ -175,13 +124,11 @@ impl FarmEngine {
     pub fn from_snapshot(snapshot: FarmSnapshot) -> Result<Self, String> {
         snapshot.validate()?;
         let model_rng = SeededRng::new(snapshot.seed);
-        let locomotion_rng = SeededRng::new(snapshot.locomotion_seed);
         #[cfg(feature = "history-ring")]
         let history_starts = vec![0; snapshot.animals.len()];
         let engine = Self {
             state: snapshot,
             model_rng,
-            locomotion_rng,
             #[cfg(feature = "history-ring")]
             history_starts,
         };
@@ -195,7 +142,6 @@ impl FarmEngine {
             animal.history.rotate_left(usize::from(*start));
         }
         result.seed = self.model_rng.state();
-        result.locomotion_seed = self.locomotion_rng.state();
         result
     }
 
@@ -208,9 +154,6 @@ impl FarmEngine {
         let previous = self.state.config;
         self.state.config = config;
         if config.housing != previous.housing {
-            for index in 0..self.state.animals.len() {
-                self.place(index);
-            }
             self.log(
                 if config.housing == Housing::Barn {
                     "Rebanho transferido para o confinamento.".to_owned()
@@ -348,21 +291,6 @@ impl FarmEngine {
                         None
                     };
 
-                    let bounds = bounds_for(config.housing, patch_index);
-                    animal.target_x =
-                        bounds.x + 10.0 + self.locomotion_rng.next_f64() * (bounds.w - 20.0);
-                    animal.target_y =
-                        bounds.y + 10.0 + self.locomotion_rng.next_f64() * (bounds.h - 20.0);
-                    animal.x = clamp(
-                        animal.x + (animal.target_x - animal.x) * 0.15,
-                        bounds.x + 8.0,
-                        bounds.x + bounds.w - 8.0,
-                    );
-                    animal.y = clamp(
-                        animal.y + (animal.target_y - animal.y) * 0.15,
-                        bounds.y + 8.0,
-                        bounds.y + bounds.h - 8.0,
-                    );
                     event
                 };
                 if let Some((text, animal_id)) = activity_event {
@@ -386,24 +314,6 @@ impl FarmEngine {
         Ok(())
     }
 
-    fn random_locomotion(&mut self) -> f64 {
-        let result = self.locomotion_rng.next_f64();
-        self.state.locomotion_seed = self.locomotion_rng.state();
-        result
-    }
-
-    fn place(&mut self, index: usize) {
-        let patch = self.state.animals[index].patch as usize;
-        let bounds = bounds_for(self.state.config.housing, patch);
-        let x = bounds.x + 10.0 + self.random_locomotion() * (bounds.w - 20.0);
-        let y = bounds.y + 10.0 + self.random_locomotion() * (bounds.h - 20.0);
-        let animal = &mut self.state.animals[index];
-        animal.x = x;
-        animal.y = y;
-        animal.target_x = x;
-        animal.target_y = y;
-    }
-
     fn log(&mut self, text: String, animal_id: Option<EntityId>) {
         self.state.events.insert(
             0,
@@ -418,20 +328,7 @@ impl FarmEngine {
 
     fn sync_rng_states(&mut self) {
         self.state.seed = self.model_rng.state();
-        self.state.locomotion_seed = self.locomotion_rng.state();
     }
-}
-
-fn bounds_for(housing: Housing, patch: usize) -> Bounds {
-    if housing == Housing::Barn {
-        BARN_BOUNDS
-    } else {
-        PATCH_BOUNDS[patch]
-    }
-}
-
-fn clamp(value: f64, min: f64, max: f64) -> f64 {
-    value.max(min).min(max)
 }
 
 fn activity_label(activity: Activity) -> &'static str {
@@ -441,6 +338,10 @@ fn activity_label(activity: Activity) -> &'static str {
         Activity::Drinking => "bebendo água",
         Activity::Resting => "descansando",
     }
+}
+
+fn clamp(value: f64, min: f64, max: f64) -> f64 {
+    value.max(min).min(max)
 }
 
 fn record_activity_vec(
@@ -886,7 +787,7 @@ mod tests {
     }
 
     #[test]
-    fn native_initialization_uses_stable_ids_and_the_two_js_rng_streams() {
+    fn native_initialization_uses_stable_ids_and_the_js_model_rng_stream() {
         let engine = FarmEngine::new(917, 2).unwrap();
         let snapshot = engine.snapshot();
         assert_eq!(
@@ -899,7 +800,6 @@ mod tests {
         );
         assert_eq!(snapshot.seed, 1_949_569_679);
         assert_eq!(snapshot.animals[0].weight, 371.40174839645624);
-        assert_eq!(snapshot.locomotion_seed, 2_052_957_951);
         assert_eq!(snapshot.events[0].hour, 6);
         assert_eq!(snapshot.animals[0].history[0].action, Activity::Grazing);
     }
@@ -982,7 +882,6 @@ mod tests {
         let metrics = engine.metrics();
         assert_eq!(snapshot.hour, 30);
         assert_eq!(snapshot.seed, 1_472_672_670);
-        assert_eq!(snapshot.locomotion_seed, 2_374_808_501);
         assert_eq!(snapshot.events[0].text, "Novo dia: peso médio 350.2 kg.");
         assert_eq!(snapshot.events[1].text, "Cacau: bebendo água.");
         assert!((metrics.weight - 350.23800803415776).abs() < 1e-12);

@@ -12,10 +12,11 @@
 .manifesto-page a:not(.header-manifesto):not(.header-product) { text-decoration: underline; text-decoration-color: #a5a394; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .18s ease, background-size .2s ease, text-decoration-color .18s ease; }
 .manifesto-page main a:hover, .manifesto-page main a:focus-visible { color: inherit; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 88% / 100% 54%; text-decoration-color: #77745f; }
 .manifesto-page main a:focus-visible { outline: 2px solid #595a50; outline-offset: 3px; }
-.manifesto-worlds { width: min(100%, 1260px); margin: 48px auto 112px; }
-.manifesto-world-canvas { position: relative; width: 100%; aspect-ratio: 800 / 416; background: transparent; }
-.manifesto-world-canvas canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; background: transparent; }
-.manifesto-worlds figcaption { margin-top: 8px; color: var(--manifesto-muted); font: 400 11px/1.5 var(--mono); text-align: right; }
+.manifesto-worlds { display:grid; grid-template-columns:1.2fr 1fr; align-items:center; gap:40px; width:min(100%,1260px); margin:48px auto 112px; padding:clamp(22px,4vw,54px); border:1px solid var(--manifesto-line); background:var(--manifesto-paper); }
+.manifesto-principle { display:grid; gap:18px; }
+.manifesto-principle span { color:var(--manifesto-muted); font:10px var(--mono); letter-spacing:.1em; }
+.manifesto-principle strong { font-size:clamp(24px,4vw,48px); font-weight:500; letter-spacing:-.05em; line-height:1.12; }
+.manifesto-worlds>p { max-width:360px; margin:0; color:var(--manifesto-muted); font-size:16px; }
 .manifesto-continuation { width: min(100%, 835px); margin: 0 auto; }
 .manifesto-continuation p:last-child { margin-bottom: 0; }
 
@@ -27,7 +28,7 @@
   .manifesto-page main { padding: 100px 21px 70px; }
   .manifesto-copy h1 { max-width: 590px; margin-bottom: 20px; font-size: clamp(30px, 8vw, 34px); line-height: 1.28; }
   .manifesto-copy p, .manifesto-continuation p { margin-bottom: 16px; font-size: 15px; line-height: 1.75; }
-  .manifesto-worlds { width: calc(100% + 22px); margin: 35px -11px 64px; }
+  .manifesto-worlds { grid-template-columns:1fr; width:calc(100% + 22px); margin:35px -11px 64px; gap:20px; }
   .manifesto-continuation { width: 100%; }
 }
 

@@ -61,3 +61,10 @@ test('housing arms retain stable animal IDs and order in each checkpoint', () =>
   const reordered = compareExactJson(js, {animals: [{id: 2}, {id: 1}, {id: 3}]});
   assert.equal(classifyTrajectoryDivergence(reordered.mismatch.pointer), 'ORDER_DIVERGENCE');
 });
+
+test('trajectory parity ignores retired visual coordinates while exact JSON remains strict', () => {
+  const legacy = {state: {animals: [{id: 1, weight: 330, x: 10, y: 20, targetX: 11, targetY: 21}], locomotionSeed: 99}};
+  const scientific = {state: {animals: [{id: 1, weight: 330}]}};
+  assert.ok(compareExactJson(legacy, scientific).mismatch);
+  assert.equal(compareTrajectoryCheckpoint({jsValue: legacy, rustValue: scientific}).parity, 'PASS');
+});

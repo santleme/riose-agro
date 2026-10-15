@@ -49,7 +49,7 @@ test('reconciled registry metadata leaves the legacy comparison manifest replay 
   const replay = replayComparisonManifest(manifest);
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
-  assert.equal(hash(manifest), 'a3d2c246358cc7ca75e3ec4d512d65f474caadcfade1747d0d5165f11a024a4c');
+  assert.equal(hash(manifest), '3e4f06e6649cb327727ecf4571ddcf546a1e11796af0dbc1ba6f94863aa59410');
   assert.equal(hash(replay), 'aa77c8889e5cf13e720a08855d7d0d42847341bc7dfecdf707c56daf46acfbe6');
   assert.deepEqual(replayComparisonManifest(JSON.parse(JSON.stringify(manifest))), replay);
 });

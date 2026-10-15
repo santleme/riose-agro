@@ -96,6 +96,15 @@ fn assert_json_exact(actual: &Value, expected: &Value) {
             assert_eq!(canonical_number(actual), canonical_number(expected));
         }
         (Value::Object(actual), Value::Object(expected)) => {
+            let ignored_visual = ["locomotionSeed", "x", "y", "targetX", "targetY"];
+            let actual: std::collections::BTreeMap<_, _> = actual
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
+            let expected: std::collections::BTreeMap<_, _> = expected
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
             assert_eq!(actual.len(), expected.len());
             for (key, actual_value) in actual {
                 assert_json_exact(actual_value, &expected[key]);

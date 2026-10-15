@@ -269,7 +269,6 @@ fn endpoint_projection(engine: &FarmEngine) -> Value {
         "hour": snapshot["hour"],
         "seed": snapshot["seed"],
         "initialSeed": snapshot["initialSeed"],
-        "locomotionSeed": snapshot["locomotionSeed"],
         "config": snapshot["config"],
         "animals": snapshot["animals"].as_array().unwrap().iter().map(|animal| json!({
             "id": animal["id"],
@@ -339,6 +338,15 @@ fn compare_tolerant_json(
             }
         }
         (Value::Object(actual), Value::Object(expected)) => {
+            let ignored_visual = ["locomotionSeed", "x", "y", "targetX", "targetY"];
+            let actual: std::collections::BTreeMap<_, _> = actual
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
+            let expected: std::collections::BTreeMap<_, _> = expected
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
             if actual.len() != expected.len() {
                 return Err(format!("{display_path}: object field count differs"));
             }
@@ -402,6 +410,15 @@ fn compare_exact_json(actual: &Value, expected: &Value, path: &str) -> Result<()
             }
         }
         (Value::Object(actual), Value::Object(expected)) => {
+            let ignored_visual = ["locomotionSeed", "x", "y", "targetX", "targetY"];
+            let actual: std::collections::BTreeMap<_, _> = actual
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
+            let expected: std::collections::BTreeMap<_, _> = expected
+                .iter()
+                .filter(|(key, _)| !ignored_visual.contains(&key.as_str()))
+                .collect();
             if actual.len() != expected.len() {
                 return Err(format!("{path}: object field count differs"));
             }

@@ -94,7 +94,7 @@ const memoryMeasurements=[measurement('memory','wasmLinearMemoryBytesAfterKernel
 console.log(JSON.stringify(benchmarkReport({
   name:'simulation-engine',
   runtime:{rust:process.env.RUSTC_VERSION??null},
-  workload:{seed:20261012,populations:[...simulation.map(row=>({animals:row.animals,scope:'FarmEngine',limit:'FarmEngine maximum 10000'})),...kernel.filter(row=>row.animals===100_000).map(row=>({animals:row.animals,scope:'numeric-kernel-only',limit:'isolated numeric kernel; not FarmEngine or renderer'}))]},
+  workload:{seed:20261012,populations:[...simulation.map(row=>({animals:row.animals,scope:'FarmEngine',limit:'FarmEngine maximum 10000'})),...kernel.filter(row=>row.animals===100_000).map(row=>({animals:row.animals,scope:'numeric-kernel-only',limit:'isolated numeric kernel; not FarmEngine or full simulation'}))]},
   configuration:{warmupRuns:{simulation:simulationWarmups,kernel:kernelWarmups,stateTransfer:snapshotWarmups},repetitions},
   phases:{
     engine:{status:'measured',measurements:[...engineMeasurements,...kernelMeasurements]},

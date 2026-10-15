@@ -14,6 +14,14 @@ async function readGolden(id) {
   return readFile(resolve(goldenDirectory, `${id}.json`), 'utf8');
 }
 
+function scientificOnly(value) {
+  if (Array.isArray(value)) return value.map(scientificOnly);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(Object.entries(value)
+    .filter(([key]) => !['locomotionSeed', 'x', 'y', 'targetX', 'targetY'].includes(key))
+    .map(([key, item]) => [key, scientificOnly(item)]));
+}
+
 test('baseline fixed-seed output matches the versioned golden and preserves ordering', async () => {
   const scenario = JSON.parse(await readFile(baselineScenarioPath, 'utf8'));
   const goldenBytes = await readGolden('baseline-pasture');
@@ -27,11 +35,11 @@ test('baseline fixed-seed output matches the versioned golden and preserves orde
   assert.equal(golden.seed, scenario.engine.seed);
   assert.deepEqual(golden.horizon, {value: 24, unit: 'hour'});
   assert.equal(first, second);
-  assert.deepEqual(JSON.parse(first), golden);
-  assert.deepEqual(executeScenario(scenario).result, golden.output);
+  assert.deepEqual(scientificOnly(JSON.parse(first)), scientificOnly(golden));
+  assert.deepEqual(scientificOnly(executeScenario(scenario).result), scientificOnly(golden.output));
   assert.equal(golden.output.state.seed, golden.output.state.seed >>> 0);
   assert.equal(golden.output.state.initialSeed, scenario.engine.seed);
-  assert.ok(Number.isInteger(golden.output.state.locomotionSeed));
+  assert.equal(Object.hasOwn(JSON.parse(first).output.state, 'locomotionSeed'), false);
   assert.ok(golden.output.state.events.every((event, index, events) => index === 0 || events[index - 1].hour >= event.hour));
   for (const animal of golden.output.state.animals) {
     assert.ok(animal.history.every((item, index, history) => index === 0 || history[index - 1].hour <= item.hour));
@@ -53,9 +61,9 @@ test('housing comparison golden replays the declared contract and freezes each d
   assert.equal(golden.seed, 2026);
   assert.deepEqual(golden.horizon, {value: 30, unit: 'day'});
   assert.equal(first, second);
-  assert.deepEqual(JSON.parse(first), golden);
+  assert.deepEqual(scientificOnly(JSON.parse(first)), scientificOnly(golden));
   assert.equal(validateScenarioContract(golden.replayManifest), true);
-  assert.deepEqual(replayScenarioContract(golden.replayManifest), golden.output);
+  assert.deepEqual(scientificOnly(replayScenarioContract(golden.replayManifest)), scientificOnly(golden.output));
   assert.deepEqual(golden.output.rows.map(row => row.day), Array.from({length: 31}, (_, day) => day));
   assert.equal(golden.output.baselineConfig.housing, 'pasture');
   assert.equal(golden.output.scenarioConfig.housing, 'barn');

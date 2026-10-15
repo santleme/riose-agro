@@ -84,7 +84,7 @@ test('CLI and API both reject a digest-matching but invalid comparison manifest'
   }
 });
 
-test('snapshot review endpoint validates locally and review assets are served', async t => {
+test('snapshot review endpoint validates locally without a map-specific review asset', async t => {
   const server = createServer({env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
@@ -92,9 +92,9 @@ test('snapshot review endpoint validates locally and review assets are served', 
 
   const page = await fetch(`${root}/`);
   assert.equal(page.status, 200);
-  assert.match(await page.text(), /Revisar snapshot da fazenda/);
-  const reviewScript = await fetch(`${root}/src/client/snapshot-review.js`);
-  assert.equal(reviewScript.status, 200);
+  assert.match(await page.text(), /href="product\.html"/);
+  const retiredReviewScript = await fetch(`${root}/src/client/snapshot-review.js`);
+  assert.equal(retiredReviewScript.status, 404);
   const schema = await fetch(`${root}/schemas/farm-snapshot.schema.json`);
   assert.equal(schema.status, 200);
   const invalidContentType = await fetch(`${root}/api/validate-snapshot`, {method: 'POST', body: JSON.stringify({snapshot: snapshotExample})});
@@ -112,7 +112,7 @@ test('snapshot review endpoint validates locally and review assets are served', 
   assert.equal(report.coverage.sources.length, 2);
 });
 
-test('outcome record page is served as a local-only flow from the map', async t => {
+test('outcome record page is served as a local-only scientific review flow', async t => {
   const server = createServer({env: {}});
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));
@@ -130,8 +130,8 @@ test('outcome record page is served as a local-only flow from the map', async t 
   assert.match(pageText, /data-field="periodDays" type="number"/);
   assert.doesNotMatch(pageText, /data-field="periodDays"[^>]*readonly/i);
   assert.doesNotMatch(pageText, /<form[^>]+action=/i);
-  const map = await fetch(`${root}/`);
-  assert.match(await map.text(), /Registrar resultado/);
+  const home = await fetch(`${root}/`);
+  assert.match(await home.text(), /href="product\.html"/);
 
   const script = await fetch(`${root}/src/client/outcome-review.js`);
   assert.equal(script.status, 200);

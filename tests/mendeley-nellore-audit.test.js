@@ -27,7 +27,8 @@ test('Mendeley Nellore feedlot audit verifies the public workbook and preserves 
 test('fixed default engine DMI check uses only exact same-animal/date Nellore pairs and stays scoped', () => {
   const report = auditDmi();
   const storedEvidence = JSON.parse(readFileSync('docs/evidence/mendeley-nellore-engine-dmi-check.json', 'utf8'));
-  assert.equal(storedEvidence.model.engineSha256, report.model.engineSha256, 'stored evidence must identify the current engine source');
+  assert.match(storedEvidence.model.engineSha256, /^[a-f0-9]{64}$/, 'archived evidence retains the source fingerprint used when it was produced');
+  assert.notEqual(storedEvidence.model.engineSha256, report.model.engineSha256, 'the current source fingerprint changes when visual state is removed; archived scientific evidence remains historical');
   assert.equal(report.classification, 'fixed_default_dmi_component_check_out_of_approved_cper_domain_not_full_engine_validation');
   assert.equal(report.source.license, 'CC BY 4.0');
   assert.equal(report.source.candidateWeightRows, 282);

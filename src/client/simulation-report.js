@@ -17,7 +17,9 @@ function configText(config) {
 }
 
 function metricRow(label, key, row) {
-  return `- ${label}: base ${valueText(row?.[`baseline${key}`])}; intervenção ${valueText(row?.[`scenario${key}`])}`;
+  const baseline = row?.[`baseline${key}`] ?? row?.[`reference${key}`];
+  const scenario = row?.[`scenario${key}`];
+  return `- ${label}: referência ${valueText(baseline)}; intervenção ${valueText(scenario)}`;
 }
 
 function renderModelProvenance(models) {
@@ -67,7 +69,7 @@ export function renderSimulationReport(result, manifest, {lotContext} = {}) {
     metricRow('Peso médio no último dia (kg/animal)', 'Weight', lastRow),
     metricRow('Consumo estimado no período (kg MS/lote)', 'ConsumptionKgDM', lastRow),
     metricRow('Estoque de forragem no último dia (kg MS)', 'PastureKgDM', lastRow),
-    metricRow('Custo acumulado no período (R$/lote)', 'Cost', lastRow)
+    metricRow('Custo acumulado no período (unidades do modelo/lote)', 'Cost', lastRow)
   ].join('\n');
   const modelProvenance = renderModelProvenance(result.scientificProvenance);
   const lotDetails=lotContext?[

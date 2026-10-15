@@ -28,10 +28,6 @@ function validateSnapshot(snapshot) {
       || snapshot.initialSeed < 0 || snapshot.initialSeed > 0xffffffff)) {
     throw new Error('snapshot.initialSeed must be an unsigned 32-bit integer when present.');
   }
-  if (snapshot.locomotionSeed !== undefined && (!Number.isInteger(snapshot.locomotionSeed)
-      || snapshot.locomotionSeed < 0 || snapshot.locomotionSeed > 0xffffffff)) {
-    throw new Error('snapshot.locomotionSeed must be an unsigned 32-bit integer when present.');
-  }
 
   const engine = FarmEngine.from(snapshot);
   engine.configure({...snapshot.config});
@@ -53,7 +49,7 @@ function validateSnapshot(snapshot) {
     }
   }
   for (const [index, animal] of snapshot.animals.entries()) {
-    const numericFields = ['weight', 'initialWeight', 'energy', 'thirst', 'x', 'y', 'targetX', 'targetY'];
+    const numericFields = ['weight', 'initialWeight', 'energy', 'thirst'];
     if (!isRecord(animal) || numericFields.some(field => !Number.isFinite(animal[field]))) {
       throw new Error(`Invalid FarmEngine snapshot: animals[${index}] has invalid numeric state.`);
     }

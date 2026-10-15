@@ -44,17 +44,17 @@ test('engine config retains legacy invalid-weather behavior without mutating sta
 test('fixed weather inputs preserve legacy snapshots, metrics, and replay outputs', () => {
   const expected = {
     normal: {
-      snapshot: '31fcf1cc89eb8ae3f24d74f349fcc7cb6219e8682b06d3b4135b5405ae041ffe',
+      snapshot: '956d1fa4dbf1f6ed2dac161584180a1b4bd780d82f08a8d05391ef3a8b28de63',
       metrics: '81bffd546da5a79ed6c9c6d94facd3e8cd1703b575c86950ad04ec97101c7a1f',
       comparison: '03c44b9af2a211913a42cddb593c87737f7ae3c433f0a52a89d7fc3832da00b1'
     },
     hot: {
-      snapshot: 'b1d7fb785295070c8bd594eb100bd7c4b2ef44e5a2ed8c140cf2ee2db75e111e',
+      snapshot: 'be09a6264c264f66c389cf2b831b2c2dea97fa396b8298932361f06ee9b17c5b',
       metrics: '16e2ec761072cdc7d4d660878eab63c43c5e5a148c9335ad80a5ef9a2249030c',
       comparison: '446d2e734046268f9039608e71300e5f1a7fe02d3c663954cb6a9ee601f44e6e'
     },
     rain: {
-      snapshot: '5413dbe9ea1fe16025d14bc671e2fa73c9fb0d6a6a541f92b6aff0cf0c520273',
+      snapshot: 'fa37ffef1ff50b39f96a6248584c3385b0efde3b3d154e9e1b4ef2d5c5a2b993',
       metrics: '9305f1f6f604adbabf4129e67eea84bafbe8d0079b60102e9772383968a4fa30',
       comparison: 'e67b77dd4a0282c3a9159a414554f3aea77e5411c29f0f6f55f2e18679b18ab5'
     }

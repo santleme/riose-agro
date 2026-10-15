@@ -1,2 +1,0 @@
-# Optional offline macro-placement solver. Install into a dedicated venv.
-ortools==9.15.6755

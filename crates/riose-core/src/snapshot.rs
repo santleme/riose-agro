@@ -42,7 +42,7 @@ mod tests {
         let expected = FarmEngine::new(2026, 2).unwrap().snapshot();
         let json = encode_farm_snapshot(&expected).unwrap();
         assert!(json.contains("\"initialSeed\""));
-        assert!(json.contains("\"locomotionSeed\""));
+        assert!(!json.contains("\"locomotionSeed\""));
         assert!(!json.contains("\"snapshotType\""));
         assert_eq!(decode_farm_snapshot(&json).unwrap(), expected);
     }
@@ -84,7 +84,7 @@ mod tests {
     }
 
     #[test]
-    fn legacy_snapshots_derive_only_the_two_rng_metadata_fields_as_js_does() {
+    fn legacy_snapshots_accept_and_discard_visual_rng_metadata() {
         let snapshot = FarmEngine::new(2026, 1).unwrap().snapshot();
         let mut value: serde_json::Value =
             serde_json::from_str(&encode_farm_snapshot(&snapshot).unwrap()).unwrap();
@@ -92,9 +92,7 @@ mod tests {
         value.as_object_mut().unwrap().remove("locomotionSeed");
         let decoded = decode_farm_snapshot(&serde_json::to_string(&value).unwrap()).unwrap();
         assert_eq!(decoded.initial_seed, snapshot.seed);
-        assert_eq!(
-            decoded.locomotion_seed,
-            crate::derive_locomotion_seed(snapshot.seed)
-        );
+        assert_eq!(decoded.seed, snapshot.seed);
+        assert_eq!(decoded.initial_seed, snapshot.seed);
     }
 }

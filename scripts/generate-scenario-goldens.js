@@ -18,7 +18,6 @@ function endpointState(engine) {
     hour: state.hour,
     seed: state.seed,
     initialSeed: state.initialSeed,
-    locomotionSeed: state.locomotionSeed,
     config: state.config,
     animals: state.animals.map(({id, weight, initialWeight, energy, thirst, action, patch}) => ({
       id, weight, initialWeight, energy, thirst, action, patch,

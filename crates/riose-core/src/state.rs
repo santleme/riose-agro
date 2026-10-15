@@ -89,8 +89,8 @@ pub struct ActivityRecord {
     pub observed: ObservedActivityState,
 }
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AnimalState {
     pub id: EntityId,
     pub name: String,
@@ -100,12 +100,51 @@ pub struct AnimalState {
     pub thirst: f64,
     pub action: Activity,
     pub patch: u32,
-    pub x: f64,
-    pub y: f64,
-    pub target_x: f64,
-    pub target_y: f64,
-    #[serde(default)]
     pub history: Vec<ActivityRecord>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct AnimalStateInput {
+    id: EntityId,
+    name: String,
+    weight: f64,
+    initial_weight: f64,
+    energy: f64,
+    thirst: f64,
+    action: Activity,
+    patch: u32,
+    #[serde(default)]
+    history: Vec<ActivityRecord>,
+    // Legacy map coordinates are accepted at the input boundary and discarded.
+    #[serde(rename = "x", default)]
+    _legacy_x: Option<f64>,
+    #[serde(rename = "y", default)]
+    _legacy_y: Option<f64>,
+    #[serde(rename = "targetX", default)]
+    _legacy_target_x: Option<f64>,
+    #[serde(rename = "targetY", default)]
+    _legacy_target_y: Option<f64>,
+}
+
+impl<'de> Deserialize<'de> for AnimalState {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let input = AnimalStateInput::deserialize(deserializer)?;
+        Ok(Self {
+            id: input.id,
+            name: input.name,
+            weight: input.weight,
+            initial_weight: input.initial_weight,
+            energy: input.energy,
+            thirst: input.thirst,
+            action: input.action,
+            patch: input.patch,
+            history: input.history,
+        })
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -154,8 +193,6 @@ pub struct FarmSnapshot {
     /// Current state of the model RNG stream, matching JS `state.seed`.
     pub seed: u32,
     pub initial_seed: u32,
-    /// Current state of the independent locomotion RNG stream.
-    pub locomotion_seed: u32,
 }
 
 #[derive(Deserialize)]
@@ -171,8 +208,8 @@ struct FarmSnapshotInput {
     seed: u32,
     #[serde(default)]
     initial_seed: Option<u32>,
-    #[serde(default)]
-    locomotion_seed: Option<u32>,
+    #[serde(rename = "locomotionSeed", default)]
+    _legacy_locomotion_seed: Option<u32>,
 }
 
 impl<'de> Deserialize<'de> for FarmSnapshot {
@@ -191,9 +228,6 @@ impl<'de> Deserialize<'de> for FarmSnapshot {
             events: input.events,
             seed: input.seed,
             initial_seed: input.initial_seed.unwrap_or(input.seed),
-            locomotion_seed: input
-                .locomotion_seed
-                .unwrap_or_else(|| crate::derive_locomotion_seed(input.seed)),
         })
     }
 }
@@ -223,10 +257,6 @@ impl FarmSnapshot {
                 animal.initial_weight,
                 animal.energy,
                 animal.thirst,
-                animal.x,
-                animal.y,
-                animal.target_x,
-                animal.target_y,
             ]
             .iter()
             .any(|value| !value.is_finite())

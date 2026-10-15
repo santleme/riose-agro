@@ -81,10 +81,10 @@ test('adult observed-data explorer is linked from project pages and served with 
   }
   const home = readFileSync(new URL('../home.html', import.meta.url), 'utf8');
   const calves = readFileSync(new URL('../observed-data.html', import.meta.url), 'utf8');
-  const farm = readFileSync(new URL('../lab.html', import.meta.url), 'utf8');
   assert.match(home, /adult-data\.html/);
   assert.match(calves, /adult-data\.html/);
-  assert.match(farm, /adult-data\.html/);
+  const product = readFileSync(new URL('../product.html', import.meta.url), 'utf8');
+  assert.match(product, /adult-data\.html/);
   const adultPage = readFileSync(new URL('../adult-data.html', import.meta.url), 'utf8');
   assert.match(adultPage, /novilhos de um ano/);
   assert.match(adultPage, /yearlings/);
