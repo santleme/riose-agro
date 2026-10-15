@@ -6,7 +6,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from src.server.compute_service import create_server, detect_amd_backend, execute_compute
+from src.server.compute_service import create_server, detect_amd_backend, detect_compute_backends, execute_compute
 
 
 UNAVAILABLE = {
@@ -214,24 +214,99 @@ class ComputeServiceTests(unittest.TestCase):
         self.assertFalse(result["fallback_used"])
 
     def test_amd_detection_requires_rocm_and_an_available_device(self):
-        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
-            version=SimpleNamespace(hip=None),
-            cuda=SimpleNamespace(is_available=lambda: True),
-            __version__="test",
-        )):
+        class Probe:
+            def sum(self): return self
+            def item(self): return 0
+        def fake_torch(*, hip=None, cuda=None, available=True):
+            return SimpleNamespace(version=SimpleNamespace(hip=hip, cuda=cuda),
+                cuda=SimpleNamespace(is_available=lambda: available, get_device_name=lambda _: "test GPU"),
+                empty=lambda *_, **__: Probe(), float64=object(), __version__="test")
+        with patch("src.server.compute_service.import_module", return_value=fake_torch(cuda="12.4")):
             self.assertFalse(detect_amd_backend()["available"])
-        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
-            version=SimpleNamespace(hip="test-rocm"),
-            cuda=SimpleNamespace(is_available=lambda: False),
-            __version__="test",
-        )):
+        with patch("src.server.compute_service.import_module", return_value=fake_torch(hip="test-rocm", available=False)):
             self.assertFalse(detect_amd_backend()["available"])
-        with patch("src.server.compute_service.import_module", return_value=SimpleNamespace(
-            version=SimpleNamespace(hip="test-rocm"),
-            cuda=SimpleNamespace(is_available=lambda: True),
-            __version__="test",
-        )):
+        with patch("src.server.compute_service.import_module", return_value=fake_torch(hip="test-rocm")):
             self.assertTrue(detect_amd_backend()["available"])
+
+    def test_cuda_detection_requires_a_cuda_runtime_and_successful_device_probe(self):
+        class Probe:
+            def sum(self): return self
+            def item(self): return 0
+        torch = SimpleNamespace(version=SimpleNamespace(hip=None, cuda="12.4"),
+            cuda=SimpleNamespace(is_available=lambda: True, get_device_name=lambda _: "GTX test"),
+            empty=lambda *_, **__: Probe(), float64=object(), __version__="test")
+        with patch("src.server.compute_service.import_module", return_value=torch):
+            result = detect_compute_backends()
+        self.assertTrue(result["cuda"]["available"])
+        self.assertEqual(result["cuda"]["device_name"], "GTX test")
+        self.assertFalse(result["rocm"]["available"])
+
+    def test_device_probe_failure_is_reported_as_unavailable(self):
+        torch = SimpleNamespace(version=SimpleNamespace(hip=None, cuda="12.4"),
+            cuda=SimpleNamespace(is_available=lambda: True, get_device_name=lambda _: "GTX test"),
+            empty=lambda *_, **__: (_ for _ in ()).throw(RuntimeError("driver unavailable")),
+            float64=object(), __version__="test")
+        with patch("src.server.compute_service.import_module", return_value=torch):
+            result = detect_compute_backends()
+        self.assertFalse(result["cuda"]["available"])
+        self.assertEqual(result["cuda"]["reason"], "runtime_initialization_failed")
+
+    def test_cpu_request_does_not_initialize_optional_accelerator_runtime(self):
+        result = execute_compute({"contract_version": "1", "operation": "scale_vector",
+            "payload": {"values": [2], "factor": 3}, "preferred_backend": "cpu"},
+            backend_detector=lambda: (_ for _ in ()).throw(AssertionError("must not detect GPU")))
+        self.assertEqual(result["backend_used"], "cpu")
+        self.assertFalse(result["fallback_used"])
+
+    def test_runtime_detection_exception_falls_back_truthfully(self):
+        result = execute_compute({"contract_version": "1", "operation": "scale_vector",
+            "payload": {"values": [2], "factor": 3}, "preferred_backend": "cuda"},
+            backend_detector=lambda: (_ for _ in ()).throw(RuntimeError("broken CUDA runtime")))
+        self.assertEqual(result["backend_used"], "cpu")
+        self.assertTrue(result["fallback_used"])
+        self.assertEqual(result["backend_availability"]["cuda"]["reason"], "runtime_detection_failed")
+        self.assertEqual(result["result"]["values"], [6])
+
+    def test_auto_prefers_cuda_then_rocm_and_reports_cpu_fallback(self):
+        class Tensor:
+            def __init__(self, values): self.values = values
+            def __mul__(self, factor): return Tensor([value * factor for value in self.values])
+            def tolist(self): return self.values
+        class FakeTorch:
+            float64 = object()
+            @staticmethod
+            def tensor(values, **_): return Tensor(values)
+        available = {"available": True, "reason": None, "device_name": "test GPU", "runtime_version": "test"}
+        unavailable = {"available": False, "reason": "runtime_unavailable", "device_name": None, "runtime_version": None}
+        body = {"contract_version": "1", "operation": "scale_vector",
+            "payload": {"values": [2], "factor": 3}, "preferred_backend": "auto"}
+        both = {"torch_version": "test", "cuda": available, "rocm": available}
+        cuda_result = execute_compute(body, backend_detector=lambda: both, torch_module=FakeTorch)
+        self.assertEqual(cuda_result["backend_selected"], "cuda")
+        self.assertEqual(cuda_result["backend_used"], "cuda")
+        rocm_only = execute_compute(body, backend_detector=lambda: {"torch_version": "test",
+            "cuda": unavailable, "rocm": {**available, "device_name": "AMD test"}}, torch_module=FakeTorch)
+        self.assertEqual(rocm_only["backend_selected"], "rocm")
+        self.assertEqual(rocm_only["backend_used"], "amd_rocm")
+
+        fallback = execute_compute(body, backend_detector=lambda: {"torch_version": None,
+            "cuda": unavailable, "rocm": {**unavailable, "reason": "pytorch_unavailable"}})
+        self.assertEqual(fallback["backend_used"], "cpu")
+        self.assertTrue(fallback["fallback_used"])
+        self.assertEqual(fallback["execution_metadata"]["fallback_reason"], "no_accelerator_available")
+
+    def test_explicit_cuda_and_rocm_unavailable_report_cpu_fallback(self):
+        unavailable = {"available": False, "reason": "device_unavailable", "device_name": None, "runtime_version": None}
+        hardware = {"torch_version": "test", "cuda": unavailable, "rocm": unavailable}
+        for backend in ("cuda", "rocm"):
+            with self.subTest(backend=backend):
+                result = execute_compute({"contract_version": "1", "operation": "scale_vector",
+                    "payload": {"values": [2], "factor": 3}, "preferred_backend": backend},
+                    backend_detector=lambda: hardware)
+                self.assertEqual(result["backend_requested"], backend)
+                self.assertEqual(result["backend_used"], "cpu")
+                self.assertTrue(result["fallback_used"])
+                self.assertEqual(result["execution_metadata"]["fallback_reason"], "device_unavailable")
 
     def test_failed_accelerator_execution_reports_cpu_fallback(self):
         class FailingTorch:

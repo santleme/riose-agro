@@ -1,83 +1,48 @@
-# AMD compute service (contract v1)
+# Compute service and backend selection
 
-This is a small, standalone Python endpoint for reproducible compute operations. It does not replace or change the JavaScript simulation engine, its snapshots, replay, manifests, or scenario contracts. The CPU path uses only the Python standard library; PyTorch is detected at runtime and is needed only to use an available AMD ROCm device. No LLM or internet access is required.
+The compute service runs the existing deterministic livestock metabolism batch. It does not replace the scenario engine or change its equations, feeding rules, snapshots, or replay contract. Contract version `1` accepts `livestock_metabolism_batch` with ordered Float64 inputs `[weight, energy, intake, resting]` and returns `[next weight, next energy]` for each animal.
 
-## Run
+## Start and inspect capabilities
 
 ```bash
 python3 src/server/compute_service.py
 ```
 
-The service listens on `127.0.0.1:8766` by default. Set `COMPUTE_HOST` or `COMPUTE_PORT` to override the bind address or port. `GET /health` returns the service and contract version.
+The service listens on `127.0.0.1:8766`. `GET /health` reports service health. `GET /api/compute/backends` reports CPU, CUDA, and ROCm capability using the loaded PyTorch build, runtime/device availability, a device name, and runtime version. Accelerator detection imports PyTorch only when an accelerator is requested or capability metadata is queried; the CPU computation itself has no PyTorch dependency.
 
-## Compute request
+PyTorch CUDA and ROCm builds both expose their device as `torch.cuda`. The detector distinguishes CUDA from ROCm using `torch.version.cuda` versus `torch.version.hip`, then requires an available device, a readable device name, and a successful Float64 allocation/synchronization probe. A failed probe is reported as unavailable. Merely seeing a vendor or GPU name does not select an accelerator.
 
-`POST /api/compute/v1` accepts JSON with this versioned shape:
+## Backend policy
 
-```json
-{
-  "contract_version": "1",
-  "operation": "scale_vector",
-  "payload": {"values": [1, -2.5, 4], "factor": 2},
-  "preferred_backend": "auto"
-}
+`preferred_backend` accepts `auto`, `cpu`, `cuda`, and `rocm`; legacy `amd` maps to `rocm` for the #137 runbook. `auto` tries CUDA first, then ROCm, then CPU. An explicit accelerator request that is unavailable or fails during execution returns a CPU result with `fallback_used: true`, the actual `backend_used: "cpu"`, and a reason. It never labels CPU work as GPU execution. CPU requests run the Python reference path directly and do not initialize PyTorch.
+
+Accelerator results use Float64 tensors and the same metabolism operation order and constants as the existing client kernel: maintenance `5.3`, gain factor `0.22`, weight floor `200 kg`, and energy clamp `[0,100]`. Result metadata identifies the requested and selected backend, actual backend, device, runtime, fallback reason, and whether fallback occurred. Product displays availability from the service and reports the backend actually used after each tick.
+
+The Product calls the generic `/api/compute/livestock-metabolism` proxy. The existing `/api/amd/metabolism-batch` route and `runAmdMetabolismBatch` helper remain for the #137 AMD runbook and continue to reject CPU fallback as AMD proof.
+
+## Reproduce livestock parity
+
+With the Node Product server and Python compute service available, run:
+
+```bash
+npm run verify:compute-livestock
 ```
 
-`preferred_backend` is `auto`, `cpu`, or `amd`; it defaults to `auto`. The operation multiplies each finite number in `values` by the finite `factor`. The array must be non-empty and contain at most 100,000 values. CPU and PyTorch both use IEEE-754 `float64`; integer inputs outside ±2^53 are rejected because they cannot all be represented exactly. Invalid JSON or contract/input fields return HTTP 400.
+This uses `FarmEngine(seed=2026)` to construct a 24-animal, one-hour metabolism input, records the exact Float64 fixture and SHA-256, runs the CPU reference and three repetitions for Auto, CUDA, and ROCm preferences, compares weight and energy outputs at absolute and relative tolerance `1e-12`, verifies deterministic repeats, and records observed backend identity and local service latency. It fails if an available accelerator is detected but the execution silently falls back. Its output is parity/runtime evidence; reported request latency is not an acceleration claim.
 
-An example response is:
+The #137 physical AMD verifier remains separate:
 
-```json
-{
-  "contract_version": "1",
-  "status": "ok",
-  "backend_requested": "auto",
-  "backend_used": "cpu",
-  "hardware_available": false,
-  "fallback_used": false,
-  "mode": "cpu",
-  "result": {"values": [2, -5, 8]},
-  "execution_metadata": {
-    "operation": "scale_vector",
-    "runtime": "python",
-    "torch_version": null,
-    "rocm_version": null,
-    "fallback_reason": null,
-    "deterministic": true
-  }
-}
+```bash
+npm run verify:amd-livestock
 ```
 
-## Backend detection and fallback
-
-AMD is reported as available only when PyTorch is installed, exposes a ROCm/HIP version, and `torch.cuda.is_available()` reports an available device. The service then runs this operation on PyTorch's `cuda` device, which is the device name PyTorch uses for ROCm. A CUDA build without ROCm is not reported as AMD.
-
-When AMD is unavailable, `auto` runs on CPU and reports `backend_used: "cpu"`. An explicit `preferred_backend: "amd"` request also completes on CPU, but reports `status: "fallback"`, `backend_used: "cpu"`, `hardware_available: false`, `fallback_used: true`, and `mode: "cpu_fallback"`. `execution_metadata.fallback_reason` reports why AMD was unavailable or why its execution failed; it is `null` when no fallback was needed. It never labels a CPU result as AMD. A CPU request always stays on CPU.
-
-This endpoint currently supports only the simple vector-scaling operation. It does not run the farm simulation, add scientific models, or measure performance. Benchmarking CPU against AMD belongs to issue #35.
+That command requests ROCm explicitly and fails unless the service reports `backend_used: "amd_rocm"` with no CPU fallback. Mocked adapter tests are not physical execution evidence.
 
 ## Tests
 
-Run the CPU-only service tests with:
-
 ```bash
-python3 -m unittest tests/test_compute_service.py
+python3 -m unittest tests.test_compute_service
+node --test tests/amd-metabolism.test.js tests/worker-protocol.test.js
 ```
 
-They do not require PyTorch or AMD hardware.
-
-## CPU versus AMD benchmark
-
-Run the reproducible benchmark from the repository root:
-
-```bash
-npm run benchmark:amd
-```
-
-It measures the existing `scale_vector` operation by calling `compute_service.execute_compute` directly. This reuses the service's CPU and ROCm adapters while excluding HTTP transport and server queueing. Both requests use contract version 1, the same 16,384-element deterministic input (`values[i] = ((i * 17 % 2001) - 1000) / 1000`), and factor `1.125`; the JSON includes a SHA-256 digest of that payload. The operation is a small numeric kernel, not the farm simulation.
-
-The benchmark runs three warmups and 15 measured repetitions per backend by default. Set `BENCH_WARMUP` or `BENCH_REPETITIONS` to change those counts. It validates CPU/AMD result equivalence first with relative and absolute tolerances of `1e-12`. It reports individual elapsed times, run count, mean, median, minimum, maximum, population standard deviation, and elements per second at the median. Speedup is `median_cpu_ms / median_amd_ms` and is emitted only after the service reports `backend_used: "amd_rocm"` for the AMD probe and every measured AMD call, and correctness passes.
-
-AMD availability uses the service's `detect_amd_backend`: PyTorch must expose a ROCm/HIP version and `torch.cuda.is_available()` must report a device. If detection or AMD execution is unavailable, the CPU benchmark still runs; AMD is reported as unavailable with its reason, no AMD timing is emitted, and speedup is `null`. If AMD falls back to CPU during a run, those timings are discarded. Tests inject a simulated adapter and do not require physical AMD hardware; simulated values are never used in a real benchmark report.
-
-The JSON report on stdout records the timestamp, commit, OS, architecture, CPU and Python runtime, ROCm/PyTorch versions when exposed, workload digest, backend metadata, correctness result, timings, speedup and limitations. The endpoint does not return an AMD device model, so that field remains `null`. Results describe this operation and environment only; benchmark de software/hardware não implica validação científica do modelo.
+These tests exercise backend selection, capability failures, reporting, deterministic CPU parity, and fallback. Simulated CUDA/ROCm tests validate control flow only; hardware claims require a recorded run on the corresponding device/runtime.

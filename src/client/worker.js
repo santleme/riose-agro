@@ -1,14 +1,16 @@
 import {FarmEngine,compare,compareConfiguredScenarios,replayComparisonManifest,validateConfiguredComparisonManifest} from './engine.js';
 import {addLotComparisonContext,createLotScopedSnapshot,validateLotComparisonManifest} from './lot-comparison.js';
 import {loadWasmMetabolism,updateMetabolismJS} from './metabolism-wasm.js';
-import {runAmdMetabolismBatch} from './amd-metabolism.js';
+import {runComputeMetabolismBatch} from './amd-metabolism.js';
 import {createViewLayout,createWorkerError,createWorkerResponse,decodeWorkerCommand,normalizeWorkerResponse} from './worker-protocol.js';
 
 let engine=new FarmEngine();
 let metabolismKernel=updateMetabolismJS;
 let engineImplementation='javascript-fallback';
-let backendPreference='cpu';
-let execution={backend:'cpu',device:null};
+const productWorker=new URL(import.meta.url).searchParams.get('product')==='1';
+let backendPreference=productWorker?'auto':'cpu';
+let execution={backend:productWorker?'pending':'cpu',device:null,
+  requestedBackend:backendPreference,availability:productWorker?'not_checked':'local'};
 let selectedAnimalId=1;
 const wasmRequested=new URL(import.meta.url).searchParams.get('engine')==='wasm';
 const wasmReady=wasmRequested?loadWasmMetabolism().then(kernel=>{
@@ -19,7 +21,7 @@ const nativeComparisonReady=typeof fetch==='function'
     .then(status=>status?.available===true).catch(()=>false)
   :Promise.resolve(false);
 const scope=self                                                                                      ;
-const fullStateUpdates=new URL(import.meta.url).searchParams.get('product')==='1';
+const fullStateUpdates=productWorker;
 const actionCodes={grazing:0,feeding:1,drinking:2,resting:3};
 async function configuredComparison(snapshot,options){
   const available=await nativeComparisonReady;
@@ -50,23 +52,43 @@ async function replayConfiguredComparison(manifest){
   return configuredComparison(manifest.initialSnapshot,{days:manifest.periodDays,
     referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario});
 }
-async function tickWithAmd(hours){
+async function tickWithCompute(hours){
   const candidate=FarmEngine.from(engine.snapshot());
+  let candidateExecution=null;
   for(let step=0;step<hours;step++){
     let batch;
     candidate.tick(1,(input,count,output)=>{
       batch=input.slice(0,count*4);
-      return updateMetabolismJS(input,count,output);
+      return metabolismKernel(input,count,output);
     },false);
-    const result=await runAmdMetabolismBatch(batch,candidate.state.animals.length);
+    let result;
+    try{
+      result=await runComputeMetabolismBatch(batch,candidate.state.animals.length,backendPreference);
+    }catch(error){
+      candidateExecution={...candidateExecution,backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
+        requestedBackend:backendPreference,fallbackUsed:true,fallbackReason:error?.message??'compute_service_unavailable'};
+      break;
+    }
+    candidateExecution={backend:result.backend,device:result.device,rocmVersion:result.rocmVersion,
+      cudaVersion:result.cudaVersion,torchVersion:result.torchVersion,backendSelected:result.backendSelected,
+      requestedBackend:result.requestedBackend,fallbackUsed:result.fallbackUsed,fallbackReason:result.fallbackReason,
+      backendAvailability:result.backendAvailability,serviceBackendUsed:result.backend};
+    if(result.backend==='cpu')break;
     for(let index=0;index<candidate.state.animals.length;index++){
       const animal=candidate.state.animals[index],offset=index*2;
       animal.weight=result.values[offset];animal.energy=result.values[offset+1];
     }
-    execution={backend:result.backend,device:result.device,rocmVersion:result.rocmVersion};
   }
-  engine=candidate;
-  engineImplementation='pytorch-rocm/livestock-metabolism-v1';
+  if(candidateExecution?.fallbackUsed){
+    const cpuCandidate=FarmEngine.from(engine.snapshot());
+    cpuCandidate.tick(hours,metabolismKernel,false);
+    engine=cpuCandidate;
+    execution={...candidateExecution,backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
+      rocmVersion:null,cudaVersion:null};
+  }else{
+    engine=candidate;
+    execution=candidateExecution??{backend:'cpu',device:null,requestedBackend:backendPreference,fallbackUsed:false};
+  }
 }
 function postSnapshot(){scope.postMessage(createWorkerResponse('state',{state:engine.snapshot(),execution},engineImplementation));}
 function postUpdate(){if(fullStateUpdates)postSnapshot();else postView();}
@@ -82,13 +104,13 @@ function postView(){
   const selectedAnimal=animals.find(animal=>animal.id===selectedAnimalId)??animals[0];
   scope.postMessage(createWorkerResponse('view',{hour:state.hour,pastures:state.pastures,cost:state.cost,intake:state.intake,config:state.config,events:state.events.slice(0,20),animalIds:ids,animalValues:values,animalActions:actions,viewLayout:createViewLayout(animals.length),selectedAnimalId:selectedAnimal?.id??null,selectedHistory:engine.historyFor(selectedAnimal),execution},engineImplementation),[ids.buffer,values.buffer,actions.buffer]);
 }
-scope.onmessage=async(event)=>{await wasmReady;let command;try{
+async function handleMessage(event){await wasmReady;let command;try{
   command=decodeWorkerCommand(event.data).command;
   const m=command;
   if(m.type==='setBackend'){
-    backendPreference=m.backend;
-    execution=m.backend==='cpu'?{backend:'cpu',device:null}:{backend:'amd-requested',device:null};
-    engineImplementation=m.backend==='cpu'?'javascript-fallback':'amd-rocm-pending';
+    backendPreference=m.backend==='amd'?'rocm':m.backend;
+    execution={backend:backendPreference==='cpu'?'cpu':'pending',device:null,
+      requestedBackend:backendPreference,availability:'not_checked'};
     postSnapshot();return;
   }
   if(m.type==='reset'){engine=new FarmEngine(m.seed??2026,m.count??24);selectedAnimalId=1;}
@@ -96,8 +118,11 @@ scope.onmessage=async(event)=>{await wasmReady;let command;try{
   else if(m.type==='configure'){engine.configure(m.patch                   );postUpdate();return;}
   else if(m.type==='select'){selectedAnimalId=m.animalId;postUpdate();return;}
   else if(m.type==='tick'){
-    if(backendPreference==='amd')await tickWithAmd(m.hours??1);
-    else{engine.tick(m.hours??1,metabolismKernel,false);execution={backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null};}
+    if(backendPreference==='cpu'){
+      engine.tick(m.hours??1,metabolismKernel,false);
+      execution={backend:metabolismKernel===updateMetabolismJS?'cpu':'wasm-cpu',device:null,
+        requestedBackend:'cpu',fallbackUsed:false};
+    }else await tickWithCompute(m.hours??1);
     postUpdate();return;
   }
   else if(m.type==='compare'){scope.postMessage(createWorkerResponse('comparison',{data:compare(m.snapshot??engine.snapshot(),m.days??30,metabolismKernel)},engineImplementation));return;}
@@ -109,4 +134,11 @@ scope.onmessage=async(event)=>{await wasmReady;let command;try{
   else if(m.type==='snapshot'){postSnapshot();return;}
   else throw new Error(`Unknown Worker command: ${m.type}.`);
   postSnapshot();
-}catch(error){scope.postMessage(createWorkerError(error,command?.type,engineImplementation));}};
+}catch(error){scope.postMessage(createWorkerError(error,command?.type,engineImplementation));}}
+
+let messageQueue=Promise.resolve();
+scope.onmessage=(event)=>{
+  const next=messageQueue.then(()=>handleMessage(event));
+  messageQueue=next.catch(()=>{});
+  return next;
+};
