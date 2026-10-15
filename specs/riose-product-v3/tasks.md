@@ -112,3 +112,15 @@ Acceptance criteria: English/Portuguese known format produces a validated review
 Required tests: parser contract/unit tests, prompt injection inertness, app asset test and browser E2E from prompt through review with no automatic run.
 Evidence: `src/client/scenario-lab-intent.js`; `tests/scenario-lab-intent.test.js`; `scripts/e2e/scenario-lab.mjs`.
 Status: DONE (`npm run test:scenario-lab-intent` 4/4; Product V3 and Product V2 E2E pass; full suite 486/486).
+
+## P3-010 — Confirmed intent and replay integrity
+
+ID: P3-010
+Title: Bind interpretation, reviewed manifest, Worker execution, and exported replay to one approved experiment
+Specification reference: LAB-001/LAB-003/LAB-006/LAB-008; `03-system-architecture.md`; `07-testing-strategy.md`; `08-acceptance-criteria.md`.
+Dependencies: P3-009; reuse `riose-scenario-set/v1` and Worker cancellation without changing FarmEngine.
+Implementation scope: Strict PT/EN deterministic interpretation and semantic validation; invalidate stale review on edits; bind actual execution output to the exact reviewed manifest; version export provenance and verify deterministic replay against exported output; accessible review/error states.
+Acceptance criteria: ambiguous, conflicting, incompatible-unit, multi-factor and out-of-domain prompts cannot become ready; the exact manifest reviewed is the manifest executed; user edits never start execution and force a new review; export identifies source prompt/intent, seed, executor, engine/model status, units and assumptions; tampering or non-reproducible replay fails closed; existing V3 `{manifest,results}` and V2 persisted contracts remain readable.
+Required tests: parser contract/unit matrix, archive tamper and round-trip replay tests, app/Worker binding tests, browser E2E including clarify→review→confirm, post-review edit, no-auto-run, export/reload/replay, accessible live status and reduced-motion behavior; `npm test`, Product V2 E2E and `npm run test:parity`.
+Evidence: `tests/scenario-lab-intent.test.js`, `tests/scenario-lab-integrity.test.js`, `tests/worker-protocol.test.js`, `scripts/e2e/scenario-lab.mjs`, `docs/evidence/product-v3-scenario-lab-initial.png`, `docs/evidence/product-v3-scenario-lab-results.png`.
+Status: DONE (`npm test` 497/497; intent 10/10; archive 4/4; Worker/app 8/8; Product V2 and V3 E2E pass; parity passes 24 + 1,440 checkpoints).
