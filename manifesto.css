@@ -12,33 +12,26 @@
 .manifesto-page a:not(.header-manifesto):not(.header-product) { text-decoration: underline; text-decoration-color: #a5a394; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .18s ease, background-size .2s ease, text-decoration-color .18s ease; }
 .manifesto-page main a:hover, .manifesto-page main a:focus-visible { color: inherit; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 88% / 100% 54%; text-decoration-color: #77745f; }
 .manifesto-page main a:focus-visible { outline: 2px solid #595a50; outline-offset: 3px; }
-.manifesto-term { display: inline; padding: 0; border: 0; border-radius: 0; color: inherit; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 88% / 0% 54%; font: inherit; line-height: inherit; cursor: help; transition: background-size .2s ease; }
-.manifesto-term:hover, .manifesto-term:focus-visible, .manifesto-term[aria-pressed="true"] { background-size: 100% 54%; }
-.manifesto-term:focus-visible { outline: 2px solid #595a50; outline-offset: 3px; }
-
-.manifesto-world { position: relative; width: min(100%, 1260px); aspect-ratio: 576 / 336; margin: 48px auto 112px; }
-.manifesto-world-poster, .manifesto-world-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.manifesto-world-poster { object-fit: contain; opacity: 1; transition: opacity .7s ease; }
-.manifesto-world-frame { border: 0; background: var(--paper); opacity: 0; transition: opacity .7s ease; }
-.manifesto-world.is-live .manifesto-world-poster { opacity: 0; pointer-events: none; }
-.manifesto-world.is-live .manifesto-world-frame { opacity: 1; }
+.manifesto-worlds { width: min(100%, 1260px); margin: 48px auto 112px; }
+.manifesto-world-canvas { position: relative; width: 100%; aspect-ratio: 800 / 416; background: transparent; }
+.manifesto-world-canvas canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; background: transparent; }
+.manifesto-worlds figcaption { margin-top: 8px; color: var(--manifesto-muted); font: 400 11px/1.5 var(--mono); text-align: right; }
 .manifesto-continuation { width: min(100%, 835px); margin: 0 auto; }
 .manifesto-continuation p:last-child { margin-bottom: 0; }
 
 .manifesto-page.has-reveal [data-reveal] { opacity: 0; transform: translateY(10px); transition: opacity .55s ease, transform .55s ease; }
 .manifesto-page.has-reveal [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
-.manifesto-page.has-reveal .manifesto-world[data-reveal] { transition-delay: .08s; }
+.manifesto-page.has-reveal .manifesto-worlds[data-reveal] { transition-delay: .08s; }
 
 @media (max-width: 760px) {
   .manifesto-page main { padding: 100px 21px 70px; }
   .manifesto-copy h1 { max-width: 590px; margin-bottom: 20px; font-size: clamp(30px, 8vw, 34px); line-height: 1.28; }
   .manifesto-copy p, .manifesto-continuation p { margin-bottom: 16px; font-size: 15px; line-height: 1.75; }
-  .manifesto-world { width: calc(100% + 22px); margin: 35px -11px 64px; }
+  .manifesto-worlds { width: calc(100% + 22px); margin: 35px -11px 64px; }
   .manifesto-continuation { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .manifesto-page.has-reveal [data-reveal], .manifesto-page.has-reveal [data-reveal].is-visible { opacity: 1; transform: none; transition: none; }
-  .manifesto-term, .manifesto-page main a { transition: none; }
-  .manifesto-world-poster, .manifesto-world-frame { transition: none; }
+  .manifesto-page main a { transition: none; }
 }

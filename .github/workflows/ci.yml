@@ -116,6 +116,9 @@ jobs:
       - name: Run Rust workspace tests
         run: cargo test --locked --workspace
 
+      - name: Check isolated SIMD study equivalence and scalar fallback
+        run: cargo test --locked --release -p riose-core --example simd_metabolism_study
+
       - name: Build native Rust workspace
         run: cargo build --locked --workspace --release
 

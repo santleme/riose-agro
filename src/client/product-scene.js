@@ -1,4 +1,4 @@
-import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, worldToScreen, screenToWorld, animalWorldPosition, separateAnimalVisuals} from './product-spatial.js';
+import {PRODUCT_BLOCKOUT, PRODUCT_WORLD, PRODUCT_PREFABS, productFenceRuns, productWorldFrontEdges, productWorldOutline, worldToScreen, screenToWorld, animalWorldPosition, separateAnimalVisuals} from './product-spatial.js';
 
 export const PRODUCT_SCENE_SIZE=Object.freeze({width:800,height:416});
 export const PRODUCT_TILE=PRODUCT_WORLD.tile;
@@ -7,16 +7,12 @@ const center=(item)=>worldToScreen(item.x+item.w/2,item.y+item.h/2);
 const corners=(x,y,w,h)=>[worldToScreen(x,y),worldToScreen(x+w,y),worldToScreen(x+w,y+h),worldToScreen(x,y+h)];
 function path(ctx,points,fill,stroke=null,width=1){ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();}}
 function drawTerrain(ctx){
-  const w=PRODUCT_WORLD.width,h=PRODUCT_WORLD.height,d=PRODUCT_WORLD.soilDepth;
-  const top=corners(0,0,w,h);
-  ctx.save();ctx.shadowColor='rgba(38,52,36,.25)';ctx.shadowBlur=22;ctx.shadowOffsetY=14;path(ctx,top,'#80975d');ctx.restore();
-  // Visible front and side faces establish one continuous land mass.
-  for(const [index,face] of [[0,[top[3],top[2]]],[1,[top[2],top[1]]]]){
-    const shade=index?'#765039':'#8d6040';
-    path(ctx,[face[0],face[1],{x:face[1].x,y:face[1].y+d},{x:face[0].x,y:face[0].y+d}],shade,'#604833',1);
-    path(ctx,[face[0],face[1],{x:face[1].x,y:face[1].y+d*.36},{x:face[0].x,y:face[0].y+d*.36}],index?'#9a6b47':'#a6744d');
+  const top=productWorldOutline().map(point=>worldToScreen(point.x,point.y));
+  for(const edge of productWorldFrontEdges()){
+    const d=PRODUCT_WORLD.soilDepth,shade=edge.shade==='side'?'#765039':'#8d6040';
+    path(ctx,[edge.from,edge.to,{x:edge.to.x,y:edge.to.y+d},{x:edge.from.x,y:edge.from.y+d}],shade,'rgba(96,72,51,.62)',.7);
   }
-  path(ctx,top,'#81965f','#c6c38b',1.3);
+  path(ctx,top,'#81965f','rgba(119,140,89,.34)',.7);
   // Soft, irregular pasture pads define the four occupied management zones.
   for(const [i,zone] of PRODUCT_BLOCKOUT.zones.entries()){
     const cornersZone=corners(zone.x,zone.y,zone.w,zone.h);
@@ -45,24 +41,15 @@ function drawPaths(ctx){
 function drawZoneHighlights(ctx,selectedId,hoverId){
   for(const zone of PRODUCT_BLOCKOUT.zones){const selected=zone.id===selectedId,hovered=zone.id===hoverId;if(!selected&&!hovered)continue;path(ctx,corners(zone.x,zone.y,zone.w,zone.h),selected?'rgba(246,220,146,.17)':'rgba(250,244,212,.1)',selected?'#f4d98c':'#fff4d4',1.7);}
 }
-function fenceRuns(){
-  const gates=PRODUCT_BLOCKOUT.gates,segments=[];
-  for(const zone of PRODUCT_BLOCKOUT.zones){
-    const edges=[['top',zone.x,zone.y,1,0,zone.w],['right',zone.x+zone.w,zone.y,0,1,zone.h],['bottom',zone.x+zone.w,zone.y+zone.h,-1,0,zone.w],['left',zone.x,zone.y+zone.h,0,-1,zone.h]];
-    for(const [edge,x,y,dx,dy,count] of edges)for(let i=0;i<count;i++){
-      const a={x:x+dx*i,y:y+dy*i},b={x:x+dx*(i+1),y:y+dy*(i+1)};
-      if(gates.some(g=>g.zone===zone.id&&Math.hypot((g.a.x+g.b.x)/2-(a.x+b.x)/2,(g.a.y+g.b.y)/2-(a.y+b.y)/2)<.51))continue;
-      segments.push({id:`${zone.id}-${edge}-${i}`,zone:zone.id,a,b,gate:false});
-    }
-  }
-  return [...segments,...gates.map(g=>({...g,gate:true}))];
-}
-const FENCES=fenceRuns();
-function drawFence(ctx,fence,drawAsset){
-  const a=worldToScreen(fence.a.x,fence.a.y),b=worldToScreen(fence.b.x,fence.b.y),angle=Math.atan2(b.y-a.y,b.x-a.x),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-  ctx.save();ctx.translate(mx,my);ctx.rotate(angle);ctx.strokeStyle=fence.gate?'#69492f':'#8a6948';ctx.lineWidth=fence.gate?1.8:1;
-  if(fence.gate){for(const x of [-8,8]){ctx.fillStyle='#765333';ctx.fillRect(x-1,-6,2,12);}ctx.beginPath();ctx.moveTo(-8,-4);ctx.lineTo(8,-4);ctx.moveTo(-8,1);ctx.lineTo(8,1);ctx.stroke();}
-  else{ctx.beginPath();ctx.moveTo(-PRODUCT_TILE.width/2,-2);ctx.lineTo(PRODUCT_TILE.width/2,-2);ctx.moveTo(-PRODUCT_TILE.width/2,2);ctx.lineTo(PRODUCT_TILE.width/2,2);ctx.stroke();ctx.fillStyle='#735538';ctx.fillRect(-PRODUCT_TILE.width/2-1,-6,2,11);ctx.fillRect(PRODUCT_TILE.width/2-1,-6,2,11);}
+const fenceSegments=productFenceRuns().map(run=>({id:run.id,zone:run.zoneId,a:run.from,b:run.to,gate:false}));
+const FENCES=[...fenceSegments,...PRODUCT_BLOCKOUT.gates.map(gate=>({...gate,gate:true}))];
+function drawFence(ctx,fence){
+  const a=worldToScreen(fence.a.x,fence.a.y),b=worldToScreen(fence.b.x,fence.b.y);
+  ctx.save();ctx.lineCap='round';ctx.strokeStyle=fence.gate?'#69492f':'#8a6948';ctx.lineWidth=fence.gate?1.8:1;
+  const rails=fence.gate?[-4,1]:[-5,-2,-.5];
+  for(const offset of rails){ctx.beginPath();ctx.moveTo(a.x,a.y+offset);ctx.lineTo(b.x,b.y+offset);ctx.stroke();}
+  ctx.fillStyle='#735538';
+  for(const point of [a,b])ctx.fillRect(point.x-1,point.y-8,2,8);
   ctx.restore();
 }
 function drawStructure(ctx,entity){
@@ -92,7 +79,7 @@ export function productFarmEntityAt(x,y){
 export const productFarmHoverEntityAt=productFarmEntityAt;
 
 export function drawProductFarm(ctx,{time=0,animals=[],housing='pasture',drawAnimal=()=>{},onAnimalPosition=()=>{},selectedEntityId=null,hoverEntityId=null,debug=false}){
-  ctx.fillStyle='#e8eadc';ctx.fillRect(0,0,PRODUCT_SCENE_SIZE.width,PRODUCT_SCENE_SIZE.height);drawTerrain(ctx);drawPaths(ctx);drawZoneHighlights(ctx,selectedEntityId,hoverEntityId);
+  ctx.clearRect(0,0,PRODUCT_SCENE_SIZE.width,PRODUCT_SCENE_SIZE.height);drawTerrain(ctx);drawPaths(ctx);drawZoneHighlights(ctx,selectedEntityId,hoverEntityId);
   const queue=[];
   for(const fence of FENCES)queue.push({depth:(fence.a.x+fence.a.y+fence.b.x+fence.b.y)/2,kind:'fence',item:fence});
   for(const item of PRODUCT_BLOCKOUT.structures)queue.push({depth:item.x+item.w/2+item.y+item.h,kind:'structure',item});

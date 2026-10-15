@@ -13,7 +13,7 @@ import {engineSourceSha256} from '../scripts/engine-source-hash.js';
 import {WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 const source=await readFile(new URL('../src/client/app.js',import.meta.url),'utf8');
-const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+const html=await readFile(new URL('../lab.html',import.meta.url),'utf8');
 function presentation(snapshot=new FarmEngine(42,2).snapshot()){
   const elements=new Map();
   const element=id=>{

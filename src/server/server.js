@@ -19,12 +19,12 @@ const PUBLIC_FILES = new Set([
   'tools/product-composer.html', 'tools/product-composer.css', 'tools/product-composer.js',
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
   'product.html', 'product.css', 'product-interaction.js', 'simulator.html', 'riose-mark.svg',
-  'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png', 'assets/agroville-manifesto-farm.png',
+  'assets/riose-cow-cutout.png', 'assets/agroville-farm-worlds.png',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
-  'index.html', 'style.css', 'app.js', 'engine.js', 'animal-view-state.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
+  'index.html', 'lab.html', 'style.css', 'app.js', 'engine.js', 'animal-view-state.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
   'snapshot-review.js', 'snapshot-review.css', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
@@ -64,24 +64,8 @@ const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
 
 for (const file of [
   'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
-  'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json', 'graphics-poc/scenes/water-stress-visual.json', 'graphics-poc/scenes/terrain-v8.json', 'graphics-poc/scenes/farm-assembly-v8.json', 'graphics-poc/scenes/farm-final-v8.json',
-  'graphics-poc/rural-renderer-lab.html', 'graphics-poc/dist/rural-renderer-lab.js',
-  'graphics-poc/scenes/rural-small-v9.json', 'graphics-poc/scenes/rural-property-v9.json',
-  'graphics-poc/snapshots/demo-herd-visual.json',
-  'graphics-poc/ranch-v4.html', 'graphics-poc/ranch-v4.css', 'graphics-poc/dist/ranch-v4.js',
-  'graphics-poc/ranch-v6.html', 'graphics-poc/ranch-v6.css', 'graphics-poc/dist/ranch-v6.js',
-  'graphics-poc/spatial-debug.html', 'graphics-poc/spatial-debug.css', 'graphics-poc/dist/spatial-debug.js',
-  'graphics-poc/asset-geometry-annotator.html', 'graphics-poc/asset-geometry-annotator.css', 'graphics-poc/asset-geometry-annotator.js',
-  'graphics-poc/asset-registry.json', 'graphics-poc/asset-geometry-v1.json', 'graphics-poc/assembly-specs-v6.js', 'graphics-poc/spatial-assembly-v6.js', 'graphics-poc/contract.js',
-  'graphics-poc/asset-spatial-annotations-v1.json',
-  'graphics-poc/generated/ranch-v4.tmj', 'graphics-poc/generated/terrain-v5/homestead-high-ground.png',
-  'graphics-poc/generated/terrain-v5/homestead-high-ground-render.png',
-  'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.png', 'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.json',
-  'artifacts/graphics/spatial-assembly-v6/compiled-beef-84018.json',
-  'artifacts/graphics/spatial-assembly-v6/compiled-beef-84019.json',
-  'artifacts/graphics/spatial-assembly-v6/compiled-beef-84020.json',
-  'artifacts/graphics/spatial-assembly-v6/compiled-dairy-84018.json',
-  'graphics-poc/asset-sources.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
+  'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json',
+  'graphics-poc/asset-sources.json', 'graphics-poc/benchmark-approved-scene.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
   'graphics-poc/assets/handling-review-atlas-v1.png', 'graphics-poc/assets/dairy/dairy-holstein-cow.png',
   'graphics-poc/assets/dairy/dairy-girolando-cow.png', 'graphics-poc/assets/dairy/dairy-heifer.png',
   'graphics-poc/assets/dairy/dairy-heifer-calf.png', 'graphics-poc/assets/dairy/dairy-barn.png',
@@ -91,38 +75,6 @@ for (const file of [
   'graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png', 'graphics-poc/assets/main-composer/technology-review-atlas-v1.png',
   'graphics-poc/assets/main-composer/animals-review-atlas-v1.png', 'graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png',
 ]) PUBLIC_FILES.add(file);
-const spatialRegistryPath = 'graphics-poc/asset-registry.json';
-const spatialRegistry = JSON.parse(readFileSync(resolve(ROOT, spatialRegistryPath), 'utf8'));
-for (const asset of spatialRegistry.assets) {
-  const sourceFile = asset.source?.file;
-  if (typeof sourceFile === 'string' && sourceFile.startsWith('assets/')) PUBLIC_FILES.add(sourceFile);
-}
-// The V4 scene is authored from the repository asset catalog. Publish only its
-// exact inputs instead of exposing the whole top-level assets/ directory.
-const GRAPHICS_SCENE_FILE = 'assets/previews/ranch-composition-v4/rural-diorama-scene-v4-grounding-v2-gate-v2-water-v2-feed-v2-review.json';
-const GRAPHICS_MANIFEST_FILE = 'assets/manifests/manifest.json';
-const graphicsScene = JSON.parse(readFileSync(resolve(ROOT, GRAPHICS_SCENE_FILE), 'utf8'));
-const graphicsManifest = JSON.parse(readFileSync(resolve(ROOT, GRAPHICS_MANIFEST_FILE), 'utf8'));
-const graphicsAssetIds = new Set([graphicsScene.terrainAssetId,
-  ...graphicsScene.placements.map(placement => placement.assetId),
-  ...graphicsScene.groundingOverlays.map(overlay => overlay.assetId),
-]);
-const graphicsRecords = new Map(graphicsManifest.assets.map(asset => [asset.id, asset]));
-const GRAPHICS_SOURCE_FILES = new Set([GRAPHICS_SCENE_FILE, GRAPHICS_MANIFEST_FILE,
-  'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.png',
-  'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.json',
-  'assets/generated/world-v8/terrain-atlas-v8.png', 'assets/generated/world-v8/terrain-atlas-v8.json',
-  'assets/generated/world-v8/farm-art-atlas-v1.png',
-  'assets/generated/world-v8/farm-modules-atlas-v1.png',
-  'assets/generated/world-v8/farm-stream-modules-atlas-v1.png',
-  'assets/generated/world-v8/farm-pixel-art-atlas-v1.png',
-]);
-for (const assetId of graphicsAssetIds) {
-  const asset = graphicsRecords.get(assetId);
-  if (!asset?.file || !asset.file.startsWith('assets/')) throw new Error(`Missing or unsafe V4 runtime asset: ${assetId}`);
-  GRAPHICS_SOURCE_FILES.add(asset.file);
-}
-for (const file of GRAPHICS_SOURCE_FILES) PUBLIC_FILES.add(file);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -333,15 +285,13 @@ function sendJson(response, status, value) {
 async function serveStatic(pathname, response, env = process.env) {
   let decoded;
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
-  const relative = decoded === '/' ? 'index.html' : decoded.replace(/^\/+/, '');
+  const relative = decoded === '/' ? 'home.html' : decoded.replace(/^\/+/, '');
   if (relative.startsWith('tools/') && env.NODE_ENV === 'production') return sendJson(response, 404, {error: 'not_found'});
   const isProjectAsset = relative.startsWith('assets/') && !PUBLIC_FILES.has(relative) && !relative.split('/').some(part => part === '.' || part === '..');
-  const isGraphicsSourceAsset = GRAPHICS_SOURCE_FILES.has(relative);
   const isClientFile = relative.startsWith('src/client/') && CLIENT_FILES.has(relative.slice('src/client/'.length));
   const isLegacyClientFile = CLIENT_FILES.has(relative) && PUBLIC_FILES.has(relative);
-  if (!PUBLIC_FILES.has(relative) && !isProjectAsset && !isGraphicsSourceAsset && !isClientFile) return sendJson(response, 404, {error: 'not_found'});
-  const path = isGraphicsSourceAsset ? resolve(ROOT, relative)
-    : isProjectAsset ? resolve(ROOT, 'public', relative)
+  if (!PUBLIC_FILES.has(relative) && !isProjectAsset && !isClientFile) return sendJson(response, 404, {error: 'not_found'});
+  const path = isProjectAsset ? resolve(ROOT, 'public', relative)
     : isLegacyClientFile ? resolve(ROOT, 'src/client', relative)
       : resolve(ROOT, relative);
   const allowedRoot = isProjectAsset ? resolve(ROOT, 'public') : ROOT;

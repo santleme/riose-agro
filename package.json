@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prestart": "npm run build:product-renderer",
     "start": "node src/server/server.js",
+    "build:product-renderer": "node scripts/build-product-renderer.mjs",
     "test": "node --test --test-concurrency=1",
     "test:parity": "node scripts/run-trajectory-parity.js",
     "test:wasm-scenario": "node --test tests/native-scenario-wasm.test.js",

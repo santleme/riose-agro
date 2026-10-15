@@ -19,7 +19,7 @@ import {combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot} f
 
 // Execute the UI handlers against a small DOM/worker harness, without browser dependencies.
 async function openFarm(saved=[],activeId=null,promptValue=null,seedStorage=[],confirmValue=true){
-  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+const html=await readFile(new URL('../lab.html',import.meta.url),'utf8');
   const elements=new Map(),messages=[],workerMessages=[],downloads=[],storage=new Map([['agroville-scenarios-v1',JSON.stringify(saved)],['agroville-active-scenario-v1',activeId],...seedStorage]);
   let scheduledFrame,mapDrawCalls=0;const drawing=new Proxy({}, {get:(_,key)=>key==='drawImage'?()=>mapDrawCalls++:()=>{}});
   function element(){return {value:'',textContent:'',innerHTML:'',disabled:false,dataset:{},files:[],scrollTop:0,clientHeight:400,classList:{toggle(){}},addEventListener(name,handler){this['on'+name]=handler;},setAttribute(key,value){this[key]=value;},replaceChildren(){},add(){},getContext:()=>drawing,getBoundingClientRect(){return {left:0,top:0,width:576,height:336};},setPointerCapture(){},showModal(){this.open=true;},close(){this.open=false;},click(){this.clicked=true;}};}

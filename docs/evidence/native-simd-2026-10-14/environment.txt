@@ -1,0 +1,65 @@
+rustc 1.95.0 (59807616e 2026-04-14)
+binary: rustc
+commit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860
+commit-date: 2026-04-14
+host: x86_64-unknown-linux-gnu
+release: 1.95.0
+LLVM version: 22.1.2
+cargo 1.95.0 (f2d3ce0bd 2026-03-21)
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Linux DESKTOP-DM63QP1 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.4 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        39 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               12
+On-line CPU(s) list:                  0-11
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz
+CPU family:                           6
+Model:                                165
+Thread(s) per core:                   2
+Core(s) per socket:                   6
+Socket(s):                            1
+Stepping:                             3
+BogoMIPS:                             5807.99
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow ept vpid ept_ad fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 xsaves vnmi md_clear flush_l1d arch_capabilities
+Virtualization:                       VT-x
+Hypervisor vendor:                    Microsoft
+Virtualization type:                  full
+L1d cache:                            192 KiB (6 instances)
+L1i cache:                            192 KiB (6 instances)
+L2 cache:                             1.5 MiB (6 instances)
+L3 cache:                             12 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-11
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          KVM: Mitigation: VMX disabled
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Mitigation; Clear CPU buffers; SMT Host state unknown
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Mitigation; Enhanced IBRS
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                  Unknown: Dependent on hypervisor status
+Vulnerability Tsx async abort:        Not affected
+9d9b7e712904f6906ddd3d29e6fbad2038fa428b
+4ffe4f7e10d8b6b9765e92293374c1034a357fe1
+Wed Oct 14 19:02:23 UTC 2026
