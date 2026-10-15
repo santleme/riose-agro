@@ -1,8 +1,8 @@
 # Product V4 handoff
 
 Date: 2026-10-15
-Last verified commit: `e72fa02` (P4-006 implementation and test commit); documentation/evidence follow-up is ready locally.
-Current branch: `codex/behavioral-agents-sdd` (45 commits ahead of origin after local commit; no push or merge).
+Last verified implementation commit: `e72fa02` (P4-006 implementation and test commit); SDD/evidence recorded in `ee98869`.
+Current branch: `codex/behavioral-agents-sdd` (46 commits ahead of origin after local commits; no push or merge).
 
 Completed tasks: P4-001 through P4-006. P4-006 adds optional server-side Groq/Hugging Face structured interpretation, deterministic fallback, source/model status, and scenario archive v2 with interpreter provenance. Archive v1 stays readable. Manual edits preserve the original proposal and record `manual-revision`; the confirmed manifest remains tied to actual Worker inputs and result digest.
 
