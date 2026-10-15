@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {createBeefFarmScene, createDairyFarmScene, projectIso, unprojectIso} from '../public/assets/scenario-editor/scene-layout.js';
+import {createBeefFarmScene, createDairyFarmScene, projectIso, unprojectIso} from '../src/client/scenario-editor/scene-layout.js';
 
 const manifest = JSON.parse(await readFile(new URL('../public/assets/manifest.json', import.meta.url), 'utf8'));
 const prefabDoc = JSON.parse(await readFile(new URL('../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8'));

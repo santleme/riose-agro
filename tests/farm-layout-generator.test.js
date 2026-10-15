@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {generateFarmLayout, validateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {generateFarmLayout, validateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 
 const [prefabDocument, manifest] = await Promise.all([
   readFile(new URL('../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8').then(JSON.parse),

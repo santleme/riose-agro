@@ -1,5 +1,5 @@
 import {readFile, writeFile} from 'node:fs/promises';
-import {createBeefFarmScene, createDairyFarmScene} from '../../public/assets/scenario-editor/scene-layout.js';
+import {createBeefFarmScene, createDairyFarmScene} from '../../src/client/scenario-editor/scene-layout.js';
 
 const prefabs = JSON.parse(await readFile(new URL('../../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8'));
 const scene = createDairyFarmScene(prefabs.prefabs);

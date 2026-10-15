@@ -3,7 +3,7 @@ import {performance} from 'node:perf_hooks';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {generateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {generateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const quantile = (values, q) => [...values].sort((a, b) => a - b)[Math.floor((values.length - 1) * q)];

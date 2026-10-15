@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import Ajv2020 from 'ajv/dist/2020.js';
-import {generateFarmLayout, validateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {generateFarmLayout, validateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 import {
   adaptGeneratedFarmLayoutDocument,
   GENERATED_LAYOUT_SOURCE_FORMAT,

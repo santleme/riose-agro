@@ -36,7 +36,7 @@ This is the practical workflow shown by the official authoring/runtime documenta
 
 This project already contains most of that pipeline, but in separate, overlapping implementations:
 
-- `public/assets/scenario-editor/scene-layout.js` creates/validates deterministic farm layouts, layers, zones, placements and isometric projection. `composer.js` is the scene composer around it.
+- `src/client/scenario-editor/scene-layout.js` creates/validates deterministic farm layouts, layers, zones, placements and isometric projection. `composer.js` is the scene composer around it.
 - `graphics-poc/contract.js` already has isometric projection/unprojection, terrain-cell expansion/sorting, zone painting, visual LOD and coordinate mapping from simulation positions. `graphics-poc/app.js` is its Pixi runtime, including camera, atlas frames, terrain/props/animals, culling and input.
 - `src/client/product/spatial.js` and `src/client/product/world-renderer.js` introduce a third Product-specific scene representation and renderer.
 - `package.json` lists `pixi.js` 8.22; it does not list Phaser or an embedded Godot/Unity runtime.
