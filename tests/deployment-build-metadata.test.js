@@ -22,5 +22,5 @@ test('hosted demo metadata is generated from the source commit', () => {
   assert.match(metadata.commit, /^[0-9a-f]{40}$/i);
   assert.equal(metadata.releaseStatus, 'candidate');
   assert.ok(readFileSync(join(outputPath, 'experiments.html'), 'utf8').includes('experiment-form'));
-  assert.ok(readFileSync(join(ROOT, '.openai/hosting.json'), 'utf8').includes('"static": "dist"'));
+  assert.ok(readFileSync(join(ROOT, '.openai/hosting.json'), 'utf8').includes('"directory": "dist"'));
 });
