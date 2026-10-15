@@ -11,6 +11,10 @@ const finite=value=>typeof value==='number'&&Number.isFinite(value);
 const numberFrom=(value)=>Number(value.replace(',','.'));
 
 function matchNumber(text,pattern){const found=text.match(pattern);return found?numberFrom(found[1]):null;}
+function supplementPairsFrom(text){
+  return [...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)|(?:compare(?:d)?\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:with|versus|vs\.?)\s*(\d+(?:[.,]\d+)?)/gi)]
+    .map(item=>item[1]?[numberFrom(item[1]),numberFrom(item[2])]:[numberFrom(item[3]),numberFrom(item[4])]);
+}
 function assumptionsFor({population,duration,breed,weather,baseline,intervention,provided={}}){
   return [
     {field:'population.count',value:population.count,origin:provided.count?'user prompt':'engine default',kind:provided.count?'detected':'assumption'},
@@ -29,8 +33,8 @@ export function interpretExperimentPrompt(prompt){
   const text=prompt.toLowerCase();
   const count=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*(?:nelore\s+)?(?:bovinos?|cattle|animals?|cows?|head|animais|cabeças)/i);
   const days=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*(?:days?|dias?)/i);
-  const supplements=[...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)/gi)].map(item=>[numberFrom(item[1]),numberFrom(item[2])]);
-  const singleSupplement=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*kg\s*(?:dm|ms)?\s*(?:per|por)\s*(?:animal|head|cabeça)/i);
+  const supplements=supplementPairsFrom(text);
+  const singleSupplement=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*kg\s*(?:dm|ms)?\s*(?:of\s+)?(?:supplement|suplemento)?\s*(?:per|por)\s*(?:animal|head|cabeça)/i);
   const supplementPair=supplements.at(-1);
   const weather=/\b(hot|heat|calor|quente)\b/.test(text)?'hot':/\b(rain|rainy|chuv|chuva)\b/.test(text)?'rain':'normal';
   const breed=/\bnelore\b/.test(text)?'Nelore':null;
@@ -92,11 +96,11 @@ export function amendmentFromPrompt(spec,prompt){
   const text=prompt.toLowerCase();let next=structuredClone(spec);let changed=false;
   const days=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*(?:days?|dias?)/i);
   const count=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*(?:bovinos?|cattle|animals?|head|animais|cabeças)/i);
-  const pair=[...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)/gi)].at(-1);
-  const one=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*kg\s*(?:dm|ms)?\s*(?:per|por)\s*(?:animal|head|cabeça)/i);
+  const pair=supplementPairsFrom(text).at(-1);
+  const one=matchNumber(text,/(\d+(?:[.,]\d+)?)\s*kg\s*(?:dm|ms)?\s*(?:of\s+)?(?:supplement|suplemento)?\s*(?:per|por)\s*(?:animal|head|cabeça)/i);
   if(days!==null){next.duration.days=days;changed=true;}
   if(count!==null){next.population.count=count;changed=true;}
-  if(pair){next.baseline.supplement=numberFrom(pair[1]);next.intervention.supplement=numberFrom(pair[2]);changed=true;}
+  if(pair){next.baseline.supplement=pair[0];next.intervention.supplement=pair[1];changed=true;}
   else if(one!==null){next.intervention.supplement=one;changed=true;}
   if(/\b(hot|heat|calor|quente)\b/.test(text)){next.baseline.weather='hot';next.intervention.weather='hot';changed=true;}
   if(/\b(rain|rainy|chuv|chuva)\b/.test(text)){next.baseline.weather='rain';next.intervention.weather='rain';changed=true;}
@@ -104,6 +108,10 @@ export function amendmentFromPrompt(spec,prompt){
   if(/\b(rain|rainy|chuv|chuva)\b/.test(text)){next.baseline.weather='rain';next.intervention.weather='rain';changed=true;}
   if(/\b(normal|temperate|ameno)\b/.test(text)){next.baseline.weather='normal';next.intervention.weather='normal';changed=true;}
   if(!changed)throw new Error('I can update population size, duration, weather, or supplement. Please name one of those values.');
+  if(pair||one!==null){
+    next.missing_inputs=spec.missing_inputs.filter(item=>!item.toLowerCase().includes('supplement'));
+    if(next.baseline.supplement===next.intervention.supplement)next.missing_inputs.push('a supplement value that differs from the baseline');
+  }
   next.assumptions=assumptionsFor({...next,population:{...next.population},duration:{...next.duration},breed:next.population.breed,weather:next.baseline.weather,baseline:next.baseline,intervention:next.intervention,provided:{count:count!==null||spec.population.count!==24,days:days!==null||spec.duration.days!==30,weather:next.baseline.weather!=='normal',supplement:pair!==null||one!==null||spec.assumptions.some(item=>item.field==='baseline.supplement'&&item.origin==='user prompt')}});
   validateExperimentSpecification(next);
   return next;
