@@ -25,10 +25,14 @@ O retrato e as contagens abaixo continuam descrevendo `main@27c5d29`. As etapas 
 - PR #160 compartilhou os pontos projetados de terreno, caminhos, cercas e portões entre Canvas e Pixi.
 - PR #161 isolou o desenho estático Pixi em `static-world-renderer.js`.
 - PR #162 adicionou a validação do contrato Product ao job JavaScript/WASM da CI.
+- PR #163 inventariou os formatos e caminhos de authoring de Product, Graphics PoC e Scenario Editor.
+- PR #164 conectou o Product Composer à cena Product versionada, com validação antes da abertura e exportação.
+- PRs #165 e #166 moveram o código-fonte do Scenario Editor para `src/client/scenario-editor/`, preservando as URLs públicas como fachadas compatíveis.
+- PR #167 extraiu o renderer Canvas do Scenario Editor para uma interface explícita de cena.
 
-Essas mudanças conectam e documentam o fluxo interno do Product; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
+Essas mudanças conectam e documentam o fluxo interno do Product e reduzem o acoplamento do Scenario Editor; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
 
-O próximo recorte arquitetural deve inventariar a propriedade dos formatos e do authoring no Scenario Editor, Graphics PoC e `tools/product-composer`, antes de criar uma conversão entre eles. Depois desse mapa, a modularização do `composer.js` pode extrair responsabilidades com uma interface sustentada por consumidores reais.
+O inventário de authoring já está registrado em `scene-authoring-inventory.md`. Os recortes seguintes devem continuar extraindo responsabilidades coesas do Composer, preservando o editor como dono do formato grid próprio; qualquer adaptador para o Product só deve ser criado quando um fluxo real exigir e especificar essa conversão.
 
 ## Retrato do repositório
 
