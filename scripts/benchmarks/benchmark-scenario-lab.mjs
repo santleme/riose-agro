@@ -34,12 +34,13 @@ await page.addInitScript(() => {
     const state = window.__scenarioLabBenchmark;
     const results = document.querySelector('#results:not([hidden])');
     const cells = document.querySelectorAll('#scenario-population [role="gridcell"]');
-    if (state.resultReceivedAt === null || state.renderCompletedAt !== null || !results || cells.length === 0) return;
-    requestAnimationFrame(() => { state.renderCompletedAt = performance.now(); });
+    if (state.resultReceivedAt !== null && state.renderCompletedAt === null && results && cells.length > 0) {
+      requestAnimationFrame(() => { state.renderCompletedAt = performance.now(); });
+    }
   }).observe(document, {subtree: true, childList: true, attributes: true});
 });
 
-const samples = Object.fromEntries(populations.map(count => [count, {uiEndToEnd: [], workerToRender: [], payloadBytes: [], gridCells: [], domNodes: [], memoryBytes: []}]));
+const samples = Object.fromEntries(populations.map(count => [count, {uiEndToEnd: [], workerToRender: [], selectionRender: [], payloadBytes: [], gridCells: [], domNodes: [], memoryBytes: []}]));
 let browserInfo = null;
 const runOnce = async count => {
   await page.goto(new URL('/scenario-lab.html', origin).toString(), {waitUntil: 'domcontentloaded'});
@@ -67,6 +68,12 @@ const runOnce = async count => {
       gridCells: document.querySelectorAll('#scenario-population [role="gridcell"]').length,
     };
   });
+  result.selectionRenderMs = await page.evaluate(async () => {
+    const startedAt = performance.now();
+    document.querySelector('#scenario-population [role="gridcell"]')?.click();
+    await new Promise(requestAnimationFrame);
+    return performance.now() - startedAt;
+  });
   const metrics = new Map((await cdp.send('Performance.getMetrics')).metrics.map(metric => [metric.name, metric.value]));
   const uiEndToEndMs = await page.evaluate(startedAt => performance.now() - startedAt, started);
   return {...result, uiEndToEndMs, rendererHeapBytes: metrics.has('JSHeapUsedSize') ? metrics.get('JSHeapUsedSize') : null,
@@ -82,6 +89,7 @@ try {
       const target = samples[count];
       target.uiEndToEnd.push(result.uiEndToEndMs);
       target.workerToRender.push(result.workerToRenderMs);
+      target.selectionRender.push(result.selectionRenderMs);
       target.payloadBytes.push(result.resultJsonBytes);
       target.gridCells.push(result.gridCells);
       if (result.rendererDomNodes !== null) target.domNodes.push(result.rendererDomNodes);
@@ -124,6 +132,9 @@ try {
       render: {status: 'measured', measurements: perPopulation('render', 'scenarioResultMessageToPaintedGrid', 'ms', 'workerToRender', {
         source: 'Performance timestamp at Worker scenarioSet message capture through next animation frame after actual population grid appears; includes UI result projection, DOM creation, and paint scheduling.',
       })},
+      ui: {status: 'measured', measurements: perPopulation('ui', 'selectedAnimalGridAndInspectorUpdate', 'ms', 'selectionRender', {
+        source: 'Actual first animal cell click to next animation frame after the selected-animal inspector changes; includes rebuilding the visible grid.',
+      })},
       serialization: {status: 'measured', measurements: perPopulation('serialization', 'scenarioResultJsonProjection', 'bytes', 'payloadBytes', {
         memoryType: 'serialized-payload',
         source: 'UTF-8 size of JSON.stringify over the actual Worker result. A size proxy, not the browser structured-clone wire size.',
@@ -138,6 +149,7 @@ try {
     timingBoundaries: [
       {phase: 'uiEndToEnd', timed: ['User confirmation click until results and the actual population grid become visible.'], notTimed: ['Browser startup and initial navigation.']},
       {phase: 'render', timed: ['Worker result receipt through the next animation frame after the population grid becomes visible.'], notTimed: ['Worker computation before its result message.']},
+      {phase: 'ui', timed: ['Selecting the first animal through the next animation frame after its inspector updates.'], notTimed: ['Keyboard interaction latency, assistive technology, and repeated high-frequency selection.']},
       {phase: 'serialization', timed: ['No timing; UTF-8 result JSON projection size is measured.'], notTimed: ['Structured-clone transfer bytes and serialization time.']},
       {phase: 'layout', timed: ['Rendered population cells and total page DOM node count.'], notTimed: ['No geometric layout duration is isolated.']},
       {phase: 'memory', timed: ['Page-renderer JSHeapUsedSize after render, when Chromium exposes the CDP metric.'], notTimed: ['Worker heaps, browser-process RSS and GPU memory.']},

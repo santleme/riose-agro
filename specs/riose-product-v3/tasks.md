@@ -70,7 +70,7 @@ Title: Profile 3+ arm payloads and preserve JS/Rust/WASM parity
 Specification reference: LAB-005; P2-007/P2-008.  
 Dependencies: P3-003; P3-005.  
 Implementation scope: Extend native compact observations only after versioned parity contract; profile browser run, transfer, render, memory and interaction.  
-Acceptance criteria: record 100/1,000/10,000 results for the same fixed 3-arm scenario on a named browser/device; include actual UI, result-size proxy, page-renderer memory and DOM-cell/node observations or explicitly state unavailable; preserve JS/Rust/WASM parity; document a measured payload/DOM bound or a follow-up gate where no safe bound exists.
+Acceptance criteria: record 100/1,000/10,000 results for the same fixed 3-arm scenario on a named browser/device; include actual UI, selected-animal interaction, result-size proxy, page-renderer memory and DOM-cell/node observations or explicitly state unavailable; preserve JS/Rust/WASM parity; document a measured payload/DOM bound or a follow-up gate where no safe bound exists.
 
 Required tests: JS/Rust trajectory parity, existing WASM golden parity/fallback benchmark, Product V3 browser-flow regression and repeatable `npm run bench:scenario-lab`.
 
