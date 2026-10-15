@@ -3,6 +3,7 @@ import {
 } from '../../../assets/scenario-editor/vendor/pixi.min.mjs';
 import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from './scene-layout.js';
 import {createCanvasSceneRenderer} from './canvas-scene-renderer.js';
+import {createSceneHistory} from './scene-history.js';
 
 const URLS = {
   manifest: '/assets/manifest.json',
@@ -70,8 +71,7 @@ let zoom = 0.42;
 let pan = {x: 0, y: 0};
 let pointer = null;
 let dragSnapshot = null;
-let history = [];
-let historyIndex = -1;
+const sceneHistory = createSceneHistory();
 let frameTimes = [];
 let lastFrameAt = 0;
 let fps = 0;
@@ -695,12 +695,7 @@ function selectTool(tool) {
 }
 
 function pushHistory() {
-  const snapshot = JSON.stringify(scene);
-  if (history[historyIndex] === snapshot) return;
-  history = history.slice(0, historyIndex + 1);
-  history.push(snapshot);
-  if (history.length > 40) history.shift();
-  historyIndex = history.length - 1;
+  if (!sceneHistory.commit(scene)) return;
   persistSceneDraft();
 }
 
@@ -713,10 +708,10 @@ function persistSceneDraft() {
   } catch {}
 }
 
-function restoreHistory(nextIndex) {
-  if (nextIndex < 0 || nextIndex >= history.length) return;
-  historyIndex = nextIndex;
-  scene = JSON.parse(history[historyIndex]);
+function restoreHistory() {
+  const previousScene = sceneHistory.undo();
+  if (!previousScene) return;
+  scene = previousScene;
   selectedId = null;
   rebuildEditor();
   setSaveState('Alterações pendentes', true);
@@ -1340,8 +1335,7 @@ async function loadEditor() {
   let saved;
   try { saved = preset === 'custom' ? customScene : JSON.parse(localStorage.getItem(`${storeKey}:${loadedScene.metadata.id}`) ?? (preset === 'dairy' ? localStorage.getItem(storeKey) : 'null') ?? 'null'); } catch {}
   scene = saved && validateScene(saved).length === 0 ? saved : loadedScene;
-  history = [JSON.stringify(scene)];
-  historyIndex = 0;
+  sceneHistory.reset(scene);
   const atlasCount = await loadAssets();
   atlasMemoryMB = (atlasTextures.size
     ? [...atlasTextures.values()].reduce((sum, texture) => sum + texture.source.width * texture.source.height * 4, 0) / (1024 * 1024)
@@ -1400,7 +1394,7 @@ $('scene-preset').addEventListener('change', async (event) => {
   const saved = (() => { try { return JSON.parse(localStorage.getItem(`${storeKey}:${source.metadata.id}`) ?? 'null'); } catch { return null; } })();
   scene = saved && validateScene(saved).length === 0 ? saved : deepClone(source);
   persistSceneDraft();
-  history = [JSON.stringify(scene)]; historyIndex = 0; selectedId = null;
+  sceneHistory.reset(scene); selectedId = null;
   drawZoneLegend(); createZoneSelect(); rebuildEditor(); fitScene(); populateInspector(); updateHeader(); renderComparison();
   setSaveState('Cena carregada', false);
 });
@@ -1438,7 +1432,7 @@ window.addEventListener('keydown', (event) => {
   if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) return;
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); saveScene(); }
   else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'd') { event.preventDefault(); duplicateSelection(); }
-  else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); restoreHistory(historyIndex - 1); }
+  else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); restoreHistory(); }
   else if (event.key.toLowerCase() === 'r') rotateSelection();
   else if (event.key.toLowerCase() === 'v') selectTool('select');
   else if (event.key.toLowerCase() === 'p') selectTool('place');
