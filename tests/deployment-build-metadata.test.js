@@ -22,5 +22,7 @@ test('hosted demo metadata is generated from the source commit', () => {
   assert.match(metadata.commit, /^[0-9a-f]{40}$/i);
   assert.equal(metadata.releaseStatus, 'candidate');
   assert.ok(readFileSync(join(outputPath, 'product.html'), 'utf8').includes('product-interface'));
+  assert.ok(readFileSync(join(outputPath, 'scientific/br_corte_pasture_dmi.js'), 'utf8').includes('BR_CORTE_PASTURE_DMI'));
+  assert.ok(readFileSync(join(outputPath, 'src/client/product-world-renderer.bundle.js'), 'utf8').length > 0);
   assert.ok(readFileSync(join(ROOT, '.openai/hosting.json'), 'utf8').includes('"directory": "dist"'));
 });
