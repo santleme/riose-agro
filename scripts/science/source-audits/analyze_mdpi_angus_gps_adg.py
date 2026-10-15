@@ -18,7 +18,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/mdpi-angus-cow-grazing"
 REPORT_PATH = ROOT / "docs/evidence/mdpi-angus-gps-adg-association.json"
 AGE_LABELS = {"4": "4", "5": "5-7", "6": "8+"}

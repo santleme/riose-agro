@@ -41,6 +41,6 @@ Treatment-specific summaries are descriptive only:
 ## Reproduction
 
 ```bash
-python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py
+python3 scripts/science/source-audits/analyze_mendeley_nellore_dmi_sequential_partition.py
 python3 -m unittest discover -s tests -p 'test_mendeley_nellore_dmi_sequential_partition.py' -v
 ```

@@ -19,7 +19,7 @@ from typing import Iterable
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "scripts/science/source-audits"))
 from audit_mendeley_nellore_feedlot import (  # noqa: E402
     MANIFEST_PATH,
@@ -221,7 +221,7 @@ def analyze(records: Iterable[dict], source: dict) -> dict:
             "No engine outputs, liveweight values, model predictions, parameter fitting, or motor-versus-DMI metrics are used.",
             "DMI contains 97 missing animal-day values; they are excluded without imputation.",
         ],
-        "reproduction": "python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py",
+        "reproduction": "python3 scripts/science/source-audits/analyze_mendeley_nellore_dmi_sequential_partition.py",
     }
 
 

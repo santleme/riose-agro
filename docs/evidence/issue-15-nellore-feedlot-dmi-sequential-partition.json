@@ -70,7 +70,7 @@
     "system": "controlled tropical feedlot study",
     "treatments": "Shade and No shade; 47 animals across four collective pens (two pens per treatment, per associated article)"
   },
-  "reproduction": "python3 scripts/analyze_mendeley_nellore_dmi_sequential_partition.py",
+  "reproduction": "python3 scripts/science/source-audits/analyze_mendeley_nellore_dmi_sequential_partition.py",
   "scientificLimitations": [
     "This is an exploratory description of one feedlot cohort, not evidence for mature beef cows grazing pasture or the DMI target in issue 109.",
     "Treatment is constant within animal and associated with collective pen assignment. The treatment share is a descriptive between-group sum of squares, not an independently replicated treatment variance or causal shade effect.",
