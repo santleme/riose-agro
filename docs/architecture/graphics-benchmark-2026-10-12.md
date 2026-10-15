@@ -72,7 +72,7 @@ After adding labeled zone boundaries, the same harness ran at 10,000 animals, zo
 The default benchmark explicitly selects SwiftShader for repeatable harness checks. Those numbers do not qualify a renderer choice. With the project built and its local server running, capture a supported physical device using its normal hardware-accelerated Chromium installation:
 
 ```bash
-BENCH_GPU_MODE=hardware BENCH_DEVICE_PROFILE=laptop-amd-radeon BENCH_REPEATS=30 node scripts/benchmark-graphics-poc.mjs > graphics-poc-amd-radeon.json
+BENCH_GPU_MODE=hardware BENCH_DEVICE_PROFILE=laptop-amd-radeon BENCH_REPEATS=30 node scripts/graphics/benchmark-graphics-poc.mjs > graphics-poc-amd-radeon.json
 ```
 
 Use a distinct stable profile name for each supported GPU/browser combination and keep the resulting report with the device name, driver and browser version. Hardware mode does not force an ANGLE backend or bypass Chrome's GPU blocklist. It records WebGL vendor/renderer/version/limits and Chrome's device/driver details when exposed, and stops if WebGL reports a known software renderer. The harness still reports JavaScript submission separately from GPU completion; browser WebGL exposes no general GPU completion or texture-memory measurement here. A renderer decision therefore requires repeated captures across the supported profiles, the exact atlas and scene workload, and documented driver/browser versions. A passing hardware capture is evidence for its named profile, not for devices that were not measured.

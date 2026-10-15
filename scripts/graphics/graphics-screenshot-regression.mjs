@@ -21,7 +21,7 @@ const cases = [
 
 // The application server deliberately does not publish generated dist bundles.
 // This ephemeral loopback server serves only the Graphics PoC and its visual schema.
-const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const clientFiles=new Set(await readdir(path.join(projectRoot,'src/client')));
 const localServer=createServer(async(request,response)=>{try{const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname);let file;if(pathname.startsWith('/graphics-poc/')||pathname==='/schemas/visual-scene.schema.json')file=path.resolve(projectRoot,`.${pathname}`);else if(pathname.startsWith('/src/client/')&&!pathname.slice('/src/client/'.length).includes('/')&&clientFiles.has(pathname.slice('/src/client/'.length)))file=path.join(projectRoot,'src/client',pathname.slice('/src/client/'.length));else if(!pathname.slice(1).includes('/')&&clientFiles.has(pathname.slice(1)))file=path.join(projectRoot,'src/client',pathname.slice(1));else{response.writeHead(404).end();return;}if(!file.startsWith(projectRoot+path.sep)){response.writeHead(403).end();return;}const body=await readFile(file),type=({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream';response.writeHead(200,{'content-type':`${type}; charset=utf-8`,'cache-control':'no-store'}).end(body);}catch{response.writeHead(404).end();}});
 await new Promise(resolve=>localServer.listen(0,'127.0.0.1',resolve));

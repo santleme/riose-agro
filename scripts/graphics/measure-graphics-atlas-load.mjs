@@ -6,9 +6,9 @@ import net from 'node:net';
 import crypto from 'node:crypto';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createHash} from 'node:crypto';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
+const ROOT = path.resolve(import.meta.dirname, '../..');
 const ORIGIN = process.env.RIOSE_ATLAS_URL ?? 'http://127.0.0.1:8000';
 const REPEATS = Number(process.env.ATLAS_LOAD_REPEATS ?? 3);
 const OUTPUT = path.join(ROOT, 'docs/evidence/graphics-atlas-load-2026-10-12.json');

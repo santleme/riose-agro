@@ -13,6 +13,8 @@ crates/                                                       Rust core and WASM
 assets/, public/                                              shipped browser assets
 data/, schemas/, scientific/                                  input data and domain contracts
 scripts/, tests/, tools/, experiments/, graphics-poc/, docs/ development and project material
+scripts/assets/                                                asset composition, validation and release gates
+scripts/graphics/                                              Graphics PoC builds, screenshots and renderer benchmarks
 ```
 
 `index.html` and `/` lead to the Riose landing page. `product.html` is the canonical farm experience. `lab.html` preserves the former Agroville research interface for embedded and specialist workflows; `simulator.html` is a compatibility redirect to Product. The root HTML pages load implementation assets through relative `src/client/` URLs, preserving deployment under a repository subpath. Product-specific implementation belongs in `src/client/product/`; shared simulation, worker and view-state modules remain in `src/client/`. Renderer-independent projection utilities belong in `src/client/visualization/`; each scene and renderer remains owned by its feature. The old top-level Product module paths are temporary compatibility facades for scripts and consumers. Browser module imports are relative to their owning modules. `npm start` remains the supported entry point for the Node server.
