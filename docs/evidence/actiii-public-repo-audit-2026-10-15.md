@@ -1,9 +1,9 @@
 # ACT III public repository release audit
 
-Audit date: 15 October 2026  
-Audited release ref: `release/amd-act-iii` at `db741d77ed67fd4f4621ee7f56e05b3b6f595ecc`  
-Repository visibility: private (confirmed through GitHub repository metadata)  
-Issue #140: closed as completed; final issue comment records `#140_RUNTIME_ASSETS_RELEASE_CLEARED` and PR #156 at the audited release SHA.  
+Audit date: 15 October 2026
+Audited release ref: `release/amd-act-iii` at `db741d77ed67fd4f4621ee7f56e05b3b6f595ecc`
+Repository visibility: private (confirmed through GitHub repository metadata)
+Issue #140: closed as completed; final issue comment records `#140_RUNTIME_ASSETS_RELEASE_CLEARED` and PR #156 at the audited release SHA.
 Root license: canonical Apache License 2.0 is present at `LICENSE`; the owner decision is recorded in #140.
 
 ## Refreshed checks at the audited SHA
