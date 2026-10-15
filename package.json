@@ -10,6 +10,7 @@
     "build:wasm": "sh scripts/build/build-wasm.sh",
     "build:wasm-scenario": "sh scripts/build-wasm-scenario.sh",
     "bench:simulation": "node scripts/benchmarks/benchmark-simulation.mjs",
+    "bench:scenario-lab": "node scripts/benchmarks/benchmark-scenario-lab.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",
     "test:scenario-set": "node --test tests/scenario-set.test.js",
     "test:br-corte-scenarios": "node --test tests/br-corte-scenario.test.js",

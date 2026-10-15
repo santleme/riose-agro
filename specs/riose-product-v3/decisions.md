@@ -8,3 +8,4 @@
 - V3-ADR-006: Paid customer decision use remains blocked until a separate independent quantitative/domain gate; table parity, software tests and published equation metadata alone are insufficient.
 - V3-ADR-007: AI proposes plans and formats retrieved results only; explicit user confirmation and validators gate execution; never allow direct animal-tick control.
 - V3-ADR-008: Ship the first V3 scenario laboratory at `scenario-lab.html` alongside Product V2 until the 3+ arm flow, saved-manifest compatibility and scientific calculator are complete; Product V2 is not removed.
+- V3-ADR-009: P3-006 profiles the exact JavaScript Product V3 Worker/UI path and the existing JS/Rust/WASM parity harness separately. Do not label the current single-scenario native benchmark as multi-arm Product V3 parity, and do not migrate scenario sets to WASM without a versioned full-output parity contract.

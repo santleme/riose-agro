@@ -27,4 +27,4 @@ The central user flow is: configure a question → review three or more comparab
 
 ## Current status
 
-V3 requirements are defined. P3-001 audit/rescope, P3-002 multi-scenario contract, P3-003 scenario-lab UI/Worker, P3-004 isolated BR-CORTE DMI calculator, and P3-005 cancellation are complete on the separate `/scenario-lab.html` route. Product V2 remains available unchanged except for a navigation link, and FarmEngine defaults are unchanged. P3-006 performance/native parity profiling is the next ready task. Commercial decision-use remains blocked by P3-008 pending independent domain review.
+V3 requirements are defined. P3-001 audit/rescope, P3-002 multi-scenario contract, P3-003 scenario-lab UI/Worker, P3-004 isolated BR-CORTE DMI calculator, and P3-005 cancellation are complete on the separate `/scenario-lab.html` route. Product V2 remains available unchanged except for a navigation link, and FarmEngine defaults are unchanged. P3-006 performance/native parity profiling is in progress. Commercial decision-use remains blocked by P3-008 pending independent domain review.
