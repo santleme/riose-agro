@@ -28,4 +28,11 @@
 - Added a BR-CORTE example button using representative values and no price. Inline message says inputs are illustrative and not observations. Prompt example button remains draft-only.
 - E2E asserts initial inputs are empty/invalid, no review/results/Worker post is created, examples load explicitly, and calculation still needs explicit review/confirmation. Product V3 flow passes. Full suite `npm test` 502/502; JS/Rust parity passes 24 pasture and 1,440 hourly housing checkpoints; Product V2 E2E passes.
 - Visual captures: `docs/evidence/product-v4-empty-state.png` and `docs/evidence/product-v4-empty-and-example-state.png`; reviewed at 1440×1000. Sensitivity mobile result capture continues to show 390 px width and no overflow.
-- P4-004 user discovery materials are the next independent READY task; no users were contacted or feedback fabricated.
+- P4-004 discovery protocol, neutral demonstration script, and blank interview record are complete in `docs/product-research/`. Materials state they are prepared, not executed; no users were contacted and no findings are claimed. Readout thresholds are precommitted and explicitly do not confer scientific or commercial approval.
+
+## P4-004 — User discovery preparation
+
+- Prepared an exploratory protocol for a recurring pasture supplementation and cost-comparison decision, a seven-minute neutral product demonstration, and an empty anonymized feedback instrument.
+- The materials distinguish user-workflow evidence from scientific validation and commercial readiness. They prohibit invented participant data/prices, require consent, and do not authorize outreach. No interviews or external contact occurred.
+- Reviewed all three documents for consistency and blank response fields; `git diff --check` passes. No software tests apply to this document-only task.
+- P4-005 is READY: sensitivity results currently have no dedicated scientific archive/replay contract. The existing scenario-set archive must remain unchanged.

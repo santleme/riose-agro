@@ -48,7 +48,19 @@ Implementation scope: Demonstrate conditional CMS/cost use case, ask about an ac
 Acceptance criteria: protocol distinguishes product demand from scientific validation; blank records only; no contacts or findings fabricated.
 Required tests: document consistency review; no software test needed.
 Evidence: `docs/product-research/` materials.
-Status: IN_PROGRESS
+Status: DONE (protocol, neutral demo script and blank feedback instrument reviewed; no users contacted and no findings fabricated).
+
+## P4-005 — Sensitivity archive and deterministic replay
+
+ID: P4-005
+Title: Export, validate, reopen and explicitly replay a scientific sensitivity calculation
+Specification reference: `product-requirements.md` PRD-006; `scientific-contracts.md`; P4-ACC-005
+Dependencies: P4-002
+Implementation scope: Add a versioned BR-CORTE sensitivity archive with strict manifest/result binding and hashes; allow opening a saved sensitivity archive into a review state; require explicit recalculation and compare the regenerated result to the archived result. Preserve existing scenario-set and BR-CORTE scenario archives.
+Acceptance criteria: Export includes exact reviewed manifest, calculated result, model implementation provenance and canonical digests; modified manifest/result is rejected; reopening never calculates; an explicit replay reproduces byte-canonical result content; existing archive formats continue to work.
+Required tests: archive contract/unit tests; Product V3 browser E2E for export/open/no-auto-run/replay/tampering; existing scenario archive and BR-CORTE scenario tests.
+Evidence: `progress.md`, focused test output, E2E output.
+Status: READY
 
 ## Reused / gated capabilities
 
