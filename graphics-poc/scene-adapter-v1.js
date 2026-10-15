@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {validateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {validateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 
 export const SCENE_ADAPTER_VERSION = '1.0.0';
 export const COMPOSER_SOURCE_FORMAT = 'riose-composer-layout';

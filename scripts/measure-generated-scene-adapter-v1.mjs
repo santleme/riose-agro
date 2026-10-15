@@ -2,7 +2,7 @@ import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {adaptGeneratedFarmLayoutDocument} from '../graphics-poc/scene-adapter-v1.js';
-import {generateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {generateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const warmupRuns = Number(process.env.GENERATED_SCENE_ADAPTER_WARMUPS ?? 5);

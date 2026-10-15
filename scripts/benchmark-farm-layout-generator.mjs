@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import os from 'node:os';
 import {dirname, resolve} from 'node:path';
-import {generateFarmLayout} from '../public/assets/scenario-editor/scene-layout.js';
+import {generateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 
 const repetitions = Number(process.env.FARM_LAYOUT_REPETITIONS ?? 50);

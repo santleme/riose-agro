@@ -6,6 +6,7 @@ The repository keeps browser page URLs at the project root for static-host compa
 index.html, home.html, product.html, lab.html, *-data.html   browser entry points
 src/client/                                                   browser modules and stylesheets
   product/                                                   Product experience: app, versioned world scene, shared geometry, static world drawing, Pixi orchestration, spatial model and interaction
+  scenario-editor/                                           shared grid-scene generation and validation for the standalone Composer and Graphics adapters
   visualization/                                             shared presentation geometry and visual adapters
 src/server/                                                   local HTTP and Python compute services
 crates/                                                       Rust core and WASM adapters

@@ -1,7 +1,7 @@
 import {
   Application, Assets, Container, Graphics, Rectangle, Sprite, Texture,
 } from './vendor/pixi.min.mjs';
-import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from './scene-layout.js';
+import {DEFAULT_LAYERS, generateFarmLayout, validateFarmLayout, projectIso, unprojectIso} from '../../../src/client/scenario-editor/scene-layout.js';
 
 const URLS = {
   manifest: '/assets/manifest.json',
