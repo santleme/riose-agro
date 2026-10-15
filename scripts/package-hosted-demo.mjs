@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const outputRoot = resolve(repositoryRoot, 'dist/hosted-demo');
+const outputRoot = resolve(repositoryRoot, 'dist');
 const hostedFiles = execFileSync('git', ['ls-files', '-z'], { cwd: repositoryRoot, encoding: 'utf8' })
   .split('\0')
   .filter(Boolean)
@@ -36,13 +36,13 @@ writeFileSync(join(outputRoot, 'build-metadata.json'), `${JSON.stringify({
 console.log(`Hosted demo packaged at ${relative(repositoryRoot, outputRoot).split(sep).join('/')}`);
 console.log(`Source commit: ${commitSha}`);
 
-const archivePath = join(repositoryRoot, 'dist/hosted-demo.tar');
+const archivePath = join(repositoryRoot, 'dist-hosted-demo.tar');
 mkdirSync(dirname(archivePath), { recursive: true });
 execFileSync('tar', [
   '-cf', archivePath,
   '-C', repositoryRoot,
   '.openai/hosting.json',
-  'dist/hosted-demo',
+  'dist',
 ], { stdio: 'inherit' });
 console.log(`Sites archive: ${relative(repositoryRoot, archivePath).split(sep).join('/')}`);
 

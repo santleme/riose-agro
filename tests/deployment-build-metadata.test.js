@@ -13,7 +13,7 @@ test('hosted demo metadata is generated from the source commit', () => {
     stdio: 'pipe',
   });
 
-  const outputPath = join(ROOT, 'dist/hosted-demo');
+  const outputPath = join(ROOT, 'dist');
   const expectedCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
   const metadata = JSON.parse(readFileSync(join(outputPath, 'build-metadata.json'), 'utf8'));
 
@@ -22,5 +22,5 @@ test('hosted demo metadata is generated from the source commit', () => {
   assert.match(metadata.commit, /^[0-9a-f]{40}$/i);
   assert.equal(metadata.releaseStatus, 'candidate');
   assert.ok(readFileSync(join(outputPath, 'experiments.html'), 'utf8').includes('experiment-form'));
-  assert.ok(readFileSync(join(ROOT, '.openai/hosting.json'), 'utf8').includes('"directory": "dist/hosted-demo"'));
+  assert.ok(readFileSync(join(ROOT, '.openai/hosting.json'), 'utf8').includes('"static": "dist"'));
 });

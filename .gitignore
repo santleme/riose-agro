@@ -2,8 +2,8 @@
 Thumbs.db
 .codex/
 node_modules/
-dist/hosted-demo/
-/dist/hosted-demo.tar
+/dist/
+/dist-hosted-demo.tar
 target/
 coverage/
 .codex/
