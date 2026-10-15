@@ -5,12 +5,12 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, renameSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 import {fileURLToPath} from 'node:url';
 
-const inputPath = new URL('../docs/evidence/usda-cper-ltgi-audit.json', import.meta.url);
-const reportPath = new URL('../docs/evidence/engine-adg-usda-cper-ltgi-check.json', import.meta.url);
+const inputPath = new URL('../../../docs/evidence/usda-cper-ltgi-audit.json', import.meta.url);
+const reportPath = new URL('../../../docs/evidence/engine-adg-usda-cper-ltgi-check.json', import.meta.url);
 const input = JSON.parse(readFileSync(inputPath, 'utf8'));
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const HOLDOUT_YEARS = [2014, 2015, 2016, 2017, 2018];

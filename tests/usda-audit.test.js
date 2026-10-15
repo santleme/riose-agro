@@ -33,7 +33,7 @@ test('USDA CPER feasibility audit groups periods by animal and does not claim en
 });
 
 test('default engine ADG range check stays explicitly descriptive and verifies equal housing gain', () => {
-  const raw = execFileSync('node', ['scripts/audit_engine_adg_range.js'], {encoding: 'utf8'});
+  const raw = execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_range.js'], {encoding: 'utf8'});
   const report = JSON.parse(raw);
   const [pasture, barn] = report.defaultEngineRuns;
   assert.equal(report.classification, 'face_validity_range_check_only_not_validation_or_calibration');

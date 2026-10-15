@@ -9,7 +9,7 @@ import {createComparisonArchive} from '../src/client/comparison-archive.js';
 import {validateOutcomeRecord} from '../src/client/outcome-record.js';
 import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 import {createRunRecord, listRuns, runCompatibility, RUN_HISTORY_KEY} from '../src/client/run-history.js';
-import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
+import {readEngineSourceBundle} from '../scripts/science/engine-audits/engine-source-hash.js';
 
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 const sourceSnapshot = JSON.parse(readFileSync(new URL('../schemas/examples/usda-cper-2019-paddock-19n-eartag-242.json', import.meta.url), 'utf8'));

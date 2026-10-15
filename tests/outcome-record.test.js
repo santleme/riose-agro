@@ -11,7 +11,7 @@ import addFormats from 'ajv-formats';
 import {FarmEngine, createComparisonManifest} from '../src/client/engine.js';
 import {createScenarioContract} from '../src/client/scenario-contract.js';
 import {createComparisonArchive, sha256Bytes} from '../src/client/comparison-archive.js';
-import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
+import {readEngineSourceBundle} from '../scripts/science/engine-audits/engine-source-hash.js';
 import {validateOutcomeRecord} from '../src/client/outcome-record.js';
 import {linkFarmSnapshotToManifest} from '../src/client/snapshot-manifest-link.js';
 

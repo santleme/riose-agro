@@ -34,6 +34,8 @@ O retrato e as contagens abaixo continuam descrevendo `main@27c5d29`. As etapas 
 - PR #170 centralizou leitura e escrita de cenas locais em `scene-storage.js`.
 - PR #171 agrupou builds, screenshots e benchmarks do Graphics PoC em `scripts/graphics/`.
 - PR #172 reuniu o runner de cenários e as bibliotecas reutilizáveis de lotes experimentais em `scripts/experiments/`.
+- PR #173 agrupou benchmarks de simulação/sistema e validação de relatórios em `scripts/benchmarks/`.
+- PR em andamento move as comparações fixas do motor por coorte para `scripts/science/engine-audits/`, mantendo comandos, imports, testes e paths de dados alinhados.
 
 Essas mudanças conectam e documentam o fluxo interno do Product e reduzem o acoplamento do Scenario Editor; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
 

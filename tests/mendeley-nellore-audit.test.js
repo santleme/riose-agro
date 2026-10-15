@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
-import {auditDmi} from '../scripts/audit_engine_dmi_mendeley.js';
+import {auditDmi} from '../scripts/science/engine-audits/audit_engine_dmi_mendeley.js';
 
 test('Mendeley Nellore feedlot audit verifies the public workbook and preserves missing DMI', () => {
   const raw = execFileSync('python3', ['scripts/audit_mendeley_nellore_feedlot.py'], {encoding: 'utf8'});

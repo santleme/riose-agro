@@ -6,10 +6,10 @@
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = resolve(new URL('../../../', import.meta.url).pathname);
 const INPUT = resolve(ROOT, 'data/grastech-dairy-grazing-dmi/individual-dmi-observations.tsv');
 const MANIFEST = resolve(ROOT, 'data/grastech-dairy-grazing-dmi/manifest.json');
 const REPORT = resolve(ROOT, 'docs/evidence/grastech-dairy-grazing-dmi-engine-check.json');

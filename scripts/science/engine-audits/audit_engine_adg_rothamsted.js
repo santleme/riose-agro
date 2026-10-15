@@ -5,10 +5,10 @@
  */
 import {createHash} from 'node:crypto';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
-const root = new URL('../', import.meta.url);
+const root = new URL('../../../', import.meta.url);
 const dataPath = new URL('data/rothamsted/Cattle_LWt_collated_2018-2025.csv', root);
 const manifestPath = new URL('data/rothamsted/manifest.json', root);
 const auditPath = new URL('docs/evidence/rothamsted-adg-audit.json', root);

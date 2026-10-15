@@ -7,7 +7,7 @@ import {
   replayConfiguredComparisonManifest,validateConfiguredComparisonManifest
 } from '../src/client/engine.js';
 import {createComparisonArchive} from '../src/client/comparison-archive.js';
-import {readEngineSourceBundle} from '../scripts/engine-source-hash.js';
+import {readEngineSourceBundle} from '../scripts/science/engine-audits/engine-source-hash.js';
 import {createRunRecord,runCompatibility} from '../src/client/run-history.js';
 import {validateReproducibilityManifest,replayScenarioContract} from '../src/client/scenario-contract.js';
 import {decodeWorkerCommand,normalizeWorkerResponse} from '../src/client/worker-protocol.js';

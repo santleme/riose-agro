@@ -3,10 +3,10 @@ import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {FarmEngine} from '../src/client/engine.js';
+import {FarmEngine} from '../../../src/client/engine.js';
 import {engineSourceSha256, ENGINE_SOURCE_FILES} from './engine-source-hash.js';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = resolve(new URL('../../../', import.meta.url).pathname);
 const EXPORTER = resolve(ROOT, 'scripts/export_mendeley_nellore_dmi_weight_pairs.py');
 const REPORT = resolve(ROOT, 'docs/evidence/mendeley-nellore-engine-dmi-check.json');
 

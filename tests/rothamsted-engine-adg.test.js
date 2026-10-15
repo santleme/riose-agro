@@ -6,7 +6,7 @@ import {readFileSync, writeFileSync} from 'node:fs';
 test('frozen engine ADG diagnostic uses the public Rothamsted cohort holdout without fitting', () => {
   const sourceAudit = execFileSync('python3', ['scripts/audit_rothamsted_adg.py'], {encoding: 'utf8'});
   writeFileSync('docs/evidence/rothamsted-adg-audit.json', `${JSON.stringify(JSON.parse(sourceAudit), null, 2)}\n`);
-  execFileSync('node', ['scripts/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
   const path = 'docs/evidence/engine-adg-rothamsted-check.json';
   const firstRun = readFileSync(path, 'utf8');
   const report = JSON.parse(firstRun);
@@ -28,6 +28,6 @@ test('frozen engine ADG diagnostic uses the public Rothamsted cohort holdout wit
   assert.equal(report.validated, false);
   assert.equal(report.calibrated, false);
   assert.equal(report.productPredictiveIntervalsAvailable, false);
-  execFileSync('node', ['scripts/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
+  execFileSync('node', ['scripts/science/engine-audits/audit_engine_adg_rothamsted.js'], {encoding: 'utf8'});
   assert.equal(readFileSync(path, 'utf8'), firstRun);
 });
