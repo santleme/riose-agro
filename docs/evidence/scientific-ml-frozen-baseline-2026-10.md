@@ -2,7 +2,7 @@
 
 This reference captures the existing biomass, behavior, and ADG evaluations as they stood at commit `523982b7c5070c1f244bf8f7d2edca8a1b27b124`, before the new candidate protocols are run. It is a reproducibility checkpoint, not a scientific validation claim.
 
-The machine-readable record in [`baseline-v1.json`](../../experiments/scientific-ml/baseline-v1.json) hashes the source files, scripts, dependency declarations, and reported artifacts. [`verify_scientific_ml_baseline.py`](../../scripts/verify_scientific_ml_baseline.py) checks those hashes and independently recomputes metrics from the saved out-of-fold rows without fitting a model.
+The machine-readable record in [`baseline-v1.json`](../../experiments/scientific-ml/baseline-v1.json) hashes the source files, scripts, dependency declarations, and reported artifacts. [`verify_scientific_ml_baseline.py`](../../scripts/science/evaluations/verify_scientific_ml_baseline.py) checks those hashes and independently recomputes metrics from the saved out-of-fold rows without fitting a model.
 
 ## Frozen evaluations
 
@@ -17,7 +17,7 @@ These old outputs are retained as a baseline only. Any new candidate comparison 
 ## Reproduction
 
 ```bash
-python3 scripts/verify_scientific_ml_baseline.py
+python3 scripts/science/evaluations/verify_scientific_ml_baseline.py
 uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/audit_mendeley_pasture_biomass_prediction_readiness.py
 python3 scripts/evaluate_perea_behavior_grouped.py
 npm run audit:engine-adg-cgrec-transport

@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 BASELINE_PATH = "experiments/scientific-ml/baseline-v1.json"
 ALLOWED_REPORT = "docs/evidence/engine-adg-usda-cgrec-transport-check.json"
 SOURCE_AUDIT = "docs/evidence/usda-cgrec-longterm-audit.json"
