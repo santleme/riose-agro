@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "scripts/science/source-audits"))
 from audit_mendeley_nellore_feedlot import (
     DATA_DIR,

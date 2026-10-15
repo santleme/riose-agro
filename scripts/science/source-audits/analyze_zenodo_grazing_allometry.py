@@ -9,7 +9,7 @@ import math
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/zenodo-grazing-allometry/Zenodo_Data_Allometry.txt"
 REPORT = ROOT / "docs/evidence/zenodo-grazing-allometry-association.json"
 HORIZON_DAYS = 70

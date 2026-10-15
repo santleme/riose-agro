@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('Montana GPS and derived ADG association is reproducible and year-stratified', () => {
-  const output = JSON.parse(execFileSync('python3', ['scripts/analyze_mdpi_angus_gps_adg.py'], {encoding: 'utf8'}));
+  const output = JSON.parse(execFileSync('python3', ['scripts/science/source-audits/analyze_mdpi_angus_gps_adg.py'], {encoding: 'utf8'}));
   const saved = JSON.parse(readFileSync(new URL('../docs/evidence/mdpi-angus-gps-adg-association.json', import.meta.url), 'utf8'));
   const reviewBrief = readFileSync(new URL('../docs/revisao-independente-caso.md', import.meta.url), 'utf8');
   assert.deepEqual(output, saved);
