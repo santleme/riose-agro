@@ -15,6 +15,21 @@ O repositório já possui divisões úteis por intenção — runtime, dados, pe
 
 Isso não é apenas uma questão de mover diretórios. Vários caminhos são consumidos por páginas estáticas, manifests, scripts, testes, CI e ferramentas de pesquisa. Uma reorganização precisa começar por propriedade e contratos e preservar essas interfaces.
 
+## Progresso desde a auditoria
+
+O retrato e as contagens abaixo continuam descrevendo `main@27c5d29`. As etapas seguintes foram incorporadas depois desse snapshot:
+
+- PR #157 agrupou os módulos de runtime do Product em `src/client/product/` e registrou o mapa de propriedade.
+- PR #158 compartilhou a projeção isométrica entre Product, Graphics PoC e Scenario Editor.
+- PR #159 tornou `src/client/product/scene.json` a fonte versionada do mundo Product, definiu seu schema e ligou o validador a spatial e asset checks.
+- PR #160 compartilhou os pontos projetados de terreno, caminhos, cercas e portões entre Canvas e Pixi.
+- PR #161 isolou o desenho estático Pixi em `static-world-renderer.js`.
+- PR #162 adicionou a validação do contrato Product ao job JavaScript/WASM da CI.
+
+Essas mudanças conectam e documentam o fluxo interno do Product; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
+
+O próximo recorte arquitetural deve inventariar a propriedade dos formatos e do authoring no Scenario Editor, Graphics PoC e `tools/product-composer`, antes de criar uma conversão entre eles. Depois desse mapa, a modularização do `composer.js` pode extrair responsabilidades com uma interface sustentada por consumidores reais.
+
 ## Retrato do repositório
 
 | Área | Inventário observado | Leitura |
@@ -94,13 +109,13 @@ docs/{architecture,evidence,decisions}/
 tests/{application,simulation,scientific,visualization,server}/
 ```
 
-Esse desenho é uma hipótese de destino, não uma ordem para mover diretórios. `pages/` só vale se os HTMLs de raiz forem wrappers estáveis; caso contrário, as entradas podem ficar onde estão e o mapa deve documentar a exceção. A implementação mais urgente é escolher se `public/assets/scenario-editor`, `tools/product-composer` ou uma extração do Graphics PoC é o authoring canônico, e fixar um único contrato compartilhado com o Product.
+Esse desenho é uma hipótese de destino, não uma ordem para mover diretórios. `pages/` só vale se os HTMLs de raiz forem wrappers estáveis; caso contrário, as entradas podem ficar onde estão e o mapa deve documentar a exceção. O Product já tem uma fonte de cena versionada própria. A decisão pendente é mapear os fluxos de authoring do Scenario Editor, `tools/product-composer` e Graphics PoC e descobrir se algum deles realmente precisa trocar dados com o Product. Não se deve impor um formato compartilhado até os campos e as regras de preservação estarem definidos.
 
 ## Sequência de reorganização com menor risco
 
 1. **Inventariar propriedade e entradas:** documentar cada página/CLI, módulos importados, contrato, saída de build e testes associados. Marcar cada área como produto, ferramenta, pesquisa, protótipo, dado-fonte, artefato ou histórico.
 2. **Atualizar documentação de arquitetura:** substituir o mapa desatualizado por um mapa atual e manter auditorias históricas com seus commits claramente identificados.
-3. **Unificar cena/renderer como módulo antes de mover:** escolher o contrato de cena, definir os adapters de compatibilidade para os formatos atuais e dar um dono único ao renderer usado pelo Product. Manter PoCs e histórico como tal até a integração ficar comprovada.
+3. **Definir propriedade de cenas e renderers:** o Product já possui cena versionada, geometria compartilhada entre Canvas/Pixi e validação em CI. Mapear os formatos e fluxos de authoring restantes antes de propor adapters; manter PoCs e históricos separados até a integração ficar comprovada.
 4. **Reorganizar tooling em grupos:** separar auditoria/processamento/avaliação de dados, benchmarks, build/visual e utilitários compartilhados. Atualizar comandos de `package.json`, imports, CI e descoberta Python no mesmo passo.
 5. **Agrupar testes por módulo/contrato:** fazer somente depois de definir discovery Node/Python e atualizar caminhos. Preservar fixtures e dados de referência.
 6. **Reduzir cópias visuais com manifesto de origem:** eliminar apenas cópias deriváveis; manter snapshots usados para evidência e assets de saída que tenham uma finalidade de runtime mensurada.
@@ -108,7 +123,7 @@ Esse desenho é uma hipótese de destino, não uma ordem para mover diretórios.
 
 ## Próxima tarefa sugerida
 
-Criar um inventário rastreável de **página/CLI → módulo de entrada → módulos chamados → contratos/dados → artefatos → testes/CI** e corrigir o mapa arquitetural com base nele. Em seguida, iniciar a consolidação de cenas/renderer em um PR isolado. Essa ordem transforma a sensação de dispersão em decisões verificáveis e evita uma grande movimentação que quebre caminhos sem reduzir acoplamento.
+Criar um inventário rastreável de **editor/CLI → formato de cena → módulo de entrada → módulos chamados → artefatos → validação/CI** para Scenario Editor, Graphics PoC e `tools/product-composer`. Em seguida, decidir com evidência se um adapter é necessário e modularizar o `composer.js` nas responsabilidades que o inventário confirmar. Essa ordem transforma a sensação de dispersão em decisões verificáveis e evita uma movimentação que quebre caminhos sem reduzir acoplamento.
 
 ## Limites desta auditoria
 
