@@ -20,7 +20,7 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-001.
 - Scope: preregister candidate families, group splits, primary metrics, stop thresholds and evaluation code; IID, persistence and first-order Markov policies.
 - Acceptance: per-animal held-out comparisons, gap-aware bout extraction, no future observed signal input; deterministic seeded repeatability and negative controls.
-- Status: READY (BEH-001 completed; held-out generative outcomes remain unopened).
+- Status: IN_PROGRESS (protocol v1 frozen; implementation/tests in progress; confirmatory outcomes remain unopened).
 
 ## BEH-003 — Semi-Markov behavior generator
 - Depends on: BEH-002.
