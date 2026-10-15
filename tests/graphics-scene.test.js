@@ -393,6 +393,7 @@ test('the Graphics Lab serves editable scenes and only the cleared runtime atlas
   for (const path of ['/graphics-poc/index.html', '/graphics-poc/scene.json', '/graphics-poc/scenes/dairy.json', '/graphics-poc/assets/main-composer-render-manifest.json', '/schemas/visual-scene.schema.json']) {
     const response = await fetch(origin + path); assert.equal(response.status, 200, path);
   }
+  assert.equal((await fetch(origin + '/assets/manifest.json')).status, 200, 'Graphics Lab can load the cleared runtime manifest');
   assert.match(await (await fetch(origin + '/graphics-poc/index.html')).text(), /id="rotate-selection"/, 'the composer exposes a selected-prefab rotation action');
   const image = await fetch(origin + '/assets/atlas/synthetic-release-atlas-v1.png');
   assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');
