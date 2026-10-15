@@ -27,4 +27,4 @@ Scientific limitations: BR-CORTE Eq. 2.6 estimates total DMI conditionally using
 
 External readiness: discovery protocol and neutral demo are prepared only. No participants contacted and no feedback/interview performed. Independent scientific review is still `NOT_PERFORMED`. No LLM provider call, push, merge, or remote history operation was performed.
 
-Next action: after committing this verified slice, await a new eligible local product task or human recruitment/consent for PRD-007. Do not treat participant discovery as scientific review or unblock P3-007/P3-008 without their real gates.
+Next action: no implementation task is currently READY. Resume product code when a new non-duplicative requirement is selected; PRD-007 needs real human recruitment and consent. Do not treat participant discovery as scientific review or unblock P3-007/P3-008 without their real gates.
