@@ -13,13 +13,14 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Scope: Reconcile row/animal IDs, duplicate timestamps, contradictory labels, contiguous session windows, timezones, per-class minutes, durations, annotation carry-forward, licensing manifest/checksum. Compare preprocessing bytes to earlier scripts.
 - Acceptance: deterministic machine-readable readiness report and tests; no model fitting; annotate which metrics have sufficient coverage and which do not.
 - Files: `data/perea-rangeland-behavior/`, `scripts/science/`, `tests/`, `docs/evidence/` as appropriate.
-- Status: READY.
+- Evidence: `docs/evidence/perea-time-series-readiness.md` and `.json`; parity digest and deterministic report are covered by `tests/test_perea_time_series_readiness.py`.
+- Status: DONE (audit and parity tests pass; no model fitting).
 
 ## BEH-002 — Freeze generative benchmark and implement simple policies
 - Depends on: BEH-001.
 - Scope: preregister candidate families, group splits, primary metrics, stop thresholds and evaluation code; IID, persistence and first-order Markov policies.
 - Acceptance: per-animal held-out comparisons, gap-aware bout extraction, no future observed signal input; deterministic seeded repeatability and negative controls.
-- Status: BACKLOG.
+- Status: READY (BEH-001 completed; held-out generative outcomes remain unopened).
 
 ## BEH-003 — Semi-Markov behavior generator
 - Depends on: BEH-002.

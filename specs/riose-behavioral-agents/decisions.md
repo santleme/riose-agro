@@ -7,3 +7,4 @@
 - **ADR-BEH-005:** Holdout grouped by individual animal; no synthetic sequence regarded as new biological sample. Site/breed confounding remains visible.
 - **ADR-BEH-006:** Groq and Hugging Face are optional orchestration/model artifact services, not an animal physiology simulation substrate. No provider key required for core features.
 - **ADR-BEH-007:** Experimental behavior policy disabled by default, no predictive confidence or commercial deployment claim; independent external ground truth required to progress to population validity.
+- **ADR-BEH-008 (2026-10-15):** Perea time-series windows are defined operationally as adjacent eligible animal observations exactly one minute apart; missing/conflicting minutes split windows. This is conservative coverage bookkeeping and must not be described as source-declared video sessions. Preserve Mountain local wall-clock timestamps without UTC conversion because source rows lack offsets/fold metadata.
