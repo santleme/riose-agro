@@ -1,5 +1,5 @@
 
-/mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/native/release/libriose_core.so:     file format elf64-x86-64
+<workspace>/issue-91/repro-target-9d9b7e7/native/release/libriose_core.so:     file format elf64-x86-64
 
 
 Disassembly of section .init:

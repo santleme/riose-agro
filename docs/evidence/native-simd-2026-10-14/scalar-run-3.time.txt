@@ -1,4 +1,4 @@
-	Command being timed: "env SIMD_STUDY_PROFILE=scalar: -C no-vectorize-loops -C no-vectorize-slp SIMD_STUDY_RUN=3 /mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/scalar/release/examples/simd_metabolism_study"
+	Command being timed: "env SIMD_STUDY_PROFILE=scalar: -C no-vectorize-loops -C no-vectorize-slp SIMD_STUDY_RUN=3 <workspace>/issue-91/repro-target-9d9b7e7/scalar/release/examples/simd_metabolism_study"
 	User time (seconds): 8.85
 	System time (seconds): 0.05
 	Percent of CPU this job got: 98%

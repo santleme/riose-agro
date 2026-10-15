@@ -1,13 +1,13 @@
 {
   "evidence_id": "ev_173a1b3e9548f90da1e62cd4203f89c6d16e989b74d0f6720c2592f5de715a54",
   "subject": {
-    "name": "\\\\wsl.localhost\\Ubuntu\\tmp\\rea-smallville-ui",
+    "name": "\\<workspace>/tmp/rea-smallville-ui",
     "digest": {
       "sha256": "9c8aceb2cde1098e92bc953792bf4fdf04019d872eedc98c945355808f6dd381"
     },
     "format": "directory",
     "architecture": null,
-    "local_path": "\\\\wsl.localhost\\Ubuntu\\tmp\\rea-smallville-ui"
+    "local_path": "\\<workspace>/tmp/rea-smallville-ui"
   },
   "normalized_result": {
     "graph": {

@@ -1,13 +1,13 @@
 {
   "evidence_id": "ev_b9b57c0d88b5777f1eb853d062795b1fd4ed8b383ac5b8cbeb79da9fbcae868c",
   "subject": {
-    "name": "\\\\wsl.localhost\\Ubuntu\\home\\lucas_coimbra\\projects\\hackhatons\\riose-agro",
+    "name": "\\<workspace>/projects/hackhatons/riose-agro",
     "digest": {
       "sha256": "2e6052468f74ecc8245d4d335169fba098d39761cd8f22016015373c68819fc7"
     },
     "format": "directory",
     "architecture": null,
-    "local_path": "\\\\wsl.localhost\\Ubuntu\\home\\lucas_coimbra\\projects\\hackhatons\\riose-agro"
+    "local_path": "\\<workspace>/projects/hackhatons/riose-agro"
   },
   "normalized_result": {
     "statistics": {
