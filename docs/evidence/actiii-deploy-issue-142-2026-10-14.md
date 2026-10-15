@@ -29,4 +29,4 @@ Therefore the demo is functional, but its deployed revision cannot be verified a
 
 ## Current candidate checkpoint
 
-The release branch has since advanced to `5c5f07095bf1c8bddb652eb02342ff15b5cc0d56`. Issue #142 remains open, and its current issue body/comment history does not record a verified public URL or deployed SHA for this candidate. The browser observations above concern the earlier source SHA only and do not verify the current candidate. The judge-facing README therefore omits a deployment URL until #142 records a verified one.
+The release branch has since advanced to `e897c53b2d99ae0ae4de9db31ece281375bf96b1`. Issue #142 remains open, and its current issue body/comment history does not record a verified public URL or deployed SHA for this candidate. The browser observations above concern the earlier source SHA only and do not verify the current candidate. The judge-facing README therefore omits a deployment URL until #142 records a verified one.

@@ -28,7 +28,9 @@ The representative comparison uses the same initial farm snapshot and seed for b
 | --- | --- |
 | ![RIOSE Product scenario](docs/act-iii/screenshots/product-scenario.png) | ![RIOSE scenario comparison](docs/act-iii/screenshots/scenario-comparison.png) |
 
-These captures and the [architecture diagram](docs/act-iii/architecture/act-iii-architecture.svg) were recorded at source SHA `0581f6574bc05547a02a88bd95ed4292a0c9b9e5`, before AMD Product integration. They do not show the current AMD selector or establish AMD execution; [#144](https://github.com/santleme/riose-agro/issues/144) remains open for final-candidate visuals.
+The [comparison details screenshot](docs/act-iii/screenshots/scenario-comparison-details.png) shows the modeled forage and feed-cost differences with illustrative-model labels.
+
+These captures and the [architecture diagram](docs/act-iii/architecture/act-iii-architecture.svg) were recorded at source SHA `5c5f07095bf1c8bddb652eb02342ff15b5cc0d56`. The Product screenshot shows CPU selected; the architecture depicts the #137 AMD/ROCm route without claiming physical AMD execution. The visual package is ready under [#144](https://github.com/santleme/riose-agro/issues/144).
 
 ## Architecture
 
@@ -50,7 +52,7 @@ See the [#146 scientific-claims review](docs/evidence/issue-146-scientific-claim
 ## AMD / ACT III status
 
 - **Experimental accelerator work:** a reproducible metabolism benchmark and a no-go report for the captured WSL2 environment are present. That host had no usable ROCm device, so the report contains no accelerator timing or speedup. See the [benchmark report](docs/evidence/amd-metabolism-benchmark-no-go-2026-10.md).
-- **AMD product integration:** an experimental Product route for the existing livestock metabolism batch and an explicit CPU fallback are implemented. Issue [#137](https://github.com/santleme/riose-agro/issues/137) remains open, so its release acceptance gate is not marked complete. See the [integration evidence](docs/evidence/actiii-amd-integration-137.md).
+- **AMD product integration:** the experimental Product route for the existing livestock metabolism batch and explicit CPU fallback passed [#137](https://github.com/santleme/riose-agro/issues/137) (`AMD_PRODUCT_PATH_FUNCTIONAL`) and was merged through [PR #154](https://github.com/santleme/riose-agro/pull/154). See the [integration evidence](docs/evidence/actiii-amd-integration-137.md).
 - **Real AMD/ROCm execution:** the integration report records `pytorch_unavailable`; no physical device execution, parity result, or AMD timing is available. The captured environment is a no-go; a real-device run remains open in [#138](https://github.com/santleme/riose-agro/issues/138). NVIDIA results are not AMD evidence.
 - **CPU path:** JavaScript is the product's default metabolism implementation and fallback. The native comparison route also falls back to JavaScript when the Rust runner is unavailable or fails. The optional WASM path is not an AMD path.
 
@@ -116,20 +118,20 @@ See the concise [ACT III evidence index](docs/act-iii/evidence-index.md) for art
 
 ## Current ACT III status
 
-This README was reviewed against `release/amd-act-iii` at `5c5f07095bf1c8bddb652eb02342ff15b5cc0d56`. That is the current source candidate, not a verified deployment or fully release-tested SHA. The exact release-tested SHA remains pending [#143](https://github.com/santleme/riose-agro/issues/143).
+This README was refreshed against `release/amd-act-iii` at `e897c53b2d99ae0ae4de9db31ece281375bf96b1`. This is the current source candidate, not a verified deployment or fully release-tested SHA. The exact release-tested SHA remains pending [#143](https://github.com/santleme/riose-agro/issues/143).
 
 | Area | Current status |
 | --- | --- |
 | Working prototype | Present; final candidate checks remain open in [#143](https://github.com/santleme/riose-agro/issues/143) |
-| Public repository security | `PUBLIC_REPO_SECURITY_BLOCKED`: root `LICENSE` is absent and requires an owner decision; XG-AIN terms conflict, and reuse terms for the grazing-ingestive-behavior RDGV and Perea datasets are missing or unclear. Latest-head secret/path/artifact scans are not complete. See refreshed [#139 audit checkpoint](https://github.com/santleme/riose-agro/issues/139#issuecomment-6181654090). |
+| Public repository security | `PUBLIC_REPO_SECURITY_BLOCKED`: the owner must select a root `LICENSE`; conflicting XG-AIN terms and missing or unclear grazing-ingestive-behavior-RDGV and Perea dataset reuse terms must be resolved or the datasets removed; then secret/path/artifact scans must be refreshed against the candidate. See refreshed [#139 audit checkpoint](https://github.com/santleme/riose-agro/issues/139#issuecomment-6181654090). |
 | Runtime asset rights | Pending: [#140](https://github.com/santleme/riose-agro/issues/140) remains open with no final asset-clearance report. |
 | Judge-accessible repository | Pending [#141](https://github.com/santleme/riose-agro/issues/141); the repository remains private and judge access is unverified. [Repository](https://github.com/santleme/riose-agro) |
 | Public demo URL and SHA | No public URL or deployment SHA is published: [#142](https://github.com/santleme/riose-agro/issues/142) remains `#142_BLOCKED_UNKNOWN_DEPLOY_REVISION`. |
-| AMD product integration | Experimental route is present and merged through [PR #154](https://github.com/santleme/riose-agro/pull/154); issue [#137](https://github.com/santleme/riose-agro/issues/137) remains open, so release acceptance is not marked complete. |
+| AMD product integration | `AMD_PRODUCT_PATH_FUNCTIONAL`; [#137](https://github.com/santleme/riose-agro/issues/137) is closed after [PR #154](https://github.com/santleme/riose-agro/pull/154) merged. This confirms integration, not physical AMD execution. |
 | Real AMD/ROCm execution | No physical device execution or accelerator timing is recorded; evidence remains pending [#138](https://github.com/santleme/riose-agro/issues/138). |
 | Scientific-claims review | Closed in [#146](https://github.com/santleme/riose-agro/issues/146); approved wording is present from merged [#151](https://github.com/santleme/riose-agro/pull/151) |
-| Submission screenshots and architecture | [Visual index](docs/act-iii/README.md), screenshots, and diagram are present but captured at `0581f6574bc05547a02a88bd95ed4292a0c9b9e5`, before AMD integration; [#144](https://github.com/santleme/riose-agro/issues/144) remains open. |
-| Technical release gate | Pending [#143](https://github.com/santleme/riose-agro/issues/143); no status checks or workflow runs are recorded for source SHA `5c5f07095bf1c8bddb652eb02342ff15b5cc0d56`. |
+| Submission screenshots and architecture | `SUBMISSION_VISUALS_READY`; [#144](https://github.com/santleme/riose-agro/issues/144) is closed. Visuals are present in the [visual index](docs/act-iii/README.md), with capture provenance at `5c5f07095bf1c8bddb652eb02342ff15b5cc0d56`. |
+| Technical release gate | `RELEASE_GATE_PASS` is not recorded; [#143](https://github.com/santleme/riose-agro/issues/143) remains open. The current source candidate is `e897c53b2d99ae0ae4de9db31ece281375bf96b1`; candidate verification and exact tested release SHA remain pending. |
 
 **Exact release-tested SHA:** not yet recorded; candidate verification remains open in [#143](https://github.com/santleme/riose-agro/issues/143).
 
@@ -139,7 +141,7 @@ The required #145 finalization gates [#138](https://github.com/santleme/riose-ag
 
 - Outputs are exploratory and illustrative; the simulator is not calibrated for a target farm or population.
 - The full simulator is not validated to predict real farm outcomes. Results are not management advice.
-- AMD product integration is present but its issue gate remains open; real-device execution evidence is incomplete.
+- AMD Product integration is complete, but real-device execution evidence remains incomplete under [#138](https://github.com/santleme/riose-agro/issues/138).
 - Root license selection, dataset reuse clearance, and runtime asset rights remain unresolved under [#139](https://github.com/santleme/riose-agro/issues/139) and [#140](https://github.com/santleme/riose-agro/issues/140).
-- Current screenshots and architecture predate the AMD Product integration; refresh them against the final candidate under [#144](https://github.com/santleme/riose-agro/issues/144).
+- Screenshots and architecture are ready under #144, but depict the CPU-selected Product state and do not provide physical AMD execution or deployment evidence.
 - Public demo deployment verification is blocked until its exact repository revision can be identified.
