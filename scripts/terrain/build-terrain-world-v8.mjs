@@ -1,7 +1,7 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {buildTerrainWorldV8, validateTerrainWorldV8} from '../../src/client/terrain-world-v8.js';
+import {buildTerrainWorldV8, validateTerrainWorldV8, waterTileAssetId} from '../../src/client/terrain-world-v8.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const model = buildTerrainWorldV8();
@@ -10,7 +10,7 @@ if (!validation.valid) throw new Error(`Terrain V8 geometry invalid: ${validatio
 
 const tiles = model.cells.flat().map(cell => ({
   position: {x: cell.x, y: cell.y},
-  assetId: `world-v8-${cell.material === 'water' ? 'water-0' : cell.material}`,
+  assetId: cell.material === 'water' ? waterTileAssetId(model.cells, cell.x, cell.y) : `world-v8-${cell.material}`,
   zoneId: null,
   elevation: cell.elevation,
   material: cell.material,

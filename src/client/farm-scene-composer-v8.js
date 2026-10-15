@@ -32,7 +32,7 @@ export function composeFarmSceneV8(sourceScene, seed = 84018) {
     if (zones.some(zone => x + .5 >= zone.origin.x && x + .5 < zone.origin.x + zone.footprint.columns
       && y + .5 >= zone.origin.y && y + .5 < zone.origin.y + zone.footprint.rows)) continue;
     if (blockers.some(prefab => overlapsWithClearance(x, y, 1, 1, prefab, .55))) continue;
-    if (fixedTrees.some(prefab => Math.hypot(prefab.position.x - x, prefab.position.y - y) < 2.2)) continue;
+    if (fixedTrees.some(prefab => Math.hypot(prefab.position.x - x, prefab.position.y - y) < 1.35)) continue;
     candidates.push({x, y});
   }
   if (!candidates.length) throw new Error('Nenhuma célula segura disponível para vegetação decorativa.');

@@ -19,7 +19,7 @@
     "rows": 12,
     "metersPerCell": 5,
     "elevationUnit": "level",
-    "elevationPxPerLevel": 30
+    "elevationPxPerLevel": 60
   },
   "heightLevels": [
     0,
@@ -48,20 +48,22 @@
     ]
   ],
   "routeCells": 12,
-  "visibleSprites": 280,
+  "visibleSprites": 289,
   "assembly": {
-    "prefabs": 13,
-    "fences": 1,
+    "prefabs": 22,
+    "fences": 10,
+    "modularFenceSegments": 9,
+    "pastureGates": 1,
     "animals": 5,
     "pastures": 1
   },
   "frameStats": {
-    "meanFps": 57.39201729214027,
-    "p95FrameMs": 16.799999999999727,
-    "medianPaintMs": 0.20000000298023224,
+    "meanFps": 56.002036437688645,
+    "p95FrameMs": 16.799999999999955,
+    "medianPaintMs": 0.29999999701976776,
     "p95PaintMs": 0.6000000014901161,
     "medianSceneUpdateMs": 0.19999999552965164,
-    "p95SceneUpdateMs": 0.6000000014901161,
+    "p95SceneUpdateMs": 0.3999999985098839,
     "medianMotionUpdateMs": 0,
     "meanLodVisualUpdates": 0,
     "simulatedAnimals": 0,
@@ -75,10 +77,10 @@
     "accountedAnimals": 0,
     "animalRenderUnits": 5,
     "herdClusters": 0,
-    "visibleSprites": 280,
+    "visibleSprites": 289,
     "viewportWidth": 1536,
     "viewportHeight": 960,
-    "cameraZoom": 1.05,
+    "cameraZoom": 1.1199999999999999,
     "renderer": "pixi"
   },
   "errors": []

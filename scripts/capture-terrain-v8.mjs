@@ -54,12 +54,14 @@ try {
   assert.ok(validation.cliffSegments > 0 && validation.routeCells > 0);
   if (captureScene === 'farm-assembly-v8') {
     assert.equal(validation.assembly.animals, 5);
-    assert.equal(validation.assembly.fences, 1);
-    assert.ok(validation.assembly.prefabs >= 9);
+    assert.equal(validation.assembly.fences, 10);
+    assert.ok(validation.assembly.prefabs >= 18);
   }
   if (captureScene === 'farm-final-v8') {
-    assert.equal(validation.assembly.animals, 9);
-    assert.equal(validation.assembly.fences, 3);
+    assert.equal(validation.assembly.animals, 20);
+    assert.equal(validation.assembly.modularFenceSegments, 21);
+    assert.equal(validation.assembly.pastureGates, 3);
+    assert.equal(validation.assembly.fences, 25);
     assert.equal(validation.assembly.pastures, 3);
   }
   await mkdir(output, {recursive: true});
@@ -72,10 +74,11 @@ try {
     .stage-shell{position:absolute!important;left:0!important;top:0!important;width:1536px!important;height:960px!important;min-height:0!important;border:0!important;border-radius:0!important}
   `});
   await page.waitForTimeout(700);
-  await page.evaluate(() => window.__graphicsControl.setCameraZoom(1.05));
+  await page.evaluate(() => { window.__graphicsControl.fitScene(); window.__graphicsControl.setLayer('overlays', false); });
   await page.waitForTimeout(450);
   await page.screenshot({path: path.join(output, `${captureName}-proof-1536x960.png`), animations: 'disabled'});
   await page.evaluate(() => {
+    window.__graphicsControl.setLayer('overlays', true);
     const grid = document.querySelector('[data-layer="grid"]');
     grid.checked = true;
     grid.dispatchEvent(new Event('change', {bubbles: true}));

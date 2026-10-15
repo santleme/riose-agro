@@ -30,4 +30,14 @@ await build({
   target: ['es2022'],
   legalComments: 'none',
 });
-console.log('Built graphics-poc/dist/app.js, graphics-poc/dist/ranch-v4.js, and graphics-poc/dist/spatial-debug.js');
+await build({
+  entryPoints: ['graphics-poc/rural-renderer-lab.js'],
+  outfile: 'graphics-poc/dist/rural-renderer-lab.js',
+  bundle: true,
+  minify: true,
+  sourcemap: false,
+  format: 'esm',
+  target: ['es2022'],
+  legalComments: 'none',
+});
+console.log('Built graphics-poc application, spatial debug, and Pixi/Babylon rural renderer lab.');

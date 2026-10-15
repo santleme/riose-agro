@@ -12,6 +12,8 @@ const waterStressSceneUrl = '/graphics-poc/scenes/water-stress-visual.json';
 const terrainV8SceneUrl = '/graphics-poc/scenes/terrain-v8.json';
 const farmAssemblyV8SceneUrl = '/graphics-poc/scenes/farm-assembly-v8.json';
 const farmFinalV8SceneUrl = '/graphics-poc/scenes/farm-final-v8.json';
+const ruralSmallV9SceneUrl = '/graphics-poc/scenes/rural-small-v9.json';
+const ruralPropertyV9SceneUrl = '/graphics-poc/scenes/rural-property-v9.json';
 const farmAtlasUrl = '/graphics-poc/assets/farm-starter-atlas.png';
 const neloreUrl = '/graphics-poc/assets/nelore-adult-idle-v1.png';
 const frames = {
@@ -45,7 +47,7 @@ const frames = {
 };
 const startedAt = performance.now();
 let originalBeefModule, originalBeefScenario;
-const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true, grid: false}, selection: null, selectedAnimalIds: [], tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), pixiWaterSprites: [], pixiWaterFrame: -1, visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', sceneSelectionGeneration: 0, assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, terrainV8AssetManifest: null, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
+const state = {scene: null, scenes: {}, view: null, renderer: 'canvas', context: null, camera: {x: 0, y: 0, zoom: 1.35}, activeLayers: {terrain: true, infrastructure: true, livestock: true, overlays: true, grid: false}, selection: null, selectedAnimalIds: [], tool: null, pixi: null, pixiTextures: new Map(), pixiTerrain: [], pixiPrefabs: new Map(), pixiAnimals: new Map(), pixiWaterSprites: [], pixiWaterFrame: -1, visible: [], visibleAnimalCount: 0, culledAnimalCount: 0, visibleByLod: {near: 0, medium: 0, far: 0}, animalRenderUnits: 0, herdClusterCount: 0, lodUpdates: 0, motionById: new Map(), updateMs: 0, motionUpdateMs: 0, paintMs: 0, frameTimes: [], paintTimes: [], updateTimes: [], motionUpdateTimes: [], lodUpdateTimes: [], lastFrame: 0, lastAnimatedDepthSort: 0, lastHud: 0, worker: null, workerReady: false, pending: [], running: false, timer: null, drawCount: 0, selectedDomain: 'beef', sceneSelectionGeneration: 0, assetImages: {}, assetFrames: {}, assetAtlasUrls: {}, terrainV8AssetManifest: null, renderManifest: null, assetSourceManifest: null, canvasSizing: {width: 0, height: 0, ratio: 1}};
 
 function image(url) {
   return new Promise((resolve, reject) => {
@@ -98,7 +100,7 @@ function fitSceneZoom() {
   const maxHeight = state.scene.terrainV8 ? Math.max(0, ...state.scene.terrainV8.heightMap.flat()) : 0;
   const height = (columns + rows) * cellHeight / 2 + (state.scene.terrainV8?.dimensions.elevationPxPerLevel ?? 0) * maxHeight;
   const stage = $('stage');
-  return Math.max(.15, Math.min(4, Math.min(stage.clientWidth * .88 / width, stage.clientHeight * .82 / height)));
+  return Math.max(.15, Math.min(4, Math.min(stage.clientWidth * .98 / width, stage.clientHeight * .9 / height)));
 }
 
 function isoPosition(column, row) {
@@ -133,8 +135,13 @@ function entityEntries() {
     entries.push({id: entity.entityId, kind: 'livestock', assetId: entity.asset.assetId, x: position.x, y: position.y, depth: position.y, entity});
   }
   for (const prefab of state.scene.prefabs) {
-    const position = isoPosition(prefab.position.x + prefab.footprint.columns / 2, prefab.position.y + prefab.footprint.rows / 2);
-    entries.push({id: prefab.prefabId, kind: prefab.layer, assetId: prefab.assetId, x: position.x, y: position.y, depth: prefab.depth ?? position.y + (prefab.depthOffset ?? 0), visualScale: prefab.visualScale ?? 1, prefab});
+    const centerX = prefab.position.x + prefab.footprint.columns / 2, centerY = prefab.position.y + prefab.footprint.rows / 2;
+    const position = isoPosition(centerX, centerY);
+    // The front corner of the ground footprint is the contact point that determines occlusion.
+    // isoPosition reads the logical elevation map, so raised prefabs sort at their actual z.
+    const contact = isoPosition(prefab.position.x + prefab.footprint.columns, prefab.position.y + prefab.footprint.rows);
+    entries.push({id: prefab.prefabId, kind: prefab.layer, assetId: prefab.assetId, x: position.x, y: position.y,
+      depth: prefab.depth ?? contact.y + (prefab.depthOffset ?? 0), visualScale: prefab.visualScale ?? 1, prefab});
   }
   return entries;
 }
@@ -360,7 +367,7 @@ async function initPixi() {
 
 async function createPixi() {
   const started = performance.now(), app = new Application();
-  await app.init({background: state.scene?.terrainV8 ? '#dedccf' : '#7c9562', resizeTo: $('stage'), antialias: false, autoDensity: true, resolution: Math.min(devicePixelRatio || 1, 1.5), preference: 'webgl', eventMode: 'static'});
+  await app.init({background: state.scene?.terrainV8 ? '#dedccf' : '#7c9562', resizeTo: $('stage'), antialias: false, autoDensity: true, autoStart: false, resolution: Math.min(devicePixelRatio || 1, 1.5), preference: 'webgl', eventMode: 'static'});
   app.canvas.id = 'pixi-canvas'; app.canvas.setAttribute('aria-label', 'Mapa isométrico da fazenda em PixiJS'); $('stage').append(app.canvas); app.stop();
   state.pixi = app;
   const farmTexture = await Assets.load(farmAtlasUrl), cowTexture = await Assets.load(neloreUrl), handlingTexture = await Assets.load('/graphics-poc/assets/handling-review-atlas-v1.png');
@@ -729,11 +736,19 @@ function pixiFrame(time) {
       const from = route[pointIndex], to = route[(pointIndex + 1) % route.length];
       const world = isoPosition(from[0] + (to[0] - from[0]) * fraction, from[1] + (to[1] - from[1]) * fraction);
       sprite.position.set(world.x, world.y);
-      sprite.zIndex = world.y;
+      const foot = entry.prefab.footprint;
+      const contact = isoPosition(from[0] + (to[0] - from[0]) * fraction + foot.columns / 2,
+        from[1] + (to[1] - from[1]) * fraction + foot.rows / 2);
+      sprite.zIndex = contact.y;
       animatedDepth = true;
     }
   }
-  if (animatedDepth) state.pixiLayers.depth.sortChildren();
+  // The contact-depth keys change continuously while cattle walk, but their
+  // relative occlusion only needs a bounded refresh cadence. Sorting every
+  // sprite every RAF dominated the scene cost without improving the image.
+  if (animatedDepth && time - state.lastAnimatedDepthSort >= 100) {
+    state.pixiLayers.depth.sortChildren(); state.lastAnimatedDepthSort = time;
+  }
   if (state.scene.terrainV8 && Math.floor(time / 330) !== state.pixiWaterFrame) {
     state.pixiWaterFrame = Math.floor(time / 330);
     const frame = state.pixiTextures.get(`world-v8-water-${state.pixiWaterFrame % 3}`);
@@ -808,13 +823,15 @@ async function runGraphicsBenchmark({counts = [100, 1000, 10000], durationMs = 3
 
 async function initialize() {
   window.__graphicsInitStage = 'loading-assets';
-  const [scene, dairyScene, waterStressScene, terrainV8Scene, farmAssemblyV8Scene, farmFinalV8Scene, terrainV8AssetManifest, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
+  const [scene, dairyScene, waterStressScene, terrainV8Scene, farmAssemblyV8Scene, farmFinalV8Scene, ruralSmallV9Scene, ruralPropertyV9Scene, terrainV8AssetManifest, renderManifest, assetSourceManifest, farmImage, neloreImage, handlingImage, dairyHeiferImage, dairyCollarImage] = await Promise.all([
     fetch(sceneUrl).then(response => { if (!response.ok) throw new Error('Scene de corte não encontrada'); return response.json(); }),
     fetch(dairySceneUrl).then(response => { if (!response.ok) throw new Error('Scene leiteira não encontrada'); return response.json(); }),
     fetch(waterStressSceneUrl).then(response => { if (!response.ok) throw new Error('Variante visual seca não encontrada'); return response.json(); }),
     fetch(terrainV8SceneUrl).then(response => { if (!response.ok) throw new Error('Prova de terreno V8 não encontrada'); return response.json(); }),
     fetch(farmAssemblyV8SceneUrl).then(response => { if (!response.ok) throw new Error('Montagem rural V8 não encontrada'); return response.json(); }),
     fetch(farmFinalV8SceneUrl).then(response => { if (!response.ok) throw new Error('Fazenda completa V8 não encontrada'); return response.json(); }),
+    fetch(ruralSmallV9SceneUrl).then(response => { if (!response.ok) throw new Error('Piquete gerado V9 não encontrado'); return response.json(); }),
+    fetch(ruralPropertyV9SceneUrl).then(response => { if (!response.ok) throw new Error('Propriedade gerada V9 não encontrada'); return response.json(); }),
     fetch('/assets/generated/world-v8/terrain-atlas-v8.json').then(response => { if (!response.ok) throw new Error('Manifesto do atlas de terreno V8 ausente'); return response.json(); }),
     fetch('/graphics-poc/assets/main-composer-render-manifest.json').then(response => { if (!response.ok) throw new Error('Manifesto de renderização do Composer ausente'); return response.json(); }),
     fetch('/graphics-poc/asset-sources.json').then(response => { if (!response.ok) throw new Error('Manifesto de proveniência local ausente'); return response.json(); }),
@@ -823,10 +840,10 @@ async function initialize() {
   ]);
   state.renderManifest = renderManifest; state.assetSourceManifest = assetSourceManifest;
   const dynamicAtlases = await Promise.all(Object.entries({...renderManifest.atlases, 'world-v8': '/assets/generated/world-v8/terrain-atlas-v8.png'}).map(async ([key, url]) => [key, await image(url)]));
-  state.scenes = {beef: scene, dairy: dairyScene, 'water-stress': waterStressScene, 'terrain-v8': terrainV8Scene, 'farm-assembly-v8': farmAssemblyV8Scene, 'farm-final-v8': farmFinalV8Scene};
+  state.scenes = {beef: scene, dairy: dairyScene, 'water-stress': waterStressScene, 'terrain-v8': terrainV8Scene, 'farm-assembly-v8': farmAssemblyV8Scene, 'farm-final-v8': farmFinalV8Scene, 'rural-small-v9': ruralSmallV9Scene, 'rural-property-v9': ruralPropertyV9Scene};
   state.terrainV8AssetManifest = terrainV8AssetManifest;
   const requestedScene = new URLSearchParams(location.search).get('scene');
-  const initialDomain = ['beef', 'dairy', 'water-stress', 'terrain-v8', 'farm-assembly-v8', 'farm-final-v8'].includes(requestedScene) ? requestedScene : 'beef';
+  const initialDomain = ['beef', 'dairy', 'water-stress', 'terrain-v8', 'farm-assembly-v8', 'farm-final-v8', 'rural-small-v9', 'rural-property-v9'].includes(requestedScene) ? requestedScene : 'beef';
   const requestedSeed = new URLSearchParams(location.search).get('seed');
   const parsedSeed = requestedSeed === null ? null : Number(requestedSeed);
   const seededFarmScene = initialDomain === 'farm-final-v8' && parsedSeed !== null && Number.isSafeInteger(parsedSeed) && parsedSeed >= 0
@@ -841,11 +858,15 @@ async function initialize() {
   document.body.classList.toggle('terrain-v8-mode', Boolean(state.scene.terrainV8));
   for (const item of document.querySelectorAll('[data-system]')) item.classList.toggle('hidden', !toolAvailableInSystem(item.dataset.system, state.selectedDomain));
   state.assetImages = {farm: farmImage, nelore: neloreImage, neloreLow: makeLowResolutionCow(neloreImage), handling: handlingImage, 'dairy-heifer': dairyHeiferImage, 'dairy-activity-collar': dairyCollarImage, ...Object.fromEntries(dynamicAtlases)};
-  state.assetAtlasUrls = {...renderManifest.atlases, 'world-v8': '/assets/generated/world-v8/terrain-atlas-v8.png'};
+  state.assetAtlasUrls = {...renderManifest.atlases, ...Object.fromEntries(Object.entries(terrainV8AssetManifest.atlases ?? {}).map(([key, url]) => [key, `/${url}`]))};
   state.assetFrames = Object.fromEntries(renderManifest.assets.map(asset => [asset.assetId, {x: asset.frame.x, y: asset.frame.y, w: asset.frame.w, h: asset.frame.h, anchor: asset.anchor, scale: asset.scale, atlasKey: asset.atlasKey, kind: asset.category === 'livestock' ? 'livestock' : 'infrastructure', reviewStatus: asset.reviewStatus, footprint: {columns: asset.footprint[0], rows: asset.footprint[1]}, blocking: asset.blocking}]));
-  const v8ScaleByKind = {terrain: 96 / 128, road: 96 / 128, ramp: 96 / 128, water: 96 / 128, cliff: 1, bridge: 1, vegetation: .68, livestock: .38};
+  const v8ScaleByKind = {terrain: 96 / 128, road: 96 / 128, ramp: 96 / 128, water: 96 / 128, cliff: 1, bridge: 1, vegetation: .68, livestock: .46,
+    'generated-decoration': .82, 'generated-building': .7, 'generated-ground': .7, 'generated-livestock': .38};
   for (const [name, asset] of Object.entries(terrainV8AssetManifest.assets)) {
-    state.assetFrames[`world-v8-${name}`] = {x: asset.frame.x, y: asset.frame.y, w: asset.frame.width, h: asset.frame.height, anchor: asset.anchor, scale: v8ScaleByKind[asset.kind] ?? 1, atlasKey: 'world-v8', kind: asset.kind, footprint: asset.footprint, blocking: asset.kind === 'bridge'};
+    state.assetFrames[`world-v8-${name}`] = {x: asset.frame.x, y: asset.frame.y, w: asset.frame.width, h: asset.frame.height, anchor: asset.anchor, scale: v8ScaleByKind[asset.kind] ?? 1, atlasKey: asset.atlasKey ?? 'world-v8', kind: asset.kind, footprint: asset.footprint, blocking: asset.kind === 'bridge'};
+  }
+  for (const [assetId, override] of Object.entries(terrainV8AssetManifest.assetOverrides ?? {})) {
+    if (state.assetFrames[assetId]) state.assetFrames[assetId] = {...state.assetFrames[assetId], ...override};
   }
   state.imageLoadMs = performance.now() - startedAt;
   state.terrainCells = sceneTerrainCells(state.scene);
@@ -902,7 +923,10 @@ async function initialize() {
   window.__graphicsReady = true; window.__runGraphicsBenchmark = runGraphicsBenchmark; window.__graphicsStats = frameStats;
   window.__terrainV8 = state.scene.terrainV8 ? {
     sceneId: state.scene.sceneId, projection: state.scene.projection, model: state.scene.terrainV8,
-    assembly: {prefabs: state.scene.prefabs.length, fences: state.scene.prefabs.filter(item => item.assetId.includes('fence-') || item.assetId.includes('corral-')).length, animals: state.scene.prefabs.filter(item => item.layer === 'livestock').length, pastures: state.scene.zones.filter(item => item.kind === 'pasture').length},
+    assembly: {prefabs: state.scene.prefabs.length, fences: state.scene.prefabs.filter(item => item.assetId.includes('fence-') || item.assetId.includes('corral-')).length,
+      modularFenceSegments: state.scene.prefabs.filter(item => item.modularType === 'fence-segment').length,
+      pastureGates: state.scene.prefabs.filter(item => item.modularType === 'fence-gate').length,
+      animals: state.scene.prefabs.filter(item => item.layer === 'livestock').length, pastures: state.scene.zones.filter(item => item.kind === 'pasture').length},
     getVisibleSprites: () => state.visible.length, getRenderer: () => state.renderer,
   } : null;
   if (new URLSearchParams(location.search).get('renderer') === 'pixi') switchRenderer('pixi');
@@ -911,6 +935,8 @@ async function initialize() {
     selectScene: domain => selectScene(domain),
     reset: count => resetSimulation(count),
     setCameraZoom: zoom => { state.camera.zoom = zoom; syncCanvasSize(); refreshScene(); },
+    fitScene: () => { state.camera.zoom = fitSceneZoom(); syncCanvasSize(); refreshScene(); return state.camera.zoom; },
+    setLayer: (layer, visible) => { if (!(layer in state.activeLayers)) return false; state.activeLayers[layer] = Boolean(visible); const input = document.querySelector(`[data-layer="${layer}"]`); if (input) input.checked = Boolean(visible); refreshScene(); return true; },
     focusAnimal,
     clearStats: () => { state.frameTimes = []; state.paintTimes = []; state.updateTimes = []; state.motionUpdateTimes = []; state.lodUpdateTimes = []; state.lastFrame = 0; },
     stats: frameStats,

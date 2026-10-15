@@ -1,0 +1,18 @@
+{
+  "id": "visual-demo-herd-states-v1",
+  "source": "external-display-fixture",
+  "scope": "animation-state-only",
+  "scientificObservations": false,
+  "animals": [
+    {"id":"cow-01","displayState":"walking"},{"id":"cow-02","displayState":"walking"},
+    {"id":"cow-03","displayState":"walking"},{"id":"cow-04","displayState":"walking"},
+    {"id":"cow-05","displayState":"walking"},{"id":"cow-06","displayState":"walking"},
+    {"id":"cow-07","displayState":"walking"},{"id":"cow-08","displayState":"walking"},
+    {"id":"cow-09","displayState":"walking"},{"id":"cow-10","displayState":"walking"},
+    {"id":"cow-11","displayState":"walking"},{"id":"cow-12","displayState":"walking"},
+    {"id":"cow-13","displayState":"walking"},{"id":"cow-14","displayState":"walking"},
+    {"id":"cow-15","displayState":"walking"},{"id":"cow-16","displayState":"walking"},
+    {"id":"cow-17","displayState":"walking"},{"id":"cow-18","displayState":"walking"},
+    {"id":"cow-19","displayState":"walking"},{"id":"cow-20","displayState":"walking"}
+  ]
+}

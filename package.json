@@ -33,8 +33,8 @@
     "bench:browser": "node scripts/benchmark-browser.mjs",
     "bench:wasm-scenario-browser": "node scripts/benchmark-native-wasm-browser.mjs",
     "bench:wasm-scenario-browser:firefox": "node scripts/benchmark-native-wasm-browser.mjs --browser=firefox",
-    "build:world-v8-assets": "python3 scripts/assets/build_world_v8_assets.py && node scripts/terrain/build-terrain-world-v8.mjs && node scripts/terrain/build-farm-assembly-v8.mjs && node scripts/terrain/build-farm-final-v8.mjs",
-    "build:graphics-poc": "npm run build:world-v8-assets && node scripts/tiled/build-scene.mjs && node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
+    "build:world-v8-assets": "python3 scripts/assets/build_world_v8_assets.py && node scripts/terrain/build-terrain-world-v8.mjs && node scripts/terrain/build-farm-assembly-v8.mjs && node scripts/terrain/build-farm-final-v8.mjs && python3 scripts/assets/build_riose_v8_selected_contact_sheet.py",
+    "build:graphics-poc": "npm run build:world-v8-assets && node scripts/terrain/build-rural-worlds-v9.mjs && node scripts/tiled/build-scene.mjs && node scripts/build-composer-scenes.mjs && node scripts/build-graphics-poc.mjs",
     "build:graphics-asset-registry": "node scripts/build-graphics-asset-registry.mjs",
     "compile:asset-geometry": "python3 scripts/assets/compile_asset_geometry.py && node scripts/build-graphics-asset-registry.mjs",
     "validate:spatial-assembly-v6": "node scripts/validate-spatial-assembly-v6.mjs",
@@ -112,6 +112,7 @@
     "playwright": "1.57.0"
   },
   "dependencies": {
+    "@babylonjs/core": "9.30.0",
     "pixi.js": "^8.22.0"
   }
 }

@@ -970,7 +970,7 @@
         "x": 10,
         "y": 1
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-2",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -1624,7 +1624,7 @@
         "x": 10,
         "y": 2
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-10",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -2195,7 +2195,7 @@
         "x": 9,
         "y": 3
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-3",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -2218,7 +2218,7 @@
         "x": 10,
         "y": 3
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-14",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -2781,7 +2781,7 @@
         "x": 9,
         "y": 4
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-9",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -2804,7 +2804,7 @@
         "x": 10,
         "y": 4
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-14",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -3314,7 +3314,18 @@
       "material": "ramp",
       "slope": 1,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-gate",
+          "assetId": "fence-gate-wood-imagegen-v1",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-0-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 6,
@@ -3358,7 +3369,18 @@
       "material": "road",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-0-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-0-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 7,
@@ -3407,6 +3429,11 @@
           "prefabId": "bridge-creek-01",
           "assetId": "world-v8-bridge",
           "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-0-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
         }
       ],
       "connectivity": [
@@ -3441,7 +3468,7 @@
         "x": 10,
         "y": 5
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-10",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -3938,7 +3965,13 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-3-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 5,
@@ -3982,7 +4015,28 @@
       "material": "road",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-gate",
+          "assetId": "fence-gate-wood-imagegen-v1",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-0-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-3-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-01",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 6,
@@ -4026,7 +4080,18 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-0-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-0-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 7,
@@ -4070,7 +4135,23 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-0-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-1-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-03",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 8,
@@ -4103,7 +4184,7 @@
         "x": 10,
         "y": 6
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-11",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -4126,7 +4207,7 @@
         "x": 11,
         "y": 6
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-6",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -4546,7 +4627,18 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-3-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-3-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 5,
@@ -4590,7 +4682,23 @@
       "material": "road",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-3-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-3-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-01",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 6,
@@ -4634,7 +4742,18 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "pen-water-trough",
+          "assetId": "water-trough-round-imagegen-v1",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-02",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 7,
@@ -4678,7 +4797,23 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-1-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-1-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-03",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 8,
@@ -4711,7 +4846,7 @@
         "x": 10,
         "y": 7
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-11",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -4734,7 +4869,7 @@
         "x": 11,
         "y": 7
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-12",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -5138,7 +5273,18 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-2-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-3-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        }
+      ],
       "connectivity": [
         {
           "x": 5,
@@ -5174,7 +5320,28 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-2-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-2-2",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-3-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-04",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 6,
@@ -5218,7 +5385,23 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-2-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-2-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-04",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 7,
@@ -5254,7 +5437,23 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": null,
+      "occupancy": [
+        {
+          "prefabId": "beef-pen-fence-1-1",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "beef-pen-fence-2-0",
+          "assetId": "world-v8-farm-fence-wood-segment",
+          "blocking": true
+        },
+        {
+          "prefabId": "pen-cow-05",
+          "assetId": "world-v8-animal-idle",
+          "blocking": false
+        }
+      ],
       "connectivity": [
         {
           "x": 8,
@@ -5282,7 +5481,7 @@
         "x": 10,
         "y": 8
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-10",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -5345,18 +5544,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-01",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 11,
@@ -5400,13 +5588,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 12,
@@ -5442,18 +5624,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-03",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 13,
@@ -5489,13 +5660,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 14,
@@ -5842,7 +6007,7 @@
         "x": 9,
         "y": 9
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-1",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -5865,7 +6030,7 @@
         "x": 10,
         "y": 9
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-14",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -5933,18 +6098,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-01",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 11,
@@ -5980,23 +6134,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-water-trough",
-          "assetId": "water-trough-round-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-02",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 12,
@@ -6032,18 +6170,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-03",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 13,
@@ -6079,13 +6206,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 14,
@@ -6463,7 +6584,7 @@
         "x": 10,
         "y": 10
       },
-      "assetId": "world-v8-water-0",
+      "assetId": "world-v8-water-edge-8",
       "zoneId": null,
       "elevation": 0,
       "material": "water",
@@ -6531,18 +6652,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-04",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 11,
@@ -6578,18 +6688,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-04",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 12,
@@ -6625,18 +6724,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        },
-        {
-          "prefabId": "pen-cow-05",
-          "assetId": "world-v8-animal-idle",
-          "blocking": false
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 13,
@@ -6672,13 +6760,7 @@
       "material": "grass",
       "slope": 0,
       "navigable": true,
-      "occupancy": [
-        {
-          "prefabId": "beef-pen-and-gate",
-          "assetId": "corral-wood-standard-imagegen-v1",
-          "blocking": true
-        }
-      ],
+      "occupancy": null,
       "connectivity": [
         {
           "x": 14,
@@ -7197,7 +7279,7 @@
       "rows": 12,
       "metersPerCell": 5,
       "elevationUnit": "level",
-      "elevationPxPerLevel": 30
+      "elevationPxPerLevel": 60
     },
     "heightMap": [
       [
@@ -10449,7 +10531,18 @@
           "elevation": 0,
           "inclination": 1,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-gate",
+              "assetId": "fence-gate-wood-imagegen-v1",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-0-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 6,
@@ -10490,7 +10583,18 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-0-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-0-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 7,
@@ -10535,6 +10639,11 @@
             {
               "prefabId": "bridge-creek-01",
               "assetId": "world-v8-bridge",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-0-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
               "blocking": true
             }
           ],
@@ -11030,7 +11139,13 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-3-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 5,
@@ -11071,7 +11186,28 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-gate",
+              "assetId": "fence-gate-wood-imagegen-v1",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-0-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-3-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-01",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 6,
@@ -11112,7 +11248,18 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-0-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-0-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 7,
@@ -11153,7 +11300,23 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-0-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-1-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-03",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 8,
@@ -11592,7 +11755,18 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-3-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-3-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 5,
@@ -11633,7 +11807,23 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-3-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-3-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-01",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 6,
@@ -11674,7 +11864,18 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "pen-water-trough",
+              "assetId": "water-trough-round-imagegen-v1",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-02",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 7,
@@ -11715,7 +11916,23 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-1-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-1-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-03",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 8,
@@ -12138,7 +12355,18 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-2-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-3-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            }
+          ],
           "connectivity": [
             {
               "x": 5,
@@ -12171,7 +12399,28 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-2-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-2-2",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-3-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-04",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 6,
@@ -12212,7 +12461,23 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-2-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-2-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-04",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 7,
@@ -12245,7 +12510,23 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": null,
+          "occupancy": [
+            {
+              "prefabId": "beef-pen-fence-1-1",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "beef-pen-fence-2-0",
+              "assetId": "world-v8-farm-fence-wood-segment",
+              "blocking": true
+            },
+            {
+              "prefabId": "pen-cow-05",
+              "assetId": "world-v8-animal-idle",
+              "blocking": false
+            }
+          ],
           "connectivity": [
             {
               "x": 8,
@@ -12327,18 +12608,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-01",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 11,
@@ -12379,13 +12649,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 12,
@@ -12418,18 +12682,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-03",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 13,
@@ -12462,13 +12715,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 14,
@@ -12869,18 +13116,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-01",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 11,
@@ -12913,23 +13149,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-water-trough",
-              "assetId": "water-trough-round-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-02",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 12,
@@ -12962,18 +13182,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-03",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 13,
@@ -13006,13 +13215,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 14,
@@ -13421,18 +13624,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-04",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 11,
@@ -13465,18 +13657,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-04",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 12,
@@ -13509,18 +13690,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            },
-            {
-              "prefabId": "pen-cow-05",
-              "assetId": "world-v8-animal-idle",
-              "blocking": false
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 13,
@@ -13553,13 +13723,7 @@
           "elevation": 0,
           "inclination": 0,
           "navigable": true,
-          "occupancy": [
-            {
-              "prefabId": "beef-pen-and-gate",
-              "assetId": "corral-wood-standard-imagegen-v1",
-              "blocking": true
-            }
-          ],
+          "occupancy": null,
           "connectivity": [
             {
               "x": 14,
@@ -14918,12 +15082,12 @@
       "name": "Piquete",
       "kind": "pasture",
       "origin": {
-        "x": 12,
-        "y": 8
+        "x": 7,
+        "y": 6
       },
       "footprint": {
-        "columns": 3.5,
-        "rows": 3
+        "columns": 2.5,
+        "rows": 2.5
       },
       "color": "#8ba767"
     }
@@ -15153,25 +15317,27 @@
       ]
     },
     {
-      "prefabId": "beef-pen-and-gate",
-      "assetId": "corral-wood-standard-imagegen-v1",
+      "prefabId": "beef-pen-gate",
+      "assetId": "fence-gate-wood-imagegen-v1",
       "position": {
-        "x": 12,
-        "y": 8,
+        "x": 7.016666666666667,
+        "y": 5.7,
         "unit": "grid-cell"
       },
       "footprint": {
-        "columns": 3.5,
-        "rows": 3
+        "columns": 0.8,
+        "rows": 0.6
       },
       "layer": "infrastructure",
       "blocking": true,
-      "visualScale": 1.8,
+      "modularType": "fence-gate",
+      "flipX": true,
+      "visualScale": 1.35,
       "snapping": {
         "grid": 1,
         "origin": [
-          12,
-          8
+          7.016666666666667,
+          5.7
         ],
         "groundLevel": 0
       },
@@ -15184,26 +15350,26 @@
           "units": "normalized-sprite"
         },
         "visualBoundingBoxPx": null,
-        "visualHeightCells": 1.3,
+        "visualHeightCells": 0.7,
         "collisionPolygon": [
           [
             0,
             0
           ],
           [
-            3.5,
+            0.8,
             0
           ],
           [
-            3.5,
-            3
+            0.8,
+            0.6
           ],
           [
             0,
-            3
+            0.6
           ]
         ],
-        "clearanceCells": 0.2,
+        "clearanceCells": 0.15,
         "supportedOrientations": [
           0,
           90
@@ -15211,31 +15377,772 @@
       },
       "sockets": [
         {
+          "id": "gate-left-fence",
+          "type": "fence"
+        },
+        {
+          "id": "gate-right-fence",
+          "type": "fence"
+        },
+        {
           "id": "gate-to-access-road",
           "type": "road",
           "position": [
-            0,
-            0.3
-          ],
-          "elevation": 0
-        },
-        {
-          "id": "pen-interior",
-          "type": "livestock",
-          "position": [
-            0.7,
-            0.55
+            0.4,
+            -0.7
           ],
           "elevation": 0
         }
+      ],
+      "socketConnections": {
+        "left": "beef-pen-fence-3-1",
+        "right": "beef-pen-fence-0-1"
+      },
+      "roadConnectionCell": [
+        7,
+        5
       ]
+    },
+    {
+      "prefabId": "beef-pen-fence-0-1",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 7.833333333333333,
+        "y": 5.725,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.8333333333333334,
+        "rows": 0.55
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "flipX": true,
+      "visualScale": 0.10306875833788093,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          7.833333333333333,
+          5.725
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-0-1-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-0-1-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-gate",
+        "end": "beef-pen-fence-0-2"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-0-2",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 8.666666666666668,
+        "y": 5.725,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.8333333333333334,
+        "rows": 0.55
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "flipX": true,
+      "visualScale": 0.10306875833788093,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          8.666666666666668,
+          5.725
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-0-2-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-0-2-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-0-1",
+        "end": "beef-pen-fence-1-0"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-1-0",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 9.225,
+        "y": 6,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.55,
+        "rows": 1.25
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "visualScale": 0.15460313750682142,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          9.225,
+          6
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-1-0-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-1-0-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-0-2",
+        "end": "beef-pen-fence-1-1"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-1-1",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 9.225,
+        "y": 7.25,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.55,
+        "rows": 1.25
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "visualScale": 0.15460313750682142,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          9.225,
+          7.25
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-1-1-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-1-1-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-1-0",
+        "end": "beef-pen-fence-2-0"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-2-0",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 8.666666666666668,
+        "y": 8.225,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.8333333333333334,
+        "rows": 0.55
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "flipX": true,
+      "visualScale": 0.10306875833788093,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          8.666666666666668,
+          8.225
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-2-0-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-2-0-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-1-1",
+        "end": "beef-pen-fence-2-1"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-2-1",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 7.833333333333333,
+        "y": 8.225,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.8333333333333334,
+        "rows": 0.55
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "flipX": true,
+      "visualScale": 0.10306875833788093,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          7.833333333333333,
+          8.225
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-2-1-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-2-1-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-2-0",
+        "end": "beef-pen-fence-2-2"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-2-2",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 6.999999999999999,
+        "y": 8.225,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.8333333333333334,
+        "rows": 0.55
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "flipX": true,
+      "visualScale": 0.10306875833788093,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          6.999999999999999,
+          8.225
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-2-2-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-2-2-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-2-1",
+        "end": "beef-pen-fence-3-0"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-3-0",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 6.725,
+        "y": 7.25,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.55,
+        "rows": 1.25
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "visualScale": 0.15460313750682142,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          6.725,
+          7.25
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-3-0-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-3-0-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-2-2",
+        "end": "beef-pen-fence-3-1"
+      }
+    },
+    {
+      "prefabId": "beef-pen-fence-3-1",
+      "assetId": "world-v8-farm-fence-wood-segment",
+      "position": {
+        "x": 6.725,
+        "y": 6,
+        "unit": "grid-cell"
+      },
+      "footprint": {
+        "columns": 0.55,
+        "rows": 1.25
+      },
+      "layer": "infrastructure",
+      "blocking": true,
+      "modularType": "fence-segment",
+      "visualScale": 0.15460313750682142,
+      "snapping": {
+        "grid": 1,
+        "origin": [
+          6.725,
+          6
+        ],
+        "groundLevel": 0
+      },
+      "spatialGeometry": {
+        "status": "authored-v8-review-required",
+        "units": "grid-cell",
+        "groundContactAnchor": {
+          "x": 0.5,
+          "y": 1,
+          "units": "normalized-sprite"
+        },
+        "visualBoundingBoxPx": null,
+        "visualHeightCells": 0.6,
+        "collisionPolygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1.1,
+            0
+          ],
+          [
+            1.1,
+            0.55
+          ],
+          [
+            0,
+            0.55
+          ]
+        ],
+        "clearanceCells": 0.05,
+        "supportedOrientations": [
+          0,
+          90
+        ]
+      },
+      "sockets": [
+        {
+          "id": "beef-pen-fence-3-1-start",
+          "type": "fence",
+          "position": [
+            -0.55,
+            0
+          ]
+        },
+        {
+          "id": "beef-pen-fence-3-1-end",
+          "type": "fence",
+          "position": [
+            0.55,
+            0
+          ]
+        }
+      ],
+      "socketConnections": {
+        "start": "beef-pen-fence-3-0",
+        "end": "beef-pen-gate"
+      }
     },
     {
       "prefabId": "pen-water-trough",
       "assetId": "water-trough-round-imagegen-v1",
       "position": {
-        "x": 13.25,
-        "y": 9.15,
+        "x": 8.25,
+        "y": 7.15,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15249,8 +16156,8 @@
       "snapping": {
         "grid": 1,
         "origin": [
-          13.25,
-          9.15
+          8.25,
+          7.15
         ],
         "groundLevel": 0
       },
@@ -15304,8 +16211,8 @@
       "prefabId": "pen-cow-01",
       "assetId": "world-v8-animal-idle",
       "position": {
-        "x": 12.35,
-        "y": 8.85,
+        "x": 7.35,
+        "y": 6.85,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15320,8 +16227,8 @@
       "snapping": {
         "grid": 1,
         "origin": [
-          12.35,
-          8.85
+          7.35,
+          6.85
         ],
         "groundLevel": 0
       },
@@ -15365,8 +16272,8 @@
       "prefabId": "pen-cow-02",
       "assetId": "world-v8-animal-idle",
       "position": {
-        "x": 13.15,
-        "y": 9.2,
+        "x": 8.15,
+        "y": 7.2,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15381,8 +16288,8 @@
       "snapping": {
         "grid": 1,
         "origin": [
-          13.15,
-          9.2
+          8.15,
+          7.2
         ],
         "groundLevel": 0
       },
@@ -15426,8 +16333,8 @@
       "prefabId": "pen-cow-03",
       "assetId": "world-v8-animal-idle",
       "position": {
-        "x": 14.35,
-        "y": 8.85,
+        "x": 9,
+        "y": 6.85,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15442,8 +16349,8 @@
       "snapping": {
         "grid": 1,
         "origin": [
-          14.35,
-          8.85
+          9,
+          6.85
         ],
         "groundLevel": 0
       },
@@ -15487,8 +16394,8 @@
       "prefabId": "pen-cow-04",
       "assetId": "world-v8-animal-idle",
       "position": {
-        "x": 12.65,
-        "y": 10.25,
+        "x": 7.65,
+        "y": 8,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15502,35 +16409,35 @@
       "animationPhaseMs": 0,
       "visualRoute": [
         [
-          12.5,
-          9.8
+          7.5,
+          7.8
         ],
         [
-          13.2,
-          10
+          8.2,
+          8
         ],
         [
-          14,
-          10
+          9,
+          8
         ],
         [
-          14.4,
-          10.45
+          9.4,
+          8.25
         ],
         [
-          13.6,
-          10.6
+          8.6,
+          8.4
         ],
         [
-          12.6,
-          10.35
+          7.6,
+          8.35
         ]
       ],
       "snapping": {
         "grid": 1,
         "origin": [
-          12.65,
-          10.25
+          7.65,
+          8
         ],
         "groundLevel": 0
       },
@@ -15574,8 +16481,8 @@
       "prefabId": "pen-cow-05",
       "assetId": "world-v8-animal-idle",
       "position": {
-        "x": 14.35,
-        "y": 10.25,
+        "x": 9,
+        "y": 8,
         "unit": "grid-cell"
       },
       "footprint": {
@@ -15589,35 +16496,35 @@
       "animationPhaseMs": 520,
       "visualRoute": [
         [
-          12.5,
-          10.7
+          7.5,
+          8.45
         ],
         [
-          13.2,
-          10.75
+          8.2,
+          8.5
         ],
         [
-          14.1,
-          10.65
+          9.1,
+          8.45
         ],
         [
-          14.55,
-          10.2
+          9.4,
+          8.1
         ],
         [
-          13.8,
-          10.15
+          8.8,
+          8.05
         ],
         [
-          12.75,
-          10.45
+          7.75,
+          8.2
         ]
       ],
       "snapping": {
         "grid": 1,
         "origin": [
-          14.35,
-          10.25
+          9,
+          8
         ],
         "groundLevel": 0
       },

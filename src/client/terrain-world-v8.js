@@ -3,7 +3,7 @@ export const TERRAIN_WORLD_V8 = Object.freeze({
   rows: 12,
   cellWidthPx: 128,
   cellHeightPx: 64,
-  elevationPxPerLevel: 30,
+  elevationPxPerLevel: 60,
   maxWalkStep: 1,
   metersPerCell: 5,
 });
@@ -137,6 +137,17 @@ export function buildTerrainWorldV8() {
     artReview: 'pending-human-review',
   };
   return model;
+}
+
+const WATER_NEIGHBOR_DIRECTIONS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+
+export function waterTileAssetId(cells, x, y) {
+  let connectedEdges = 0;
+  for (let index = 0; index < WATER_NEIGHBOR_DIRECTIONS.length; index++) {
+    const [dx, dy] = WATER_NEIGHBOR_DIRECTIONS[index];
+    if (cells[y + dy]?.[x + dx]?.material === 'water') connectedEdges |= 1 << index;
+  }
+  return connectedEdges === 15 ? 'world-v8-water-0' : `world-v8-water-edge-${connectedEdges}`;
 }
 
 export function validateTerrainWorldV8(model) {

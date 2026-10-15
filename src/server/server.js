@@ -65,6 +65,9 @@ const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
 for (const file of [
   'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
   'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json', 'graphics-poc/scenes/water-stress-visual.json', 'graphics-poc/scenes/terrain-v8.json', 'graphics-poc/scenes/farm-assembly-v8.json', 'graphics-poc/scenes/farm-final-v8.json',
+  'graphics-poc/rural-renderer-lab.html', 'graphics-poc/dist/rural-renderer-lab.js',
+  'graphics-poc/scenes/rural-small-v9.json', 'graphics-poc/scenes/rural-property-v9.json',
+  'graphics-poc/snapshots/demo-herd-visual.json',
   'graphics-poc/ranch-v4.html', 'graphics-poc/ranch-v4.css', 'graphics-poc/dist/ranch-v4.js',
   'graphics-poc/ranch-v6.html', 'graphics-poc/ranch-v6.css', 'graphics-poc/dist/ranch-v6.js',
   'graphics-poc/spatial-debug.html', 'graphics-poc/spatial-debug.css', 'graphics-poc/dist/spatial-debug.js',
@@ -109,6 +112,10 @@ const GRAPHICS_SOURCE_FILES = new Set([GRAPHICS_SCENE_FILE, GRAPHICS_MANIFEST_FI
   'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.png',
   'assets/candidates/livestock/animation-v1/nelore-state-atlas-v1.json',
   'assets/generated/world-v8/terrain-atlas-v8.png', 'assets/generated/world-v8/terrain-atlas-v8.json',
+  'assets/generated/world-v8/farm-art-atlas-v1.png',
+  'assets/generated/world-v8/farm-modules-atlas-v1.png',
+  'assets/generated/world-v8/farm-stream-modules-atlas-v1.png',
+  'assets/generated/world-v8/farm-pixel-art-atlas-v1.png',
 ]);
 for (const assetId of graphicsAssetIds) {
   const asset = graphicsRecords.get(assetId);
