@@ -29,7 +29,7 @@ for profile in generic native scalar; do
   esac
   export RUSTFLAGS="$flags" CARGO_TARGET_DIR="$target/$profile"
   cargo rustc --offline --locked --release -p riose-core --lib -- --emit=asm,llvm-ir
-  python3 scripts/audit-native-simd.py "$CARGO_TARGET_DIR/release/libriose_core.so" \
+  python3 scripts/benchmarks/audit-native-simd.py "$CARGO_TARGET_DIR/release/libriose_core.so" \
     "$out/audit-$profile" --ir "$CARGO_TARGET_DIR/release/deps/riose_core.ll" \
     > "$out/audit-$profile.log"
   cargo test --offline --locked --release -p riose-core --example simd_metabolism_study

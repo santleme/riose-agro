@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {loadScientificCorpus, searchScientificSources} from '../scripts/scientific-retrieval.js';
+import {loadScientificCorpus, searchScientificSources} from '../scripts/science/scientific-retrieval.js';
 
 const corpus = [
   {source_id: 'data/a/manifest.json', path: 'data/a/manifest.json', content: '{\n  "title": "Pasture intake study",\n  "doi": "10.1234/example"\n}'},

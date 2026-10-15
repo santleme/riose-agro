@@ -6,10 +6,10 @@ The root `scripts/` directory contains command-line tools for builds, data audit
 | --- | --- | --- |
 | `scripts/assets/` | Asset pipeline | Asset composition, validation, provenance and release gates. |
 | `scripts/build/` | Product and runtime builds | Product renderer bundling, WASM compilation and editor vendor asset copying. |
-| `scripts/validation/` | CLI and record validation | Farm snapshots, comparison/outcome records, Product scene, scientific registry and uncertainty readiness. |
+| `scripts/validation/` | Validation and reproducibility tools | Farm snapshots, comparison/outcome records, Product scene, scientific registry, uncertainty readiness, engine parity and scenario goldens. |
 | `scripts/graphics/` | Graphics PoC tooling | Scene adaptation/build, screenshot regression and renderer benchmarks. |
 | `scripts/experiments/` | Scenario and batch-experiment tooling | Scenario runner, reusable manifest/journal/dispatch modules, replicate summaries and experiment-format tools. |
-| `scripts/benchmarks/` | Benchmark harnesses | Simulation, browser, memory, native/WASM and scientific benchmark entry points, plus their shared report schema and validator. |
+| `scripts/benchmarks/` | Benchmark tooling | Simulation, browser, memory, native/WASM and scientific benchmarks, report validation, executor profile generation and native SIMD audit. |
 | `scripts/science/engine-audits/` | Engine and cohort comparisons | Fixed-configuration ADG/DMI comparisons against named external cohorts; the frozen CGREC source stays at its pinned root path. |
 | `scripts/science/source-audits/` | Public-source audits and analyses | Dataset checksums, coverage, schema, normalization and cohort-association reports. USDA source tools are grouped under `usda/`; baseline-pinned sources remain at their recorded root paths. |
 | `scripts/science/evaluations/` | Model and cohort evaluations | Evaluation harnesses, shared experimental protocols, and scientific baseline maintenance; generated research outputs stay under `experiments/` or `docs/evidence/`. |

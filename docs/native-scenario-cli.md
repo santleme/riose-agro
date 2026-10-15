@@ -75,7 +75,7 @@ fallback state. The ordinary simulation ticks, Canvas/diorama rendering, and
 Scene Composer continue to run in their existing browser paths.
 
 After building the release CLI, run
-`node scripts/verify-native-configured-integration.mjs` to check all four
+`node scripts/validation/verify-native-configured-integration.mjs` to check all four
 configured factors through the actual Worker, HTTP route, native process,
 history record, and replay path. The saved smoke report is
 [`native-configured-integration-v1.json`](performance/native-configured-integration-v1.json).

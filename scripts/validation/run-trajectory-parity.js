@@ -5,12 +5,12 @@ import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {gzipSync} from 'node:zlib';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {FarmEngine} from '../src/client/engine.js';
-import {SCENARIO_ENGINE_VERSION} from '../src/client/scenario-contract.js';
-import {runScenarioPreset} from '../src/client/scenario-presets.js';
-import {canonicalTrajectoryJson, compareTrajectoryCheckpoint} from '../src/client/trajectory-comparator.js';
+import {FarmEngine} from '../../src/client/engine.js';
+import {SCENARIO_ENGINE_VERSION} from '../../src/client/scenario-contract.js';
+import {runScenarioPreset} from '../../src/client/scenario-presets.js';
+import {canonicalTrajectoryJson, compareTrajectoryCheckpoint} from '../../src/client/trajectory-comparator.js';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = fileURLToPath(new URL('../../', import.meta.url));
 const artifactDirectory = resolve(root, 'artifacts/parity');
 const baselineGoldenPath = resolve(root, 'tests/scenario-goldens/baseline-pasture.json');
 const housingGoldenPath = resolve(root, 'tests/scenario-goldens/housing-comparison.json');

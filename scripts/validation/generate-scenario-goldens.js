@@ -2,12 +2,12 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {FarmEngine, metrics} from '../src/client/engine.js';
-import {SCENARIO_CONTRACT_VERSION, SCENARIO_ENGINE_VERSION, createScenarioContract, replayScenarioContract} from '../src/client/scenario-contract.js';
-import {SCENARIO_PRESET_CATALOG_VERSION, getScenarioPreset, runScenarioPreset} from '../src/client/scenario-presets.js';
-import {executeScenario} from './experiments/run-scenarios.js';
+import {FarmEngine, metrics} from '../../src/client/engine.js';
+import {SCENARIO_CONTRACT_VERSION, SCENARIO_ENGINE_VERSION, createScenarioContract, replayScenarioContract} from '../../src/client/scenario-contract.js';
+import {SCENARIO_PRESET_CATALOG_VERSION, getScenarioPreset, runScenarioPreset} from '../../src/client/scenario-presets.js';
+import {executeScenario} from '../experiments/run-scenarios.js';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = fileURLToPath(new URL('../../', import.meta.url));
 const goldenDirectory = resolve(root, 'tests/scenario-goldens');
 const baselineScenarioPath = resolve(root, 'tests/scenarios/baseline-pasture.json');
 const supportedGoldenIds = ['baseline-pasture', 'housing-comparison'];
