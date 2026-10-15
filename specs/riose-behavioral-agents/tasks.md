@@ -27,7 +27,7 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-002.
 - Scope: conditional transitions and sampled durations; learned from train-only observed behaviors; feature-availability checks; explicit behavior ontology.
 - Acceptance: deterministic outputs and JSON schema; class and duration support; no leakage; transparent outcome and model provenance; no physiology coupling.
-- Status: READY (BEH-002 baseline API and training-only data boundary available; confirmation remains gated by development thresholds).
+- Status: IN_PROGRESS (candidate protocol frozen; implement and evaluate development folds only; confirmatory holdout remains sealed).
 
 ## BEH-004 — Comparative evaluation and scientific gate
 - Depends on: BEH-003.

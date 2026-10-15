@@ -23,3 +23,4 @@
 - Verification: full baseline evaluator rerun produced byte-identical report SHA-256 `d7def7fa0bb61905f755692cdacadf6e29e21a43b8e9b1cf338e22f4412e7010`; readiness tests 3/3, baseline tests 4/4, legacy Perea page/server test 1/1 pass. No FarmEngine or WASM path changed.
 - Broader regression: `npm test` passed 445/445 tests (2026-10-15).
 - BEH-002 is DONE. BEH-003 is next eligible; any semi-Markov candidate must be compared only on the same development folds first. Do not open confirmatory scores unless code is frozen and the pre-registered threshold passes.
+- BEH-003 in progress: froze a semi-Markov candidate protocol before implementation/scoring. It learns complete interior annotated-run durations and run-to-run transitions from training animals only, reports unsupported duration classes, and does not use motion index or physiology. Evaluation remains development-fold-only; confirmatory holdout stays sealed unless every preregistered criterion passes.
