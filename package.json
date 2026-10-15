@@ -13,6 +13,7 @@
     "bench:scenario-lab": "node scripts/benchmarks/benchmark-scenario-lab.mjs",
     "test:benchmark-report": "node --test tests/benchmark-report.test.js",
     "test:scenario-set": "node --test tests/scenario-set.test.js",
+    "test:scenario-set-budget": "node --test tests/scenario-set-budget.test.js",
     "test:br-corte-scenarios": "node --test tests/br-corte-scenario.test.js",
     "bench:memory": "node --expose-gc scripts/benchmarks/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmarks/benchmark_amd.py",

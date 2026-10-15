@@ -76,8 +76,13 @@ try {
   assert.doesNotMatch(await page.locator('#br-corte-table-head').textContent(), /cost/i);
   assert.match(await page.locator('#br-corte-provenance').textContent(), /not a cohort distribution/);
   await page.locator('#scenario-form [name="animalCount"]').fill('10000');
-  await page.locator('#scenario-form [name="durationDays"]').fill('365');
+  await page.locator('#scenario-form [name="durationDays"]').fill('15');
   await page.getByRole('button', {name: /Review scenarios/}).click();
+  assert.equal(await page.locator('#run-scenarios').isDisabled(), true);
+  assert.match(await page.locator('#resource-budget').textContent(), /planning limit/);
+  await page.locator('#scenario-form [name="durationDays"]').fill('7');
+  await page.getByRole('button', {name: /Review scenarios/}).click();
+  assert.equal(await page.locator('#run-scenarios').isDisabled(), false);
   await page.getByRole('button', {name: 'Run scenarios'}).click();
   await page.getByRole('button', {name: 'Cancel run'}).waitFor();
   await page.getByRole('button', {name: 'Cancel run'}).click();

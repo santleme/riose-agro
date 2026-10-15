@@ -3,7 +3,7 @@
 | ID | Risk | Impact | Mitigation | Status |
 |---|---|---|---|---|
 | RSK-V3-001 | FarmEngine visuals may imply validated prediction. | Users make decisions from demo dynamics. | Persistent illustrative label at config, results, export and AI layers. | OPEN |
-| RSK-V3-002 | Multi-arm replay multiplies work and memory. | Long runs/UI stalls or unbounded payload. | Worker execution, shared compact baseline, cancellation and measured bounds. Single-sample 7-day 10,000-head smoke: ~14 s to visible grid, ~31.6 MB JSON result proxy, 1200 cells, ~115 MB page-renderer JS heap; repeat before acting on these provisional values. | OPEN |
+| RSK-V3-002 | Multi-arm replay multiplies work and memory. | Long runs/UI stalls or unbounded payload. | Worker execution, shared compact baseline, cancellation, 40 MiB estimated JSON-result planning cap, and 1,200 visible-cell cap. The estimate is linear from the benchmark reference; it is not a hard transfer/heap bound and requires validation on other devices. | OPEN |
 | RSK-V3-003 | BR-CORTE GMD can be mistaken for a forecast. | False gain/DMI interpretation. | Require user input, mark it as assumption, omit gain trajectory. | OPEN |
 | RSK-V3-004 | Scaling representative-animal output to 200 head hides heterogeneity. | False precision. | Explicit representative input or user-supplied weight distribution; show arithmetic aggregation. | OPEN |
 | RSK-V3-005 | Cost arithmetic may be treated as profit. | Economic overclaim. | Require DM price/currency; call output supplement expenditure only, exclude total profit. | OPEN |

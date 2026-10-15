@@ -1,6 +1,7 @@
 import {FarmEngine} from './engine.js';
 import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
 import {createBrCorteDmiScenarioManifest, evaluateBrCorteDmiScenarioManifest, validateBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
+import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
 import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
 
 const $ = id => document.getElementById(id);
@@ -62,6 +63,13 @@ function createManifest(form) {
 function renderReview(manifest) {
   $('review-panel').hidden = false;
   $('review-meta').textContent = `${manifest.durationDays} days · ${manifest.initialSnapshot.animals.length.toLocaleString()} generated engine animals · seed ${manifest.seed} · one factor: supplementation`;
+  const budget = scenarioSetResultBudgetStatus({animalCount: manifest.initialSnapshot.animals.length, durationDays: manifest.durationDays, scenarioCount: manifest.scenarios.length});
+  const mib = bytes => `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
+  $('resource-budget').textContent = budget.withinBudget
+    ? `Estimated result JSON ${mib(budget.estimatedBytes)} / ${mib(SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES)} planning limit. ${budget.source}`
+    : `This combination is over the ${mib(budget.budgetBytes)} estimated-result planning limit (${mib(budget.estimatedBytes)} projected). Reduce animals, duration or scenario arms, then review again. ${budget.source}`;
+  $('resource-budget').dataset.withinBudget = String(budget.withinBudget);
+  $('run-scenarios').disabled = !budget.withinBudget;
   const host = $('scenario-list');
   host.replaceChildren(...manifest.scenarios.map(scenario => {
     const article = document.createElement('article');
@@ -328,6 +336,8 @@ $('scenario-form').addEventListener('input', event => {
 
 $('run-scenarios').addEventListener('click', async () => {
   if (!reviewedManifest || activeWorker) return;
+  const budget = scenarioSetResultBudgetStatus({animalCount: reviewedManifest.initialSnapshot.animals.length, durationDays: reviewedManifest.durationDays, scenarioCount: reviewedManifest.scenarios.length});
+  if (!budget.withinBudget) { status('This scenario set exceeds the estimated-result resource budget. Reduce animals, duration or arms.'); return; }
   $('run-scenarios').disabled = true;
   status(`Running ${reviewedManifest.scenarios.length} reproducible scenarios…`);
   try {
