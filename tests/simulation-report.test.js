@@ -44,7 +44,7 @@ test('renders registered scientific model identity, units, evidence status, and 
   assert.match(report,/Modelo: br-corte-2023-eq-2\.6@2023/);
   assert.match(report,/bodyWeightKg=400 kg/);
   assert.match(report,/supplementKgDMPerDay=1\.6 kg DM\/day/);
-  assert.match(report,/https:\/\/brcorte\.com\.br\/assets\/book2023\/br\/02\.pdf \[demonstrative\]; estado: demonstrative/);
+  assert.match(report,/https:\/\/brcorte\.com\.br\/assets\/book2023\/br\/02\.pdf \[published-equation-with-external-validation; no Riose-specific calibration\]; estado: published-equation-with-external-validation; no Riose-specific calibration/);
   assert.match(report,/Hash da implementação: sha256:[a-f0-9]{64}/);
   assert.match(report,/a resolução não promove evidência nem valida o modelo/);
 });
