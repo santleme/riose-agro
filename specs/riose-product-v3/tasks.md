@@ -24,7 +24,7 @@ Implementation scope: Add `riose-scenario-set/v1` creation, validation, and dete
 Acceptance criteria: Valid set replays every intervention from the same snapshot/seed with aligned checkpoints and shared baseline; repeated replay is deterministic; invalid shape, unsupported version, extra fields, invalid factor, multiple changed factors, duplicate arm IDs/values, and out-of-domain config are rejected. Existing V2 manifests remain accepted unchanged.  
 Required tests: `npm run test:scenario-set`; Product V2 scenario-contract regression.  
 Evidence: `tests/scenario-set.test.js`; `src/client/scenario-set.js`.  
-Status: DONE (`test:scenario-set` 7/7; scenario contract and golden regressions 11/11 pass).
+Status: DONE (`test:scenario-set` 8/8; scenario contract and golden regressions 11/11 pass).
 
 ## P3-003 — Multi-arm Worker execution and Product review/results UI
 
@@ -33,10 +33,10 @@ Title: Run and display 3+ scenarios and sensitivity in Product
 Specification reference: LAB-001/LAB-003; `02-user-journeys.md`; `06-design-system.md`  
 Dependencies: P3-002.  
 Implementation scope: Execute all arms from the same snapshot/seed, show named comparison traces, deterministic sensitivity and provenance; retain Product V2 fallback/history compatibility.  
-Acceptance criteria: User can review 3+ arms before run, run them in a Worker, compare actual returned traces, move across shared checkpoints, save/replay/export all arms, and adjust one bounded sensitivity grid.  
+Acceptance criteria: User can review 3+ arms before run, run them in a Worker, compare actual returned traces, move across shared checkpoints, export/re-open a versioned manifest and recalculate all arms, and adjust one bounded sensitivity grid.
 Required tests: Worker, contract/replay, browser E2E, mobile/accessibility and regression tests.  
-Evidence: future V3 screenshots and reports.  
-Status: READY
+Evidence: `scripts/e2e/scenario-lab.mjs`; `docs/evidence/product-v3-scenario-lab-initial.png`; `docs/evidence/product-v3-scenario-lab-results.png`.
+Status: DONE (`npm run test:e2e:scenario-lab`, V2 E2E and `npm test` 474/474 pass).
 
 ## P3-004 — Isolated BR-CORTE Eq. 2.6 scientific calculator
 
@@ -59,8 +59,8 @@ Dependencies: P3-003; reuse P2-009 rather than fork the Worker lifecycle.
 Implementation scope: Responsive cancel, cleanup/recreation, explicit cancelled state, rerun reviewed manifest.  
 Acceptance criteria: Cancellation never creates complete history or an exportable result; no stale message can overwrite a later run.  
 Required tests: Worker lifecycle unit and browser cancellation E2E.  
-Evidence: tests and cancellation E2E report.  
-Status: BACKLOG
+Evidence: `tests/worker-protocol.test.js`; `scripts/e2e/scenario-lab.mjs`.
+Status: DONE (cancel terminates the dedicated Worker; no result/history is created; rerun uses the still-reviewed manifest).
 
 ## P3-006 — Large-population performance and native parity
 

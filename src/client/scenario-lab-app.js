@@ -1,0 +1,385 @@
+import {FarmEngine} from './engine.js';
+import {createScenarioSetManifest, validateScenarioSetManifest} from './scenario-set.js';
+import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
+
+const $ = id => document.getElementById(id);
+const MAX_VISIBLE_ANIMALS = 1200;
+const COLORS = ['#397f9c', '#65a8c5', '#8fbfce', '#66a68b', '#c39a69', '#947faf', '#cf8076', '#7d96b3', '#93a765', '#d28fa5'];
+
+let reviewedManifest = null;
+let completedResult = null;
+let selectedDayIndex = 0;
+let visibleAnimals = MAX_VISIBLE_ANIMALS;
+let selectedAnimalId = null;
+let activeWorker = null;
+let cancelActiveRun = null;
+
+function status(message) {
+  $('lab-status').textContent = message;
+  clearTimeout(status.timer);
+  status.timer = setTimeout(() => {
+    if (!activeWorker) $('lab-status').textContent = '';
+  }, 5000);
+}
+
+function parseNumber(value, field, min, max, integer = false) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < min || number > max || (integer && !Number.isInteger(number))) {
+    throw new Error(`${field} must be ${integer ? 'an integer' : 'a number'} from ${min} to ${max}.`);
+  }
+  return number;
+}
+
+function createManifest(form) {
+  const formData = new FormData(form);
+  const animalCount = parseNumber(formData.get('animalCount'), 'Animals', 1, 10000, true);
+  const durationDays = parseNumber(formData.get('durationDays'), 'Duration', 1, 365, true);
+  const baselineSupplement = parseNumber(formData.get('baselineSupplement'), 'Baseline supplement', 0, 4);
+  const seed = parseNumber(formData.get('seed'), 'Seed', 0, 0xffffffff, true);
+  const levelsText = String(formData.get('alternativeLevels') ?? '');
+  const levels = levelsText.split(/[,;\s]+/).filter(Boolean).map((value, index) => parseNumber(value, `Alternative ${index + 1}`, 0, 4));
+  if (levels.length < 2 || levels.length > 9) throw new Error('Enter 2 to 9 alternative supplement levels.');
+  if (new Set([baselineSupplement, ...levels]).size !== levels.length + 1) throw new Error('Every alternative must use a distinct supplement level, different from baseline.');
+
+  const engine = new FarmEngine(seed, animalCount);
+  const baselineConfig = {...engine.snapshot().config, supplement: baselineSupplement, weather: formData.get('weather')};
+  engine.configure(baselineConfig);
+  const snapshot = engine.snapshot();
+  const scenarios = [{
+    id: 'baseline', label: `Baseline · ${baselineSupplement} kg DM/head/day`, role: 'baseline', config: {...baselineConfig},
+  }, ...levels.map((level, index) => ({
+    id: `alternative-${index + 1}`,
+    label: `Scenario ${String.fromCharCode(65 + index)} · ${level} kg DM/head/day`,
+    role: 'intervention',
+    config: {...baselineConfig, supplement: level},
+  }))];
+  return createScenarioSetManifest({snapshot, durationDays, scenarioId: `supplement-sweep-${seed}`, scenarios});
+}
+
+function renderReview(manifest) {
+  $('review-panel').hidden = false;
+  $('review-meta').textContent = `${manifest.durationDays} days · ${manifest.initialSnapshot.animals.length.toLocaleString()} generated engine animals · seed ${manifest.seed} · one factor: supplementation`;
+  const host = $('scenario-list');
+  host.replaceChildren(...manifest.scenarios.map(scenario => {
+    const article = document.createElement('article');
+    const name = document.createElement('span');
+    name.textContent = scenario.label;
+    const details = document.createElement('strong');
+    details.textContent = `${scenario.config.weather} · ${scenario.config.housing} · ${scenario.config.diet}`;
+    article.append(name, details);
+    return article;
+  }));
+}
+
+function requestScenarioSet(manifest) {
+  if (activeWorker) return Promise.reject(new Error('A scenario set is already running.'));
+  const worker = new Worker(new URL('./worker.js', import.meta.url), {type: 'module'});
+  activeWorker = worker;
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const cleanup = () => {
+      if (settled) return;
+      settled = true;
+      worker.removeEventListener('message', onMessage);
+      worker.removeEventListener('error', onError);
+      worker.terminate();
+      if (activeWorker === worker) activeWorker = null;
+      if (cancelActiveRun === cancel) cancelActiveRun = null;
+      $('cancel-run').hidden = true;
+    };
+    const cancel = () => {
+      cleanup();
+      reject(new Error('Scenario run cancelled. The reviewed manifest is ready to run again.'));
+    };
+    const onMessage = event => {
+      try {
+        const response = normalizeWorkerResponse(event.data);
+        if (response.type === 'progress') {
+          const arm = response.scenarioId ? ` · scenario ${response.scenarioIndex}/${response.scenarioCount}` : '';
+          $('lab-status').textContent = `Calculating${arm} · day ${response.day} of ${response.days}`;
+          return;
+        }
+        cleanup();
+        if (response.type === 'error') reject(new Error(response.error.message));
+        else if (response.type === 'scenarioSet') resolve(response.data);
+        else reject(new Error('Unexpected Worker response.'));
+      } catch (error) {
+        cleanup();
+        reject(error);
+      }
+    };
+    const onError = event => {
+      cleanup();
+      reject(new Error(event.message || 'Scenario Worker failed.'));
+    };
+    cancelActiveRun = cancel;
+    $('cancel-run').hidden = false;
+    worker.addEventListener('message', onMessage);
+    worker.addEventListener('error', onError, {once: true});
+    try {
+      worker.postMessage({protocolVersion: WORKER_PROTOCOL_VERSION, type: 'replayScenarioSet', manifest});
+    } catch (error) {
+      cleanup();
+      reject(error);
+    }
+  });
+}
+
+function activePopulationScenario() {
+  if (!completedResult) return null;
+  const selectedId = $('population-scenario').value;
+  return selectedId === completedResult.baseline.id
+    ? completedResult.baseline
+    : completedResult.scenarios.find(scenario => scenario.id === selectedId) ?? completedResult.baseline;
+}
+
+function allScenarios() {
+  return completedResult ? [completedResult.baseline, ...completedResult.scenarios] : [];
+}
+
+function renderScenarioPicker() {
+  const select = $('population-scenario');
+  select.replaceChildren(...allScenarios().map(scenario => {
+    const option = document.createElement('option');
+    option.value = scenario.id;
+    option.textContent = scenario.label;
+    return option;
+  }));
+}
+
+function renderChart() {
+  const host = $('scenario-chart');
+  const scenarios = allScenarios();
+  if (!scenarios.length) return;
+  const width = 760, height = 210, pad = {left: 48, right: 16, top: 12, bottom: 26};
+  const rows = scenarios.map(scenario => scenario.rows);
+  const values = rows.flatMap(series => series.map(row => row.meanWeightKg));
+  const low = Math.min(...values), high = Math.max(...values), range = Math.max(high - low, 0.1);
+  const points = rows[0].length;
+  const x = index => pad.left + (width - pad.left - pad.right) * index / Math.max(1, points - 1);
+  const y = value => height - pad.bottom - (value - low) / range * (height - pad.top - pad.bottom);
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  for (let tick = 0; tick <= 2; tick++) {
+    const value = low + range * tick / 2;
+    const py = y(value);
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', pad.left); line.setAttribute('x2', width - pad.right);
+    line.setAttribute('y1', py); line.setAttribute('y2', py); line.setAttribute('stroke', '#e8eef0');
+    svg.append(line);
+    const label = document.createElementNS(ns, 'text');
+    label.setAttribute('x', pad.left - 8); label.setAttribute('y', py + 3);
+    label.setAttribute('text-anchor', 'end'); label.setAttribute('font-size', '9'); label.setAttribute('fill', '#8d9b9f');
+    label.textContent = value.toFixed(1);
+    svg.append(label);
+  }
+  scenarios.forEach((scenario, scenarioIndex) => {
+    const path = scenario.rows.map((row, index) => `${index ? 'L' : 'M'}${x(index).toFixed(2)},${y(row.meanWeightKg).toFixed(2)}`).join(' ');
+    const line = document.createElementNS(ns, 'path');
+    line.setAttribute('d', path); line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', COLORS[scenarioIndex % COLORS.length]); line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke-linecap', 'round'); line.setAttribute('stroke-linejoin', 'round');
+    svg.append(line);
+  });
+  host.replaceChildren(svg);
+  const legend = $('scenario-legend');
+  legend.replaceChildren(...scenarios.map((scenario, index) => {
+    const item = document.createElement('span'), swatch = document.createElement('i');
+    swatch.style.backgroundColor = COLORS[index % COLORS.length];
+    item.append(swatch, document.createTextNode(scenario.label));
+    return item;
+  }));
+}
+
+function currentPoint(scenario) {
+  return scenario?.timeline[selectedDayIndex] ?? scenario?.timeline.at(-1) ?? null;
+}
+
+function renderPopulation() {
+  const scenario = activePopulationScenario();
+  const point = currentPoint(scenario);
+  const host = $('scenario-population');
+  if (!point) { host.replaceChildren(); return; }
+  const animals = point.animals;
+  const weights = animals.map(animal => animal.weight);
+  const low = Math.min(...weights), high = Math.max(...weights);
+  const cells = animals.slice(0, visibleAnimals).map(animal => {
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = `scenario-animal-cell${animal.id === selectedAnimalId ? ' selected' : ''}`;
+    cell.setAttribute('role', 'gridcell');
+    cell.setAttribute('aria-selected', String(animal.id === selectedAnimalId));
+    cell.setAttribute('aria-label', `Animal ${animal.id}, ${animal.weight.toFixed(1)} kilograms on day ${point.day}`);
+    cell.title = `Animal ${animal.id} · ${animal.weight.toFixed(1)} kg · day ${point.day}`;
+    const ratio = high === low ? 0.5 : (animal.weight - low) / (high - low);
+    cell.style.backgroundColor = `hsl(${200 - 24 * ratio} 44% ${92 - ratio * 28}%)`;
+    cell.addEventListener('click', () => { selectedAnimalId = animal.id; renderPopulation(); renderAnimalDetail(); });
+    cell.addEventListener('keydown', event => {
+      if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
+      event.preventDefault();
+      const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowDown' ? 12 : -12;
+      const index = animals.findIndex(item => item.id === animal.id);
+      const next = animals[Math.max(0, Math.min(animals.length - 1, index + step))];
+      if (next) { selectedAnimalId = next.id; renderPopulation(); renderAnimalDetail(); host.querySelector(`[aria-label^="Animal ${selectedAnimalId},"]`)?.focus(); }
+    });
+    return cell;
+  });
+  host.replaceChildren(...cells);
+  $('cell-count').textContent = `${Math.min(animals.length, visibleAnimals).toLocaleString()} / ${animals.length.toLocaleString()} cells`;
+  $('population-count').textContent = `${animals.length.toLocaleString()} engine animals · day ${point.day}`;
+  $('show-more-cells').hidden = animals.length <= visibleAnimals;
+  $('show-more-cells').textContent = `Show more (${Math.min(animals.length - visibleAnimals, MAX_VISIBLE_ANIMALS).toLocaleString()})`;
+}
+
+function renderAnimalDetail() {
+  const scenario = activePopulationScenario();
+  const point = currentPoint(scenario);
+  const animal = point?.animals.find(item => item.id === selectedAnimalId);
+  if (!animal) {
+    $('animal-detail').textContent = 'Select an animal cell to inspect its returned state.';
+    return;
+  }
+  $('animal-detail').textContent = `Animal ${animal.id} · ${animal.name} · initial weight ${animal.initialWeight.toFixed(1)} kg · day ${point.day} weight ${animal.weight.toFixed(1)} kg · activity ${animal.action}. These are illustrative engine states.`;
+}
+
+function renderTable() {
+  const scenarios = allScenarios();
+  const head = $('scenario-table-head'), body = $('scenario-table-body');
+  const headings = ['Day', ...scenarios.map(scenario => `${scenario.label} · kg`)];
+  head.replaceChildren();
+  const row = document.createElement('tr');
+  for (const text of headings) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = text; row.append(th); }
+  head.append(row);
+  const baselineRows = completedResult.baseline.rows;
+  const rows = baselineRows.map((baseRow, index) => {
+    const tr = document.createElement('tr');
+    const selectedDay = completedResult.baseline.timeline[selectedDayIndex].day;
+    tr.dataset.selected = String(baseRow.day === selectedDay);
+    const cells = [baseRow.day, ...scenarios.map(scenario => scenario.rows[index].meanWeightKg.toFixed(1))];
+    for (const value of cells) { const td = document.createElement('td'); td.textContent = String(value); tr.append(td); }
+    return tr;
+  });
+  body.replaceChildren(...rows);
+}
+
+function renderProvenance() {
+  const details = $('scenario-provenance');
+  const lines = [
+    `Executor: ${completedResult.executor}.`,
+    `Engine: ${completedResult.engineVersion}. Experiment set: ${completedResult.scenarioId}; seed ${completedResult.seed}; ${completedResult.durationDays} days; factor ${completedResult.factor}.`,
+    'Every intervention was compared against the same cloned baseline snapshot. The baseline output is stored once in the result projection.',
+    'Animal identities, weights and actions are outputs of the deterministic illustrative FarmEngine, not observed cattle.',
+    `Units: ${completedResult.units.meanWeightKg}; herd feed ${completedResult.units.cumulativeFeedIntakeKgDM}; ${completedResult.units.cumulativeCostUnits}; ${completedResult.units.pastureStockKgDM}.`,
+    `Illustrative engine assumptions: ${Object.entries(completedResult.assumptions).map(([key, value]) => `${key}=${value}`).join(', ')}.`,
+    'No result is independently validated as a weight, intake, activity, weather, pasture or economic prediction. BR-CORTE is not used by this run.',
+  ];
+  const list = document.createElement('ul');
+  list.replaceChildren(...lines.map(line => { const item = document.createElement('li'); item.textContent = line; return item; }));
+  details.replaceChildren(list);
+}
+
+function renderResults(result) {
+  completedResult = result;
+  selectedDayIndex = 0;
+  visibleAnimals = MAX_VISIBLE_ANIMALS;
+  const checkpoints = result.baseline.timeline;
+  $('results').hidden = false;
+  $('run-meta').textContent = `${result.scenarios.length + 1} scenarios · ${result.executionCount} intervention executions · ${result.executor} · ${result.engineVersion}`;
+  $('result-day').max = String(checkpoints.length - 1);
+  $('result-day').value = '0';
+  $('result-checkpoints').replaceChildren(...checkpoints.map(point => { const item = document.createElement('span'); item.textContent = String(point.day); return item; }));
+  $('selected-day').textContent = String(checkpoints[0].day);
+  renderScenarioPicker();
+  $('population-scenario').value = result.scenarios[0]?.id ?? result.baseline.id;
+  renderChart(); renderTable(); renderPopulation(); renderAnimalDetail(); renderProvenance();
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('results').scrollIntoView({behavior: reducedMotion ? 'auto' : 'smooth', block: 'start'});
+}
+
+$('scenario-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    reviewedManifest = createManifest(event.currentTarget);
+    renderReview(reviewedManifest);
+    $('results').hidden = true;
+    completedResult = null;
+    status('Review the shared snapshot, seed and intervention levels before running.');
+  } catch (error) {
+    reviewedManifest = null;
+    $('review-panel').hidden = true;
+    status(error.message);
+  }
+});
+
+$('scenario-form').addEventListener('input', event => {
+  if (!reviewedManifest || activeWorker || event.target.type === 'submit') return;
+  reviewedManifest = null;
+  $('review-panel').hidden = true;
+  $('results').hidden = true;
+  completedResult = null;
+  status('Inputs changed. Review the updated scenario set before running.');
+});
+
+$('run-scenarios').addEventListener('click', async () => {
+  if (!reviewedManifest || activeWorker) return;
+  $('run-scenarios').disabled = true;
+  status(`Running ${reviewedManifest.scenarios.length} reproducible scenarios…`);
+  try {
+    const result = await requestScenarioSet(reviewedManifest);
+    renderResults(result);
+    status('Scenario set complete. All displayed values came from the Worker result.');
+  } catch (error) {
+    status(error.message);
+  } finally {
+    $('run-scenarios').disabled = false;
+    $('cancel-run').hidden = true;
+  }
+});
+
+$('cancel-run').addEventListener('click', () => {
+  if (cancelActiveRun) cancelActiveRun();
+});
+
+$('result-day').addEventListener('input', event => {
+  if (!completedResult) return;
+  selectedDayIndex = Number(event.target.value);
+  $('selected-day').textContent = String(completedResult.baseline.timeline[selectedDayIndex].day);
+  renderTable(); renderPopulation(); renderAnimalDetail();
+});
+
+$('population-scenario').addEventListener('change', () => { renderPopulation(); renderAnimalDetail(); });
+$('show-more-cells').addEventListener('click', () => { visibleAnimals += MAX_VISIBLE_ANIMALS; renderPopulation(); });
+$('export-results').addEventListener('click', () => {
+  if (!reviewedManifest || !completedResult) return;
+  const blob = new Blob([JSON.stringify({manifest: reviewedManifest, results: completedResult}, null, 2)], {type: 'application/json'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob); link.download = `${reviewedManifest.scenarioId}.json`; link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 0);
+});
+
+$('load-manifest').addEventListener('click', () => $('manifest-file').click());
+$('manifest-file').addEventListener('change', async event => {
+  const input = event.currentTarget;
+  const file = input.files?.[0];
+  if (!file) return;
+  try {
+    if (file.size > 4 * 1024 * 1024) throw new Error('Saved experiment JSON must be 4 MB or smaller.');
+    const saved = JSON.parse(await file.text());
+    const manifest = saved?.manifest;
+    validateScenarioSetManifest(manifest);
+    reviewedManifest = manifest;
+    completedResult = null;
+    $('results').hidden = true;
+    renderReview(manifest);
+    status('Saved manifest loaded. Review it, then run to recalculate the scenarios.');
+  } catch (error) {
+    reviewedManifest = null;
+    $('review-panel').hidden = true;
+    status(`Could not open saved experiment: ${error.message}`);
+  } finally {
+    input.value = '';
+  }
+});

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafb">
+  <meta name="description" content="Compare reproducible multi-scenario livestock experiments with Riose.">
+  <title>Riose — Scenario laboratory</title>
+  <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="scenario-lab.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html" aria-label="Riose home"><span class="brand-mark">r.</span><span>riose<span class="brand-light"> agro</span></span></a>
+    <nav aria-label="Main navigation"><a href="product.html">Product</a><a class="active" href="scenario-lab.html">Scenario lab</a><a href="experiments.html">Experiments</a><a href="observed-data.html">Observed data</a></nav>
+    <span class="system-status"><i></i> Local engine · illustrative</span>
+  </header>
+
+  <main class="lab-shell">
+    <header class="lab-intro">
+      <p class="eyebrow">RIOSE · SCIENTIFIC SCENARIO LABORATORY</p>
+      <h1>Compare the conditions you can control.</h1>
+      <p>Set a baseline and at least two alternatives. Every arm starts from the same saved state and seed.</p>
+      <p class="lab-limit">FarmEngine outputs are deterministic demonstrations, not validated livestock forecasts or management recommendations.</p>
+    </header>
+
+    <section class="lab-layout" aria-label="Scenario laboratory">
+      <form id="scenario-form" class="lab-card setup-card">
+        <div class="lab-card-heading"><div><p class="eyebrow">1 · CONFIGURE</p><h2>Experiment inputs</h2></div><span class="engine-badge">Illustrative engine</span></div>
+        <div class="lab-fields">
+          <label>Animals<input name="animalCount" type="number" min="1" max="10000" step="1" value="200" required><small>Seeded engine population</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" value="30" required><small>Days</small></label>
+          <label>Baseline supplement<input name="baselineSupplement" type="number" min="0" max="4" step="0.1" value="0.5" required><small>kg DM/head/day</small></label>
+          <label>Shared weather<select name="weather"><option value="normal">Normal</option><option value="hot">Hot rule set</option><option value="rain">Rain rule set</option></select><small>Demonstrative engine rule</small></label>
+          <label class="lab-wide">Alternative supplement levels<input name="alternativeLevels" type="text" value="1.0, 1.5" maxlength="120" required><small>Enter 2–9 distinct values from 0 to 4 kg DM/head/day, separated by commas.</small></label>
+          <label>Seed<input name="seed" type="number" min="0" max="4294967295" step="1" value="20261015" required><small>Unsigned 32-bit seed</small></label>
+        </div>
+        <div class="lab-actions"><button class="primary-button" type="submit">Review scenarios <span aria-hidden="true">↗</span></button><span>Only supplementation varies across arms.</span></div>
+        <div class="saved-manifest"><button id="load-manifest" class="text-button" type="button">Open exported experiment JSON</button><input id="manifest-file" type="file" accept="application/json,.json" hidden><span>Replay uses the saved manifest and recalculates every arm.</span></div>
+
+        <section id="review-panel" class="review-panel" hidden aria-labelledby="review-title">
+          <div class="lab-card-heading"><div><p class="eyebrow">2 · REVIEW</p><h2 id="review-title">Scenario set</h2></div><span class="review-status">Requires confirmation</span></div>
+          <p id="review-meta" class="review-meta"></p>
+          <div id="scenario-list" class="scenario-list"></div>
+          <p class="review-limit">These runs use the illustrative FarmEngine. Weight, intake, weather and cost rules are not independently validated. No biological uncertainty or prediction interval is calculated.</p>
+          <div class="lab-actions"><button id="run-scenarios" class="primary-button" type="button">Run scenarios</button><button id="cancel-run" class="quiet-button" type="button" hidden>Cancel run</button></div>
+        </section>
+      </form>
+
+      <section id="results" class="lab-card results-card" hidden aria-labelledby="results-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">3 · EXPLORE</p><h2 id="results-title">Sensitivity analysis</h2></div><span class="engine-badge">One factor · deterministic</span></div>
+        <p class="results-caption">Actual FarmEngine outputs for the reviewed manifest. Each colored line is one run; the sweep is not a confidence interval or causal estimate.</p>
+        <div class="results-meta"><span id="run-meta"></span><button id="export-results" class="quiet-button" type="button">Export manifest + results ↓</button></div>
+        <div class="lab-timeline"><label for="result-day">Day <strong id="selected-day">0</strong></label><input id="result-day" type="range" min="0" max="0" value="0" aria-label="Choose an available result day"><div id="result-checkpoints" class="timeline-points"></div></div>
+        <div id="scenario-chart" class="scenario-chart" role="img" aria-label="Mean engine weight by scenario and day"></div>
+        <div id="scenario-legend" class="chart-legend" aria-label="Scenario chart legend"></div>
+        <div class="scenario-select-row"><label for="population-scenario">Population view</label><select id="population-scenario"></select><span id="population-count"></span></div>
+        <div class="lab-grid-toolbar"><span>Each square is one engine animal; cell order follows stable animal ID.</span><span id="cell-count"></span></div>
+        <div id="scenario-population" class="scenario-population" role="grid" aria-label="Selected scenario population observations"></div>
+        <div class="lab-grid-footer"><span id="population-limit">No geographical coordinates are represented.</span><button id="show-more-cells" class="text-button" type="button" hidden>Show more</button></div>
+        <div id="animal-detail" class="animal-detail" aria-live="polite">Select an animal cell to inspect its returned state.</div>
+        <div class="lab-table-scroll"><table><thead id="scenario-table-head"></thead><tbody id="scenario-table-body"></tbody></table></div>
+        <details class="provenance"><summary>Model provenance and limitations</summary><div id="scenario-provenance"></div></details>
+      </section>
+    </section>
+    <p id="lab-status" class="live-status" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="src/client/scenario-lab-app.js"></script>
+</body>
+</html>

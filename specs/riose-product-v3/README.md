@@ -27,4 +27,4 @@ The central user flow is: configure a question → review three or more comparab
 
 ## Current status
 
-V3 requirements are defined. P3-001 audit/rescope and P3-002, the versioned multi-scenario manifest/replay seam, are complete. The Product V2 UI and FarmEngine defaults remain unchanged; P3-003 is next.
+V3 requirements are defined. P3-001 audit/rescope, P3-002 multi-scenario contract, P3-003 scenario-lab UI/Worker, and P3-005 cancellation are complete on the separate `/scenario-lab.html` route. Product V2 remains available unchanged except for a navigation link, and FarmEngine defaults are unchanged. P3-004 BR-CORTE calculator is next.

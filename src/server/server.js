@@ -21,7 +21,7 @@ const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
+  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
