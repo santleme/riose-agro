@@ -4,10 +4,9 @@ Date: 2026-10-15
 Source PR: https://github.com/santleme/riose-agro/pull/190
 Source PR head: 983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc
 Working branch: codex/behavioral-agents-sdd
-Last verified commit: update after committing BEH-004 NO-GO evidence.
+Last verified commit: 8bfda3382f05d0bbb416f610a80d1fbdf485011c (BEH-004 NO-GO evidence).
 Completed tasks: BEH-000; BEH-001; BEH-002; BEH-003.
-Task in progress: none.
-Next READY: BEH-005 — secure AI research assistant can proceed independently. BEH-006 is blocked by the BEH-004 NO-GO; BEH-007/008 remain blocked by rights/external evidence.
+Task in progress: BEH-005 — frozen security contract; implementation and provider-mocked security tests in progress. BEH-006 is blocked by the BEH-004 NO-GO; BEH-007/008 remain blocked by rights/external evidence.
 Files changed in BEH-004: pinned confirmatory evaluator, partition/result tests, deterministic report, separate host resource sidecar, human evidence summary and SDD status/decision records.
 Tests executed: confirmatory partition and result tests 4/4; confirmatory evaluator run twice with byte-identical JSON SHA-256 `499d7d0c0952428c9f305bab7c73123f70770f20599d9f779a645739bb23a94f`; full `npm test` 446/446 after BEH-004 tests.
 Passing checks: frozen SHA-256 identities match; 20 train/4 confirmatory animals disjoint; expected NO-GO gate asserted; no model promotion/external validity; resource sidecar separate from scientific result.
