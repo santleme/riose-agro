@@ -7,9 +7,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from scripts.science.behavior.perea_sequence_baselines import (
-    CLASSES, animal_split, derive_seed, extract_windows, fit_baselines, generate,
+    CLASSES, animal_split, derive_seed, extract_windows, fit_baselines, fit_semimarkov,
+    generate, generate_semimarkov, serialize_semimarkov_sequence,
 )
-from scripts.science.behavior.evaluate_perea_sequence_baselines import _complete_runs, _transition_tv
+from scripts.science.behavior.evaluate_perea_sequence_baselines import (
+    _complete_runs, _transition_tv, semimarkov_development_gate,
+)
 
 
 class PereaSequenceBaselineTests(unittest.TestCase):
@@ -66,6 +69,54 @@ class PereaSequenceBaselineTests(unittest.TestCase):
         missing_row_tv, missing_row_count = _transition_tv(["GR", "RE"], ["WA", "WA"], ["GR"])
         self.assertEqual(missing_row_tv, 1.0)
         self.assertEqual(missing_row_count, 1)
+
+    def test_semimarkov_uses_only_complete_training_runs_and_is_seeded(self):
+        training = [
+            {"animal": "AH:1", "labels": ["GR", "GR", "RE", "RE", "RE", "WA", "WA"]},
+            {"animal": "BH:2", "labels": ["WA", "RE", "RE", "GR", "GR", "RE", "WA"]},
+        ]
+        model = fit_semimarkov(training)
+        self.assertEqual(set(model["supportedClasses"]), {"GR", "RE"})
+        self.assertNotIn("WA", model["durationSamplesByAnimal"])
+        first = generate_semimarkov(model, 80, 3901)
+        second = generate_semimarkov(model, 80, 3901)
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 80)
+        self.assertTrue(set(first) <= {"GR", "RE"})
+        record = serialize_semimarkov_sequence(first, model, 3901, 0, 0, 0)
+        self.assertIn("WA", record["unsupportedBehaviors"])
+        self.assertIn("RU", record["unsupportedBehaviors"])
+
+    def test_semimarkov_fails_closed_when_all_runs_are_boundary_censored(self):
+        with self.assertRaisesRegex(ValueError, "unsupported_duration_support"):
+            fit_semimarkov([{"animal": "AH:1", "labels": ["GR", "GR"]}])
+
+    def test_sequence_serialization_is_versioned_and_tracks_train_only_provenance(self):
+        model = fit_semimarkov([{"animal": "AH:1", "labels": ["GR", "GR", "RE", "RE", "RE", "GR", "GR"]}])
+        sequence = generate_semimarkov(model, 8, 10)
+        record = serialize_semimarkov_sequence(sequence, model, 10, 2, 1, 3)
+        self.assertEqual(record["schemaVersion"], "perea.behavior-sequence.v1")
+        self.assertEqual(record["training"]["animalIds"], ["AH:1"])
+        self.assertEqual(record["seedHex"], "000000000000000a")
+        self.assertEqual(record["requestedMinutes"], record["generatedMinutes"])
+        self.assertEqual(len(record["observations"]), 8)
+
+    def test_preregistered_gate_requires_all_metrics_and_never_opens_holdout_itself(self):
+        def summary(composition, transition, classes):
+            return {"animalMacroCompositionError": composition,
+                    "animalMacroTransitionTotalVariation": transition,
+                    "perClassAnimalMacroAbsoluteProportionError": classes}
+        baseline = {"iid": summary(.30, .80, {"GR": .20}),
+                    "persistence": summary(.31, .75, {"GR": .21}),
+                    "markov": summary(.305, .74, {"GR": .22})}
+        passing = dict(baseline)
+        passing["semimarkov"] = summary(.309, .70, {"GR": .24})
+        result = semimarkov_development_gate(passing, ["GR"])
+        self.assertTrue(result["pass"])
+        self.assertFalse(result["confirmatoryHoldoutOpened"])
+        failing = dict(passing)
+        failing["semimarkov"] = summary(.311, .70, {"GR": .24})
+        self.assertFalse(semimarkov_development_gate(failing, ["GR"])["pass"])
 
 
 if __name__ == "__main__":

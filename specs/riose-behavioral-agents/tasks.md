@@ -27,13 +27,14 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-002.
 - Scope: conditional transitions and sampled durations; learned from train-only observed behaviors; feature-availability checks; explicit behavior ontology.
 - Acceptance: deterministic outputs and JSON schema; class and duration support; no leakage; transparent outcome and model provenance; no physiology coupling.
-- Status: IN_PROGRESS (candidate protocol frozen; implement and evaluate development folds only; confirmatory holdout remains sealed).
+- Evidence: `08-semimarkov-protocol-v1.md`; `schemas/perea-behavior-sequence-v1.schema.json`; `docs/evidence/perea-semimarkov-development-v1.md` and `.json`; deterministic output and training-boundary tests.
+- Status: DONE (research-only candidate passes the preregistered development eligibility gate; confirmatory data not yet opened).
 
 ## BEH-004 — Comparative evaluation and scientific gate
 - Depends on: BEH-003.
 - Scope: frozen evaluation over held-out animals and independent replicated sequences; publication of all metrics, failures, resource usage, support limits.
 - Acceptance: preregistered pass/fail vs baselines, clear NO-GO where applicable, no external validation claim.
-- Status: BACKLOG.
+- Status: READY (BEH-003 code and development gate are frozen; evaluate the four reserved animals only under a separate confirmatory protocol; no promotion).
 
 ## BEH-005 — Secure AI research assistant (Groq / Hugging Face)
 - Depends on: BEH-000; may run independently of BEH-002.
