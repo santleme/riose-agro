@@ -16,7 +16,7 @@ from collections import Counter
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 SOURCE = ROOT / "data/usda-grasscast/cper-grouped-observations.json"
 REPORT = ROOT / "docs/evidence/usda-grasscast-cper-association.json"
 TOLERANCE = 1e-12

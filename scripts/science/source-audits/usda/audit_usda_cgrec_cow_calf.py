@@ -11,7 +11,7 @@ import re
 from zipfile import ZipFile
 from xml.etree import ElementTree as ET
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 SOURCE = ROOT / "data/usda-cgrec-cow-calf/CentralGrasslandsFireForageNAL.xlsx"
 MANIFEST = ROOT / "data/usda-cgrec-cow-calf/manifest.json"
 OUTPUT = ROOT / "data/usda-cgrec-cow-calf/cow-calf-observations.json"

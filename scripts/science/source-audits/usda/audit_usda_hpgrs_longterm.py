@@ -7,7 +7,7 @@ import math
 from collections import Counter, defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DATA = ROOT / "data/usda-hpgrs-1982-2022"
 MANIFEST = json.loads((DATA / "manifest.json").read_text(encoding="utf-8"))
 SOURCE = DATA / "EastUnit_LTGI.csv"

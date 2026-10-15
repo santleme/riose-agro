@@ -16,7 +16,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_CSV = ROOT / "data/usda-cper/period.csv"
 MANIFEST_PATH = ROOT / "data/usda-cper/manifest.json"
 REQUIRED_COLUMNS = {

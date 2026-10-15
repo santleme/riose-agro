@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('public USDA-ARS CPER LTGI source and frozen engine ADG holdout are reproducible', () => {
-  execFileSync('python3', ['scripts/audit_usda_cper_ltgi.py'], {encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/usda/audit_usda_cper_ltgi.py'], {encoding: 'utf8'});
   const source = JSON.parse(readFileSync('docs/evidence/usda-cper-ltgi-audit.json', 'utf8'));
   assert.equal(source.source.license, 'U.S. Public Domain');
   assert.match(source.source.sha256, /^[a-f0-9]{64}$/);

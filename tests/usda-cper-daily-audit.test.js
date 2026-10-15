@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 
 test('USDA CPER daily audit pins public files and refuses ambiguous period joins', () => {
   const report = JSON.parse(execFileSync(
-    'python3', ['scripts/audit_usda_cper_daily.py'], {encoding: 'utf8'},
+    'python3', ['scripts/science/source-audits/usda/audit_usda_cper_daily.py'], {encoding: 'utf8'},
   ));
 
   assert.equal(report.source.doi, '10.15482/USDA.ADC/1524788');

@@ -35,7 +35,8 @@ O retrato e as contagens abaixo continuam descrevendo `main@27c5d29`. As etapas 
 - PR #171 agrupou builds, screenshots e benchmarks do Graphics PoC em `scripts/graphics/`.
 - PR #172 reuniu o runner de cenários e as bibliotecas reutilizáveis de lotes experimentais em `scripts/experiments/`.
 - PR #173 agrupou benchmarks de simulação/sistema e validação de relatórios em `scripts/benchmarks/`.
-- PR em andamento move as comparações fixas do motor por coorte para `scripts/science/engine-audits/`, mantendo comandos, imports, testes e paths de dados alinhados. O comparador CGREC permanece no caminho original porque o baseline científico versionado fixa seus bytes.
+- PR #174 agrupou as comparações fixas do motor por coorte em `scripts/science/engine-audits/`, mantendo o comparador CGREC no caminho original porque o baseline científico versionado fixa seus bytes.
+- PR em andamento move auditorias de fontes e análises de associação das coortes USDA para `scripts/science/source-audits/usda/`, com comandos, testes e raízes de dados atualizados.
 
 Essas mudanças conectam e documentam o fluxo interno do Product e reduzem o acoplamento do Scenario Editor; não tornam o formato de cena do Graphics PoC intercambiável com o mundo irregular do Product. A decisão sobre um adaptador entre authoring continua aberta. `scene-layout.js` permanece dono da geração de layouts do Composer, enquanto `scene.json` é fonte do mundo fixo do Product.
 

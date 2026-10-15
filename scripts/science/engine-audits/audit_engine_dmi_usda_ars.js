@@ -36,7 +36,7 @@ function summarize(rows) {
 }
 
 export function auditDmi() {
-  execFileSync('python3', ['scripts/audit_usda_ars_feedlot_dmi.py'], {cwd: ROOT, encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/usda/audit_usda_ars_feedlot_dmi.py'], {cwd: ROOT, encoding: 'utf8'});
   const source = JSON.parse(readFileSync(resolve(ROOT, 'docs/evidence/usda-ars-feedlot-dmi-audit.json'), 'utf8'));
   const rows = source.rows.map(row => ({
     ...row,

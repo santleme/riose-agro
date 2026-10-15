@@ -7,7 +7,7 @@ import math
 from collections import Counter, defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = ROOT / "data/usda-cgrec-longterm"
 MANIFEST = json.loads((DATA_DIR / "manifest.json").read_text(encoding="utf-8"))
 SOURCE = DATA_DIR / "Streeter-ND_1989-2015_compiled.csv"
