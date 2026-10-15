@@ -34,7 +34,7 @@ Statuses: BACKLOG, READY, IN_PROGRESS, BLOCKED, VALIDATING, DONE.
 - Depends on: BEH-003.
 - Scope: frozen evaluation over held-out animals and independent replicated sequences; publication of all metrics, failures, resource usage, support limits.
 - Acceptance: preregistered pass/fail vs baselines, clear NO-GO where applicable, no external validation claim.
-- Status: READY (BEH-003 code and development gate are frozen; evaluate the four reserved animals only under a separate confirmatory protocol; no promotion).
+- Status: IN_PROGRESS (confirmatory protocol v1 frozen; now eligible to score reserved animals with code pinned; no promotion).
 
 ## BEH-005 — Secure AI research assistant (Groq / Hugging Face)
 - Depends on: BEH-000; may run independently of BEH-002.
