@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.local/schemas/product-world-scene-1.0.0.schema.json",
+  "title": "Riose Product world scene",
+  "description": "Renderer-independent Product world layout. Coordinates are logical cells; no metric scale is implied.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "version", "sceneId", "name", "world", "outline", "zones", "structures", "paths", "gates", "vegetation"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "version": {"const": 1},
+    "sceneId": {"$ref": "#/$defs/id"},
+    "name": {"type": "string", "minLength": 1},
+    "world": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unit", "width", "height", "tile", "origin", "soilDepth"],
+      "properties": {
+        "unit": {"const": "cell"},
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "tile": {"$ref": "#/$defs/tile"},
+        "origin": {"$ref": "#/$defs/point"},
+        "soilDepth": {"type": "number", "minimum": 0}
+      }
+    },
+    "outline": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/pair"}},
+    "zones": {"type": "array", "items": {"$ref": "#/$defs/zone"}},
+    "structures": {"type": "array", "items": {"$ref": "#/$defs/structure"}},
+    "paths": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "gates": {"type": "array", "items": {"$ref": "#/$defs/gate"}},
+    "vegetation": {"type": "array", "items": {"$ref": "#/$defs/vegetation"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]*$"},
+    "point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {"x": {"type": "number"}, "y": {"type": "number"}}
+    },
+    "pair": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+    "tile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {"width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}}
+    },
+    "zone": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "x", "y", "w", "h"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["pasture", "holdingPen"]},
+        "patch": {"type": "integer", "minimum": 0, "maximum": 3},
+        "x": {"type": "number"}, "y": {"type": "number"},
+        "w": {"type": "number", "exclusiveMinimum": 0}, "h": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "structure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "asset", "x", "y", "w", "h"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["farmstead", "pond", "barnCorral", "crops"]},
+        "asset": {"$ref": "#/$defs/id"},
+        "hero": {"type": "boolean"},
+        "x": {"type": "number"}, "y": {"type": "number"},
+        "w": {"type": "number", "exclusiveMinimum": 0}, "h": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "path": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "cells"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "cells": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/pair"}},
+        "destinations": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}
+      }
+    },
+    "gate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "zone", "a", "b", "connects"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "zone": {"$ref": "#/$defs/id"},
+        "a": {"$ref": "#/$defs/point"},
+        "b": {"$ref": "#/$defs/point"},
+        "connects": {"$ref": "#/$defs/id"}
+      }
+    },
+    "vegetation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "asset", "x", "y"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "asset": {"$ref": "#/$defs/id"},
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    }
+  }
+}

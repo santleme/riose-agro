@@ -37,8 +37,11 @@ manifest. No new art was generated for this blockout.
 
 ## Canonical world geometry
 
-`src/client/product/spatial.js` is the single source of truth consumed by the
-renderer, simulation mapping, development editor, and validator. The world has
+`src/client/product/scene.json` is the versioned source of truth for the Product
+world. `schemas/product-world-scene.schema.json` defines its shape, while
+`src/client/product/spatial.js` retains the `PRODUCT_BLOCKOUT` compatibility
+API and derives geometry consumed by the renderer, simulation mapping,
+development editor, and validator. The world has
 34 columns × 16 rows. A world unit is one logical **cell**; no metres-per-cell
 conversion is assumed. The isometric tile basis is 26 × 14 render pixels with
 origin (283, 32), but those pixel dimensions only project the cell grid and do
@@ -142,6 +145,9 @@ Run:
 node --test tests/product-spatial.test.js
 node scripts/validate-product-blockout.mjs
 ```
+
+The validator checks the scene schema before running spatial and asset checks.
+Run it as `npm run validate:product-scene` from the repository root.
 
 The generated report is `docs/product-scene-validation.json`. It records asset
 source/display dimensions, footprint metadata, world scale contract, route and

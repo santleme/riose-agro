@@ -1,11 +1,11 @@
 # Repository layout
 
-The repository keeps browser page URLs at the project root for static-host compatibility. Their implementation files live under `src/client/`; the optional HTTP service and standalone Python compute service live under `src/server/`. The current full inventory and migration priorities are in [repository-architecture-audit-2026-10-14.md](repository-architecture-audit-2026-10-14.md). The first accepted layout decision groups Product code under `src/client/product/` ([ADR 0003](adr/0003-product-module-layout.md)).
+The repository keeps browser page URLs at the project root for static-host compatibility. Their implementation files live under `src/client/`; the optional HTTP service and standalone Python compute service live under `src/server/`. The current full inventory and migration priorities are in [repository-architecture-audit-2026-10-14.md](repository-architecture-audit-2026-10-14.md). The accepted Product decisions group its implementation, share projection math and version its world data ([ADRs 0003–0005](adr/0003-product-module-layout.md)).
 
 ```text
 index.html, home.html, product.html, lab.html, *-data.html   browser entry points
 src/client/                                                   browser modules and stylesheets
-  product/                                                   Product experience: app, scene, spatial model, renderer, interaction
+  product/                                                   Product experience: app, versioned world scene, spatial model, renderer, interaction
   visualization/                                             shared presentation geometry and visual adapters
 src/server/                                                   local HTTP and Python compute services
 crates/                                                       Rust core and WASM adapters
