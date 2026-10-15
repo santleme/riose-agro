@@ -1,7 +1,7 @@
 # Product V3 session handoff
 
 Date: 2026-10-15
-Last verified commit: pending final P3-011 evidence/documentation commit; benchmark was executed against clean source commit `7391758131771a08ee497c9baabceefeea1fa89d`.
+Last verified P3-011 evidence/documentation commit: `81fab37` (`docs: record P3-011 benchmark and handoff`); benchmark was executed against clean source commit `7391758131771a08ee497c9baabceefeea1fa89d`.
 Current branch: `codex/behavioral-agents-sdd`; all commits are local and unpushed. Do not rewrite history, force-push, or work around network policy.
 
 Completed tasks: P3-001 through P3-006, P3-009, P3-010, and P3-011. P3-007 and P3-008 remain BLOCKED; behavioral model integration remains NO-GO.
