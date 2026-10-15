@@ -1,3 +1,5 @@
+import {projectIso as projectGrid, unprojectIso as unprojectGrid} from '../../../src/client/visualization/isometric.js';
+
 export const DEFAULT_LAYERS = [
   'terrain', 'roads', 'pasture', 'water', 'fences', 'buildings',
   'handling', 'technology', 'animals', 'overlays',
@@ -261,16 +263,12 @@ export function createBeefFarmScene(prefabs, seed = 20261012) {
 }
 
 export function projectIso(col, row, grid) {
-  return {
-    x: (col - row) * grid.tileWidth / 2,
-    y: (col + row) * grid.tileHeight / 2,
-  };
+  return projectGrid(col, row, grid.tileWidth, grid.tileHeight);
 }
 
 export function unprojectIso(x, y, grid) {
-  const px = x / (grid.tileWidth / 2);
-  const py = y / (grid.tileHeight / 2);
-  return {col: (px + py) / 2, row: (py - px) / 2};
+  const point = unprojectGrid(x, y, grid.tileWidth, grid.tileHeight);
+  return {col: point.column, row: point.row};
 }
 
 /**

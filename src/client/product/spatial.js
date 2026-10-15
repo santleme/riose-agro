@@ -1,4 +1,5 @@
 import {SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS} from '../patch-bounds.js';
+import {projectIso, unprojectIso} from '../visualization/isometric.js';
 export {SIMULATOR_PATCH_BOUNDS,SIMULATOR_BARN_BOUNDS};
 
 // Canonical Product scene space. One world unit is one logical grid cell; it
@@ -92,8 +93,7 @@ export const PRODUCT_BLOCKOUT = {
 };
 
 export function worldToScreen(x, y, world = PRODUCT_WORLD) {
-  const {width:tw,height:th}=world.tile;
-  return {x:world.origin.x+(x-y)*tw/2,y:world.origin.y+(x+y)*th/2};
+  return projectIso(x, y, world.tile.width, world.tile.height, world.origin);
 }
 
 export function productWorldOutline(scene = PRODUCT_BLOCKOUT) {
@@ -189,8 +189,8 @@ export function productFenceRuns(scene = PRODUCT_BLOCKOUT) {
 }
 
 export function screenToWorld(x, y, world = PRODUCT_WORLD) {
-  const dx=(x-world.origin.x)/(world.tile.width/2),dy=(y-world.origin.y)/(world.tile.height/2);
-  return {x:(dx+dy)/2,y:(dy-dx)/2};
+  const point = unprojectIso(x, y, world.tile.width, world.tile.height, world.origin);
+  return {x: point.column, y: point.row};
 }
 export function displayToScenePoint(clientX,clientY,bounds,size=PRODUCT_CANVAS_SIZE){
   return {x:(clientX-bounds.left)*size.width/bounds.width,y:(clientY-bounds.top)*size.height/bounds.height};

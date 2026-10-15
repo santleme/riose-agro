@@ -1,6 +1,5 @@
-export function projectIso(column, row, cellWidth = 64, cellHeight = 32, origin = {x: 0, y: 0}) {
-  return {x: origin.x + (column - row) * cellWidth / 2, y: origin.y + (column + row) * cellHeight / 2};
-}
+import {projectIso, unprojectIso} from '../src/client/visualization/isometric.js';
+export {projectIso, unprojectIso};
 
 export function zoneGridCorners(zone) {
   const {x, y} = zone.origin, {columns, rows} = zone.footprint;
@@ -10,11 +9,6 @@ export function zoneGridCorners(zone) {
     {column: x + columns, row: y + rows},
     {column: x, row: y + rows},
   ];
-}
-
-export function unprojectIso(x, y, cellWidth = 64, cellHeight = 32, origin = {x: 0, y: 0}) {
-  const horizontal = (x - origin.x) / (cellWidth / 2), vertical = (y - origin.y) / (cellHeight / 2);
-  return {column: (horizontal + vertical) / 2, row: (vertical - horizontal) / 2};
 }
 
 export function farmPositionToGrid(x, y, columns = 14, rows = 10) {
