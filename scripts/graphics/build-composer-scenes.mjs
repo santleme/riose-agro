@@ -1,11 +1,11 @@
 import {readFile, writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {adaptMainComposerScene} from '../graphics-poc/main-composer-adapter.js';
-import {assertGraphicsReleaseReady} from './assets/graphics-release-gate.mjs';
-import {enrichRendererManifest, enrichRuntimeAssetManifest} from './assets/runtime-asset-provenance.mjs';
+import {adaptMainComposerScene} from '../../graphics-poc/main-composer-adapter.js';
+import {assertGraphicsReleaseReady} from '../assets/graphics-release-gate.mjs';
+import {enrichRendererManifest, enrichRuntimeAssetManifest} from '../assets/runtime-asset-provenance.mjs';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = fileURLToPath(new URL('../../', import.meta.url));
 const releaseBuild = process.argv.includes('--release');
 if (releaseBuild) await assertGraphicsReleaseReady();
 const readJson = file => readFile(path.join(root, file), 'utf8').then(JSON.parse);

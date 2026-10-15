@@ -1,9 +1,9 @@
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {adaptGeneratedFarmLayoutDocument} from '../graphics-poc/scene-adapter-v1.js';
-import {generateFarmLayout} from '../src/client/scenario-editor/scene-layout.js';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {adaptGeneratedFarmLayoutDocument} from '../../graphics-poc/scene-adapter-v1.js';
+import {generateFarmLayout} from '../../src/client/scenario-editor/scene-layout.js';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
 
 const warmupRuns = Number(process.env.GENERATED_SCENE_ADAPTER_WARMUPS ?? 5);
 const repetitions = Number(process.env.GENERATED_SCENE_ADAPTER_REPETITIONS ?? 21);
@@ -12,9 +12,9 @@ if (!Number.isInteger(warmupRuns) || warmupRuns < 1 || !Number.isInteger(repetit
 }
 
 const [prefabs, composerManifest, rendererManifest] = await Promise.all([
-  readFile(new URL('../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8').then(text => JSON.parse(text).prefabs),
-  readFile(new URL('../public/assets/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
-  readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+  readFile(new URL('../../public/assets/scenario-editor/prefabs.json', import.meta.url), 'utf8').then(text => JSON.parse(text).prefabs),
+  readFile(new URL('../../public/assets/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
+  readFile(new URL('../../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8').then(JSON.parse),
 ]);
 const percentile = (sorted, p) => sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * p) - 1)];
 const summarize = values => {
@@ -72,8 +72,8 @@ const report = benchmarkReport({
   configuration: {warmupRuns, repetitions, baseSeed: 417, timer: 'performance.now'},
   phases: {
     layout: {status: 'measured', measurements: results.flatMap(row => [
-      measurement('layout', 'layout-generation', 'ms', summarizeSamples(row.observations.generationMs), {population: 1, scope: row.scenarioType, source: 'scripts/measure-generated-scene-adapter-v1.mjs', observations: row.observations.generationMs}),
-      measurement('layout', 'generated-scene-adaptation', 'ms', summarizeSamples(row.observations.adaptationMs), {population: 1, scope: row.scenarioType, source: 'scripts/measure-generated-scene-adapter-v1.mjs', observations: row.observations.adaptationMs}),
+      measurement('layout', 'layout-generation', 'ms', summarizeSamples(row.observations.generationMs), {population: 1, scope: row.scenarioType, source: 'scripts/graphics/measure-generated-scene-adapter-v1.mjs', observations: row.observations.generationMs}),
+      measurement('layout', 'generated-scene-adaptation', 'ms', summarizeSamples(row.observations.adaptationMs), {population: 1, scope: row.scenarioType, source: 'scripts/graphics/measure-generated-scene-adapter-v1.mjs', observations: row.observations.adaptationMs}),
     ])},
     serialization: {status: 'measured', measurements: results.flatMap(row => Object.entries(row.rawByteObservations).map(([metric, value]) => measurement('serialization', metric, 'bytes', summarizeSamples([value]), {population: 1, scope: row.scenarioType, source: 'JSON.stringify output byte count; duration not measured', observations: [value]})))},
   },

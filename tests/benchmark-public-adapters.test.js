@@ -71,13 +71,13 @@ test('public benchmark adapters emit schema-valid envelopes and retain raw obser
     comparison.repeatableNetWin === (comparison.soaEndToEndMedianMs < comparison.aosMedianMs
       && comparison.sampleWinRate >= animal.decisionEvidence.requiredSampleWinRate)));
 
-  const scene = JSON.parse(run('scripts/measure-scene-adapter-v1.mjs'));
+  const scene = JSON.parse(run('scripts/graphics/measure-scene-adapter-v1.mjs'));
   assertMeasurements(scene);
   assert.equal(scene.results.results.length, 2);
   assert.ok(scene.results.results[0].observations.loadMs.length > 0);
   assert.ok(scene.results.results[0].observations.adaptMs.length > 0);
 
-  const generated = JSON.parse(run('scripts/measure-generated-scene-adapter-v1.mjs', [], {
+  const generated = JSON.parse(run('scripts/graphics/measure-generated-scene-adapter-v1.mjs', [], {
     GENERATED_SCENE_ADAPTER_WARMUPS: '1',
     GENERATED_SCENE_ADAPTER_REPETITIONS: '5',
   }));
@@ -207,7 +207,7 @@ test('browser and graphics PoC adapters emit valid reports when Chromium is avai
     if (!bundle.ok) {
       assert.fail(`Built graphics PoC bundle should be explicitly served after the build, received HTTP ${bundle.status}.`);
     }
-    const graphics = JSON.parse(run('scripts/benchmark-graphics-poc.mjs', [], {
+    const graphics = JSON.parse(run('scripts/graphics/benchmark-graphics-poc.mjs', [], {
       CHROME_BIN: chrome,
       RIOSE_GRAPHICS_URL: `${origin}graphics-poc/index.html`,
       BENCH_HERDS: '100',

@@ -8,7 +8,7 @@ const recordFrame = app.slice(app.indexOf('function recordFrame('), app.indexOf(
 const frameStats = app.slice(app.indexOf('function frameStats()'), app.indexOf('function pixiFrame('));
 const benchmark = app.slice(app.indexOf('async function runGraphicsBenchmark('), app.indexOf('async function initialize('));
 const control = app.slice(app.indexOf('window.__graphicsControl = {'), app.indexOf('};', app.indexOf('window.__graphicsControl = {')) + 2);
-const harness = await readFile(new URL('../scripts/benchmark-graphics-poc.mjs', import.meta.url), 'utf8');
+const harness = await readFile(new URL('../scripts/graphics/benchmark-graphics-poc.mjs', import.meta.url), 'utf8');
 
 test('culling timing is recorded once per actual scene refresh, never once per render frame', () => {
   assert.match(refreshScene, /state\.cullingMs = performance\.now\(\) - cullingStarted;\s*state\.cullingTimes\.push\(state\.cullingMs\);/);

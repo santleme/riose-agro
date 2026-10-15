@@ -1,12 +1,12 @@
 import {readFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
-import {adaptComposerDocument} from '../graphics-poc/scene-adapter-v1.js';
-import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
+import {adaptComposerDocument} from '../../graphics-poc/scene-adapter-v1.js';
+import {benchmarkReport, measurement, summarizeSamples} from '../benchmark-report.mjs';
 
-const manifestPath = new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url);
+const manifestPath = new URL('../../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url);
 const fixtures = [
-  ['beef', new URL('../graphics-poc/source/main-composer-v1/beef.json', import.meta.url)],
-  ['dairy', new URL('../graphics-poc/source/main-composer-v1/dairy.json', import.meta.url)],
+  ['beef', new URL('../../graphics-poc/source/main-composer-v1/beef.json', import.meta.url)],
+  ['dairy', new URL('../../graphics-poc/source/main-composer-v1/dairy.json', import.meta.url)],
 ];
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const median = values => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
@@ -48,8 +48,8 @@ const report = benchmarkReport({
   workload: {seed: 'fixed-committed-fixtures-no-rng', populations: [{count: fixtures.length, unit: 'scenes', scope: 'committed Composer beef and dairy fixtures'}]},
   configuration: {warmupRuns: 1, repetitions: 20},
   phases: {
-    startup: {status: 'measured', measurements: results.map(row => measurement('startup', 'fixture-json-parse', 'ms', summarizeSamples(row.observations.loadMs), {population: 1, scope: row.system, source: 'scripts/measure-scene-adapter-v1.mjs', observations: row.observations.loadMs}))},
-    layout: {status: 'measured', measurements: results.map(row => measurement('layout', 'composer-to-canonical-adaptation', 'ms', summarizeSamples(row.observations.adaptMs), {population: 1, scope: row.system, source: 'scripts/measure-scene-adapter-v1.mjs', observations: row.observations.adaptMs}))},
+    startup: {status: 'measured', measurements: results.map(row => measurement('startup', 'fixture-json-parse', 'ms', summarizeSamples(row.observations.loadMs), {population: 1, scope: row.system, source: 'scripts/graphics/measure-scene-adapter-v1.mjs', observations: row.observations.loadMs}))},
+    layout: {status: 'measured', measurements: results.map(row => measurement('layout', 'composer-to-canonical-adaptation', 'ms', summarizeSamples(row.observations.adaptMs), {population: 1, scope: row.system, source: 'scripts/graphics/measure-scene-adapter-v1.mjs', observations: row.observations.adaptMs}))},
     serialization: {status: 'measured', measurements: results.flatMap(row => [
       measurement('serialization', 'canonical-scene-bytes', 'bytes', summarizeSamples([row.canonicalSceneBytes]), {population: 1, scope: row.system, source: 'JSON.stringify(document.scene)', observations: [row.canonicalSceneBytes]}),
       measurement('serialization', 'adapter-document-bytes', 'bytes', summarizeSamples([row.adapterDocumentBytes]), {population: 1, scope: row.system, source: 'JSON.stringify(document)', observations: [row.adapterDocumentBytes]}),
