@@ -134,12 +134,12 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `data/usda-cper/period.csv` and `daily.csv` — public-domain yearling-steer ADG-by-period and daily grazing observations from USDA/CPER; used for read-only exploration, not engine calibration
 - `data/perea-rangeland-behavior/` — Figshare v2 behavior labels and source README, CC BY 4.0; audit records repeated animal/timestamp rows and keeps this sample separate from USDA/CPER
 - `data/usda-cper/manifest.json` — DOI, license, direct source URLs, and pinned SHA-256 checksums for both data tables and dictionaries
-- `data/usda-grasscast/` and `scripts/audit_usda_grasscast.py` — public CPER/Grass-Cast historical gain, ANPP, NDVI files with pinned checksums; summaries remain group/site-level and separate from the individual 2019–2020 CPER cohort (`npm run audit:usda-grasscast`)
+- `data/usda-grasscast/` and `scripts/science/source-audits/usda/audit_usda_grasscast.py` — public CPER/Grass-Cast historical gain, ANPP, NDVI files with pinned checksums; summaries remain group/site-level and separate from the individual 2019–2020 CPER cohort (`npm run audit:usda-grasscast`)
 - `data/mendeley-nellore-feedlot/` — public CC BY 4.0 workbook and SHA-256 provenance manifest for a separate adult feedlot cohort
 - `scripts/audit_mendeley_nellore_feedlot.py`, `scripts/export_mendeley_nellore_dmi_weight_pairs.py`, `scripts/science/engine-audits/audit_engine_dmi_mendeley.js`, `tests/mendeley-nellore-audit.test.js` — checksum/coverage audit and fixed-default DMI component check for the separate Nellore feedlot cohort
 - `data/sdsu-individual-dmi/`, `scripts/audit_sdsu_individual_dmi.py`, `scripts/science/engine-audits/audit_engine_dmi_sdsu.js` — public supplement, selected-tag derivation, and fixed-default DMI diagnostic for a separate hay-fed Angus cohort
-- `scripts/audit_usda_cper_validation.py` — source hash checks, grouped mean baseline and exploratory cross-validated ADG model, with explicit engine-target compatibility report (`npm run audit:usda-cper`)
-- `scripts/audit_usda_cper_daily.py` — source hash, daily schema, coverage, duplicate animal-day, and codebook consistency audit (`npm run audit:usda-cper-daily`)
+- `scripts/science/source-audits/usda/audit_usda_cper_validation.py` — source hash checks, grouped mean baseline and exploratory cross-validated ADG model, with explicit engine-target compatibility report (`npm run audit:usda-cper`)
+- `scripts/science/source-audits/usda/audit_usda_cper_daily.py` — source hash, daily schema, coverage, duplicate animal-day, and codebook consistency audit (`npm run audit:usda-cper-daily`)
 - `tests/usda-audit.test.js` — checks grouped holdout coverage and that the audit does not claim model validation
 - `docs/engenharia-reversa.md` — evidence ledger for Smallville, Simile, REA static analysis, and runtime-observation limits
 

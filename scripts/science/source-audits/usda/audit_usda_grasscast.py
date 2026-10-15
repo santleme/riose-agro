@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DATA = ROOT / "data" / "usda-grasscast"
 REPORT = ROOT / "docs" / "evidence" / "usda-grasscast-audit.json"
 DERIVED = DATA / "cper-grouped-observations.json"

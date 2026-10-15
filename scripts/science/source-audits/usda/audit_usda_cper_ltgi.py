@@ -11,7 +11,7 @@ import os
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DATA = ROOT / "data/usda-cper-ltgi-2000-2019"
 SOURCE = DATA / "LTGI_2000-2019_all_weights_published.csv"
 DICTIONARY = DATA / "LTGI_2000-2019_data_dictionary.csv"

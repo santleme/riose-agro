@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 
 test('CPER association report keeps animal periods clustered and distinct from engine validation', () => {
-  const report = JSON.parse(execFileSync('python3', ['scripts/analyze_usda_cper_association.py'], {encoding: 'utf8'}));
+  const report = JSON.parse(execFileSync('python3', ['scripts/science/source-audits/usda/analyze_usda_cper_association.py'], {encoding: 'utf8'}));
   assert.equal(report.source.doi, '10.15482/USDA.ADC/1524788');
   assert.equal(report.source.sha256Verified, true);
   assert.equal(report.classification, 'within_study_observational_association_exploration_not_engine_validation');

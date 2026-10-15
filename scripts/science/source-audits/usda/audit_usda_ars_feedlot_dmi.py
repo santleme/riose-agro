@@ -15,7 +15,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[4]
 DATA = ROOT / "data/usda-ars-individual-dmi-feedlot"
 WORKBOOK = DATA / "supplemental material.xlsx"
 MANIFEST = DATA / "manifest.json"

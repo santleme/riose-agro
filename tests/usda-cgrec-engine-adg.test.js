@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
 test('CPER-only ADG scale is evaluated unchanged on public external-site CGREC steer data', () => {
-  execFileSync('python3', ['scripts/audit_usda_cgrec_longterm.py'], {encoding: 'utf8'});
+  execFileSync('python3', ['scripts/science/source-audits/usda/audit_usda_cgrec_longterm.py'], {encoding: 'utf8'});
   const integrity = JSON.parse(readFileSync('docs/evidence/usda-cgrec-longterm-audit.json', 'utf8'));
   assert.equal(integrity.dataset.sha256_verified, true);
   assert.equal(integrity.dataset.public_md5_verified, true);
