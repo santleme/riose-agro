@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterator
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 RECORD_ID = "4064802"
 RAW_DIR = ROOT / "data/raw/zenodo-4064802"
 OUTPUT_DIR = ROOT / "data/processed/zenodo-4064802"

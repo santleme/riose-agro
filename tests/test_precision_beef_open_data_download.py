@@ -4,7 +4,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts/download_precision_beef_open_data.py"
+SCRIPT = ROOT / "scripts/science/data_pipelines/download_precision_beef_open_data.py"
 SPEC = importlib.util.spec_from_file_location("precision_beef_download", SCRIPT)
 DOWNLOAD = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(DOWNLOAD)

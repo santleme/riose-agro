@@ -11,6 +11,7 @@ The root `scripts/` directory contains command-line tools for builds, data audit
 | `scripts/science/engine-audits/` | Engine and cohort comparisons | Fixed-configuration ADG/DMI comparisons against named external cohorts; the frozen CGREC source stays at its pinned root path. |
 | `scripts/science/source-audits/` | Public-source audits and analyses | Dataset checksums, coverage, schema, normalization and cohort-association reports. USDA source tools are grouped under `usda/`; baseline-pinned sources remain at their recorded root paths. |
 | `scripts/science/evaluations/` | Model and cohort evaluations | Biomass and CPER ADG evaluation harnesses with generated research outputs kept under `experiments/`. |
+| `scripts/science/data_pipelines/` | Public scientific data acquisition and processing | License/checksum-verified downloads, normalization and cohort processing entry points. |
 | `scripts/` | Remaining project commands | Data audits, scientific processing, build commands and validators whose ownership is not grouped yet. |
 | `experiments/` | Research records and experiment-specific code | Protocols, source snapshots, evaluation code, execution outputs, reports and model artifacts; reusable Node helpers belong under `scripts/experiments/`. |
 

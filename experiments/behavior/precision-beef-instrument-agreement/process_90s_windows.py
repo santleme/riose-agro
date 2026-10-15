@@ -21,7 +21,7 @@ from typing import Any, Iterable, Iterator
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
-from scripts.process_precision_beef_open_data import (  # noqa: E402
+from scripts.science.data_pipelines.process_precision_beef_open_data import (  # noqa: E402
     AXES, EXPECTED_ANIMALS, MANIFEST_PATH, RAW_DIR, SOURCE_TEST_ANIMALS,
     TRIAL_BY_ANIMAL, _rows, file_sha256, parse_timestamp,
 )

@@ -17,7 +17,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data/mendeley-pasture-biomass"
 API_URL = "https://data.mendeley.com/public-api/datasets/nj72kmdj77"
 SELECTED_SUFFIXES = (".xlsx", ".shp", ".shx", ".dbf", ".prj", ".cpg")
