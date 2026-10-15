@@ -193,7 +193,7 @@ test('browser and graphics PoC adapters emit valid reports when Chromium is avai
 
   const browser = JSON.parse(run('scripts/benchmark-browser.mjs', [], {
     CHROME_BIN: chrome,
-    RIOSE_URL: origin,
+    RIOSE_URL: new URL('product.html', origin).href,
     BENCH_REPETITIONS: '1',
   }));
   assertMeasurements(browser);

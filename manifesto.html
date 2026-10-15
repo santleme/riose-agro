@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="src/client/home.css">
     <link rel="stylesheet" href="manifesto.css">
   </head>
   <body class="manifesto-page">
@@ -19,7 +19,7 @@
       <a class="header-manifesto" href="#manifesto-title" aria-current="page">manifesto</a>
       <div class="header-mark-group">
         <div class="header-name-control">
-          <button class="header-wordmark meaning-trigger" type="button" aria-label="About the name Riose" aria-expanded="false" aria-controls="riose-definition" aria-describedby="riose-definition">Riose</button>
+          <a class="header-wordmark meaning-trigger" href="home.html" aria-label="Riose home" aria-describedby="riose-definition">Riose</a>
           <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
             <span class="definition-title">Riose</span>
             <span class="definition-meta">proper noun / origin</span>
@@ -36,17 +36,17 @@
       <section class="manifesto-opening" aria-labelledby="manifesto-title">
         <div class="manifesto-copy" data-reveal>
           <h1 id="manifesto-title">Every season, decisions are made before anyone knows what the season will bring.</h1>
-          <p>How much to plant. Where to move a <button class="manifesto-term" type="button" data-scenario="herd" aria-pressed="false">herd</button>. When to irrigate. Which machinery to deploy. The land changes, the <button class="manifesto-term" type="button" data-scenario="rain" aria-pressed="false">weather</button> shifts, animals respond, and systems that appeared stable reveal their limits.</p>
+          <p>How much to plant. Where to move a herd. When to irrigate. Which machinery to deploy. The land changes, the weather shifts, animals respond, and systems that appeared stable reveal their limits.</p>
         </div>
       </section>
 
-      <section class="manifesto-world" aria-label="Interactive farm simulation" data-reveal>
-        <img class="manifesto-world-poster" src="assets/agroville-manifesto-farm.png" alt="" aria-hidden="true" width="500" height="314">
-        <iframe class="manifesto-world-frame" src="index.html?manifesto-world=1" title="Riose farm simulation showing cattle moving through connected pastures, with water, weather and farm structures" loading="eager"></iframe>
-      </section>
+      <figure class="manifesto-worlds" data-reveal>
+        <div id="manifesto-world-canvas" class="manifesto-world-canvas" role="img" aria-label="A single isometric farm assembled from Riose's cattle, pasture, farmhouse, barn, pond, crop, and tree assets."></div>
+        <figcaption>One farm. Many decisions ahead.</figcaption>
+      </figure>
 
       <section class="manifesto-continuation" aria-label="Riose approach" data-reveal>
-        <p>Uncertainty is not a theory. Over three decades, disasters have caused an estimated $3.8 trillion in global crop and livestock production losses, according to the <a href="https://www.fao.org/newsroom/detail/first-ever-global-estimation-of-the-impact-of-disasters-on-agriculture/en" target="_blank" rel="noopener noreferrer">FAO</a>. In Brazil, <a href="https://www.embrapa.br/pt/visao/riscos-na-agricultura" target="_blank" rel="noopener noreferrer">Embrapa's research on agricultural risk</a> documents how <button class="manifesto-term" type="button" data-scenario="drought" aria-pressed="false">droughts</button>, floods, pests, and climate pressures threaten production.</p>
+        <p>Uncertainty is not a theory. Over three decades, disasters have caused an estimated $3.8 trillion in global crop and livestock production losses, according to the <a href="https://www.fao.org/newsroom/detail/first-ever-global-estimation-of-the-impact-of-disasters-on-agriculture/en" target="_blank" rel="noopener noreferrer">FAO</a>. In Brazil, <a href="https://www.embrapa.br/pt/visao/riscos-na-agricultura" target="_blank" rel="noopener noreferrer">Embrapa's research on agricultural risk</a> documents how droughts, floods, pests, and climate pressures threaten production.</p>
         <p>Behind those figures are decisions made with incomplete information, and consequences that cannot always be reversed.</p>
         <p>We started with a question: what if some of those decisions could be examined before they become irreversible?</p>
         <p>At Riose, we are building worlds where decisions have consequences.</p>
@@ -63,5 +63,6 @@
     </main>
     <script src="header-interaction.js" defer></script>
     <script src="manifesto.js" defer></script>
+    <script type="module" src="src/client/manifesto-world.js"></script>
   </body>
 </html>

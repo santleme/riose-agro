@@ -1,17 +1,18 @@
 import {metrics,createComparisonManifest,validateComparisonManifest} from './engine.js';
 import {simulateNelorePastureScenario,analyzePastureDmiSensitivity,BR_CORTE_PASTURE_DMI} from '../../scientific/br_corte_pasture_dmi.js';
 import {drawProductFarm,productFarmEntityAt,productFarmHoverEntityAt,projectFarm,PRODUCT_SCENE_SIZE} from './product-scene.js';
-import {displayToScenePoint} from './product-spatial.js';
+import {displayToScenePoint,PRODUCT_BLOCKOUT} from './product-spatial.js';
 import {combineLegacySnapshot,createAnimalViewStateDTO,separateLegacySnapshot} from './animal-view-state.js';
 
 const $=                                   (id       )=>document.getElementById(id)     ;
-const manifestoWorldOnly=typeof location!=='undefined'&&location.search.includes('manifesto-world=1');
 const manifestoMotionPreference=typeof window.matchMedia==='function'?window.matchMedia('(prefers-reduced-motion: reduce)'):{matches:false,addEventListener(){}};
 const productExperience=typeof document!=='undefined'&&Boolean(document.body?.classList?.contains('product-body'));
 const sceneWidth=productExperience?PRODUCT_SCENE_SIZE.width:576,sceneHeight=productExperience?PRODUCT_SCENE_SIZE.height:336;
 const worker=new Worker(new URL('./worker.js?product=1',import.meta.url),{type:'module'});
-let state,viewState,snapshotViewState,selected=1,running=!manifestoWorldOnly&&!(productExperience&&manifestoMotionPreference.matches),speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false,manifestoWorldReadySent=false,manifestoWorldVisible=false;
+let state,viewState,snapshotViewState,selected=1,running=!(productExperience&&manifestoMotionPreference.matches),speed=1,pending=false,lastTick=0,comparison    ,requestCompare=false,comparisonSnapshot,comparisonManifest,pendingComparison,loadingScenario=false,scientificResult=null,scientificPreviewActive=false;
 const stateRequests=[];
+let productWorldRenderer=null;
+let productZoom=1;
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
 function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=productExperience?(loadingScenario?'Loading world…':value?'Comparing…':'Compare 30 days'):(loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗');}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
@@ -23,7 +24,6 @@ const scenarioNames=productExperience?{pasture:'Pasture',balanced:'Balanced',con
 const scenarioStorageKey='agroville-scenarios-v1',scenarioActiveKey='agroville-active-scenario-v1';
 let scenarios=[],activeScenarioId=null,storageWarningShown=false;
 try{const saved=JSON.parse(localStorage.getItem(scenarioStorageKey)??'[]');if(Array.isArray(saved))scenarios=saved.filter(item=>item&&typeof item.id==='string'&&typeof item.name==='string'&&item.snapshot?.animals&&item.snapshot?.config);}catch{}
-if(manifestoWorldOnly){scenarios=[];activeScenarioId=null;}
 try{activeScenarioId=localStorage.getItem(scenarioActiveKey);}catch{}
 if(!scenarios.some(item=>item.id===activeScenarioId))activeScenarioId=null;
 function activeScenario(){return scenarios.find(item=>item.id===activeScenarioId);}
@@ -64,12 +64,6 @@ function tree(x       ,y       ,size=1){rect(t,x-8*size,y+6*size,23*size,8*size,
 function fence(x       ,y       ,w       ,h       ){rect(t,x,y,w,2,'#d0b785');rect(t,x,y+5,w,1,'#baa26c');rect(t,x,y+h,w,2,'#d0b785');rect(t,x,y+h+5,w,1,'#a88c5c');for(let a=x;a<=x+w;a+=12){rect(t,a,y-2,2,10,'#e0c796');rect(t,a,y+h-2,2,10,'#dac08b');}rect(t,x,y,2,h,'#baa06c');rect(t,x+w,y,2,h,'#b79b64');for(let a=y;a<y+h;a+=12){rect(t,x-1,a,4,3,'#e0c796');rect(t,x+w-1,a,4,3,'#e0c796');}}
 function house(x       ,y       ,w       ,h       ,roof       ,wall       ){rect(t,x+4,y+6,w,h,'#52684955');rect(t,x,y,w,h,wall);rect(t,x-3,y-6,w+6,15,roof);rect(t,x,y-12,w,7,roof);rect(t,x+5,y-16,w-10,5,roof);rect(t,x+4,y-6,w-8,2,'#ffffff22');for(let xx=x+5;xx<x+w-5;xx+=10){rect(t,xx,y+16,5,7,'#2b4845');rect(t,xx,y+16,5,1,'#ecdaae');}rect(t,x+w/2-4,y+h-13,9,13,'#6b5948');rect(t,x+w/2-3,y+h-11,6,11,'#403b32');}
 function buildTerrain(){
-  if(manifestoWorldOnly){
-    const farm=new Image();
-    farm.onload=()=>{t.clearRect(0,0,576,336);const scale=Math.min(536/farm.width,336/farm.height),w=farm.width*scale,h=farm.height*scale;t.drawImage(farm,(576-w)/2,(336-h)/2,w,h);};
-    farm.src='assets/agroville-manifesto-farm.png';
-    return;
-  }
   if(productExperience){rect(t,0,0,576,336,'#71905d');return;}
   rect(t,0,0,576,336,'#7ea466');
   for(let y=0;y<336;y+=8)for(let x=0;x<576;x+=8){const n=rand();if(n<.42)rect(t,x,y,8,8,n<.2?'#82a86a':'#7b9f60');if(n>.8){rect(t,x+2,y+5,1,2,'#5e874e');rect(t,x+4,y+4,1,3,'#689251');}}
@@ -91,7 +85,7 @@ function buildTerrain(){
   // Tractor and farm worker.
   rect(t,354,215,16,8,'#396e55');rect(t,354,212,8,5,'#518666');rect(t,358,212,4,4,'#b9cabc');rect(t,352,221,6,5,'#384237');rect(t,365,221,5,4,'#384237');rect(t,354,222,2,2,'#989b77');rect(t,366,222,2,2,'#989b77');
   rect(t,366,148,4,4,'#d9b889');rect(t,365,152,6,6,'#7d8274');rect(t,365,148,6,2,'#c5a46c');rect(t,365,158,2,4,'#4b5143');rect(t,369,158,2,4,'#4b5143');
-  if(!manifestoWorldOnly&&!productExperience){t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>t.fillText('PIQUETE '+String.fromCharCode(65+i),p.x+8,p.y+14));t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);}
+  if(!productExperience){t.font='7px monospace';t.fillStyle='#405d35';patches.forEach((p,i)=>t.fillText('PIQUETE '+String.fromCharCode(65+i),p.x+8,p.y+14));t.fillStyle='#ece1c3';t.fillText('CONFINAMENTO',414,183);}
 }
 buildTerrain();
 if(productExperience)loadProductAssets();
@@ -100,19 +94,23 @@ const positions=new Map();
 const visualAnimalPositions=new Map();
 function renderAnimals(){if(!state||!viewState)return[];const positionsById=new Map(viewState.animals.map(animal=>[animal.id,animal]));return state.animals.map(animal=>({...animal,...positionsById.get(animal.id)}));}
 function currentLegacySnapshot(){return combineLegacySnapshot(state,snapshotViewState);}
-function drawProductScene(time){
-  const animals=renderAnimals().map(animal=>{
+function prepareProductAnimals(time){
+  return renderAnimals().map(animal=>{
     let point=positions.get(animal.id);
     if(!point||point.patch!==animal.patch||Math.hypot(point.x-animal.x,point.y-animal.y)>180){point={x:animal.x,y:animal.y,patch:animal.patch};positions.set(animal.id,point);}
     const movementFactor=manifestoMotionPreference.matches?1:.07;
     point.x+=(animal.x-point.x)*movementFactor;point.y+=(animal.y-point.y)*movementFactor;
-    return {animal,x:point.x,y:point.y};
-  }):[];
-  drawProductFarm(ctx,{time,animals,housing:state?.config.housing??'pasture',drawAnimal:drawManifestoCow,onAnimalPosition:(animal,point)=>visualAnimalPositions.set(animal.id,point),selectedEntityId:activeSceneEntity?.id??null,hoverEntityId:hoverSceneEntity?.id??null});
+    visualAnimalPositions.set(animal.id,projectFarm(point.x,point.y,animal.patch,state.config.housing));
+    return {...animal,x:point.x,y:point.y};
+  });
+}
+function drawProductScene(time){
+  const animals=prepareProductAnimals(time).map(animal=>({animal,x:animal.x,y:animal.y}));
+  drawProductFarm(ctx,{time,animals,housing:state?.config.housing??'pasture',drawAnimal:drawProductCow,onAnimalPosition:(animal,point)=>visualAnimalPositions.set(animal.id,point),selectedEntityId:activeSceneEntity?.id??null,hoverEntityId:hoverSceneEntity?.id??null});
 }
 
 function drawCow(a       ,x       ,y       ,time       ){
-  const sel=!manifestoWorldOnly&&a.id===selected;const resting=a.action==='resting';const dx=resting?0:Math.sin(time*.003+a.id)*.5;
+  const sel=a.id===selected;const resting=a.action==='resting';const dx=resting?0:Math.sin(time*.003+a.id)*.5;
   x=Math.round(x);y=Math.round(y+dx);rect(ctx,x-6,y+4,15,3,'#40583a55');
   if(sel){ctx.strokeStyle='#f4e4a1';ctx.lineWidth=1;ctx.strokeRect(x-9,y-8,21,19);}
   rect(ctx,x-5,y-3,11,7,a.id%4===0?'#a68460':'#e9e3d0');rect(ctx,x-4,y-2,4,3,'#38483a');rect(ctx,x+2,y+1,4,3,'#38483a');
@@ -121,7 +119,7 @@ function drawCow(a       ,x       ,y       ,time       ){
   if(a.action==='drinking')rect(ctx,x+9,y+2,2,2,'#83c4cb');
   if(sel&&!productExperience){ctx.fillStyle='#f5f3dd';ctx.fillRect(x-18,y-18,39,9);ctx.fillStyle='#3d5635';ctx.font='6px monospace';ctx.fillText(a.name,x-15,y-12);}
 }
-function drawManifestoCow(a,x,y,time,scale=1){
+function drawProductCow(a,x,y,time,scale=1){
   if(productExperience){
     const bob=a.action==='resting'?0:Math.sin(time*.003+a.id)*1.1;
     const width=(a.action==='resting'?21:23)*scale,height=(a.action==='resting'?16:18)*scale;
@@ -146,14 +144,21 @@ function drawManifestoCow(a,x,y,time,scale=1){
   rect(ctx,x+7,y-5,1,4,'#34382f');rect(ctx,x+8,y-6,1,2,'#34382f');
 }
 function draw(time       ){
-  ctx.setTransform(canvasScaleX,0,0,canvasScaleY,0,0);ctx.clearRect(0,0,sceneWidth,sceneHeight);ctx.fillStyle=productExperience||manifestoWorldOnly?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,sceneWidth,sceneHeight);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
+  if(productExperience&&productWorldRenderer){
+    const animals=prepareProductAnimals(time);
+    productWorldRenderer.update({animals,housing:state?.config.housing??'pasture',hour:state?.hour??6,pastures:state?.pastures??[],selectedAnimalId:selected,selectedEntityId:activeSceneEntity?.id??null,hoverAnimalId,hoverEntityId:hoverSceneEntity?.id??null,weather:state?.config.weather??'normal'});
+    if(running&&!pending&&!loadingScenario&&time-lastTick>1000/speed){requestState({type:'tick',hours:1});pending=true;lastTick=time;}
+    requestAnimationFrame(draw);
+    return;
+  }
+  ctx.setTransform(canvasScaleX,0,0,canvasScaleY,0,0);ctx.clearRect(0,0,sceneWidth,sceneHeight);ctx.fillStyle=productExperience?'#f7f7f4':'#6b905b';ctx.fillRect(0,0,sceneWidth,sceneHeight);ctx.save();ctx.translate(panX,panY);ctx.scale(zoom,zoom);
   if(productExperience){
     drawProductScene(time);
   }else ctx.drawImage(terrain,0,0);
   if(state){
-    if(!manifestoWorldOnly&&!productExperience)for(let i=0;i<4;i++){const x=i%2===0?28:195,y=i<2?38:178;const fraction=state.pastures[i]/(scientificResult?Math.max(1,scientificResult.assumptions.initialPastureKgDMByPaddock[i]):2400);rect(ctx,x+8,y+23,30,2,'#5c7748');rect(ctx,x+8,y+23,Math.round(30*fraction),2,'#dde6a0');}
-    const animals=renderAnimals().sort((a,b)=>manifestoWorldOnly?a.x+a.y-(b.x+b.y):productExperience?(a.x+a.y)-(b.x+b.y):a.y-b.y);
-    for(const a of animals){if(productExperience)continue;let pos=positions.get(a.id);if(!pos||Math.hypot(pos.x-a.x,pos.y-a.y)>180){pos={x:a.x,y:a.y};positions.set(a.id,pos);}const movementFactor=manifestoWorldOnly&&manifestoMotionPreference.matches?1:.07;pos.x+=(a.x-pos.x)*movementFactor;pos.y+=(a.y-pos.y)*movementFactor;const frameTime=(manifestoWorldOnly&&manifestoMotionPreference.matches)?0:time;if(manifestoWorldOnly){const x=288+(pos.x-288)*.68-(pos.y-168)*.68,y=168+(pos.x-288)*.31+(pos.y-168)*.31;drawManifestoCow(a,x,y,frameTime);}else drawCow(a,pos.x,pos.y,frameTime);}
+    if(!productExperience)for(let i=0;i<4;i++){const x=i%2===0?28:195,y=i<2?38:178;const fraction=state.pastures[i]/(scientificResult?Math.max(1,scientificResult.assumptions.initialPastureKgDMByPaddock[i]):2400);rect(ctx,x+8,y+23,30,2,'#5c7748');rect(ctx,x+8,y+23,Math.round(30*fraction),2,'#dde6a0');}
+    const animals=renderAnimals().sort((a,b)=>productExperience?(a.x+a.y)-(b.x+b.y):a.y-b.y);
+    for(const a of animals){if(productExperience)continue;let pos=positions.get(a.id);if(!pos||Math.hypot(pos.x-a.x,pos.y-a.y)>180){pos={x:a.x,y:a.y};positions.set(a.id,pos);}pos.x+=(a.x-pos.x)*.07;pos.y+=(a.y-pos.y)*.07;drawCow(a,pos.x,pos.y,time);}
     if(state.config.weather==='rain'){ctx.strokeStyle='#c0d6c355';ctx.lineWidth=1;for(let i=0;i<60;i++){const x=(i*77+(time*.045))%sceneWidth,y=(i*59+time*.095)%sceneHeight;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-2,y+5);ctx.stroke();}}
     if(state.config.weather==='hot'){rect(ctx,0,0,sceneWidth,sceneHeight,'#efb65715');}
     const hour=state.hour%24;if(hour>=20||hour<6)rect(ctx,0,0,sceneWidth,sceneHeight,'#183c4c70');
@@ -177,7 +182,7 @@ function draw(time       ){
   if(running&&!pending&&!loadingScenario&&time-lastTick>1000/speed){requestState({type:'tick',hours:1});pending=true;lastTick=time;}
   requestAnimationFrame(draw);
 }
-function setZoom(value       ){const next=Math.max(1,Math.min(3,value));panX=sceneWidth/2-(sceneWidth/2-panX)*next/zoom;panY=sceneHeight/2-(sceneHeight/2-panY)*next/zoom;zoom=next;limitPan();}
+function setZoom(value       ){if(productExperience&&productWorldRenderer){productZoom=Math.max(1,Math.min(3,value));productWorldRenderer.setZoom(productZoom);return;}const next=Math.max(1,Math.min(3,value));panX=sceneWidth/2-(sceneWidth/2-panX)*next/zoom;panY=sceneHeight/2-(sceneHeight/2-panY)*next/zoom;zoom=next;limitPan();}
 function limitPan(){panX=Math.max(sceneWidth-sceneWidth*zoom,Math.min(0,panX));panY=Math.max(sceneHeight-sceneHeight*zoom,Math.min(0,panY));}
 function mapPoint(e                        ){const b=canvas.getBoundingClientRect();return displayToScenePoint(e.clientX,e.clientY,b,{width:sceneWidth,height:sceneHeight});}
 canvas.addEventListener('pointerdown',e=>{const p=mapPoint(e);drag={...p,px:panX,py:panY,moved:false};canvas.setPointerCapture(e.pointerId);});
@@ -186,13 +191,13 @@ canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved&&state){const p=map
 canvas.addEventListener('pointercancel',()=>drag=null);
 canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom+(e.deltaY<0?.15:-.15));},{passive:false});
 canvas.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(zoom+.25);}if(e.key==='-'){e.preventDefault();setZoom(zoom-.25);}if(e.key==='ArrowLeft'){e.preventDefault();panX+=12;}if(e.key==='ArrowRight'){e.preventDefault();panX-=12;}if(e.key==='ArrowUp'){e.preventDefault();panY+=12;}if(e.key==='ArrowDown'){e.preventDefault();panY-=12;}limitPan();});
-$('zoomin').onclick=()=>setZoom(zoom+.25);$('zoomout').onclick=()=>setZoom(zoom-.25);$('home').onclick=()=>{zoom=1;panX=0;panY=0;};
+$('zoomin').onclick=()=>setZoom(productExperience&&productWorldRenderer?productWorldRenderer.getZoom()+.25:productExperience?productZoom+.25:zoom+.25);$('zoomout').onclick=()=>setZoom(productExperience&&productWorldRenderer?productWorldRenderer.getZoom()-.25:productExperience?productZoom-.25:zoom-.25);$('home').onclick=()=>{if(productExperience&&productWorldRenderer){productZoom=1;productWorldRenderer.resetCamera();return;}zoom=1;panX=0;panY=0;};
 function listAnimals(){if(!state)return;const query=$                  ('search').value.toLocaleLowerCase();$('animals').innerHTML=state.animals.filter(a=>a.name.toLocaleLowerCase().includes(query)||String(a.id).includes(query)).map(a=>'<button class="animal-row '+(a.id===selected?'selected':'')+'" data-animal="'+a.id+'" aria-pressed="'+(a.id===selected)+'"><span class="animal-avatar">'+cowSvg+'</span><span><strong>'+a.name+'</strong><small>'+actionNames[a.action]+'</small></span><span class="animal-id">'+String(a.id).padStart(3,'0')+'</span></button>').join('');}
 $('animals').onclick=e=>{const btn=(e.target               ).closest                   ('[data-animal]');if(btn){selected=Number(btn.dataset.animal);updateUI();}};
 $('search').oninput=()=>listAnimals();
 const reasonNames={rest_window:'horário de descanso (21:00–05:59)',thirst_threshold:'sede simulada acima de 65/100',pasture_housing:'alojamento configurado como pasto',barn_housing:'alojamento configurado como confinamento'};
 function renderAnimalHistory(animal){const records=(animal.history??[]).slice(-6).reverse();$('animal-history').innerHTML=records.map(record=>{const hour=String(record.hour%24).padStart(2,'0');const day=String(Math.floor(record.hour/24)+1).padStart(2,'0');const observed=record.observed;if(productExperience)return '<article class="memory-record"><strong>Day '+day+' · '+hour+':00 — '+actionNames[record.action]+'</strong><span>Rule: '+(record.reason==='rest_window'?'rest schedule':record.reason==='thirst_threshold'?'simulated thirst threshold':record.reason==='barn_housing'?'confinement configured':'pasture configured')+'.</span><small>Model state: thirst '+number(observed.thirst,0)+'/100 · '+(observed.housing==='barn'?'confinement':'pasture')+'.</small></article>';return '<article class="memory-record"><strong>D'+day+' · '+hour+':00 — '+actionNames[record.action]+'</strong><span>Regra: '+(reasonNames[record.reason]??record.reason)+'.</span><small>Estado observado pelo motor: sede '+number(observed.thirst,0)+'/100 · alojamento '+(observed.housing==='barn'?'confinamento':'pasto')+'.</small></article>';}).join('')||(productExperience?'<p class="memory-empty">No recent state changes for this animal.</p>':'<p class="memory-empty">Sem transições registradas para este animal.</p>');}
-function updateUI(){if(!state)return;if(manifestoWorldOnly&&!manifestoWorldReadySent){parent.postMessage({type:'manifesto-world-ready'},location.origin);manifestoWorldReadySent=true;}const m=metrics(state),a=state.animals.find(a=>a.id===selected)??state.animals[0];$('clock').textContent=(productExperience?'Day ':'Dia ')+String(Math.floor(state.hour/24)+1).padStart(2,'0')+' · '+String(state.hour%24).padStart(2,'0')+':00';$('count').textContent=String(state.animals.length);$('weight').textContent=number(m.weight)+' kg';$('gain').textContent=(m.gain>=0?'+':'')+number(m.gain,2)+(productExperience?' kg/animal since start':' kg/animal desde o início');$('pasture').textContent=number(m.pasture,0);$('cost').textContent=currency(m.cost);$('animalname').innerHTML=a.name+' <span>#'+String(a.id).padStart(3,'0')+'</span>';$('animalweight').textContent=number(a.weight)+' kg';if(productExperience)document.querySelector('.map-location').textContent='HORIZONTE / '+state.animals.length+' ANIMALS';$('activity').textContent=actionNames[a.action];$('thought').textContent='“'+thoughts[a.action]+'”';renderAnimalHistory(a);if(productExperience){const energy=$('energy-meter'),thirst=$('thirst-meter');if(energy)energy.style.width=Math.max(0,Math.min(100,a.energy))+'%';if(thirst)thirst.style.width=Math.max(0,Math.min(100,a.thirst))+'%';}$                   ('diet').value=state.config.diet;$                   ('weather').value=state.config.weather;$                  ('supplement').value=String(state.config.supplement);$('supplementvalue').textContent=number(state.config.supplement)+(productExperience?' kg DM/day':' kg MS/dia');for(const [id,condition] of [['pasturebtn',state.config.housing==='pasture'],['barnbtn',state.config.housing==='barn']]                      ){$(id).classList.toggle('active',condition);$(id).setAttribute('aria-pressed',String(condition));}listAnimals();$('events').innerHTML=state.events.slice(0,20).map(event=>{let text=event.text;if(productExperience){text=text.replace('Fazenda iniciada. Os animais estão no pasto.','Farm initialized. Animals begin in pasture.').replace('no cocho.','at the feeder.').replace('Bebendo água.','drinking water.').replace('está pastando.','is grazing.').replace('está descansando.','is resting.');}return '<div class="event"><time>'+(productExperience?'Day ':'D')+String(Math.floor(event.hour/24)+1).padStart(2,'0')+' '+String(event.hour%24).padStart(2,'0')+':00</time><span>'+text+'</span></div>';}).join('');if(productExperience)document.dispatchEvent(new CustomEvent('riose:world-state',{detail:{hour:state.hour,animal:a,config:state.config,metrics:m,pastures:state.pastures}}));}
+function updateUI(){if(!state)return;const m=metrics(state),a=state.animals.find(a=>a.id===selected)??state.animals[0];$('clock').textContent=(productExperience?'Day ':'Dia ')+String(Math.floor(state.hour/24)+1).padStart(2,'0')+' · '+String(state.hour%24).padStart(2,'0')+':00';$('count').textContent=String(state.animals.length);$('weight').textContent=number(m.weight)+' kg';$('gain').textContent=(m.gain>=0?'+':'')+number(m.gain,2)+(productExperience?' kg/animal since start':' kg/animal desde o início');$('pasture').textContent=number(m.pasture,0);$('cost').textContent=currency(m.cost);$('animalname').innerHTML=a.name+' <span>#'+String(a.id).padStart(3,'0')+'</span>';$('animalweight').textContent=number(a.weight)+' kg';if(productExperience)document.querySelector('.map-location').textContent='HORIZONTE / '+state.animals.length+' ANIMALS';$('activity').textContent=actionNames[a.action];$('thought').textContent='“'+thoughts[a.action]+'”';renderAnimalHistory(a);if(productExperience){const energy=$('energy-meter'),thirst=$('thirst-meter');if(energy)energy.style.width=Math.max(0,Math.min(100,a.energy))+'%';if(thirst)thirst.style.width=Math.max(0,Math.min(100,a.thirst))+'%';}$                   ('diet').value=state.config.diet;$                   ('weather').value=state.config.weather;$                  ('supplement').value=String(state.config.supplement);$('supplementvalue').textContent=number(state.config.supplement)+(productExperience?' kg DM/day':' kg MS/dia');for(const [id,condition] of [['pasturebtn',state.config.housing==='pasture'],['barnbtn',state.config.housing==='barn']]                      ){$(id).classList.toggle('active',condition);$(id).setAttribute('aria-pressed',String(condition));}listAnimals();$('events').innerHTML=state.events.slice(0,20).map(event=>{let text=event.text;if(productExperience){text=text.replace('Fazenda iniciada. Os animais estão no pasto.','Farm initialized. Animals begin in pasture.').replace('no cocho.','at the feeder.').replace('Bebendo água.','drinking water.').replace('está pastando.','is grazing.').replace('está descansando.','is resting.');}return '<div class="event"><time>'+(productExperience?'Day ':'D')+String(Math.floor(event.hour/24)+1).padStart(2,'0')+' '+String(event.hour%24).padStart(2,'0')+':00</time><span>'+text+'</span></div>';}).join('');if(productExperience)document.dispatchEvent(new CustomEvent('riose:world-state',{detail:{hour:state.hour,animal:a,config:state.config,metrics:m,pastures:state.pastures}}));}
 function renderScientificSensitivity(){const host=$('scientific-result'),sensitivity=analyzePastureDmiSensitivity({bodyWeightKg:Number($('science-weight').value),adgKgPerDay:Number($('science-adg').value),supplementKgDMPerDay:Number($('science-supplement').value)}),rows=sensitivity.effects.map(effect=>'<tr><th>'+effect.label+'</th><td>'+number(effect.testedInputRange[0],2)+'–'+number(effect.testedInputRange[1],2)+'</td><td>'+number(effect.deltaFromBaselineKgDMPerDay[0],2)+'–'+number(effect.deltaFromBaselineKgDMPerDay[1],2)+' kg MS/dia</td></tr>').join('');host.insertAdjacentHTML('beforeend','<h4>Sensibilidade local da equação</h4><table><thead><tr><th>Entrada variada isoladamente</th><th>Faixa testada</th><th>Variação de CMS vs. base</th></tr></thead><tbody>'+rows+'</tbody></table><small>Variações determinísticas (±10 kg de peso, ±0,1 kg/d de GMD informado, ±0,5 kg MS/d de suplemento), limitadas ao domínio de validação. Não são intervalos de previsão nem calibração empírica do Riose.</small>');}
 function renderScientificPanel(){let panel=document.getElementById('scientific-active-panel');if(!scientificResult){panel?.remove();return;}if(!panel){panel=document.createElement('section');panel.id='scientific-active-panel';panel.className='scientific-active-panel';document.querySelector('.metrics').after(panel);}const final=scientificResult.final,perHead=final.totalDmiKgDM/scientificResult.animalCount;panel.innerHTML='<strong>BR-CORTE 2023 · Eq. 2.6 · cenário '+scientificResult.days+' dias</strong><div>CMS total condicional: '+number(perHead,2)+' kg MS/cabeça/dia no último dia · forragem retirada: '+number(final.forageConsumedKgDM,0)+' kg MS no lote/dia · estoque final: '+number(final.pastureKgDMByPaddock.reduce((sum,value)=>sum+value,0),0)+' kg MS.</div><small>GMD assumido: '+number(scientificResult.assumptions.assumedAdgKgPerDay,2)+' kg/dia; '+(final.forageShortfallKgDM>0?'há déficit de forragem no último dia. ':'sem déficit de forragem no último dia. ')+'Água por piquete: '+scientificResult.assumptions.waterAvailableByPaddock.map((available,index)=>String.fromCharCode(65+index)+': '+(available?'disponível':'indisponível')).join(' · ')+'.</small><a href="'+BR_CORTE_PASTURE_DMI.source+'" target="_blank" rel="noopener">Fonte e equação ↗</a>';$('map').setAttribute('aria-label','Mapa da fazenda com resultado científico BR-CORTE. '+scientificResult.animalCount+' animais, dia '+scientificResult.days+'.');document.querySelector('.map-location').textContent='BR-CORTE / '+scientificResult.animalCount+' NELORE';}
 function configure(patch                ){if(!loadingScenario&&!scientificPreviewActive)requestState({type:'configure',patch});}
@@ -202,22 +207,6 @@ $                  ('supplement').oninput=e=>$('supplementvalue').textContent=nu
 $                  ('supplement').onchange=e=>configure({supplement:Number((e.target                    ).value)});
 $('pasturebtn').onclick=()=>configure({housing:'pasture'});$('barnbtn').onclick=()=>configure({housing:'barn'});
 function setRunning(value        ){running=value;if(productExperience)$('play').dataset.running=String(value);else $('play').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',productExperience?(value?'Pause simulation':'Continue simulation'):(value?'Pausar simulação':'Continuar simulação'));lastTick=performance.now();}
-if(manifestoWorldOnly){
-  window.addEventListener('message',(event)=>{
-    if(event.origin!==location.origin||event.source!==parent||event.data?.type!=='manifesto-world')return;
-    const message=event.data;
-    if(Object.hasOwn(message,'visible'))manifestoWorldVisible=Boolean(message.visible);
-    if(Object.hasOwn(message,'visible')||Object.hasOwn(message,'reducedMotion'))setRunning(manifestoWorldVisible&&!(Object.hasOwn(message,'reducedMotion')?Boolean(message.reducedMotion):manifestoMotionPreference.matches)&&!document.hidden);
-    if(Object.hasOwn(message,'scenario')){
-      const config={weather:'normal',housing:'pasture'};
-      if(message.scenario==='drought')config.weather='hot';
-      if(message.scenario==='rain')config.weather='rain';
-      if(message.scenario==='herd')config.housing='barn';
-      configure(config);
-    }
-  });
-  manifestoMotionPreference.addEventListener?.('change',(event)=>setRunning(manifestoWorldVisible&&!event.matches&&!document.hidden));
-}
 if(productExperience&&manifestoMotionPreference.matches)setRunning(false);manifestoMotionPreference.addEventListener?.('change',event=>{if(productExperience)setRunning(!event.matches);});$('play').onclick=()=>{if(scientificPreviewActive)return;setRunning(!running);};$('day').onclick=()=>{if(loadingScenario||scientificPreviewActive)return;setRunning(false);requestState({type:'tick',hours:24});};$('reset').onclick=()=>{if(loadingScenario)return;scientificPreviewActive=false;scientificResult=null;renderScientificPanel();$('play').disabled=false;$('day').disabled=false;document.querySelector('.map-location').textContent='HORIZONTE / 24 ANIMAIS';selected=1;positions.clear();requestState({type:'reset'});setRunning(false);};
 document.addEventListener('riose:seek-day',(event)=>{if(!productExperience||!state||pending||loadingScenario||scientificPreviewActive)return;const targetHour=6+(Math.max(1,Math.min(30,Number(event.detail?.day)||1))-1)*24;const hours=targetHour-state.hour;if(hours>0){setRunning(false);requestState({type:'tick',hours});pending=true;}});
 document.addEventListener('riose:timeline-horizon',()=>{if(productExperience)setRunning(false);});
@@ -339,5 +328,14 @@ worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift
 worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setRunning(false);});
 window.addEventListener('pagehide',saveScenarioData);
+async function initializeProductWorldRenderer(){
+  const host=canvas.parentElement;
+  try{
+    const {createProductWorldRenderer}=await import('./product-world-renderer.bundle.js');
+    productWorldRenderer=await createProductWorldRenderer({host,scene:PRODUCT_BLOCKOUT,onAnimalSelect:animal=>{selected=animal.id;activeSceneEntity=null;updateUI();document.dispatchEvent(new CustomEvent('riose:agent-selected',{detail:{animal}}));},onEntitySelect:(entity,world)=>{activeSceneEntity=entity;hoverSceneEntity=null;document.dispatchEvent(new CustomEvent('riose:entity-selected',{detail:{entity,pastures:state?.pastures??world.pastures,config:state?.config??world.config}}));}});
+    host.dataset.renderer='pixi';host.setAttribute('aria-busy','false');canvas.tabIndex=-1;
+  }catch(error){host.dataset.renderer='canvas';host.setAttribute('aria-busy','false');console.warn('Pixi farm renderer unavailable; keeping the Canvas fallback.',error);}
+}
 renderScenarios();if(activeScenario()){selected=activeScenario().selected??1;loadingScenario=true;compareBusy(false);requestState({type:'load',snapshot:activeScenario().snapshot});}else requestState({type:'snapshot'});
 requestAnimationFrame(draw);
+if(productExperience)initializeProductWorldRenderer();

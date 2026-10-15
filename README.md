@@ -14,7 +14,7 @@ Requires Node.js 20 or newer for the local server. From this directory:
 python3 -m http.server 8000
 ```
 
-Open http://localhost:8000 for the farm map and Scenario Studio. The optional project landing page is `home.html`; `simulator.html` remains a direct link to the same farm experience. Web Workers and JavaScript modules require HTTP; opening files via `file://` will not work. To use the local explanation endpoint and the **Revisar snapshot** panel, start the bundled server with `npm start`; the snapshot file is validated locally and is never applied to the current simulation. A static server can run the simulator but uses only deterministic explanations and does not provide the snapshot review API. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
+Open http://localhost:8000 for the Riose landing page. Choose **product** or **View dashboard** to enter the farm experience at `product.html`; `simulator.html` redirects there for compatibility. The previous Agroville laboratory is preserved at `lab.html` for the manifesto's embedded simulation and specialist workflows. Web Workers and JavaScript modules require HTTP; opening files via `file://` will not work. To use the local explanation endpoint and the **Revisar snapshot** panel, start the bundled server with `npm start`; the snapshot file is validated locally and is never applied to the current simulation. A static server serves the landing and product experience without the local snapshot review API. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
 
 The optional Rust/WASM metabolism prototype runs with `?engine=wasm` (for example `http://localhost:8000/?engine=wasm`). The default remains the existing JavaScript path because current browser-side measurements do not show a consistent end-to-end WASM gain. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
 
@@ -86,9 +86,11 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 
 ## Project files
 
-- `index.html`, `src/client/style.css` — interactive cattle-farm simulator and Scenario Studio
-- `home.html`, `src/client/home.css`, `src/client/home.js` — optional responsive project landing page
-- `simulator.html` — direct link to the farm experience
+- `index.html` — compatibility redirect to `home.html`; the canonical project entry
+- `home.html`, `src/client/home.css`, `src/client/home.js` — Riose landing page
+- `product.html`, `product.css`, `src/client/product-app.js` — canonical farm experience
+- `lab.html`, `src/client/style.css`, `src/client/app.js` — Agroville research laboratory and extended workflows
+- `simulator.html` — compatibility redirect to `product.html`
 - `assets/agroville-farm-worlds.png` — original generated hero illustration
 - `src/client/app.js` — map rendering, controls, charts, and CSV export
 - `src/client/engine.js`, `src/client/feeding-model.js` — deterministic farm simulation and extracted feeding calculation

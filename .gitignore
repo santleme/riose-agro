@@ -15,6 +15,7 @@ __pycache__/
 *.py[cod]
 .test-results/scenarios/
 graphics-poc/dist/
+src/client/product-world-renderer.bundle.js
 target/
 data/raw/zenodo-4064802/
 data/processed/zenodo-4064802/

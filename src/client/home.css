@@ -31,7 +31,7 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 .header-manifesto { position: absolute; left: clamp(24px, 5.35vw, 80px); color: #64655e; font: 11px var(--mono); letter-spacing: .025em; pointer-events: auto; }
 .header-mark-group { position: absolute; top: 50%; left: 50%; display: flex; align-items: baseline; gap: 10px; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: auto; }
 .header-name-control { position: relative; display: inline-flex; align-items: baseline; }
-.header-wordmark { position: relative; z-index: 1; display: block; padding: 0; border: 0; background: transparent; color: var(--ink); font: 700 19px/1.05 var(--sans); letter-spacing: -.065em; cursor: help; pointer-events: auto; }
+.header-wordmark { position: relative; z-index: 1; display: block; padding: 0; border: 0; background: transparent; color: var(--ink); font: 700 19px/1.05 var(--sans); letter-spacing: -.065em; text-decoration: none; cursor: pointer; pointer-events: auto; }
 .header-wordmark::before { position: absolute; z-index: -1; inset: 0 -.08em; content: ""; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 86% / 0% 58%; transition: background-size .24s ease; }
 .header-wordmark:hover::before, .header-wordmark:focus-visible::before, .header-name-control.is-open .header-wordmark::before { background-size: 100% 58%; }
 .header-product { align-self: baseline; color: #66675f; font: 11px/1 var(--mono); pointer-events: auto; }
@@ -83,14 +83,17 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 }
 .hero-monogram {
   display: grid;
-  width: clamp(24px, 3vw, 40px);
+  width: clamp(42px, 4.4vw, 62px);
   aspect-ratio: 1;
   place-items: center;
-  margin: 0 0 .13em;
-  border: 1px solid #373832;
-  color: #33342f;
-  font-size: clamp(13px, 1.48vw, 20px);
-  font-weight: 600;
+  margin: 0 0 .17em;
+  border: 2px solid #20211e;
+  border-radius: 50%;
+  background: #20211e;
+  box-shadow: 0 0 0 4px rgb(233 223 170 / .7), 0 10px 24px rgb(32 33 30 / .16);
+  color: var(--paper);
+  font-size: clamp(20px, 2.25vw, 30px);
+  font-weight: 900;
   line-height: 1;
 }
 .hero-scene {
@@ -136,10 +139,6 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 .publication-pages:hover .paper-image--front { transform: translateY(-5px) rotate(-1.2deg); box-shadow: 0 24px 48px rgb(44 41 34 / .17); }
 .publication-pages:hover .paper-image--middle { transform: translateY(2px) rotate(2.4deg); }
 .publication-pages:hover .paper-image--back { transform: translateY(5px) rotate(5deg); }
-.research-footer { display: flex; flex-wrap: wrap; gap: 12px 24px; width: min(1320px, 100%); margin: 10px auto 0; padding-bottom: 34px; }
-.research-footer a { color: #74756e; font: 10px var(--mono); }
-.research-footer a:hover { color: var(--ink); }
-
 .hero-lockup.is-locking { filter: blur(var(--lockup-blur, 0px)); }
 body.is-scrolled .hero-scene { transform: translate3d(calc(-50% + var(--scene-x, 0px)), 55px, 0) scale(.96); opacity: 0; }
 
@@ -174,7 +173,7 @@ body.is-scrolled .hero-scene { transform: translate3d(calc(-50% + var(--scene-x,
   .hero { min-height: 700px; min-height: 100svh; }
   .hero-lockup { top: 20%; gap: 8px; }
   .hero-wordmark { font-size: clamp(108px, 35vw, 150px); letter-spacing: -.1em; }
-  .hero-monogram { width: 22px; margin-bottom: .12em; font-size: 12px; }
+  .hero-monogram { width: 32px; margin-bottom: .13em; border-width: 1.5px; box-shadow: 0 0 0 2px rgb(233 223 170 / .7), 0 5px 12px rgb(32 33 30 / .15); font-size: 16px; }
   .hero-scene { width: 112vw; max-width: 500px; bottom: 20%; }
   .hero-scene img { filter: drop-shadow(0 12px 12px rgb(60 47 32 / .12)); }
   .hero-footer { inset: auto 20px 4.4%; align-items: end; gap: 10px; }
@@ -200,7 +199,6 @@ body.is-scrolled .hero-scene { transform: translate3d(calc(-50% + var(--scene-x,
   .paper-image--back { right: 2%; top: 3%; }
   .paper-image--middle { right: 23%; top: 7%; }
   .paper-image--front { left: 3%; top: 11%; }
-  .research-footer { padding-bottom: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
