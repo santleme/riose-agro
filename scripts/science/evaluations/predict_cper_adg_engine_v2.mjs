@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /** Fixed-config CPER row-aligned descriptive engine benchmark for v2. */
 import {readFileSync} from 'node:fs';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 
 const rows = JSON.parse(readFileSync(0, 'utf8'));
 if (!Array.isArray(rows) || rows.length !== 320) throw new Error('Expected exactly 320 CPER benchmark rows');

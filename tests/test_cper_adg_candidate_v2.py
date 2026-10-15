@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts/evaluate_cper_adg_candidate_v2.py"
+SCRIPT = ROOT / "scripts/science/evaluations/evaluate_cper_adg_candidate_v2.py"
 SPEC = importlib.util.spec_from_file_location("cper_adg_candidate_v2", SCRIPT)
 experiment = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
@@ -45,7 +45,7 @@ class CperAdgCandidateV2Tests(unittest.TestCase):
         report_path = experiment.EXP / "evaluation.json"
         oof_path = experiment.EXP / "oof-predictions.csv"
         if not report_path.exists() or not oof_path.exists():
-            self.skipTest("Run scripts/evaluate_cper_adg_candidate_v2.py to produce experiment outputs")
+            self.skipTest("Run scripts/science/evaluations/evaluate_cper_adg_candidate_v2.py to produce experiment outputs")
         report = json.loads(report_path.read_text(encoding="utf-8"))
         self.assertFalse(report["cgrecOutcomesUsed"])
         self.assertEqual(report["evaluation"]["oofRows"], 320)

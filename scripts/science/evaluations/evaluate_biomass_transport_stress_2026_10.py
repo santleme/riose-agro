@@ -11,7 +11,7 @@ import sklearn
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 PROTOCOL = ROOT / "experiments/diagnostics/biomass/preregister-transport-stress-2026-10.json"
 INPUT = ROOT / "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet"
 LEGACY_OOF = ROOT / "experiments/biomass/mendeley-spatial-cv/buffered-spatial-oof-predictions.csv"

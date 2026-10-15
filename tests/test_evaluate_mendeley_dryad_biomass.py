@@ -9,7 +9,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
-    "evaluate_mendeley_dryad_biomass", ROOT / "scripts/evaluate_mendeley_dryad_biomass.py"
+    "evaluate_mendeley_dryad_biomass", ROOT / "scripts/science/evaluations/evaluate_mendeley_dryad_biomass.py"
 )
 MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader
