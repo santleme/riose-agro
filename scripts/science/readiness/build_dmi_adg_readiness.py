@@ -3,7 +3,7 @@
 
 The source registry below records decisions and paths; source rows and raw
 measurements stay in their existing manifests and audit reports. Re-run with
-``python3 scripts/build_dmi_adg_readiness.py`` to refresh the versioned JSON
+``python3 scripts/science/readiness/build_dmi_adg_readiness.py`` to refresh the versioned JSON
 and Markdown artifacts.
 """
 
@@ -16,7 +16,7 @@ from time import perf_counter
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 VERSION = "1.1.0"
 JSON_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.json"
 MARKDOWN_OUTPUT = ROOT / "docs/evidence/dmi-adg-readiness-v1.md"
@@ -901,7 +901,7 @@ def build_readiness_report(
     document = {
         "schemaVersion": "riose.dmi-adg-readiness/v1",
         "version": version,
-        "generator": "scripts/build_dmi_adg_readiness.py",
+        "generator": "scripts/science/readiness/build_dmi_adg_readiness.py",
         "purpose": "Reference-only readiness assessment for DMI/ADG datasets and separate scientific modules.",
         "domainExpertReview": domain_expert_review,
         "sources": records,

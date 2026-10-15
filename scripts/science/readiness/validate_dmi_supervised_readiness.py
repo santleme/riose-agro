@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 REPORT = ROOT / "docs/evidence/dmi-supervised-readiness-2026-10.json"
 ROOT_REAL = ROOT.resolve()
 

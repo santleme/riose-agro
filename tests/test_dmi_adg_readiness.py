@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts/build_dmi_adg_readiness.py"
+SCRIPT = ROOT / "scripts/science/readiness/build_dmi_adg_readiness.py"
 FIXTURE = ROOT / "tests/fixtures/dmi-readiness/mixed-sources.json"
 REPORT = ROOT / "docs/evidence/dmi-adg-readiness-v1.json"
 SPEC = importlib.util.spec_from_file_location("dmi_adg_readiness", SCRIPT)

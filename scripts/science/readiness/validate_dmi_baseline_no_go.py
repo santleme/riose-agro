@@ -10,7 +10,7 @@ from typing import Any
 from validate_dmi_supervised_readiness import validate as validate_readiness
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 REPORT = ROOT / "docs/evidence/dmi-baseline-no-go-2026-10.json"
 
 

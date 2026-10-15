@@ -206,4 +206,4 @@ Estas decisões complementam a matriz DMI/ADG sem misturar populações ou desfe
 
 `sourceCount` = 28; `inputFileCount` = 48; `elapsedSeconds` = 0.025229 s.
 
-Gerado pelo script `scripts/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.
+Gerado pelo script `scripts/science/readiness/build_dmi_adg_readiness.py`; versão do schema: `riose.dmi-adg-readiness/v1`.
