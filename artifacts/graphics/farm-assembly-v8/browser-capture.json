@@ -1,0 +1,85 @@
+{
+  "sceneId": "riose-farm-assembly-v8-proof",
+  "modelId": "riose-terrain-v8-first-proof",
+  "viewport": {
+    "width": 1536,
+    "height": 960
+  },
+  "canvas": {
+    "width": 1536,
+    "height": 960
+  },
+  "stage": {
+    "width": 1536,
+    "height": 960
+  },
+  "renderer": "pixi",
+  "dimensions": {
+    "columns": 16,
+    "rows": 12,
+    "metersPerCell": 5,
+    "elevationUnit": "level",
+    "elevationPxPerLevel": 30
+  },
+  "heightLevels": [
+    0,
+    1
+  ],
+  "materials": [
+    "grass",
+    "ramp",
+    "road",
+    "water"
+  ],
+  "navigableCells": 178,
+  "cliffSegments": 40,
+  "bridgePath": [
+    [
+      9,
+      5
+    ],
+    [
+      10,
+      5
+    ],
+    [
+      11,
+      5
+    ]
+  ],
+  "routeCells": 12,
+  "visibleSprites": 280,
+  "assembly": {
+    "prefabs": 13,
+    "fences": 1,
+    "animals": 5,
+    "pastures": 1
+  },
+  "frameStats": {
+    "meanFps": 57.39201729214027,
+    "p95FrameMs": 16.799999999999727,
+    "medianPaintMs": 0.20000000298023224,
+    "p95PaintMs": 0.6000000014901161,
+    "medianSceneUpdateMs": 0.19999999552965164,
+    "p95SceneUpdateMs": 0.6000000014901161,
+    "medianMotionUpdateMs": 0,
+    "meanLodVisualUpdates": 0,
+    "simulatedAnimals": 0,
+    "visibleAnimals": 0,
+    "culledAnimals": 0,
+    "visibleByLod": {
+      "near": 5,
+      "medium": 0,
+      "far": 0
+    },
+    "accountedAnimals": 0,
+    "animalRenderUnits": 5,
+    "herdClusters": 0,
+    "visibleSprites": 280,
+    "viewportWidth": 1536,
+    "viewportHeight": 960,
+    "cameraZoom": 1.05,
+    "renderer": "pixi"
+  },
+  "errors": []
+}

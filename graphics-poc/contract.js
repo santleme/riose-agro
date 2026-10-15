@@ -191,6 +191,13 @@ export function terrainCells(scene) {
       assetId: tile.assetId,
       zoneId: tile.zoneId ?? null,
       transitionZoneId: null,
+      elevation: tile.elevation ?? 0,
+      material: tile.material ?? null,
+      slope: tile.slope ?? 0,
+      navigable: tile.navigable ?? true,
+      occupancy: tile.occupancy ?? null,
+      connectivity: tile.connectivity ?? [],
+      transition: tile.transition ?? null,
     }));
   }
   for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {

@@ -10,7 +10,7 @@
   <main>
     <section class="toolbar" aria-label="Ferramentas do editor">
       <label>Renderizador<select id="renderer"><option value="canvas">Canvas 2D</option><option value="pixi">PixiJS 8</option></select></label>
-      <label>Cena<select id="scene-picker"><option value="beef">Fazenda de corte</option><option value="dairy">Fazenda leiteira</option><option value="water-stress">Pastagem seca · visual</option></select></label>
+      <label>Cena<select id="scene-picker"><option value="beef">Fazenda de corte</option><option value="dairy">Fazenda leiteira</option><option value="water-stress">Pastagem seca · visual</option><option value="terrain-v8">Prova de terreno V8</option><option value="farm-assembly-v8">Montagem rural V8</option><option value="farm-final-v8">Fazenda completa V8</option></select></label>
       <label>Rebanho<select id="herd-size"><option>100</option><option>1000</option><option>10000</option></select></label>
       <label>Módulo<select id="domain-module"><option value="beef">Corte · demonstrativo</option><option value="dairy">Leite · em desenvolvimento</option></select></label>
       <button id="reset-simulation">Reiniciar com semente fixa</button><button id="run-simulation">▶ Simular</button>
@@ -23,7 +23,7 @@
         <h2>Cena independente do renderer</h2><button id="rotate-selection" disabled>Girar seleção 90°</button><p id="scene-status">Carregando manifestos e assets…</p>
         <dl><div><dt>Cena</dt><dd id="scene-name"></dd></div><div><dt>Seed / cenário</dt><dd id="seed-label"></dd></div><div><dt>Objetos de cena</dt><dd id="prefab-count"></dd></div><div><dt>Simulados</dt><dd id="sim-count"></dd></div><div><dt>Visíveis</dt><dd id="visible-count"></dd></div><div><dt>FPS médio / p95 frame</dt><dd id="fps-label">—</dd></div><div><dt>Atualização / pintura</dt><dd id="cost-label">—</dd></div><div><dt>Carregamento inicial</dt><dd id="load-label">—</dd></div></dl>
         <details class="selected-members"><summary>IDs dos animais selecionados</summary><output id="selected-members">Nenhum animal selecionado.</output></details>
-        <div class="layers"><h3>Camadas</h3><label><input type="checkbox" data-layer="terrain" checked> Terreno e transições</label><label><input type="checkbox" data-layer="infrastructure" checked> Infraestrutura e prefabs</label><label><input type="checkbox" data-layer="livestock" checked> Rebanho</label><label><input type="checkbox" data-layer="overlays" checked> Seleção e zonas</label></div>
+        <div class="layers"><h3>Camadas</h3><label><input type="checkbox" data-layer="terrain" checked> Terreno e transições</label><label><input type="checkbox" data-layer="infrastructure" checked> Infraestrutura e prefabs</label><label><input type="checkbox" data-layer="livestock" checked> Rebanho</label><label><input type="checkbox" data-layer="overlays" checked> Seleção e zonas</label><label><input type="checkbox" data-layer="grid"> Grade e cotas</label></div>
         <p class="asset-note"><strong>Proveniência visual:</strong> o Nelore adulto está aprovado. Os demais assets do Composer mantêm seus status <code>REVIEW</code> ou <code>UNRESOLVED</code> nos manifestos; a prévia não altera sua aprovação.</p>
         <p class="model-note"><strong>Limite científico:</strong> o Worker é o motor demonstrativo de corte existente. O módulo leiteiro e seus assets continuam em desenvolvimento; alterná-lo desativa a simulação e não inventa um modelo de leite.</p>
         <output id="benchmark-output" aria-live="polite"></output>
