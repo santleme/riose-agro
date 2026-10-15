@@ -14,6 +14,13 @@ const stateRequests=[];
 let productWorldRenderer=null;
 let productZoom=1;
 function requestState(message){stateRequests.push(message.type);worker.postMessage(message);}
+function updateComputeStatus(execution){
+  const status=$('compute-status');if(!status)return;
+  const backend=execution?.backend??'cpu';
+  status.textContent=backend==='amd_rocm'?'AMD · '+(execution.device??'ROCm'):
+    backend==='amd-requested'?'AMD requested':backend==='wasm-cpu'?'WASM · CPU':'CPU';
+  status.title=execution?.rocmVersion?'AMD ROCm '+execution.rocmVersion+(execution.device?' · '+execution.device:''):backend;
+}
 function compareBusy(value){requestCompare=value;for(const id of ['compare','experiment','manifest-import','manifest-open','manifest-export','export'])$(id).disabled=value||loadingScenario;$('scenario-select').disabled=value||loadingScenario;$('compare').textContent=productExperience?(loadingScenario?'Loading world…':value?'Comparing…':'Compare 30 days'):(loadingScenario?'Carregando cenário…':value?'Calculando…':'Comparar 30 dias ↗');}
 const currency=(n       )=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
 const number=(n       ,digits=1)=>n.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
@@ -208,6 +215,7 @@ $                  ('supplement').onchange=e=>configure({supplement:Number((e.ta
 $('pasturebtn').onclick=()=>configure({housing:'pasture'});$('barnbtn').onclick=()=>configure({housing:'barn'});
 function setRunning(value        ){running=value;if(productExperience)$('play').dataset.running=String(value);else $('play').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',productExperience?(value?'Pause simulation':'Continue simulation'):(value?'Pausar simulação':'Continuar simulação'));lastTick=performance.now();}
 if(productExperience&&manifestoMotionPreference.matches)setRunning(false);manifestoMotionPreference.addEventListener?.('change',event=>{if(productExperience)setRunning(!event.matches);});$('play').onclick=()=>{if(scientificPreviewActive)return;setRunning(!running);};$('day').onclick=()=>{if(loadingScenario||scientificPreviewActive)return;setRunning(false);requestState({type:'tick',hours:24});};$('reset').onclick=()=>{if(loadingScenario)return;scientificPreviewActive=false;scientificResult=null;renderScientificPanel();$('play').disabled=false;$('day').disabled=false;document.querySelector('.map-location').textContent='HORIZONTE / 24 ANIMAIS';selected=1;positions.clear();requestState({type:'reset'});setRunning(false);};
+if($('compute-backend'))$('compute-backend').addEventListener('change',event=>{setRunning(false);requestState({type:'setBackend',backend:event.target.value});if(event.target.value==='amd')notify('AMD ROCm selected. The next simulation step will fail visibly if the local ROCm service is unavailable.');});
 document.addEventListener('riose:seek-day',(event)=>{if(!productExperience||!state||pending||loadingScenario||scientificPreviewActive)return;const targetHour=6+(Math.max(1,Math.min(30,Number(event.detail?.day)||1))-1)*24;const hours=targetHour-state.hour;if(hours>0){setRunning(false);requestState({type:'tick',hours});pending=true;}});
 document.addEventListener('riose:timeline-horizon',()=>{if(productExperience)setRunning(false);});
 $('scientific-open').onclick=()=>{$('scientific-result').replaceChildren();if(!$('science-paddock-inputs').children.length)$('science-paddock-inputs').innerHTML=Array.from({length:4},(_,i)=>'<label>Piquete '+String.fromCharCode(65+i)+'<input type="number" min="0" step="100" value="16000" data-science-stock="'+i+'"><span><input type="checkbox" checked data-science-water="'+i+'"> Água disponível</span></label>').join('');$('scientific-simulation').showModal();};
@@ -325,6 +333,7 @@ $('manifest-import').onclick=$('manifest-open').onclick=()=>{if(!requestCompare&
 $('manifest-file').onchange=async event=>{const file=event.target.files?.[0];event.target.value='';if(!file||requestCompare||loadingScenario)return;compareBusy(true);try{const manifest=JSON.parse(await file.text());validateComparisonManifest(manifest);setRunning(false);pendingComparison={snapshot:structuredClone(manifest.initialSnapshot),manifest};notify('Manifesto validado. Reproduzindo a comparação salva…');worker.postMessage({type:'replayComparison',manifest});}catch(error){pendingComparison=null;compareBusy(false);notify('Manifesto inválido: '+error.message);}};
 function downloadFile(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 worker.onmessage=e=>{if(e.data.type==='state'){const request=stateRequests.shift(),separated=separateLegacySnapshot(e.data.state);state=separated.state;snapshotViewState=separated.viewState;viewState=createAnimalViewStateDTO(state.animals,snapshotViewState);pending=false;if(request==='load'){loadingScenario=false;compareBusy(requestCompare);}updateUI();}else if(e.data.type==='comparison'){showComparison(e.data.data);}else if(e.data.type==='error'){const request=stateRequests.shift();pending=false;if(request==='load')loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Erro no motor: '+e.data.message);}};
+worker.addEventListener('message',event=>{if(event.data.type==='state'||event.data.type==='view')updateComputeStatus(event.data.execution);});
 worker.onerror=()=>{pending=false;loadingScenario=false;pendingComparison=null;compareBusy(false);setRunning(false);notify('Não foi possível iniciar o motor. Abra o aplicativo por um servidor HTTP.');};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setRunning(false);});
 window.addEventListener('pagehide',saveScenarioData);

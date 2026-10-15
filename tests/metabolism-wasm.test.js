@@ -353,12 +353,14 @@ test('Worker runs the JavaScript default and falls back for unavailable or inval
   const invalidAbi=await run('wasm',fetchWasm,async()=>({instance:{exports:{memory:new WebAssembly.Memory({initial:1}),riose_abi_version:()=>2,riose_alloc_f64:()=>1,riose_free_f64:()=>{},riose_update_metabolism_batch:()=>0}}}));
   assert.equal(javascript.snapshot.engineImplementation,'javascript-fallback');
   assert.equal(wasm.snapshot.engineImplementation,'riose-core-wasm/0.1.0');
+  assert.equal(javascript.snapshot.execution.backend,'cpu');
+  assert.equal(wasm.snapshot.execution.backend,'wasm-cpu');
   assert.equal(unavailableWasm.snapshot.engineImplementation,'javascript-fallback');
   for(const failed of [compilationFailure,invalidExports,invalidAbi])assert.equal(failed.snapshot.engineImplementation,'javascript-fallback');
   assert.deepEqual(wasm.snapshot.state,javascript.snapshot.state);
   assert.deepEqual(unavailableWasm.snapshot.state,javascript.snapshot.state);
   for(const failed of [compilationFailure,invalidExports,invalidAbi])assert.deepEqual(failed.snapshot.state,javascript.snapshot.state);
-  const withoutImplementation=views=>views.map(({engineImplementation,...view})=>view);
+  const withoutImplementation=views=>views.map(({engineImplementation,execution,...view})=>view);
   assert.deepEqual(withoutImplementation(wasm.views),withoutImplementation(javascript.views));
   assert.deepEqual(withoutImplementation(unavailableWasm.views),withoutImplementation(javascript.views));
   assert.equal(javascript.views.at(-1).animalValues.length,40*4);

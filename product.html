@@ -38,6 +38,8 @@
     <div class="timeline-dock" aria-label="Simulation time controls">
       <button id="play" class="timeline-play" data-running="true" type="button" aria-label="Pause simulation"><span class="pause-icon" aria-hidden="true"><i></i><i></i></span><span class="play-icon" aria-hidden="true"></span></button>
       <label class="timeline-slider" for="product-time"><span id="timeline-start">Day 01</span><input id="product-time" type="range" min="1" max="30" step="1" value="1" aria-label="Move to a future simulation day"><span id="timeline-end">Day 30</span></label>
+      <label class="compute-control" for="compute-backend"><span class="visually-hidden">Metabolism compute backend</span><select id="compute-backend" aria-label="Metabolism compute backend"><option value="cpu">CPU</option><option value="amd">AMD · ROCm</option></select></label>
+      <span id="compute-status" role="status" aria-live="polite">CPU</span>
       <label class="speed-control" for="speed"><span class="visually-hidden">Simulation speed</span><select id="speed" aria-label="Simulation speed"><option value="1">1×</option><option value="4">4×</option><option value="16">16×</option></select></label>
     </div>
   </section>
