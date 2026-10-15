@@ -122,6 +122,8 @@ try {
   assert.match(await page.locator('#br-corte-table-body tr').first().textContent(), /6\.726/);
   assert.match(await page.locator('#br-corte-table-body tr').first().textContent(), /BRL 12000\.00/);
   assert.match(await page.locator('#br-corte-provenance').textContent(), /does not forecast gain/);
+  assert.match(await page.locator('#br-corte-provenance').textContent(), /published-equation-with-external-validation; no Riose-specific calibration/);
+  assert.doesNotMatch(await page.locator('#br-corte-provenance').textContent(), /registry evidence status demonstrative/);
   await page.screenshot({path: 'docs/evidence/product-v3-scenario-lab-results.png', fullPage: true});
   const [brCorteDownload] = await Promise.all([
     page.waitForEvent('download'),
@@ -162,6 +164,8 @@ try {
   await mobile.goto('http://127.0.0.1:8000/scenario-lab.html', {waitUntil: 'networkidle'});
   const dimensions = await mobile.evaluate(() => ({scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth}));
   assert.ok(dimensions.scroll <= dimensions.client, `mobile horizontal overflow: ${JSON.stringify(dimensions)}`);
+  const navLinkHeights = await mobile.locator('.topbar nav a').evaluateAll(links => links.map(link => Math.round(link.getBoundingClientRect().height)));
+  assert.ok(navLinkHeights.every(height => height <= 28), `mobile navigation links should stay on one line: ${JSON.stringify(navLinkHeights)}`);
   await mkdir('docs/evidence', {recursive: true});
   console.log(JSON.stringify({scenarioCount: 3, animalCount: 8, selectedDay: 1, cancellation: 'passed', mobile: dimensions, consoleErrors: errors}));
 } finally {
