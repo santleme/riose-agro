@@ -74,7 +74,8 @@
     "analyze:usda-cper-association": "python3 scripts/analyze_usda_cper_association.py",
     "analyze:usda-grasscast-association": "python3 scripts/analyze_usda_grasscast_association.py",
     "audit:perea-rangeland-behavior": "python3 scripts/audit_perea_rangeland_behavior.py",
-    "validate:scientific-data-registry": "node scripts/validate_scientific_data_registry.js"
+    "validate:scientific-data-registry": "node scripts/validate_scientific_data_registry.js",
+    "build:hosted-demo": "node scripts/package-hosted-demo.mjs"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
