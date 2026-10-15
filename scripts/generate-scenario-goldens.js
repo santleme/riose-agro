@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {FarmEngine, metrics} from '../src/client/engine.js';
 import {SCENARIO_CONTRACT_VERSION, SCENARIO_ENGINE_VERSION, createScenarioContract, replayScenarioContract} from '../src/client/scenario-contract.js';
 import {SCENARIO_PRESET_CATALOG_VERSION, getScenarioPreset, runScenarioPreset} from '../src/client/scenario-presets.js';
-import {executeScenario} from './run-scenarios.js';
+import {executeScenario} from './experiments/run-scenarios.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const goldenDirectory = resolve(root, 'tests/scenario-goldens');

@@ -50,7 +50,7 @@ const scenarios = Array.from({length: recordCount}, (_, index) => {
 
 const engineSourceFiles = ['engine.js', 'metabolism-wasm.js', 'environment-model.js', 'feeding-model.js'];
 const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
-  name, await readFile(new URL(`../src/client/${name}`, import.meta.url), 'utf8'),
+  name, await readFile(new URL(`../../src/client/${name}`, import.meta.url), 'utf8'),
 ])));
 const engineBuildDigest = sha256Digest(engineSources);
 const experimentRuns = scenarios.map(({scenario, result}) => {

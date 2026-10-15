@@ -4,7 +4,7 @@ import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir, availableParallelism} from 'node:os';
 import {join} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {runScenarioDirectoryResumable} from './run-scenarios.js';
+import {runScenarioDirectoryResumable} from './experiments/run-scenarios.js';
 import {ScenarioWorkerPool} from './scenario-worker-pool.js';
 import {benchmarkReport, measurement, summarizeSamples} from './benchmark-report.mjs';
 

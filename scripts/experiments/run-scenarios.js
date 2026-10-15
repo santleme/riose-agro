@@ -172,7 +172,7 @@ export async function runScenarioDirectoryResumable(scenarioDirectory, resultDir
   await mkdir(resultDirectory, {recursive: true});
   const engineSourceFiles = ENGINE_SOURCE_FILES;
   const engineSources = Object.fromEntries(await Promise.all(engineSourceFiles.map(async name => [
-    name, await readFile(fileURLToPath(new URL(`../src/client/${name}`, import.meta.url)), 'utf8'),
+    name, await readFile(fileURLToPath(new URL(`../../src/client/${name}`, import.meta.url)), 'utf8'),
   ])));
   const engineDigest = sha256Digest(engineSources);
   const plans = [];
