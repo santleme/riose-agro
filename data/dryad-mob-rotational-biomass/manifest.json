@@ -54,7 +54,7 @@
     "outcomeGrainAfterAggregation": "treatment x replicate/paddock x study year x Julian day"
   },
   "processing": {
-    "pipeline": "scripts/process_dryad_mob_rotational_biomass.py",
+    "pipeline": "scripts/science/data_pipelines/process_dryad_mob_rotational_biomass.py",
     "rowLevelParquet": "data/dryad-mob-rotational-biomass/processed/dryad-per-harvest-biomass-samples-v1.parquet",
     "rowLevelSha256": "39791095abb52e71a05f2474ffb0f5bac5651acd5050c6358da186a67e2d1d8a",
     "rowLevelRows": 623,

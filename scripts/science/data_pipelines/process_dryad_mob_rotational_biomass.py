@@ -20,7 +20,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 SOURCE = ROOT / "data/raw/dryad-79cnp5ht4/version-6.zip"
 OUT_DIR = ROOT / "data/dryad-mob-rotational-biomass/processed"
 SAMPLE_PARQUET = OUT_DIR / "dryad-per-harvest-biomass-samples-v1.parquet"

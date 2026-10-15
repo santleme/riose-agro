@@ -23,7 +23,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 SOURCE = ROOT / "data/raw/zenodo-15600573/WP5_T5.7_IoT sensor data_v1_EV ILVO_dataset.zip"
 OUT_DIR = ROOT / "data/xgain-cattle-behavior/processed"
 OUT_PARQUET = OUT_DIR / "xgain-hourly-behavior-counts-v1.parquet"

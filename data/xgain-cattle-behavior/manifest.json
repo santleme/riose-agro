@@ -74,7 +74,7 @@
   "processed": {
     "parquet": "data/xgain-cattle-behavior/processed/xgain-hourly-behavior-counts-v1.parquet",
     "sha256": "27884dcaba0e074b4c33fc500ac3035f45189475eb3b2684ee89d2e25c6a49b3",
-    "pipeline": "scripts/process_xgain_hourly_behavior.py",
+    "pipeline": "scripts/science/data_pipelines/process_xgain_hourly_behavior.py",
     "qualityReport": "docs/evidence/xgain-hourly-behavior-quality-2026-10.json"
   }
 }

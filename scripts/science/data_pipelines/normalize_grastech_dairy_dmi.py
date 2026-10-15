@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = ROOT / "data" / "grastech-dairy-grazing-dmi"
 MANIFEST_PATH = DATA_DIR / "manifest.json"
 OUTPUT_PATH = DATA_DIR / "individual-dmi-observations.tsv"

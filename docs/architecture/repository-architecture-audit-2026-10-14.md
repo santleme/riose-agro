@@ -142,3 +142,9 @@ Criar um inventário rastreável de **editor/CLI → formato de cena → módulo
 ## Limites desta auditoria
 
 Esta revisão cobre a árvore limpa de `main@27c5d29`, leitura de documentação/manifests/código e análise estática de imports e hashes visuais. Não executou testes, benchmarks, app/browser, workflows de CI ou todas as ferramentas de pesquisa. O clone original disponível na máquina estava três commits atrasado e tinha alterações locais; foi deixado intacto. O checkout desta auditoria foi criado limpo a partir do `main` remoto.
+
+## Progresso da reorganização — 15/10/2026
+
+Após essa fotografia inicial, os PRs #157–177 foram integrados para separar cenas e renderização do Product, fronteiras do Scenario Editor, tooling de Graphics/experimentos/benchmarks e auditorias/avaliações científicas. A documentação corrente está em [`repository-layout.md`](repository-layout.md) e [`tooling-layout.md`](tooling-layout.md); este relatório preserva a auditoria inicial como registro histórico.
+
+O PR #177 agrupou avaliadores de coortes e modelos em `scripts/science/evaluations/`. O próximo grupo em andamento, ainda sem PR, organiza aquisição e processamento de dados públicos em `scripts/science/data_pipelines/`. As alterações atualizam comandos, imports, manifestos e documentação; scripts com caminhos congelados por baselines continuam nas localizações documentadas.

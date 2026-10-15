@@ -110,7 +110,7 @@ Open `/assets/scenario-editor/index.html` after running `npm start`. The Compose
 - `grasscast-data.html`, `src/client/grasscast-data.js`, `src/client/grasscast-data.css` — separate historical CPER explorer for group-level ADG/ANPP pairs and independent NDVI, without engine calibration or causal claims
 - `rothamsted-data.html`, `src/client/rothamsted-data.js`, `src/client/rothamsted-data.css` — separate read-only explorer for the public Rothamsted 2018–2025 young dairy-cross-beef cattle weight and plot-level herbage-mass cohort (CC BY 4.0); it does not validate the simulation engine
 - `src/client/observed-data-model.js` — animal-weighted weekly summaries for the observed-data explorer
-- `scripts/build_observed_calf_dataset.py` — standard-library importer that fetches and checksum-verifies the source XLSX files
+- `scripts/science/data_pipelines/build_observed_calf_dataset.py` — standard-library importer that fetches and checksum-verifies the source XLSX files
 - `data/observed-calves-zenodo-7251167.json` — normalized observations from the CC0 Zenodo record; not model output
 - `tests/observed-data.test.js` — source snapshot, missingness, and animal-level summary checks
 - `docs/engenharia-reversa.md` — source evidence and REA availability notes

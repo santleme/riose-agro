@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 RECORD_ID = "4064802"
 API_URL = f"https://zenodo.org/api/records/{RECORD_ID}"
 RAW_DIR = ROOT / "data/raw/zenodo-4064802"
