@@ -18,4 +18,5 @@ Keep renderer-facing adapters responsible for converting this complete Product s
 - Product scene data is reviewable separately from projection, hit testing and validation algorithms.
 - Current Canvas/Pixi/editor consumers keep using the same compatibility shape and shared source data.
 - Interoperability with Graphics Lab remains an explicit adapter task; the two renderers are not unified by this change.
+- CI runs the Product scene validator, so schema, spatial and asset checks gate changes to the authored layout.
 - Schema changes must increment `schemaVersion` and preserve the prior reader or provide an adapter when a breaking field change is required.
