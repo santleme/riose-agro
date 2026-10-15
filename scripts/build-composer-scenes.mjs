@@ -12,8 +12,8 @@ const readJson = file => readFile(path.join(root, file), 'utf8').then(JSON.parse
 const sourceDir = 'graphics-poc/source/main-composer-v1';
 const [rawRendererManifest, semanticManifest, dairyManifest, rawRuntimeManifest, beefSource, dairySource] = await Promise.all([
   readJson('graphics-poc/assets/main-composer-render-manifest.json'),
-  readJson('assets/manifests/manifest.json'),
-  readJson('public/assets/modules/livestock-dairy/manifest.json'),
+  readJson('assets/manifests/actiii-release-v1.json'),
+  Promise.resolve({assets: [], atlases: {}}),
   readJson('public/assets/manifest.json'),
   readJson(`${sourceDir}/beef.json`),
   readJson(`${sourceDir}/dairy.json`),

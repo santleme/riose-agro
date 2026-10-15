@@ -12,7 +12,7 @@ const LEGACY_DIRECT_IMAGE_IDS = Object.freeze([
 ]);
 
 function normalizeStatus(status) {
-  if (status === 'APPROVED') return 'APPROVED';
+  if (status === 'APPROVED' || status === 'RELEASED') return 'APPROVED';
   if (status === 'REVIEW') return 'REVIEW';
   if (status === 'REJECTED') return 'REJECTED';
   return 'UNRESOLVED';

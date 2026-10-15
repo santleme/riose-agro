@@ -37,448 +37,448 @@
       "assetId": "building-farmhouse-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "building.farmhouse.imagegen.v1",
-      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-farmhouse-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-farmhouse-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "building-shed-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "building.shed.imagegen.v1",
-      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-shed-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-shed-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "building-workshop-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "building.workshop.imagegen.v1",
-      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.building-workshop-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/building-workshop-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "corral-wood-standard-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "APPROVED",
-      "sourceSemanticId": "corral.wood.standard.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.corral-wood-standard-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/corral-wood-standard-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-barn",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.barn.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-barn.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-barn.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-girolando-cow",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/animals/girolando-cow-imagegen-original-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-girolando-cow.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-girolando-cow.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-heifer-calf",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-calf-imagegen-original-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-heifer-calf.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-heifer-calf.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-holstein-cow",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-milk-chilling-tank",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.milk.chilling.tank.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-milk-chilling-tank.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-milk-chilling-tank.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-milking-parlor",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.milking.parlor.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-milking-parlor.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-milking-parlor.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "dairy-waiting-pen",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "dairy.waiting.pen.imagegen.v1",
-      "sourceFile": "assets/modules/livestock-dairy/source/infrastructure/dairy-infrastructure-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.dairy-waiting-pen.v1",
+      "sourceFile": "assets/synthetic/runtime/dairy-waiting-pen.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "feed-salt-roofed-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "feed.salt.roofed.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.feed-salt-roofed-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/feed-salt-roofed-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "feed-trough-hay-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "feed.trough.hay.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.feed-trough-hay-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/feed-trough-hay-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "fence-gate-wood-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "fence.gate.wood.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.fence-gate-wood-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/fence-gate-wood-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "fence-wire-wood-post-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "APPROVED",
-      "sourceSemanticId": "fence.wire.wood-post.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.fence-wire-wood-post-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/fence-wire-wood-post-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "grass-light",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.grass-light.v1",
+      "sourceFile": "assets/synthetic/runtime/grass-light.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "grass-mid",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.grass-mid.v1",
+      "sourceFile": "assets/synthetic/runtime/grass-mid.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "handling-chute-cattle-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "handling.chute.cattle.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.handling-chute-cattle-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/handling-chute-cattle-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "road-straight",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.road-straight.v1",
+      "sourceFile": "assets/synthetic/runtime/road-straight.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "road-turn",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.road-turn.v1",
+      "sourceFile": "assets/synthetic/runtime/road-turn.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "shade-tree",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.shade-tree.v1",
+      "sourceFile": "assets/synthetic/runtime/shade-tree.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "shrub",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.shrub.v1",
+      "sourceFile": "assets/synthetic/runtime/shrub.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "soil-dry",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "UNRESOLVED",
-      "sourceStatus": "UNRESOLVED",
-      "sourceSemanticId": null,
-      "sourceFile": null,
-      "sourceManifest": "public/assets/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.soil-dry.v1",
+      "sourceFile": "assets/synthetic/runtime/soil-dry.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "unknown",
-        "notes": "No source rights record resolves for this renderer asset."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "technology-gateway-antenna-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "technology.gateway.antenna.imagegen.v1",
-      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-gateway-antenna-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-gateway-antenna-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "technology-monitor-station-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "technology.monitor.station.imagegen.v1",
-      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-monitor-station-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-monitor-station-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "technology-scale-electronic-full-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "technology.scale.electronic.full.imagegen.v1",
-      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-scale-electronic-full-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-scale-electronic-full-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "technology-traceability-system-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "technology.traceability.system.imagegen.v1",
-      "sourceFile": "assets/source/technology/riose-traceability-tech-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.technology-traceability-system-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/technology-traceability-system-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "vegetation-tree-shade-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "vegetation.tree.shade.imagegen.v1",
-      "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vegetation-tree-shade-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vegetation-tree-shade-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "vehicle-pickup-rural-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "vehicle.pickup.rural.imagegen.v1",
-      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vehicle-pickup-rural-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vehicle-pickup-rural-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "vehicle-tractor-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "vehicle.tractor.imagegen.v1",
-      "sourceFile": "assets/source/infrastructure/riose-farm-infrastructure-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.vehicle-tractor-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/vehicle-tractor-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "water-pond-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "water.pond.imagegen.v1",
-      "sourceFile": "assets/source/environment/riose-environment-atlas-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.water-pond-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/water-pond-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     },
     {
       "assetId": "water-trough-round-imagegen-v1",
       "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
       "manifestVersion": "main-composer-v1",
-      "reviewStatus": "REVIEW",
-      "sourceStatus": "REVIEW",
-      "sourceSemanticId": "water.trough.round.imagegen.v1",
-      "sourceFile": "assets/source/handling/livestock-handling-props-sheet-imagegen-v1.png",
-      "sourceManifest": "/assets/manifests/manifest.json",
+      "reviewStatus": "RELEASED",
+      "sourceStatus": "RELEASED",
+      "sourceSemanticId": "riose.synthetic.runtime.water-trough-round-imagegen-v1.v1",
+      "sourceFile": "assets/synthetic/runtime/water-trough-round-imagegen-v1.png",
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
       "rights": {
-        "licenseState": "project-generated-review",
-        "notes": "Generated with built-in OpenAI ImageGen for Riose internal asset development; preserve raw source; art is pending review."
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
       }
     }
   ],
@@ -495,14 +495,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -525,14 +525,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -555,14 +555,14 @@
         "assetId": "dairy-girolando-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/girolando-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-girolando-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-girolando-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -585,14 +585,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -615,14 +615,14 @@
         "assetId": "dairy-girolando-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.girolando.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/girolando-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-girolando-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-girolando-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -645,14 +645,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -675,14 +675,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -705,14 +705,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -735,14 +735,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -765,14 +765,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -795,14 +795,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -825,14 +825,14 @@
         "assetId": "dairy-holstein-cow",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.holstein.cow.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/holstein-cow-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -855,14 +855,14 @@
         "assetId": "dairy-heifer-calf",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-calf-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-heifer-calf.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-heifer-calf.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {
@@ -885,14 +885,14 @@
         "assetId": "dairy-heifer-calf",
         "manifestUri": "/graphics-poc/assets/main-composer-render-manifest.json",
         "manifestVersion": "main-composer-v1",
-        "reviewStatus": "REVIEW",
-        "sourceStatus": "REVIEW",
-        "sourceSemanticId": "dairy.heifer.calf.imagegen.v1",
-        "sourceFile": "assets/modules/livestock-dairy/source/animals/dairy-heifer-calf-imagegen-original-v1.png",
-        "sourceManifest": "/assets/modules/livestock-dairy/manifest.json",
+        "reviewStatus": "RELEASED",
+        "sourceStatus": "RELEASED",
+        "sourceSemanticId": "riose.synthetic.runtime.dairy-heifer-calf.v1",
+        "sourceFile": "assets/synthetic/runtime/dairy-heifer-calf.png",
+        "sourceManifest": "assets/manifests/actiii-release-v1.json",
         "rights": {
-          "licenseState": "unknown",
-          "notes": "No source rights record resolves for this renderer asset."
+          "licenseState": "documented",
+          "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
         }
       },
       "state": {

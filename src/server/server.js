@@ -66,15 +66,8 @@ const CLIENT_FILES = new Set(readdirSync(resolve(ROOT, 'src/client')));
 for (const file of [
   'scenario-storage.js', 'metabolism-wasm.js', 'wasm/riose_core.wasm', 'schemas/visual-scene.schema.json',
   'graphics-poc/index.html', 'graphics-poc/style.css', 'graphics-poc/dist/app.js', 'graphics-poc/scene.json', 'graphics-poc/scenes/dairy.json',
-  'graphics-poc/asset-sources.json', 'graphics-poc/benchmark-approved-scene.json', 'graphics-poc/assets/farm-starter-atlas.png', 'graphics-poc/assets/nelore-adult-idle-v1.png',
-  'graphics-poc/assets/handling-review-atlas-v1.png', 'graphics-poc/assets/dairy/dairy-holstein-cow.png',
-  'graphics-poc/assets/dairy/dairy-girolando-cow.png', 'graphics-poc/assets/dairy/dairy-heifer.png',
-  'graphics-poc/assets/dairy/dairy-heifer-calf.png', 'graphics-poc/assets/dairy/dairy-barn.png',
-  'graphics-poc/assets/dairy/dairy-milking-parlor.png', 'graphics-poc/assets/dairy/dairy-milk-chilling-tank.png',
-  'graphics-poc/assets/dairy/dairy-waiting-pen.png', 'graphics-poc/assets/dairy/dairy-activity-collar.png',
-  'graphics-poc/assets/main-composer-render-manifest.json', 'graphics-poc/assets/main-composer/environment-review-atlas-v1.png',
-  'graphics-poc/assets/main-composer/infrastructure-review-atlas-v1.png', 'graphics-poc/assets/main-composer/technology-review-atlas-v1.png',
-  'graphics-poc/assets/main-composer/animals-review-atlas-v1.png', 'graphics-poc/assets/main-composer/dairy-assets-atlas-v1.png',
+  'graphics-poc/asset-sources.json', 'graphics-poc/benchmark-approved-scene.json',
+  'graphics-poc/assets/main-composer-render-manifest.json',
 ]) PUBLIC_FILES.add(file);
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
@@ -288,6 +281,9 @@ async function serveStatic(pathname, response, env = process.env) {
   try { decoded = decodeURIComponent(pathname); } catch { return sendJson(response, 400, {error: 'invalid_path'}); }
   const relative = decoded === '/' ? 'home.html' : decoded.replace(/^\/+/, '');
   if (relative.startsWith('tools/') && env.NODE_ENV === 'production') return sendJson(response, 404, {error: 'not_found'});
+  const candidateAsset = (relative.startsWith('assets/atlas/') && relative !== 'assets/atlas/synthetic-release-atlas-v1.png')
+    || relative.startsWith('assets/modules/livestock-dairy/');
+  if (candidateAsset) return sendJson(response, 404, {error: 'not_found'});
   const isProjectAsset = relative.startsWith('assets/') && !PUBLIC_FILES.has(relative) && !relative.split('/').some(part => part === '.' || part === '..');
   const isClientFile = relative.startsWith('src/client/') && CLIENT_FILES.has(relative.slice('src/client/'.length));
   const isLegacyClientFile = CLIENT_FILES.has(relative) && PUBLIC_FILES.has(relative);

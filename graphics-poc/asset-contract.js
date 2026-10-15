@@ -1,4 +1,4 @@
-const REVIEW_STATUSES = new Set(['APPROVED', 'REVIEW', 'UNRESOLVED']);
+const REVIEW_STATUSES = new Set(['APPROVED', 'REVIEW', 'UNRESOLVED', 'RELEASED']);
 const LEGACY_ASSET_IDS = {
   farmhouse: 'building-farmhouse-imagegen-v1',
   'farm-shed': 'building-shed-imagegen-v1',

@@ -20,7 +20,7 @@ export function enrichRuntimeAssetManifest(runtimeManifest, {semanticManifest, d
         : 'UNRESOLVED';
       const sourceFile = source?.source?.sourceFile ?? source?.sourceFile ?? renderer?.sourceFile ?? null;
       const sourceManifest = source
-        ? (dairyAssets.includes(source) ? '/assets/modules/livestock-dairy/manifest.json' : '/assets/manifests/manifest.json')
+        ? (source.sourceManifest ?? (dairyAssets.includes(source) ? '/assets/modules/livestock-dairy/manifest.json' : '/assets/manifests/manifest.json'))
         : null;
       return {
         ...asset,
@@ -52,7 +52,7 @@ export function enrichRendererManifest(rendererManifest, {semanticManifest, dair
         sourceStatus: source?.status ?? asset.reviewStatus ?? 'UNRESOLVED',
         sourceFile: source?.source?.sourceFile ?? source?.sourceFile ?? asset.sourceFile ?? null,
         sourceManifest: source
-          ? ((dairyManifest?.assets ?? []).includes(source) ? '/assets/modules/livestock-dairy/manifest.json' : '/assets/manifests/manifest.json')
+          ? (source.sourceManifest ?? ((dairyManifest?.assets ?? []).includes(source) ? '/assets/modules/livestock-dairy/manifest.json' : '/assets/manifests/manifest.json'))
           : asset.manifestSource ?? null,
         rights: source?.rights ?? {licenseState: 'unknown', notes: 'No source rights record resolves for this renderer asset.'},
         sourceReview: source?.review ?? asset.sourceReview ?? null,

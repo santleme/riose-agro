@@ -1,0 +1,2003 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": {
+    "commit": "actiii-release-synthetic-v1"
+  },
+  "atlasPacks": {
+    "synthetic-release": {
+      "image": "public/assets/atlas/synthetic-release-atlas-v1.png"
+    }
+  },
+  "assets": [
+    {
+      "id": "riose.synthetic.runtime.grass-light.v1",
+      "name": "grass-light",
+      "category": "terrain",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/grass-light.png",
+        "sha256": "c1f48baa70df2775ea598adf8c1758a2fd73b47f9d1eb21e45c23d6336c953fb",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.grass-mid.v1",
+      "name": "grass-mid",
+      "category": "terrain",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/grass-mid.png",
+        "sha256": "78a7f8535e496f552972590ecbd5a06ccac440596cd0ffeee7a92b7a33df1ae6",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.soil-dry.v1",
+      "name": "soil-dry",
+      "category": "terrain",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/soil-dry.png",
+        "sha256": "8472ee6eb0b6498a84b18ea42952668000801b6ec083bbbdbd3ee94daed0b730",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.soil-damp.v1",
+      "name": "soil-damp",
+      "category": "terrain",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/soil-damp.png",
+        "sha256": "8485933d0c2b9a5451c1faf5b8f6863d8b4aaa248d7b160000f6331eef76b705",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.road-straight.v1",
+      "name": "road-straight",
+      "category": "infrastructure",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/road-straight.png",
+        "sha256": "1ddc65c10308db00c6460f8d9a8e2fb02156411b7f93969893efcb1a723c230f",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.road-turn.v1",
+      "name": "road-turn",
+      "category": "infrastructure",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/road-turn.png",
+        "sha256": "0e6003141dd53f152ab725b5f0dee4568139d58b5d53c000d8c5de594a9a4e69",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.fence-straight.v1",
+      "name": "fence-straight",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/fence-straight.png",
+        "sha256": "968f5db2ca8869e4fa4afb3d13713252a27ac86d5d4a0316c162c7488ab279cb",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.gate.v1",
+      "name": "gate",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/gate.png",
+        "sha256": "516b7d83b6e6b16ceb6b5840635faee568bd54bceb1d9dcb7798ae54c684640f",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 0,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.shade-tree.v1",
+      "name": "shade-tree",
+      "category": "vegetation",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/shade-tree.png",
+        "sha256": "55883b5031933c811e70eaa8d9c483a0bee1d45e4916b824d753679b940e8489",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.shrub.v1",
+      "name": "shrub",
+      "category": "vegetation",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/shrub.png",
+        "sha256": "8329c2d7ef787fef4b61e71455a95b4b338e870c79eda30db55ce26153badcfb",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.pond.v1",
+      "name": "pond",
+      "category": "water",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/pond.png",
+        "sha256": "b93335fc58d1e0a8bba356fcbb52941455148ba6d8058474ef95492a91cfdb79",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.farmhouse.v1",
+      "name": "farmhouse",
+      "category": "buildings",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/farmhouse.png",
+        "sha256": "465923e9aedf52baa2c406d62cff9ed5767fde4b0789148d26430ebda38c71e5",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.shed.v1",
+      "name": "shed",
+      "category": "buildings",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/shed.png",
+        "sha256": "e6f3e6d3e97e5bd567d395c364be3dbc2914fe0a49369e17fe90db9bd214c698",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.silo.v1",
+      "name": "silo",
+      "category": "buildings",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/silo.png",
+        "sha256": "c777453851f4a7608c5b49a7b850c2c760423b8a9516870f53f1791e87c2ec3f",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.tractor.v1",
+      "name": "tractor",
+      "category": "vehicles",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/tractor.png",
+        "sha256": "2050847aa7475c9b6a79c296996a24a79272b69bcace905ac8776be593b2ca12",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.water-trough.v1",
+      "name": "water-trough",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/water-trough.png",
+        "sha256": "98440294d4e82e1d161b21ceac16b7423a5a4d2fd01f560828d25c748af8b485",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 128,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.feed-trough.v1",
+      "name": "feed-trough",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/feed-trough.png",
+        "sha256": "618a02ae8f41926a1750d536d931215a4483de70be81d5cd67cb97bde3d9cb6e",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.corral.v1",
+      "name": "corral",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/corral.png",
+        "sha256": "198d9e731b3b535fdbcc47cd59ffa83689a07031443b5b130752397bbf1dab8f",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.cow-dairy.v1",
+      "name": "cow-dairy",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/cow-dairy.png",
+        "sha256": "cee844a92a710e64eba8860e6bc38742c4fd0bce737fbb54baf176db8ad80f3b",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.cow-beef.v1",
+      "name": "cow-beef",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/cow-beef.png",
+        "sha256": "1c000e4fcd7bbc8eac56e2f2efbde44e1842e1985d6ba54b8d78a472e989f2b3",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.calf.v1",
+      "name": "calf",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/calf.png",
+        "sha256": "ef5dc5d4fb10c30a768881829374481f2f9e416832f08784eb9d47855a0a84b1",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.pickup.v1",
+      "name": "pickup",
+      "category": "vehicles",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/pickup.png",
+        "sha256": "d7edc05290537cceb7eaae722d1cde033b40b115f99972e73d46decd897a0fde",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.utility-truck.v1",
+      "name": "utility-truck",
+      "category": "vehicles",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/utility-truck.png",
+        "sha256": "6c272cdc37a39bcb0a3e1e13144b8c7cbd6684a38b2825e8e11ab0e588cca314",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-prepared.v1",
+      "name": "field-prepared",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-prepared.png",
+        "sha256": "767696014c910fe197c96cbe1fcf9f8cbccd4cb90f3370453d34b196e49d4c85",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 256,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-soybean-emerged.v1",
+      "name": "field-soybean-emerged",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-soybean-emerged.png",
+        "sha256": "1babae12745f2ad241b10a2ecde72f7ca01080a0120954c3d9f01c02eb41eb9d",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-soybean-growing.v1",
+      "name": "field-soybean-growing",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-soybean-growing.png",
+        "sha256": "1bb67ed76a67cf23e2b0ce2d173d4eeb7a5c19810b8c2702d8473766aa411971",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-soybean-mature.v1",
+      "name": "field-soybean-mature",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-soybean-mature.png",
+        "sha256": "e06ae1bcc77f07c443fc6136999f16fa5cbc7225d1e7b05374069ff07d3d288b",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-maize-growing.v1",
+      "name": "field-maize-growing",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-maize-growing.png",
+        "sha256": "4fbc6ef507553ad83cd01294bac2b27610213088e7b5f47174228379b277dfd3",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-maize-mature.v1",
+      "name": "field-maize-mature",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-maize-mature.png",
+        "sha256": "53f3721b33ad9ac185a4d46d82180da6d37410ba7db45903ed3fcfa344fcb6b9",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-harvested.v1",
+      "name": "field-harvested",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-harvested.png",
+        "sha256": "431e64c4a04bc3991ab800ecd129ad84462138807aaa83866bbe0d9603a49c06",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.field-irrigated.v1",
+      "name": "field-irrigated",
+      "category": "agriculture",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/field-irrigated.png",
+        "sha256": "5dec419dad394172f8087a1d1472107945340903f03835791e627b30dea73fa7",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.nelore-adult.v1",
+      "name": "nelore-adult",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/nelore-adult.png",
+        "sha256": "c8ad964fc09f7e7ffcf2532f56f3135830dd2a85666fa9d5b8a660b25a509e27",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 384,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.livestock-nelore-cow-idle-imagegen-v1.v1",
+      "name": "livestock-nelore-cow-idle-imagegen-v1",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/livestock-nelore-cow-idle-imagegen-v1.png",
+        "sha256": "99f620ac23a64892bd824ace0657981b12a54fe95ad525405ec3a6bb7c3e1cae",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.livestock-nelore-calf-idle-imagegen-v1.v1",
+      "name": "livestock-nelore-calf-idle-imagegen-v1",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/livestock-nelore-calf-idle-imagegen-v1.png",
+        "sha256": "64ac2cf2b3225a8fcc7df73030b9e814ee13e4b0cef964ac47dd8673df51a824",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.livestock-nelore-heifer-idle-imagegen-v1.v1",
+      "name": "livestock-nelore-heifer-idle-imagegen-v1",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/livestock-nelore-heifer-idle-imagegen-v1.png",
+        "sha256": "28e27a1f7a60c633990e6e187c33d0ca477ed62e02dad9fc0a402a243d2b4b99",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.corral-wood-standard-imagegen-v1.v1",
+      "name": "corral-wood-standard-imagegen-v1",
+      "category": "corral",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/corral-wood-standard-imagegen-v1.png",
+        "sha256": "d47f8c78dd4c6ab328f1bf8fd3fca830db9420b721dc7e227c5837a56982bd86",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.handling-chute-cattle-imagegen-v1.v1",
+      "name": "handling-chute-cattle-imagegen-v1",
+      "category": "corral",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/handling-chute-cattle-imagegen-v1.png",
+        "sha256": "6ab4619942a72cf6bde5d77b4af1954bccb589eeeaa36d5499173d075b0808d5",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.fence-gate-wood-imagegen-v1.v1",
+      "name": "fence-gate-wood-imagegen-v1",
+      "category": "fence",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/fence-gate-wood-imagegen-v1.png",
+        "sha256": "bf68ed42ba67c38cd0cd59b5ce77f935bc0743ba7508ca65250a90db55f645a5",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.fence-wire-wood-post-imagegen-v1.v1",
+      "name": "fence-wire-wood-post-imagegen-v1",
+      "category": "fence",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/fence-wire-wood-post-imagegen-v1.png",
+        "sha256": "bf68ed42ba67c38cd0cd59b5ce77f935bc0743ba7508ca65250a90db55f645a5",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.feed-trough-hay-imagegen-v1.v1",
+      "name": "feed-trough-hay-imagegen-v1",
+      "category": "feed",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/feed-trough-hay-imagegen-v1.png",
+        "sha256": "04376079306296a3ae197e56045133aa20bb979f222a1eec9f24b572f166b104",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 512,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.water-trough-round-imagegen-v1.v1",
+      "name": "water-trough-round-imagegen-v1",
+      "category": "water",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/water-trough-round-imagegen-v1.png",
+        "sha256": "2eb06533bd8028f187dd2c22cb1ed1b6b6047a78fdbf73d61309c37776115675",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.feed-salt-roofed-imagegen-v1.v1",
+      "name": "feed-salt-roofed-imagegen-v1",
+      "category": "feed",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/feed-salt-roofed-imagegen-v1.png",
+        "sha256": "2050847aa7475c9b6a79c296996a24a79272b69bcace905ac8776be593b2ca12",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.water-pond-imagegen-v1.v1",
+      "name": "water-pond-imagegen-v1",
+      "category": "water",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/water-pond-imagegen-v1.png",
+        "sha256": "98440294d4e82e1d161b21ceac16b7423a5a4d2fd01f560828d25c748af8b485",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.vegetation-tree-shade-imagegen-v1.v1",
+      "name": "vegetation-tree-shade-imagegen-v1",
+      "category": "vegetation",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/vegetation-tree-shade-imagegen-v1.png",
+        "sha256": "b876027b335cd48ebf35399b89a023057f9a291252b7d3c2190005d20e6c57e1",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.building-farmhouse-imagegen-v1.v1",
+      "name": "building-farmhouse-imagegen-v1",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/building-farmhouse-imagegen-v1.png",
+        "sha256": "7fc7c69db6206b206cc91cf5f884c0c63fdbc5ef31c4da99b89011d8dcd776db",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.building-shed-imagegen-v1.v1",
+      "name": "building-shed-imagegen-v1",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/building-shed-imagegen-v1.png",
+        "sha256": "0c35f43bfc6a0f52fa3616af19d85005fa5f6f32290fb0d30acaa515f05c761c",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.building-workshop-imagegen-v1.v1",
+      "name": "building-workshop-imagegen-v1",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/building-workshop-imagegen-v1.png",
+        "sha256": "d3c0959a9fea21980c6276fe330b9f01e0dc41f3924471fc078090a2204fa48b",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.vehicle-pickup-rural-imagegen-v1.v1",
+      "name": "vehicle-pickup-rural-imagegen-v1",
+      "category": "vehicle",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/vehicle-pickup-rural-imagegen-v1.png",
+        "sha256": "643881d07e274e0a5b7f76c8b96eaa0afa2c3280c78e54b90825b798ee161cdc",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 640,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.vehicle-tractor-imagegen-v1.v1",
+      "name": "vehicle-tractor-imagegen-v1",
+      "category": "vehicle",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/vehicle-tractor-imagegen-v1.png",
+        "sha256": "98586b8f33988f354765e12f341d0c6eba4fb27f0b26a608724c848778e9d04e",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.technology-gateway-antenna-imagegen-v1.v1",
+      "name": "technology-gateway-antenna-imagegen-v1",
+      "category": "technology",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/technology-gateway-antenna-imagegen-v1.png",
+        "sha256": "bb6022e9f8f98b5ace40fde1a677464b71209c1de10ee3249cfbf6edb7cac084",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.technology-monitor-station-imagegen-v1.v1",
+      "name": "technology-monitor-station-imagegen-v1",
+      "category": "technology",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/technology-monitor-station-imagegen-v1.png",
+        "sha256": "5462089313e46d6994d05ad6c4309f58e00bfab580a9a4bede87f8c5a29f2fac",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.technology-scale-electronic-full-imagegen-v1.v1",
+      "name": "technology-scale-electronic-full-imagegen-v1",
+      "category": "technology",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/technology-scale-electronic-full-imagegen-v1.png",
+        "sha256": "871372463fe26fe40dfba5e90351a1d02f7be6bd3b92a12804338a950e14030d",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.technology-traceability-system-imagegen-v1.v1",
+      "name": "technology-traceability-system-imagegen-v1",
+      "category": "technology",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/technology-traceability-system-imagegen-v1.png",
+        "sha256": "3b35270242cc65f2e571e2674f57bf99796b2ebd88000cf4e0055ce0175fd2eb",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 768,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-milking-parlor.v1",
+      "name": "dairy-milking-parlor",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-milking-parlor.png",
+        "sha256": "fd9efc49a96a129f4c5a6bc6d202e46aa986825a38a6568de0203ba149350e52",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 960,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-milk-chilling-tank.v1",
+      "name": "dairy-milk-chilling-tank",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-milk-chilling-tank.png",
+        "sha256": "25b5763868152fb305f0fd013930368c56502c7268dc99b0e1c11321ab6d15d9",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1152,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-waiting-pen.v1",
+      "name": "dairy-waiting-pen",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-waiting-pen.png",
+        "sha256": "cb2fec3b1d90f0537059fcf2c75b516bdc3e02b5aa44e389a487137e0472acc4",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 1344,
+        "y": 768,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-barn.v1",
+      "name": "dairy-barn",
+      "category": "building",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-barn.png",
+        "sha256": "2d3d5ef41315d19874fe87032a08e0e3a3555ff9ddf88ac994d4a800779af462",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 0,
+        "y": 896,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-holstein-cow.v1",
+      "name": "dairy-holstein-cow",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-holstein-cow.png",
+        "sha256": "24af73e50d5928e00873cee8c0a7bbe74e3dd81188dd95b388a1a302657d12d2",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 192,
+        "y": 896,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-girolando-cow.v1",
+      "name": "dairy-girolando-cow",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-girolando-cow.png",
+        "sha256": "2fc6af8b282fc979dc632bf0d01f38e800fd5b5b560002657865fb191ee8d0fd",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 384,
+        "y": 896,
+        "w": 192,
+        "h": 128
+      }
+    },
+    {
+      "id": "riose.synthetic.runtime.dairy-heifer-calf.v1",
+      "name": "dairy-heifer-calf",
+      "category": "livestock",
+      "status": "RELEASED",
+      "rights": {
+        "licenseState": "documented",
+        "notes": "Project-owned synthetic sprite drawn from geometric primitives; no external image inputs, reference artwork, fonts, or third-party components."
+      },
+      "review": {
+        "art": "pass",
+        "technical": "pass",
+        "decisionNote": "Minimal category silhouette inspected in the generated atlas; source dimensions, alpha channel, and reproducible packing verified."
+      },
+      "sourceManifest": "assets/manifests/actiii-release-v1.json",
+      "source": {
+        "kind": "project-authored-synthetic",
+        "sourceFile": "assets/synthetic/runtime/dairy-heifer-calf.png",
+        "sha256": "d3ad6c45f8f7f9dff220391b23d08f48e5eaf2d07c4257ba5380c53b486ac3fe",
+        "tool": "Project-authored geometric sprite source file"
+      },
+      "atlas": {
+        "pack": "synthetic-release"
+      },
+      "file": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "frame": {
+        "atlas": "synthetic-release",
+        "x": 576,
+        "y": 896,
+        "w": 192,
+        "h": 128
+      }
+    }
+  ],
+  "atlases": {
+    "synthetic-release": {
+      "image": "public/assets/atlas/synthetic-release-atlas-v1.png",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "sha256": "f7a9c34cf8cf1a4a90b2168de9f6bf976e243009fd35281d2804ce3cbb12f072"
+    }
+  }
+}

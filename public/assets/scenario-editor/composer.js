@@ -90,7 +90,7 @@ function nameOfAsset(asset) {
   const known = {
     'grass-light': 'Grama clara', 'grass-mid': 'Grama média', 'soil-dry': 'Terra seca',
     'soil-damp': 'Terra úmida', 'road-straight': 'Estrada de terra', 'road-turn': 'Curva de estrada',
-    'shade-tree': 'Árvore de sombra', 'fruit-tree': 'Árvore frutífera', 'shrub': 'Arbusto',
+    'shade-tree': 'Árvore de sombra', 'shrub': 'Arbusto',
     'cow-dairy': 'Bovino leiteiro', 'cow-beef': 'Bovino de corte', 'calf': 'Bezerro',
     'nelore-adult': 'Boi Nelore', 'livestock-nelore-cow-idle-imagegen-v1': 'Vaca Nelore',
     'livestock-nelore-calf-idle-imagegen-v1': 'Bezerro Nelore', 'livestock-nelore-heifer-idle-imagegen-v1': 'Novilha Nelore',

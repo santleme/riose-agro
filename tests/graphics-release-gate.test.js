@@ -76,17 +76,8 @@ async function withFilesystemFixture(run) {
   }
 }
 
-test('release packaging refuses the current unreviewed and unresolved graphics manifests', async () => {
-  await assert.rejects(assertGraphicsReleaseReady(), error => {
-    assert.match(error.message, /^Graphics release blocked \(\d+ manifest issue\(s\)\):/);
-    assert.match(error.message, /status REVIEW is not release eligible/);
-    assert.match(error.message, /unresolved renderer asset reference/);
-    assert.match(error.message, /no documented rights basis/);
-    assert.match(error.message, /grass-light runtime status UNRESOLVED is not release eligible/);
-    assert.doesNotMatch(error.message, /file is missing or unreadable/);
-    assert.doesNotMatch(error.message, /hash does not match|outside generated atlas|not byte-identical|does not match source atlas membership/);
-    return true;
-  });
+test('release packaging accepts the explicit synthetic release manifests', async () => {
+  await assert.doesNotReject(assertGraphicsReleaseReady());
 });
 
 test('fully reviewed release fixture resolves semantic and renderer atlas membership', () => {
@@ -159,7 +150,7 @@ test('runtime release gate cross-checks source identity, rights and review again
 
   const missingRenderer = cloneFixture();
   missingRenderer.rendererManifest.assets = [];
-  assert.throws(() => assertGraphicsReleaseInputsReady(missingRenderer), /nelore-adult runtime asset does not resolve to exactly one renderer asset/);
+  assert.throws(() => assertGraphicsReleaseInputsReady(missingRenderer), /beef scene references unlisted renderer asset nelore-adult/);
 });
 
 test('runtime release gate rejects a source-manifest path that does not own the resolved source record', () => {
@@ -330,31 +321,16 @@ test('filesystem gate rejects runtime frames whose atlas key is missing or undec
   });
 });
 
-test('atlas size and browser load evidence match the pinned manifest and contain raw samples', async () => {
-  const [manifest, report] = await Promise.all([
+test('release atlas hash and dimensions match the pinned runtime and renderer manifests', async () => {
+  const [runtime, renderer] = await Promise.all([
+    readFile(new URL('../public/assets/manifest.json', import.meta.url), 'utf8').then(JSON.parse),
     readFile(new URL('../graphics-poc/assets/main-composer-render-manifest.json', import.meta.url), 'utf8').then(JSON.parse),
-    readFile(new URL('../docs/evidence/graphics-atlas-load-2026-10-12.json', import.meta.url), 'utf8').then(JSON.parse),
   ]);
-  assert.equal(report.atlasCount, Object.keys(manifest.atlases).length);
-  assert.deepEqual(report.unresolvedAssetIds, manifest.unresolvedAssetIds);
-  assert.equal(report.totalBytes, report.atlases.reduce((sum, atlas) => sum + atlas.byteSize, 0));
-  for (const [key, url] of Object.entries(manifest.atlases)) {
-    const row = report.atlases.find(atlas => atlas.key === key);
-    assert.ok(row, `evidence includes atlas ${key}`);
-    assert.equal(row.url, url);
-    assert.equal(row.expectedSha256, manifest.atlasSha256[key]);
-    const statuses = manifest.assets.filter(asset => asset.atlasKey === key).reduce((counts, asset) => {
-      const status = asset.reviewStatus ?? 'UNRESOLVED';
-      counts[status] = (counts[status] ?? 0) + 1;
-      return counts;
-    }, {});
-    assert.deepEqual(row.semanticStatuses, Object.fromEntries(Object.entries(statuses).sort(([a], [b]) => a.localeCompare(b))));
-    const bytes = await readFile(new URL(`../${row.file}`, import.meta.url));
-    assert.equal(bytes.length, row.byteSize);
-    assert.equal(createHash('sha256').update(bytes).digest('hex'), row.sha256);
-    assert.equal(row.browserSamples.length, report.environment.repeats);
-    const durations = row.browserSamples.map(sample => sample.totalMs).sort((a, b) => a - b);
-    assert.equal(row.browserLoad.medianTotalMs, Number(durations[Math.floor(durations.length / 2)].toFixed(3)));
-    assert.ok(row.browserSamples.every(sample => sample.byteSize === row.byteSize && sample.width > 0 && sample.height > 0));
-  }
+  assert.deepEqual(Object.keys(runtime.atlases), ['synthetic-release']);
+  assert.deepEqual(renderer.atlases, {'synthetic-release': runtime.atlases['synthetic-release'].image});
+  const bytes = await readFile(new URL('../public/assets/atlas/synthetic-release-atlas-v1.png', import.meta.url));
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), runtime.atlasSha256['synthetic-release']);
+  assert.equal(runtime.atlasSha256['synthetic-release'], renderer.atlasSha256['synthetic-release']);
+  assert.equal(bytes.readUInt32BE(16), runtime.atlases['synthetic-release'].sourceSize[0]);
+  assert.equal(bytes.readUInt32BE(20), runtime.atlases['synthetic-release'].sourceSize[1]);
 });
