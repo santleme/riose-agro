@@ -32,6 +32,6 @@ Decision: **NO_ADVANCEMENT_RETAIN_OLS_AS_DEVELOPMENT_REFERENCE**. Relative equal
 ## Reproduction
 
 ```bash
-uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/evaluate_biomass_nested_development.py
+uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/science/evaluations/evaluate_biomass_nested_development.py
 uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python -m unittest tests.test_biomass_nested_development -v
 ```

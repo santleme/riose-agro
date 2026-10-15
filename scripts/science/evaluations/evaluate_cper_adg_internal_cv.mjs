@@ -7,11 +7,11 @@
 import {createHash} from 'node:crypto';
 import {createReadStream, readFileSync, renameSync, writeFileSync} from 'node:fs';
 import {createInterface} from 'node:readline';
-import {FarmEngine, metrics} from '../src/client/engine.js';
+import {FarmEngine, metrics} from '../../../src/client/engine.js';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 export const PROTOCOL_PATH = path.join(ROOT, 'experiments/diagnostics/adg/preregister-cper-internal-cv-2026-10.json');
 export const INPUT_PATH = path.join(ROOT, 'data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv');
 export const OUTPUT_JSON = path.join(ROOT, 'experiments/diagnostics/adg/cper-internal-cv-2026-10.json');

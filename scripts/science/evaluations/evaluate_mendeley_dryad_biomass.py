@@ -16,7 +16,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 PROTOCOL = ROOT / "experiments/diagnostics/biomass/preregister-mendeley-to-dryad-biomass-2026-10.json"
 MEND = ROOT / "data/mendeley-pasture-biomass/processed/pasture-biomass-samples-v1.parquet"
 DRYAD = ROOT / "data/dryad-mob-rotational-biomass/processed/dryad-paddock-biomass-height-v1.parquet"

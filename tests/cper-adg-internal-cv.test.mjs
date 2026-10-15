@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtempSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {createYearFolds, evaluateRows, readDevelopmentRows} from '../scripts/evaluate_cper_adg_internal_cv.mjs';
+import {createYearFolds, evaluateRows, readDevelopmentRows} from '../scripts/science/evaluations/evaluate_cper_adg_internal_cv.mjs';
 
 const header = 'Concatenate,Year,Pasture,Treatment,Allocation.number,Type,Owner,Tag.Color,Tag,QAQC.Notes,Actual.on.date,Actual.off.date,Season.on.date,Season.off.date,Season.Days,on_Weight,on_Shrink,off_Weight,off_Shrink,Gain_shrunk,ADG_shrunk,Use.Flag';
 

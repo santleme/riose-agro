@@ -26,7 +26,7 @@ from sklearn.linear_model import HuberRegressor, LinearRegression, Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 EXP = ROOT / "experiments/diagnostics/adg/cper-candidate-v2"
 PROTOCOL = EXP / "preregister.json"
 SOURCE = ROOT / "data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv"
@@ -175,7 +175,7 @@ def choose_params(model_id: str, outer_train: list[dict], costs: dict) -> tuple[
 def engine_benchmark(rows: list[dict]) -> dict:
     inputs = [{"rowId": row["row_id"], "initialWeightKg": row["initial_weight_kg"], "seasonDays": row["season_days"]} for row in rows]
     start = time.perf_counter()
-    result = subprocess.run(["node", str(ROOT / "scripts/predict_cper_adg_engine_v2.mjs")], input=json.dumps(inputs),
+    result = subprocess.run(["node", str(ROOT / "scripts/science/evaluations/predict_cper_adg_engine_v2.mjs")], input=json.dumps(inputs),
                            text=True, capture_output=True, cwd=ROOT, check=True)
     elapsed = time.perf_counter() - start
     predictions = json.loads(result.stdout)
@@ -316,7 +316,7 @@ def write_outputs(report: dict, records: list[dict]) -> None:
     engine_seconds = evaluation["engineBenchmarkWallSecondsFor320Rows"]
     lines += [f"| Engine reference (320 rows) | — | — | 320 | {engine_seconds:.6f} | {engine_seconds * 1_000_000 / 320:.2f} |",
               "", "Timings are environment-dependent and intended only as inference-cost diagnostics. Fit seconds include nested candidate search and outer refits; engine row time includes helper-process startup.", "",
-              "Reproduce with `python3 scripts/evaluate_cper_adg_candidate_v2.py` under `requirements-data-processing.txt`."]
+              "Reproduce with `python3 scripts/science/evaluations/evaluate_cper_adg_candidate_v2.py` under `requirements-data-processing.txt`."]
     (EXP / "evaluation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -333,7 +333,7 @@ def main() -> None:
     except (OSError, subprocess.CalledProcessError):
         commit = None
     script_bytes = Path(__file__).read_bytes()
-    engine_helper = ROOT / "scripts/predict_cper_adg_engine_v2.mjs"
+    engine_helper = ROOT / "scripts/science/evaluations/predict_cper_adg_engine_v2.mjs"
     engine_helper_bytes = engine_helper.read_bytes()
     report = {
         "schemaVersion": "1.0.0", "experimentId": protocol["experimentId"], "classification": protocol["classification"],
@@ -341,7 +341,7 @@ def main() -> None:
         "protocol": {"path": str(PROTOCOL.relative_to(ROOT)), "sha256": sha256(protocol_bytes)},
         "source": {**source, "path": str(SOURCE.relative_to(ROOT))},
         "code": {"commitAtExecution": commit, "script": str(Path(__file__).resolve().relative_to(ROOT)),
-                 "scriptSha256": sha256(script_bytes), "engineHelper": "scripts/predict_cper_adg_engine_v2.mjs",
+                 "scriptSha256": sha256(script_bytes), "engineHelper": "scripts/science/evaluations/predict_cper_adg_engine_v2.mjs",
                  "engineHelperSha256": sha256(engine_helper_bytes)},
         "execution": {"completedAtUtc": datetime.now(timezone.utc).isoformat(),
                       "wallSeconds": time.perf_counter() - start, "python": sys.version.split()[0],

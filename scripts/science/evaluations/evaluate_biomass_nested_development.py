@@ -26,9 +26,9 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 _BASELINE_SPEC = importlib.util.spec_from_file_location(
-    "evaluate_mendeley_dryad_biomass", ROOT / "scripts/evaluate_mendeley_dryad_biomass.py"
+    "evaluate_mendeley_dryad_biomass", ROOT / "scripts/science/evaluations/evaluate_mendeley_dryad_biomass.py"
 )
 assert _BASELINE_SPEC and _BASELINE_SPEC.loader
 _BASELINE = importlib.util.module_from_spec(_BASELINE_SPEC)
@@ -336,7 +336,7 @@ def build_report() -> tuple[dict[str, Any], pd.DataFrame, str]:
             "dataPath": str(MEND.relative_to(ROOT)),
             "dataSha256": actual_sha,
             "dataRows": len(frame),
-            "codePath": "scripts/evaluate_biomass_nested_development.py",
+            "codePath": "scripts/science/evaluations/evaluate_biomass_nested_development.py",
             "codeSha256": sha256(Path(__file__)),
             "git": git_state(),
             "python": platform.python_version(),
@@ -421,7 +421,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines.append(f"| {model_id} | {values['maeKgDmHa']:.1f} | {values['equalBlockMaeKgDmHa']:.1f} | {values['rmseKgDmHa']:.1f} | {values['biasPredictedMinusObservedKgDmHa']:.1f} |")
     values = oof["nestedSelectedProcedure"]
     lines.append(f"| Nested-selected per block | {values['maeKgDmHa']:.1f} | {values['equalBlockMaeKgDmHa']:.1f} | {values['rmseKgDmHa']:.1f} | {values['biasPredictedMinusObservedKgDmHa']:.1f} |")
-    lines.extend(["", "## Selection and advancement", "", f"Nested selection frequency: `{json.dumps(report['selection']['selectedFrequencyByOuterBlock'], sort_keys=True)}`.", "", f"Decision: **{oof['advancementGate']['decision']}**. Relative equal-block MAE reduction vs OLS: {oof['advancementGate']['relativeEqualBlockMaeReductionVsOls']:.1%}; relative RMSE change: {oof['advancementGate']['relativePooledRmseChangeVsOls']:.1%}; bias gate: {oof['advancementGate']['absoluteBiasWithinOlsPlus100KgDmHa']}; farm gate: {oof['advancementGate']['farmSubgroupGate']}; campaign gate: {oof['advancementGate']['campaignSubgroupGate']}.", "", "## Scope", "", *[f"- {item}" for item in report["limits"]], "", "## Reproduction", "", "```bash", "uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/evaluate_biomass_nested_development.py", "uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python -m unittest tests.test_biomass_nested_development -v", "```", ""])
+    lines.extend(["", "## Selection and advancement", "", f"Nested selection frequency: `{json.dumps(report['selection']['selectedFrequencyByOuterBlock'], sort_keys=True)}`.", "", f"Decision: **{oof['advancementGate']['decision']}**. Relative equal-block MAE reduction vs OLS: {oof['advancementGate']['relativeEqualBlockMaeReductionVsOls']:.1%}; relative RMSE change: {oof['advancementGate']['relativePooledRmseChangeVsOls']:.1%}; bias gate: {oof['advancementGate']['absoluteBiasWithinOlsPlus100KgDmHa']}; farm gate: {oof['advancementGate']['farmSubgroupGate']}; campaign gate: {oof['advancementGate']['campaignSubgroupGate']}.", "", "## Scope", "", *[f"- {item}" for item in report["limits"]], "", "## Reproduction", "", "```bash", "uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/science/evaluations/evaluate_biomass_nested_development.py", "uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python -m unittest tests.test_biomass_nested_development -v", "```", ""])
     return "\n".join(lines)
 
 

@@ -25,7 +25,7 @@ The Dryad comparison was already reported before this candidate family was speci
 ## Reproduction
 
 ```bash
-uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/evaluate_biomass_nested_development.py
+uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python scripts/science/evaluations/evaluate_biomass_nested_development.py
 uv run --python 3.12 --with-requirements requirements-data-processing.txt -- python -m unittest tests.test_biomass_nested_development -v
 ```
 

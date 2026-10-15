@@ -17,7 +17,7 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[3]
 EXPERIMENT = ROOT / "experiments/diagnostics/adg/cper-preoutcome-candidate-v1"
 PROTOCOL_PATH = EXPERIMENT / "preregister.json"
 SOURCE = ROOT / "data/usda-cper-ltgi-2000-2019/LTGI_2000-2019_all_weights_published.csv"
@@ -294,7 +294,7 @@ def main() -> None:
         m = fold["metrics"]
         lines.append(f"| {fold['outerTestYear']} | {fold['outerTrainN']} | {fold['outerTestN']} | {fold['outerPurgedIdentityProxyCount']} | {fold['m2SelectedAlpha']:g} | {m['M0']['maeKgPerHeadDay']:.3f} | {m['M1']['maeKgPerHeadDay']:.3f} | {m['M2']['maeKgPerHeadDay']:.3f} |")
     lines.extend(["", "## Limits", "", *[f"- {item}" for item in report["interpretation"]], "",
-                  "Reproduce with `python3 scripts/evaluate_cper_preoutcome_adg_candidates.py`. The JSON report and OOF predictions are stored beside this report."])
+                  "Reproduce with `python3 scripts/science/evaluations/evaluate_cper_preoutcome_adg_candidates.py`. The JSON report and OOF predictions are stored beside this report."])
     (EXPERIMENT / "evaluation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps({"classification": report["classification"], "sourceSha256": source["sha256"],
                       "oofRowCount": evaluation["oofRowCount"], "models": {k: v["pooled"] for k, v in evaluation["models"].items()},

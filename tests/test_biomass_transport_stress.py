@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts/evaluate_biomass_transport_stress_2026_10.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts/science/evaluations/evaluate_biomass_transport_stress_2026_10.py"
 SPEC = importlib.util.spec_from_file_location("biomass_transport_stress", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader
