@@ -1,11 +1,11 @@
 # Behavioral SDD session handoff
 
 Date: 2026-10-15
-Source PR: https://github.com/santleme/riose-agro/pull/190
-Source PR head: 983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc
+Active PR: https://github.com/santleme/riose-agro/pull/191
+Base PR: https://github.com/santleme/riose-agro/pull/190 (head `983d0d7259fb01fcdc7c279cd059eeb5eaaf72bc`)
 Working branch: codex/behavioral-agents-sdd
-Last verified commit: update after committing BEH-005 implementation.
-Completed tasks: BEH-000; BEH-001; BEH-002; BEH-003.
+Last verified implementation commit: 24871a6 (`feat: add gated behavior research assistant`).
+Completed tasks: BEH-000; BEH-001; BEH-002; BEH-003; BEH-004; BEH-005.
 Task in progress: none.
 Next READY: none. BEH-006 is blocked by the BEH-004 NO-GO; BEH-007/008 remain blocked by rights/external evidence.
 Files changed in BEH-005: server research-assistant module and routes, provider-mocked/security tests, package script, contract/status/decision/handoff records.
@@ -18,4 +18,4 @@ Next action: no READY behavioral-agent task remains. Resume only if the independ
 Blocked dependencies: BEH-007 lacks confirmed rights and independent compatible data; BEH-008 awaits evaluation and independent review.
 Blocked: BEH-007 (independent external data reuse/population fit); BEH-008 scientific promotion.
 Implementation constraints: default FarmEngine and Product V2 remain unchanged; no model-trained claims; no unauthorized paid inference or research data upload.
-Resume command: Read RUN_LOOP.md + tasks.md, verify current git/PR state and BEH-001 commit, then continue BEH-002 without inspecting historical held-out generative outcomes.
+Resume command: Read RUN_LOOP.md + tasks.md, verify current git/PR state and this handoff. No behavioral-agent task is READY; continue only after a blocker changes or a new separately preregistered task is added.
