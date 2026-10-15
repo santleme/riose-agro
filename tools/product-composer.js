@@ -1,5 +1,6 @@
 import {PRODUCT_BLOCKOUT as baseline, PRODUCT_WORLD, worldToScreen, screenToWorld, validateProductBlockout} from '../src/client/product/spatial.js';
 const canvas=document.querySelector('#scene'),ctx=canvas.getContext('2d'),report=document.querySelector('#report'),selection=document.querySelector('#selection'),entityList=document.querySelector('#entities');
+const openSceneButton=document.querySelector('#open-scene'),sceneFile=document.querySelector('#scene-file');
 let scene=structuredClone(baseline),showGrid=true,selected=null,drag=null,pointerWorld=null,manifest={assets:[]};
 const corners=(x,y,w,h)=>[worldToScreen(x,y),worldToScreen(x+w,y),worldToScreen(x+w,y+h),worldToScreen(x,y+h)];
 function polygon(points,fill,stroke,width=1){ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();}}
@@ -32,6 +33,25 @@ function point(e){const b=canvas.getBoundingClientRect();return {x:(e.clientX-b.
 canvas.onpointerdown=e=>{const p=point(e),w=screenToWorld(p.x,p.y),item=[...scene.structures].reverse().find(o=>hits(o,p.x,p.y));if(!item)return;selected=item.id;drag={item,dx:w.x-item.x,dy:w.y-item.y};canvas.setPointerCapture(e.pointerId);draw();};
 canvas.onpointermove=e=>{const p=point(e);pointerWorld=screenToWorld(p.x,p.y);if(!drag){updateReport();return;}const w=pointerWorld,i=drag.item;i.x=Math.max(0,Math.min(PRODUCT_WORLD.width-i.w,Math.round(w.x-drag.dx)));i.y=Math.max(0,Math.min(PRODUCT_WORLD.height-i.h,Math.round(w.y-drag.dy)));draw();};canvas.onpointerup=()=>drag=null;canvas.onpointercancel=()=>drag=null;
 document.querySelector('#grid').onclick=e=>{showGrid=!showGrid;e.currentTarget.textContent=`Grade: ${showGrid?'ligada':'desligada'}`;draw();};
-document.querySelector('#export').onclick=()=>{const blob=new Blob([JSON.stringify(scene,null,2)+'\n'],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='product-blockout.json';a.click();URL.revokeObjectURL(a.href);};
-fetch('/assets/manifest.json').then(r=>r.json()).then(data=>{manifest=data;draw();});
+document.querySelector('#export').onclick=()=>{const blob=new Blob([JSON.stringify(scene,null,2)+'\n'],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='scene.json';a.click();URL.revokeObjectURL(a.href);};
+openSceneButton.onclick=()=>sceneFile.click();
+sceneFile.onchange=async()=>{
+  const [file]=sceneFile.files??[];
+  sceneFile.value='';
+  if(!file)return;
+  try{
+    const candidate=JSON.parse(await file.text());
+    const world=candidate.world??{};
+    const sameWorld=world.unit===PRODUCT_WORLD.unit&&world.width===PRODUCT_WORLD.width&&world.height===PRODUCT_WORLD.height
+      &&world.tile?.width===PRODUCT_WORLD.tile.width&&world.tile?.height===PRODUCT_WORLD.tile.height
+      &&world.origin?.x===PRODUCT_WORLD.origin.x&&world.origin?.y===PRODUCT_WORLD.origin.y;
+    const validation=sameWorld?validateProductBlockout(candidate,manifest):{valid:false,issues:[{code:'world-incompatible'}]};
+    if(!validation.valid){report.classList.add('invalid');report.textContent=`Cena rejeitada: ${validation.issues[0]?.code??'schema-incompatível'}. O editor exige o grid e a projeção da cena Product.`;return;}
+    scene=candidate;selected=null;drag=null;draw();
+  }catch(error){
+    report.classList.add('invalid');
+    report.textContent=`Não foi possível abrir a cena: ${error instanceof SyntaxError?'JSON inválido':'formato ou estrutura inválida'}.`;
+  }
+};
+fetch('/assets/manifest.json').then(r=>r.json()).then(data=>{manifest=data;openSceneButton.disabled=false;draw();}).catch(()=>{report.classList.add('invalid');report.textContent='Não foi possível carregar o manifesto de assets; abra o editor após corrigir a conexão.';});
 draw();

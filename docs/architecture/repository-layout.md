@@ -1,6 +1,6 @@
 # Repository layout
 
-The repository keeps browser page URLs at the project root for static-host compatibility. Their implementation files live under `src/client/`; the optional HTTP service and standalone Python compute service live under `src/server/`. The current full inventory and migration priorities are in [repository-architecture-audit-2026-10-14.md](repository-architecture-audit-2026-10-14.md). The accepted Product decisions group its implementation, share projection math and scene geometry, version its world data and isolate static Pixi drawing ([ADRs 0003–0007](adr/0003-product-module-layout.md)).
+The repository keeps browser page URLs at the project root for static-host compatibility. Their implementation files live under `src/client/`; the optional HTTP service and standalone Python compute service live under `src/server/`. The current full inventory and migration priorities are in [repository-architecture-audit-2026-10-14.md](repository-architecture-audit-2026-10-14.md). The accepted Product decisions group its implementation, share projection math and scene geometry, version its world data and isolate static Pixi drawing ([ADRs 0003–0007](adr/0003-product-module-layout.md)). Scene ownership and format relationships are mapped in [scene-authoring-inventory.md](scene-authoring-inventory.md).
 
 ```text
 index.html, home.html, product.html, lab.html, *-data.html   browser entry points
