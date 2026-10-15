@@ -2,7 +2,10 @@ export const SCENARIO_LAB_INTENT_TYPE = 'riose-scenario-lab-intent';
 export const SCENARIO_LAB_INTENT_VERSION = 1;
 const MAX_PROMPT_LENGTH = 1200;
 const NUMBER = '(\\d+(?:[.,]\\d+)?)';
-const SUPPLEMENT_VALUE = new RegExp(`${NUMBER}\\s*kg(?:\\s*(?:dm|ms))?`, 'gi');
+const PER_DAY_EN = '(?:\\/\\s*(?:head|animal)\\s*\\/\\s*day|per\\s+(?:head|animal)\\s+per\\s+day)';
+const PER_DAY_PT = '(?:\\/\\s*(?:cabe[cç]a|animal)\\s*\\/\\s*dia|por\\s+(?:cabe[cç]a|animal)\\s+por\\s+dia)';
+const DRY_MATTER_UNIT = `(?:(?:dm|dry\\s+matter)\\s*${PER_DAY_EN}|(?:ms|mat[eé]ria\\s+seca)\\s*${PER_DAY_PT}|de\\s+mat[eé]ria\\s+seca\\s*${PER_DAY_PT})`;
+const SUPPLEMENT_VALUE = new RegExp(`${NUMBER}\\s*kg\\s*(${DRY_MATTER_UNIT})`, 'gi');
 const finite = value => typeof value === 'number' && Number.isFinite(value);
 const parseNumber = value => Number(value.replace(',', '.'));
 const fail = message => { throw new TypeError(`Scenario lab intent is invalid: ${message}`); };
@@ -31,8 +34,8 @@ export function interpretScenarioLabPrompt(prompt) {
   if (typeof prompt !== 'string' || !prompt.trim()) throw new TypeError('Describe a scenario first.');
   if (prompt.length > MAX_PROMPT_LENGTH) throw new RangeError(`Prompt must be ${MAX_PROMPT_LENGTH.toLocaleString()} characters or fewer.`);
   const text = prompt.toLowerCase();
-  const populationMatch = text.match(new RegExp(`${NUMBER}\\s*(?:nelore\\s+)?(?:bovinos?|cattle|animals?|cows?|head|animais|cabeças|cabecas)`, 'i'));
-  const durationMatch = text.match(new RegExp(`${NUMBER}\\s*(?:days?|dias?)`, 'i'));
+  const populationMatches = [...text.matchAll(new RegExp(`${NUMBER}\\s*(?:nelore\\s+)?(?:bovinos?|cattle|animals?|cows?|head|animais|cabeças|cabecas)`, 'gi'))];
+  const durationMatches = [...text.matchAll(new RegExp(`${NUMBER}\\s*(?:days?|dias?)`, 'gi'))];
   const unsupportedRequests = [];
 
   if (/\bbr[\s-]?corte\b|\bdmi\b|\bcms\b|dry matter intake|consumo de mat[eé]ria seca/.test(text)) {
@@ -43,22 +46,33 @@ export function interpretScenarioLabPrompt(prompt) {
     unsupportedRequests.push('The requested biological outcome or uncertainty is not computed by the illustrative FarmEngine.');
   }
   if (/\bnelore\b/.test(text)) unsupportedRequests.push('Breed-specific effects are not modeled by FarmEngine; the breed cannot change this scenario.');
-  if (/\b(cold|frio|winter|inverno|drought|seca)\b/.test(text)) unsupportedRequests.push('That environmental condition has no corresponding supported FarmEngine input.');
+  if (/\b(cold|frio|winter|inverno|drought)\b/.test(text) || (/\bseca\b/.test(text) && !/mat[eé]ria\s+seca/.test(text))) unsupportedRequests.push('That environmental condition has no corresponding supported FarmEngine input.');
 
   const levels = [...text.matchAll(SUPPLEMENT_VALUE)].map(match => parseNumber(match[1]));
+  const populationValues = [...new Set(populationMatches.map(match => parseNumber(match[1])))];
+  const durationValues = [...new Set(durationMatches.map(match => parseNumber(match[1])))];
+  if (populationValues.length > 1) unsupportedRequests.push('Population is ambiguous; provide one animal count.');
+  if (durationValues.length > 1) unsupportedRequests.push('Duration is ambiguous; provide one number of days.');
   if (/\b(weather|climate|clima|tempo)\b/.test(text) && !/\b(hot|heat|calor|quente|rain|rainy|chuva|chuvoso|normal)\b/.test(text)) {
     unsupportedRequests.push('State normal, hot, or rain only; FarmEngine weather is a demonstrative rule set.');
   }
-  const weather = /\b(hot|heat|calor|quente)\b/.test(text) ? 'hot'
-    : /\b(rain|rainy|chuva|chuvoso)\b/.test(text) ? 'rain' : 'normal';
+  const weatherOptions = new Set();
+  if (/\b(hot|heat|calor|quente)\b/.test(text)) weatherOptions.add('hot');
+  if (/\b(rain|rainy|chuva|chuvoso)\b/.test(text)) weatherOptions.add('rain');
+  if (/\bnormal\b/.test(text)) weatherOptions.add('normal');
+  if (weatherOptions.size > 1) unsupportedRequests.push('The requested weather conditions conflict; choose one shared weather condition for the scenarios.');
+  const weather = weatherOptions.has('hot') ? 'hot' : weatherOptions.has('rain') ? 'rain' : 'normal';
+  if (/\b(?:also\s+)?(?:change|vary|alter|mudar|variar|alterar)\s+(?:the\s+)?(?:housing|diet|pasture|paddock|weather|climate|alojamento|dieta|pasto|piquete|clima)\b/.test(text)) {
+    unsupportedRequests.push('This scenario set can vary one factor only: supplement level. Remove the additional intervention factor.');
+  }
   const missingInputs = [];
-  if (populationMatch === null) missingInputs.push('population count');
-  if (durationMatch === null) missingInputs.push('duration');
-  if (levels.length < 3) missingInputs.push('three explicit supplement levels with kg units');
+  if (populationMatches.length === 0) missingInputs.push('population count');
+  if (durationMatches.length === 0) missingInputs.push('duration');
+  if (levels.length < 3) missingInputs.push('three explicit supplement levels with kg DM/head/day units');
   if (levels.length > 10) unsupportedRequests.push('Use at most 10 distinct scenarios including a baseline.');
   if (new Set(levels).size !== levels.length) missingInputs.push('distinct supplement levels');
-  const populationCount = populationMatch === null ? null : parseNumber(populationMatch[1]);
-  const durationDays = durationMatch === null ? null : parseNumber(durationMatch[1]);
+  const populationCount = populationValues.length === 0 ? null : populationValues[0];
+  const durationDays = durationValues.length === 0 ? null : durationValues[0];
   if (populationCount !== null && (!Number.isInteger(populationCount) || populationCount < 1 || populationCount > 10000)) {
     unsupportedRequests.push('Population size must be an integer from 1 to 10,000.');
   }
@@ -69,6 +83,20 @@ export function interpretScenarioLabPrompt(prompt) {
     unsupportedRequests.push('Supplement levels must be from 0 to 4 kg DM/head/day in FarmEngine.');
   }
   return intentResult({populationCount, durationDays, levels: levels.slice(0, 10), weather, weatherExplicit: weather !== 'normal' || /\bnormal\b/.test(text), missingInputs, unsupportedRequests});
+}
+
+/** Combine a clarification reply with its original request without interpreting it as privileged instructions. */
+export function combineScenarioLabClarification(originalPrompt, clarification) {
+  if (typeof originalPrompt !== 'string' || !originalPrompt.trim() || originalPrompt.length > MAX_PROMPT_LENGTH) fail('original clarification request is invalid.');
+  if (typeof clarification !== 'string' || !clarification.trim()) fail('clarification reply must not be empty.');
+  const reply = clarification.trim();
+  if (reply.startsWith(originalPrompt.trim())) return reply;
+  const replyLooksComplete = [...reply.matchAll(SUPPLEMENT_VALUE)].length >= 3
+    && /\b(?:bovinos?|cattle|animals?|animais)\b/i.test(reply)
+    && /\b(?:days?|dias?)\b/i.test(reply);
+  const combined = replyLooksComplete ? reply : `${originalPrompt.trim()}\n${reply}`;
+  if (combined.length > MAX_PROMPT_LENGTH) throw new RangeError(`Prompt must be ${MAX_PROMPT_LENGTH.toLocaleString()} characters or fewer.`);
+  return combined;
 }
 
 export function validateScenarioLabIntent(intent) {
@@ -95,6 +123,12 @@ export function validateScenarioLabIntent(intent) {
   }
   if (intent.ready !== (intent.missingInputs.length === 0 && intent.unsupportedRequests.length === 0)) fail('ready must match clarification and unsupported-request lists.');
   if (new Set(intent.assumptions.map(item => item.field)).size !== 2) fail('assumption fields must be unique.');
+  const supplementAssumption = intent.assumptions.find(item => item.field === 'supplementLevelsKgDMPerHeadPerDay');
+  const weatherAssumption = intent.assumptions.find(item => item.field === 'weather');
+  if (supplementAssumption.origin !== 'user prompt' || Object.hasOwn(supplementAssumption, 'value')) fail('supplement assumption must preserve explicit user-supplied values.');
+  if (weatherAssumption.value !== intent.weather
+      || (intent.weather !== 'normal' && weatherAssumption.origin !== 'user prompt')
+      || (weatherAssumption.origin === 'scenario-lab default' && intent.weather !== 'normal')) fail('weather assumption provenance must match the requested or declared default weather.');
   if (intent.ready && (count === null || !Number.isInteger(count) || count < 1 || count > 10000
       || days === null || !Number.isInteger(days) || days < 1 || days > 365
       || intent.supplementLevelsKgDMPerHeadPerDay.length < 3
