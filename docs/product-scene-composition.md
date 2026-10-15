@@ -143,7 +143,7 @@ Run:
 
 ```sh
 node --test tests/product-spatial.test.js
-node scripts/validate-product-blockout.mjs
+node scripts/validation/validate-product-blockout.mjs
 ```
 
 The validator checks the scene schema before running spatial and asset checks.

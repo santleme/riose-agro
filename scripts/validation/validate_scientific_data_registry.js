@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const manifestPaths = [path.join(root, 'data/mendeley-pasture-biomass/manifest.json')];
 const precisionBeefManifestPath = path.join(root, 'data/precision-beef/manifest.json');
 if (fs.existsSync(precisionBeefManifestPath)) manifestPaths.push(precisionBeefManifestPath);

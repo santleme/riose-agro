@@ -280,14 +280,14 @@ test('CLI archives a reproducible comparison without overwriting an existing art
     const outcomePath = join(directory, 'outcome.json');
     writeFileSync(manifestPath, manifestBytes);
     writeFileSync(snapshotPath, snapshotBytes);
-    const archiveCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
+    const archiveCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/validation/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
     assert.equal(archiveCommand.status, 0, archiveCommand.stderr);
-    const noOverwrite = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
+    const noOverwrite = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/validation/archive-comparison.js', import.meta.url)), manifestPath, outputPath], {encoding: 'utf8'});
     assert.equal(noOverwrite.status, 1);
     assert.match(noOverwrite.stderr, /EEXIST/);
     writeFileSync(outputPath, archiveBytes);
     writeFileSync(outcomePath, JSON.stringify(record));
-    const validationCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/validate-outcome-record.js', import.meta.url)), outcomePath, '--archive', outputPath, '--manifest', manifestPath, '--snapshot', snapshotPath], {encoding: 'utf8'});
+    const validationCommand = spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/validation/validate-outcome-record.js', import.meta.url)), outcomePath, '--archive', outputPath, '--manifest', manifestPath, '--snapshot', snapshotPath], {encoding: 'utf8'});
     assert.equal(validationCommand.status, 0, validationCommand.stderr);
     assert.equal(JSON.parse(validationCommand.stdout).schemaValid, true);
     assert.equal(JSON.parse(validationCommand.stdout).snapshotSchemaValid, true);

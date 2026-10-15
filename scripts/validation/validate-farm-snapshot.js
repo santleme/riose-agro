@@ -4,8 +4,8 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {validateFarmSnapshot} from '../src/client/snapshot-validator.js';
-import {validateFarmSnapshotManifestReference} from '../src/client/snapshot-manifest-link.js';
+import {validateFarmSnapshot} from '../../src/client/snapshot-validator.js';
+import {validateFarmSnapshotManifestReference} from '../../src/client/snapshot-manifest-link.js';
 
 const usage = 'Uso: npm run validate:snapshot -- <snapshot.json> [--manifest <comparacao.json>] [--require-eligible]';
 const args = process.argv.slice(2);
@@ -20,7 +20,7 @@ if (!inputPath || (manifestIndex >= 0 && !manifestPath)) {
   process.exitCode = 1;
 } else {
   try {
-    const schemaPath = fileURLToPath(new URL('../schemas/farm-snapshot.schema.json', import.meta.url));
+    const schemaPath = fileURLToPath(new URL('../../schemas/farm-snapshot.schema.json', import.meta.url));
     const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
     const snapshot = JSON.parse(readFileSync(resolve(inputPath), 'utf8'));
     const ajv = new Ajv2020({allErrors: true, strict: true, strictRequired: false});
