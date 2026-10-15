@@ -14,7 +14,7 @@ Passing checks: all animal folds disjoint; no gap-crossing transitions; determin
 Known failures: none.
 Scientific limitations: sampled annotation windows only; no complete 24-hour windows; annotations may carry forward under-30-second events; local Mountain timestamps have no UTC offset/fold; CC BY 4.0 is from prior repository audit, not a new live rights review. No behavior model promoted.
 Visual limitations: no UI changed.
-Next action: commit the frozen BEH-003 candidate and development report (baseline JSON SHA-256 `e28c82ab67316e012787e27231c506c5903c5384c57ee76cc5aba5d0a1b12821`; semi-Markov JSON SHA-256 `d7fef1aa13112ecd91cb0314981a087dbf3726ff7bfceec0c8e45590431cd2eb`). Then freeze BEH-004's confirmatory protocol before evaluating labels from AH:2008, BH:5111, BR:8065, or RC:35. Keep this internal holdout distinct from external validation.
+Next action: compact evidence and code refinements are ready for a follow-up commit (baseline JSON SHA-256 `1b1b91a82d23a94c9f1f68e6940bce4a9cf9bcecb3276bdf5adf6589712027d0`; semi-Markov JSON SHA-256 `cbe9b06a12be5e9c534166a7dfbe3b1d08250495ae659a7730359c50d4c823a4`). Then freeze BEH-004's confirmatory protocol before evaluating labels from AH:2008, BH:5111, BR:8065, or RC:35. Keep this internal holdout distinct from external validation.
 Blocked dependencies: BEH-007 lacks confirmed rights and independent compatible data; BEH-008 awaits evaluation and independent review.
 Blocked: BEH-007 (independent external data reuse/population fit); BEH-008 scientific promotion.
 Implementation constraints: default FarmEngine and Product V2 remain unchanged; no model-trained claims; no unauthorized paid inference or research data upload.

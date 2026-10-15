@@ -1,6 +1,6 @@
 # Perea semi-Markov development result v1
 
-Generated under [`08-semimarkov-protocol-v1.md`](../../specs/riose-behavioral-agents/08-semimarkov-protocol-v1.md). The machine-readable report records the exact source/protocol/implementation hashes, five animal-grouped folds, per-window results, and support by training fold in [`perea-semimarkov-development-v1.json`](perea-semimarkov-development-v1.json).
+Generated under [`08-semimarkov-protocol-v1.md`](../../specs/riose-behavioral-agents/08-semimarkov-protocol-v1.md). The machine-readable report records the exact source/protocol/implementation hashes, five animal-grouped folds, per-animal metrics, and duration support by training fold in [`perea-semimarkov-development-v1.json`](perea-semimarkov-development-v1.json).
 
 ## Frozen development comparison
 

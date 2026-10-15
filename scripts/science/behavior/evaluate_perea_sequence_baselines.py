@@ -139,7 +139,6 @@ def evaluate(data_path: Path = DATA, include_semimarkov: bool = False) -> dict:
         model = fit_baselines(training_windows)
         semimarkov_model = fit_semimarkov(training_windows) if include_semimarkov else None
         supported = [state for state in CLASSES if model["transitionSupport"][state] >= 20]
-        animal_records = []
         for animal in sorted(test_animals):
             for window in sorted(by_animal[animal], key=lambda item: item["index"]):
                 observed = window["labels"]
@@ -175,16 +174,6 @@ def evaluate(data_path: Path = DATA, include_semimarkov: bool = False) -> dict:
                         values[f"class:{label}"].append(value)
                     values["transition"].append(_mean(transition) if transition else None)
                     values["runErrors"].extend(value for class_values in run_errors.values() for value in class_values)
-                    animal_records.append({
-                        "candidate": candidate, "animal": animal, "windowIndex": window["index"],
-                        "lengthMinutes": len(observed), "compositionError": _mean(composition),
-                        "classCompositionAbsoluteError": class_errors,
-                        "transitionTotalVariation": _mean(transition),
-                        "transitionComparisonsPerReplicate": n_states,
-                        "completeRunAbsoluteMedianErrorMinutes": {
-                            label: _mean(run_errors[label]) for label in CLASSES if run_errors[label]
-                        },
-                    })
         fold_reports.append({
             "fold": fold_index,
             "trainAnimals": sorted(train_animals), "testAnimals": sorted(test_animals),
@@ -196,7 +185,6 @@ def evaluate(data_path: Path = DATA, include_semimarkov: bool = False) -> dict:
                 label: sum(len(values) for values in semimarkov_model["durationSamplesByAnimal"][label].values())
                 for label in semimarkov_model["supportedClasses"]
             } if semimarkov_model else None),
-            "perWindowPerCandidate": animal_records,
         })
     summaries = {}
     for candidate in candidates:
@@ -208,6 +196,9 @@ def evaluate(data_path: Path = DATA, include_semimarkov: bool = False) -> dict:
                 "compositionError": _mean(vals["composition"]),
                 "transitionTotalVariation": _mean([x for x in vals["transition"] if x is not None]),
                 "completeRunAbsoluteMedianErrorMinutes": _mean(vals["runErrors"]),
+                "perClassAbsoluteProportionError": {
+                    label: _mean(vals[f"class:{label}"]) for label in CLASSES
+                },
                 "scoredWindows": len(vals["composition"]),
             }
         diagnostic = candidate_diagnostics[candidate]
