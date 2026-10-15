@@ -20,7 +20,7 @@ from typing import Iterable
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts/science/source-audits"))
 from audit_mendeley_nellore_feedlot import (  # noqa: E402
     MANIFEST_PATH,
     WORKBOOK_PATH,
