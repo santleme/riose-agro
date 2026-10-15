@@ -35,6 +35,40 @@ test('archive binds prompt, validated intent, exact confirmed manifest, executio
   assert.deepEqual(archive.provenance.hypothesis, {statement: request, origin: 'user question', status: 'not independently evaluated'});
 });
 
+test('version 2 archive preserves AI interpretation provenance while version 1 remains importable', async () => {
+  const manifest = scenarioSet();
+  const results = replayScenarioSetManifest(manifest);
+  const intent = interpretScenarioLabPrompt(request);
+  const interpretation = {source: 'llm', provider: 'groq', model: 'openai/gpt-oss-20b'};
+  const archive = await createScenarioLabArchive({manifest, results, sourcePrompt: request, intent, interpretation});
+  assert.equal(archive.version, 2);
+  assert.deepEqual(archive.request.interpretation, interpretation);
+  assert.deepEqual(archive.provenance.interpreter, interpretation);
+  assert.equal(archive.request.relationship, 'validated-ai-draft');
+  await validateScenarioLabArchive(archive);
+
+  const manuallyRevisedManifest = structuredClone(manifest);
+  manuallyRevisedManifest.scenarios[1].config.supplement = 1.25;
+  const manuallyRevised = await createScenarioLabArchive({
+    manifest: manuallyRevisedManifest,
+    results: replayScenarioSetManifest(manuallyRevisedManifest),
+    sourcePrompt: request,
+    intent,
+    interpretation,
+    relationship: 'manual-revision',
+  });
+  assert.deepEqual(manuallyRevised.request.intent, intent);
+  assert.equal(manuallyRevised.request.relationship, 'manual-revision');
+  assert.deepEqual(manuallyRevised.provenance.interpreter, interpretation);
+  await validateScenarioLabArchive(manuallyRevised);
+
+  const legacy = structuredClone(await createScenarioLabArchive({manifest, results, sourcePrompt: request, intent}));
+  legacy.version = 1;
+  delete legacy.request.interpretation;
+  delete legacy.provenance.interpreter;
+  assert.equal((await validateScenarioLabArchive(legacy)).version, 1);
+});
+
 test('scenario results must match every confirmed arm and run dimension', async () => {
   const manifest = scenarioSet();
   const results = replayScenarioSetManifest(manifest);

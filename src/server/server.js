@@ -10,6 +10,7 @@ import {validateFarmSnapshotManifestReference} from '../client/snapshot-manifest
 import {executeNativeConfiguredComparison, nativeComparisonAvailable, nativeComparisonRunner} from './native-comparison.js';
 import {validateExperimentSpecification} from '../client/population-experiment.js';
 import {consumeBehaviorResearchRateLimit, requestBehaviorExperimentExecution, runBehaviorResearchAssistant, validateBehaviorExecutionRequest} from './behavior-research-assistant.js';
+import {interpretScenarioLabPromptWithProvider, validateScenarioLabInterpretationRequest} from './scenario-lab-ai.js';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
@@ -378,6 +379,9 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
       if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
         return sendJson(response, 415, {error: 'content_type_must_be_json'});
       }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {available: false, error: 'intent_interpretation_rate_limit'});
+      }
       try {
         const input=await readJson(request);
         if(!validateExperimentInterpretationRequest(input))return sendJson(response,400,{error:'invalid_experiment_prompt'});
@@ -391,6 +395,29 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
         return sendJson(response,200,result);
       }catch(error){
         return sendJson(response,error.status??503,{available:false,error:error.status===413?'request_too_large':'intent_interpretation_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/interpret-scenario-lab' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {available: false, error: 'scenario_lab_rate_limit'});
+      }
+      try {
+        const input = await readJson(request);
+        if (!validateScenarioLabInterpretationRequest(input)) return sendJson(response, 400, {available: false, error: 'invalid_scenario_lab_prompt'});
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const providerSettings = {
+          groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? ''},
+        }[provider] ?? {};
+        const result = await interpretScenarioLabPromptWithProvider(input.prompt, {
+          provider, apiKey: providerSettings.apiKey, model: providerSettings.model, fetchImpl,
+        });
+        return sendJson(response, 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {available: false, error: error.status === 413 ? 'request_too_large' : 'scenario_lab_interpretation_unavailable'});
       }
     }
     if (url.pathname === '/api/behavior-research-assistant' && request.method === 'POST') {

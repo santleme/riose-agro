@@ -85,6 +85,7 @@
     "validate:scientific-data-registry": "node scripts/validation/validate_scientific_data_registry.js",
     "test:e2e:product": "node scripts/e2e/product-flow.mjs",
     "test:e2e:scenario-lab": "node scripts/e2e/scenario-lab.mjs",
+    "test:e2e:scenario-lab-ai": "node scripts/e2e/scenario-lab-ai.mjs",
     "audit:product-v3": "node scripts/e2e/product-v3-review-capture.mjs",
     "test:br-corte-sensitivity": "node --test tests/br-corte-sensitivity.test.js"
   },

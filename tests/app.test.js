@@ -24,7 +24,8 @@ test('conversational product and experiment dashboard are served without farm gr
   assert.match(scenarioLabHtml, /Compare the conditions you can control/);
   assert.match(scenarioLabHtml, /Export manifest \+ results/);
   assert.match(scenarioLabHtml, /BR-CORTE 2023/);
-  assert.match(scenarioLabHtml, /Deterministic parser/);
+  assert.match(scenarioLabHtml, /Validated draft · no auto-run/);
+  assert.match(scenarioLabHtml, /Optional server-side AI interpretation/);
   assert.match(scenarioLabHtml, /user-supplied/);
   assert.doesNotMatch(productHtml, /farm-scene|<canvas|isométr|mapa da fazenda/i);
   const experiments = await fetch(`${root}/experiments.html`);

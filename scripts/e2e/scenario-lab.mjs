@@ -50,11 +50,13 @@ try {
 
   await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for cattle.');
   await page.getByRole('button', {name: 'Draft for review'}).click();
+  await page.waitForFunction(() => document.querySelector('#prompt-result')?.textContent.includes('Please specify:'));
   assert.match(await page.locator('#prompt-result').textContent(), /population count, duration/);
   assert.equal(await page.locator('#review-panel:not([hidden])').count(), 0);
   await page.locator('#scenario-prompt').fill('8 cattle over 3 days in hot weather.');
   await page.getByRole('button', {name: 'Draft for review'}).click();
-  assert.match(await page.locator('#prompt-result').textContent(), /Draft prepared from the request/);
+  await page.waitForFunction(() => document.querySelector('#prompt-result')?.textContent.includes('Draft prepared by'));
+  assert.match(await page.locator('#prompt-result').textContent(), /local deterministic interpreter/);
   assert.match(await page.locator('#review-meta').textContent(), /3 days · 8 generated engine animals/);
   assert.equal(await page.locator('#results:not([hidden])').count(), 0);
   assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
@@ -63,6 +65,7 @@ try {
   assert.equal(await page.evaluate(() => window.__scenarioWorkerPosts.length), 0);
   await page.locator('#scenario-prompt').fill('Compare supplement levels 0.5 kg DM/head/day, 1 kg DM/head/day, and 1.5 kg DM/head/day for 8 cattle over 3 days in hot weather.');
   await page.getByRole('button', {name: 'Draft for review'}).click();
+  await page.locator('#review-panel:not([hidden])').waitFor();
   await page.locator('#review-state').getByText(/Requires confirmation/).waitFor();
 
   await page.locator('#scenario-form [name="animalCount"]').fill('8');

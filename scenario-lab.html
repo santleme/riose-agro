@@ -29,11 +29,11 @@
     </header>
 
     <section class="lab-card prompt-card" aria-labelledby="prompt-title">
-      <div class="lab-card-heading"><div><p class="eyebrow">LOCAL DRAFT · NO AI SERVICE</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Deterministic parser</span></div>
+      <div class="lab-card-heading"><div><p class="eyebrow">EXPERIMENT ASSISTANT</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Validated draft · no auto-run</span></div>
       <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels in kg DM/head/day. Missing values can be added in a clarification; ambiguous units or multiple intervention factors remain blocked.</p>
       <label class="prompt-label" for="scenario-prompt">Scenario request</label>
       <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Write an experiment request, or select “Use example”."></textarea>
-      <div class="prompt-actions"><button id="draft-scenario" class="primary-button" type="button">Draft for review <span aria-hidden="true">↗</span></button><button id="fill-prompt-example" class="text-button" type="button">Use example</button><span>Parsing is rule-based; no LLM is configured or simulated.</span></div>
+      <div class="prompt-actions"><button id="draft-scenario" class="primary-button" type="button">Draft for review <span aria-hidden="true">↗</span></button><button id="fill-prompt-example" class="text-button" type="button">Use example</button><span>Optional server-side AI interpretation · deterministic fallback · review required.</span></div>
       <p id="prompt-result" class="prompt-result" role="status" aria-live="polite"></p>
     </section>
 

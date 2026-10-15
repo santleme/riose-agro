@@ -2,7 +2,7 @@ import {validateScenarioSetManifest} from './scenario-set.js';
 import {interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
 
 export const SCENARIO_LAB_ARCHIVE_TYPE = 'riose-scenario-lab-archive';
-export const SCENARIO_LAB_ARCHIVE_VERSION = 1;
+export const SCENARIO_LAB_ARCHIVE_VERSION = 2;
 const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const fail = message => { throw new TypeError(`Scenario lab archive is invalid: ${message}`); };
 
@@ -114,7 +114,7 @@ export function validateScenarioLabResultBinding(manifest, result) {
   return true;
 }
 
-function provenanceFor(manifest, results, manifestSha256, resultsSha256) {
+function provenanceFor(manifest, results, manifestSha256, resultsSha256, interpreter = {source: 'deterministic', provider: null, model: null}) {
   return {
     confirmedManifestSha256: manifestSha256,
     executedManifestSha256: manifestSha256,
@@ -124,6 +124,7 @@ function provenanceFor(manifest, results, manifestSha256, resultsSha256) {
     resultExecutor: results.executor,
     engine: {id: 'FarmEngine', version: manifest.engineVersion, evidenceStatus: 'demonstration', validated: false},
     scientificModel: {id: null, version: null, status: 'not-used'},
+    interpreter: structuredClone(interpreter),
     units: structuredClone(results.units),
     assumptions: structuredClone(results.assumptions),
     hypothesis: {
@@ -134,13 +135,16 @@ function provenanceFor(manifest, results, manifestSha256, resultsSha256) {
   };
 }
 
-export async function createScenarioLabArchive({manifest, results, sourcePrompt = null, intent = null, relationship, executedManifestSha256 = null} = {}) {
+export async function createScenarioLabArchive({manifest, results, sourcePrompt = null, intent = null, interpretation = {source: 'deterministic', provider: null, model: null}, relationship, executedManifestSha256 = null} = {}) {
   validateScenarioLabResultBinding(manifest, results);
   if (sourcePrompt !== null && (typeof sourcePrompt !== 'string' || sourcePrompt.length > 1200)) fail('source prompt must be null or at most 1,200 characters.');
-  if (intent !== null && (!sourcePrompt || !intentMatchesManifest(intent, manifest))) fail('validated intent does not match the confirmed manifest.');
-  if (intent !== null && !same(intent, interpretScenarioLabPrompt(sourcePrompt))) fail('validated intent does not match its source prompt.');
-  const requestRelationship = relationship ?? (intent ? 'validated-prompt-draft' : sourcePrompt ? 'manual-revision' : 'structured-only');
-  if (!['validated-prompt-draft', 'manual-revision', 'structured-only', 'legacy-import'].includes(requestRelationship)) fail('request relationship is unsupported.');
+  if (intent !== null && (!sourcePrompt || !isRecord(intent))) fail('validated intent requires its source prompt.');
+  if (intent !== null) validateScenarioLabIntent(intent);
+  if (intent !== null && relationship !== 'manual-revision' && !intentMatchesManifest(intent, manifest)) fail('validated intent does not match the confirmed manifest.');
+  validateInterpretation(interpretation);
+  if (intent !== null && interpretation.source === 'deterministic' && !same(intent, interpretScenarioLabPrompt(sourcePrompt))) fail('validated intent does not match its source prompt.');
+  const requestRelationship = relationship ?? (intent ? (interpretation.source === 'llm' ? 'validated-ai-draft' : 'validated-prompt-draft') : sourcePrompt ? 'manual-revision' : 'structured-only');
+  if (!['validated-prompt-draft', 'validated-ai-draft', 'manual-revision', 'structured-only', 'legacy-import'].includes(requestRelationship)) fail('request relationship is unsupported.');
   const manifestSha256 = await sha256ScenarioLabJson(manifest);
   if (executedManifestSha256 !== null && executedManifestSha256 !== manifestSha256) fail('Worker execution digest does not match the confirmed manifest.');
   const resultsSha256 = await sha256ScenarioLabJson(results);
@@ -150,10 +154,10 @@ export async function createScenarioLabArchive({manifest, results, sourcePrompt 
   const archive = {
     type: SCENARIO_LAB_ARCHIVE_TYPE,
     version: SCENARIO_LAB_ARCHIVE_VERSION,
-    request: {sourcePrompt, intent: intent === null ? null : structuredClone(intent), relationship: requestRelationship, hypothesis},
+    request: {sourcePrompt, intent: intent === null ? null : structuredClone(intent), relationship: requestRelationship, hypothesis, interpretation: structuredClone(interpretation)},
     manifest: structuredClone(manifest),
     results: structuredClone(results),
-    provenance: {...provenanceFor(manifest, results, manifestSha256, resultsSha256), hypothesis},
+    provenance: {...provenanceFor(manifest, results, manifestSha256, resultsSha256, interpretation), hypothesis},
   };
   await validateScenarioLabArchive(archive);
   return archive;
@@ -161,20 +165,32 @@ export async function createScenarioLabArchive({manifest, results, sourcePrompt 
 
 export async function validateScenarioLabArchive(archive) {
   exactKeys(archive, ['type', 'version', 'request', 'manifest', 'results', 'provenance'], 'root');
-  if (archive.type !== SCENARIO_LAB_ARCHIVE_TYPE || archive.version !== SCENARIO_LAB_ARCHIVE_VERSION) fail('type/version is unsupported.');
-  exactKeys(archive.request, ['sourcePrompt', 'intent', 'relationship', 'hypothesis'], 'request');
-  if (!['validated-prompt-draft', 'manual-revision', 'structured-only', 'legacy-import'].includes(archive.request.relationship)) fail('request relationship is unsupported.');
+  if (archive.type !== SCENARIO_LAB_ARCHIVE_TYPE || ![1, SCENARIO_LAB_ARCHIVE_VERSION].includes(archive.version)) fail('type/version is unsupported.');
+  exactKeys(archive.request, archive.version === 1 ? ['sourcePrompt', 'intent', 'relationship', 'hypothesis'] : ['sourcePrompt', 'intent', 'relationship', 'hypothesis', 'interpretation'], 'request');
+  const interpretation = archive.version === 1 ? {source: 'deterministic', provider: null, model: null} : archive.request.interpretation;
+  validateInterpretation(interpretation);
+  const allowedRelationships = archive.version === 1
+    ? ['validated-prompt-draft', 'manual-revision', 'structured-only', 'legacy-import']
+    : ['validated-prompt-draft', 'validated-ai-draft', 'manual-revision', 'structured-only', 'legacy-import'];
+  if (!allowedRelationships.includes(archive.request.relationship)) fail('request relationship is unsupported.');
   if (archive.request.sourcePrompt !== null && (typeof archive.request.sourcePrompt !== 'string' || archive.request.sourcePrompt.length > 1200)) fail('source prompt is invalid.');
-  if (archive.request.intent !== null && (!archive.request.sourcePrompt || !intentMatchesManifest(archive.request.intent, archive.manifest))) fail('intent does not match the confirmed manifest.');
-  if (archive.request.intent !== null && !same(archive.request.intent, interpretScenarioLabPrompt(archive.request.sourcePrompt))) fail('intent does not match its source prompt.');
-  if ((archive.request.relationship === 'validated-prompt-draft') !== (archive.request.intent !== null)
+  if (archive.request.intent !== null && !archive.request.sourcePrompt) fail('intent requires its source prompt.');
+  if (archive.request.intent !== null) validateScenarioLabIntent(archive.request.intent);
+  if (archive.request.intent !== null && archive.request.relationship !== 'manual-revision' && !intentMatchesManifest(archive.request.intent, archive.manifest)) fail('intent does not match the confirmed manifest.');
+  if (archive.request.intent !== null && interpretation.source === 'deterministic' && !same(archive.request.intent, interpretScenarioLabPrompt(archive.request.sourcePrompt))) fail('intent does not match its source prompt.');
+  const validatedDraftRelationship = ['validated-prompt-draft', 'validated-ai-draft'].includes(archive.request.relationship);
+  if ((validatedDraftRelationship && archive.request.intent === null)
+      || (!validatedDraftRelationship && archive.request.relationship !== 'manual-revision' && archive.request.intent !== null)
       || (archive.request.relationship === 'structured-only' && archive.request.sourcePrompt !== null)) fail('request relationship does not match the supplied intent and source prompt.');
+  if (validatedDraftRelationship && ((archive.request.relationship === 'validated-ai-draft') !== (interpretation.source === 'llm'))) fail('AI interpretation provenance does not match the request relationship.');
+  if (interpretation.source === 'llm' && (archive.request.intent === null || archive.request.sourcePrompt === null)) fail('AI interpretation provenance requires its original prompt and validated proposal.');
   const expectedHypothesis = archive.request.sourcePrompt === null
     ? {statement: null, origin: 'not supplied', status: 'no scientific hypothesis was evaluated'}
     : {statement: archive.request.sourcePrompt, origin: 'user question', status: 'not independently evaluated'};
   if (!same(archive.request.hypothesis, expectedHypothesis)) fail('request hypothesis provenance is inconsistent.');
   validateScenarioLabResultBinding(archive.manifest, archive.results);
-  const expectedProvenance = provenanceFor(archive.manifest, archive.results, archive.provenance?.confirmedManifestSha256, archive.provenance?.resultsSha256);
+  const expectedProvenance = provenanceFor(archive.manifest, archive.results, archive.provenance?.confirmedManifestSha256, archive.provenance?.resultsSha256, interpretation);
+  if (archive.version === 1) delete expectedProvenance.interpreter;
   expectedProvenance.hypothesis = expectedHypothesis;
   exactKeys(archive.provenance, Object.keys(expectedProvenance), 'provenance');
   if (!same(archive.provenance, expectedProvenance)) fail('provenance does not match the confirmed manifest and results.');
@@ -182,4 +198,14 @@ export async function validateScenarioLabArchive(archive) {
   if (archive.provenance.confirmedManifestSha256 !== manifestSha256 || archive.provenance.executedManifestSha256 !== manifestSha256) fail('manifest digest does not match the confirmed and executed manifest.');
   if (archive.provenance.resultsSha256 !== await sha256ScenarioLabJson(archive.results)) fail('result digest does not match the archived results.');
   return archive;
+}
+
+function validateInterpretation(value) {
+  exactKeys(value, ['source', 'provider', 'model'], 'interpretation provenance');
+  if (!['deterministic', 'llm'].includes(value.source)) fail('interpretation source is unsupported.');
+  if (value.source === 'deterministic') {
+    if (value.provider !== null || value.model !== null) fail('deterministic interpretation cannot claim a remote provider.');
+  } else if (!['groq', 'huggingface'].includes(value.provider) || typeof value.model !== 'string' || !value.model.trim() || value.model.length > 120) {
+    fail('LLM interpretation must identify its provider and model.');
+  }
 }

@@ -20,6 +20,7 @@ let replayExpectation = null;
 let requestSourcePrompt = null;
 let requestIntent = null;
 let requestRelationship = 'structured-only';
+let requestInterpretation = {source: 'deterministic', provider: null, model: null};
 let pendingClarificationPrompt = null;
 let applyingPromptIntent = false;
 let selectedDayIndex = 0;
@@ -356,7 +357,6 @@ $('scenario-form').addEventListener('submit', event => {
 $('scenario-form').addEventListener('input', event => {
   if (applyingPromptIntent || activeWorker || event.target.type === 'submit') return;
   if (requestIntent) {
-    requestIntent = null;
     requestRelationship = 'manual-revision';
   }
   reviewedManifest = null;
@@ -394,6 +394,7 @@ $('run-scenarios').addEventListener('click', async () => {
       results: result,
       sourcePrompt: requestSourcePrompt,
       intent: requestIntent,
+      interpretation: requestInterpretation,
       relationship: requestRelationship,
       executedManifestSha256: response.manifestSha256,
     });
@@ -450,6 +451,7 @@ $('manifest-file').addEventListener('change', async event => {
   requestSourcePrompt = null;
   requestIntent = null;
   requestRelationship = 'structured-only';
+  requestInterpretation = {source: 'deterministic', provider: null, model: null};
   $('review-panel').hidden = true;
   $('results').hidden = true;
   try {
@@ -465,6 +467,9 @@ $('manifest-file').addEventListener('change', async event => {
     lastArchive = null;
     requestSourcePrompt = archive?.request.sourcePrompt ?? null;
     requestIntent = archive?.request.intent ?? null;
+    requestInterpretation = archive?.version === 1
+      ? {source: 'deterministic', provider: null, model: null}
+      : archive?.request.interpretation ?? {source: 'deterministic', provider: null, model: null};
     requestRelationship = archive?.request.relationship ?? 'legacy-import';
     completedResult = null;
     $('results').hidden = true;
@@ -508,20 +513,41 @@ $('scenario-prompt').addEventListener('input', () => {
     $('review-panel').hidden = true;
     $('review-state').dataset.state = 'review';
     $('review-state').textContent = 'Request changed · review again';
+    requestSourcePrompt = $('scenario-prompt').value.trim() || null;
     requestIntent = null;
+    requestInterpretation = {source: 'deterministic', provider: null, model: null};
     requestRelationship = requestSourcePrompt ? 'manual-revision' : 'structured-only';
     status('The request changed after review. Draft and review it again before a new run.');
   }
 });
-$('draft-scenario').addEventListener('click', () => {
+$('draft-scenario').addEventListener('click', async () => {
   const result = $('prompt-result');
+  const button = $('draft-scenario');
   result.className = 'prompt-result';
+  button.disabled = true;
   try {
     const enteredText = $('scenario-prompt').value;
     const prompt = pendingClarificationPrompt
       ? combineScenarioLabClarification(pendingClarificationPrompt, enteredText)
       : enteredText;
-    const intent = interpretScenarioLabPrompt(prompt);
+    result.textContent = 'Interpreting the request. No experiment is running.';
+    let intent;
+    let interpretation = {source: 'deterministic', provider: null, model: null};
+    try {
+      const response = await fetch('/api/interpret-scenario-lab', {
+        method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({prompt}),
+      });
+      if (response.ok) {
+        const interpreted = await response.json();
+        if (interpreted.available === true && interpreted.source === 'llm') {
+          intent = interpreted.intent;
+          interpretation = {source: 'llm', provider: interpreted.provider, model: interpreted.model};
+        }
+      }
+    } catch {
+      // Provider failures retain the deterministic offline draft path; they never run an experiment.
+    }
+    if (!intent) intent = interpretScenarioLabPrompt(prompt);
     validateScenarioLabIntent(intent);
     if (!intent.ready) {
       pendingClarificationPrompt = intent.missingInputs.length && !intent.unsupportedRequests.length ? prompt : null;
@@ -534,14 +560,15 @@ $('draft-scenario').addEventListener('click', () => {
       result.textContent = [
         intent.missingInputs.length ? `Please specify: ${intent.missingInputs.join(', ')}.` : '',
         intent.unsupportedRequests.join(' '),
-        'Add the missing details or restate the full request. This deterministic parser does not execute or invent missing scientific inputs.',
+        `Add the missing details or restate the full request. ${interpretation.source === 'llm' ? `Interpreted by ${interpretation.provider} · ${interpretation.model};` : 'The local deterministic interpreter is active;'} no scientific inputs are invented and no experiment has run.`,
       ].filter(Boolean).join(' ');
       return;
     }
     pendingClarificationPrompt = null;
     requestSourcePrompt = prompt;
     requestIntent = intent;
-    requestRelationship = 'validated-prompt-draft';
+    requestInterpretation = interpretation;
+    requestRelationship = interpretation.source === 'llm' ? 'validated-ai-draft' : 'validated-prompt-draft';
     const form = $('scenario-form');
     applyingPromptIntent = true;
     form.elements.animalCount.value = String(intent.population.count);
@@ -552,16 +579,18 @@ $('draft-scenario').addEventListener('click', () => {
     form.dispatchEvent(new Event('input', {bubbles: true}));
     form.requestSubmit();
     applyingPromptIntent = false;
-    const assumptions = intent.assumptions.filter(item => item.origin === 'scenario-lab default')
-      .map(item => `${item.field}: ${item.value} (${item.origin})`);
+    const assumptions = intent.assumptions.map(item => `${item.field}${item.value === undefined ? '' : `: ${item.value}`} (${item.origin})`);
     result.classList.add('draft-ready');
-    result.textContent = `Draft prepared from the request. ${intent.population.count} animals · ${intent.duration.days} days · supplement levels ${intent.supplementLevelsKgDMPerHeadPerDay.join(', ')} kg DM/head/day. ${assumptions.length ? `Assumption: ${assumptions.join('; ')}. ` : ''}No simulation was run. Review the structured settings and confirm explicitly.`;
+    const interpreterLabel = interpretation.source === 'llm' ? `${interpretation.provider} · ${interpretation.model}` : 'local deterministic interpreter · AI provider unavailable';
+    result.textContent = `Draft prepared by ${interpreterLabel}. ${intent.population.count} animals · ${intent.duration.days} days · supplement levels ${intent.supplementLevelsKgDMPerHeadPerDay.join(', ')} kg DM/head/day. Parameter origins: ${assumptions.join('; ')}. No simulation was run. Review the structured settings and confirm explicitly.`;
   } catch (error) {
     applyingPromptIntent = false;
     result.classList.add('needs-input');
     result.textContent = error.message;
     $('review-state').dataset.state = 'error';
     $('review-state').textContent = 'Draft rejected';
+  } finally {
+    button.disabled = false;
   }
 });
 
