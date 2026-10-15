@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createServer} from '../src/server/server.js';
-import {compareConfiguredScenarios,createConfiguredComparisonManifest} from '../src/client/engine.js';
-import {normalizeWorkerResponse} from '../src/client/worker-protocol.js';
-import {createRunRecord,runCompatibility} from '../src/client/run-history.js';
+import {createServer} from '../../src/server/server.js';
+import {compareConfiguredScenarios,createConfiguredComparisonManifest} from '../../src/client/engine.js';
+import {normalizeWorkerResponse} from '../../src/client/worker-protocol.js';
+import {createRunRecord,runCompatibility} from '../../src/client/run-history.js';
 
-const fixture=JSON.parse(readFileSync(new URL('../tests/fixtures/configured-comparison-v2-parity.json',import.meta.url),'utf8'));
+const fixture=JSON.parse(readFileSync(new URL('../../tests/fixtures/configured-comparison-v2-parity.json',import.meta.url),'utf8'));
 const runner=resolve(process.env.RIOSE_RUNNER_PATH??'target/release/riose-run');
 const server=createServer({env:{RIOSE_NATIVE_COMPARISON:'true',RIOSE_RUNNER_PATH:runner}});
 const oldFetch=globalThis.fetch,oldSelf=globalThis.self;
@@ -46,7 +46,7 @@ try{
   for(const vector of fixture.cases){
     const worker={messages:[],postMessage(message){this.messages.push(message);}};
     globalThis.self=worker;
-    await import(`../src/client/worker.js?native-integration-${vector.factor}-${Math.random()}`);
+    await import(`../../src/client/worker.js?native-integration-${vector.factor}-${Math.random()}`);
     const options={days:vector.days,referenceConfig:vector.referenceConfig,scenarioConfig:vector.scenarioConfig};
     const start=performance.now();
     await worker.onmessage({data:{protocolVersion:1,type:'compareConfigured',snapshot:fixture.snapshot,...options}});
@@ -64,7 +64,7 @@ try{
     const history=createRunRecord({manifest,result:nativeResponse.data,execution:nativeResponse.execution,id:`native-${vector.factor}`});
     assert.equal(runCompatibility(history).supported,true);
     const storage=new MemoryStorage();
-    const {recordRun,exportRunHistory}=await import('../src/client/run-history.js');
+    const {recordRun,exportRunHistory}=await import('../../src/client/run-history.js');
     recordRun(history,storage);
     const exported=JSON.parse(exportRunHistory(storage));
     assert.deepEqual(exported.runs[0].execution,history.execution);

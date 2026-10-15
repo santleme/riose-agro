@@ -3,7 +3,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import os from 'node:os';
-import {EXECUTOR_PROFILE_VERSION} from '../src/server/experiment-executor.js';
+import {EXECUTOR_PROFILE_VERSION} from '../../src/server/experiment-executor.js';
 
 export function createExecutorProfile(reports, evidence, {animalCount = 3} = {}) {
   const inputs = Array.isArray(reports) ? reports : [reports];
@@ -61,7 +61,7 @@ export function createExecutorProfile(reports, evidence, {animalCount = 3} = {})
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [output, ...inputs] = process.argv.slice(2);
-  if (!output || inputs.length === 0) throw new Error('usage: node scripts/create-executor-profile.mjs <profile.json> <scheduler-report.json> [scheduler-report.json ...]');
+  if (!output || inputs.length === 0) throw new Error('usage: node scripts/benchmarks/create-executor-profile.mjs <profile.json> <scheduler-report.json> [scheduler-report.json ...]');
   const reports = await Promise.all(inputs.map(async input => JSON.parse(await readFile(resolve(input), 'utf8'))));
   const profile = createExecutorProfile(reports, report => inputs[reports.indexOf(report)]);
   const outputPath = resolve(output);

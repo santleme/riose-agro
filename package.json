@@ -8,7 +8,7 @@
     "build:product-renderer": "node scripts/build/build-product-renderer.mjs",
     "validate:product-scene": "node scripts/validation/validate-product-blockout.mjs",
     "test": "node --test --test-concurrency=1",
-    "test:parity": "node scripts/run-trajectory-parity.js",
+    "test:parity": "node scripts/validation/run-trajectory-parity.js",
     "test:wasm-scenario": "node --test tests/native-scenario-wasm.test.js",
     "build:wasm": "sh scripts/build/build-wasm.sh",
     "build:wasm-scenario": "sh scripts/build-wasm-scenario.sh",

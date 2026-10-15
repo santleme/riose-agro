@@ -125,7 +125,7 @@ function listScientificSourcePaths(root) {
 }
 
 /** Load existing scientific manifests, evidence reports, and documentation without creating an index or registry. */
-export function loadScientificCorpus(root = fileURLToPath(new URL('../', import.meta.url))) {
+export function loadScientificCorpus(root = fileURLToPath(new URL('../../', import.meta.url))) {
   const absoluteRoot = resolve(root);
   return listScientificSourcePaths(absoluteRoot).map(path => ({
     source_id: path,
@@ -143,7 +143,7 @@ function readCliOptions(args) {
     else if (flag === '--root') options.root = args[++index];
     else throw new Error(`Unknown option: ${flag}`);
   }
-  if (!options.query?.trim()) throw new Error('Usage: node scripts/scientific-retrieval.js --query "terms" [--top-k 5]');
+  if (!options.query?.trim()) throw new Error('Usage: node scripts/science/scientific-retrieval.js --query "terms" [--top-k 5]');
   return options;
 }
 

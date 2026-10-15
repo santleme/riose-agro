@@ -9,7 +9,7 @@ Fixtures record the generator and engine contract versions, scenario identity, s
 Regenerate with:
 
 ```sh
-node scripts/generate-scenario-goldens.js --write
+node scripts/validation/generate-scenario-goldens.js --write
 ```
 
 The generator reuses the scenario harness, supported preset runner, and scenario contract replay API. It rejects unsupported presets. It emits no timestamps, generated-at values, filesystem paths, or random run IDs. To review an update, regenerate twice, confirm the second run creates no additional diff, and inspect every changed fixture value against the JavaScript engine behavior. Update a golden only when an intentional compatibility change is understood and reviewed. Passing these fixtures proves deterministic software/replay compatibility for the recorded inputs; it does not prove biological accuracy, calibration, or scientific validity.

@@ -3,7 +3,7 @@
 Run a deterministic lexical search over the scientific manifests, evidence reports, and selected documentation already in the repository:
 
 ```sh
-node scripts/scientific-retrieval.js --query "grazing intake" --top-k 5
+node scripts/science/scientific-retrieval.js --query "grazing intake" --top-k 5
 ```
 
 The JSON result includes the exact snippet, repository-relative `source_id`, file path and line range, and a score. The score is the fraction of unique normalized query terms present in the snippet; `matched_terms` shows the terms counted. Ties are resolved by source path and line range, then by source ID and snippet for otherwise identical locations. Diacritics and letter case are normalized. Empty or unmatched queries return an empty result list.
