@@ -7,6 +7,16 @@
     <meta name="description" content="Riose — Brazilian applied research and technology for agriculture.">
     <title>Riose — Research beyond the expected</title>
     <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+    <script>
+      try {
+        if (window.localStorage.getItem('riose-home-theme') === 'dark') {
+          document.documentElement.dataset.theme = 'dark';
+          document.querySelector('meta[name="theme-color"]').content = '#181a17';
+        }
+      } catch {
+        // The page starts in light mode when browser storage is restricted.
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -70,7 +80,10 @@
             <p class="publication-authors">Joon Sung Park, Joseph C. O’Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein</p>
             <p class="publication-summary">A memory architecture lets simulated agents retrieve experience, reflect, and plan in a town of 25 people.</p>
             <p class="publication-relation">A reference for questions about memory and context in agents. Its evidence concerns simulated human behavior, not physical systems.</p>
-            <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3586183.3606763" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
+            <div class="publication-link-row">
+              <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3586183.3606763" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
+              <img class="publication-illustration publication-illustration--cow" src="assets/research-illustrations/nelore-white.png" data-light-src="assets/research-illustrations/nelore-white.png" data-dark-src="assets/research-illustrations/nelore-black.png" alt="" aria-hidden="true" width="144" height="108" loading="lazy" decoding="async">
+            </div>
           </div>
           <figure class="publication-pages" aria-hidden="true">
             <img class="paper-image paper-image--back" src="assets/research-pages/generative-agents-3.webp" alt="" width="850" height="1100" loading="eager">
@@ -88,7 +101,10 @@
             <p class="publication-authors">Joon Sung Park, Carolyn Q. Zou, Jonne Kamphorst, Niles Egan, Aaron Shaw, Benjamin Mako Hill, Carrie Cai, Meredith Ringel Morris, Percy Liang, Robb Willer, Michael S. Bernstein</p>
             <p class="publication-summary">Agents grounded in interviews with 1,052 people were evaluated against those participants on selected tasks.</p>
             <p class="publication-relation">This is evidence for grounding and task-specific evaluation, not accuracy in other populations or physical domains.</p>
-            <a class="publication-link" href="https://arxiv.org/abs/2411.10109" target="_blank" rel="noopener noreferrer">Read the preprint <span aria-hidden="true">↗</span></a>
+            <div class="publication-link-row">
+              <a class="publication-link" href="https://arxiv.org/abs/2411.10109" target="_blank" rel="noopener noreferrer">Read the preprint <span aria-hidden="true">↗</span></a>
+              <img class="publication-illustration" src="assets/research-illustrations/tractor.png" alt="" aria-hidden="true" width="144" height="108" loading="lazy" decoding="async">
+            </div>
           </div>
           <figure class="publication-pages" aria-hidden="true">
             <img class="paper-image paper-image--back" src="assets/research-pages/grounded-agents-3.webp" alt="" width="850" height="1100" loading="eager">
@@ -105,7 +121,10 @@
             <p class="publication-authors">Joon Sung Park, Lindsay Popowski, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein</p>
             <p class="publication-summary">Populated prototypes use generated posts and replies to explore how rule changes affect social interaction.</p>
             <p class="publication-relation">A bounded example of scenario exploration in social computing; it does not study agriculture or environmental systems.</p>
-            <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3526113.3545616" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
+            <div class="publication-link-row">
+              <a class="publication-link" href="https://dl.acm.org/doi/10.1145/3526113.3545616" target="_blank" rel="noopener noreferrer">Read the paper <span aria-hidden="true">↗</span></a>
+              <img class="publication-illustration" src="assets/research-illustrations/rural-pickup.png" alt="" aria-hidden="true" width="144" height="108" loading="lazy" decoding="async">
+            </div>
           </div>
           <figure class="publication-pages" aria-hidden="true">
             <img class="paper-image paper-image--back" src="assets/research-pages/social-simulacra-3.webp" alt="" width="850" height="1100" loading="eager">

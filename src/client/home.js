@@ -6,6 +6,10 @@ const homeThemeStorageKey = 'riose-home-theme';
 function setHomeTheme(theme) {
   const dark = theme === 'dark';
   homePage.dataset.theme = dark ? 'dark' : 'light';
+  document.querySelectorAll('.publication-illustration--cow').forEach((cow) => {
+    const image = dark ? cow.dataset.darkSrc : cow.dataset.lightSrc;
+    if (cow.getAttribute('src') !== image) cow.setAttribute('src', image);
+  });
   themeToggle.setAttribute('aria-pressed', String(dark));
   themeToggle.title = dark ? 'Turn off dark mode' : 'Turn on dark mode';
   themeColor.content = dark ? '#181a17' : '#f7f7f4';
@@ -76,4 +80,5 @@ window.addEventListener('scroll', () => {
   }
 }, {passive: true});
 reduceMotion.addEventListener('change', updateScrollState);
+homePage.classList.add('home-scroll-ready');
 updateScrollState();

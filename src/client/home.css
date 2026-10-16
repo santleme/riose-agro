@@ -37,7 +37,7 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 .header-product { align-self: baseline; color: #66675f; font: 11px/1 var(--mono); pointer-events: auto; }
 .header-place { margin-left: auto; color: #77766f; font: 11px var(--mono); letter-spacing: .025em; text-transform: lowercase; }
 .header-place { pointer-events: auto; }
-body:has(.hero-lockup) .site-header:not(.is-locked) .header-name-control { visibility: hidden; }
+html.home-scroll-ready body:has(.hero-lockup) .site-header:not(.is-locked) .header-name-control { visibility: hidden; }
 .site-header.is-scrolled { background-color: rgb(247 247 244 / .86); backdrop-filter: blur(5px); }
 .header-manifesto, .header-product { transition: color .18s ease, background-color .18s ease; }
 .header-manifesto:hover, .header-manifesto:focus-visible, .header-product:hover, .header-product:focus-visible { color: var(--paper); background: var(--ink); }
@@ -120,6 +120,8 @@ body:has(.hero-lockup) .site-header:not(.is-locked) .header-name-control { visib
 .publication-relation { margin: 0 0 24px; color: #777870; font-size: 12px; line-height: 1.65; }
 .publication-link { display: inline-flex; align-items: center; gap: 8px; color: #51524c; font: 10px var(--mono); transition: color .18s ease; }
 .publication-link:hover { color: #8b5b38; }
+.publication-link-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 104px; }
+.publication-illustration { display: block; flex: 0 1 138px; width: 138px; height: 104px; object-fit: contain; }
 .publication-pages { position: relative; width: 100%; max-width: 690px; height: clamp(420px, 36vw, 520px); justify-self: end; margin: 0; perspective: 1300px; }
 .paper-image { position: absolute; top: 5%; display: block; width: 44%; height: auto; background: #fff; box-shadow: 0 18px 40px rgb(44 41 34 / .14); transform-origin: center; transition: transform .55s cubic-bezier(.2,.72,.2,1), box-shadow .55s ease; }
 .paper-image--back { right: 2%; z-index: 0; top: 2%; transform: rotate(4deg); }
@@ -222,6 +224,8 @@ body:has(.hero-lockup) .site-header:not(.is-locked) .header-name-control { visib
   .publication-former-title { margin: -5px 0 9px; font-size: 8px; }
   .publication-summary { margin-bottom: 10px; font-size: 13px; }
   .publication-relation { margin-bottom: 15px; font-size: 11px; }
+  .publication-link-row { min-height: 82px; gap: 10px; }
+  .publication-illustration { flex-basis: 112px; width: 112px; height: 82px; }
   .publication-pages { width: 100%; height: 270px; max-width: 560px; justify-self: center; }
   .paper-image { width: 43%; box-shadow: 0 13px 28px rgb(44 41 34 / .13); }
   .paper-image--back { right: 2%; top: 3%; }
