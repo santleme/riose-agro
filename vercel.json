@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node scripts/build/build-vercel-site.mjs",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/[...path].js": {
+      "includeFiles": "{src/client/**,schemas/**,docs/evidence/perea-no-go-diagnostic-v1.json}"
+    }
+  }
+}

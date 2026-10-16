@@ -3,6 +3,7 @@ Thumbs.db
 .codex/
 node_modules/
 target/
+dist/
 coverage/
 .codex/
 __pycache__/
@@ -19,3 +20,4 @@ target/
 data/raw/zenodo-4064802/
 data/processed/zenodo-4064802/
 graphics-poc/dist/
+.vercel
