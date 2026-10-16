@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "validate:product-scene": "node scripts/validation/validate-product-scene.mjs",
     "start": "node src/server/server.js",
     "test": "node --test --test-concurrency=1",
     "test:parity": "node scripts/validation/run-trajectory-parity.js",
