@@ -6,7 +6,7 @@ const homeThemeStorageKey = 'riose-home-theme';
 function setHomeTheme(theme) {
   const dark = theme === 'dark';
   homePage.dataset.theme = dark ? 'dark' : 'light';
-  document.querySelectorAll('.publication-illustration--cow').forEach((cow) => {
+  document.querySelectorAll('.hero-cow').forEach((cow) => {
     const image = dark ? cow.dataset.darkSrc : cow.dataset.lightSrc;
     if (cow.getAttribute('src') !== image) cow.setAttribute('src', image);
   });

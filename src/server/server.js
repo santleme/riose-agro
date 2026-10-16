@@ -26,7 +26,6 @@ const PUBLIC_FILES = new Set([
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
   'assets/research-illustrations/nelore-white.png', 'assets/research-illustrations/nelore-black.png',
-  'assets/research-illustrations/tractor.png', 'assets/research-illustrations/rural-pickup.png',
   'index.html', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
   'snapshot-review.js', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
