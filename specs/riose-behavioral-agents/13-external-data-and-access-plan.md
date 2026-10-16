@@ -30,7 +30,7 @@ The draft request is stored in the evidence audit; it must be reviewed by a huma
 | Perea v2 | **Already evaluated; internal exploratory only** | CC BY 4.0 per existing record; 24 mature cows, two ranch contexts, four annotations, sampled windows/carry-forward. Not independent external validation. |
 | Precision Beef | **Separate instrument-agreement diagnostic only** | CC BY 4.0; indoor housed Limousin-cross steers and sensor/halter label agreement, not pasture ground truth. |
 | Chile IoT collar repository | **Exclude until written grant/license** | Useful pasture event clips, but repository has no explicit dataset license; paper copyright does not establish data/model commercial rights. |
-| XGain UC6 | **Exclude from commercial training** | Repository record and embedded README have conflicting commercial/non-commercial licenses; labels are classifier-derived hourly summaries. |
+| XGain UC6 | **Removed; redistribution and reuse blocked** | Repository record and embedded README have conflicting commercial/non-commercial licenses. Source and derived data are removed from this tree; retain the source reference for rights research only. Classifier-derived hourly summaries do not establish independent validation. |
 | Japanese Black Zenodo sequence data | **Exclude from commercial training/derivatives** | CC BY-NC-ND 4.0 terms conflict with commercial reuse; one short mixed grass/pen recording context. |
 | CSIRO CVB video clips | **Exclude until exact record terms are verified** | Visual clips/annotations may support perception research, but continuous stable individual activity history and training/commercial permissions were not established. |
 

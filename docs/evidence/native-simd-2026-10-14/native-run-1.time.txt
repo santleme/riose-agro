@@ -1,4 +1,4 @@
-	Command being timed: "env SIMD_STUDY_PROFILE=native: -C target-cpu=native SIMD_STUDY_RUN=1 /mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/native/release/examples/simd_metabolism_study"
+	Command being timed: "env SIMD_STUDY_PROFILE="native: -C target-cpu=native" SIMD_STUDY_RUN=1 "$WORKSPACE/issue-91/repro-target-9d9b7e7/native/release/examples/simd_metabolism_study""
 	User time (seconds): 14.53
 	System time (seconds): 0.12
 	Percent of CPU this job got: 96%

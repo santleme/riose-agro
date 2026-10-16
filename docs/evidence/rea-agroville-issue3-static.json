@@ -1,13 +1,13 @@
 {
   "evidence_id": "ev_4ad96b98a1908efa97adb3317d8fe978c8390027767c6aa5ca83a050266d4c68",
   "subject": {
-    "name": "\\\\wsl.localhost\\Ubuntu\\tmp\\rea-agroville-recheck",
+    "name": "<workspace>/tmp/rea-agroville-recheck",
     "digest": {
       "sha256": "6b734a4bd1463ef819b56171a38f2aef4a0091f45999a64c59be7af68c52b51c"
     },
     "format": "directory",
     "architecture": null,
-    "local_path": "\\\\wsl.localhost\\Ubuntu\\tmp\\rea-agroville-recheck"
+    "local_path": "<workspace>/tmp/rea-agroville-recheck"
   },
   "normalized_result": {
     "graph": {

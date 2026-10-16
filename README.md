@@ -4,7 +4,7 @@ Riose Agro is a browser-based livestock simulation and experiment workspace. The
 
 ## License and publication status
 
-Project code is licensed under [Apache License 2.0](LICENSE). Third-party datasets carry separate terms; see each dataset's `data/**/manifest.json` for its source and license. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) provides selected attribution details and flags the unresolved XGain rights issue. Read the [ACT III owner-publication readiness review](docs/evidence/actiii-owner-publication-readiness.md) before making the repository public; it records an unresolved dataset-rights gate on the current `main` branch.
+Project code is licensed under [Apache License 2.0](LICENSE). Third-party datasets carry separate terms; see each dataset's `data/**/manifest.json` for its source and license. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) explains that XGain files with conflicting license statements were removed from this tree, while the publication gate remains open pending review of other refs and reachable history. Read the [ACT III owner-publication readiness review](docs/evidence/actiii-owner-publication-readiness.md) before making the repository public; it records the remaining dataset-rights and publication checks.
 
 See the [repository layout guide](docs/architecture/repository-layout.md) for directory responsibilities and the reason browser page URLs remain at the root.
 
@@ -23,6 +23,10 @@ Open the printed local URL and choose Product. Snapshot review validates a linke
 The Product simulation workspace does not render a farm or use decorative animals as engine state. The Manifesto has a separate illustrative pixel-art farm; those sprites are not observations or simulation outputs. Scientific charts and research-page illustrations remain separate from both.
 
 The product runs comparisons in a Web Worker; when the local native runner is available it can use Rust and otherwise falls back to JavaScript. `scenario-lab.html` provides multi-scenario comparisons and the conditional BR-CORTE module. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
+
+### Standalone compute service
+
+An optional Python service can run a bounded livestock-metabolism batch on CPU, CUDA, or AMD ROCm. It is separate from Product's population comparisons, branches, and replay; selecting an accelerator here does not change Product simulation results. Start it in another terminal with `python3 src/server/compute_service.py`, then run `npm run verify:compute-livestock` to compare one deterministic batch against the JavaScript kernel. The verifier reports actual backend use and fallback; CPU-only verification does not establish GPU execution or a performance gain. See [the compute-service contract](docs/compute-service.md).
 
 `npm run bench:wasm-scenario-browser` compares full scenario compute and Worker costs in Chromium; `npm run bench:wasm-scenario-browser:firefox` selects Firefox. These computational benchmarks do not measure UI rendering.
 

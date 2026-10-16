@@ -281,22 +281,14 @@
       "id": "zenodo-xgain-hourly-behavior",
       "doi": "10.5281/zenodo.15600573",
       "officialUrl": "https://zenodo.org/records/15600573",
-      "license": "Zenodo metadata says CC BY 4.0; embedded README says CC BY-NC (conflict)",
+      "license": "Zenodo metadata declares CC BY 4.0; embedded README declares CC BY-NC. No reuse right is claimed.",
       "technicalAccess": {
-        "metadataAndFiles": "public anonymous ZIP",
-        "fileBytesRetrieved": true,
-        "localManifest": "data/xgain-cattle-behavior/manifest.json",
-        "checksumRecorded": true
+        "metadataAndFiles": "Public source record; source archive and derivatives removed from this repository",
+        "fileBytesRetrieved": false,
+        "repositoryDisposition": "EXCLUDED_UNRESOLVED_LICENSE_CONFLICT"
       },
-      "population": "10 adult lactating Holstein cows with pasture access at ILVO, Belgium.",
-      "target": "Hourly counts of grazing, ruminating, resting, and other activity predictions from an embedded classifier, not human reference labels.",
-      "measurementMethod": "Released counts aggregate one-minute decision-tree classifications; raw IMU and independent human-reference outcomes are absent.",
-      "units": "Counts per animal-hour; 5,760 animal-hour rows, 576 hours per animal.",
-      "grainAndGroups": "animal_id × hour.",
-      "period": "576 hours per animal; source timezone unspecified.",
-      "decision": "CONDITIONAL_FOR_DESCRIPTIVE_PROFILES; INELIGIBLE_FOR_COMMERCIAL_TRAINING_PENDING_LICENSE_CONFLICT",
-      "decisionReason": "Data are public and checksummed, but the embedded outputs are classifier predictions and license statements conflict. Commercial reuse is not cleared and no independent predictive evaluation is possible from the archive.",
-      "bestSeparateUse": "Descriptive hourly activity profiles only; do not treat as independent behavior labels or DMI evidence."
+      "decision": "REMOVED_UNRESOLVED_LICENSE_CONFLICT",
+      "decisionReason": "The project removed the source archive and derivatives; no dataset values or reuse right are included in this release."
     }
   ],
   "moduleReadinessMatrix": [

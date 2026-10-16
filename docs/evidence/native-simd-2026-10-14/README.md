@@ -64,6 +64,8 @@ Reconsider production integration only after a full FarmEngine benchmark on cont
 
 ## Reproduction and files
 
+Absolute machine paths in the retained captures are redacted: `<workspace>` is a neutral location marker in static evidence. In the recorded timing commands, `$WORKSPACE` represents the external artifact root containing `issue-91/repro-target-9d9b7e7`; set it to the matching local directory before replay. Shell quoting around profile values and executable paths is normalized for replay; measured timings, results, source revisions, and artifact digests are unchanged. Use the current runner below for fresh captures rather than treating the historical artifact layout as a checkout requirement.
+
 The source harness, audit, and capture scripts are in `crates/riose-core/examples/simd_metabolism_study.rs` and `scripts/benchmarks/{audit-native-simd.py,run-native-simd-study.sh,summarize-native-simd.py}`. The runner requires a clean checkout, an external Cargo directory, and an output path that does not already exist. `summary.json` consolidates, but does not replace, the raw 12 reports; each `*-run-*.time.txt` contains GNU time/RSS output.
 
 Source revision: 9d9b7e712904f6906ddd3d29e6fbad2038fa428b (the published PR head used for these captures and reachable from the PR branch). The study began from 4ffe4f7e10d8b6b9765e92293374c1034a357fe1. Raw reports, compiler audits, and summary were regenerated from the clean published revision so reproduction works from repository history.
