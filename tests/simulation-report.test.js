@@ -83,12 +83,10 @@ test('explains invalid report inputs',()=>{
   assert.throws(()=>renderSimulationReport({rows:[],days:0},{}),/horizonte deve ser um número inteiro/);
 });
 
-test('experiment dashboard offers the portable Markdown report export', async () => {
-  const app = await readFile(new URL('../src/client/experiments-app.js', import.meta.url), 'utf8');
+test('retired Experiments route no longer exposes the old dashboard', async () => {
   const html = await readFile(new URL('../experiments.html', import.meta.url), 'utf8');
-  assert.match(html, /id="export-report"[^>]*>Baixar relatório/);
-  assert.match(app, /renderSimulationReport\(latest\.result,latest\.manifest\)/);
-  assert.match(app, /riose-relatorio\.md/);
+  assert.match(html, /product\.html/);
+  assert.doesNotMatch(html, /id="experiment-form"|id="export-report"/);
 });
 
 test('local app server exposes imported browser modules',async t=>{

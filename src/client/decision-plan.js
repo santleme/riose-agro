@@ -1,10 +1,11 @@
 import {interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
+import {interpretExperimentPrompt} from './population-experiment.js';
 import {createBrCorteSensitivityManifest} from './br-corte-sensitivity.js';
 import {createBrCorteDmiScenarioManifest} from './br-corte-scenario.js';
 
 export const DECISION_LABELS = ['create_experiment', 'compare_scenarios', 'sensitivity_analysis', 'conditional_cost',
   'scientific_explanation', 'inspect_results', 'clarification_needed', 'unsupported_request'];
-export const CAPABILITIES = ['farm_comparison', 'br_corte_single', 'br_corte_scenarios', 'br_corte_sensitivity', 'evidence', 'results', 'none'];
+export const CAPABILITIES = ['farm_pair_comparison', 'farm_comparison', 'br_corte_single', 'br_corte_scenarios', 'br_corte_sensitivity', 'evidence', 'results', 'none'];
 export const EVIDENCE = Object.freeze({
   farm_demonstrative: 'FarmEngine uses deterministic demonstrative rules for weight, intake and weather. Its outputs do not establish real weight gain, intervention effects or management recommendations.',
   br_corte_conditional: 'BR-CORTE 2023 Eq. 2.6 estimates total dry matter intake conditional on user-supplied average daily gain (ADG/GMD). ADG is an input, never a predicted output. Domain: growing Zebu cattle on tropical pasture with supplementation; no Riose-specific calibration.',
@@ -75,7 +76,7 @@ export function validateDecisionPlan(plan) {
   if (p.bodyWeightKg !== null && (p.bodyWeightKg < 133 || p.bodyWeightKg > 474)) fail('body weight outside published 133–474 kg domain.');
   if (p.adgKgPerDay !== null && (p.adgKgPerDay < -0.18 || p.adgKgPerDay > 1.34)) fail('supplied ADG outside published domain.');
   if (p.pricePerKgDM !== null && (p.pricePerKgDM < 0 || p.pricePerKgDM > 1e9)) fail('price outside supported arithmetic bounds.');
-  const maxSupplement = plan.capability === 'farm_comparison' ? 4 : 5.32;
+  const maxSupplement = ['farm_comparison','farm_pair_comparison'].includes(plan.capability) ? 4 : 5.32;
   if (p.supplementLevels.some(x => x < 0 || x > maxSupplement) || new Set(p.supplementLevels).size !== p.supplementLevels.length) fail('supplement inputs outside domain or duplicated.');
   return plan;
 }
@@ -109,11 +110,17 @@ export function reconcileDecisionPlan(plan, prompt, previousPrompt = '') {
     plan.capability = 'evidence';
     plan.evidenceIds = [...new Set([...plan.evidenceIds, 'br_corte_conditional', 'farm_demonstrative', ...(plan.intent === 'unsupported_request' ? ['behavior_no_go'] : [])])];
   }
-  const executable = ['farm_comparison', 'br_corte_single', 'br_corte_scenarios', 'br_corte_sensitivity'].includes(plan.capability);
+  const executable = ['farm_pair_comparison','farm_comparison','br_corte_single','br_corte_scenarios','br_corte_sensitivity'].includes(plan.capability);
   if (executable) {
-    if (plan.capability === 'farm_comparison' && /br[ -]?corte|\bcms\b|\bdmi\b/.test(normalize(prompt))) fail('FarmEngine cannot substitute for a requested scientific calculation.');
+    if (['farm_comparison','farm_pair_comparison'].includes(plan.capability) && /br[ -]?corte|\bcms\b|\bdmi\b/.test(normalize(prompt))) fail('FarmEngine cannot substitute for a requested scientific calculation.');
     if (plan.capability === 'farm_comparison') {
       for (const unsupported of interpretScenarioLabPrompt(prompt).unsupportedRequests) missing.add(unsupported);
+    } else if (plan.capability === 'farm_pair_comparison') {
+      const paired = interpretExperimentPrompt(source);
+      for (const unsupported of paired.unsupported_requests) missing.add(unsupported);
+      if (paired.missing_inputs.length) for (const item of paired.missing_inputs) missing.add(item);
+      if (paired.baseline.supplement !== p.supplementLevels[0] || paired.intervention.supplement !== p.supplementLevels[1]) fail('provider pair does not match the explicit supplement values or order.');
+      if (paired.population.count !== p.populationCount || paired.duration.days !== p.durationDays || paired.baseline.weather !== p.weather) fail('provider pair does not match the explicit herd, duration or weather.');
     }
     if (!/kg\s*(?:de\s*)?(?:dm|ms|materia seca|dry matter)[\s\S]{0,70}(?:head|animal|cabeca)[\s\S]{0,30}(?:day|dia)/.test(text)) missing.add('supplement in kg DM/head/day (explicit dry-matter basis)');
     if (plan.capability !== 'br_corte_single') {
@@ -134,10 +141,11 @@ export function reconcileDecisionPlan(plan, prompt, previousPrompt = '') {
     }
     if (plan.capability === 'br_corte_sensitivity') {
       for (const key of ['sweepMinimum', 'sweepMaximum', 'sweepStep']) if (p[key] === null) missing.add(key);
-    } else if (p.supplementLevels.length < (plan.capability === 'br_corte_single' ? 1 : 3)) missing.add(plan.capability === 'br_corte_single' ? 'one supplement input' : 'three explicit supplement alternatives');
+    } else if (plan.capability === 'farm_pair_comparison' && p.supplementLevels.length !== 2) missing.add('two distinct supplement levels for the Product pair comparison');
+    else if (plan.capability !== 'farm_pair_comparison' && p.supplementLevels.length < (plan.capability === 'br_corte_single' ? 1 : 3)) missing.add(plan.capability === 'br_corte_single' ? 'one supplement input' : 'three explicit supplement alternatives');
     if (plan.capability === 'br_corte_single' && p.supplementLevels.length !== 1) missing.add('one supplement input for a single estimate');
     const weatherExplicit = {normal: /\bnormal\b/, hot: /\bhot\b|heat|calor|quente/, rain: /rain|chuva|chuvoso/};
-    if (plan.capability === 'farm_comparison' && (p.weather === null || !weatherExplicit[p.weather].test(text))) missing.add('shared weather: normal, hot or rain (demonstrative rule)');
+    if (['farm_comparison','farm_pair_comparison'].includes(plan.capability) && (p.weather === null || !weatherExplicit[p.weather].test(text))) missing.add('shared weather: normal, hot or rain (demonstrative rule)');
     if (plan.capability === 'farm_comparison') {
       const latestWeather = Object.entries(weatherExplicit).filter(([, expression]) => expression.test(normalize(prompt))).map(([category]) => category);
       if (latestWeather.length === 1 && p.weather !== null && p.weather !== latestWeather[0]) fail('provider changed explicit weather.');
@@ -185,6 +193,20 @@ export function decisionPlanToFarmIntent(plan) {
 export function deterministicDecisionPlan(prompt) {
   const plan = emptyDecisionPlan(prompt);
   if (['create_experiment', 'compare_scenarios'].includes(plan.intent)) {
+    try {
+      const explicitLevels = interpretScenarioLabPrompt(prompt).supplementLevelsKgDMPerHeadPerDay;
+      const enumeratesThree = /\d+(?:[.,]\d+)?\s*,\s*\d+(?:[.,]\d+)?\s*(?:,\s*\d+(?:[.,]\d+)?|and\s+\d+(?:[.,]\d+)?|e\s+\d+(?:[.,]\d+)?)/i.test(prompt);
+      const pair = explicitLevels.length >= 3 || enumeratesThree ? null : interpretExperimentPrompt(prompt);
+      const origins = new Map(pair.assumptions.map(item => [item.field, item.origin]));
+      if (pair.missing_inputs.length === 0 && pair.unsupported_requests.length === 0
+          && pair.baseline.supplement !== pair.intervention.supplement
+          && ['population.count','duration.days','weather'].every(field => origins.get(field) === 'user prompt')) {
+        plan.capability = 'farm_pair_comparison';
+        Object.assign(plan.parameters, {populationCount: pair.population.count, durationDays: pair.duration.days,
+          supplementLevels: [pair.baseline.supplement, pair.intervention.supplement], weather: pair.baseline.weather});
+        plan.missingInputs = []; plan.evidenceIds = ['farm_demonstrative']; return validateDecisionPlan(plan);
+      }
+    } catch { /* Fall through to the Scenario Lab planner for multi-arm or incomplete requests. */ }
     const intent = interpretScenarioLabPrompt(prompt);
     plan.capability = 'farm_comparison';
     Object.assign(plan.parameters, {populationCount: intent.population.count, durationDays: intent.duration.days,

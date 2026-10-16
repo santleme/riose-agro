@@ -1,3 +1,27 @@
+const themeToggle = document.querySelector('.theme-toggle');
+const themeStorageKey = 'riose-theme';
+function setTheme(theme, persist = false) {
+  const dark = theme === 'dark';
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  if (themeToggle) {
+    themeToggle.textContent = dark ? 'light' : 'dark';
+    themeToggle.setAttribute('aria-pressed', String(dark));
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Enable dark mode');
+  }
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.content = dark ? '#171916' : '#f7f7f4';
+  if (persist) {
+    try { localStorage.setItem(themeStorageKey, dark ? 'dark' : 'light'); } catch {}
+  }
+}
+
+let savedTheme = 'light';
+try { savedTheme = localStorage.getItem(themeStorageKey) === 'dark' ? 'dark' : 'light'; } catch {}
+setTheme(savedTheme);
+themeToggle?.addEventListener('click', () => {
+  setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
+});
+
 const nameControl = document.querySelector('.header-name-control');
 const definitionTrigger = document.querySelector('.meaning-trigger');
 const definitionPanel = document.querySelector('.name-definition');

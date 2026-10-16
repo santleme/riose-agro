@@ -21,7 +21,7 @@ Observed farm snapshots in `schemas/farm-snapshot.schema.json` remain a separate
 
 ## User-facing flow
 
-The homepage remains the institutional entry point. `experiments.html` is the experiment workspace. It reports modeled weight, dry-matter intake, pasture stocks, and model costs using existing engine outputs, labels assumptions and limitations, and distinguishes output from observed measurements. The scenario history is local to the browser. Snapshot review validates an uploaded observational record without importing it into the simulator. `product.html` and `simulator.html` are compatibility redirects.
+The homepage remains the institutional entry point and `product.html` is the primary conversational workspace. `scenario-lab.html` is a direct entry to multi-scenario and BR-CORTE workflows. The former `experiments.html` dashboard is retired; its URL and `simulator.html` return a permanent redirect to Product. The app header uses the established Riose site header and no longer exposes separate Product, Scenario Lab, Experiments, or Observed Data tabs. Observed-data explorers remain available through direct links and keep their data separate from simulation output.
 
 ## Removed surface
 

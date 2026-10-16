@@ -3,32 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f8fafb">
+  <meta name="theme-color" content="#f7f7f4">
   <meta name="description" content="Describe a cattle experiment, review its assumptions, and compare reproducible scenarios with Riose.">
   <title>Riose — What would happen if?</title>
   <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/client/home.css">
   <link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="home.html" aria-label="Riose home"><span class="brand-mark">r.</span><span>riose<span class="brand-light"> agro</span></span></a>
-    <nav aria-label="Main navigation"><a class="active" href="product.html">Product</a><a href="scenario-lab.html">Scenario lab</a><a href="experiments.html">Experiments</a><a href="observed-data.html">Observed data</a></nav>
-    <span class="system-status"><i></i> Local engine ready</span>
+  <header class="site-header" aria-label="Riose">
+    <a class="header-manifesto" href="manifesto.html">manifesto</a>
+    <div class="header-mark-group">
+      <div class="header-name-control">
+        <a class="header-wordmark meaning-trigger" href="home.html" aria-label="Riose home" aria-describedby="riose-definition">Riose</a>
+        <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
+          <span class="definition-title">Riose</span>
+          <span class="definition-meta">proper noun / origin</span>
+          <p>Named after Bel Riose, a general from <em>Foundation</em>, a character inspired by the Byzantine commander Belisarius.</p>
+          <p class="definition-note">A name for seeing farther and turning the unseen into knowledge.</p>
+        </aside>
+      </div>
+      <a class="header-product" href="product.html" aria-current="page">· product</a>
+    </div>
+    <div class="header-utilities"><span class="header-place">são paulo, brazil</span><button class="theme-toggle" type="button" aria-pressed="false" aria-label="Enable dark mode">dark</button></div>
   </header>
 
   <main id="product" class="product-shell">
     <section id="welcome" class="welcome">
-      <div class="welcome-mark" aria-hidden="true">r.</div>
-      <p class="eyebrow">RIOSE · LIVESTOCK EXPERIMENTS</p>
       <h1>What would happen if?</h1>
       <p class="welcome-copy">Describe a population, a condition, or an intervention. Review the assumptions, then explore both scenarios animal by animal.</p>
       <form id="prompt-form" class="prompt-form">
         <label class="visually-hidden" for="prompt-input">Describe an experiment</label>
-        <textarea id="prompt-input" rows="3" maxlength="1200" placeholder="For example: I have 200 Nelore cattle on pasture for 30 days in hot weather. What changes if I increase supplementation from 0.5 to 1.5 kg per animal?"></textarea>
-        <div class="prompt-footer"><span>Natural language · deterministic local interpretation</span><button class="primary-button" type="submit">Review experiment <span aria-hidden="true">↗</span></button></div>
+        <textarea id="prompt-input" rows="3" maxlength="1200" placeholder="Write your scenario in your own words. Choose an example below if helpful."></textarea>
+        <div class="prompt-footer"><span id="agent-availability" aria-live="polite">Riose experiment agent · checking server configuration</span><button class="primary-button" type="submit">Ask Riose <span aria-hidden="true">↗</span></button></div>
       </form>
       <div class="suggestions" aria-label="Example experiments">
         <button type="button" data-prompt="Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, with supplementation changing from 0.5 to 1.5 kg dry matter per animal per day.">Supplementation under heat <span>↗</span></button>
@@ -46,33 +57,64 @@
           <label for="followup-input">Change one experiment input</label>
           <div class="followup-entry"><input id="followup-input" maxlength="400" placeholder="e.g. make it 15 days"><button aria-label="Send update" type="submit">↑</button></div>
         </form>
-        <div class="engine-card"><span class="engine-dot"></span><div><strong>Riose farm engine</strong><small>JavaScript · deterministic · unvalidated demo</small></div></div>
       </aside>
 
-      <section class="population-panel" aria-label="Population workspace">
-        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div>
-        <div class="control-row">
-          <label>View <select id="metric-select"><option value="weight">Live weight · kg</option><option value="delta">Weight difference · kg</option><option value="energy">Energy · index</option><option value="thirst">Thirst · index</option></select></label>
-          <label>Filter <select id="filter-select"><option value="all">All animals</option><option value="positive">Higher in intervention</option><option value="negative">Lower in intervention</option><option value="neutral">No difference</option></select></label>
-          <label>Activity <select id="activity-select"><option value="all">All activities</option><option value="grazing">Grazing</option><option value="feeding">Feeding</option><option value="drinking">Drinking</option><option value="resting">Resting</option></select></label>
-          <label>Sort <select id="sort-select"><option value="id">Animal ID</option><option value="weight">Weight</option><option value="delta">Difference</option></select></label>
-        </div>
-        <div class="timeline-row"><div class="timeline-label"><span>Time point</span><strong id="day-label">Day 0</strong></div><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available simulation day"><div id="timeline-points" class="timeline-points"></div></div>
-        <div class="grid-toolbar"><span id="grid-count">0 animals</span><span id="population-legend" class="legend" aria-live="polite"><i class="legend-low"></i><span id="legend-low-label">lower</span><i class="legend-mid"></i><span id="legend-mid-label">middle</span><i class="legend-high"></i><span id="legend-high-label">higher</span></span></div>
-        <div id="population-grid" class="population-grid" role="grid" aria-label="Cattle population observations"></div>
-        <div class="grid-footer"><span id="grid-note">Each square represents an animal returned by the engine.</span><button id="show-more" class="text-button" type="button" hidden>Show more</button></div>
+      <section id="population-panel" class="population-panel" aria-label="Population workspace">
+        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><div class="workspace-actions"><button id="return-parent" class="quiet-button" type="button" hidden>Back to parent path</button><button id="replay-branch" class="quiet-button" type="button" hidden>Replay branch</button><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div></div>
+        <div id="population-empty" class="population-empty" role="status"><span class="empty-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Your population view is ready when you are.</p><small>Review the experiment, then confirm the run. No animal states are shown before the engine returns them.</small></div>
         <div id="analysis-area" class="analysis-area" hidden>
-          <div class="analysis-header"><div><p class="eyebrow">ANALYSIS</p><h2>Scenario outcomes</h2></div><span class="not-validated">Demonstration · not a prediction</span></div>
-          <div id="aggregate-cards" class="aggregate-cards"></div>
-          <div id="activity-counts" class="activity-counts" aria-label="Animal count by recorded activity"></div>
-          <div class="analysis-grid"><article class="analysis-card"><h3>Mean live weight</h3><div id="weight-chart" class="weight-chart" aria-label="Mean live weight by day"></div><p>Computed from engine animal states. ADG is not an input to this engine and the result is not biologically validated.</p></article><article class="analysis-card"><h3>Selected animal</h3><div id="animal-inspector" class="animal-inspector"><p>Select a cell to inspect available states and activity history.</p></div></article></div>
-          <details class="provenance"><summary>Model limits and provenance</summary><div id="provenance-details"></div></details>
-          <details class="daily-table"><summary>Daily aggregate results</summary><div class="table-scroll"><table><thead><tr><th>Day</th><th>Base mean weight (kg)</th><th>Intervention mean weight (kg)</th><th>Δ weight (kg)</th><th>Pasture stock (kg MS)</th></tr></thead><tbody id="daily-rows"></tbody></table></div></details>
+          <div class="analysis-header"><div><p class="eyebrow">POPULATION JOURNEY</p><h2>One herd. Different paths.</h2></div><span class="not-validated">Demonstrative engine</span></div>
+          <section class="journey-card" aria-labelledby="journey-chart-title">
+            <div class="journey-summary"><p id="journey-summary" class="journey-summary-main">The engine’s population trajectories will appear here after a confirmed run.</p><p id="journey-summary-note" class="journey-summary-note">Both paths use the same starting population and seed. This comparison is demonstrative, not a validated forecast.</p></div>
+            <div class="tree-heading"><h3 id="journey-chart-title">Population decision paths</h3><span>Choose a checkpoint to inspect or branch</span></div>
+            <div id="population-tree" class="population-tree" aria-label="Population decision paths"></div>
+            <div class="tree-inspection"><span>Inspect the population at <strong id="day-label">Day 0</strong></span><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available population checkpoint"><div id="timeline-points" class="timeline-points"></div></div>
+          </section>
+          <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
+          <details id="conditional-cost" class="conditional-cost">
+            <summary>Compare supplied supplement and conditional expense</summary>
+            <p>Uses the entered supplement amount, animals, applicable days and your price per kg of dry matter. This arithmetic does not use engine cost or estimate intake, production or profit.</p>
+            <form id="conditional-cost-form">
+              <label for="supplement-price">Your price per kg of supplement dry matter</label>
+              <div class="cost-fields"><input id="supplement-price" name="price" type="number" min="0" max="1000000000" step="any" required inputmode="decimal" placeholder="Enter price"><label for="supplement-currency">Currency</label><input id="supplement-currency" name="currency" type="text" minlength="3" maxlength="3" pattern="[A-Za-z]{3}" autocomplete="off" required placeholder="BRL" aria-label="Currency, three-letter ISO code"><button class="quiet-button" type="submit">Calculate from my inputs</button></div>
+            </form>
+            <div id="conditional-cost-result" class="conditional-cost-result" aria-live="polite"><p>No monetary amount is calculated until you provide both a price and currency.</p></div>
+          </details>
+          <details id="population-explorer" class="analysis-more population-explorer"><summary>Explore individual animals and recorded states</summary>
+            <div class="control-row">
+              <label>Color by <select id="metric-select"><option value="weight">Live weight · kg</option><option value="delta">Weight difference · kg</option><option value="energy">Energy · index</option><option value="thirst">Thirst · index</option></select></label>
+              <label>Difference <select id="filter-select"><option value="all">All animals</option><option value="positive">Higher in intervention</option><option value="negative">Lower in intervention</option><option value="neutral">No difference</option></select></label>
+              <label>Activity <select id="activity-select"><option value="all">All activities</option><option value="grazing">Grazing</option><option value="feeding">Feeding</option><option value="drinking">Drinking</option><option value="resting">Resting</option></select></label>
+              <label>Order <select id="sort-select"><option value="id">Animal ID</option><option value="weight">Weight</option><option value="delta">Difference</option></select></label>
+            </div>
+            <div class="grid-toolbar"><span id="grid-count">0 animals</span><span id="population-legend" class="legend" aria-live="polite"><i class="legend-low"></i><span id="legend-low-label">lower</span><i class="legend-mid"></i><span id="legend-mid-label">middle</span><i class="legend-high"></i><span id="legend-high-label">higher</span></span></div>
+            <div id="population-grid" class="population-grid" role="grid" aria-label="Cattle population observations"></div>
+            <div class="grid-footer"><span id="grid-note">Each square represents an animal returned by the engine.</span><button id="show-more" class="text-button" type="button" hidden>Show more</button></div>
+            <details id="analysis-more" class="analysis-more"><summary>Inspect an animal, aggregate states &amp; provenance</summary>
+            <div id="activity-counts" class="activity-counts" aria-label="Animal count by recorded activity"></div>
+            <div id="aggregate-cards" class="aggregate-cards"></div>
+            <div class="analysis-grid"><article class="analysis-card"><h3>Selected animal</h3><div id="animal-inspector" class="animal-inspector"><p>Select a cell to inspect available states and activity history.</p></div></article></div>
+            <details class="provenance"><summary>Model limits and provenance</summary><div id="provenance-details"></div></details>
+            <details class="daily-table"><summary>Daily aggregate results</summary><div class="table-scroll"><table><thead><tr><th>Day</th><th>Base mean weight (kg)</th><th>Intervention mean weight (kg)</th><th>Δ weight (kg)</th><th>Pasture stock (kg MS)</th></tr></thead><tbody id="daily-rows"></tbody></table></div></details>
+          </details>
+          </details>
         </div>
       </section>
     </section>
+    <dialog id="branch-dialog" class="branch-dialog" aria-labelledby="branch-title">
+      <form id="branch-form">
+        <p class="eyebrow">COUNTERFACTUAL PATH</p><h2 id="branch-title">Try another intervention</h2>
+        <p class="branch-context">A new path starts from the exact selected checkpoint. The parent experiment stays available.</p>
+        <label for="branch-source">Continue from</label><select id="branch-source"><option value="reference">Baseline path</option><option value="scenario">Intervention path</option></select>
+        <label for="branch-supplement">Supplement in the new path</label><div class="branch-number"><input id="branch-supplement" type="number" min="0" max="4" step="0.1" required><span>kg DM / animal / day</span></div>
+        <p id="branch-error" class="branch-error" role="alert" hidden></p>
+        <div id="branch-review" class="branch-review" hidden></div>
+        <div class="branch-buttons"><button id="cancel-branch" class="quiet-button" type="button">Cancel</button><button id="review-branch" class="quiet-button" type="submit">Review path</button><button id="run-branch" class="primary-button" type="button" hidden>Run branch</button></div>
+      </form>
+    </dialog>
     <p id="live-status" class="live-status" role="status" aria-live="polite"></p>
   </main>
+  <script src="header-interaction.js" defer></script>
   <script type="module" src="src/client/product-app.js"></script>
 </body>
 </html>

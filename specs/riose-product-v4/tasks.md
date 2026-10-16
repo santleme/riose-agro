@@ -2,6 +2,44 @@
 
 Allowed statuses: `BACKLOG`, `READY`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`.
 
+## Product decision experience continuation
+
+### P4-011 — Population journey result hierarchy
+
+ID: P4-011
+Title: Make the paired population trajectory the primary result and disclose individual detail on demand
+Specification reference: `product-requirements.md` PRD-002/003; `design-system.md`; `decision-analysis.md`; P4-ACC-015
+Dependencies: P4-001; existing paired Product comparison and archive/replay
+Implementation scope: Replace the metric-dashboard hierarchy with one two-path population-weight trajectory, a selected-day summary and time control. Move the animal grid, filters, inspector, secondary aggregates, daily table and provenance behind accessible disclosures. Remove FarmEngine internal illustrative monetary cost from decision-facing results. Retain actual Worker data, export, replay, keyboard use and mobile/reduced-motion behavior.
+Acceptance criteria: The selected-day summary and chart derive only from actual paired `comparison.rows`; they say the engine response is demonstrative and avoid real-world causal claims. No monetary cost appears without user-entered price. The animal grid is collapsed by default and remains selectable; selecting an animal opens its inspector. Timeline changes update chart, summary, grid and inspector from the same actual checkpoint. No automatic execution is introduced.
+Required tests: Product E2E review/confirm/results/revision/replay; assert result hierarchy, hidden-by-default individual view, animal selection and no demo cost; mobile no-overflow and reduced-motion inspection; relevant population contract/unit tests.
+Evidence: E2E output, Chromium desktop/mobile screenshots inspected, `progress.md`, test output.
+Status: DONE (`npm run test:e2e:product` PASS after result-hierarchy, checkpoint summary, mobile, reduced-motion and keyboard assertions; `node --test tests/product-population.test.js` 9/9; `npm test` 525/525; desktop/mobile captures reviewed. No executor or scientific model changed).
+
+### P4-012 — Explicit population pathway branching
+
+ID: P4-012
+Title: Let a user draft and explicitly run a new intervention from a selected population checkpoint
+Specification reference: `scenario-engine.md`; `decision-analysis.md`; `product-requirements.md` PRD-003/005; P4-ACC-016
+Dependencies: P4-011; existing shared-snapshot/seed comparisons and Worker execution
+Implementation scope: Verify whether the engine can restore an exact deterministic checkpoint without fabricating state. If feasible, add a versioned Worker operation that replays the archived initial state to the selected day and creates baseline/branch continuations from the same checkpoint and seed. Present the branch inputs for review, require explicit confirmation, preserve the parent result, and label demonstrative deltas. If exact restoration cannot be represented, keep the branch blocked and document the missing contract rather than approximate from compact observations.
+Acceptance criteria: A branch records parent run/checkpoint, exact restored state digest, shared seed, changed factor and executor/model version. Editing only creates a draft; confirmation is required to run. Parent run remains viewable; branch differences use outputs from both actual runs and no automatic winner is selected. Export/replay revalidates the branch lineage.
+Required tests: exact checkpoint restore determinism; same-state/seed equivalence; changed-factor validation; cancel/edit/no-auto-run; branch export/replay; Product browser E2E and population worker tests.
+Evidence: contract and E2E output, deterministic digest comparison, desktop/mobile captures, `progress.md`.
+Status: DONE (`node --test tests/product-population.test.js` 10/10; Product E2E verifies invalid/identical-value rejection, no Worker post on review, explicit run, selected-day lineage, checkpoint and result SHA-256, branch export and explicit rerun; full `npm test` 526/526. The unchanged branch arm matched the parent daily series. Desktop/mobile captures inspected; no engine equation changed).
+
+### P4-013 — User-priced conditional supplement cost
+
+ID: P4-013
+Title: Add explicit, user-supplied conditional supplement quantity and cost beside the population journey
+Specification reference: `decision-analysis.md`; `scientific-contracts.md`; PRD-002/003; P4-ACC-017
+Dependencies: P4-011; P4-012; reuse existing P3-004/P4 scenario cost arithmetic and units
+Implementation scope: Allow a user to enter price per kg of supplement dry matter and currency for the reviewed scenario arms; calculate supplied quantity and conditional supplement expense from user-specified amount × represented animals × period, or branch remaining horizon. Keep this arithmetic separate from the FarmEngine and BR-CORTE. Persist and export the price basis, quantities, and calculation provenance. Never use internal FarmEngine prices.
+Acceptance criteria: Monetary output is absent until price and currency are explicit; displayed cost is exactly reproducible from input units and horizon, including branch remaining days; output is called conditional supplement expense, not total ration cost/profit/ROI. Price edits require review and do not execute the scientific engine. FarmEngine and BR-CORTE outputs stay distinct.
+Required tests: cost arithmetic/unit/bounds tests; count×duration×price invariants; branch horizon tests; export/replay provenance; Product E2E no-price/price/review/edit cases; mobile/accessibility.
+Evidence: focused tests, Product E2E, cost report screenshot, `progress.md`.
+Status: DONE (combined cost/history unit suites 30/30; `npm run test:e2e:product` PASS including no-price state, user price and currency, edit invalidation, no Worker execution, export digest, checkpoint remaining-days arithmetic, local history and replay; `npm test` 529/529; desktop/mobile cost captures visually reviewed; `git diff --check` PASS. No engine formulas or scientific gates changed.)
+
 ## P4-001 — Audit and SDD bootstrap
 
 ID: P4-001
@@ -68,6 +106,18 @@ Status: DONE (versioned archive schema/module; unit tests verify reproducible re
 - Conditional BR-CORTE scenario costs: DONE in P3-004; no new cost model unless an input or equation gap is demonstrated.
 - P3-007 AI providers/tool agent: BLOCKED by shared persistent spend ceiling; do not mark complete here.
 - P3-008 commercial/scientific readiness: BLOCKED pending independent domain review and evidence. Behavioral integration: NO-GO.
+
+### P4-014 — Product agent visibility and responsive population paths
+
+ID: P4-014
+Title: Make Product's decision-agent routing honest and ensure both computed population paths remain visible
+Specification reference: `product-requirements.md` PRD-001/002/003/004; `ai-orchestration.md`; `design-system.md`; P4-ACC-018
+Dependencies: P4-006; P4-009; existing paired FarmEngine comparison and P4-015 population journey
+Implementation scope: Verify Product routes requests to the allowlisted decision assistant; expose only safe provider availability; retain deterministic local planning when credentials are absent; render the already-computed baseline and intervention branches without opacity-dependent content; cover mobile and reduced-motion visibility.
+Acceptance criteria: Product identifies when no remote provider is configured; requests still reach validated local planning; no plan or explanation runs the engine; both result paths stay readable at 390 px during animation and reduced motion; remote LLM, Laya, and bovine behavioral execution remain distinct capabilities and gates.
+Required tests: Product E2E review/confirm/explanation/no-auto-run, mobile path visibility and reduced-motion assertions; assistant-status endpoint credential-safety tests; full regression; visual screenshot review.
+Evidence: E2E PASS; `/api/assistant-status` returns `available:false` without provider credentials and no secret fields; desktop and 390 px screenshots `docs/evidence/visual-review/2026-10-16/03-product-results.png` and `04-product-workspace-mobile.png`; full-suite evidence in `progress.md`.
+Status: DONE (Product endpoint routing and deterministic fallback verified; stale long-running Node server was restarted; mobile review exposed an opacity-only reveal that made both computed arms look blank mid-animation, corrected to transform-only motion; both paths asserted visibly at 390 px. No credentials were available for a remote call.)
 
 ## AI integration continuation
 

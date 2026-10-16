@@ -23,7 +23,10 @@ const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
+  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'theme.css', 'riose-mark.svg',
+  'assets/riose-cow-cutout.png',
+  'assets/pasture-cattle-map.webp', 'assets/riose-farm-diorama.webp',
+  'assets/riose-farm-pixel-scene.png', 'assets/riose-cow-sprite-idle.png', 'assets/riose-cow-sprite-graze.png',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
@@ -38,6 +41,8 @@ const PUBLIC_FILES = new Set([
   'montana-cow-data.html', 'montana-cow-data.js',
   'rangeland-behavior.html', 'rangeland-behavior.js',
   'data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv',
+  'data/perea-rangeland-behavior/README_V2.txt',
+  'docs/revisao-independente-caso.md',
   'docs/evidence/perea-rangeland-behavior-audit.json',
   'usda-cgrec-cow-calf.html', 'usda-cgrec-cow-calf.css', 'usda-cgrec-cow-calf.js',
   'observed-data.html', 'observed-data.css', 'observed-data.js', 'observed-data-model.js',
@@ -74,6 +79,7 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
   '.wasm': 'application/wasm',
   '.csv': 'text/csv; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
@@ -347,6 +353,20 @@ function isLoopbackRequest(request) {
 export function createServer({env = process.env, fetchImpl = fetch} = {}) {
   return createHttpServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
+    if (url.pathname === '/api/assistant-status' && request.method === 'GET') {
+      const provider = env.LLM_PROVIDER ?? 'none';
+      const settings = {
+        groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+        huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? 'openai/gpt-oss-120b:cheapest'},
+      }[provider];
+      const configured = Boolean(settings?.apiKey);
+      return sendJson(response, 200, {assistant: configured ? {available: true, provider, model: settings.model} : {available: false},
+        localPlanner: true, laya: {available: false, status: 'experimental-disabled'}});
+    }
+    if (url.pathname === '/experiments.html' || url.pathname === '/simulator.html') {
+      response.writeHead(308, {location: '/product.html', 'cache-control': 'no-store'});
+      return response.end();
+    }
     if (url.pathname === '/api/native/configured-comparison') {
       if (request.method === 'GET') {
         const runner = nativeComparisonRunner(env, ROOT);

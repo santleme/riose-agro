@@ -3,21 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f8fafb">
+  <meta name="theme-color" content="#f7f7f4">
   <meta name="description" content="Compare reproducible multi-scenario livestock experiments with Riose.">
   <title>Riose — Scenario laboratory</title>
   <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/client/home.css">
   <link rel="stylesheet" href="product.css">
   <link rel="stylesheet" href="scenario-lab.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="home.html" aria-label="Riose home"><span class="brand-mark">r.</span><span>riose<span class="brand-light"> agro</span></span></a>
-    <nav aria-label="Main navigation"><a href="product.html">Product</a><a class="active" href="scenario-lab.html">Scenario lab</a><a href="experiments.html">Experiments</a><a href="observed-data.html">Observed data</a></nav>
-    <span class="system-status"><i></i> Local engine · illustrative</span>
+  <header class="site-header" aria-label="Riose">
+    <a class="header-manifesto" href="manifesto.html">manifesto</a>
+    <div class="header-mark-group">
+      <div class="header-name-control">
+        <a class="header-wordmark meaning-trigger" href="home.html" aria-label="Riose home" aria-describedby="riose-definition">Riose</a>
+        <aside class="name-definition" id="riose-definition" role="tooltip" aria-label="Meaning and origin of Riose" aria-hidden="true">
+          <span class="definition-title">Riose</span>
+          <span class="definition-meta">proper noun / origin</span>
+          <p>Named after Bel Riose, a general from <em>Foundation</em>, a character inspired by the Byzantine commander Belisarius.</p>
+          <p class="definition-note">A name for seeing farther and turning the unseen into knowledge.</p>
+        </aside>
+      </div>
+      <a class="header-product" href="product.html">· product</a>
+    </div>
+    <div class="header-utilities"><span class="header-place">são paulo, brazil</span><button class="theme-toggle" type="button" aria-pressed="false" aria-label="Enable dark mode">dark</button></div>
   </header>
 
   <main class="lab-shell">
@@ -142,6 +155,7 @@
     </section>
     <p id="lab-status" class="live-status" role="status" aria-live="polite"></p>
   </main>
+  <script src="header-interaction.js" defer></script>
   <script type="module" src="src/client/scenario-lab-app.js"></script>
 </body>
 </html>

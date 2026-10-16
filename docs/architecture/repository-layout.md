@@ -12,4 +12,4 @@ scripts/, tests/, docs/evidence/       research tooling, validation, and evidenc
 assets/                                institutional identity and research-page images
 ```
 
-`/` and `index.html` lead to `home.html`. `experiments.html` hosts the quantitative experiment workspace; `product.html` and `simulator.html` redirect there for old links. Research and observed-data pages remain separate from model-generated results. `npm start` starts the local API and serves allowlisted assets; browser modules are loaded from relative paths so deployments can live under a repository subpath.
+`/` and `index.html` lead to `home.html`; the institutional header links to `product.html`. `scenario-lab.html` remains a direct entry for multi-scenario and BR-CORTE workflows. The retired `experiments.html` and `simulator.html` routes redirect to Product for old links. Research and observed-data pages remain separate from model-generated results and are not primary navigation tabs. `npm start` starts the local API and serves allowlisted assets; browser modules are loaded from relative paths so deployments can live under a repository subpath.

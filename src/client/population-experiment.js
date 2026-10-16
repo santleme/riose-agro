@@ -1,4 +1,4 @@
-import {FarmEngine,FARM_ENGINE_VERSION,ASSUMPTIONS,metrics} from './engine.js';
+import {FarmEngine,FARM_ENGINE_VERSION,ASSUMPTIONS,metrics,validateConfiguredComparisonManifest} from './engine.js';
 
 export const EXPERIMENT_INTENT_VERSION='riose-experiment-intent/v1';
 export const SUPPORTED_EXPERIMENT_DAYS=Object.freeze([1,7,15,30,60,90,180,365]);
@@ -12,8 +12,8 @@ const numberFrom=(value)=>Number(value.replace(',','.'));
 
 function matchNumber(text,pattern){const found=text.match(pattern);return found?numberFrom(found[1]):null;}
 function supplementPairsFrom(text){
-  return [...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)|(?:compare(?:d)?\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:with|versus|vs\.?)\s*(\d+(?:[.,]\d+)?)/gi)]
-    .map(item=>item[1]?[numberFrom(item[1]),numberFrom(item[2])]:[numberFrom(item[3]),numberFrom(item[4])]);
+  return [...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)|(?:compare(?:d)?\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:with|versus|vs\.?)\s*(\d+(?:[.,]\d+)?)|compare(?:d)?\s+(?:(?:supplement(?:ation)?|suplementa(?:ção|cao)|suplemento)\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:and|e|,)\s*(\d+(?:[.,]\d+)?)\s*(?=(?:kg\s*)?(?:dm|ms|dry\s+matter|mat[eé]ria\s+seca)\s*(?:per|por)\s*(?:animal|head|cabeça))/gi)]
+    .map(item=>item[1]?[numberFrom(item[1]),numberFrom(item[2])]:item[3]?[numberFrom(item[3]),numberFrom(item[4])]:[numberFrom(item[5]),numberFrom(item[6])]);
 }
 function assumptionsFor({population,duration,breed,weather,baseline,intervention,provided={}}){
   return [
@@ -171,4 +171,32 @@ export function runPopulationComparison(snapshot,{days,referenceConfig,scenarioC
     initialPastureByPaddock:[...snapshot.pastures],comparisonFactor:differences[0],seed:Number.isInteger(snapshot.initialSeed)?snapshot.initialSeed:snapshot.seed,
     referenceConfig:{...referenceConfig},scenarioConfig:{...scenarioConfig},rows,reference:reference.metrics(),scenario:scenario.metrics(),assumptions:{...ASSUMPTIONS},validated:false};
   return {intentVersion:EXPERIMENT_INTENT_VERSION,observationFormat:'riose-population-observations/v1-compact-history',comparison,timeline,observationGranularity:'daily engine state, retained at days 0, 1, 7, 15, 30, 60, 90, 180 and final day when applicable',individualIntakeAvailable:false};
+}
+
+/** Reconstruct one exact deterministic parent arm checkpoint from its persisted start state. */
+export function restorePopulationCheckpoint(parentManifest,{checkpointDay,sourceArm}={}){
+  validateConfiguredComparisonManifest(parentManifest);
+  if(!Number.isInteger(checkpointDay)||checkpointDay<0||checkpointDay>=parentManifest.periodDays)throw new RangeError('A branch must start before the parent experiment’s final day.');
+  if(!['reference','scenario'].includes(sourceArm))throw new TypeError('Choose the baseline or intervention path to branch from.');
+  const sourceConfig=parentManifest.scenarios[sourceArm],engine=FarmEngine.from(parentManifest.initialSnapshot);
+  engine.configure(sourceConfig);
+  if(checkpointDay)engine.tick(checkpointDay*24);
+  return engine.snapshot();
+}
+
+/** Run a new one-factor counterfactual from a checkpoint restored from the parent manifest. */
+export function runPopulationBranch(parentManifest,{checkpointDay,sourceArm,branchConfig,onProgress,onCheckpoint}={}){
+  const checkpoint=restorePopulationCheckpoint(parentManifest,{checkpointDay,sourceArm});
+  onCheckpoint?.(checkpoint);
+  const sourceConfig=parentManifest.scenarios[sourceArm],factorKeys=['diet','housing','supplement','weather'];
+  const differences=factorKeys.filter(key=>sourceConfig[key]!==branchConfig?.[key]);
+  if(differences.length!==1)throw new Error('A branch must change exactly one supported intervention from its selected path.');
+  const days=parentManifest.periodDays-checkpointDay;
+  const result=runPopulationComparison(checkpoint,{days,referenceConfig:sourceConfig,scenarioConfig:branchConfig,onProgress});
+  result.timeline=result.timeline.map(point=>({...point,day:point.day+checkpointDay}));
+  result.comparison={...result.comparison,days,parentHorizonDays:parentManifest.periodDays,branchStartDay:checkpointDay,
+    rows:result.comparison.rows.map(row=>({...row,day:row.day+checkpointDay}))};
+  result.branch={type:'riose-population-branch/v1',checkpointDay,sourceArm,sourceConfig:{...sourceConfig},branchConfig:{...branchConfig},
+    horizonDay:parentManifest.periodDays,seed:parentManifest.seed,engineVersion:parentManifest.engineVersion};
+  return result;
 }

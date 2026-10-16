@@ -47,3 +47,53 @@ The closing SDD audit/report changes are being recorded separately after this im
 ## Next action
 
 No independent READY implementation task remains in this SDD track. Keep P3 gates blocked, preserve the negative Laya promotion decision, and wait for new user research direction, an external scientific reviewer, or a persistent provider budget gate before adding a dependent task. Product can be demonstrated locally with its scientific and demonstrative labels intact; this handoff does not authorize decision-grade commercial claims.
+
+## Session handoff — 2026-10-16
+
+Last verified implementation commit: `1cb9896` (`Add user-priced conditional supplement costs`).
+Current branch: `codex/behavioral-agents-sdd`.
+Completed this session: P4-013. P4-011 and P4-012 were already done and not repeated.
+Task in progress: none. No Product V4 task is READY without external user research, new requirements, or a gated external dependency.
+
+Files changed in the implementation commit: Product cost disclosure and responsive styling; independent versioned conditional-cost arithmetic; validated local history persistence; cost-aware export digest; Product E2E and focused unit coverage; P4 task/progress/decision/acceptance records; desktop branch and mobile cost screenshots.
+
+Tests executed: combined cost/history unit tests 30/30; `npm run test:e2e:product` PASS; `npm test` PASS 529/529 in 38.97 seconds; `git diff --check` PASS. The E2E verified that price entry/edit/cost review never posts an engine Worker command, branch cost uses remaining days, exports bind cost provenance, local history preserves the amount, and replay verifies it. No parity run was needed because engine, Rust, and WASM code were untouched.
+
+Passing checks: visual review at 1440×1100 and 390×844, including mobile no-overflow. Captures are `docs/evidence/visual-review/2026-10-16/03b-product-conditional-cost-mobile.png` and `.../10b-product-branch-cost-desktop.png`.
+
+Known failures: the first E2E attempt had an assertion-order issue in its mobile disclosure test; that test was corrected and the full Product E2E passed. No known code/test failures remain.
+
+Scientific limitations: FarmEngine remains demonstrative; the new amount is transparent arithmetic on supplement supplied, herd count, horizon, and user price. It is not measured intake, total ration cost, profit, ROI, or evidence of production response. BR-CORTE and behavioral NO-GO are unchanged. P3-007 remains blocked; P3-008 remains `NOT_PERFORMED`.
+
+Visual limitations: mobile conversation remains a scrollable compact panel as before; the new cost disclosure is readable and fits the viewport. No new motion was added.
+
+Working tree note: unrelated pre-existing local edits remain unstaged in `docs/architecture/current-system-audit.md`, `docs/architecture/module-boundaries.md`, `docs/architecture/repository-layout.md`, several engine/source evidence JSON and Product V2 screenshots, plus `tests/adult-data.test.js` and `tests/simulation-report.test.js`. Preserve them; they were not part of P4-013. E2E-generated non-target screenshots were removed and the pre-existing 2026-10-15 visual captures were restored.
+
+Next action: hold Product V4 implementation here until real user feedback or a new independently eligible task is supplied. Do not activate provider traffic, change behavioral gates, or present the FarmEngine as decision-grade.
+
+## Session handoff — 2026-10-16 — P4-014
+
+Last verified commit: `9567c45` (`Fix Product agent visibility and mobile paths`).
+Current branch: `codex/behavioral-agents-sdd`.
+
+Completed tasks: P4-014. Earlier P4-001–P4-013 and P4-006–P4-009 remain as recorded; no prior work was recreated. Task in progress: none.
+
+Files changed for P4-014: `product.css`, `product.html`, `src/client/product-app.js`, `scripts/e2e/product-flow.mjs`, P4 V4 tasks/progress/decisions/handoff/acceptance criteria, and 390 px/desktop visual captures.
+
+Tests executed: `npm run test:e2e:product` PASS; `npm run test:e2e:decision-assistant` PASS using its documented provider fixture (no external inference); `npm test` PASS, 531/531 in 39.9 seconds; `node --check` for Product and server modules PASS; `git diff --check` PASS. No JS/Rust/WASM engine or scientific formula changed, so trajectory parity was not rerun.
+
+Observed runtime: the prior process on port 8000 was a long-running Node instance with an older server route; it returned 404 for `/api/assistant-status`. Restarting from this checkout made that route available. The current Node process reports Groq/HF credentials missing, remote assistant unavailable, local planner available, and Laya `experimental-disabled`; response contains no secret values. No remote inference was attempted and no token from chat was reused.
+
+Product behavior: prompts use `/api/decision-assistant`; fallback is labeled as local deterministic planning; a structured plan still requires review and an explicit run action. Grounded scientific questions preserve results without issuing Worker commands. The result view presents computed baseline/intervention population paths and a checkpoint timeline. A mobile screenshot caught opacity-zero content during the reveal; the cards now animate with transform only and the E2E asserts both arms visible at 390 px, including reduced-motion handling.
+
+Known failures: none in executed tests. Remote Groq/HF behavior is unverified in this server process because its secure environment has no credential. This is configuration availability, not a passing live-provider check.
+
+Scientific limitations: FarmEngine remains a deterministic demonstrative engine; its hourly activity/physiology rules are not validated livestock behavior or forecast. The behavioral agent remains NO-GO; Laya remains off. BR-CORTE only estimates total DMI conditional on supplied ADG within its stated growing-Zebu domain; it does not predict ADG. No scientific gate or claim was changed.
+
+Visual evidence: reviewed desktop `docs/evidence/visual-review/2026-10-16/03-product-results.png` and mobile `04-product-workspace-mobile.png` in headless Chromium. Both comparison arms are legible at mobile width; motion is transform-only and reduced motion disables it. T3 Preview reported that no automation host is connected, so Chromium E2E was used.
+
+Blocked dependencies: configure `GROQ_API_KEY` and `LLM_PROVIDER=groq` in the secure environment inherited by the Node server, then restart that server in the same process tree, to exercise live Groq in Product. HF remains optional. Keep P3-007 (shared/production spend gate) and P3-008 (independent review) blocked. Never paste credentials into chat or source.
+
+Working tree note: `docs/evidence/visual-review/2026-10-16/03b-product-conditional-cost-mobile.png` and `10b-product-branch-cost-desktop.png` were already modified at the start of this turn and were not included in commit `9567c45`; preserve them for review.
+
+Next action: use the same Product E2E with secure Groq configuration when the user provisions it; verify live interpretation separately from scientific validity. No merge or push was performed.

@@ -3,6 +3,7 @@ import {
   validateComparisonManifest,validateConfiguredComparisonManifest
 } from './engine.js';
 import {createLotComparisonManifest,validateLotComparisonManifest,LOT_COMPARISON_MANIFEST_TYPE} from './lot-comparison.js';
+import {validateConditionalSupplementCostResult} from './conditional-supplement-cost.js';
 
 export const RUN_HISTORY_KEY='agroville-run-history-v1';
 export const RUN_HISTORY_VERSION=1;
@@ -90,7 +91,17 @@ export function getRun(runId,storage=globalThis.localStorage){
   return listRuns(storage).find(run=>run.id===runId)??null;
 }
 
-export function createRunRecord({manifest,result,status='completed',error,execution,engineImplementation,now=Date.now(),id}){
+function validateCostAgainstConfiguredRun(conditionalCost,manifest){
+  validateConditionalSupplementCostResult(conditionalCost);
+  if(conditionalCost.basis.scope!=='experiment'||conditionalCost.basis.animalCount!==manifest.initialSnapshot.animals.length
+      ||conditionalCost.basis.days!==manifest.periodDays||conditionalCost.scenarios.length!==2
+      ||conditionalCost.scenarios[0].supplementKgDMPerAnimalPerDay!==manifest.scenarios.reference.supplement
+      ||conditionalCost.scenarios[1].supplementKgDMPerAnimalPerDay!==manifest.scenarios.scenario.supplement){
+    throw new Error('O cálculo econômico não corresponde aos cenários e ao período registrados.');
+  }
+}
+
+export function createRunRecord({manifest,result,status='completed',error,execution,engineImplementation,conditionalCost,now=Date.now(),id}){
   if(!manifest||!['completed','failed'].includes(status))throw new Error('Registro de execução inválido.');
   const configured=manifest.type==='riose-configured-comparison';
   const lotConfigured=manifest.type===LOT_COMPARISON_MANIFEST_TYPE;
@@ -109,6 +120,7 @@ export function createRunRecord({manifest,result,status='completed',error,execut
     ?createConfiguredComparisonManifest(snapshot,{days:manifest.periodDays,referenceConfig:manifest.scenarios.reference,scenarioConfig:manifest.scenarios.scenario})
     :createComparisonManifest(snapshot,manifest.periodDays);
   const safeExecution=cleanExecution(execution);
+  if(conditionalCost)validateCostAgainstConfiguredRun(conditionalCost,replayManifest);
   return {
     id:id??globalThis.crypto?.randomUUID?.()??`run-${now}-${Math.random().toString(36).slice(2)}`,
     timestamp:new Date(now).toISOString(),operation:'comparison',status,
@@ -116,10 +128,25 @@ export function createRunRecord({manifest,result,status='completed',error,execut
     seed:replayManifest.seed,engineVersion:COMPARISON_ENGINE_VERSION,
     manifest:replayManifest,
     ...(status==='completed'?{result}:{error:cleanError(error)}),
+    ...(conditionalCost?{conditionalCost}:{}),
     provenance:{source:'local-browser',historyVersion:RUN_HISTORY_VERSION},
     ...(safeExecution?{execution:safeExecution}:{}),
     ...(typeof (engineImplementation??execution?.engineImplementation)==='string'&&(engineImplementation??execution.engineImplementation)?{executor:{engineImplementation:engineImplementation??execution.engineImplementation}}:{})
   };
+}
+
+export function updateRunConditionalCost(runId,conditionalCost,storage=globalThis.localStorage){
+  const runs=parseRuns(storage),index=runs.findIndex(run=>run.id===runId);
+  if(index<0)throw new Error('A execução salva não foi encontrada.');
+  const run=runs[index];
+  if(conditionalCost)validateCostAgainstConfiguredRun(conditionalCost,run.manifest);
+  const updated={...run};
+  if(conditionalCost)updated.conditionalCost=conditionalCost;else delete updated.conditionalCost;
+  const next=[...runs];next[index]=updated;
+  const serialized=serializeRuns(next);
+  if(serializedBytes(serialized)>MAX_RUN_HISTORY_BYTES)throw new Error('O cálculo econômico excede o limite local do histórico.');
+  try{storage.setItem(RUN_HISTORY_KEY,serialized);}catch{throw new Error('O navegador não conseguiu atualizar o histórico local.');}
+  return updated;
 }
 
 export function recordRun(run,storage=globalThis.localStorage){
@@ -169,6 +196,7 @@ export function runCompatibility(run){
     if(run.manifest.type===LOT_COMPARISON_MANIFEST_TYPE)validateLotComparisonManifest(run.manifest);
     else if(run.manifest.type==='riose-configured-comparison')validateConfiguredComparisonManifest(run.manifest);
     else validateComparisonManifest(run.manifest);
+    if(run.conditionalCost)validateCostAgainstConfiguredRun(run.conditionalCost,run.manifest);
     return {supported:true,reason:''};
   }
   catch(error){return {supported:false,reason:error.message};}

@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {FarmEngine,compare,createComparisonManifest} from '../src/client/engine.js';
-import {COMPARISON_ENGINE_VERSION,createRunRecord,getRun,listRuns,recordRun,runCompatibility,RUN_HISTORY_KEY,MAX_RUN_HISTORY_BYTES,getRunHistoryStats,exportRunHistory,clearRunHistory} from '../src/client/run-history.js';
+import {FarmEngine,compare,createComparisonManifest,createConfiguredComparisonManifest} from '../src/client/engine.js';
+import {COMPARISON_ENGINE_VERSION,createRunRecord,getRun,listRuns,recordRun,runCompatibility,RUN_HISTORY_KEY,MAX_RUN_HISTORY_BYTES,getRunHistoryStats,exportRunHistory,clearRunHistory,updateRunConditionalCost} from '../src/client/run-history.js';
+import {calculateConditionalSupplementCosts} from '../src/client/conditional-supplement-cost.js';
 
 class MemoryStorage{
   constructor(values=new Map()){this.values=values;}
@@ -42,6 +43,25 @@ test('persists failed execution status and a brief error summary',()=>{
 
 test('starts with an empty list when history is absent',()=>{
   assert.deepEqual(listRuns(new MemoryStorage()),[]);
+});
+
+test('persists reviewed user-priced costs with a run and can clear an edited price without changing replay compatibility',()=>{
+  const storage=new MemoryStorage(),snapshot=new FarmEngine(31,24).snapshot();
+  const options={days:3,referenceConfig:{...snapshot.config,supplement:0.5},scenarioConfig:{...snapshot.config,supplement:1.5}};
+  const manifest=createConfiguredComparisonManifest(snapshot,options);
+  const result=compare(snapshot,3);
+  const cost=calculateConditionalSupplementCosts({animalCount:24,days:3,scenarios:[
+    {id:'baseline',label:'Baseline',supplementKgDMPerAnimalPerDay:0.5},
+    {id:'intervention',label:'Intervention',supplementKgDMPerAnimalPerDay:1.5}],pricePerKgDM:4,currency:'BRL',scope:'experiment'});
+  const run=createRunRecord({manifest,result,conditionalCost:cost,id:'priced-run'});
+  recordRun(run,storage);
+  assert.equal(getRun('priced-run',storage).conditionalCost.scenarios[1].expense,432);
+  assert.equal(runCompatibility(getRun('priced-run',storage)).supported,true);
+  const tampered=structuredClone(getRun('priced-run',storage));tampered.conditionalCost.scenarios[1].expense=1;
+  assert.equal(runCompatibility(tampered).supported,false,'tampered stored arithmetic must not be replayable as provenance');
+  updateRunConditionalCost('priced-run',null,storage);
+  assert.equal(Object.hasOwn(getRun('priced-run',storage),'conditionalCost'),false);
+  assert.equal(runCompatibility(getRun('priced-run',storage)).supported,true);
 });
 
 test('rejects a duplicate run ID without changing the stored item',()=>{

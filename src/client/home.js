@@ -1,38 +1,4 @@
 const homePage = document.documentElement;
-const themeToggle = document.querySelector('.theme-toggle');
-const themeColor = document.querySelector('meta[name="theme-color"]');
-const homeThemeStorageKey = 'riose-home-theme';
-
-function setHomeTheme(theme) {
-  const dark = theme === 'dark';
-  homePage.dataset.theme = dark ? 'dark' : 'light';
-  document.querySelectorAll('.hero-cow').forEach((cow) => {
-    const image = dark ? cow.dataset.darkSrc : cow.dataset.lightSrc;
-    if (cow.getAttribute('src') !== image) cow.setAttribute('src', image);
-  });
-  themeToggle.setAttribute('aria-pressed', String(dark));
-  themeToggle.title = dark ? 'Turn off dark mode' : 'Turn on dark mode';
-  themeColor.content = dark ? '#181a17' : '#f7f7f4';
-}
-
-let savedHomeTheme = 'light';
-try {
-  savedHomeTheme = window.localStorage.getItem(homeThemeStorageKey) || 'light';
-} catch {
-  // The toggle remains available when browser storage is restricted.
-}
-setHomeTheme(savedHomeTheme);
-
-themeToggle.addEventListener('click', () => {
-  const theme = homePage.dataset.theme === 'dark' ? 'light' : 'dark';
-  setHomeTheme(theme);
-  try {
-    window.localStorage.setItem(homeThemeStorageKey, theme);
-  } catch {
-    // Keep the selected theme for this visit if it cannot be saved.
-  }
-});
-
 const header = document.querySelector('.site-header');
 const hero = document.querySelector('.hero');
 const lockup = document.querySelector('.hero-lockup');

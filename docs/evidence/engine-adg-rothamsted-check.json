@@ -19,10 +19,9 @@
     }
   },
   "engine": {
-    "sha256": "178e6874a88270e40a56bc9f43078517686fb0bc6a5eccdbb4a6b65fb16f2a30",
+    "sha256": "9836c0eb3813dd086147a9a473afa2cc9e23c893a58cf4d5966fd7544470b45b",
     "sourceFiles": [
       "engine.js",
-      "animal-view-state.js",
       "feeding-model.js",
       "environment-model.js",
       "metabolism-wasm.js"

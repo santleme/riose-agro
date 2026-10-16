@@ -10,6 +10,7 @@ const commandFields = {
   compare: ['snapshot', 'days'],
   compareConfigured: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
   populationCompare: ['snapshot', 'days', 'referenceConfig', 'scenarioConfig'],
+  populationBranch: ['parentManifest', 'checkpointDay', 'sourceArm', 'branchConfig'],
   compareLotConfigured: ['manifest'],
   replayComparison: ['manifest'],
   replayConfigured: ['manifest'],
@@ -81,6 +82,16 @@ function validateCommandPayload(message) {
       requireInteger(message.days, 'populationCompare.days', 1, 365, command);
       if (!isValidConfig(message.referenceConfig) || !isValidConfig(message.scenarioConfig)) {
         fail('INVALID_COMMAND_PAYLOAD', 'populationCompare requires two complete valid configurations.', command);
+      }
+      break;
+    case 'populationBranch':
+      if (!isRecord(message.parentManifest) || message.parentManifest.type !== 'riose-configured-comparison' || message.parentManifest.version !== 1) {
+        fail('INVALID_COMMAND_PAYLOAD', 'populationBranch requires a configured parent comparison manifest.', command);
+      }
+      requireInteger(message.parentManifest.periodDays, 'populationBranch.parentManifest.periodDays', 1, 365, command);
+      requireInteger(message.checkpointDay, 'populationBranch.checkpointDay', 0, message.parentManifest.periodDays - 1, command);
+      if (!['reference', 'scenario'].includes(message.sourceArm) || !isValidConfig(message.branchConfig)) {
+        fail('INVALID_COMMAND_PAYLOAD', 'populationBranch requires a source path and one complete valid branch configuration.', command);
       }
       break;
     case 'replayComparison':

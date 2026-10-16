@@ -1,0 +1,189 @@
+:root {
+  --surface: #fff;
+  --surface-soft: #f0efe9;
+  --text-soft: #777870;
+  --border-soft: #deded7;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  color: var(--ink);
+  background: var(--paper);
+  --paper: #171916;
+  --ink: #eeefe9;
+  --muted: #aeb1a7;
+  --rule: #383b35;
+  --surface: #20231f;
+  --surface-soft: #282b26;
+  --text-soft: #adb1a7;
+  --border-soft: #3c4039;
+}
+
+:root[data-theme="dark"] body {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.header-utilities { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.theme-toggle {
+  min-width: 67px;
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 18px;
+  color: #62645d;
+  background: transparent;
+  font: 20px/1 var(--mono);
+  cursor: pointer;
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+.theme-toggle:hover { color: var(--ink); border-color: currentColor; }
+.theme-toggle:focus-visible { outline: 2px solid #4788a0; outline-offset: 3px; }
+:root[data-theme="dark"] .theme-toggle { color: #d2d5cc; border-color: #565b52; }
+:root[data-theme="dark"] .theme-toggle:hover { background: #30342e; }
+:root[data-theme="dark"] .site-header.is-scrolled { background-color: rgb(23 25 22 / .88); }
+:root[data-theme="dark"] .header-manifesto,
+:root[data-theme="dark"] .header-product,
+:root[data-theme="dark"] .header-place { color: #c0c3b9; }
+:root[data-theme="dark"] .name-definition { color: #eceee7; background: rgb(34 37 32 / .94); border-color: #484d44; }
+:root[data-theme="dark"] .name-definition p,
+:root[data-theme="dark"] .name-definition .definition-note { color: #c0c4ba; }
+
+:root[data-theme="dark"] .experiment-preview,
+:root[data-theme="dark"] .publication-pages .paper-image { background-color: #252821; }
+:root[data-theme="dark"] .hero-wordmark,
+:root[data-theme="dark"] .hero-monogram { color: #eeefe9; }
+:root[data-theme="dark"] .experiment-preview { color: #d0d3ca; border-color: #3c4039; }
+:root[data-theme="dark"] .experiment-preview-label,
+:root[data-theme="dark"] .publication-year,
+:root[data-theme="dark"] .publication-authors,
+:root[data-theme="dark"] .publication-relation { color: #aeb2a8; }
+:root[data-theme="dark"] .publication-source,
+:root[data-theme="dark"] .publication-summary { color: #d2d4cd; }
+:root[data-theme="dark"] .publication-link,
+:root[data-theme="dark"] .hero-copy a { color: #d0d3ca; border-color: #696d63; }
+:root[data-theme="dark"] .manifesto-page { --manifesto-copy: #d0d3ca; --manifesto-muted: #aeb2a8; }
+:root[data-theme="dark"] .manifesto-page .manifesto-copy h1 { color: var(--ink); }
+
+/* Keep page content clear of the taller fixed site header. */
+.welcome { padding-top: 70px; }
+.workspace { padding-top: 64px; }
+.conversation-panel { top: 64px; height: calc(100vh - 64px); }
+.lab-shell { padding-top: 88px; }
+
+:root[data-theme="dark"] .product-shell,
+:root[data-theme="dark"] .welcome h1,
+:root[data-theme="dark"] .population-heading h1 { color: var(--ink); }
+:root[data-theme="dark"] .welcome .eyebrow,
+:root[data-theme="dark"] .welcome-copy,
+:root[data-theme="dark"] .prompt-footer,
+:root[data-theme="dark"] .section-heading span,
+:root[data-theme="dark"] .muted { color: #aeb2a8; }
+:root[data-theme="dark"] .prompt-form,
+:root[data-theme="dark"] .suggestions button,
+:root[data-theme="dark"] .conversation-panel,
+:root[data-theme="dark"] .spec-card,
+:root[data-theme="dark"] .population-empty,
+:root[data-theme="dark"] .population-grid,
+:root[data-theme="dark"] .analysis-card,
+:root[data-theme="dark"] .provenance,
+:root[data-theme="dark"] .daily-table { color: #e4e6df; background: var(--surface); border-color: var(--border-soft); }
+:root[data-theme="dark"] .welcome-history,
+:root[data-theme="dark"] .analysis-area,
+:root[data-theme="dark"] .followup-form { border-color: var(--border-soft); }
+:root[data-theme="dark"] .suggestions button,
+:root[data-theme="dark"] .history-row,
+:root[data-theme="dark"] .back-link,
+:root[data-theme="dark"] .spec-row,
+:root[data-theme="dark"] .analysis-card > p,
+:root[data-theme="dark"] .provenance div,
+:root[data-theme="dark"] td { color: #b7bcb2; }
+:root[data-theme="dark"] .history-row:hover,
+:root[data-theme="dark"] .chat-message.assistant,
+:root[data-theme="dark"] .aggregate-card,
+:root[data-theme="dark"] .inspector-stat,
+:root[data-theme="dark"] .animal-inspector .animal-detail { background: var(--surface-soft); }
+:root[data-theme="dark"] .chat-message.assistant,
+:root[data-theme="dark"] .spec-row strong,
+:root[data-theme="dark"] .animal-inspector h4,
+:root[data-theme="dark"] .inspector-stat strong { color: #e1e4dc; }
+:root[data-theme="dark"] .control-row,
+:root[data-theme="dark"] .timeline-row,
+:root[data-theme="dark"] .activity-count,
+:root[data-theme="dark"] .quiet-button,
+:root[data-theme="dark"] .text-button,
+:root[data-theme="dark"] .followup-entry { color: #d4d7cf; background: var(--surface); border-color: var(--border-soft); }
+:root[data-theme="dark"] .control-row select,
+:root[data-theme="dark"] .followup-entry input { color: #e4e6df; }
+:root[data-theme="dark"] .spec-note,
+:root[data-theme="dark"] .not-validated { color: #e4c08d; background: #383126; }
+:root[data-theme="dark"] .table-scroll th,
+:root[data-theme="dark"] .table-scroll td { border-color: var(--border-soft); }
+
+:root[data-theme="dark"] .lab-intro h1,
+:root[data-theme="dark"] .lab-card-heading h2 { color: var(--ink); }
+:root[data-theme="dark"] .lab-intro > p:not(.eyebrow),
+:root[data-theme="dark"] .lab-fields label,
+:root[data-theme="dark"] .lab-fields small,
+:root[data-theme="dark"] .review-meta,
+:root[data-theme="dark"] .results-caption,
+:root[data-theme="dark"] .results-meta,
+:root[data-theme="dark"] .lab-actions > span,
+:root[data-theme="dark"] .lab-grid-toolbar,
+:root[data-theme="dark"] .lab-grid-footer { color: #b3b8ae; }
+:root[data-theme="dark"] .lab-card,
+:root[data-theme="dark"] .lab-fields input,
+:root[data-theme="dark"] .lab-fields select,
+:root[data-theme="dark"] .prompt-card textarea,
+:root[data-theme="dark"] .scenario-select-row select,
+:root[data-theme="dark"] .scenario-population { color: #e3e6de; background: var(--surface); border-color: var(--border-soft); }
+:root[data-theme="dark"] .scenario-list article,
+:root[data-theme="dark"] .animal-detail,
+:root[data-theme="dark"] .lab-timeline,
+:root[data-theme="dark"] .sensitivity-figure,
+:root[data-theme="dark"] .resource-budget { background: var(--surface-soft); }
+:root[data-theme="dark"] .scenario-list article span,
+:root[data-theme="dark"] .scenario-list article strong,
+:root[data-theme="dark"] .animal-detail,
+:root[data-theme="dark"] .lab-timeline label,
+:root[data-theme="dark"] .lab-timeline label strong,
+:root[data-theme="dark"] .chart-legend span { color: #d1d5cc; }
+:root[data-theme="dark"] .review-panel,
+:root[data-theme="dark"] .scenario-select-row,
+:root[data-theme="dark"] .scientific-results,
+:root[data-theme="dark"] .lab-table-scroll { border-color: var(--border-soft); }
+
+@media (max-width: 760px) {
+  .site-header { padding-inline: 20px; }
+  .header-manifesto { left: 20px; font-size: 14.6px; }
+  .header-wordmark { font-size: 29.1px; }
+  .header-product { font-size: 14.6px; }
+  .header-mark-group { gap: 14px; }
+  .header-manifesto::after, .header-product::after { bottom: -24px; }
+  .header-utilities { gap: 0; }
+  .header-place { display: none; }
+  .theme-toggle { min-width: 67px; min-height: 48px; padding-inline: 14px; font-size: 14px; }
+}
+
+@media (max-width: 380px) {
+  .header-manifesto, .header-product { font-size: 12px; }
+  .header-wordmark { font-size: 24px; }
+  .header-mark-group { gap: 6px; }
+  .theme-toggle { min-width: 56px; min-height: 40px; padding-inline: 10px; font-size: 12px; }
+}
+
+@media (max-width: 600px) {
+  html { scroll-padding-top: 60px; }
+  .site-header { height: 60px; }
+}
+
+@media (max-width: 760px) {
+  .welcome { padding-top: 72px; }
+  .workspace { padding-top: 60px; }
+  .conversation-panel { top: auto; height: auto; }
+  .lab-shell { padding-top: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle { transition: none; }
+}
