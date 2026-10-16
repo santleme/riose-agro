@@ -21,7 +21,7 @@ const MAX_TEXT_LENGTH = 1200;
 const MAX_OUTPUT_TOKENS = 160;
 const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
-const PUBLIC_FILES = new Set([
+export const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
   'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'theme.css', 'riose-mark.svg',
   'assets/riose-cow-cutout.png',
