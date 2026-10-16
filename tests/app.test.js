@@ -24,6 +24,7 @@ test('Product uses the institutional header and retired navigation routes forwar
   const productHtml = await product.text();
   assert.match(productHtml, /What would happen if\?/);
   assert.match(productHtml, /population-grid/);
+  assert.doesNotMatch(productHtml, /RIOSE · LIVESTOCK EXPERIMENTS|Riose farm engine|JavaScript · deterministic · unvalidated demo/);
   assert.match(productHtml, /class="site-header"/);
   assert.match(productHtml, /href="product\.html" aria-current="page">· product/);
   assert.doesNotMatch(productHtml, /placeholder="For example:/);

@@ -26,14 +26,14 @@
 
 .header-utilities { display: flex; align-items: center; gap: 16px; margin-left: auto; }
 .theme-toggle {
-  min-width: 48px;
-  min-height: 34px;
-  padding: 6px 10px;
+  min-width: 67px;
+  min-height: 48px;
+  padding: 8px 14px;
   border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
   border-radius: 18px;
   color: #62645d;
   background: transparent;
-  font: 14px/1 var(--mono);
+  font: 20px/1 var(--mono);
   cursor: pointer;
   transition: color .18s ease, background-color .18s ease, border-color .18s ease;
 }
@@ -155,14 +155,21 @@
 
 @media (max-width: 760px) {
   .site-header { padding-inline: 20px; }
-  .header-manifesto { left: 20px; font-size: 10.4px; }
-  .header-wordmark { font-size: 20.8px; }
-  .header-product { font-size: 10.4px; }
-  .header-mark-group { gap: 10px; }
+  .header-manifesto { left: 20px; font-size: 14.6px; }
+  .header-wordmark { font-size: 29.1px; }
+  .header-product { font-size: 14.6px; }
+  .header-mark-group { gap: 14px; }
   .header-manifesto::after, .header-product::after { bottom: -24px; }
   .header-utilities { gap: 0; }
   .header-place { display: none; }
-  .theme-toggle { min-width: 52px; min-height: 34px; padding-inline: 10px; font-size: 10px; }
+  .theme-toggle { min-width: 67px; min-height: 48px; padding-inline: 14px; font-size: 14px; }
+}
+
+@media (max-width: 380px) {
+  .header-manifesto, .header-product { font-size: 12px; }
+  .header-wordmark { font-size: 24px; }
+  .header-mark-group { gap: 6px; }
+  .theme-toggle { min-width: 56px; min-height: 40px; padding-inline: 10px; font-size: 12px; }
 }
 
 @media (max-width: 600px) {
