@@ -47,3 +47,26 @@ The closing SDD audit/report changes are being recorded separately after this im
 ## Next action
 
 No independent READY implementation task remains in this SDD track. Keep P3 gates blocked, preserve the negative Laya promotion decision, and wait for new user research direction, an external scientific reviewer, or a persistent provider budget gate before adding a dependent task. Product can be demonstrated locally with its scientific and demonstrative labels intact; this handoff does not authorize decision-grade commercial claims.
+
+## Session handoff — 2026-10-16
+
+Last verified implementation commit: `1cb9896` (`Add user-priced conditional supplement costs`).
+Current branch: `codex/behavioral-agents-sdd`.
+Completed this session: P4-013. P4-011 and P4-012 were already done and not repeated.
+Task in progress: none. No Product V4 task is READY without external user research, new requirements, or a gated external dependency.
+
+Files changed in the implementation commit: Product cost disclosure and responsive styling; independent versioned conditional-cost arithmetic; validated local history persistence; cost-aware export digest; Product E2E and focused unit coverage; P4 task/progress/decision/acceptance records; desktop branch and mobile cost screenshots.
+
+Tests executed: combined cost/history unit tests 30/30; `npm run test:e2e:product` PASS; `npm test` PASS 529/529 in 38.97 seconds; `git diff --check` PASS. The E2E verified that price entry/edit/cost review never posts an engine Worker command, branch cost uses remaining days, exports bind cost provenance, local history preserves the amount, and replay verifies it. No parity run was needed because engine, Rust, and WASM code were untouched.
+
+Passing checks: visual review at 1440×1100 and 390×844, including mobile no-overflow. Captures are `docs/evidence/visual-review/2026-10-16/03b-product-conditional-cost-mobile.png` and `.../10b-product-branch-cost-desktop.png`.
+
+Known failures: the first E2E attempt had an assertion-order issue in its mobile disclosure test; that test was corrected and the full Product E2E passed. No known code/test failures remain.
+
+Scientific limitations: FarmEngine remains demonstrative; the new amount is transparent arithmetic on supplement supplied, herd count, horizon, and user price. It is not measured intake, total ration cost, profit, ROI, or evidence of production response. BR-CORTE and behavioral NO-GO are unchanged. P3-007 remains blocked; P3-008 remains `NOT_PERFORMED`.
+
+Visual limitations: mobile conversation remains a scrollable compact panel as before; the new cost disclosure is readable and fits the viewport. No new motion was added.
+
+Working tree note: unrelated pre-existing local edits remain unstaged in `docs/architecture/current-system-audit.md`, `docs/architecture/module-boundaries.md`, `docs/architecture/repository-layout.md`, several engine/source evidence JSON and Product V2 screenshots, plus `tests/adult-data.test.js` and `tests/simulation-report.test.js`. Preserve them; they were not part of P4-013. E2E-generated non-target screenshots were removed and the pre-existing 2026-10-15 visual captures were restored.
+
+Next action: hold Product V4 implementation here until real user feedback or a new independently eligible task is supplied. Do not activate provider traffic, change behavioral gates, or present the FarmEngine as decision-grade.
