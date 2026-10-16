@@ -1,14 +1,36 @@
-# Riose Agro — experimentos científicos
+# RIOSE
 
-Riose Agro is a browser-based livestock simulation and experiment workspace. The institutional home introduces the project and `product.html` is the primary conversational workspace. `scenario-lab.html` remains a direct entry to multi-scenario and BR-CORTE tools; the retired `experiments.html` and `simulator.html` addresses redirect to Product. Current FarmEngine outputs are demonstrative, not validated predictions or recommendations.
+<p align="center">
+  <img src="docs/assets/readme/12-riose-cover-wide.png" alt="RIOSE, com uma vaca Nelore em uma paisagem rural" width="100%">
+</p>
+
+RIOSE is an experimental, browser-based workspace for exploring livestock scenarios through reproducible simulations. Compare a baseline with a run that changes one selected factor, inspect inputs, charts and daily outputs, and review the assumptions behind each result. The project also records a narrowly scoped AMD ROCm/PyTorch compute validation. Its current FarmEngine outputs are illustrative and are not validated predictions or management recommendations.
+
+The institutional home introduces the project, `product.html` is the primary workspace, and `scenario-lab.html` opens multi-scenario and BR-CORTE tools. The retired `experiments.html` and `simulator.html` addresses redirect to Product.
+
+<p align="center"><code>amd</code> · <code>rocm</code> · <code>pytorch</code> · <code>simulation</code> · <code>livestock</code></p>
+
+[AMD validation record](docs/evidence/amd/AMD_VALIDATION.md) · [Scientific model notes](docs/modelos/interface-modelos-cientificos.md) · [Repository layout](docs/architecture/repository-layout.md)
 
 ## License and publication status
 
-Project code is licensed under [Apache License 2.0](LICENSE). Third-party datasets carry separate terms; see each dataset's `data/**/manifest.json` for its source and license. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) explains that XGain files with conflicting license statements were removed from this tree, while the publication gate remains open pending review of other refs and reachable history. Read the [ACT III owner-publication readiness review](docs/evidence/actiii-owner-publication-readiness.md) before making the repository public; it records the remaining dataset-rights and publication checks.
+Project code is licensed under the [MIT License](LICENSE). Third-party datasets carry separate terms; see each dataset's `data/**/manifest.json` for its source and license. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) explains that the XGain files with conflicting license statements were removed from this integration tree; the publication gate remains open pending review of other refs and reachable history. Read the [ACT III owner-publication readiness review](docs/evidence/actiii-owner-publication-readiness.md) before making the repository public; it records the remaining dataset-rights and publication checks.
 
 See the [repository layout guide](docs/architecture/repository-layout.md) for directory responsibilities and the reason browser page URLs remain at the root.
 
 Completed and failed comparisons can be listed and replayed from the browser's local history. See [the local execution history guide](docs/historico-execucoes.md) for its storage, retention, and compatibility behavior.
+
+## Workspace captures
+
+The following images document the experiment interface before its current entry point was consolidated at `product.html`; they are historical UI captures, not a claim that `experiments.html` remains the primary page.
+
+<table>
+  <thead><tr><th>Experiment workspace</th><th>Scenario comparison</th></tr></thead>
+  <tbody><tr>
+    <td><img src="docs/assets/readme/01-experiment-workspace-4x5.png" alt="Historical experiment workspace capture" width="100%"></td>
+    <td><img src="docs/assets/readme/02-scenario-results-4x5.png" alt="Historical scenario comparison capture" width="100%"></td>
+  </tr></tbody>
+</table>
 
 ## Run locally
 
@@ -92,6 +114,55 @@ npm run link:snapshot -- --snapshot farm-snapshot.json --manifest comparison.jso
 
 The command validates the manifest with the engine's existing rules, records the exact file SHA-256 without copying scenario fields, and refuses to overwrite the output. It rejects observed-study slices. Then validate the linked copy with `npm run validate:snapshot -- farm-snapshot-linked.json --manifest comparison.json`; the exact bytes must remain available. Linking does not make a snapshot eligible for simulation.
 
+## Visual references
+
+The illustrations are concept art from the project's visual exploration. They are not rendered by the current simulation workspace and do not represent observed data.
+
+<img align="right" width="190" src="docs/assets/readme/04-concept-cow.png" alt="Nelore cow concept illustration">
+
+RIOSE focuses on inspectable scenario comparisons, reproducible inputs and clear limits on what the model can support. The cow illustration is a visual reference only.
+
+<br clear="all">
+
+<img align="right" width="210" src="docs/assets/readme/08-concept-pickup.png" alt="Pickup concept illustration">
+
+The pickup illustration sits beside the product walkthrough as a farm-context reference; it is not an application feature.
+
+<br clear="all">
+
+<img align="left" width="220" src="docs/assets/readme/09-concept-livestock-truck.png" alt="Livestock truck concept illustration">
+
+The livestock truck is a separate transparent PNG concept, placed opposite the description to keep it integrated with the README rather than inside a boxed gallery.
+
+<br clear="all">
+
+<p align="center">
+  <img src="docs/assets/readme/06-concept-farmhouse.png" alt="Farmhouse concept illustration" width="240">
+  &nbsp;&nbsp;
+  <img src="docs/assets/readme/07-concept-barn.png" alt="Barn and tractor concept illustration" width="240">
+</p>
+
+<p align="center"><sub>Farmhouse and tractor concepts, centered as a pair.</sub></p>
+
+The [isometric asset sheet](docs/assets/readme/03-visual-concept-asset-sheet.png) shows the broader concept set.
+
+## AMD + ROCm validation evidence
+
+A successful parity run was recorded on the separate release commit [acb5cdf6e3bc23d7e48026bc736da05427f89907](https://github.com/GUZZBR1/riose-agro/commit/acb5cdf6e3bc23d7e48026bc736da05427f89907). It covered a 24-animal metabolism batch on an AMD Instinct MI300X VF with ROCm/HIP 7.14.60850 and PyTorch 2.11.0+rocm7.14.1; the recorded backend was `amd_rocm`, with parity passing at `1e-12` tolerances. This is evidence for that workload and environment only, not current-main support, performance gains, full-simulator validation or biological validity.
+
+<table>
+  <thead><tr><th>AMD environment</th><th>Product validation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><img src="docs/evidence/amd/01-amd-environment.png" alt="Recorded AMD GPU, PyTorch and ROCm environment" width="100%"></td>
+      <td><img src="docs/evidence/amd/02-riose-amd-validation.png" alt="AMD product validation output with parity result" width="100%"></td>
+    </tr>
+    <tr><td colspan="2" align="center"><strong>Backend detection</strong><br><img src="docs/evidence/amd/03-amd-backend-detection.png" alt="Backend detection showing ROCm available and CUDA unavailable" width="72%"></td></tr>
+  </tbody>
+</table>
+
+The [archived validation record](docs/evidence/amd/AMD_VALIDATION.md) includes reproduction details and explains why the recorded verifier must be run at its original release commit.
+
 ## Repository guide
 
 - `home.html` and `manifesto.html` contain institutional project information and identity artwork.
@@ -126,3 +197,9 @@ The versioned scenario contract v2 extends the existing comparison manifest whil
 
 The headless Rust runner accepts versioned baseline and housing-comparison
 requests. See [the CLI contract and exit codes](docs/native-scenario-cli.md).
+
+## RIOSE
+
+<p align="center">
+  <img src="docs/assets/readme/11-riose-landscape.png" alt="RIOSE wordmark and project subtitle within a rural sunset landscape" width="100%">
+</p>
