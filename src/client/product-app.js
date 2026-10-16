@@ -25,7 +25,7 @@ function renderSpecCard(){
   const assumption=document.createElement('p');assumption.className='spec-note';assumption.textContent=activeSpec.population.breed?'The engine does not encode breed. Nelore is preserved as prompt metadata only.':'The engine does not encode breed. This is a generic demonstrative herd.';card.append(assumption);
   const origins=document.createElement('p');origins.className='spec-note';origins.textContent=`Assumptions: initial weights and energy/thirst states come from seeded engine defaults; pasture stock starts at the engine default. Supplement is interpreted in the engine’s kg dry matter per head per day unit. Weather rules are illustrative, not a validated heat-response model.`;card.append(origins);
   if(activeSpec.missing_inputs.length||activeSpec.unsupported_requests.length){const missing=document.createElement('p');missing.className='spec-note';missing.textContent=[...activeSpec.missing_inputs.map(value=>`Need: ${value}`),...activeSpec.unsupported_requests].join(' ');card.append(missing);}
-  const run=document.createElement('button');run.type='button';run.className='primary-button';run.textContent='Run comparison';run.disabled=activeSpec.missing_inputs.length>0||activeSpec.unsupported_requests.length>0;run.addEventListener('click',runActiveExperiment);card.append(run);
+  const run=document.createElement('button');run.type='button';run.className='primary-button';run.textContent='Run comparison';run.disabled=pending||activeSpec.missing_inputs.length>0||activeSpec.unsupported_requests.length>0;run.addEventListener('click',runActiveExperiment);card.append(run);
   const explain=document.createElement('p');explain.className='spec-note';explain.textContent=interpreterSource==='llm'?'Server AI drafted this structured interpretation. Review every field; it cannot run a simulation or return scientific outcomes.':`${interpreterNotice} The local parser extracts known fields only; it does not infer scientific outputs.`;card.append(explain);
   $('conversation').append(card);$('conversation').scrollTop=$('conversation').scrollHeight;
 }
@@ -52,6 +52,7 @@ async function runActiveExperiment(){
   try{
     const engine=new FarmEngine(DAY_SEED,activeSpec.population.count);engine.configure(activeSpec.baseline);const snapshot=engine.snapshot();
     const options={days:activeSpec.duration.days,referenceConfig:activeSpec.baseline,scenarioConfig:activeSpec.intervention};
+    $('followup-input').disabled=true;$('followup-form').querySelector('button').disabled=true;
     const [execution]=await Promise.all([requestPopulationComparison(snapshot,options)]);
     const manifest=createConfiguredComparisonManifest(snapshot,options);
     latest={...execution.data,manifest,execution:{backend:'local-js',engineImplementation:execution.engineImplementation,fallbackUsed:false}};
@@ -60,6 +61,7 @@ async function runActiveExperiment(){
     addMessage('assistant',`Comparison complete. ${activeSpec.population.count} engine animals were observed at ${latest.timeline.map(point=>`day ${point.day}`).join(', ')}. These are deterministic demonstrative states, not a validated forecast.`);
     renderSpecCard();notify(`Completed · ${execution.engineImplementation} · saved locally`);
   }catch(error){if(button)button.disabled=false;notify(`Could not run comparison: ${error.message}`);}
+  finally{$('followup-input').disabled=false;$('followup-form').querySelector('button').disabled=false;}
 }
 
 function currentPoint(){return latest?.timeline[pointIndex]??null;}
@@ -90,7 +92,7 @@ async function loadHistoryRun(id){try{const run=getRun(id);if(!run||!runCompatib
 
 for(const button of document.querySelectorAll('[data-prompt]'))button.addEventListener('click',()=>{$('prompt-input').value=button.dataset.prompt;$('prompt-input').focus();});
 $('prompt-form').addEventListener('submit',async event=>{event.preventDefault();const prompt=$('prompt-input').value.trim();notify('Interpreting the request…');await handlePrompt(prompt);});
-$('followup-form').addEventListener('submit',event=>{event.preventDefault();if(!activeSpec)return;const text=$('followup-input').value.trim();if(!text)return;try{activeSpec=amendmentFromPrompt(activeSpec,text);activePrompt+=`\nUpdate: ${text}`;addMessage('user',text);addMessage('assistant','I updated the structured inputs. The result was cleared; review and run again to calculate the new comparison.');latest=null;selectedId=null;$('analysis-area').hidden=true;$('activity-counts').replaceChildren();$('population-grid').replaceChildren();$('aggregate-cards').replaceChildren();$('animal-inspector').innerHTML='<p>Run the updated experiment to inspect results.</p>';renderSpecCard();$('followup-input').value='';notify('Inputs updated. Confirm the comparison to run again.');}catch(error){addMessage('assistant',error.message);notify(error.message);}});
+$('followup-form').addEventListener('submit',event=>{event.preventDefault();if(pending||!activeSpec)return;const text=$('followup-input').value.trim();if(!text)return;try{activeSpec=amendmentFromPrompt(activeSpec,text);activePrompt+=`\nUpdate: ${text}`;addMessage('user',text);addMessage('assistant','I updated the structured inputs. The result was cleared; review and run again to calculate the new comparison.');latest=null;selectedId=null;$('analysis-area').hidden=true;$('activity-counts').replaceChildren();$('population-grid').replaceChildren();$('aggregate-cards').replaceChildren();$('animal-inspector').innerHTML='<p>Run the updated experiment to inspect results.</p>';renderSpecCard();$('followup-input').value='';notify('Inputs updated. Confirm the comparison to run again.');}catch(error){addMessage('assistant',error.message);notify(error.message);}});
 $('timeline').addEventListener('input',event=>{if(!latest)return;pointIndex=Number(event.target.value);$('day-label').textContent=`Day ${currentPoint().day}`;renderGrid();renderInspector();renderAggregateCards();renderActivityCounts();});
 for(const id of ['metric-select','filter-select','activity-select','sort-select'])$(id).addEventListener('change',()=>{if(latest){visibleCount=1200;renderGrid();}});
 $('show-more').addEventListener('click',()=>{visibleCount+=1200;renderGrid();});

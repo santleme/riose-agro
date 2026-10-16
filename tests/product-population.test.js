@@ -1,10 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {FarmEngine,compareConfiguredScenarios} from '../src/client/engine.js';
 import {amendmentFromPrompt,expandActivityHistory,interpretExperimentPrompt,runPopulationComparison,validateExperimentSpecification} from '../src/client/population-experiment.js';
 import {decodeWorkerCommand,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 const prompt='Tenho 200 bovinos Nelore a pasto, durante 30 dias, em condições de calor. Quero saber o que acontece se aumentar a suplementação de 0,5 para 1,5 kg por animal.';
+
+test('Product V2 keeps the legacy Experiments stylesheet isolated',()=>{
+  const page=readFileSync(new URL('../experiments.html',import.meta.url),'utf8');
+  const styles=readFileSync(new URL('../src/client/experiments.css',import.meta.url),'utf8');
+  assert.match(page,/href="src\/client\/experiments\.css"/);
+  assert.match(styles,/\.experiment-shell/);
+  assert.match(styles,/\.workspace\s*\{/);
+});
 
 test('deterministic intent parser extracts the supported Portuguese supplement experiment and its origins',()=>{
   const spec=interpretExperimentPrompt(prompt);
@@ -22,6 +31,19 @@ test('deterministic intent parser extracts the supported Portuguese supplement e
   assert.equal(english.population.count,200);
 });
 
+test('the two built-in supplement comparison prompts parse without AI configuration',()=>{
+  const examples=[
+    ['I have 100 cattle on pasture for 15 days. Compare 0.5 with 1.0 kg of supplement per animal per day.',.5,1],
+    ['Compare 24 cattle on pasture for 7 days with 0 versus 1 kg supplement per animal per day.',0,1]
+  ];
+  for(const [prompt,baseline,intervention] of examples){
+    const spec=interpretExperimentPrompt(prompt);
+    assert.equal(spec.baseline.supplement,baseline);
+    assert.equal(spec.intervention.supplement,intervention);
+    assert.equal(spec.missing_inputs.length,0);
+  }
+});
+
 test('ambiguous requests ask for an intervention and unsupported outputs are explicit',()=>{
   const spec=interpretExperimentPrompt('I have 50 cattle for 10 days. Predict their ADG with confidence intervals.');
   assert.ok(spec.missing_inputs.some(item=>item.includes('supplement intervention')));
@@ -36,6 +58,16 @@ test('an amendment updates structured inputs without silently executing',()=>{
   assert.equal(changed.population.count,100);
   assert.equal(changed.intervention.supplement,1.5);
   assert.throws(()=>amendmentFromPrompt(spec,'make them more productive'),/can update population size/);
+});
+
+test('an amendment clears resolved supplement questions and keeps equal arms blocked',()=>{
+  const unresolved=interpretExperimentPrompt('I have 50 cattle for 10 days.');
+  const resolved=amendmentFromPrompt(unresolved,'Use 1.5 kg supplement per animal per day');
+  assert.equal(resolved.intervention.supplement,1.5);
+  assert.equal(resolved.missing_inputs.length,0);
+  assert.equal(validateExperimentSpecification(resolved),true);
+  const sameAsBaseline=amendmentFromPrompt(unresolved,'Use 0 kg supplement per animal per day');
+  assert.ok(sameAsBaseline.missing_inputs.some(item=>item.includes('differs from the baseline')));
 });
 
 test('population comparison returns deterministic animal states at named checkpoints from matched starts',()=>{
