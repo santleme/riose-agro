@@ -61,6 +61,7 @@
 .analysis-area[hidden]{display:none}
 .analysis-area{margin-top:30px;padding-top:20px}
 .analysis-header{margin-bottom:18px}
+.workspace-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:7px}
 .analysis-header h2{font-size:22px;letter-spacing:-.55px}
 .journey-card{padding:22px 24px 16px;border:1px solid #e8ecea;border-radius:18px;background:#fff}
 .journey-summary-main{max-width:760px;margin:0;color:#1d3037;font-size:21px;line-height:1.38;letter-spacing:-.45px;font-weight:500}
@@ -74,6 +75,22 @@
 .journey-legend i{width:16px;height:3px;border-radius:3px;display:inline-block}
 .journey-baseline{background:#8fc9df}.journey-intervention{background:#378caf}
 .timeline-row{margin:12px 0 0;padding:14px 0 4px}
+.branch-action{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 8px;padding:4px 0 12px}
+.branch-action p{margin:0;color:#8a979b;font-size:10px;line-height:1.5}
+.branch-action button:disabled{opacity:.52;cursor:not-allowed}
+.branch-dialog{width:min(480px,calc(100vw - 28px));padding:0;border:1px solid #e2e8e5;border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 22px 80px #132a302b}
+.branch-dialog::backdrop{background:#15242b55;backdrop-filter:blur(3px)}
+.branch-dialog form{padding:24px}
+.branch-dialog h2{margin:0;font-size:22px;letter-spacing:-.55px}
+.branch-dialog .branch-context{margin:8px 0 20px;color:#78878b;font-size:11px;line-height:1.6}
+.branch-dialog label{display:block;margin:14px 0 6px;font-size:10px;color:#5f7176}
+.branch-dialog select,.branch-number{width:100%;min-height:42px;border:1px solid #dfe7e4;border-radius:9px;background:#fff;color:#293b40;padding:0 11px;font:12px "DM Sans",sans-serif}
+.branch-number{display:flex;align-items:center;padding-right:10px}
+.branch-number input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:inherit;font:13px "IBM Plex Mono",monospace}
+.branch-number span{color:#8b989b;font-size:9px}
+.branch-error{color:#a44d39;font-size:10px;line-height:1.5}
+.branch-review{margin:16px 0 4px;padding:12px;border-radius:10px;background:#f3f7f6;color:#53676c;font-size:11px;line-height:1.6}
+.branch-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 .population-explorer{border:1px solid #e8ecea;border-radius:14px;background:#fff;padding:15px 18px;margin-top:12px}
 .population-explorer>summary{font-size:11px;color:#50666d;list-style:none;cursor:pointer}
 .population-explorer>summary::-webkit-details-marker{display:none}
@@ -83,6 +100,11 @@
 .population-explorer .analysis-more{margin-top:18px}
 .population-explorer:not([open])>*:not(summary){display:none}
 .aggregate-cards{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}
-.journey-card svg path{transition:opacity 180ms ease-out}
-@media(max-width:760px){.analysis-area{margin-top:22px;padding-top:16px}.analysis-header h2{font-size:19px}.journey-card{padding:18px 15px 14px;border-radius:15px}.journey-summary-main{font-size:18px}.journey-summary-note{margin-bottom:20px}.journey-chart-heading{align-items:flex-start;flex-direction:column;gap:4px}.weight-chart{height:160px}.population-explorer{padding:13px 12px}.population-explorer .control-row{display:grid;grid-template-columns:1fr}.population-explorer .control-row label{width:100%}.timeline-points{font-size:8px}}
-@media(prefers-reduced-motion:reduce){.journey-card svg path{transition:none}}
+.journey-marker{transition:transform 180ms cubic-bezier(.22,1,.36,1)}
+@media(max-width:760px){.analysis-area{margin-top:22px;padding-top:16px}.analysis-header h2{font-size:19px}.journey-card{padding:18px 15px 14px;border-radius:15px}.journey-summary-main{font-size:18px}.journey-summary-note{margin-bottom:20px}.journey-chart-heading{align-items:flex-start;flex-direction:column;gap:4px}.weight-chart{height:160px}.population-explorer{padding:13px 12px}.population-explorer .control-row{display:grid;grid-template-columns:1fr}.population-explorer .control-row label{width:100%}.timeline-points{font-size:8px}.workspace-actions{gap:5px}.workspace-actions button{padding:8px;font-size:9px}.branch-action{align-items:flex-start;flex-direction:column}.branch-dialog form{padding:20px}.branch-buttons{flex-wrap:wrap}.branch-buttons button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){.journey-marker{transition:none}}
+:root[data-theme="dark"] .journey-card,:root[data-theme="dark"] .population-explorer,:root[data-theme="dark"] .branch-dialog{background:#20231f;color:#eeefe9;border-color:#3c4039}
+:root[data-theme="dark"] .journey-summary-main,:root[data-theme="dark"] .journey-chart-heading h3,:root[data-theme="dark"] .population-explorer>summary,:root[data-theme="dark"] .branch-dialog h2{color:#eeefe9}
+:root[data-theme="dark"] .journey-summary-note,:root[data-theme="dark"] .journey-chart-heading span,:root[data-theme="dark"] .journey-legend,:root[data-theme="dark"] .branch-dialog .branch-context{color:#adb1a7}
+:root[data-theme="dark"] .branch-dialog select,:root[data-theme="dark"] .branch-number{background:#20231f;color:#eeefe9;border-color:#42463f}
+:root[data-theme="dark"] .branch-review{background:#282b26;color:#d1d5cc}

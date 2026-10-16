@@ -60,7 +60,7 @@
       </aside>
 
       <section id="population-panel" class="population-panel" aria-label="Population workspace">
-        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div>
+        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><div class="workspace-actions"><button id="return-parent" class="quiet-button" type="button" hidden>Back to parent path</button><button id="replay-branch" class="quiet-button" type="button" hidden>Replay branch</button><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div></div>
         <div class="population-empty" role="status"><span class="empty-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Your population view is ready when you are.</p><small>Review the experiment, then confirm the run. No animal states are shown before the engine returns them.</small></div>
         <div id="analysis-area" class="analysis-area" hidden>
           <div class="analysis-header"><div><p class="eyebrow">POPULATION JOURNEY</p><h2>Two paths from the same starting herd</h2></div><span class="not-validated">Illustrative engine response</span></div>
@@ -68,9 +68,10 @@
             <div class="journey-summary"><p id="journey-summary" class="journey-summary-main">The engine’s population trajectories will appear here after a confirmed run.</p><p id="journey-summary-note" class="journey-summary-note">Both paths use the same starting population and seed. This comparison is demonstrative, not a validated forecast.</p></div>
             <div class="journey-chart-heading"><h3 id="journey-chart-title">Mean live weight</h3><span>kg per animal · engine state</span></div>
             <div id="weight-chart" class="weight-chart" role="img" aria-label="Mean live weight for baseline and intervention scenarios over time"></div>
-            <div class="journey-legend"><span><i class="journey-baseline"></i>Baseline</span><span><i class="journey-intervention"></i>Intervention</span></div>
+            <div class="journey-legend"><span><i class="journey-baseline"></i><span id="journey-left-label">Baseline</span></span><span><i class="journey-intervention"></i><span id="journey-right-label">Intervention</span></span></div>
           </section>
           <div class="timeline-row"><div class="timeline-label"><span>Inspect the population at</span><strong id="day-label">Day 0</strong></div><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available simulation day"><div id="timeline-points" class="timeline-points"></div></div>
+          <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
           <details id="population-explorer" class="analysis-more population-explorer"><summary>Explore individual animals and recorded states</summary>
             <div class="control-row">
               <label>Color by <select id="metric-select"><option value="weight">Live weight · kg</option><option value="delta">Weight difference · kg</option><option value="energy">Energy · index</option><option value="thirst">Thirst · index</option></select></label>
@@ -92,6 +93,17 @@
         </div>
       </section>
     </section>
+    <dialog id="branch-dialog" class="branch-dialog" aria-labelledby="branch-title">
+      <form id="branch-form">
+        <p class="eyebrow">COUNTERFACTUAL PATH</p><h2 id="branch-title">Try another intervention</h2>
+        <p class="branch-context">A new path starts from the exact selected checkpoint. The parent experiment stays available.</p>
+        <label for="branch-source">Continue from</label><select id="branch-source"><option value="reference">Baseline path</option><option value="scenario">Intervention path</option></select>
+        <label for="branch-supplement">Supplement in the new path</label><div class="branch-number"><input id="branch-supplement" type="number" min="0" max="4" step="0.1" required><span>kg DM / animal / day</span></div>
+        <p id="branch-error" class="branch-error" role="alert" hidden></p>
+        <div id="branch-review" class="branch-review" hidden></div>
+        <div class="branch-buttons"><button id="cancel-branch" class="quiet-button" type="button">Cancel</button><button id="review-branch" class="quiet-button" type="submit">Review path</button><button id="run-branch" class="primary-button" type="button" hidden>Run branch</button></div>
+      </form>
+    </dialog>
     <p id="live-status" class="live-status" role="status" aria-live="polite"></p>
   </main>
   <script src="header-interaction.js" defer></script>

@@ -10,6 +10,14 @@ Scientific constraint: The copy describes a computed engine difference only; it 
 
 Follow-on: A checkpoint branch is valid only when exact engine state can be reconstructed from the original snapshot and seed. Compact observed rows are not sufficient to reconstruct a branch state. Require deterministic restoration, digest, lineage, shared seed and explicit confirmation before enabling such a branch.
 
+## P4-D-016 — Reconstruct checkpoint branches instead of storing hourly states (2026-10-16)
+
+Decision: A branch is reconstructed by replaying the parent manifest's selected arm in the Worker through the chosen checkpoint, then running the unchanged parent continuation and the declared one-factor alternative from the same resulting `FarmEngine` snapshot. The branch computes only after a second explicit action. Export includes the parent manifest, source arm, checkpoint day and digest, changed configuration, branch result, executor and result digest.
+
+Evidence: A deterministic test verifies the unchanged branch arm's daily mean weights equal the original parent trajectory for every remaining day and that repeated branch runs are byte-equal. Browser E2E confirms that review does not post a Worker command, that explicit confirmation executes, export binds the parent/checkpoint/results, and replay reproduces the same checkpoint hash.
+
+Limit: Branch rerun is available explicitly in the current Product session. The JSON export contains the parent manifest, branch inputs and calculated results, but importing it in a fresh session is not implemented here. No checkpoint is inferred from compact UI observations, and no full hourly snapshots are retained.
+
 - P4-ADR-001: Extend Product V3's existing `/scenario-lab.html` and model registry. Do not create a parallel application or model registry.
 - P4-ADR-002: Reuse P3 multi-arm comparison and P3 conditional supplement-cost calculations as complete capabilities; no new equivalent implementations.
 - P4-ADR-003: The first new decision capability is a one-factor deterministic BR-CORTE Eq. 2.6 supplement sweep because it is mathematically supported, bounded by the existing model domain, and independent of the blocked paid-provider and commercial-review gates. It describes equation response only, not a cattle intervention effect.

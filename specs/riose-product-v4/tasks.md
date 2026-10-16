@@ -26,7 +26,19 @@ Implementation scope: Verify whether the engine can restore an exact determinist
 Acceptance criteria: A branch records parent run/checkpoint, exact restored state digest, shared seed, changed factor and executor/model version. Editing only creates a draft; confirmation is required to run. Parent run remains viewable; branch differences use outputs from both actual runs and no automatic winner is selected. Export/replay revalidates the branch lineage.
 Required tests: exact checkpoint restore determinism; same-state/seed equivalence; changed-factor validation; cancel/edit/no-auto-run; branch export/replay; Product browser E2E and population worker tests.
 Evidence: contract and E2E output, deterministic digest comparison, desktop/mobile captures, `progress.md`.
-Status: READY (scientific/demo boundary unchanged; execute only after P4-011 passes).
+Status: DONE (`node --test tests/product-population.test.js` 10/10; Product E2E verifies invalid/identical-value rejection, no Worker post on review, explicit run, selected-day lineage, checkpoint and result SHA-256, branch export and explicit rerun; full `npm test` 526/526. The unchanged branch arm matched the parent daily series. Desktop/mobile captures inspected; no engine equation changed).
+
+### P4-013 — User-priced conditional supplement cost
+
+ID: P4-013
+Title: Add explicit, user-supplied conditional supplement quantity and cost beside the population journey
+Specification reference: `decision-analysis.md`; `scientific-contracts.md`; PRD-002/003; P4-ACC-017
+Dependencies: P4-011; P4-012; reuse existing P3-004/P4 scenario cost arithmetic and units
+Implementation scope: Allow a user to enter price per kg of supplement dry matter and currency for the reviewed scenario arms; calculate supplied quantity and conditional supplement expense from user-specified amount × represented animals × period, or branch remaining horizon. Keep this arithmetic separate from the FarmEngine and BR-CORTE. Persist and export the price basis, quantities, and calculation provenance. Never use internal FarmEngine prices.
+Acceptance criteria: Monetary output is absent until price and currency are explicit; displayed cost is exactly reproducible from input units and horizon, including branch remaining days; output is called conditional supplement expense, not total ration cost/profit/ROI. Price edits require review and do not execute the scientific engine. FarmEngine and BR-CORTE outputs stay distinct.
+Required tests: cost arithmetic/unit/bounds tests; count×duration×price invariants; branch horizon tests; export/replay provenance; Product E2E no-price/price/review/edit cases; mobile/accessibility.
+Evidence: focused tests, Product E2E, cost report screenshot, `progress.md`.
+Status: READY (existing conditional-cost contract and arithmetic are available; Product result workspace has no price input today).
 
 ## P4-001 — Audit and SDD bootstrap
 

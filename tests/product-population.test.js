@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {FarmEngine,compareConfiguredScenarios} from '../src/client/engine.js';
-import {amendmentFromPrompt,expandActivityHistory,interpretExperimentPrompt,runPopulationComparison,validateExperimentSpecification} from '../src/client/population-experiment.js';
+import {FarmEngine,compareConfiguredScenarios,createConfiguredComparisonManifest} from '../src/client/engine.js';
+import {amendmentFromPrompt,expandActivityHistory,interpretExperimentPrompt,runPopulationBranch,runPopulationComparison,validateExperimentSpecification} from '../src/client/population-experiment.js';
 import {decodeWorkerCommand,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} from '../src/client/worker-protocol.js';
 
 const prompt='Tenho 200 bovinos Nelore a pasto, durante 30 dias, em condições de calor. Quero saber o que acontece se aumentar a suplementação de 0,5 para 1,5 kg por animal.';
@@ -87,6 +87,27 @@ test('population comparison returns deterministic animal states at named checkpo
     first.timeline.at(-1).scenario.reduce((sum,animal)=>sum+animal.weight,0)/200);
 });
 
+test('a counterfactual branch restores the selected parent checkpoint and matches its unchanged path',()=>{
+  const spec=interpretExperimentPrompt(prompt),engine=new FarmEngine(20261015,12);engine.configure(spec.baseline);
+  const manifest=createConfiguredComparisonManifest(engine.snapshot(),{days:30,referenceConfig:spec.baseline,scenarioConfig:spec.intervention});
+  const parent=runPopulationComparison(manifest.initialSnapshot,{days:30,referenceConfig:spec.baseline,scenarioConfig:spec.intervention});
+  const branchConfig={...spec.baseline,supplement:2};
+  const first=runPopulationBranch(manifest,{checkpointDay:7,sourceArm:'reference',branchConfig});
+  const second=runPopulationBranch(manifest,{checkpointDay:7,sourceArm:'reference',branchConfig});
+  assert.deepEqual(first,second);
+  assert.equal(first.branch.type,'riose-population-branch/v1');
+  assert.equal(first.branch.checkpointDay,7);
+  assert.equal(first.comparison.rows[0].day,7);
+  assert.equal(first.comparison.rows.at(-1).day,30);
+  assert.deepEqual(first.timeline[0].reference.map(animal=>animal.weight),parent.timeline.find(point=>point.day===7).reference.map(animal=>animal.weight));
+  for(const row of first.comparison.rows){
+    const parentRow=parent.comparison.rows.find(item=>item.day===row.day);
+    assert.equal(row.referenceWeight,parentRow.referenceWeight,`unchanged path must match parent at day ${row.day}`);
+  }
+  assert.throws(()=>runPopulationBranch(manifest,{checkpointDay:30,sourceArm:'reference',branchConfig}),/before the parent experiment/);
+  assert.throws(()=>runPopulationBranch(manifest,{checkpointDay:7,sourceArm:'reference',branchConfig:spec.baseline}),/change exactly one/);
+});
+
 test('population replay tolerates the existing history projection that omits display names',()=>{
   const spec=interpretExperimentPrompt(prompt);const engine=new FarmEngine(20261015,3);engine.configure(spec.baseline);
   const snapshot=engine.snapshot();for(const animal of snapshot.animals)delete animal.name;
@@ -100,6 +121,9 @@ test('worker protocol accepts bounded population comparison commands and observa
   const command={protocolVersion:WORKER_PROTOCOL_VERSION,type:'populationCompare',snapshot:engine.snapshot(),days:7,referenceConfig:spec.baseline,scenarioConfig:spec.intervention};
   assert.equal(decodeWorkerCommand(command).command.type,'populationCompare');
   assert.throws(()=>decodeWorkerCommand({...command,days:0}),/between 1 and 365/);
+  const manifest=createConfiguredComparisonManifest(engine.snapshot(),{days:7,referenceConfig:spec.baseline,scenarioConfig:spec.intervention});
+  assert.equal(decodeWorkerCommand({protocolVersion:WORKER_PROTOCOL_VERSION,type:'populationBranch',parentManifest:manifest,checkpointDay:1,sourceArm:'reference',branchConfig:{...spec.baseline,supplement:2}}).command.type,'populationBranch');
+  assert.throws(()=>decodeWorkerCommand({protocolVersion:WORKER_PROTOCOL_VERSION,type:'populationBranch',parentManifest:manifest,checkpointDay:7,sourceArm:'reference',branchConfig:{...spec.baseline,supplement:2}}),/between 0 and 6/);
   const result={protocolVersion:WORKER_PROTOCOL_VERSION,type:'population',data:{comparison:{},timeline:[]},engineImplementation:'javascript-population-observations'};
   assert.equal(normalizeWorkerResponse(result).type,'population');
   assert.equal(normalizeWorkerResponse({protocolVersion:WORKER_PROTOCOL_VERSION,type:'progress',day:3,days:7,engineImplementation:'javascript-population-observations'}).day,3);
