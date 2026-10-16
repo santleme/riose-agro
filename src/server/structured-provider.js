@@ -1,6 +1,7 @@
 const PROVIDERS = {
   groq: {url: 'https://api.groq.com/openai/v1/chat/completions', tokenField: 'max_completion_tokens'},
   huggingface: {url: 'https://router.huggingface.co/v1/chat/completions', tokenField: 'max_tokens'},
+  radeon: {url: 'https://developer.amd.com.cn/radeon/api/v1/chat/completions', tokenField: 'max_tokens'},
 };
 const MAX_RESPONSE_BYTES = 64 * 1024;
 
@@ -53,7 +54,10 @@ export async function requestStructuredOutput({provider, apiKey, model, instruct
       body: JSON.stringify({model, messages: [{role: 'system', content: instructions}, {role: 'user', content: JSON.stringify(input)}],
         [settings.tokenField]: maxTokens, temperature: 0, stream: false,
         ...(provider === 'groq' && /gpt-oss/.test(model) ? {reasoning_effort: 'low'} : {}),
-        response_format: {type: 'json_schema', json_schema: {name, strict: true, schema}}}),
+        ...(provider === 'radeon' ? {reasoning_effort: 'none'} : {}),
+        response_format: provider === 'radeon' && !/^MiMo-V2\.6-Flash$/i.test(model)
+          ? {type: 'json_object'}
+          : {type: 'json_schema', json_schema: {name, strict: true, schema}}}),
     });
     httpStatus = response.status ?? (response.ok ? 200 : null);
     if (!response.ok) {

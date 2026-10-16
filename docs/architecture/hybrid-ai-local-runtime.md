@@ -21,6 +21,22 @@ The live validation session used a hidden-input launcher that passed these varia
 
 The local API uses finite token/time/response-size limits, no automatic provider retries, independent server/client validation, and explicit fallback attribution. Its 10 requests/minute/address abuse limiter is process-local. P3-007's production shared monetary ceiling remains blocked; this manual test authorization does not approve production use.
 
+## Optional AMD Radeon Token Factory provider
+
+The Product server also accepts `LLM_PROVIDER=radeon`, `RADEON_API_KEY`, and optional `RADEON_MODEL` (default `DeepSeek-V4-Flash`). The key remains server-side. For chat models whose catalog only promises JSON-object mode, Riose requests `json_object` and validates the returned object against its own contract before showing a review draft. The `MiMo-V2.6-Flash` model may use strict JSON Schema. Never treat provider JSON mode as validation or execution authority. Check the live `/v1/models` catalog before choosing a model because AMD can change the shared catalog.
+
+To run locally, start a fresh server in the same terminal after entering the key at the hidden prompt:
+
+```bash
+read -rsp 'AMD Radeon API key: ' RADEON_API_KEY; printf '\n'
+export RADEON_API_KEY
+export LLM_PROVIDER=radeon
+export RADEON_MODEL=DeepSeek-V4-Flash
+npm start
+```
+
+AMD describes these APIs as experimental, shared, trial/development-only endpoints. Do not use them for production workloads. Respect the shared key's rate and daily usage limits; Riose does not retry provider requests automatically. The secure key must be provisioned in the environment that launches Node; a shell or server started earlier will not inherit later changes.
+
 ## Reproducing the CPU Laya experiment
 
 Create an isolated venv outside the project. On this tested Linux/WSL Python 3.12 setup:
