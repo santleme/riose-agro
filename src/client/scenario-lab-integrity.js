@@ -3,6 +3,9 @@ import {interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-
 
 export const SCENARIO_LAB_ARCHIVE_TYPE = 'riose-scenario-lab-archive';
 export const SCENARIO_LAB_ARCHIVE_VERSION = 2;
+// Covers compact supported results (40 MiB planning cap) plus snapshot/provenance overhead.
+// The export path enforces the same bound so a saved archive remains importable.
+export const SCENARIO_LAB_ARCHIVE_MAX_BYTES = 64 * 1024 * 1024;
 const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const fail = message => { throw new TypeError(`Scenario lab archive is invalid: ${message}`); };
 

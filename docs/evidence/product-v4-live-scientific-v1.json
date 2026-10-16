@@ -1,0 +1,230 @@
+{
+  "type": "riose-live-scientific-ui",
+  "version": 1,
+  "requests": [
+    {
+      "prompt": "Compare três estratégias de suplementação utilizando os modelos disponíveis.",
+      "source": "llm",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 807,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 946,
+          "completion_tokens": 209,
+          "total_tokens": 1155
+        }
+      },
+      "fallbackReason": null,
+      "plan": {
+        "type": "riose-decision-plan",
+        "version": 1,
+        "intent": "compare_scenarios",
+        "capability": "br_corte_scenarios",
+        "parameters": {
+          "populationCount": null,
+          "durationDays": null,
+          "bodyWeightKg": null,
+          "adgKgPerDay": null,
+          "supplementLevels": [],
+          "sweepMinimum": null,
+          "sweepMaximum": null,
+          "sweepStep": null,
+          "weather": null,
+          "pricePerKgDM": null,
+          "currency": null
+        },
+        "missingInputs": [
+          "supplement in kg DM/head/day (explicit dry-matter basis)",
+          "animal count",
+          "duration in days",
+          "body weight in kg",
+          "user-supplied ADG/GMD in kg/day",
+          "confirm growing Zebu cattle on tropical pasture",
+          "three explicit supplement alternatives"
+        ],
+        "evidenceIds": [
+          "br_corte_conditional"
+        ]
+      }
+    },
+    {
+      "prompt": "Quero melhorar o desempenho do meu rebanho.",
+      "source": "llm",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 1245,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 955,
+          "completion_tokens": 161,
+          "total_tokens": 1116
+        }
+      },
+      "fallbackReason": null,
+      "plan": {
+        "type": "riose-decision-plan",
+        "version": 1,
+        "intent": "compare_scenarios",
+        "capability": "farm_comparison",
+        "parameters": {
+          "populationCount": null,
+          "durationDays": null,
+          "bodyWeightKg": null,
+          "adgKgPerDay": null,
+          "supplementLevels": [],
+          "sweepMinimum": null,
+          "sweepMaximum": null,
+          "sweepStep": null,
+          "weather": null,
+          "pricePerKgDM": null,
+          "currency": null
+        },
+        "missingInputs": [
+          "supplement in kg DM/head/day (explicit dry-matter basis)",
+          "animal count",
+          "duration in days",
+          "three explicit supplement alternatives",
+          "shared weather: normal, hot or rain (demonstrative rule)"
+        ],
+        "evidenceIds": [
+          "farm_demonstrative"
+        ]
+      }
+    },
+    {
+      "prompt": "Como a estimativa condicional de CMS muda quando altero a suplementação, mantendo o GMD constante?",
+      "source": "llm",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 872,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 980,
+          "completion_tokens": 231,
+          "total_tokens": 1211
+        }
+      },
+      "fallbackReason": null,
+      "plan": {
+        "type": "riose-decision-plan",
+        "version": 1,
+        "intent": "compare_scenarios",
+        "capability": "br_corte_scenarios",
+        "parameters": {
+          "populationCount": null,
+          "durationDays": null,
+          "bodyWeightKg": null,
+          "adgKgPerDay": null,
+          "supplementLevels": [],
+          "sweepMinimum": null,
+          "sweepMaximum": null,
+          "sweepStep": null,
+          "weather": null,
+          "pricePerKgDM": null,
+          "currency": null
+        },
+        "missingInputs": [
+          "supplement in kg DM/head/day (explicit dry-matter basis)",
+          "animal count",
+          "duration in days",
+          "body weight in kg",
+          "user-supplied ADG/GMD in kg/day",
+          "confirm growing Zebu cattle on tropical pasture",
+          "three explicit supplement alternatives"
+        ],
+        "evidenceIds": [
+          "br_corte_conditional"
+        ]
+      }
+    },
+    {
+      "prompt": "Faça uma análise de sensibilidade BR-CORTE para 200 zebuínos em crescimento a pasto tropical por 30 dias: peso 400 kg, GMD informado de 0,5 kg/dia; suplemento de 0,5 a 2 kg MS/animal/dia com passo 0,25 kg MS/animal/dia.",
+      "source": "llm",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 802,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1054,
+          "completion_tokens": 158,
+          "total_tokens": 1212
+        }
+      },
+      "fallbackReason": null,
+      "plan": {
+        "type": "riose-decision-plan",
+        "version": 1,
+        "intent": "sensitivity_analysis",
+        "capability": "br_corte_sensitivity",
+        "parameters": {
+          "populationCount": 200,
+          "durationDays": 30,
+          "bodyWeightKg": 400,
+          "adgKgPerDay": 0.5,
+          "supplementLevels": [],
+          "sweepMinimum": 0.5,
+          "sweepMaximum": 2,
+          "sweepStep": 0.25,
+          "weather": null,
+          "pricePerKgDM": null,
+          "currency": null
+        },
+        "missingInputs": [],
+        "evidenceIds": [
+          "br_corte_conditional",
+          "sensitivity_noncausal"
+        ]
+      }
+    },
+    {
+      "prompt": "Compare BR-CORTE para 200 zebuínos em crescimento a pasto tropical por 30 dias, peso 400 kg, GMD informado de 0,5 kg/dia; suplemento 0,5, 1 e 1,5 kg MS/animal/dia, preço BRL 2 por kg MS.",
+      "source": "llm",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 555,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1123,
+          "completion_tokens": 215,
+          "total_tokens": 1338
+        }
+      },
+      "fallbackReason": null,
+      "plan": {
+        "type": "riose-decision-plan",
+        "version": 1,
+        "intent": "compare_scenarios",
+        "capability": "br_corte_scenarios",
+        "parameters": {
+          "populationCount": 200,
+          "durationDays": 30,
+          "bodyWeightKg": 400,
+          "adgKgPerDay": 0.5,
+          "supplementLevels": [
+            0.5,
+            1,
+            1.5
+          ],
+          "sweepMinimum": 0.5,
+          "sweepMaximum": 2,
+          "sweepStep": 0.25,
+          "weather": "normal",
+          "pricePerKgDM": 2,
+          "currency": "BRL"
+        },
+        "missingInputs": [],
+        "evidenceIds": [
+          "farm_demonstrative",
+          "br_corte_conditional"
+        ]
+      }
+    }
+  ],
+  "checks": {
+    "sensitivityExplicitReplay": true,
+    "conditionalCostExplicit": true,
+    "pageErrors": []
+  },
+  "status": "passed"
+}

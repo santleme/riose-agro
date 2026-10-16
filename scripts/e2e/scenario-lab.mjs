@@ -5,6 +5,9 @@ import {chromium} from 'playwright';
 const browser = await chromium.launch({headless: true});
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, deviceScaleFactor: 1});
+  // This regression covers the offline interpreter. Live inference has its own explicit opt-in E2E.
+  await page.route('**/api/interpret-scenario-lab', route => route.fulfill({status: 200, contentType: 'application/json',
+    body: JSON.stringify({available: false, source: 'deterministic', reason: 'provider_not_configured'})}));
   await page.addInitScript(() => {
     window.__scenarioWorkerPosts = [];
     const NativeWorker = window.Worker;

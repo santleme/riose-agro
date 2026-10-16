@@ -5,8 +5,10 @@ import {createBrCorteSensitivityManifest, evaluateBrCorteSensitivityManifest} fr
 import {createBrCorteSensitivityArchive, validateBrCorteSensitivityArchive} from './br-corte-sensitivity-archive.js';
 import {scenarioSetResultBudgetStatus, SCENARIO_SET_PROJECTED_JSON_BUDGET_BYTES} from './scenario-set-budget.js';
 import {combineScenarioLabClarification, interpretScenarioLabPrompt, validateScenarioLabIntent} from './scenario-lab-intent.js';
-import {canonicalScenarioLabJson, createScenarioLabArchive, sha256ScenarioLabJson, validateScenarioLabArchive, validateScenarioLabResultBinding} from './scenario-lab-integrity.js';
+import {SCENARIO_LAB_ARCHIVE_MAX_BYTES, canonicalScenarioLabJson, createScenarioLabArchive, sha256ScenarioLabJson, validateScenarioLabArchive, validateScenarioLabResultBinding} from './scenario-lab-integrity.js';
 import {normalizeWorkerResponse, WORKER_PROTOCOL_VERSION} from './worker-protocol.js';
+import {validateDecisionPlan, reconcileDecisionPlan, decisionPlanToFarmIntent, deterministicDecisionPlan} from './decision-plan.js';
+import {evaluateSingleInputs, createSingleReport, validateSingleReport} from './decision-single-report.js';
 
 const $ = id => document.getElementById(id);
 const MAX_VISIBLE_ANIMALS = 1200;
@@ -33,6 +35,13 @@ let brCorteResult = null;
 let reviewedBrCorteSensitivityManifest = null;
 let brCorteSensitivityResult = null;
 let brCorteSensitivityReplayExpectation = null;
+let assistantPreviousPrompt = '';
+let singleReviewedInputs = null;
+let singleExecution = null;
+let singleRequest = null;
+let singleReplayExpectation = null;
+let lastAssistantResultKind = 'farm';
+let assistantInputRevision = 0;
 
 function status(message) {
   $('lab-status').textContent = message;
@@ -355,7 +364,7 @@ $('scenario-form').addEventListener('submit', event => {
 });
 
 $('scenario-form').addEventListener('input', event => {
-  if (applyingPromptIntent || activeWorker || event.target.type === 'submit') return;
+  if (applyingPromptIntent || activeWorker || ['submit', 'file'].includes(event.target.type)) return;
   if (requestIntent) {
     requestRelationship = 'manual-revision';
   }
@@ -432,7 +441,8 @@ $('population-scenario').addEventListener('change', () => { renderPopulation(); 
 $('show-more-cells').addEventListener('click', () => { visibleAnimals += MAX_VISIBLE_ANIMALS; renderPopulation(); });
 $('export-results').addEventListener('click', () => {
   if (!lastArchive || !completedResult) return;
-  const blob = new Blob([JSON.stringify(lastArchive, null, 2)], {type: 'application/json'});
+  const blob = new Blob([JSON.stringify(lastArchive)], {type: 'application/json'});
+  if (blob.size > SCENARIO_LAB_ARCHIVE_MAX_BYTES) { status('This archive exceeds the 64 MiB replay limit. Reduce the reviewed experiment size before exporting.'); return; }
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob); link.download = `${lastArchive.manifest.scenarioId}.json`; link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 0);
@@ -443,26 +453,17 @@ $('manifest-file').addEventListener('change', async event => {
   const input = event.currentTarget;
   const file = input.files?.[0];
   if (!file) return;
-  reviewedManifest = null;
-  reviewedManifestSha256 = null;
-  completedResult = null;
-  lastArchive = null;
-  replayExpectation = null;
-  requestSourcePrompt = null;
-  requestIntent = null;
-  requestRelationship = 'structured-only';
-  requestInterpretation = {source: 'deterministic', provider: null, model: null};
-  $('review-panel').hidden = true;
-  $('results').hidden = true;
   try {
-    if (file.size > 4 * 1024 * 1024) throw new Error('Saved experiment JSON must be 4 MB or smaller.');
+    if (file.size > SCENARIO_LAB_ARCHIVE_MAX_BYTES) throw new Error('Saved experiment JSON must be 64 MiB or smaller.');
     const saved = JSON.parse(await file.text());
     const archive = saved?.type === 'riose-scenario-lab-archive' ? await validateScenarioLabArchive(saved) : null;
     const manifest = saved?.manifest;
     validateScenarioSetManifest(manifest);
     if (saved?.results) validateScenarioLabResultBinding(manifest, saved.results);
-    reviewedManifest = structuredClone(manifest);
-    reviewedManifestSha256 = await sha256ScenarioLabJson(reviewedManifest);
+    const checkedManifest = structuredClone(manifest);
+    const checkedDigest = await sha256ScenarioLabJson(checkedManifest);
+    reviewedManifest = checkedManifest;
+    reviewedManifestSha256 = checkedDigest;
     replayExpectation = saved?.results ? structuredClone(saved.results) : null;
     lastArchive = null;
     requestSourcePrompt = archive?.request.sourcePrompt ?? null;
@@ -490,6 +491,8 @@ $('manifest-file').addEventListener('change', async event => {
 
 const promptExample = 'Compare supplement levels 0.5 kg DM/head/day, 1.0 kg DM/head/day, and 1.5 kg DM/head/day for 200 cattle over 30 days in hot weather.';
 $('fill-prompt-example').addEventListener('click', () => {
+  assistantInputRevision++;
+  assistantPreviousPrompt = '';
   $('scenario-prompt').value = promptExample;
   pendingClarificationPrompt = null;
   requestSourcePrompt = null;
@@ -523,6 +526,8 @@ $('scenario-prompt').addEventListener('input', () => {
 $('draft-scenario').addEventListener('click', async () => {
   const result = $('prompt-result');
   const button = $('draft-scenario');
+  const submittedRevision = assistantInputRevision;
+  $('ask-riose').disabled = true;
   result.className = 'prompt-result';
   button.disabled = true;
   try {
@@ -548,6 +553,7 @@ $('draft-scenario').addEventListener('click', async () => {
       // Provider failures retain the deterministic offline draft path; they never run an experiment.
     }
     if (!intent) intent = interpretScenarioLabPrompt(prompt);
+    if (submittedRevision !== assistantInputRevision) throw new Error('Inputs changed during interpretation. Draft the current request again.');
     validateScenarioLabIntent(intent);
     if (!intent.ready) {
       pendingClarificationPrompt = intent.missingInputs.length && !intent.unsupportedRequests.length ? prompt : null;
@@ -591,6 +597,7 @@ $('draft-scenario').addEventListener('click', async () => {
     $('review-state').textContent = 'Draft rejected';
   } finally {
     button.disabled = false;
+    $('ask-riose').disabled = false;
   }
 });
 
@@ -874,6 +881,11 @@ $('br-corte-file').addEventListener('change', async event => {
   try {
     if (file.size > 2 * 1024 * 1024) throw new Error('Saved BR-CORTE JSON must be 2 MB or smaller.');
     const saved = JSON.parse(await file.text());
+    if (saved?.type === 'riose-br-corte-single-report') {
+      await openSingleReport(saved);
+      status('Single conditional report opened for review. No calculation has run.');
+      return;
+    }
     if (saved?.type === 'riose-br-corte-dmi-sensitivity-archive') {
       await validateBrCorteSensitivityArchive(saved);
       resetBrCorteSensitivity();
@@ -923,3 +935,188 @@ $('br-corte-file').addEventListener('change', async event => {
     fileInput.value = '';
   }
 });
+
+function appendAssistantMessage(role, text, label = '') {
+  const log = $('assistant-conversation');
+  log.hidden = false;
+  const item = document.createElement('li');
+  item.dataset.role = role;
+  const content = document.createElement('span'); content.textContent = text; item.append(content);
+  if (label) { const meta = document.createElement('small'); meta.textContent = label; item.append(meta); }
+  log.append(item);
+  while (log.children.length > 12) log.firstElementChild.remove();
+  log.scrollTop = log.scrollHeight;
+}
+
+function currentAssistantResultSummary() {
+  if (lastAssistantResultKind === 'sensitivity' && brCorteSensitivityResult) {
+    const result = brCorteSensitivityResult;
+    const rows = result.rows.length <= 10 ? result.rows : Array.from({length: 10}, (_, index) => result.rows[Math.floor(index * (result.rows.length - 1) / 9)]);
+    return {model: result.model.id, version: result.model.version, seed: null, durationDays: result.population.durationDays,
+      kind: 'sensitivity', totalPoints: result.rows.length,
+      scenarios: rows.map(row => ({id: `sweep-${result.rows.indexOf(row)}`, supplementKgDMPerHeadPerDay: row.supplementKgDMPerHeadPerDay,
+        value: row.totalDmiKgDMPerHeadPerDay, unit: 'kg DM/head/day'}))};
+  }
+  if (lastAssistantResultKind === 'single' && singleExecution) return {
+    model: 'br-corte-2023-eq-2.6', version: singleExecution.version, seed: null, durationDays: null,
+    scenarios: [{id: 'single', supplementKgDMPerHeadPerDay: singleReviewedInputs.supplementKgDMPerDay,
+      value: singleExecution.outputs.totalDmiKgDMPerDay, unit: 'kg DM/head/day'}],
+  };
+  if (brCorteResult && lastAssistantResultKind === 'br-corte') return {
+    model: brCorteResult.model.id, version: brCorteResult.model.version, seed: null,
+    durationDays: brCorteResult.manifest.inputs.durationDays,
+    scenarios: brCorteResult.scenarios.map(row => ({id: row.id, supplementKgDMPerHeadPerDay: row.input.supplementKgDMPerHeadPerDay,
+      value: row.outputs.totalDmiKgDMPerHeadPerDay, unit: 'kg DM/head/day'})),
+  };
+  if (lastAssistantResultKind !== 'farm') return undefined;
+  if (!completedResult) return undefined;
+  return {model: 'farm-engine-demonstrative', version: completedResult.engineVersion, seed: completedResult.seed,
+    durationDays: completedResult.durationDays, scenarios: [completedResult.baseline, ...completedResult.scenarios].map(row => ({
+      id: row.id, supplementKgDMPerHeadPerDay: row.config.supplement, value: row.rows.at(-1).meanWeightKg, unit: 'kg live weight/animal',
+    }))};
+}
+
+function applyAssistantDraft(plan, response) {
+  if (plan.missingInputs.length) return;
+  if (activeWorker) { status('A confirmed run is still in progress. Wait or cancel it before preparing another review.'); return; }
+  const p = plan.parameters;
+  const interpretation = {source: response.source, provider: response.provider, model: response.model};
+  if (plan.capability === 'farm_comparison') {
+    const form = $('scenario-form');
+    requestSourcePrompt = response.sourcePrompt;
+    requestIntent = response.source === 'deterministic' ? interpretScenarioLabPrompt(response.sourcePrompt) : decisionPlanToFarmIntent(plan);
+    requestInterpretation = requestIntent ? interpretation : {source: 'deterministic', provider: null, model: null};
+    requestRelationship = requestIntent ? response.source === 'llm' ? 'validated-ai-draft' : 'validated-prompt-draft' : 'manual-revision';
+    applyingPromptIntent = true;
+    form.elements.animalCount.value = String(p.populationCount);
+    form.elements.durationDays.value = String(p.durationDays);
+    form.elements.baselineSupplement.value = String(p.supplementLevels[0]);
+    form.elements.alternativeLevels.value = p.supplementLevels.slice(1).join(', ');
+    form.elements.weather.value = p.weather;
+    form.dispatchEvent(new Event('input', {bubbles: true}));
+    form.requestSubmit();
+    applyingPromptIntent = false;
+  } else if (plan.capability === 'br_corte_single') {
+    singleReviewedInputs = {bodyWeightKg: p.bodyWeightKg, adgKgPerDay: p.adgKgPerDay, supplementKgDMPerDay: p.supplementLevels[0]};
+    singleRequest = {sourcePrompt: response.sourcePrompt, interpretation};
+    singleReplayExpectation = null;
+    singleExecution = null;
+    renderSingleReview();
+  } else if (['br_corte_scenarios', 'br_corte_sensitivity'].includes(plan.capability)) {
+    const form = $('br-corte-form');
+    const values = {bodyWeightKg: p.bodyWeightKg, adgKgPerDay: p.adgKgPerDay, animalCount: p.populationCount,
+      durationDays: p.durationDays, supplementLevels: p.supplementLevels.join(', '), supplementPrice: p.pricePerKgDM ?? '', currency: p.currency ?? ''};
+    for (const [name, value] of Object.entries(values)) form.elements[name].value = String(value);
+    form.dispatchEvent(new Event('input', {bubbles: true}));
+    if (plan.capability === 'br_corte_scenarios') form.requestSubmit();
+    else {
+      const sweep = $('br-corte-sensitivity-form');
+      for (const [name, value] of Object.entries({minimumSupplement: p.sweepMinimum, maximumSupplement: p.sweepMaximum, sweepStep: p.sweepStep})) sweep.elements[name].value = String(value);
+      sweep.requestSubmit();
+    }
+    $('br-corte-example-status').textContent = `Draft supplied by ${response.source === 'llm' ? response.provider : 'the local parser'}. Inputs are user assumptions, not observations. Review the existing scientific form before confirmation.`;
+  }
+}
+
+$('ask-riose').addEventListener('click', async () => {
+  const prompt = $('scenario-prompt').value.trim();
+  if (!prompt) { $('prompt-result').textContent = 'Write a question first.'; return; }
+  const button = $('ask-riose');
+  const submittedRevision = assistantInputRevision;
+  button.disabled = true; $('draft-scenario').disabled = true; button.setAttribute('aria-busy', 'true');
+  $('prompt-result').textContent = 'Interpreting the question and checking scientific capabilities. No experiment is running.';
+  appendAssistantMessage('user', prompt);
+  try {
+    const input = {prompt, ...(assistantPreviousPrompt ? {previousPrompt: assistantPreviousPrompt} : {}),
+      ...(currentAssistantResultSummary() ? {resultSummary: currentAssistantResultSummary()} : {})};
+    let response;
+    try {
+      const http = await fetch('/api/decision-assistant', {method: 'POST', headers: {'content-type': 'application/json'},
+        body: JSON.stringify(input), signal: AbortSignal.timeout(15000)});
+      if (!http.ok) throw new Error('assistant_unavailable');
+      response = await http.json();
+      if (response.type !== 'riose-decision-response' || response.version !== 1 || response.executed !== false
+          || !['llm', 'deterministic'].includes(response.source) || typeof response.message !== 'string') throw new Error('invalid_assistant_response');
+    } catch {
+      response = {source: 'deterministic', provider: null, model: null, executed: false, fallbackReason: 'connection_unavailable',
+        sourcePrompt: prompt, plan: deterministicDecisionPlan(prompt),
+        message: 'The remote assistant is unavailable. The local parser can draft known comparison requests; use the scientific forms for other operations. Nothing has run.'};
+    }
+    validateDecisionPlan(response.plan);
+    if (submittedRevision !== assistantInputRevision) {
+      appendAssistantMessage('assistant', 'The inputs changed while interpretation was in progress. Submit the current request again; the earlier proposal was discarded.', 'Review required');
+      $('prompt-result').textContent = 'Inputs changed during interpretation. Ask again to review the current request.';
+      return;
+    }
+    // Repeat independent scientific/input validation in the browser before changing a review.
+    if (response.source === 'llm') response.plan = reconcileDecisionPlan(response.plan, prompt, assistantPreviousPrompt);
+    const label = response.source === 'llm' ? `Groq conversational AI · ${response.model} · ${response.metadata?.latencyMs ?? '—'} ms · grounded local evidence`
+      : `Local parser · fallback: ${response.fallbackReason ?? 'provider unavailable'}`;
+    appendAssistantMessage('assistant', response.message, response.provider === 'huggingface' ? label.replace('Groq conversational AI', 'Hugging Face inference') : label);
+    applyAssistantDraft(response.plan, response);
+    if (['farm_comparison', 'br_corte_single', 'br_corte_scenarios', 'br_corte_sensitivity', 'none'].includes(response.plan.capability)) {
+      assistantPreviousPrompt = response.sourcePrompt;
+    }
+    $('prompt-result').textContent = response.plan.missingInputs.length ? 'More information is needed. Add details in the composer; no experiment has run.'
+      : ['evidence', 'results'].includes(response.plan.capability) ? 'Answer grounded in registered model limitations or current calculated results.'
+        : 'Draft ready for your review. Confirm using the calculation button in the corresponding review.';
+  } catch (error) {
+    applyingPromptIntent = false;
+    appendAssistantMessage('assistant', `Draft rejected: ${error.message}. Current results are retained; nothing has run.`, 'Independent validator');
+    $('prompt-result').textContent = 'The proposal was rejected. Clarify the request or use the structured forms.';
+  } finally {
+    button.disabled = false; $('draft-scenario').disabled = false; button.removeAttribute('aria-busy');
+  }
+});
+
+function renderSingleReview() {
+  const p = singleReviewedInputs;
+  $('single-review').hidden = false; $('single-run').disabled = false;
+  $('single-review-meta').textContent = `BW ${p.bodyWeightKg} kg · supplied ADG/GMD ${p.adgKgPerDay} kg/day · supplement ${p.supplementKgDMPerDay} kg DM/head/day. Growing Zebu on tropical pasture, confirmed in the request. Seed: not stochastic.`;
+  $('single-result').textContent = 'Awaiting explicit confirmation. No estimate has been calculated.';
+  $('single-export').hidden = true;
+}
+
+$('scenario-prompt').addEventListener('input', () => {
+  $('single-run').disabled = true;
+  // Keep completed values for questions; a changed request cannot reuse its calculation authority.
+  reviewedBrCorteManifest = null; reviewedBrCorteSensitivityManifest = null;
+  $('br-corte-review').hidden = true; $('br-corte-sensitivity-review').hidden = true;
+});
+for (const id of ['scenario-prompt', 'scenario-form', 'br-corte-form', 'br-corte-sensitivity-form']) {
+  $(id).addEventListener('input', () => { assistantInputRevision++; });
+}
+$('single-run').addEventListener('click', () => {
+  if (!singleReviewedInputs || $('single-run').disabled) return;
+  try {
+    singleExecution = evaluateSingleInputs(singleReviewedInputs);
+    if (singleReplayExpectation && canonicalScenarioLabJson(singleExecution) !== canonicalScenarioLabJson(singleReplayExpectation)) throw new Error('Single calculation replay differs from the saved result.');
+    lastAssistantResultKind = 'single';
+    $('single-result').textContent = `${singleExecution.outputs.totalDmiKgDMPerDay.toFixed(6)} kg DM/head/day · BR-CORTE Eq. 2.6@2023, calculated by the registered module. ADG is supplied, not predicted.${singleReplayExpectation ? ' Replay matches exactly.' : ''}`;
+    $('single-export').hidden = false;
+  } catch (error) { $('single-result').textContent = error.message; }
+});
+$('single-export').addEventListener('click', async () => {
+  if (!singleExecution) return;
+  const report = await createSingleReport({inputs: singleReviewedInputs, result: singleExecution, request: singleRequest});
+  const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type: 'application/json'}));
+  link.download = 'riose-br-corte-single-report-v1.json'; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0);
+});
+$('single-open').addEventListener('click', () => $('single-file').click());
+async function openSingleReport(saved) {
+  const report = await validateSingleReport(saved);
+  assistantInputRevision++;
+  singleReviewedInputs = report.inputs; singleRequest = report.request; singleReplayExpectation = report.result; singleExecution = null;
+  renderSingleReview();
+}
+$('single-file').addEventListener('change', async event => {
+  try {
+    const file = event.target.files[0]; if (!file) return;
+    if (file.size > 64000) throw new Error('Single report is too large.');
+    await openSingleReport(JSON.parse(await file.text()));
+  } catch (error) { status(`Single report rejected: ${error.message}`); }
+  event.target.value = '';
+});
+$('br-corte-run').addEventListener('click', () => { if (brCorteResult) lastAssistantResultKind = 'br-corte'; });
+$('br-corte-sensitivity-run').addEventListener('click', () => { if (brCorteSensitivityResult) lastAssistantResultKind = 'sensitivity'; });
+$('run-scenarios').addEventListener('click', () => { lastAssistantResultKind = 'farm'; });

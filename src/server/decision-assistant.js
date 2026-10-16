@@ -14,9 +14,13 @@ export function validateDecisionRequest(input) {
 }
 
 export function validateResultSummary(summary) {
-  return Boolean(exact(summary, ['model', 'version', 'seed', 'durationDays', 'scenarios'])
+  return Boolean(exact(summary, ['model', 'version', 'seed', 'durationDays', 'scenarios', 'kind', 'totalPoints'])
     && ['farm-engine-demonstrative', 'br-corte-2023-eq-2.6'].includes(summary.model)
     && typeof summary.version === 'string' && summary.version.length <= 80
+    && (summary.model !== 'br-corte-2023-eq-2.6' || summary.version === '2023')
+    && (summary.kind === undefined || ['single', 'comparison', 'sensitivity'].includes(summary.kind))
+    && (summary.kind !== 'sensitivity' || summary.model === 'br-corte-2023-eq-2.6'
+      && Number.isInteger(summary.totalPoints) && summary.totalPoints >= summary.scenarios?.length && summary.totalPoints <= 101)
     && (summary.seed === null || Number.isSafeInteger(summary.seed) && summary.seed >= 0 && summary.seed <= 4294967295)
     && (summary.durationDays === null || Number.isInteger(summary.durationDays) && summary.durationDays >= 1 && summary.durationDays <= 365)
     && Array.isArray(summary.scenarios) && summary.scenarios.length >= 1 && summary.scenarios.length <= 10
@@ -37,7 +41,9 @@ function groundedMessage(plan, resultSummary) {
   if (plan.capability === 'results') {
     if (!resultSummary) parts.push('No completed result was supplied by the current workspace. Run a reviewed experiment first.');
     else {
-      parts.push(`Current browser-run summary: ${resultSummary.model}@${resultSummary.version}; seed ${resultSummary.seed ?? 'not stochastic'}; duration ${resultSummary.durationDays ?? 'per-day estimate'} days. These are browser-supplied completed results, not an independently authenticated measurement.`);
+      const horizon = resultSummary.durationDays === null ? 'per-head/day estimate; no period aggregated' : `${resultSummary.durationDays} days`;
+      parts.push(`Current browser-run summary: ${resultSummary.model}@${resultSummary.version}; seed ${resultSummary.seed ?? 'not stochastic'}; ${horizon}. These are browser-supplied completed results, not an independently authenticated measurement.`);
+      if (resultSummary.kind === 'sensitivity') parts.push(`Showing ${resultSummary.scenarios.length} of ${resultSummary.totalPoints} calculated sensitivity points. ${EVIDENCE.sensitivity_noncausal}`);
       for (const row of resultSummary.scenarios) parts.push(`${row.id}: supplement ${row.supplementKgDMPerHeadPerDay} kg DM/head/day; ${row.value.toFixed(4)} ${row.unit}.`);
       if (resultSummary.scenarios.length > 1) {
         const base = resultSummary.scenarios[0];

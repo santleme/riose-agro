@@ -99,6 +99,13 @@ test('scientific explanation is selected by the LLM but all claims and values ar
   assert.match(result.message, /2.0000 kg live weight\/animal/);
   assert.match(result.message, /demonstrative/);
   assert.match(result.message, /browser-supplied/);
+  const sensitivitySummary = {model: 'br-corte-2023-eq-2.6', version: '2023', seed: null, durationDays: 30, kind: 'sensitivity', totalPoints: 2,
+    scenarios: [0.5, 1.5].map((supplement, index) => ({id: `sweep-${index}`, supplementKgDMPerHeadPerDay: supplement,
+      value: evaluateSingleInputs({bodyWeightKg: 400, adgKgPerDay: .5, supplementKgDMPerDay: supplement}).outputs.totalDmiKgDMPerDay, unit: 'kg DM/head/day'}))};
+  const scientific = await runDecisionAssistant({prompt: 'Inspect the completed sensitivity results', resultSummary: sensitivitySummary}, options(plan));
+  assert.match(scientific.message, /2 of 2 calculated sensitivity points/);
+  assert.match(scientific.message, /BR-CORTE/);
+  assert.ok(!scientific.message.includes('farm-engine-demonstrative@'));
 });
 
 test('single model report preserves exact registered outputs and explicit replay/tampering checks', async () => {

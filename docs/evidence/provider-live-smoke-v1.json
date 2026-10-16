@@ -1,0 +1,20 @@
+{
+  "type": "riose-live-provider-smoke",
+  "version": 1,
+  "httpStatus": 200,
+  "source": "llm",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "metadata": {
+    "latencyMs": 896,
+    "httpStatus": 200,
+    "usage": {
+      "prompt_tokens": 949,
+      "completion_tokens": 192,
+      "total_tokens": 1141
+    }
+  },
+  "executed": false,
+  "capability": "evidence",
+  "fallbackReason": null
+}
