@@ -107,6 +107,7 @@ try{
   await page.setViewportSize({width:390,height:844});
   await page.goto(`${root}/manifesto.html`,{waitUntil:'domcontentloaded'});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth===innerWidth),true,'mobile manifesto should not overflow horizontally');
+  assert.equal(await page.evaluate(()=>document.querySelector('.site-header').getBoundingClientRect().bottom<=document.querySelector('.manifesto-copy h1').getBoundingClientRect().top),true,'mobile manifesto title should clear the fixed header');
   assert.equal(await page.locator('.farm-scene').evaluate(img=>img.complete&&img.naturalWidth>0),true,'manifesto pixel-art farm should load');
   assert.equal(await page.locator('.cow-sprite').count(),5,'farm should expose five individually focusable decorative cattle sprites');
   assert.equal(await page.locator('.cow-sprite img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0)),true,'both sprite frames should load');
@@ -115,6 +116,8 @@ try{
   await page.locator('.manifesto-farm.is-visible').waitFor();
   await page.screenshot({path:`${evidence}/06-manifesto-mobile.png`});
   await page.setViewportSize({width:1440,height:1050});
+  await page.goto(`${root}/manifesto.html`,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.evaluate(()=>document.querySelector('.site-header').getBoundingClientRect().bottom<=document.querySelector('.manifesto-copy h1').getBoundingClientRect().top),true,'desktop manifesto title should clear the fixed header');
   await page.locator('.manifesto-farm').scrollIntoViewIfNeeded();
   await page.locator('.manifesto-farm.is-visible').waitFor();
   await page.screenshot({path:`${evidence}/07-manifesto-desktop.png`});

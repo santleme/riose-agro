@@ -44,6 +44,18 @@ test('Product uses the institutional header and retired navigation routes forwar
   const simulator = await fetch(`${root}/simulator.html`, {redirect: 'manual'});
   assert.equal(simulator.status, 308);
   assert.equal(simulator.headers.get('location'), '/product.html');
+  const manifesto = await fetch(`${root}/manifesto.html`);
+  assert.equal(manifesto.status, 200);
+  const manifestoHtml = await manifesto.text();
+  assert.match(manifestoHtml, /assets\/riose-farm-pixel-scene\.png/);
+  assert.match(manifestoHtml, /assets\/riose-cow-sprite-idle\.png/);
+  assert.match(manifestoHtml, /assets\/riose-cow-sprite-graze\.png/);
+  for (const path of ['/assets/riose-farm-pixel-scene.png', '/assets/riose-cow-sprite-idle.png', '/assets/riose-cow-sprite-graze.png']) {
+    const response = await fetch(`${root}${path}`);
+    assert.equal(response.status, 200, `${path} should be served for the manifesto farm`);
+    assert.match(response.headers.get('content-type') ?? '', /^image\/png/);
+    assert.ok((await response.arrayBuffer()).byteLength > 0, `${path} should not be empty`);
+  }
   for (const path of ['/product.css', '/scenario-lab.css', '/src/client/scenario-lab-app.js', '/src/client/scenario-set.js', '/src/client/scenario-set-budget.js', '/src/client/scenario-lab-intent.js', '/src/client/scenario-lab-integrity.js', '/src/client/br-corte-scenario.js', '/scientific/br_corte_dmi_adapter.js', '/scientific/model-contract.js', '/scientific/br_corte_pasture_dmi.js', '/src/client/product-app.js', '/src/client/experiments-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/population-experiment.js', '/src/client/simulation-report.js']) {
     assert.equal((await fetch(`${root}${path}`)).status, 200, `${path} should be served`);
   }
