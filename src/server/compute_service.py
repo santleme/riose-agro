@@ -48,14 +48,15 @@ def detect_compute_backends() -> dict[str, Any]:
     version = getattr(torch, "version", None)
     rocm_version = getattr(version, "hip", None)
     cuda_version = getattr(version, "cuda", None)
+    probe_error = False
     try:
         device_available = bool(torch.cuda.is_available())
     except Exception:
         device_available = False
+        probe_error = True
 
     runtime_backend = "rocm" if rocm_version else "cuda" if cuda_version else None
     device_name = None
-    probe_error = False
     if device_available and runtime_backend:
         try:
             device_name = torch.cuda.get_device_name(0)

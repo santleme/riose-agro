@@ -251,6 +251,20 @@ class ComputeServiceTests(unittest.TestCase):
         self.assertFalse(result["cuda"]["available"])
         self.assertEqual(result["cuda"]["reason"], "runtime_initialization_failed")
 
+    def test_availability_check_exception_is_reported_as_runtime_initialization_failure(self):
+        def fail_availability_check():
+            raise RuntimeError("driver initialization failed")
+
+        for backend, runtime_versions in (("cuda", {"hip": None, "cuda": "12.4"}),
+                                          ("rocm", {"hip": "7.1", "cuda": None})):
+            with self.subTest(backend=backend):
+                torch = SimpleNamespace(version=SimpleNamespace(**runtime_versions),
+                    cuda=SimpleNamespace(is_available=fail_availability_check), __version__="test")
+                with patch("src.server.compute_service.import_module", return_value=torch):
+                    result = detect_compute_backends()
+                self.assertFalse(result[backend]["available"])
+                self.assertEqual(result[backend]["reason"], "runtime_initialization_failed")
+
     def test_cpu_request_does_not_initialize_optional_accelerator_runtime(self):
         result = execute_compute({"contract_version": "1", "operation": "scale_vector",
             "payload": {"values": [2], "factor": 3}, "preferred_backend": "cpu"},
