@@ -33,7 +33,8 @@ test('deterministic intent parser extracts the supported Portuguese supplement e
 test('the two built-in supplement comparison prompts parse without AI configuration',()=>{
   const examples=[
     ['I have 100 cattle on pasture for 15 days. Compare 0.5 with 1.0 kg of supplement per animal per day.',.5,1],
-    ['Compare 24 cattle on pasture for 7 days with 0 versus 1 kg supplement per animal per day.',0,1]
+    ['Compare 24 cattle on pasture for 7 days with 0 versus 1 kg supplement per animal per day.',0,1],
+    ['Compare 0.5 and 1.5 kg DM per animal per day for 200 Nelore cattle on pasture over 30 days in hot weather.',.5,1.5]
   ];
   for(const [prompt,baseline,intervention] of examples){
     const spec=interpretExperimentPrompt(prompt);

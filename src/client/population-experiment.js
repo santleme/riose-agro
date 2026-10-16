@@ -12,8 +12,8 @@ const numberFrom=(value)=>Number(value.replace(',','.'));
 
 function matchNumber(text,pattern){const found=text.match(pattern);return found?numberFrom(found[1]):null;}
 function supplementPairsFrom(text){
-  return [...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)|(?:compare(?:d)?\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:with|versus|vs\.?)\s*(\d+(?:[.,]\d+)?)/gi)]
-    .map(item=>item[1]?[numberFrom(item[1]),numberFrom(item[2])]:[numberFrom(item[3]),numberFrom(item[4])]);
+  return [...text.matchAll(/(?:from|de)\s*(\d+(?:[.,]\d+)?)\s*(?:kg)?(?:\s*(?:dm|ms))?\s*(?:to|para|a)\s*(\d+(?:[.,]\d+)?)|(?:compare(?:d)?\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:with|versus|vs\.?)\s*(\d+(?:[.,]\d+)?)|compare(?:d)?\s+(?:(?:supplement(?:ation)?|suplementa(?:ção|cao)|suplemento)\s+)?(\d+(?:[.,]\d+)?)\s*(?:kg\s*(?:dm|ms)?\s*)?(?:and|e|,)\s*(\d+(?:[.,]\d+)?)\s*(?=(?:kg\s*)?(?:dm|ms|dry\s+matter|mat[eé]ria\s+seca)\s*(?:per|por)\s*(?:animal|head|cabeça))/gi)]
+    .map(item=>item[1]?[numberFrom(item[1]),numberFrom(item[2])]:item[3]?[numberFrom(item[3]),numberFrom(item[4])]:[numberFrom(item[5]),numberFrom(item[6])]);
 }
 function assumptionsFor({population,duration,breed,weather,baseline,intervention,provided={}}){
   return [
