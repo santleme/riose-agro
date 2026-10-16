@@ -1,5 +1,15 @@
 # Product V4 decisions
 
+## P4-D-015 — Population journey before result dashboard (2026-10-16)
+
+Decision: The default completed-run view is one paired mean-live-weight trajectory plus a plain-language selected-day comparison. Animal grid, filters, detailed aggregate cards, inspector, table and provenance are progressively disclosed. Remove FarmEngine's internally priced illustrative cost from Product results.
+
+Reason: Product V3 browser review showed a dense dashboard and a pseudo-cost that could be confused with a user-entered economic estimate. The Product's organizing idea is a population moving through two scenario paths; the animal-level view supports investigation but should not compete with the primary question. The demonstrative engine may show its own computed states, clearly labeled, but its internal cost is not decision-grade cost.
+
+Scientific constraint: The copy describes a computed engine difference only; it does not state that supplement caused a real cattle weight response. Conditional BR-CORTE CMS and any user-priced conditional economics remain separate model outputs. No metric is inferred per animal from an aggregate.
+
+Follow-on: A checkpoint branch is valid only when exact engine state can be reconstructed from the original snapshot and seed. Compact observed rows are not sufficient to reconstruct a branch state. Require deterministic restoration, digest, lineage, shared seed and explicit confirmation before enabling such a branch.
+
 - P4-ADR-001: Extend Product V3's existing `/scenario-lab.html` and model registry. Do not create a parallel application or model registry.
 - P4-ADR-002: Reuse P3 multi-arm comparison and P3 conditional supplement-cost calculations as complete capabilities; no new equivalent implementations.
 - P4-ADR-003: The first new decision capability is a one-factor deterministic BR-CORTE Eq. 2.6 supplement sweep because it is mathematically supported, bounded by the existing model domain, and independent of the blocked paid-provider and commercial-review gates. It describes equation response only, not a cattle intervention effect.

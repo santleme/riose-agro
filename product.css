@@ -58,3 +58,31 @@
 .analysis-more[open]{padding-top:13px}
 @media(max-width:760px){.workspace{display:flex;padding-top:60px}.conversation-panel{top:auto;height:auto;padding:12px 15px}.conversation{max-height:150px;flex:none}.spec-card{max-height:36vh;overflow:auto}.population-panel{padding:26px 16px 44px}.population-heading h1{font-size:25px}.population-empty{min-height:280px;margin-top:18px;border-radius:15px}.population-grid{padding:10px;max-height:38vh}.analysis-header{flex-wrap:wrap}.aggregate-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.animal-cell{transition:none}}
+.analysis-area[hidden]{display:none}
+.analysis-area{margin-top:30px;padding-top:20px}
+.analysis-header{margin-bottom:18px}
+.analysis-header h2{font-size:22px;letter-spacing:-.55px}
+.journey-card{padding:22px 24px 16px;border:1px solid #e8ecea;border-radius:18px;background:#fff}
+.journey-summary-main{max-width:760px;margin:0;color:#1d3037;font-size:21px;line-height:1.38;letter-spacing:-.45px;font-weight:500}
+.journey-summary-note{margin:8px 0 24px;color:#849198;font-size:11px;line-height:1.6}
+.journey-chart-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.journey-chart-heading h3{margin:0;font-size:12px;font-weight:600}
+.journey-chart-heading span{font-size:10px;color:#8c999c}
+.weight-chart{height:clamp(145px,22vw,220px);margin:12px 0 4px}
+.journey-legend{display:flex;gap:18px;color:#728188;font-size:10px}
+.journey-legend span{display:flex;align-items:center;gap:7px}
+.journey-legend i{width:16px;height:3px;border-radius:3px;display:inline-block}
+.journey-baseline{background:#8fc9df}.journey-intervention{background:#378caf}
+.timeline-row{margin:12px 0 0;padding:14px 0 4px}
+.population-explorer{border:1px solid #e8ecea;border-radius:14px;background:#fff;padding:15px 18px;margin-top:12px}
+.population-explorer>summary{font-size:11px;color:#50666d;list-style:none;cursor:pointer}
+.population-explorer>summary::-webkit-details-marker{display:none}
+.population-explorer>summary::after{content:'＋';float:right;color:#6893a0}
+.population-explorer[open]>summary::after{content:'−'}
+.population-explorer .control-row{margin-top:16px}
+.population-explorer .analysis-more{margin-top:18px}
+.population-explorer:not([open])>*:not(summary){display:none}
+.aggregate-cards{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}
+.journey-card svg path{transition:opacity 180ms ease-out}
+@media(max-width:760px){.analysis-area{margin-top:22px;padding-top:16px}.analysis-header h2{font-size:19px}.journey-card{padding:18px 15px 14px;border-radius:15px}.journey-summary-main{font-size:18px}.journey-summary-note{margin-bottom:20px}.journey-chart-heading{align-items:flex-start;flex-direction:column;gap:4px}.weight-chart{height:160px}.population-explorer{padding:13px 12px}.population-explorer .control-row{display:grid;grid-template-columns:1fr}.population-explorer .control-row label{width:100%}.timeline-points{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.journey-card svg path{transition:none}}

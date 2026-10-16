@@ -2,6 +2,32 @@
 
 Allowed statuses: `BACKLOG`, `READY`, `IN_PROGRESS`, `BLOCKED`, `VALIDATING`, `DONE`.
 
+## Product decision experience continuation
+
+### P4-011 — Population journey result hierarchy
+
+ID: P4-011
+Title: Make the paired population trajectory the primary result and disclose individual detail on demand
+Specification reference: `product-requirements.md` PRD-002/003; `design-system.md`; `decision-analysis.md`; P4-ACC-015
+Dependencies: P4-001; existing paired Product comparison and archive/replay
+Implementation scope: Replace the metric-dashboard hierarchy with one two-path population-weight trajectory, a selected-day summary and time control. Move the animal grid, filters, inspector, secondary aggregates, daily table and provenance behind accessible disclosures. Remove FarmEngine internal illustrative monetary cost from decision-facing results. Retain actual Worker data, export, replay, keyboard use and mobile/reduced-motion behavior.
+Acceptance criteria: The selected-day summary and chart derive only from actual paired `comparison.rows`; they say the engine response is demonstrative and avoid real-world causal claims. No monetary cost appears without user-entered price. The animal grid is collapsed by default and remains selectable; selecting an animal opens its inspector. Timeline changes update chart, summary, grid and inspector from the same actual checkpoint. No automatic execution is introduced.
+Required tests: Product E2E review/confirm/results/revision/replay; assert result hierarchy, hidden-by-default individual view, animal selection and no demo cost; mobile no-overflow and reduced-motion inspection; relevant population contract/unit tests.
+Evidence: E2E output, Chromium desktop/mobile screenshots inspected, `progress.md`, test output.
+Status: DONE (`npm run test:e2e:product` PASS after result-hierarchy, checkpoint summary, mobile, reduced-motion and keyboard assertions; `node --test tests/product-population.test.js` 9/9; `npm test` 525/525; desktop/mobile captures reviewed. No executor or scientific model changed).
+
+### P4-012 — Explicit population pathway branching
+
+ID: P4-012
+Title: Let a user draft and explicitly run a new intervention from a selected population checkpoint
+Specification reference: `scenario-engine.md`; `decision-analysis.md`; `product-requirements.md` PRD-003/005; P4-ACC-016
+Dependencies: P4-011; existing shared-snapshot/seed comparisons and Worker execution
+Implementation scope: Verify whether the engine can restore an exact deterministic checkpoint without fabricating state. If feasible, add a versioned Worker operation that replays the archived initial state to the selected day and creates baseline/branch continuations from the same checkpoint and seed. Present the branch inputs for review, require explicit confirmation, preserve the parent result, and label demonstrative deltas. If exact restoration cannot be represented, keep the branch blocked and document the missing contract rather than approximate from compact observations.
+Acceptance criteria: A branch records parent run/checkpoint, exact restored state digest, shared seed, changed factor and executor/model version. Editing only creates a draft; confirmation is required to run. Parent run remains viewable; branch differences use outputs from both actual runs and no automatic winner is selected. Export/replay revalidates the branch lineage.
+Required tests: exact checkpoint restore determinism; same-state/seed equivalence; changed-factor validation; cancel/edit/no-auto-run; branch export/replay; Product browser E2E and population worker tests.
+Evidence: contract and E2E output, deterministic digest comparison, desktop/mobile captures, `progress.md`.
+Status: READY (scientific/demo boundary unchanged; execute only after P4-011 passes).
+
 ## P4-001 — Audit and SDD bootstrap
 
 ID: P4-001
