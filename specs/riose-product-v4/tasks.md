@@ -93,7 +93,7 @@ Implementation scope: Use provider credentials available through the authorized 
 Acceptance criteria: Credentials come from secure runtime configuration and are not copied into logs, browser state, responses or archives; the selected provider/model is verified by an actual response; live intents pass server/client scientific validation; no request executes automatically; the explicit user action runs only the selected executor; FarmEngine remains demonstrative and BR-CORTE remains conditional on its declared inputs; unsupported biological claims are rejected; export/replay matches; sanitized latency/status/token metadata is recorded when available; P3-007 production/shared spend gate remains unchanged.
 Required tests: controlled live provider requests within provider quota; focused Product V4 E2E using a real interpretation; review, explicit confirmation, execution, explanation, export and replay; safe failure/fallback checks; key-safe log review.
 Evidence: sanitized provider/model/status/latency and token metadata when provided, E2E output and replay digest. Never store the secret or raw authorization headers. A live provider response validates integration only, not scientific validity or production reliability.
-Status: VALIDATING (authorized credentials injected into the Node environment in memory; authenticated Groq/HF HTTP 200, Groq gpt-oss-20b available; first real structured interpretation succeeded. Full live UI flow and grounded conversation validation pending.)
+Status: DONE (real Groq and HF authentication HTTP 200; gpt-oss-20b model verified; live Product review/explicit execution/export/replay, BR-CORTE sensitivity/cost and scientific limitations passed. Sanitized request/token metadata and screenshots committed in `9130c9f`; final report documents scope and limits. P3-007 remains blocked for production.)
 
 ### P4-008 — Experimental Laya CPU routing evaluation
 
@@ -105,7 +105,7 @@ Implementation scope: Isolated CPU venv, pinned checkpoint, structured choice wo
 Acceptance criteria: Actual local inference or measured concrete failure; fixed final labels; reproducible model/version/checksum and per-class metrics; cold/startup/latency/RSS measurements; no automatic promotion or probability calibration claims.
 Required tests: router contracts, worker invalid/oversized input, frozen fixture/metrics checks; actual CPU evaluation; no-key fallback.
 Evidence: official source audit, evaluation JSON and environment lock; `progress.md`.
-Status: IN_PROGRESS (protocol and labels frozen before inference).
+Status: DONE (actual pinned Laya CPU inference; 3/3 worker tests; 32 frozen bilingual cases; final accuracy 11/16 and macro F1 0.6458; cached offline initialization and RSS measured. Relative accuracy/F1 and unsupported-recall promotion screen failed; router remains EXPERIMENTAL_OFF. Raw evidence and reproducible comparison committed in `2218cd7`; exploratory/non-blinded baseline limitation disclosed.)
 
 ### P4-009 — Grounded decision conversation
 
@@ -117,4 +117,4 @@ Implementation scope: Strict non-executing plan schema, model applicability, cla
 Acceptance criteria: User prompts select existing capability, missing/ambiguous inputs remain missing, no model-generated scientific outputs; all execution remains explicit; current results survive provider failure; example/default provenance preserved.
 Required tests: malicious/invalid plans, applicability and missing data, follow-up edits, safe errors, browser real provider flow and regression.
 Evidence: actual provider metadata, E2E and screenshots, tests and `progress.md`.
-Status: VALIDATING (strict planning/evidence endpoint and Product conversation implemented; real Groq UI and scientific flows passed; final regression and SDD evidence consolidation in progress).
+Status: DONE (strict server/client plans, capability-specific semantic checks, grounded evidence/result inspection, full live UI paths, stale-response rejection, offline provenance and explicit single-report v2 units/replay with v1 reader. Full regression 522/522, existing and new E2E, 3 Python tests and parity pass; evidence in the closing handoff.)
