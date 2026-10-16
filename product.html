@@ -70,6 +70,15 @@
             <div id="weight-chart" class="weight-chart" role="img" aria-label="Mean live weight for baseline and intervention scenarios over time"></div>
             <div class="journey-legend"><span><i class="journey-baseline"></i><span id="journey-left-label">Baseline</span></span><span><i class="journey-intervention"></i><span id="journey-right-label">Intervention</span></span></div>
           </section>
+          <details id="conditional-cost" class="conditional-cost">
+            <summary>Estimate conditional supplement expense</summary>
+            <p>Uses supplement supplied as kg dry matter per animal per day, herd size, and this experiment’s applicable days. Enter your price; no FarmEngine cost is used.</p>
+            <form id="conditional-cost-form">
+              <label for="supplement-price">Your price per kg of supplement dry matter</label>
+              <div class="cost-fields"><input id="supplement-price" name="price" type="number" min="0" max="1000000000" step="any" required inputmode="decimal" placeholder="Enter price"><label for="supplement-currency">Currency</label><input id="supplement-currency" name="currency" type="text" minlength="3" maxlength="3" pattern="[A-Za-z]{3}" autocomplete="off" required placeholder="BRL" aria-label="Currency, three-letter ISO code"><button class="quiet-button" type="submit">Review cost</button></div>
+            </form>
+            <div id="conditional-cost-result" class="conditional-cost-result" aria-live="polite"><p>No monetary amount is calculated until you provide both a price and currency.</p></div>
+          </details>
           <div class="timeline-row"><div class="timeline-label"><span>Inspect the population at</span><strong id="day-label">Day 0</strong></div><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available simulation day"><div id="timeline-points" class="timeline-points"></div></div>
           <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
           <details id="population-explorer" class="analysis-more population-explorer"><summary>Explore individual animals and recorded states</summary>

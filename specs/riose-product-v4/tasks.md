@@ -38,7 +38,7 @@ Implementation scope: Allow a user to enter price per kg of supplement dry matte
 Acceptance criteria: Monetary output is absent until price and currency are explicit; displayed cost is exactly reproducible from input units and horizon, including branch remaining days; output is called conditional supplement expense, not total ration cost/profit/ROI. Price edits require review and do not execute the scientific engine. FarmEngine and BR-CORTE outputs stay distinct.
 Required tests: cost arithmetic/unit/bounds tests; count×duration×price invariants; branch horizon tests; export/replay provenance; Product E2E no-price/price/review/edit cases; mobile/accessibility.
 Evidence: focused tests, Product E2E, cost report screenshot, `progress.md`.
-Status: READY (existing conditional-cost contract and arithmetic are available; Product result workspace has no price input today).
+Status: DONE (combined cost/history unit suites 30/30; `npm run test:e2e:product` PASS including no-price state, user price and currency, edit invalidation, no Worker execution, export digest, checkpoint remaining-days arithmetic, local history and replay; `npm test` 529/529; desktop/mobile cost captures visually reviewed; `git diff --check` PASS. No engine formulas or scientific gates changed.)
 
 ## P4-001 — Audit and SDD bootstrap
 
