@@ -113,6 +113,13 @@ test('single model report preserves exact registered outputs and explicit replay
   const result = evaluateSingleInputs(inputs);
   const report = await createSingleReport({inputs, result, request: {sourcePrompt: 'Conditional calculation', interpretation: {source: 'llm', provider: 'groq', model: 'test'}}});
   await validateSingleReport(JSON.parse(JSON.stringify(report)));
+  assert.equal(report.version, 2);
+  assert.equal(report.units.totalDmiKgDMPerDay, 'kg DM/head/day');
+  const legacy = structuredClone(report); delete legacy.units; legacy.version = 1;
+  legacy.limitation = 'Conditional total DMI only; ADG is supplied, not predicted; no Riose-specific calibration.';
+  const {sha256: _legacyHash, ...legacyPayload} = legacy; legacy.sha256 = await sha256ScenarioLabJson(legacyPayload);
+  await validateSingleReport(legacy);
+  assert.deepEqual(evaluateSingleInputs(legacy.inputs), legacy.result, 'v1 reports remain readable and replay identically');
   assert.deepEqual(evaluateSingleInputs(report.inputs), report.result);
   const tampered = structuredClone(report); tampered.inputs.bodyWeightKg = 410;
   await assert.rejects(validateSingleReport(tampered), /digest mismatch/);

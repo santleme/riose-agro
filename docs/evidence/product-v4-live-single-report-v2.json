@@ -1,0 +1,33 @@
+{
+  "type": "riose-live-single-report-validation",
+  "version": 1,
+  "status": "passed",
+  "prompt": "Calcule o CMS condicional pelo BR-CORTE para um zebuíno em crescimento a pasto tropical de 400 kg, com GMD informado de 0,5 kg/dia e suplemento de 1,6 kg de matéria seca por animal por dia.",
+  "httpStatus": 200,
+  "source": "llm",
+  "model": "openai/gpt-oss-20b",
+  "metadata": {
+    "latencyMs": 896,
+    "httpStatus": 200,
+    "usage": {
+      "prompt_tokens": 990,
+      "completion_tokens": 439,
+      "total_tokens": 1429
+    }
+  },
+  "fallbackReason": null,
+  "reportVersion": 2,
+  "units": {
+    "bodyWeightKg": "kg",
+    "adgKgPerDay": "kg/day",
+    "supplementKgDMPerDay": "kg DM/head/day",
+    "totalDmiKgDMPerDay": "kg DM/head/day",
+    "residualForageDmiKgDMPerDay": "kg DM/head/day"
+  },
+  "reportSha256": "ee8ef0bf41e2575c51258f5df3e1ac46bd0279d6b343fcd48fcde589f7beecdf",
+  "inputOnlyInterpretation": true,
+  "explicitCalculation": true,
+  "moduleOutputEquality": true,
+  "noExecutionOnImport": true,
+  "explicitExactReplay": true
+}

@@ -1100,7 +1100,7 @@ $('single-export').addEventListener('click', async () => {
   if (!singleExecution) return;
   const report = await createSingleReport({inputs: singleReviewedInputs, result: singleExecution, request: singleRequest});
   const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type: 'application/json'}));
-  link.download = 'riose-br-corte-single-report-v1.json'; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0);
+  link.download = `riose-br-corte-single-report-v${report.version}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 0);
 });
 $('single-open').addEventListener('click', () => $('single-file').click());
 async function openSingleReport(saved) {
