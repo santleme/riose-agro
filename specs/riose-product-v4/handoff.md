@@ -1,7 +1,7 @@
 # Product V4 handoff
 
 Date: 2026-10-15
-Last verified implementation commit: `62386a0` (`fix(science): version single reports with explicit units`)
+Last verified commit: `52f472b` (handoff/runtime state; implementation and evidence verified at `62386a0`)
 Current branch: `codex/behavioral-agents-sdd`
 Starting point for this work: `81b4aa6`; five preserved local commits were added during this continuation (`ed21687`, `90d6fce`, `9130c9f`, `2218cd7`, `62386a0`). All changes remain local; no push, merge, reset, or history rewrite occurred.
 
