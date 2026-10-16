@@ -107,6 +107,18 @@ Status: DONE (versioned archive schema/module; unit tests verify reproducible re
 - P3-007 AI providers/tool agent: BLOCKED by shared persistent spend ceiling; do not mark complete here.
 - P3-008 commercial/scientific readiness: BLOCKED pending independent domain review and evidence. Behavioral integration: NO-GO.
 
+### P4-014 — Product agent visibility and responsive population paths
+
+ID: P4-014
+Title: Make Product's decision-agent routing honest and ensure both computed population paths remain visible
+Specification reference: `product-requirements.md` PRD-001/002/003/004; `ai-orchestration.md`; `design-system.md`; P4-ACC-018
+Dependencies: P4-006; P4-009; existing paired FarmEngine comparison and P4-015 population journey
+Implementation scope: Verify Product routes requests to the allowlisted decision assistant; expose only safe provider availability; retain deterministic local planning when credentials are absent; render the already-computed baseline and intervention branches without opacity-dependent content; cover mobile and reduced-motion visibility.
+Acceptance criteria: Product identifies when no remote provider is configured; requests still reach validated local planning; no plan or explanation runs the engine; both result paths stay readable at 390 px during animation and reduced motion; remote LLM, Laya, and bovine behavioral execution remain distinct capabilities and gates.
+Required tests: Product E2E review/confirm/explanation/no-auto-run, mobile path visibility and reduced-motion assertions; assistant-status endpoint credential-safety tests; full regression; visual screenshot review.
+Evidence: E2E PASS; `/api/assistant-status` returns `available:false` without provider credentials and no secret fields; desktop and 390 px screenshots `docs/evidence/visual-review/2026-10-16/03-product-results.png` and `04-product-workspace-mobile.png`; full-suite evidence in `progress.md`.
+Status: DONE (Product endpoint routing and deterministic fallback verified; stale long-running Node server was restarted; mobile review exposed an opacity-only reveal that made both computed arms look blank mid-animation, corrected to transform-only motion; both paths asserted visibly at 390 px. No credentials were available for a remote call.)
+
 ## AI integration continuation
 
 ### P4-006 — Product V4 interpretation adapter and archive provenance

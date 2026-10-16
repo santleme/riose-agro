@@ -18,6 +18,14 @@ Evidence: A deterministic test verifies the unchanged branch arm's daily mean we
 
 Limit: Branch rerun is available explicitly in the current Product session. The JSON export contains the parent manifest, branch inputs and calculated results, but importing it in a fresh session is not implemented here. No checkpoint is inferred from compact UI observations, and no full hourly snapshots are retained.
 
+## P4-D-017 — Keep population paths visible while revealing them (2026-10-16)
+
+Decision: Animate the decision paths with a short vertical transform only. Keep opacity at 1 throughout the transition and assert the baseline and intervention are both visible in the mobile browser flow.
+
+Reason: The previous opacity-from-zero reveal made completed result cards appear absent in mobile captures taken during an animation or reduced-motion preference change. The motion added no information and hid the most important comparison.
+
+Constraint: Values and path labels remain legible at every animation frame; reduced motion disables the transition. The paths continue to use actual FarmEngine observations and remain labeled demonstrative.
+
 - P4-ADR-001: Extend Product V3's existing `/scenario-lab.html` and model registry. Do not create a parallel application or model registry.
 - P4-ADR-002: Reuse P3 multi-arm comparison and P3 conditional supplement-cost calculations as complete capabilities; no new equivalent implementations.
 - P4-ADR-003: The first new decision capability is a one-factor deterministic BR-CORTE Eq. 2.6 supplement sweep because it is mathematically supported, bounded by the existing model domain, and independent of the blocked paid-provider and commercial-review gates. It describes equation response only, not a cattle intervention effect.

@@ -65,15 +65,8 @@
 .analysis-header h2{font-size:22px;letter-spacing:-.55px}
 .journey-card{padding:22px 24px 16px;border:1px solid #e8ecea;border-radius:18px;background:#fff}
 .journey-summary-main{max-width:760px;margin:0;color:#1d3037;font-size:21px;line-height:1.38;letter-spacing:-.45px;font-weight:500}
+
 .journey-summary-note{margin:8px 0 24px;color:#849198;font-size:11px;line-height:1.6}
-.journey-chart-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
-.journey-chart-heading h3{margin:0;font-size:12px;font-weight:600}
-.journey-chart-heading span{font-size:10px;color:#8c999c}
-.weight-chart{height:clamp(145px,22vw,220px);margin:12px 0 4px}
-.journey-legend{display:flex;gap:18px;color:#728188;font-size:10px}
-.journey-legend span{display:flex;align-items:center;gap:7px}
-.journey-legend i{width:16px;height:3px;border-radius:3px;display:inline-block}
-.journey-baseline{background:#8fc9df}.journey-intervention{background:#378caf}
 .timeline-row{margin:12px 0 0;padding:14px 0 4px}
 .branch-action{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 8px;padding:4px 0 12px}
 .branch-action p{margin:0;color:#8a979b;font-size:10px;line-height:1.5}
@@ -100,7 +93,7 @@
 .population-explorer .analysis-more{margin-top:18px}
 .population-explorer:not([open])>*:not(summary){display:none}
 .aggregate-cards{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}
-.journey-marker{transition:transform 180ms cubic-bezier(.22,1,.36,1)}
+
 .conditional-cost{margin-top:12px;border:1px solid #e8ecea;border-radius:14px;background:#fff;padding:14px 18px}
 .conditional-cost>summary{font-size:11px;color:#50666d;list-style:none;cursor:pointer}
 .conditional-cost>summary::-webkit-details-marker{display:none}
@@ -126,11 +119,11 @@
 :root[data-theme="dark"] .cost-fields input{background:#20231f;color:#eeefe9;border-color:#42463f}
 :root[data-theme="dark"] .conditional-cost-row{background:#282b26;color:#d1d5cc}
 :root[data-theme="dark"] .conditional-cost-row strong{color:#eeefe9}
-@media(max-width:760px){.analysis-area{margin-top:22px;padding-top:16px}.analysis-header h2{font-size:19px}.journey-card{padding:18px 15px 14px;border-radius:15px}.journey-summary-main{font-size:18px}.journey-summary-note{margin-bottom:20px}.journey-chart-heading{align-items:flex-start;flex-direction:column;gap:4px}.weight-chart{height:160px}.population-explorer{padding:13px 12px}.population-explorer .control-row{display:grid;grid-template-columns:1fr}.population-explorer .control-row label{width:100%}.timeline-points{font-size:8px}.workspace-actions{gap:5px}.workspace-actions button{padding:8px;font-size:9px}.branch-action{align-items:flex-start;flex-direction:column}.branch-dialog form{padding:20px}.branch-buttons{flex-wrap:wrap}.branch-buttons button{flex:1 1 auto}.conditional-cost{padding:13px 12px}.cost-fields{grid-template-columns:minmax(0,1fr) 70px;gap:8px}.cost-fields label{grid-column:1}.cost-fields button{grid-column:1/-1;justify-self:start}.conditional-cost-row{grid-template-columns:1fr auto;gap:4px 8px}.conditional-cost-row small{grid-column:1}.conditional-cost-row strong{grid-column:2;grid-row:1/3}}
-@media(prefers-reduced-motion:reduce){.journey-marker{transition:none}}
+@media(max-width:760px){.analysis-area{margin-top:22px;padding-top:16px}.analysis-header h2{font-size:19px}.journey-card{padding:18px 15px 14px;border-radius:15px}.journey-summary-main{font-size:18px}.journey-summary-note{margin-bottom:20px}.population-explorer{padding:13px 12px}.population-explorer .control-row{display:grid;grid-template-columns:1fr}.population-explorer .control-row label{width:100%}.timeline-points{font-size:8px}.workspace-actions{gap:5px}.workspace-actions button{padding:8px;font-size:9px}.branch-action{align-items:flex-start;flex-direction:column}.branch-dialog form{padding:20px}.branch-buttons{flex-wrap:wrap}.branch-buttons button{flex:1 1 auto}.conditional-cost{padding:13px 12px}.cost-fields{grid-template-columns:minmax(0,1fr) 70px;gap:8px}.cost-fields label{grid-column:1}.cost-fields button{grid-column:1/-1;justify-self:start}.conditional-cost-row{grid-template-columns:1fr auto;gap:4px 8px}.conditional-cost-row small{grid-column:1}.conditional-cost-row strong{grid-column:2;grid-row:1/3}}
+
 :root[data-theme="dark"] .journey-card,:root[data-theme="dark"] .population-explorer,:root[data-theme="dark"] .branch-dialog{background:#20231f;color:#eeefe9;border-color:#3c4039}
-:root[data-theme="dark"] .journey-summary-main,:root[data-theme="dark"] .journey-chart-heading h3,:root[data-theme="dark"] .population-explorer>summary,:root[data-theme="dark"] .branch-dialog h2{color:#eeefe9}
-:root[data-theme="dark"] .journey-summary-note,:root[data-theme="dark"] .journey-chart-heading span,:root[data-theme="dark"] .journey-legend,:root[data-theme="dark"] .branch-dialog .branch-context{color:#adb1a7}
+:root[data-theme="dark"] .journey-summary-main,:root[data-theme="dark"] .tree-heading h3,:root[data-theme="dark"] .population-explorer>summary,:root[data-theme="dark"] .branch-dialog h2{color:#eeefe9}
+:root[data-theme="dark"] .journey-summary-note,:root[data-theme="dark"] .tree-heading>span,:root[data-theme="dark"] .branch-dialog .branch-context{color:#adb1a7}
 :root[data-theme="dark"] .branch-dialog select,:root[data-theme="dark"] .branch-number{background:#20231f;color:#eeefe9;border-color:#42463f}
 :root[data-theme="dark"] .branch-review{background:#282b26;color:#d1d5cc}
 .prompt-footer #agent-availability{max-width:65%;line-height:1.45}
@@ -167,7 +160,7 @@
 .tree-inspection input{width:100%;accent-color:#4a9ab5}
 .tree-inspection .timeline-points{grid-column:2;margin-top:-5px}
 .branch-action{margin-top:13px}
-@keyframes tree-reveal{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tree-reveal{from{transform:translateY(6px)}to{transform:translateY(0)}}
 @media(max-width:760px){.tree-heading{align-items:flex-start;flex-direction:column;gap:4px}.tree-paths{grid-template-columns:1fr;gap:9px}.tree-path{padding:12px}.tree-inspection{grid-template-columns:1fr;gap:6px}.tree-inspection .timeline-points{grid-column:1}.tree-node{padding-inline:2px}.tree-node small{font-size:7px}.tree-origin{margin-bottom:16px}.tree-path-heading span{font-size:9px}.branch-action{margin-top:10px}}
 @media(prefers-reduced-motion:reduce){.tree-path,.tree-node::before{animation:none!important;transition:none!important}}
 :root[data-theme="dark"] .tree-origin,:root[data-theme="dark"] .tree-path{background:#20231f;border-color:#3c4039}

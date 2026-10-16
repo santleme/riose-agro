@@ -50,7 +50,7 @@ try{
   await page.locator('#prompt-input').fill(prompt);
   await page.locator('#prompt-form button[type="submit"]').click();
   await page.locator('.spec-card .primary-button').waitFor();
-  assert.equal(await page.locator('#live-status').innerText(),'','interpreting status must clear once review is ready');
+  assert.match(await page.locator('#live-status').innerText(),/Local plan ready/,'the local agent source must remain visible after review is ready');
   assert.equal(await page.locator('.population-empty').isVisible(),true,'review should show a clear no-results state');
   assert.equal(await page.locator('.population-grid').isVisible(),false,'review must not show an empty results grid');
   const review=await page.locator('.spec-card').innerText();
@@ -83,6 +83,13 @@ try{
   assert.match(await page.locator('#workspace-meta').innerText(),/200 animals · 30 days/);
   assert.match(await page.locator('.tree-heading').innerText(),/checkpoint/);
   await page.screenshot({path:`${evidence}/03-product-results.png`,fullPage:true});
+  const workersBeforeExplanation=await page.evaluate(()=>window.__workerCommands.length);
+  await page.locator('#followup-input').fill('Can BR-CORTE predict weight gain?');
+  await page.locator('#followup-form button').click();
+  await page.waitForFunction(()=>document.querySelector('#conversation').textContent.includes('ADG is an input'));
+  assert.equal(await page.locator('#analysis-area').isVisible(),true,'a grounded explanation must keep the computed population journey visible');
+  assert.equal(await page.evaluate(()=>window.__workerCommands.length),workersBeforeExplanation,'asking the agent must not execute the engine');
+  assert.match(await page.locator('#conversation').innerText(),/BR-CORTE 2023 Eq\. 2\.6 estimates total dry matter intake conditional on user-supplied average daily gain/);
   assert.equal(await page.locator('#supplement-price').inputValue(),'','cost inputs must have no hidden or assumed price');
   await page.locator('#conditional-cost > summary').click();
   await page.locator('#supplement-price').fill('2.4');
@@ -122,6 +129,10 @@ try{
   assert.equal(await page.locator('.tree-path').first().evaluate(node=>getComputedStyle(node).animationName),'none','tree reveals must respect reduced motion');
   await page.emulateMedia({reducedMotion:'no-preference'});
   assert.equal(await page.locator('.tree-path').first().evaluate(node=>getComputedStyle(node).animationName),'tree-reveal','tree reveals use a short functional transition');
+  assert.equal(await page.locator('.tree-path').count(),2,'both baseline and intervention paths must remain visible on mobile');
+  assert.match(await page.locator('.tree-path').nth(1).innerText(),/Intervention/,'the mobile branch view must show the intervention arm');
+  assert.equal(await page.locator('.tree-path').nth(1).evaluate(node=>getComputedStyle(node).opacity),'1','path motion must never make an experimental arm disappear while revealing it');
+  for(const path of await page.locator('.tree-path').all())assert.ok((await path.boundingBox()).width>300,'each mobile decision path must have a usable width');
   await page.locator('.conversation').evaluate(el=>{el.scrollTop=el.scrollHeight;});
   await page.waitForFunction(()=>document.querySelector('#live-status').textContent==='');
   await page.screenshot({path:`${evidence}/04-product-workspace-mobile.png`,fullPage:true});
@@ -201,6 +212,7 @@ try{
   assert.match(await page.locator('#workspace-meta').innerText(),/200 animals · 30 days/);
   await page.locator('#followup-input').fill('make it 15 days');
   await page.locator('#followup-form button').click();
+  await page.waitForFunction(()=>document.querySelector('.spec-card')?.textContent.includes('15 days'));
   assert.equal(await page.locator('#analysis-area').isVisible(),false,'revision clears stale analysis and does not auto-run');
   assert.match(await page.locator('.spec-card').innerText(),/15 days/);
   assert.equal(await page.locator('.spec-card .primary-button').isVisible(),true,'a revised draft requires a fresh explicit run confirmation');
