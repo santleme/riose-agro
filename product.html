@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="src/client/home.css">
   <link rel="stylesheet" href="product.css">
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="src/client/farm-simulation.css">
 </head>
 <body>
   <header class="site-header" aria-label="Riose">
@@ -34,12 +35,17 @@
 
   <main id="product" class="product-shell">
     <section id="welcome" class="welcome">
-      <h1>What would happen if?</h1>
-      <p class="welcome-copy">Describe a population, a condition, or an intervention. Review the assumptions, then explore both scenarios animal by animal.</p>
+      <h1>Give a scenario a life.</h1>
+      <p class="welcome-copy">Set a starting point. Then watch a small herd follow the paths your choices create.</p>
+      <section class="welcome-farm" aria-label="Illustrative Riose farm preview">
+        <img class="welcome-farm-land" src="/assets/product-farm/pasture-pixel.webp" alt="Pixel-art pasture with a shade shelter, water trough, and fenced field">
+        <div id="welcome-farm-animals" class="welcome-farm-animals" aria-label="Illustrative cattle preview"></div>
+        <p id="welcome-farm-note" class="welcome-farm-note">Illustrative preview · run a confirmed scenario to inspect engine states</p>
+      </section>
       <form id="prompt-form" class="prompt-form">
         <label class="visually-hidden" for="prompt-input">Describe an experiment</label>
         <textarea id="prompt-input" rows="3" maxlength="1200" placeholder="Write your scenario in your own words. Choose an example below if helpful."></textarea>
-        <div class="prompt-footer"><span id="agent-availability" aria-live="polite">Riose experiment agent · checking server configuration</span><button class="primary-button" type="submit">Ask Riose <span aria-hidden="true">↗</span></button></div>
+        <div class="prompt-footer"><span id="agent-availability" aria-live="polite">Riose experiment agent · checking server configuration</span><button class="primary-button" type="submit">Create a path <span aria-hidden="true">↗</span></button></div>
       </form>
       <div class="suggestions" aria-label="Example experiments">
         <button type="button" data-prompt="Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, with supplementation changing from 0.5 to 1.5 kg dry matter per animal per day.">Supplementation under heat <span>↗</span></button>
@@ -60,17 +66,35 @@
       </aside>
 
       <section id="population-panel" class="population-panel" aria-label="Population workspace">
-        <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><div class="workspace-actions"><button id="return-parent" class="quiet-button" type="button" hidden>Back to parent path</button><button id="replay-branch" class="quiet-button" type="button" hidden>Replay branch</button><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div></div>
+        <div class="population-heading"><div><p class="eyebrow">RIOSE · FARM SIMULATION</p><h1 id="workspace-title">One herd. Different paths.</h1><p id="workspace-meta" class="muted"></p></div><div class="workspace-actions"><button id="return-parent" class="quiet-button" type="button" hidden>Back to parent path</button><button id="replay-branch" class="quiet-button" type="button" hidden>Replay branch</button><button id="export-json" class="quiet-button" type="button">Export experiment</button></div></div>
         <div id="population-empty" class="population-empty" role="status"><span class="empty-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Your population view is ready when you are.</p><small>Review the experiment, then confirm the run. No animal states are shown before the engine returns them.</small></div>
         <div id="analysis-area" class="analysis-area" hidden>
+          <section class="farm-journey" aria-labelledby="farm-journey-title">
+            <div class="farm-journey-heading"><div><p class="eyebrow">A DEMONSTRATIVE HERD</p><h2 id="farm-journey-title">One starting point. Different lives.</h2></div><div class="farm-journey-status"><span id="farm-visible-count" class="farm-current-day">6 visible</span><span id="farm-current-day" class="farm-current-day">Day 0</span></div></div>
+            <div class="farm-stage" id="farm-stage" aria-label="Interactive farm scene">
+              <img class="farm-stage-land" src="/assets/product-farm/pasture-pixel.webp" alt="Illustrative pasture environment">
+              <div id="farm-stage-animals" class="farm-stage-animals" role="group" aria-label="Animals returned by the engine"></div>
+            </div>
+            <div class="farm-inspector" id="farm-inspector" aria-live="polite"><p class="farm-inspector-empty">Select an animal to follow its recorded states.</p></div>
+            <div class="farm-transport" aria-label="Simulation replay controls">
+              <button id="farm-play" class="farm-play" type="button" aria-pressed="false"><span aria-hidden="true">▶</span><span>Play path</span></button>
+              <button id="farm-step" class="quiet-button" type="button" disabled>Next checkpoint</button>
+              <label class="farm-scrubber"><span id="farm-day-caption">Day 0</span><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose a calculated population checkpoint"></label>
+              <span id="day-label" class="visually-hidden">Day 0</span><div id="timeline-points" class="visually-hidden" aria-hidden="true"></div>
+            </div>
+            <div id="farm-pathways" class="farm-pathways" aria-label="Calculated scenario paths"></div>
+            <div class="farm-journey-actions"><p>Choose a checkpoint, then branch from that exact population state.</p><button id="open-branch" class="farm-fork-button" type="button" disabled>Fork a scenario</button></div>
+          </section>
+          <details class="technical-results">
+            <summary>Technical results, conditional costs &amp; model provenance</summary>
           <div class="analysis-header"><div><p class="eyebrow">POPULATION JOURNEY</p><h2>One herd. Different paths.</h2></div><span class="not-validated">Demonstrative engine</span></div>
           <section class="journey-card" aria-labelledby="journey-chart-title">
             <div class="journey-summary"><p id="journey-summary" class="journey-summary-main">The engine’s population trajectories will appear here after a confirmed run.</p><p id="journey-summary-note" class="journey-summary-note">Both paths use the same starting population and seed. This comparison is demonstrative, not a validated forecast.</p></div>
             <div class="tree-heading"><h3 id="journey-chart-title">Population decision paths</h3><span>Choose a checkpoint to inspect or branch</span></div>
             <div id="population-tree" class="population-tree" aria-label="Population decision paths"></div>
-            <div class="tree-inspection"><span>Inspect the population at <strong id="day-label">Day 0</strong></span><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available population checkpoint"><div id="timeline-points" class="timeline-points"></div></div>
+            <div class="tree-inspection"><span>Inspect the population at <strong id="technical-day-label">Day 0</strong></span></div>
           </section>
-          <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
+          <div class="branch-action"><p>Branch from a checkpoint in the farm journey above.</p></div>
           <details id="conditional-cost" class="conditional-cost">
             <summary>Compare supplied supplement and conditional expense</summary>
             <p>Uses the entered supplement amount, animals, applicable days and your price per kg of dry matter. This arithmetic does not use engine cost or estimate intake, production or profit.</p>
@@ -96,6 +120,7 @@
             <div class="analysis-grid"><article class="analysis-card"><h3>Selected animal</h3><div id="animal-inspector" class="animal-inspector"><p>Select a cell to inspect available states and activity history.</p></div></article></div>
             <details class="provenance"><summary>Model limits and provenance</summary><div id="provenance-details"></div></details>
             <details class="daily-table"><summary>Daily aggregate results</summary><div class="table-scroll"><table><thead><tr><th>Day</th><th>Base mean weight (kg)</th><th>Intervention mean weight (kg)</th><th>Δ weight (kg)</th><th>Pasture stock (kg MS)</th></tr></thead><tbody id="daily-rows"></tbody></table></div></details>
+          </details>
           </details>
           </details>
         </div>
