@@ -7,12 +7,11 @@ import {decodeWorkerCommand,normalizeWorkerResponse,WORKER_PROTOCOL_VERSION} fro
 
 const prompt='Tenho 200 bovinos Nelore a pasto, durante 30 dias, em condições de calor. Quero saber o que acontece se aumentar a suplementação de 0,5 para 1,5 kg por animal.';
 
-test('Product V2 keeps the legacy Experiments stylesheet isolated',()=>{
+test('retired Experiments page points to Product instead of exposing the legacy dashboard',()=>{
   const page=readFileSync(new URL('../experiments.html',import.meta.url),'utf8');
-  const styles=readFileSync(new URL('../src/client/experiments.css',import.meta.url),'utf8');
-  assert.match(page,/href="src\/client\/experiments\.css"/);
-  assert.match(styles,/\.experiment-shell/);
-  assert.match(styles,/\.workspace\s*\{/);
+  assert.match(page,/url=product\.html/);
+  assert.match(page,/location\.replace\(new URL\('product\.html'/);
+  assert.doesNotMatch(page,/id="experiment-form"|id="sensitivity-form"/);
 });
 
 test('deterministic intent parser extracts the supported Portuguese supplement experiment and its origins',()=>{

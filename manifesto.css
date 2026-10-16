@@ -9,30 +9,55 @@
 .manifesto-copy { width: min(100%, 930px); margin: 0 auto; }
 .manifesto-copy h1 { max-width: 100%; margin: 0 0 25px; font: 500 clamp(32px, 2.5vw, 36px)/1.25 var(--mono); letter-spacing: -.065em; }
 .manifesto-copy p, .manifesto-continuation p { margin: 0 0 19px; color: var(--manifesto-copy); font: 400 16px/1.75 var(--mono); }
+.manifesto-farm { width: min(100%, 980px); margin: clamp(44px, 7vh, 82px) auto 0; }
+.manifesto-farm img { display: block; width: 100%; height: auto; }
 .manifesto-page a:not(.header-manifesto):not(.header-product) { text-decoration: underline; text-decoration-color: #a5a394; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .18s ease, background-size .2s ease, text-decoration-color .18s ease; }
 .manifesto-page main a:hover, .manifesto-page main a:focus-visible { color: inherit; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 88% / 100% 54%; text-decoration-color: #77745f; }
 .manifesto-page main a:focus-visible { outline: 2px solid #595a50; outline-offset: 3px; }
-.manifesto-worlds { display:grid; grid-template-columns:1.2fr 1fr; align-items:center; gap:40px; width:min(100%,1260px); margin:48px auto 112px; padding:clamp(22px,4vw,54px); border:1px solid var(--manifesto-line); background:var(--manifesto-paper); }
-.manifesto-principle { display:grid; gap:18px; }
-.manifesto-principle span { color:var(--manifesto-muted); font:10px var(--mono); letter-spacing:.1em; }
-.manifesto-principle strong { font-size:clamp(24px,4vw,48px); font-weight:500; letter-spacing:-.05em; line-height:1.12; }
-.manifesto-worlds>p { max-width:360px; margin:0; color:var(--manifesto-muted); font-size:16px; }
-.manifesto-continuation { width: min(100%, 835px); margin: 0 auto; }
+.manifesto-continuation { width: min(100%, 835px); margin: clamp(80px, 12vh, 140px) auto 0; }
 .manifesto-continuation p:last-child { margin-bottom: 0; }
 
 .manifesto-page.has-reveal [data-reveal] { opacity: 0; transform: translateY(10px); transition: opacity .55s ease, transform .55s ease; }
 .manifesto-page.has-reveal [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
-.manifesto-page.has-reveal .manifesto-worlds[data-reveal] { transition-delay: .08s; }
 
 @media (max-width: 760px) {
   .manifesto-page main { padding: 100px 21px 70px; }
   .manifesto-copy h1 { max-width: 590px; margin-bottom: 20px; font-size: clamp(30px, 8vw, 34px); line-height: 1.28; }
   .manifesto-copy p, .manifesto-continuation p { margin-bottom: 16px; font-size: 15px; line-height: 1.75; }
-  .manifesto-worlds { grid-template-columns:1fr; width:calc(100% + 22px); margin:35px -11px 64px; gap:20px; }
+  .manifesto-continuation { margin-top: 64px; }
   .manifesto-continuation { width: 100%; }
+  .manifesto-farm { width: calc(100% + 20px); margin: 40px -10px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .manifesto-page.has-reveal [data-reveal], .manifesto-page.has-reveal [data-reveal].is-visible { opacity: 1; transform: none; transition: none; }
   .manifesto-page main a { transition: none; }
+}
+
+.manifesto-farm { position: relative; width: min(100%, 1060px); }
+.manifesto-farm .farm-scene { display:block; width:100%; height:auto; image-rendering:pixelated; }
+.farm-cattle { position:absolute; inset:0; pointer-events:none; }
+.cow-sprite { position:absolute; width:11%; aspect-ratio:1.5; border:0; border-radius:8px; padding:0; background:transparent; cursor:pointer; pointer-events:auto; transform:translate(-50%,-50%); }
+.cow-sprite img { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:contain; image-rendering:pixelated; pointer-events:none; }
+.cow-sprite .cow-graze { opacity:0; }
+.cow-sprite:is(:hover,:focus-visible) img:first-child { animation:cow-idle-peek 720ms steps(1,end) 2; }
+.cow-sprite:is(:hover,:focus-visible) .cow-graze { animation:cow-graze-peek 720ms steps(1,end) 2; }
+.cow-sprite:focus-visible { outline:2px solid #315b42; outline-offset:2px; }
+.cow-one { left:27%; top:48%; }
+.cow-two { left:39%; top:57%; width:9.5%; }
+.cow-three { left:53%; top:52%; width:10%; }
+.cow-four { left:68%; top:61%; width:11.5%; }
+.cow-five { left:78%; top:49%; width:9%; }
+.manifesto-farm figcaption { position:static; margin:8px 3% 0; color:#697361; font:400 9px/1.4 var(--mono); letter-spacing:.02em; text-align:right; pointer-events:none; }
+@keyframes cow-graze-peek { 0%,24% { opacity:1; } 25%,49% { opacity:0; } 50%,74% { opacity:1; } 75%,100% { opacity:0; } }
+@keyframes cow-idle-peek { 0%,24% { opacity:0; } 25%,49% { opacity:1; } 50%,74% { opacity:0; } 75%,100% { opacity:1; } }
+@media(max-width:760px) {
+  .manifesto-farm { width:calc(100% + 20px); margin:35px -10px 0; }
+  .cow-sprite { width:12%; }
+  .cow-two { width:10.5%; }.cow-three{width:11%;}.cow-four{width:12.5%;}.cow-five{width:10%;}
+  .manifesto-farm figcaption { margin:5px 3% 0; font-size:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .cow-sprite:is(:hover,:focus-visible) img:first-child { animation:none; }
+  .cow-sprite:is(:hover,:focus-visible) .cow-graze { animation:none; }
 }

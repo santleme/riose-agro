@@ -23,7 +23,10 @@ const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
+  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'riose-mark.svg',
+  'assets/riose-cow-cutout.png',
+  'assets/pasture-cattle-map.webp', 'assets/riose-farm-diorama.webp',
+  'assets/riose-farm-pixel-scene.png', 'assets/riose-cow-sprite-idle.png', 'assets/riose-cow-sprite-graze.png',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
@@ -346,6 +349,10 @@ function isLoopbackRequest(request) {
 export function createServer({env = process.env, fetchImpl = fetch} = {}) {
   return createHttpServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
+    if (url.pathname === '/experiments.html' || url.pathname === '/simulator.html') {
+      response.writeHead(308, {location: '/product.html', 'cache-control': 'no-store'});
+      return response.end();
+    }
     if (url.pathname === '/api/native/configured-comparison') {
       if (request.method === 'GET') {
         const runner = nativeComparisonRunner(env, ROOT);

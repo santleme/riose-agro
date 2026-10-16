@@ -1,6 +1,6 @@
 # Riose Agro — experimentos científicos
 
-Riose Agro is a browser-based livestock simulation and experiment workspace. The institutional home introduces the project; `experiments.html` is the quantitative workspace for model comparisons, history, sensitivity analysis, and exports. `product.html` and `simulator.html` redirect older links to that workspace. Current outputs are demonstrative model results, not validated predictions or recommendations.
+Riose Agro is a browser-based livestock simulation and experiment workspace. The institutional home introduces the project and `product.html` is the primary conversational workspace. `scenario-lab.html` remains a direct entry to multi-scenario and BR-CORTE tools; the retired `experiments.html` and `simulator.html` addresses redirect to Product. Current FarmEngine outputs are demonstrative, not validated predictions or recommendations.
 
 ## License and publication status
 
@@ -18,11 +18,11 @@ Requires Node.js 20 or newer. From this directory:
 npm start
 ```
 
-Open the printed local URL and choose `experiments.html`. `product.html` and `simulator.html` remain compatibility redirects. Snapshot review validates a linked file locally and never applies an uploaded file to a simulation. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
+Open the printed local URL and choose Product. Snapshot review validates a linked file locally and never applies an uploaded file to a simulation. The bundled server binds to loopback; exposing it on another host requires `ALLOW_REMOTE_ACCESS=true` because snapshot validation is unauthenticated.
 
-The product contains no farm-scene renderer, map, sprites, atlas, 3D models, or graphical physics. Scientific charts and research-page illustrations remain part of the experiment and institutional pages.
+The Product simulation workspace does not render a farm or use decorative animals as engine state. The Manifesto has a separate illustrative pixel-art farm; those sprites are not observations or simulation outputs. Scientific charts and research-page illustrations remain separate from both.
 
-The product runs comparisons in a Web Worker; when the local native runner is available it can use Rust and otherwise falls back to JavaScript. To select the optional WASM metabolism kernel in that Worker, open `experiments.html?engine=wasm`. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
+The product runs comparisons in a Web Worker; when the local native runner is available it can use Rust and otherwise falls back to JavaScript. `scenario-lab.html` provides multi-scenario comparisons and the conditional BR-CORTE module. `npm run build:wasm` rebuilds the served module and requires the Rust `wasm32-unknown-unknown` target.
 
 `npm run bench:wasm-scenario-browser` compares full scenario compute and Worker costs in Chromium; `npm run bench:wasm-scenario-browser:firefox` selects Firefox. These computational benchmarks do not measure UI rendering.
 
