@@ -11,6 +11,20 @@ test('intent API request rejects extra fields and oversized or empty prompts',()
   assert.equal(validateExperimentInterpretationRequest({prompt:'ok',tools:['run code']}),false);
 });
 
+test('Product can show which assistant is truly configured without exposing credentials', async t => {
+  const server=createServer({env:{LLM_PROVIDER:'groq',GROQ_MODEL:'safe-model',GROQ_API_KEY:'never-return-this'},fetchImpl:async()=>{throw new Error('status must not contact provider');}});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const response=await fetch(`http://127.0.0.1:${server.address().port}/api/assistant-status`);
+  const text=await response.text();
+  assert.equal(response.status,200);
+  assert.deepEqual(JSON.parse(text),{assistant:{available:true,provider:'groq',model:'safe-model'},localPlanner:true,laya:{available:false,status:'experimental-disabled'}});
+  assert.doesNotMatch(text,/never-return-this/);
+  const empty=createServer({env:{},fetchImpl:async()=>{throw new Error('status must not contact provider');}});
+  await new Promise(resolve=>empty.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>empty.close(resolve)));
+  const missing=await fetch(`http://127.0.0.1:${empty.address().port}/api/assistant-status`);
+  assert.deepEqual(await missing.json(),{assistant:{available:false},localPlanner:true,laya:{available:false,status:'experimental-disabled'}});
+});
+
 test('server LLM adapter requests strict JSON and accepts only a validated experiment contract',async()=>{
   let sent;
   const spec=validIntent();

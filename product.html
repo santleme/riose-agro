@@ -39,7 +39,7 @@
       <form id="prompt-form" class="prompt-form">
         <label class="visually-hidden" for="prompt-input">Describe an experiment</label>
         <textarea id="prompt-input" rows="3" maxlength="1200" placeholder="Write your scenario in your own words. Choose an example below if helpful."></textarea>
-        <div class="prompt-footer"><span>Natural language · deterministic local interpretation</span><button class="primary-button" type="submit">Review experiment <span aria-hidden="true">↗</span></button></div>
+        <div class="prompt-footer"><span id="agent-availability" aria-live="polite">Riose experiment agent · checking server configuration</span><button class="primary-button" type="submit">Ask Riose <span aria-hidden="true">↗</span></button></div>
       </form>
       <div class="suggestions" aria-label="Example experiments">
         <button type="button" data-prompt="Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, with supplementation changing from 0.5 to 1.5 kg dry matter per animal per day.">Supplementation under heat <span>↗</span></button>
@@ -63,24 +63,23 @@
         <div class="population-heading"><div><p class="eyebrow">POPULATION WORKSPACE</p><h1 id="workspace-title">Scenario comparison</h1><p id="workspace-meta" class="muted"></p></div><div class="workspace-actions"><button id="return-parent" class="quiet-button" type="button" hidden>Back to parent path</button><button id="replay-branch" class="quiet-button" type="button" hidden>Replay branch</button><button id="export-json" class="quiet-button" type="button">Export data ↓</button></div></div>
         <div class="population-empty" role="status"><span class="empty-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><p>Your population view is ready when you are.</p><small>Review the experiment, then confirm the run. No animal states are shown before the engine returns them.</small></div>
         <div id="analysis-area" class="analysis-area" hidden>
-          <div class="analysis-header"><div><p class="eyebrow">POPULATION JOURNEY</p><h2>Two paths from the same starting herd</h2></div><span class="not-validated">Illustrative engine response</span></div>
+          <div class="analysis-header"><div><p class="eyebrow">POPULATION JOURNEY</p><h2>One herd. Different paths.</h2></div><span class="not-validated">Demonstrative engine</span></div>
           <section class="journey-card" aria-labelledby="journey-chart-title">
             <div class="journey-summary"><p id="journey-summary" class="journey-summary-main">The engine’s population trajectories will appear here after a confirmed run.</p><p id="journey-summary-note" class="journey-summary-note">Both paths use the same starting population and seed. This comparison is demonstrative, not a validated forecast.</p></div>
-            <div class="journey-chart-heading"><h3 id="journey-chart-title">Mean live weight</h3><span>kg per animal · engine state</span></div>
-            <div id="weight-chart" class="weight-chart" role="img" aria-label="Mean live weight for baseline and intervention scenarios over time"></div>
-            <div class="journey-legend"><span><i class="journey-baseline"></i><span id="journey-left-label">Baseline</span></span><span><i class="journey-intervention"></i><span id="journey-right-label">Intervention</span></span></div>
+            <div class="tree-heading"><h3 id="journey-chart-title">Population decision paths</h3><span>Choose a checkpoint to inspect or branch</span></div>
+            <div id="population-tree" class="population-tree" aria-label="Population decision paths"></div>
+            <div class="tree-inspection"><span>Inspect the population at <strong id="day-label">Day 0</strong></span><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available population checkpoint"><div id="timeline-points" class="timeline-points"></div></div>
           </section>
+          <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
           <details id="conditional-cost" class="conditional-cost">
-            <summary>Estimate conditional supplement expense</summary>
-            <p>Uses supplement supplied as kg dry matter per animal per day, herd size, and this experiment’s applicable days. Enter your price; no FarmEngine cost is used.</p>
+            <summary>Compare supplied supplement and conditional expense</summary>
+            <p>Uses the entered supplement amount, animals, applicable days and your price per kg of dry matter. This arithmetic does not use engine cost or estimate intake, production or profit.</p>
             <form id="conditional-cost-form">
               <label for="supplement-price">Your price per kg of supplement dry matter</label>
-              <div class="cost-fields"><input id="supplement-price" name="price" type="number" min="0" max="1000000000" step="any" required inputmode="decimal" placeholder="Enter price"><label for="supplement-currency">Currency</label><input id="supplement-currency" name="currency" type="text" minlength="3" maxlength="3" pattern="[A-Za-z]{3}" autocomplete="off" required placeholder="BRL" aria-label="Currency, three-letter ISO code"><button class="quiet-button" type="submit">Review cost</button></div>
+              <div class="cost-fields"><input id="supplement-price" name="price" type="number" min="0" max="1000000000" step="any" required inputmode="decimal" placeholder="Enter price"><label for="supplement-currency">Currency</label><input id="supplement-currency" name="currency" type="text" minlength="3" maxlength="3" pattern="[A-Za-z]{3}" autocomplete="off" required placeholder="BRL" aria-label="Currency, three-letter ISO code"><button class="quiet-button" type="submit">Calculate from my inputs</button></div>
             </form>
             <div id="conditional-cost-result" class="conditional-cost-result" aria-live="polite"><p>No monetary amount is calculated until you provide both a price and currency.</p></div>
           </details>
-          <div class="timeline-row"><div class="timeline-label"><span>Inspect the population at</span><strong id="day-label">Day 0</strong></div><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Choose an available simulation day"><div id="timeline-points" class="timeline-points"></div></div>
-          <div class="branch-action"><p>Choose a point before the end to explore another path from that population state.</p><button id="open-branch" class="quiet-button" type="button" disabled>Explore another path from Day 0</button></div>
           <details id="population-explorer" class="analysis-more population-explorer"><summary>Explore individual animals and recorded states</summary>
             <div class="control-row">
               <label>Color by <select id="metric-select"><option value="weight">Live weight · kg</option><option value="delta">Weight difference · kg</option><option value="energy">Energy · index</option><option value="thirst">Thirst · index</option></select></label>

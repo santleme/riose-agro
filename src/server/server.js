@@ -349,6 +349,16 @@ function isLoopbackRequest(request) {
 export function createServer({env = process.env, fetchImpl = fetch} = {}) {
   return createHttpServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
+    if (url.pathname === '/api/assistant-status' && request.method === 'GET') {
+      const provider = env.LLM_PROVIDER ?? 'none';
+      const settings = {
+        groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+        huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? 'openai/gpt-oss-120b:cheapest'},
+      }[provider];
+      const configured = Boolean(settings?.apiKey);
+      return sendJson(response, 200, {assistant: configured ? {available: true, provider, model: settings.model} : {available: false},
+        localPlanner: true, laya: {available: false, status: 'experimental-disabled'}});
+    }
     if (url.pathname === '/experiments.html' || url.pathname === '/simulator.html') {
       response.writeHead(308, {location: '/product.html', 'cache-control': 'no-store'});
       return response.end();

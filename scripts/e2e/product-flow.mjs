@@ -25,9 +25,13 @@ try{
     };
   });
   const errors=[];
+  const agentRequests=[];
   page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
   page.on('pageerror',error=>errors.push(error.message));
+  page.on('request',request=>{if(request.url().endsWith('/api/decision-assistant'))agentRequests.push(request.url());});
   await page.goto(`${root}/product.html`,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#agent-availability').textContent.includes('local planner available'));
+  assert.match(await page.locator('#agent-availability').innerText(),/server AI not configured/,'the landing view must not imply a remote agent is active without a server credential');
   assert.equal(await page.locator('.site-header').evaluate(node=>node.getBoundingClientRect().height),64,'desktop header band should retain its compact height');
   assert.equal(await page.locator('.header-wordmark').evaluate(node=>getComputedStyle(node).fontSize),'34.6px','desktop wordmark should retain its current enlarged size');
   assert.equal(await page.locator('.header-manifesto').evaluate(node=>getComputedStyle(node).fontSize),'20px','desktop navigation text should retain its current enlarged size');
@@ -54,7 +58,8 @@ try{
   await page.locator('.review-details summary').click();
   const fullReview=await page.locator('.spec-card').innerText();
   assert.match(fullReview,/Nelore · prompt metadata only/);
-  assert.match(review,/No AI provider is configured/);
+  assert.match(review,/provider_not_configured/);
+  assert.equal(agentRequests.length,1,'Product must submit the request to the decision-agent endpoint');
   assert.equal(await page.locator('.animal-cell').count(),0,'review must not execute');
   await page.locator('.review-details summary').click();
   await page.screenshot({path:`${evidence}/02-product-review.png`,fullPage:true});
@@ -65,7 +70,8 @@ try{
   assert.match(await page.locator('.spec-card').innerText(),/30 days/,'in-flight follow-up must not replace the specification for the running result');
   await page.locator('#analysis-area').waitFor({state:'visible'});
   assert.equal(await page.locator('#analysis-area').isVisible(),true);
-  assert.equal(await page.locator('#weight-chart').isVisible(),true,'the question-relevant population trajectory is the primary result visual');
+  assert.equal(await page.locator('#population-tree').isVisible(),true,'the population path tree is the primary result visual');
+  assert.equal(await page.locator('.tree-node').count(),4,'the tree presents actual start and end observations for both paths');
   assert.match(await page.locator('#journey-summary').innerText(),/demonstrative engine/);
   assert.equal(await page.locator('#population-explorer').evaluate(node=>node.open),false,'individual grid is progressive disclosure, not a competing dashboard');
   assert.equal(await page.locator('#population-grid').isVisible(),false);
@@ -75,7 +81,7 @@ try{
   assert.equal(await page.locator('.spec-card .primary-button').count(),0,'completed review must not still offer the same run action');
   assert.match(await page.locator('.review-state').innerText(),/Comparison complete/);
   assert.match(await page.locator('#workspace-meta').innerText(),/200 animals · 30 days/);
-  assert.match(await page.locator('.journey-chart-heading').innerText(),/kg per animal/);
+  assert.match(await page.locator('.tree-heading').innerText(),/checkpoint/);
   await page.screenshot({path:`${evidence}/03-product-results.png`,fullPage:true});
   assert.equal(await page.locator('#supplement-price').inputValue(),'','cost inputs must have no hidden or assumed price');
   await page.locator('#conditional-cost > summary').click();
@@ -113,9 +119,9 @@ try{
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth===innerWidth),true,'mobile results workspace must not overflow horizontally');
   assert.equal(await page.locator('#population-explorer').evaluate(node=>node.open),false,'mobile result keeps the dense per-animal grid closed by default');
   await page.emulateMedia({reducedMotion:'reduce'});
-  assert.equal(await page.locator('#weight-chart .journey-marker').evaluate(node=>getComputedStyle(node).transitionDuration),'0s','timeline marker transitions must respect reduced motion');
+  assert.equal(await page.locator('.tree-path').first().evaluate(node=>getComputedStyle(node).animationName),'none','tree reveals must respect reduced motion');
   await page.emulateMedia({reducedMotion:'no-preference'});
-  assert.equal(await page.locator('#weight-chart .journey-marker').evaluate(node=>getComputedStyle(node).transitionDuration),'0.18s','timeline marker uses a short functional transition');
+  assert.equal(await page.locator('.tree-path').first().evaluate(node=>getComputedStyle(node).animationName),'tree-reveal','tree reveals use a short functional transition');
   await page.locator('.conversation').evaluate(el=>{el.scrollTop=el.scrollHeight;});
   await page.waitForFunction(()=>document.querySelector('#live-status').textContent==='');
   await page.screenshot({path:`${evidence}/04-product-workspace-mobile.png`,fullPage:true});
@@ -132,9 +138,9 @@ try{
   const downloadPromise=page.waitForEvent('download');
   await page.locator('#export-json').click();
   assert.equal((await downloadPromise).suggestedFilename(),'riose-population-comparison.json');
-  const chartMarkerStart=await page.locator('#weight-chart .journey-marker').getAttribute('transform');
+  const selectedTreeDay=await page.locator('.tree-node.selected').first().getAttribute('data-day');
   await page.locator('#timeline').evaluate(input=>{input.value=String(Number(input.max)-1);input.dispatchEvent(new Event('input',{bubbles:true}));});
-  assert.notEqual(await page.locator('#weight-chart .journey-marker').getAttribute('transform'),chartMarkerStart,'timeline input moves the SVG inspection marker along the actual series');
+  assert.notEqual(await page.locator('.tree-node.selected').first().getAttribute('data-day'),selectedTreeDay,'timeline input selects the matching checkpoint in both actual population paths');
   const selectedDay=await page.locator('#day-label').innerText();
   assert.match(await page.locator('#journey-summary').innerText(),new RegExp(`at ${selectedDay}`,'i'),'summary must follow the selected engine checkpoint');
   assert.equal(await page.locator('#open-branch').isEnabled(),true,'a checkpoint before the final day can start a counterfactual branch');
@@ -279,7 +285,7 @@ try{
   await page.locator('.theme-toggle').click();
   assert.equal(await page.locator('html').getAttribute('data-theme'),'light','user should be able to return to the light theme');
   assert.deepEqual(errors,[],'browser console should be free of errors');
-  console.log('Product E2E PASS: prompt → review → explicit paired run → population trajectory → checkpoint branch review/confirm/run/export/replay → animal inspection → revision/replay; home and manifesto responsive asset/header checks pass.');
+  console.log('Product E2E PASS: prompt → decision agent/fallback → review → explicit paired run → branching population journey → checkpoint branch review/confirm/run/export/replay → animal inspection → revision/replay; home and manifesto responsive asset/header checks pass.');
 }finally{
   await browser?.close();
   await new Promise(resolve=>server.close(resolve));

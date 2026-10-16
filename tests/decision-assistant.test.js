@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {emptyDecisionPlan, reconcileDecisionPlan, validateDecisionPlan, decisionPlanToFarmIntent, classifyIntentLocally} from '../src/client/decision-plan.js';
+import {emptyDecisionPlan, deterministicDecisionPlan, reconcileDecisionPlan, validateDecisionPlan, decisionPlanToFarmIntent, classifyIntentLocally} from '../src/client/decision-plan.js';
 import {runDecisionAssistant, validateDecisionRequest} from '../src/server/decision-assistant.js';
 import {requestStructuredOutput} from '../src/server/structured-provider.js';
 import {createSingleReport, evaluateSingleInputs, validateSingleReport} from '../src/client/decision-single-report.js';
@@ -68,6 +68,16 @@ test('real adapter path produces a non-executing reviewed proposal and safe fall
   assert.equal(fallback.source, 'deterministic'); assert.equal(fallback.executed, false);
   assert.equal(fallback.fallbackReason, 'provider_network_or_response');
   assert.ok(!JSON.stringify(fallback).includes('secret should'));
+});
+
+test('deterministic decision agent supports Product paired scenarios without weakening Scenario Lab multi-arm requirements', () => {
+  const pair = deterministicDecisionPlan('Compare a pasture herd of 200 cattle over 30 days in hot weather, from 0.5 to 1.5 kg DM per animal per day.');
+  assert.equal(pair.capability, 'farm_pair_comparison');
+  assert.deepEqual(pair.parameters.supplementLevels, [.5, 1.5]);
+  assert.deepEqual(reconcileDecisionPlan(pair, 'Compare a pasture herd of 200 cattle over 30 days in hot weather, from 0.5 to 1.5 kg DM per animal per day.').missingInputs, []);
+  const multi = deterministicDecisionPlan('Compare 200 cattle over 30 days in hot weather using 0.5 kg DM per animal per day, 1.0 kg DM per animal per day and 1.5 kg DM per animal per day.');
+  assert.equal(multi.capability, 'farm_comparison');
+  assert.equal(multi.parameters.supplementLevels.length, 3);
 });
 
 test('unsupported predictions and prompt injection cannot obtain execution authority', async () => {
