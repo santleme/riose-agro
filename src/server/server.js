@@ -23,7 +23,7 @@ const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'riose-mark.svg',
+  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'theme.css', 'riose-mark.svg',
   'assets/riose-cow-cutout.png',
   'assets/pasture-cattle-map.webp', 'assets/riose-farm-diorama.webp',
   'assets/riose-farm-pixel-scene.png', 'assets/riose-cow-sprite-idle.png', 'assets/riose-cow-sprite-graze.png',

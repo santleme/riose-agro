@@ -12,6 +12,8 @@ test('Product uses the institutional header and retired navigation routes forwar
   const homeHtml = await home.text();
   assert.match(homeHtml, /Riose/);
   assert.match(homeHtml, /href="product\.html"/);
+  assert.match(homeHtml, /class="theme-toggle"[^>]*>dark<\/button>/);
+  assert.match(homeHtml, /header-utilities/);
   assert.match(homeHtml, /class="hero-scene"/);
   assert.match(homeHtml, /assets\/riose-cow-cutout\.png/);
   assert.match(homeHtml, /assets\/pasture-cattle-map\.webp/);
@@ -56,7 +58,7 @@ test('Product uses the institutional header and retired navigation routes forwar
     assert.match(response.headers.get('content-type') ?? '', /^image\/png/);
     assert.ok((await response.arrayBuffer()).byteLength > 0, `${path} should not be empty`);
   }
-  for (const path of ['/product.css', '/scenario-lab.css', '/src/client/scenario-lab-app.js', '/src/client/scenario-set.js', '/src/client/scenario-set-budget.js', '/src/client/scenario-lab-intent.js', '/src/client/scenario-lab-integrity.js', '/src/client/br-corte-scenario.js', '/scientific/br_corte_dmi_adapter.js', '/scientific/model-contract.js', '/scientific/br_corte_pasture_dmi.js', '/src/client/product-app.js', '/src/client/experiments-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/population-experiment.js', '/src/client/simulation-report.js']) {
+  for (const path of ['/product.css', '/scenario-lab.css', '/theme.css', '/header-interaction.js', '/src/client/scenario-lab-app.js', '/src/client/scenario-set.js', '/src/client/scenario-set-budget.js', '/src/client/scenario-lab-intent.js', '/src/client/scenario-lab-integrity.js', '/src/client/br-corte-scenario.js', '/scientific/br_corte_dmi_adapter.js', '/scientific/model-contract.js', '/scientific/br_corte_pasture_dmi.js', '/src/client/product-app.js', '/src/client/experiments-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/population-experiment.js', '/src/client/simulation-report.js']) {
     assert.equal((await fetch(`${root}${path}`)).status, 200, `${path} should be served`);
   }
   assert.equal((await fetch(`${root}/assets/riose-cow-cutout.png`)).status, 200, 'institutional landing illustration should be served');

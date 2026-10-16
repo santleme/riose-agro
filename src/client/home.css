@@ -28,18 +28,18 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
   transition: background-color .24s ease, backdrop-filter .24s ease;
   pointer-events: none;
 }
-.header-manifesto { position: absolute; top: 50%; left: clamp(24px, 5.35vw, 80px); color: #64655e; font: 11px var(--mono); letter-spacing: .025em; pointer-events: auto; transform: translateY(-50%); }
-.header-mark-group { position: absolute; top: 50%; left: 50%; display: flex; align-items: baseline; gap: 10px; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: auto; }
+.header-manifesto { position: absolute; top: 50%; left: clamp(24px, 5.35vw, 80px); color: #64655e; font: 14.3px var(--mono); letter-spacing: .025em; pointer-events: auto; transform: translateY(-50%); }
+.header-mark-group { position: absolute; top: 50%; left: 50%; display: flex; align-items: baseline; gap: 13px; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: auto; }
 .header-name-control { position: relative; display: inline-flex; align-items: baseline; }
-.header-wordmark { position: relative; z-index: 1; display: block; padding: 0; border: 0; background: transparent; color: var(--ink); font: 700 19px/1.05 var(--sans); letter-spacing: -.065em; cursor: help; pointer-events: auto; }
+.header-wordmark { position: relative; z-index: 1; display: block; padding: 0; border: 0; background: transparent; color: var(--ink); font: 700 24.7px/1.05 var(--sans); letter-spacing: -.065em; cursor: help; pointer-events: auto; }
 .header-wordmark::before { position: absolute; z-index: -1; inset: 0 -.08em; content: ""; background: linear-gradient(#e9dfaa, #e9dfaa) no-repeat left 86% / 0% 58%; transition: background-size .24s ease; }
 .header-wordmark:hover::before, .header-wordmark:focus-visible::before, .header-name-control.is-open .header-wordmark::before { background-size: 100% 58%; }
-.header-product { position: relative; align-self: baseline; color: #66675f; font: 11px/1 var(--mono); pointer-events: auto; }
-.header-manifesto::after, .header-product::after { position: absolute; right: 0; bottom: -20px; left: 0; height: 1px; content: ""; background: currentColor; transform: scaleX(0); transform-origin: left center; transition: transform .22s cubic-bezier(.22, 1, .36, 1); }
+.header-product { position: relative; align-self: baseline; color: #66675f; font: 14.3px/1 var(--mono); pointer-events: auto; }
+.header-manifesto::after, .header-product::after { position: absolute; right: 0; bottom: -26px; left: 0; height: 1px; content: ""; background: currentColor; transform: scaleX(0); transform-origin: left center; transition: transform .22s cubic-bezier(.22, 1, .36, 1); }
 .header-manifesto[aria-current="page"]::after, .header-product[aria-current="page"]::after { transform: scaleX(1); }
 .header-manifesto:hover::after, .header-manifesto:focus-visible::after, .header-product:hover::after, .header-product:focus-visible::after { transform: scaleX(1); }
-.header-place { margin-left: auto; color: #77766f; font: 11px var(--mono); letter-spacing: .025em; text-transform: lowercase; }
-.header-place { pointer-events: auto; }
+.header-utilities { margin-left: auto; display: flex; align-items: center; gap: 16px; pointer-events: auto; }
+.header-place { color: #77766f; font: 14.3px var(--mono); letter-spacing: .025em; text-transform: lowercase; }
 .site-header.is-locking .header-wordmark { opacity: 0; }
 .site-header.is-scrolled { background-color: rgb(247 247 244 / .86); backdrop-filter: blur(5px); }
 .header-manifesto, .header-product { transition: color .18s ease; }
@@ -167,11 +167,13 @@ body.is-scrolled .hero-scene { transform: translate3d(-50%, 55px, 0) scale(.96);
 @media (max-width: 600px) {
   html { scroll-padding-top: 60px; }
   .site-header { height: 60px; padding: 0 20px; }
-  .header-wordmark { font-size: 16px; }
-  .header-place { font-size: 7px; }
-  .header-manifesto { left: 20px; font-size: 8px; }
-  .header-product { font-size: 8px; }
-  .header-mark-group { gap: 8px; }
+  .header-wordmark { font-size: 20.8px; }
+  .header-place { font-size: 9.1px; }
+  .header-manifesto { left: 20px; font-size: 10.4px; }
+  .header-product { font-size: 10.4px; }
+  .header-mark-group { gap: 10px; }
+  .header-manifesto::after, .header-product::after { bottom: -24px; }
+  .header-utilities { gap: 10px; }
   .name-definition { top: calc(100% + 11px); width: min(350px, calc(100vw - 32px)); padding: 11px 14px 12px; border-radius: 13px; }
   .definition-title { margin-bottom: 2px; font-size: 16px; }
   .definition-meta { margin-bottom: 7px; font-size: 8px; }

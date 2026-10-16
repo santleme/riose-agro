@@ -27,6 +27,18 @@ try{
   page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(`${root}/product.html`,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('.site-header').evaluate(node=>node.getBoundingClientRect().height),64,'desktop header band should retain its compact height');
+  assert.equal(await page.locator('.header-wordmark').evaluate(node=>getComputedStyle(node).fontSize),'24.7px','desktop wordmark should be enlarged by 30%');
+  assert.equal(await page.locator('.header-manifesto').evaluate(node=>getComputedStyle(node).fontSize),'14.3px','desktop navigation text should be enlarged by 30%');
+  assert.equal(await page.evaluate(()=>document.querySelector('.site-header').getBoundingClientRect().bottom<=document.querySelector('.welcome h1').getBoundingClientRect().top),true,'desktop Product content should clear the fixed header');
+  for(const width of [640,390,320]){
+    await page.setViewportSize({width,height:900});
+    const layout=await page.evaluate(()=>{const rect=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {left:r.left,right:r.right}};return {viewport:innerWidth,document:document.documentElement.scrollWidth,left:rect('.header-manifesto'),brand:rect('.header-mark-group'),utilities:rect('.header-utilities'),buttonVisible:document.querySelector('.theme-toggle').getBoundingClientRect().width>0}});
+    assert.equal(layout.document,layout.viewport,`header should not cause mobile overflow at ${width}px`);
+    assert.equal(layout.left.right<=layout.brand.left&&layout.brand.right<=layout.utilities.left,true,`header groups should not overlap at ${width}px`);
+    assert.equal(layout.buttonVisible,true,`theme control should remain available at ${width}px`);
+  }
+  await page.setViewportSize({width:1440,height:1100});
   assert.equal(await page.locator('#analysis-area').isVisible(),false,'initial state must not show uncomputed analysis');
   await page.screenshot({path:`${evidence}/01-product-empty.png`,fullPage:true});
   const prompt='Compare a pasture herd of 200 Nelore cattle over 30 days in hot weather, changing supplementation from 0.5 to 1.5 kg DM per animal per day.';
@@ -91,11 +103,16 @@ try{
   await page.setViewportSize({width:390,height:844});
   await page.goto(`${root}/product.html`,{waitUntil:'domcontentloaded'});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'mobile page must not overflow horizontally');
+  assert.equal(await page.locator('.site-header').evaluate(node=>node.getBoundingClientRect().height),60,'mobile header band should retain its compact height');
+  assert.equal(await page.locator('.header-wordmark').evaluate(node=>getComputedStyle(node).fontSize),'20.8px','mobile wordmark should be enlarged by 30%');
   assert.equal(await page.evaluate(()=>document.querySelector('.welcome .eyebrow').getBoundingClientRect().top>=document.querySelector('.site-header').getBoundingClientRect().bottom),true,'mobile Product content should clear the fixed header');
   await page.screenshot({path:`${evidence}/05-product-empty-mobile.png`,fullPage:true});
   await page.goto(`${root}/home.html`,{waitUntil:'domcontentloaded'});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth===innerWidth),true,'mobile home should not overflow horizontally');
   assert.equal(await page.locator('.hero-monogram').innerText(),'®','hero should use the registered Riose mark');
+  await page.locator('.theme-toggle').click();
+  assert.match(await page.locator('.hero-wordmark').evaluate(node=>getComputedStyle(node).color),/rgb\(238, 239, 233\)/,'dark mode should keep the home wordmark legible');
+  await page.locator('.theme-toggle').click();
   assert.equal(await page.locator('.experiment-preview-map img').evaluate(img=>img.complete&&img.naturalWidth>0),true,'population preview map should load');
   assert.equal(await page.locator('a').evaluateAll(links=>links.some(link=>link.textContent.trim().toLowerCase()==='data')),false,'home header should not expose the retired Data tab');
   await page.setViewportSize({width:768,height:1024});
@@ -132,6 +149,17 @@ try{
   await page.emulateMedia({reducedMotion:'reduce'});
   assert.equal(await graze.evaluate(node=>getComputedStyle(node).animationName),'none','reduced-motion preference should disable the pose animation');
   await page.emulateMedia({reducedMotion:'no-preference'});
+  const themeToggle=page.locator('.theme-toggle');
+  await themeToggle.click();
+  assert.equal(await page.locator('html').getAttribute('data-theme'),'dark','theme switch should activate dark mode');
+  assert.equal(await themeToggle.getAttribute('aria-pressed'),'true','dark mode should be exposed to assistive technology');
+  assert.equal(await themeToggle.innerText(),'light','dark mode control should offer the light mode action');
+  assert.match(await page.locator('body').evaluate(node=>getComputedStyle(node).backgroundColor),/rgb\(23, 25, 22\)/,'dark mode should change the page surface, not only the toggle label');
+  assert.match(await page.locator('html').evaluate(node=>getComputedStyle(node).backgroundColor),/rgb\(23, 25, 22\)/,'dark mode should cover the full document canvas');
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('html').getAttribute('data-theme'),'dark','selected theme should persist across navigation');
+  await page.locator('.theme-toggle').click();
+  assert.equal(await page.locator('html').getAttribute('data-theme'),'light','user should be able to return to the light theme');
   assert.deepEqual(errors,[],'browser console should be free of errors');
   console.log('Product E2E PASS: prompt → review → explicit paired run → 200 animal grid → inspection/export → revision/re-run → local replay; home and manifesto responsive assets/header checks pass.');
 }finally{
