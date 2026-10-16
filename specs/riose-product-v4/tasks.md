@@ -117,4 +117,4 @@ Implementation scope: Strict non-executing plan schema, model applicability, cla
 Acceptance criteria: User prompts select existing capability, missing/ambiguous inputs remain missing, no model-generated scientific outputs; all execution remains explicit; current results survive provider failure; example/default provenance preserved.
 Required tests: malicious/invalid plans, applicability and missing data, follow-up edits, safe errors, browser real provider flow and regression.
 Evidence: actual provider metadata, E2E and screenshots, tests and `progress.md`.
-Status: READY.
+Status: VALIDATING (strict planning/evidence endpoint and Product conversation implemented; real Groq UI and scientific flows passed; final regression and SDD evidence consolidation in progress).

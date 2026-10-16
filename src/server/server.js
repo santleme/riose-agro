@@ -11,6 +11,7 @@ import {executeNativeConfiguredComparison, nativeComparisonAvailable, nativeComp
 import {validateExperimentSpecification} from '../client/population-experiment.js';
 import {consumeBehaviorResearchRateLimit, requestBehaviorExperimentExecution, runBehaviorResearchAssistant, validateBehaviorExecutionRequest} from './behavior-research-assistant.js';
 import {interpretScenarioLabPromptWithProvider, validateScenarioLabInterpretationRequest} from './scenario-lab-ai.js';
+import {runDecisionAssistant, validateDecisionRequest} from './decision-assistant.js';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
@@ -418,6 +419,20 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
         return sendJson(response, 200, result);
       } catch (error) {
         return sendJson(response, error.status ?? 503, {available: false, error: error.status === 413 ? 'request_too_large' : 'scenario_lab_interpretation_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/decision-assistant' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) return sendJson(response, 429, {error: 'decision_assistant_rate_limit'});
+      try {
+        const input = await readJson(request);
+        if (!validateDecisionRequest(input)) return sendJson(response, 400, {error: 'invalid_decision_request'});
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const settings = {groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? ''}}[provider] ?? {};
+        return sendJson(response, 200, await runDecisionAssistant(input, {provider, ...settings, fetchImpl}));
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {error: 'decision_assistant_unavailable', executed: false});
       }
     }
     if (url.pathname === '/api/behavior-research-assistant' && request.method === 'POST') {

@@ -1,5 +1,15 @@
 # Product V4 progress
 
+## 2026-10-15 — Hybrid AI activation (implementation verified; release checks in progress)
+
+- Preserved branch and 49 local commits at starting HEAD `81b4aa6`. Froze the routing protocol/32 bilingual labels in `ed21687` before Laya inference. No model tuning or thresholds were changed after final-case observation.
+- Used the explicitly authorized credentials through hidden terminal input into the Node process environment, with no secret files or command arguments. Groq model discovery and HF authentication both returned HTTP 200; Groq lists `openai/gpt-oss-20b`. Generic terminal children do not inherit the separately launched Node watcher's environment. No secret was copied into source, output, browser state or artifacts.
+- Actual Groq interpretation reached Product review and explicit execution, population results, grounded inspection, export/replay; complete live UI report is `docs/evidence/product-v4-live-ai-e2e-v1.json`. Additional real BR-CORTE sensitivity, conditional costs and mobile UI passed in `product-v4-live-scientific-v1.json`. Provider fixtures remain explicitly separate tests.
+- Added strict decision plans and independent capability, units, role, range, currency and applicability checks. The model produces input proposals/evidence IDs, not scientific numbers or scientific prose. Authoritative model limitations and numerical differences are rendered locally from registered evidence/browser-run summaries. New single BR-CORTE reports preserve exact registered implementation provenance and require explicit replay.
+- Live diagnosis fixed Groq's omission of nullable fields via a complete required-key template, and removed irrelevant provider-generated missing-input requirements. Shared transport captures sanitized status/latency/token usage, rejects incomplete or oversized responses, has finite timeouts and no retries.
+- Scientific gates unchanged: FarmEngine demonstrative; BR-CORTE conditional on supplied ADG; behavioral NO-GO; P3-007 shared-production budget and P3-008 independent review remain blocked.
+- Full Node regression passed 522/522 after transport changes; focused decision/provider tests passed 17/17. Final existing E2E and Laya evidence consolidation continue below in the closing handoff.
+
 ## 2026-10-15 — Live provider readiness recheck
 
 - Rechecked environment safely by reporting only presence: `GROQ_API_KEY`, `HF_TOKEN`, `LLM_PROVIDER`, `GROQ_MODEL`, `HF_MODEL`, and `LLM_MODEL` were all absent from the process environment. No secret values were read or emitted. No cloud-runtime secret configuration control is exposed in this session.
