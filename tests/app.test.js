@@ -63,6 +63,12 @@ test('Product uses the institutional header and retired navigation routes forwar
   for (const path of ['/product.css', '/scenario-lab.css', '/theme.css', '/header-interaction.js', '/src/client/scenario-lab-app.js', '/src/client/scenario-set.js', '/src/client/scenario-set-budget.js', '/src/client/scenario-lab-intent.js', '/src/client/scenario-lab-integrity.js', '/src/client/br-corte-scenario.js', '/scientific/br_corte_dmi_adapter.js', '/scientific/model-contract.js', '/scientific/br_corte_pasture_dmi.js', '/src/client/product-app.js', '/src/client/experiments-app.js', '/src/client/engine.js', '/src/client/worker.js', '/src/client/population-experiment.js', '/src/client/simulation-report.js']) {
     assert.equal((await fetch(`${root}${path}`)).status, 200, `${path} should be served`);
   }
+  for (const [path, mediaType] of [['/docs/revisao-independente-caso.md', /^text\/markdown/], ['/data/perea-rangeland-behavior/README_V2.txt', /^text\/plain/]]) {
+    const response = await fetch(`${root}${path}`);
+    assert.equal(response.status, 200, `${path} should be reachable from its cited research page`);
+    assert.match(response.headers.get('content-type') ?? '', mediaType);
+    assert.ok((await response.arrayBuffer()).byteLength > 0, `${path} should not be empty`);
+  }
   assert.equal((await fetch(`${root}/assets/riose-cow-cutout.png`)).status, 200, 'institutional landing illustration should be served');
   assert.equal((await fetch(`${root}/assets/pasture-cattle-map.webp`)).status, 200, 'population map thumbnail should be served');
   assert.equal((await fetch(`${root}/assets/riose-farm-diorama.webp`)).status, 200, 'manifesto farm illustration should be served');
