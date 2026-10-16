@@ -70,6 +70,30 @@ test('real adapter path produces a non-executing reviewed proposal and safe fall
   assert.ok(!JSON.stringify(fallback).includes('secret should'));
 });
 
+test('AMD Radeon Token Factory uses bounded JSON-object mode and still requires independent validation', async () => {
+  let request;
+  const amdOptions = options(draft(), {provider: 'radeon', model: 'DeepSeek-V4-Flash', fetchImpl: async (url, init) => {
+    request = {url, body: JSON.parse(init.body), authorization: init.headers.authorization};
+    return {ok: true, status: 200, json: async () => ({choices: [{finish_reason: 'stop', message: {content: JSON.stringify(draft())}}], usage: {prompt_tokens: 100, completion_tokens: 30, total_tokens: 130}})};
+  }});
+  const result = await runDecisionAssistant({prompt}, amdOptions);
+  assert.equal(request.url, 'https://developer.amd.com.cn/radeon/api/v1/chat/completions');
+  assert.equal(request.body.model, 'DeepSeek-V4-Flash');
+  assert.equal(request.body.max_tokens, 1200);
+  assert.deepEqual(request.body.response_format, {type: 'json_object'});
+  assert.equal(request.body.reasoning_effort, 'none');
+  assert.equal(request.body.tools, undefined);
+  assert.equal(request.authorization, 'Bearer test-server-only');
+  assert.equal(result.source, 'llm'); assert.equal(result.executed, false);
+  assert.equal(result.plan.parameters.populationCount, 200);
+
+  const invalidPlan = {...draft(), parameters: {...draft().parameters, supplementLevels: [0.5, 9]}};
+  const rejected = await runDecisionAssistant({prompt}, options(draft(), {provider: 'radeon', model: 'DeepSeek-V4-Flash',
+    fetchImpl: async () => ({ok: true, status: 200, json: async () => ({choices: [{finish_reason: 'stop', message: {content: JSON.stringify(invalidPlan)}}]})})}));
+  assert.equal(rejected.source, 'deterministic'); assert.equal(rejected.executed, false);
+  assert.equal(rejected.fallbackReason, 'provider_plan_rejected');
+});
+
 test('deterministic decision agent supports Product paired scenarios without weakening Scenario Lab multi-arm requirements', () => {
   const pair = deterministicDecisionPlan('Compare a pasture herd of 200 cattle over 30 days in hot weather, from 0.5 to 1.5 kg DM per animal per day.');
   assert.equal(pair.capability, 'farm_pair_comparison');

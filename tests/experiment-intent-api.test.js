@@ -25,6 +25,16 @@ test('Product can show which assistant is truly configured without exposing cred
   assert.deepEqual(await missing.json(),{assistant:{available:false},localPlanner:true,laya:{available:false,status:'experimental-disabled'}});
 });
 
+test('assistant status recognizes AMD Radeon configuration without exposing its key', async t => {
+  const server=createServer({env:{LLM_PROVIDER:'radeon',RADEON_MODEL:'DeepSeek-V4-Flash',RADEON_API_KEY:'never-return-this'},fetchImpl:async()=>{throw new Error('status must not contact provider');}});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const response=await fetch(`http://127.0.0.1:${server.address().port}/api/assistant-status`);
+  const text=await response.text();
+  assert.equal(response.status,200);
+  assert.deepEqual(JSON.parse(text),{assistant:{available:true,provider:'radeon',model:'DeepSeek-V4-Flash'},localPlanner:true,laya:{available:false,status:'experimental-disabled'}});
+  assert.doesNotMatch(text,/never-return-this/);
+});
+
 test('server LLM adapter requests strict JSON and accepts only a validated experiment contract',async()=>{
   let sent;
   const spec=validIntent();

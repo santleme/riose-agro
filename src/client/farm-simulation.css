@@ -1,0 +1,137 @@
+:root{--farm-ink:#21382d;--farm-muted:#718075;--farm-line:rgba(39,62,46,.14);--farm-paper:#f7f7f2;--farm-moss:#587848;--farm-clay:#d99e56}
+.welcome{width:min(1120px,calc(100% - 44px));padding:104px 0 58px}
+.welcome h1{font-size:clamp(34px,4vw,54px);letter-spacing:-2.5px;color:var(--farm-ink)}
+.welcome-copy{margin:12px auto 22px;font-size:15px;color:var(--farm-muted)}
+.welcome-farm{position:relative;width:min(920px,100%);margin:0 auto 18px;overflow:hidden;border-radius:24px;isolation:isolate;background:#f5f3e9}
+.welcome-farm-land{display:block;width:100%;height:auto;aspect-ratio:1799/874;object-fit:cover}
+.welcome-farm-animals,.farm-stage-animals{position:absolute;inset:0;pointer-events:none}
+.farm-animal{position:absolute;left:var(--animal-x);top:var(--animal-y);z-index:2;width:clamp(70px,9vw,126px);height:clamp(52px,6.2vw,86px);padding:0;border:0;background:transparent;transform:translate(-50%,-50%);cursor:pointer;pointer-events:auto;transition:filter 180ms ease,transform 220ms cubic-bezier(.22,1,.36,1)}
+.farm-animal img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 5px 3px rgba(28,39,25,.16));user-select:none}
+.farm-animal:hover,.farm-animal:focus-visible{z-index:5;filter:drop-shadow(0 0 8px rgba(255,255,255,.92));transform:translate(-50%,-56%) scale(1.08);outline:none}
+.farm-animal.is-selected{z-index:4;filter:drop-shadow(0 0 8px rgba(255,255,255,.95)) drop-shadow(0 0 15px rgba(49,104,70,.62))}
+.farm-animal.is-selected:after{content:"";position:absolute;inset:6px 14px 0;border:1px solid rgba(255,255,255,.86);border-radius:50%;pointer-events:none}
+.farm-animal[data-activity="grazing"]:hover img,.farm-animal[data-activity="grazing"]:focus-visible img{animation:animal-graze 720ms ease-in-out 2;transform-origin:28% 58%}
+.farm-animal[data-activity="drinking"]:hover img,.farm-animal[data-activity="drinking"]:focus-visible img{animation:animal-drink 620ms ease-in-out 2;transform-origin:20% 52%}
+.farm-animal[data-activity="resting"]:hover img,.farm-animal[data-activity="resting"]:focus-visible img{animation:animal-breathe 900ms ease-in-out 2;transform-origin:50% 70%}
+.farm-animal[data-activity="feeding"]:hover img,.farm-animal[data-activity="feeding"]:focus-visible img{animation:animal-feed 650ms ease-in-out 2;transform-origin:20% 60%}
+@keyframes animal-graze{50%{transform:rotate(3deg) translateY(2px)}}
+@keyframes animal-drink{50%{transform:rotate(4deg) translateY(2px)}}
+@keyframes animal-breathe{50%{transform:scaleY(1.035)}}
+@keyframes animal-feed{50%{transform:translateY(2px) scale(.99)}}
+.welcome-farm .preview-animal{width:clamp(70px,8vw,106px);height:clamp(50px,5vw,70px)}
+.welcome-farm-note{position:absolute;right:14px;bottom:12px;margin:0;padding:7px 10px;border-radius:14px;background:rgba(255,255,255,.86);color:#5f6b5e;font-size:10px;backdrop-filter:blur(10px)}
+.prompt-form{max-width:920px;margin:0 auto;border-color:var(--farm-line);box-shadow:0 12px 40px rgba(35,51,39,.045)}
+.suggestions{margin-bottom:28px}
+.suggestions button{border-color:var(--farm-line);color:#546650}
+.welcome-history{max-width:920px;margin:0 auto;text-align:left}
+.workspace{grid-template-columns:260px minmax(0,1fr);background:var(--farm-paper)}
+.conversation-panel{background:rgba(255,255,255,.76);border-color:var(--farm-line);padding:18px 15px}
+.population-panel{max-width:1500px;padding-top:26px}
+.population-heading{align-items:center;margin-bottom:4px}
+.population-heading .eyebrow{margin-bottom:5px;color:#788570}
+.population-heading h1{font-size:23px;letter-spacing:-.9px;color:var(--farm-ink)}
+.workspace-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.quiet-button{border-color:var(--farm-line);color:#526452}
+.analysis-area{margin-top:14px;border:0;padding-top:0}
+.farm-journey{max-width:1160px;margin:0 auto}
+.farm-journey-heading{display:flex;align-items:end;justify-content:space-between;margin:0 0 10px}
+.farm-journey-status{display:flex;align-items:center;gap:12px}
+.farm-journey-heading .eyebrow{margin:0 0 5px;color:#7f8a76}
+.farm-journey-heading h2{margin:0;color:var(--farm-ink);font-size:clamp(20px,2.2vw,28px);letter-spacing:-.8px;font-weight:600}
+.farm-current-day{font:500 12px "IBM Plex Mono",monospace;color:#52644d}
+.farm-stage{position:relative;width:min(920px,100%);margin-inline:auto;overflow:hidden;isolation:isolate;border-radius:20px;background:#f4f1e7;line-height:0;box-shadow:0 14px 36px rgba(33,52,34,.08)}
+.farm-stage-land{display:block;width:100%;height:auto;aspect-ratio:1799/874;object-fit:cover}
+.farm-transport{display:grid;grid-template-columns:auto auto minmax(140px,1fr);align-items:center;gap:9px;padding:12px 2px 8px}
+.farm-play{display:flex;align-items:center;gap:8px;border:0;border-radius:22px;background:var(--farm-ink);color:#fff;padding:10px 15px;font:500 11px "DM Sans",sans-serif;cursor:pointer;transition:transform 160ms ease,background 160ms ease}
+.farm-play:hover{background:#34513e;transform:translateY(-1px)}
+.farm-scrubber{display:flex;align-items:center;gap:11px;min-width:0;color:#63715e;font:500 11px "IBM Plex Mono",monospace}
+.farm-scrubber span{min-width:52px}
+.farm-scrubber input{width:100%;accent-color:#5e8a53;cursor:pointer}
+.farm-inspector{display:grid;grid-template-columns:minmax(130px,.75fr) minmax(130px,.7fr) minmax(250px,1.4fr) minmax(190px,1fr);align-items:center;gap:14px;padding:12px 14px;margin-top:10px;border-top:1px solid var(--farm-line);border-bottom:1px solid var(--farm-line);background:rgba(255,255,255,.52);min-height:80px}
+.farm-inspector-empty{grid-column:1/-1;margin:0;color:var(--farm-muted);font-size:12px}
+.farm-agent-identity{display:flex;align-items:center;gap:9px;min-width:0}
+.farm-agent-portrait{display:grid;place-items:center;width:50px;height:42px;overflow:hidden;border-radius:12px;background:#f1f0e7}
+.farm-agent-portrait img{width:100%;height:100%;object-fit:contain}
+.farm-agent-identity strong,.farm-agent-identity span,.farm-agent-current span,.farm-agent-current strong{display:block}
+.farm-agent-identity strong{font-size:12px;color:var(--farm-ink)}
+.farm-agent-identity span{font-size:10px;color:var(--farm-muted);margin-top:3px}
+.farm-agent-current span,.farm-agent-fact span{font-size:9px;color:#808b7d}
+.farm-agent-current strong{font-size:13px;color:#465e3f;margin-top:4px}
+.farm-agent-facts{display:flex;gap:15px;flex-wrap:wrap}
+.farm-agent-fact strong{display:block;margin-top:4px;font:500 11px "IBM Plex Mono",monospace;color:#344b39}
+.farm-agent-origin{font-size:9px;line-height:1.45;color:#818c7f;margin:0}
+.farm-agent-events{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 16px;list-style:none;padding:8px 0 0;margin:0;border-top:1px solid var(--farm-line)}
+.farm-agent-event{display:flex;gap:7px;font-size:9px;color:#5f6d5e}
+.farm-agent-event span:first-child{font-family:"IBM Plex Mono",monospace;color:#8a9282}
+.farm-pathways{display:grid;gap:0;margin:15px 0 8px;border-bottom:1px solid var(--farm-line)}
+.farm-path{display:grid;grid-template-columns:minmax(145px,.72fr) minmax(0,2fr);gap:12px;align-items:center;padding:9px 2px;border-top:1px solid var(--farm-line)}
+.farm-path-heading strong,.farm-path-heading span{display:block}
+.farm-path-heading strong{font-size:11px;color:var(--farm-ink)}
+.farm-path-heading span{font-size:9px;color:#82907f;margin-top:3px}
+.farm-path-checkpoints{position:relative;display:flex;justify-content:space-between;gap:10px;min-width:0}
+.farm-path-checkpoints:before{content:"";position:absolute;top:31px;left:6%;right:6%;height:1px;background:#bbc7b4;z-index:0}
+.farm-path-checkpoint{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1px;width:76px;min-width:42px;padding:0 1px;border:0;background:transparent;color:#697766;cursor:pointer}
+.farm-path-checkpoint img{display:block;width:51px;height:39px;object-fit:contain;transition:transform 180ms ease,filter 180ms ease}
+.farm-path-checkpoint small{font:9px "IBM Plex Mono",monospace;color:#84907f;white-space:nowrap}
+.farm-path-checkpoint:hover img,.farm-path-checkpoint:focus-visible img{transform:translateY(-3px) scale(1.08);filter:drop-shadow(0 3px 3px rgba(35,55,36,.17))}
+.farm-path-checkpoint.is-current img{filter:drop-shadow(0 0 5px rgba(81,128,67,.52))}
+.farm-path-checkpoint:disabled{opacity:.42;cursor:default}
+.farm-path-checkpoint:focus-visible{outline:2px solid #5e8a53;outline-offset:2px;border-radius:8px}
+.farm-path-supplement .farm-path-checkpoints:before{background:#e1c294}
+.farm-path-branch .farm-path-checkpoints:before{background:#a7c6b5}
+.farm-journey-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 0 12px}
+.farm-journey-actions p{margin:0;color:#7a8678;font-size:10px}
+.farm-fork-button{border:0;border-radius:18px;background:#e5b969;color:#342c1e;padding:10px 15px;font:600 10px "DM Sans",sans-serif;cursor:pointer;transition:transform 160ms ease,background 160ms ease}
+.farm-fork-button:not(:disabled):hover{background:#f0cb84;transform:translateY(-1px)}
+.farm-fork-button:disabled{opacity:.45;cursor:not-allowed}
+.technical-results{max-width:1160px;margin:20px auto 0;border-top:1px solid var(--farm-line);color:#70806f}
+.technical-results>summary{padding:13px 2px;font-size:10px;cursor:pointer;list-style-position:inside}
+.technical-results .analysis-header,.technical-results .journey-card,.technical-results .branch-action,.technical-results #conditional-cost,.technical-results #population-explorer{margin-left:0;margin-right:0}
+.technical-results[open]>summary{margin-bottom:12px}
+.welcome-farm-animals .farm-animal:nth-child(2n){transform:translate(-50%,-50%) scaleX(-1)}
+.welcome-farm-animals .farm-animal:hover{transform:translate(-50%,-56%) scale(1.08)}
+@media(max-width:980px){.workspace{grid-template-columns:220px minmax(0,1fr)}.farm-inspector{grid-template-columns:1fr 1fr}.farm-agent-origin{grid-column:1/-1}.farm-agent-events{grid-column:1/-1}}
+@media(max-width:700px){
+  .welcome{width:min(100% - 28px,560px);padding:76px 0 42px}
+  .welcome h1{font-size:36px;letter-spacing:-1.5px}
+  .welcome-copy{font-size:13px;margin:9px auto 16px}
+  .welcome-farm{border-radius:16px;margin-bottom:12px}
+  .welcome-farm-note{right:7px;bottom:7px;max-width:72%;font-size:8px;padding:6px 8px}
+  .welcome-farm .preview-animal{width:58px;height:42px}
+  .prompt-form{padding:9px;border-radius:14px}
+  .prompt-form textarea{min-height:74px;font-size:13px}
+  .prompt-footer{gap:8px;font-size:9px}
+  .suggestions{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding:2px 0 7px;margin:12px 0 24px}
+  .suggestions button{white-space:nowrap}
+  .workspace{display:flex;flex-direction:column}
+  .workspace.is-review .conversation-panel{order:0}
+  .workspace.is-review .population-panel{order:1}
+  .workspace:not(.is-review) .population-panel{order:0}
+  .workspace:not(.is-review) .conversation-panel{order:1}
+  .conversation-panel{position:relative;top:auto;height:auto;min-height:0;border-right:0;border-top:1px solid var(--farm-line);border-bottom:0;padding:12px 15px}
+  .conversation{max-height:170px;flex:initial}
+  .population-panel{padding:17px 13px 32px}
+  .population-heading h1{font-size:20px}
+  .workspace-actions{max-width:150px}
+  .workspace-actions .quiet-button{font-size:9px;padding:8px}
+  .farm-journey-heading h2{font-size:19px}
+  .farm-journey-status{gap:7px;flex-direction:column;align-items:flex-end}
+  .farm-stage{border-radius:13px}
+  .farm-transport{grid-template-columns:auto auto;gap:8px;padding-top:10px}
+  .farm-scrubber{grid-column:1/-1;grid-row:2}
+  .farm-play{padding:9px 12px;font-size:10px}
+  .farm-inspector{grid-template-columns:1fr 1fr;gap:10px;padding:11px 8px}
+  .farm-agent-identity{grid-column:1/-1}
+  .farm-agent-facts{gap:12px}
+  .farm-agent-origin{grid-column:1/-1}
+  .farm-agent-events{grid-column:1/-1}
+  .farm-path{grid-template-columns:1fr;gap:5px;padding:9px 0}
+  .farm-path-checkpoints{overflow-x:auto;justify-content:flex-start;padding:0 3px 4px}
+  .farm-path-checkpoints:before{left:22px;right:auto;width:calc(4 * 68px);top:28px}
+  .farm-path-checkpoint{flex:0 0 68px}
+  .farm-path-checkpoint img{width:43px;height:34px}
+  .farm-journey-actions{align-items:flex-start;flex-direction:column;padding-top:8px}
+  .farm-fork-button{align-self:flex-end}
+  .technical-results{margin-top:14px}
+}
+@media(prefers-reduced-motion:reduce){.farm-animal,.farm-path-checkpoint img,.farm-play,.farm-fork-button{transition:none!important;animation:none!important}.farm-animal:hover,.farm-path-checkpoint:hover img,.farm-play:hover,.farm-fork-button:not(:disabled):hover{transform:none}}
