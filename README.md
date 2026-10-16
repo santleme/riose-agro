@@ -64,6 +64,8 @@ The cow, road, vehicles, farmhouse, and barn shown here are editorial concept il
 
 ## AMD + ROCm evidence
 
+The optional standalone Python compute service runs a bounded livestock-metabolism batch on CPU, CUDA, or AMD ROCm. It is separate from Product's population comparisons, branches, and replay; it does not establish Product GPU acceleration. Start it with `python3 src/server/compute_service.py` and run `npm run verify:compute-livestock`; see the [compute-service contract](docs/compute-service.md).
+
 A successful parity run was recorded at release commit [acb5cdf6e3bc23d7e48026bc736da05427f89907](https://github.com/GUZZBR1/riose-agro/commit/acb5cdf6e3bc23d7e48026bc736da05427f89907).
 
 | Workload | Device and runtime | Recorded result |

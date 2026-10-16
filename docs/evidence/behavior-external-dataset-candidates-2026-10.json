@@ -68,33 +68,23 @@
       "doi": "10.5281/zenodo.15600573",
       "official_record": "https://zenodo.org/records/15600573",
       "metadata_api": "https://zenodo.org/api/records/15600573",
-      "access": "Public anonymous ZIP download succeeded; Zenodo metadata gives CC BY 4.0 but the included README states CC BY-NC, so reuse remains conditional.",
-      "license": "Zenodo record API declares CC BY 4.0, but README embedded in the downloaded archive declares CC BY-NC; commercial reuse is not cleared.",
+      "access": "The archive was publicly downloadable, but it has been removed from this repository after discovering conflicting license statements.",
+      "license": "Zenodo record API declares CC BY 4.0, but the embedded README declares CC BY-NC. No reuse right is claimed.",
       "files": {
         "count": 1,
         "filename": "WP5_T5.7_IoT sensor data_v1_EV ILVO_dataset.zip",
         "size_bytes": 221938,
         "direct_download": "https://zenodo.org/api/records/15600573/files/WP5_T5.7_IoT%20sensor%20data_v1_EV%20ILVO_dataset.zip/content",
-        "note": "Archive downloaded and inspected; normalized summary counts are in data/xgain-cattle-behavior/processed/ and the source ZIP checksum is verified.",
-        "archive_downloaded": true,
-        "archive_sha256": "a1e418f97e3c11b96f5fd6d7f7106688750083a00d6660f01f41f5ecc6471b16",
-        "normalized_parquet": "data/xgain-cattle-behavior/processed/xgain-hourly-behavior-counts-v1.parquet",
-        "normalized_records": 5760,
-        "archive_inspection": "Ten files, each 576 hourly rows; four class-count columns per hour sum to 60. No raw IMU or human-reference event labels in the archive."
+        "note": "The source archive and derived files were removed from this repository because the record and embedded README conflict on reuse terms.",
+        "archive_downloaded": false
       },
-      "population": "10 multiparous Holstein cows at ILVO, Melle, Belgium; neck-mounted Axivity AX3 sensors; metadata says pasture access from 07:30-14:00. Archive timestamp coverage is 2024-05-31 00:00 through 2024-06-23 23:00.",
-      "labels_and_measurement": "Published ZIP contains only processed hourly counts of grazing, rumination, resting, and other activity. The README says labels were produced by a supervised decision tree, and separately describes observer labels used to train/validate; no raw sensor values or independent observer-reference labels are distributed. Counts are 1-minute outputs aggregated hourly.",
-      "groups_and_grain": "Archive has 10 separate workbook files named with ear-tag IDs; each contains 576 hourly records. Animal-hour grouping is explicit after filename parsing.",
-      "best_riose_module": "Behavioral monitoring exploration for pasture grazing and rumination; potentially edge/low-cost classifier work.",
-      "decision": "CONDITIONAL",
-      "decision_reason": "Conditional for descriptive profiles and ingestion tests only. Class counts are classifier outputs rather than independent reference labels, raw sensor values are absent, and official CC BY metadata conflicts with a CC BY-NC statement in the embedded README. Not cleared for commercial training or validation.",
-      "external_validation": "Ineligible as external validation because released outcomes are model-generated aggregates, not independent human ground truth. Not suitable for DMI or ADG.",
+      "decision": "REMOVED",
+      "decision_reason": "Conflicting source and embedded README licenses leave redistribution rights unresolved. The project removed the source archive and derivatives and makes no reuse claim.",
       "evidence": [
         "https://zenodo.org/records/15600573",
         "https://zenodo.org/api/records/15600573",
         "https://pureportal.ilvo.be/en/datasets/iot-sensor-data-xgain-uc6/",
-        "https://pureportal.ilvo.be/en/publications/computer-vision-and-deep-learning-for-remote-cattle-behavior-trac/",
-        "data/xgain-cattle-behavior/manifest.json"
+        "https://pureportal.ilvo.be/en/publications/computer-vision-and-deep-learning-for-remote-cattle-behavior-trac/"
       ]
     },
     {

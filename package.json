@@ -20,6 +20,7 @@
     "test:br-corte-scenarios": "node --test tests/br-corte-scenario.test.js",
     "bench:memory": "node --expose-gc scripts/benchmarks/benchmark-memory.mjs",
     "benchmark:amd": "python3 scripts/benchmarks/benchmark_amd.py",
+    "verify:compute-livestock": "node scripts/validation/verify-compute-livestock.mjs",
     "bench:history": "node scripts/benchmarks/benchmark-history.mjs",
     "bench:history-storage": "node --expose-gc scripts/benchmarks/benchmark-history-storage.mjs",
     "bench:wasm-scenario-browser": "node scripts/benchmarks/benchmark-native-wasm-browser.mjs",

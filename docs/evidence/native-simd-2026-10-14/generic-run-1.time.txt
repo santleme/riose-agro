@@ -1,4 +1,4 @@
-	Command being timed: "env SIMD_STUDY_PROFILE=generic:  SIMD_STUDY_RUN=1 /mnt/d/CodexTools/issue-91/repro-target-9d9b7e7/generic/release/examples/simd_metabolism_study"
+	Command being timed: "env SIMD_STUDY_PROFILE="generic: " SIMD_STUDY_RUN=1 "$WORKSPACE/issue-91/repro-target-9d9b7e7/generic/release/examples/simd_metabolism_study""
 	User time (seconds): 8.22
 	System time (seconds): 0.06
 	Percent of CPU this job got: 97%

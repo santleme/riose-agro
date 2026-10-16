@@ -194,7 +194,10 @@ def _amd_reason_message(reason: str | None) -> str:
     return {
         "pytorch_unavailable": "PyTorch is not installed or could not be imported.",
         "pytorch_rocm_unavailable": "PyTorch does not expose a ROCm/HIP runtime.",
+        "runtime_unavailable": "PyTorch does not expose a ROCm/HIP runtime.",
         "amd_device_unavailable": "PyTorch ROCm is present, but no AMD device is available to it.",
+        "device_unavailable": "The ROCm runtime is available, but no usable AMD device was detected.",
+        "runtime_initialization_failed": "The ROCm runtime or driver failed during device initialization.",
         "amd_execution_failed": "The compute service fell back because AMD execution failed.",
         "amd_backend_not_used": "The service did not report an AMD backend for the request.",
         "result_values_missing": "The AMD response did not include comparable result values.",
@@ -326,7 +329,7 @@ def run_benchmark(
         "reason": detection.get("reason") if not amd_available else None,
         "torch_version": detection.get("torch_version"),
         "rocm_version": detection.get("rocm_version"),
-        "device_name": None,
+        "device_name": detection.get("device_name"),
     }
     amd_output: dict[str, Any] = {
         "status": amd_status,
@@ -382,7 +385,7 @@ def run_benchmark(
         "limitations": [
             "This benchmark measures the compute_service scale_vector operation, not a scientific model or the full farm simulation.",
             "Timings call the service compute function directly and exclude HTTP transport and server queueing.",
-            "The compute service does not expose an AMD device model, so device_name is null when unavailable from its contract.",
+            "The AMD device model is recorded when the compute service exposes it; otherwise device_name is null.",
             "Benchmark de software/hardware não implica validação científica do modelo.",
         ],
     }
