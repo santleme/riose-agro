@@ -1,3 +1,4 @@
+const homePage = document.documentElement;
 const header = document.querySelector('.site-header');
 const hero = document.querySelector('.hero');
 const lockup = document.querySelector('.hero-lockup');
@@ -25,6 +26,7 @@ function updateScrollState() {
   lockup.classList.toggle('is-locking', progress > 0);
   lockup.classList.toggle('is-locked', complete);
   header.classList.toggle('is-locking', locking);
+  header.classList.toggle('is-locked', complete);
   header.classList.toggle('is-scrolled', scrolled);
   document.body.classList.toggle('is-scrolled', scrolled);
   if (progress > 0) {
@@ -43,4 +45,6 @@ window.addEventListener('scroll', () => {
     scrollTicking = true;
   }
 }, {passive: true});
+reduceMotion.addEventListener('change', updateScrollState);
+homePage.classList.add('home-scroll-ready');
 updateScrollState();

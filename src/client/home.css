@@ -44,6 +44,7 @@ a:focus-visible { outline: 2px solid #595a50; outline-offset: 5px; }
 .site-header.is-scrolled { background-color: rgb(247 247 244 / .86); backdrop-filter: blur(5px); }
 .header-manifesto, .header-product { transition: color .18s ease; }
 .header-manifesto:hover, .header-manifesto:focus-visible, .header-product:hover, .header-product:focus-visible { color: var(--ink); }
+html.home-scroll-ready body:has(.hero-lockup) .site-header:not(.is-locked) .header-name-control { visibility: hidden; }
 .name-definition { position: absolute; z-index: 4; top: calc(100% + 13px); left: 50%; width: min(328px, calc(100vw - 32px)); padding: 18px 20px 19px; color: #292a25; white-space: normal; background: rgb(250 249 245 / .78); border: 1px solid rgb(255 255 255 / .72); border-radius: 20px; box-shadow: 0 22px 60px rgb(46 43 34 / .10), 0 3px 12px rgb(46 43 34 / .04), inset 0 1px 0 rgb(255 255 255 / .72); backdrop-filter: blur(17px) saturate(112%); -webkit-backdrop-filter: blur(17px) saturate(112%); opacity: 0; pointer-events: none; transform: translate(calc(-50% + var(--definition-shift-x, 0px)), 6px); filter: blur(2px); transition: opacity .2s ease, transform .2s ease, filter .2s ease; }
 .header-name-control.is-open .name-definition { opacity: 1; pointer-events: auto; transform: translate(calc(-50% + var(--definition-shift-x, 0px)), 0); filter: blur(0); }
 .definition-title { display: block; margin-bottom: 4px; font-size: 20px; font-weight: 600; letter-spacing: -.045em; }
