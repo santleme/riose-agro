@@ -1,0 +1,2 @@
+{"status": "ready", "model": "convaiinnovations/laya-multilingual", "revision": "1720e3e3357cfe1e281542e223f8273b0890ca34", "sdkVersion": "0.4.8", "torchVersion": "2.14.1+cpu", "device": "cpu", "threads": 4, "initializationMs": 4970.061526000791, "initializationMayIncludeDownload": true, "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39", "python": "3.12.3", "retainedRssBytes": 1785044992, "peakRssBytes": 2428833792}
+{"status": "classified", "label": "compare_scenarios", "latencyMs": 183.20273800054565}

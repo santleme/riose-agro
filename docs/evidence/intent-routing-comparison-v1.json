@@ -1,0 +1,470 @@
+{
+  "type": "riose-intent-routing-comparison",
+  "version": 1,
+  "fixtureSha256": "b7f73a27c600eebf823ccb3ba5510bf4d1ee00720c371fb354bed976cc314ab8",
+  "final": {
+    "laya": {
+      "count": 16,
+      "accuracy": 0.6875,
+      "macroF1": 0.6458333333333334,
+      "perClass": {
+        "create_experiment": {
+          "support": 2,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        },
+        "compare_scenarios": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "sensitivity_analysis": {
+          "support": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "conditional_cost": {
+          "support": 2,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        },
+        "scientific_explanation": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "inspect_results": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "clarification_needed": {
+          "support": 2,
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0
+        },
+        "unsupported_request": {
+          "support": 2,
+          "precision": 0.3333333333333333,
+          "recall": 0.5,
+          "f1": 0.4
+        }
+      },
+      "confusion": {
+        "create_experiment": {
+          "create_experiment": 2,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "compare_scenarios": {
+          "create_experiment": 0,
+          "compare_scenarios": 2,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "sensitivity_analysis": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 1,
+          "conditional_cost": 1,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "conditional_cost": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 2,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "scientific_explanation": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 2,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "inspect_results": {
+          "create_experiment": 1,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 1,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "clarification_needed": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 2,
+          "error": 0
+        },
+        "unsupported_request": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 1,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 1,
+          "error": 0
+        }
+      },
+      "medianMs": 200.08750399938435,
+      "p95Ms": 222.78055000060704,
+      "language": {
+        "pt": 0.5,
+        "en": 0.875
+      }
+    },
+    "deterministic": {
+      "count": 16,
+      "accuracy": 1.0,
+      "macroF1": 1.0,
+      "perClass": {
+        "create_experiment": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "compare_scenarios": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "sensitivity_analysis": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "conditional_cost": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "scientific_explanation": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "inspect_results": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "clarification_needed": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "unsupported_request": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "create_experiment": {
+          "create_experiment": 2,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "compare_scenarios": {
+          "create_experiment": 0,
+          "compare_scenarios": 2,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "sensitivity_analysis": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 2,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "conditional_cost": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 2,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "scientific_explanation": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 2,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "inspect_results": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 2,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "clarification_needed": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 2,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "unsupported_request": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 2,
+          "error": 0
+        }
+      },
+      "medianMs": 0.0017099999999992122,
+      "p95Ms": 0.07352300000000156,
+      "language": {
+        "pt": 1.0,
+        "en": 1.0
+      }
+    },
+    "groq": {
+      "count": 16,
+      "accuracy": 1.0,
+      "macroF1": 1.0,
+      "perClass": {
+        "create_experiment": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "compare_scenarios": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "sensitivity_analysis": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "conditional_cost": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "scientific_explanation": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "inspect_results": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "clarification_needed": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "unsupported_request": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "create_experiment": {
+          "create_experiment": 2,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "compare_scenarios": {
+          "create_experiment": 0,
+          "compare_scenarios": 2,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "sensitivity_analysis": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 2,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "conditional_cost": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 2,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "scientific_explanation": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 2,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "inspect_results": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 2,
+          "clarification_needed": 0,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "clarification_needed": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 2,
+          "unsupported_request": 0,
+          "error": 0
+        },
+        "unsupported_request": {
+          "create_experiment": 0,
+          "compare_scenarios": 0,
+          "sensitivity_analysis": 0,
+          "conditional_cost": 0,
+          "scientific_explanation": 0,
+          "inspect_results": 0,
+          "clarification_needed": 0,
+          "unsupported_request": 2,
+          "error": 0
+        }
+      },
+      "medianMs": 428.0,
+      "p95Ms": 650,
+      "language": {
+        "pt": 1.0,
+        "en": 1.0
+      }
+    }
+  },
+  "limitation": "16 developer-authored final smoke cases; no real-user/external validation, no calibrated probabilities, no production reliability or biological validity claim.",
+  "promotionScreen": {
+    "accuracyStrictlyImproves": false,
+    "macroF1StrictlyImproves": false,
+    "unsupportedRecallComplete": false,
+    "cpuP95Under1000Ms": true
+  },
+  "promotionScreenPassed": false,
+  "routingEnabled": false,
+  "decision": "EXPERIMENTAL_OFF"
+}

@@ -87,7 +87,10 @@
     "test:e2e:scenario-lab": "node scripts/e2e/scenario-lab.mjs",
     "test:e2e:scenario-lab-ai": "node scripts/e2e/scenario-lab-ai.mjs",
     "audit:product-v3": "node scripts/e2e/product-v3-review-capture.mjs",
-    "test:br-corte-sensitivity": "node --test tests/br-corte-sensitivity.test.js"
+    "test:br-corte-sensitivity": "node --test tests/br-corte-sensitivity.test.js",
+    "test:e2e:decision-assistant": "node scripts/e2e/decision-assistant-contract.mjs",
+    "test:e2e:decision-assistant:live": "node scripts/e2e/decision-assistant-live.mjs",
+    "test:laya-router": "python3 -m unittest tests/test_laya_intent_worker.py -v"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
