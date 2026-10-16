@@ -49,6 +49,7 @@ test('Product uses the institutional header and retired navigation routes forwar
   const manifesto = await fetch(`${root}/manifesto.html`);
   assert.equal(manifesto.status, 200);
   const manifestoHtml = await manifesto.text();
+  assert.doesNotMatch(manifestoHtml, /Small living details/);
   assert.match(manifestoHtml, /assets\/riose-farm-pixel-scene\.png/);
   assert.match(manifestoHtml, /assets\/riose-cow-sprite-idle\.png/);
   assert.match(manifestoHtml, /assets\/riose-cow-sprite-graze\.png/);

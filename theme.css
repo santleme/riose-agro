@@ -64,7 +64,6 @@
 :root[data-theme="dark"] .hero-copy a { color: #d0d3ca; border-color: #696d63; }
 :root[data-theme="dark"] .manifesto-page { --manifesto-copy: #d0d3ca; --manifesto-muted: #aeb2a8; }
 :root[data-theme="dark"] .manifesto-page .manifesto-copy h1 { color: var(--ink); }
-:root[data-theme="dark"] .manifesto-page .manifesto-farm figcaption { color: #c0c4ba; }
 
 /* Keep page content clear of the taller fixed site header. */
 .welcome { padding-top: 70px; }

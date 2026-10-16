@@ -48,14 +48,12 @@
 .cow-three { left:53%; top:52%; width:10%; }
 .cow-four { left:68%; top:61%; width:11.5%; }
 .cow-five { left:78%; top:49%; width:9%; }
-.manifesto-farm figcaption { position:static; margin:8px 3% 0; color:#697361; font:400 9px/1.4 var(--mono); letter-spacing:.02em; text-align:right; pointer-events:none; }
 @keyframes cow-graze-peek { 0%,24% { opacity:1; } 25%,49% { opacity:0; } 50%,74% { opacity:1; } 75%,100% { opacity:0; } }
 @keyframes cow-idle-peek { 0%,24% { opacity:0; } 25%,49% { opacity:1; } 50%,74% { opacity:0; } 75%,100% { opacity:1; } }
 @media(max-width:760px) {
   .manifesto-farm { width:calc(100% + 20px); margin:35px -10px 0; }
   .cow-sprite { width:12%; }
   .cow-two { width:10.5%; }.cow-three{width:11%;}.cow-four{width:12.5%;}.cow-five{width:10%;}
-  .manifesto-farm figcaption { margin:5px 3% 0; font-size:8px; }
 }
 @media(prefers-reduced-motion:reduce) {
   .cow-sprite:is(:hover,:focus-visible) img:first-child { animation:none; }
