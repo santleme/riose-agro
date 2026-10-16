@@ -17,6 +17,7 @@ class AmdBenchmarkTests(unittest.TestCase):
             "reason": None,
             "torch_version": "test-torch",
             "rocm_version": "test-rocm",
+            "device_name": "AMD Radeon test",
         }
 
     @staticmethod
@@ -88,6 +89,8 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertIsNone(report["amd"]["timings_ms"])
         self.assertIsNone(report["speedup"])
         self.assertEqual(report["correctness_check"]["status"], "not_compared")
+        self.assertEqual(report["amd"]["reason"], "pytorch_unavailable")
+        self.assertIn("PyTorch", report["amd"]["reason_message"])
         self.assertEqual(calls, ["cpu"] * 4)
         self.assertEqual(report["workload"]["seed"], "deterministic-vector-no-rng")
         self.assertEqual(report["workload"]["populations"], [{
@@ -122,6 +125,8 @@ class AmdBenchmarkTests(unittest.TestCase):
         self.assertEqual(report["amd"]["status"], "measured")
         self.assertEqual(report["amd"]["backend_used"], "amd_rocm")
         self.assertEqual(report["amd"]["statistics"]["runs"], 2)
+        self.assertEqual(report["amd"]["hardware_detection"]["device_name"], "AMD Radeon test")
+        self.assertEqual(report["environment"]["amd"]["device_name"], "AMD Radeon test")
         self.assertIsNotNone(report["speedup"])
         self.assertEqual(len({report["workload"]["payload_sha256"]}), 1)
         self.assertEqual({item[0] for item in payloads}, {"scale_vector"})
@@ -133,6 +138,35 @@ class AmdBenchmarkTests(unittest.TestCase):
             self.assertEqual(measurement["population"]["count"], 8)
             self.assertTrue(measurement["source"])
             self.assertEqual(len(measurement["statistics"]["rawObservations"]), 2)
+
+    def test_new_detector_reasons_have_specific_benchmark_messages(self):
+        expected_messages = {
+            "runtime_unavailable": "ROCm/HIP runtime",
+            "device_unavailable": "no usable AMD device",
+            "runtime_initialization_failed": "driver failed during device initialization",
+        }
+        for reason, expected_message in expected_messages.items():
+            with self.subTest(reason=reason):
+                def detector(reason=reason):
+                    return {
+                        "available": False,
+                        "reason": reason,
+                        "torch_version": "test-torch",
+                        "rocm_version": None,
+                        "device_name": None,
+                    }
+
+                report = run_benchmark(
+                    repetitions=1,
+                    warmup_runs=0,
+                    vector_length=4,
+                    amd_detector=detector,
+                    executor=self.fake_executor,
+                    project_commit="a1b2c3d",
+                )
+
+                self.assertEqual(report["amd"]["reason"], reason)
+                self.assertIn(expected_message, report["amd"]["reason_message"])
 
     def test_correctness_mismatch_prevents_amd_timing_and_speedup(self):
         def mismatching_executor(request, *, amd_detector):
