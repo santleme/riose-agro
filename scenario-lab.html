@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8fafb">
+  <meta name="description" content="Compare reproducible multi-scenario livestock experiments with Riose.">
+  <title>Riose — Scenario laboratory</title>
+  <link rel="icon" href="riose-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="scenario-lab.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html" aria-label="Riose home"><span class="brand-mark">r.</span><span>riose<span class="brand-light"> agro</span></span></a>
+    <nav aria-label="Main navigation"><a href="product.html">Product</a><a class="active" href="scenario-lab.html">Scenario lab</a><a href="experiments.html">Experiments</a><a href="observed-data.html">Observed data</a></nav>
+    <span class="system-status"><i></i> Local engine · illustrative</span>
+  </header>
+
+  <main class="lab-shell">
+    <header class="lab-intro">
+      <p class="eyebrow">RIOSE · SCIENTIFIC SCENARIO LABORATORY</p>
+      <h1>Compare the conditions you can control.</h1>
+      <p>Set a baseline and at least two alternatives. Every arm starts from the same saved state and seed.</p>
+      <p class="lab-limit">FarmEngine outputs are deterministic demonstrations, not validated livestock forecasts or management recommendations.</p>
+    </header>
+
+    <section class="lab-card prompt-card" aria-labelledby="prompt-title">
+      <div class="lab-card-heading"><div><p class="eyebrow">EXPERIMENT ASSISTANT</p><h2 id="prompt-title">Start with a scenario question</h2></div><span class="engine-badge">Validated draft · no auto-run</span></div>
+      <p class="prompt-description">Describe animal count, duration, and at least three explicit supplement levels in kg DM/head/day. Missing values can be added in a clarification; ambiguous units or multiple intervention factors remain blocked.</p>
+      <label class="prompt-label" for="scenario-prompt">Scenario request</label>
+      <textarea id="scenario-prompt" maxlength="1200" rows="3" placeholder="Write an experiment request, or select “Use example”."></textarea>
+      <div class="prompt-actions"><button id="ask-riose" class="primary-button" type="button">Ask Riose <span aria-hidden="true">↗</span></button><button id="draft-scenario" class="quiet-button" type="button">Draft for review</button><button id="fill-prompt-example" class="text-button" type="button">Use example</button></div>
+      <p class="prompt-description">Optional server-side AI interpretation for conditional intake, comparisons, sensitivity and scientific limits. Every calculation requires your confirmation.</p>
+      <p id="prompt-result" class="prompt-result" role="status" aria-live="polite"></p>
+      <ol id="assistant-conversation" class="assistant-conversation" aria-label="Experiment conversation" role="log" aria-live="polite" tabindex="0" hidden></ol>
+      <section id="single-review" class="review-panel" hidden aria-labelledby="single-review-title">
+        <h3 id="single-review-title">Review conditional BR-CORTE estimate</h3>
+        <p id="single-review-meta" class="review-meta"></p>
+        <p class="review-limit">Growing Zebu on tropical pasture only. Supplied ADG stays an input; it is never forecast. No Riose-specific calibration. No individual behavior or gain is predicted.</p>
+        <div class="lab-actions"><button id="single-run" class="primary-button" type="button">Calculate reviewed estimate</button><button id="single-export" class="quiet-button" type="button" hidden>Export single calculation</button><button id="single-open" class="text-button" type="button">Open single calculation report</button><input id="single-file" type="file" accept="application/json,.json" hidden></div>
+        <p id="single-result" class="prompt-result" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <section class="lab-layout" aria-label="Scenario laboratory">
+      <form id="scenario-form" class="lab-card setup-card">
+        <div class="lab-card-heading"><div><p class="eyebrow">1 · CONFIGURE</p><h2>Experiment inputs</h2></div><span class="engine-badge">Illustrative engine</span></div>
+        <div class="lab-fields">
+          <label>Animals<input name="animalCount" type="number" min="1" max="10000" step="1" placeholder="e.g. 200" required><small>Required input · generated illustrative population, not observed cattle</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" placeholder="e.g. 30" required><small>Days · required input</small></label>
+          <label>Baseline supplement<input name="baselineSupplement" type="number" min="0" max="4" step="0.1" placeholder="e.g. 0.5" required><small>kg DM/head/day · required input</small></label>
+          <label>Shared weather<select name="weather" required><option value="" selected disabled>Select a demonstrative rule</option><option value="normal">Normal rule set</option><option value="hot">Hot rule set</option><option value="rain">Rain rule set</option></select><small>Required demonstrative engine rule · not weather observation</small></label>
+          <label class="lab-wide">Alternative supplement levels<input name="alternativeLevels" type="text" placeholder="e.g. 1.0, 1.5" maxlength="120" required><small>2–9 distinct values from 0 to 4 kg DM/head/day, separated by commas.</small></label>
+          <label>Seed (reproducibility)<input name="seed" type="number" min="0" max="4294967295" step="1" value="20261015" required><small>Visible default seed · replay setting, not animal data</small></label>
+        </div>
+        <div class="lab-actions"><button class="primary-button" type="submit">Review scenarios <span aria-hidden="true">↗</span></button><span>Only supplementation varies across arms.</span></div>
+        <div class="saved-manifest"><button id="load-manifest" class="text-button" type="button">Open exported experiment JSON</button><input id="manifest-file" type="file" accept="application/json,.json" hidden><span>Replay uses the saved manifest and recalculates every arm.</span></div>
+
+        <section id="review-panel" class="review-panel" hidden aria-labelledby="review-title">
+          <div class="lab-card-heading"><div><p class="eyebrow">2 · REVIEW</p><h2 id="review-title">Scenario set</h2></div><span id="review-state" class="review-status" role="status" aria-live="polite" data-state="review">Requires confirmation</span></div>
+          <p id="review-meta" class="review-meta"></p>
+          <p id="resource-budget" class="resource-budget" role="status"></p>
+          <div id="scenario-list" class="scenario-list"></div>
+          <p class="review-limit">These runs use the illustrative FarmEngine. Weight, intake, weather and cost rules are not independently validated. No biological uncertainty or prediction interval is calculated.</p>
+          <div class="lab-actions"><button id="run-scenarios" class="primary-button" type="button">Run scenarios</button><button id="cancel-run" class="quiet-button" type="button" hidden>Cancel run</button></div>
+        </section>
+      </form>
+
+      <section id="results" class="lab-card results-card" hidden aria-labelledby="results-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">3 · EXPLORE</p><h2 id="results-title">Sensitivity analysis</h2></div><span class="engine-badge">One factor · deterministic</span></div>
+        <p class="results-caption">Actual FarmEngine outputs for the reviewed manifest. Each colored line is one run; the sweep is not a confidence interval or causal estimate.</p>
+        <div class="results-meta"><span id="run-meta"></span><button id="export-results" class="quiet-button" type="button">Export manifest + results ↓</button></div>
+        <div class="lab-timeline"><label for="result-day">Day <strong id="selected-day">0</strong></label><input id="result-day" type="range" min="0" max="0" value="0" aria-label="Choose an available result day"><div id="result-checkpoints" class="timeline-points"></div></div>
+        <div id="scenario-chart" class="scenario-chart" role="img" aria-label="Mean engine weight by scenario and day"></div>
+        <div id="scenario-legend" class="chart-legend" aria-label="Scenario chart legend"></div>
+        <div class="scenario-select-row"><label for="population-scenario">Population view</label><select id="population-scenario"></select><span id="population-count"></span></div>
+        <div class="lab-grid-toolbar"><span>Each square is one engine animal; cell order follows stable animal ID.</span><span id="cell-count"></span></div>
+        <div id="scenario-population" class="scenario-population" role="grid" aria-label="Selected scenario population observations"></div>
+        <div class="lab-grid-footer"><span id="population-limit">No geographical coordinates are represented.</span><button id="show-more-cells" class="text-button" type="button" hidden>Show more</button></div>
+        <div id="animal-detail" class="animal-detail" aria-live="polite">Select an animal cell to inspect its returned state.</div>
+        <div class="lab-table-scroll"><table><thead id="scenario-table-head"></thead><tbody id="scenario-table-body"></tbody></table></div>
+        <details class="provenance"><summary>Model provenance and limitations</summary><div id="scenario-provenance"></div></details>
+      </section>
+    </section>
+    <section id="br-corte-calculator" class="lab-card scientific-card" aria-labelledby="br-corte-title">
+      <div class="lab-card-heading"><div><p class="eyebrow">SCIENTIFIC MODULE · BR-CORTE 2023</p><h2 id="br-corte-title">Conditional pasture intake estimate</h2></div><span class="scientific-badge">Published Eq. 2.6</span></div>
+      <p class="scientific-intro">Estimate total dry matter intake for growing Zebu cattle on tropical pasture from body weight, user-supplied average daily gain, and supplement. This module is independent of FarmEngine.</p>
+      <form id="br-corte-form">
+        <div class="lab-fields scientific-fields">
+          <label>Representative body weight<input name="bodyWeightKg" type="number" min="133" max="474" step="any" placeholder="e.g. 400" required><small>133–474 kg · required representative input</small></label>
+          <label>Supplied average daily gain<input name="adgKgPerDay" type="number" min="-0.18" max="1.34" step="any" placeholder="e.g. 0.5" required><small>−0.18–1.34 kg/day · input, not predicted</small></label>
+          <label>Animals represented<input name="animalCount" type="number" min="1" max="10000" step="1" placeholder="e.g. 200" required><small>Representative inputs apply to all</small></label>
+          <label>Duration<input name="durationDays" type="number" min="1" max="365" step="1" placeholder="e.g. 30" required><small>Days · inputs held constant for arithmetic totals</small></label>
+          <label class="lab-wide">Supplement levels<input name="supplementLevels" type="text" maxlength="120" placeholder="e.g. 0.5, 1.0, 1.5" required><small>3–10 distinct levels · 0–5.32 kg DM/head/day</small></label>
+          <label>Optional supplement price<input name="supplementPrice" type="number" min="0" step="any" placeholder="Leave blank to omit cost"><small>Price per kg dry matter</small></label>
+          <label>Currency<input name="currency" type="text" maxlength="3" pattern="[A-Za-z]{3}" placeholder="e.g. BRL"><small>ISO 4217 code, required with price</small></label>
+        </div>
+        <div class="lab-actions"><button class="primary-button" type="submit">Review BR-CORTE scenarios <span aria-hidden="true">↗</span></button><button id="fill-br-corte-example" class="text-button" type="button">Load BR-CORTE example</button><span>Example values are not observations; review is still required.</span></div>
+        <p id="br-corte-example-status" class="prompt-result" role="status" aria-live="polite"></p>
+      </form>
+      <div class="saved-manifest scientific-saved"><button id="br-corte-load" class="text-button" type="button">Open exported BR-CORTE JSON</button><input id="br-corte-file" type="file" accept="application/json,.json" hidden><span>Reopens the versioned inputs and recalculates them for review.</span></div>
+      <form id="br-corte-sensitivity-form" class="sensitivity-request" aria-labelledby="sensitivity-request-title">
+        <div><p class="eyebrow">ONE-FACTOR SENSITIVITY</p><h3 id="sensitivity-request-title">Sweep supplementation</h3><p>Uses the reviewed body weight and supplied ADG above; those values stay fixed.</p></div>
+        <div class="lab-fields sensitivity-fields">
+          <label>Minimum · kg DM/head/day<input name="minimumSupplement" type="number" min="0" max="5.32" step="any" placeholder="0.5" required></label>
+          <label>Maximum · kg DM/head/day<input name="maximumSupplement" type="number" min="0" max="5.32" step="any" placeholder="2.0" required></label>
+          <label>Step · kg DM/head/day<input name="sweepStep" type="number" min="0.000001" max="5.32" step="any" placeholder="0.25" required></label>
+        </div>
+        <div class="lab-actions"><button class="quiet-button" type="submit">Review sensitivity</button><span>2–101 points · inside BR-CORTE published supplement range</span></div>
+      </form>
+      <section id="br-corte-sensitivity-review" class="review-panel" hidden aria-labelledby="sensitivity-review-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">REVIEW</p><h3 id="sensitivity-review-title">Sensitivity inputs</h3></div><span class="review-status">User confirmation required</span></div>
+        <p id="br-corte-sensitivity-review-meta" class="review-meta"></p>
+        <div id="br-corte-sensitivity-review-list" class="scenario-list"></div>
+        <p class="review-limit">This is deterministic variation of the published equation with BW and supplied ADG held constant. It is not a causal supplement effect, prediction interval, probability, or forecast of gain.</p>
+        <div class="lab-actions"><button id="br-corte-sensitivity-run" class="primary-button" type="button">Calculate sensitivity</button></div>
+      </section>
+      <section id="br-corte-sensitivity-results" class="scientific-results" hidden aria-labelledby="sensitivity-results-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">COMPUTED SENSITIVITY</p><h3 id="sensitivity-results-title">Conditional equation response</h3></div><span class="scientific-badge">Deterministic · not causal</span></div>
+        <p id="br-corte-sensitivity-summary" class="results-caption"></p>
+        <figure class="sensitivity-figure"><div id="br-corte-sensitivity-chart" role="img"></div><figcaption>Each point is calculated from BR-CORTE 2023 Eq. 2.6. No uncertainty distribution is applied.</figcaption></figure>
+        <div class="lab-table-scroll"><table><thead id="br-corte-sensitivity-table-head"></thead><tbody id="br-corte-sensitivity-table-body"></tbody></table></div>
+        <p id="br-corte-sensitivity-provenance" class="sensitivity-limitation"></p>
+        <div class="lab-actions"><button id="br-corte-sensitivity-export" class="quiet-button" type="button">Export sensitivity archive</button><span>Versioned inputs, exact results, model implementation hash, units and assumptions.</span></div>
+      </section>
+      <section id="br-corte-review" class="review-panel" hidden aria-labelledby="br-corte-review-title">
+        <div class="lab-card-heading"><div><p class="eyebrow">REVIEW</p><h3 id="br-corte-review-title">Conditional inputs</h3></div><span class="review-status">User confirmation required</span></div>
+        <p id="br-corte-review-meta" class="review-meta"></p>
+        <div id="br-corte-review-list" class="scenario-list"></div>
+        <p class="review-limit">This equation does not predict gain. The supplied ADG and representative body weight are held constant for total calculations. Supplement level is an equation input; the result is total DMI and must not be presented as measured forage intake. No individual animal distribution, weight path, ration cost, or profit is inferred.</p>
+        <div class="lab-actions"><button id="br-corte-run" class="primary-button" type="button">Calculate conditional estimates</button></div>
+      </section>
+      <section id="br-corte-results" class="scientific-results" hidden aria-live="polite">
+        <div class="lab-card-heading"><div><p class="eyebrow">COMPUTED OUTPUT</p><h3>Conditional dry matter intake</h3></div><div class="scientific-result-actions"><span class="review-status">Not Riose-calibrated</span><button id="br-corte-export" class="quiet-button" type="button">Export inputs + results ↓</button></div></div>
+        <div class="lab-table-scroll"><table><thead id="br-corte-table-head"></thead><tbody id="br-corte-table-body"></tbody></table></div>
+        <details class="provenance" open><summary>Model provenance and limitations</summary><div id="br-corte-provenance"></div></details>
+      </section>
+    </section>
+    <p id="lab-status" class="live-status" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="src/client/scenario-lab-app.js"></script>
+</body>
+</html>

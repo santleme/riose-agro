@@ -14,9 +14,10 @@ const commandFields = {
   replayComparison: ['manifest'],
   replayConfigured: ['manifest'],
   replayLotConfigured: ['manifest'],
+  replayScenarioSet: ['manifest', 'manifestSha256'],
   snapshot: []
 };
-const responseTypes = new Set(['state', 'comparison', 'population', 'progress', 'error']);
+const responseTypes = new Set(['state', 'comparison', 'population', 'scenarioSet', 'progress', 'error']);
 const actions = new Set(['grazing', 'feeding', 'drinking', 'resting']);
 
 export class WorkerProtocolError extends Error {
@@ -92,6 +93,14 @@ function validateCommandPayload(message) {
     case 'replayLotConfigured':
       if (!isRecord(message.manifest)) fail('INVALID_COMMAND_PAYLOAD', `${command}.manifest must be an object.`, command);
       break;
+    case 'replayScenarioSet':
+      if (!isRecord(message.manifest) || message.manifest.type !== 'riose-scenario-set' || message.manifest.version !== 1) {
+        fail('INVALID_COMMAND_PAYLOAD', 'replayScenarioSet.manifest must be a riose-scenario-set/v1 object.', command);
+      }
+      if (message.manifestSha256 !== undefined && (typeof message.manifestSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(message.manifestSha256))) {
+        fail('INVALID_COMMAND_PAYLOAD', 'replayScenarioSet.manifestSha256 must be a lowercase SHA-256 hex digest.', command);
+      }
+      break;
     case 'snapshot':
       break;
   }
@@ -151,7 +160,23 @@ export function normalizeWorkerResponse(raw) {
   if (raw.type === 'population' && (!isRecord(raw.data) || !isRecord(raw.data.comparison) || !Array.isArray(raw.data.timeline))) {
     fail('INVALID_RESPONSE', 'Population response must include a comparison and timeline.');
   }
-  if(raw.type==='progress'&&(!Number.isInteger(raw.day)||!Number.isInteger(raw.days)||raw.day<0||raw.day>raw.days))fail('INVALID_RESPONSE','Progress response must contain a bounded day and horizon.');
+  if (raw.type === 'scenarioSet' && (!isRecord(raw.data) || raw.data.type !== 'riose-scenario-results' || raw.data.version !== 1
+      || raw.data.validated !== false || !isRecord(raw.data.baseline) || !Array.isArray(raw.data.baseline.timeline)
+      || !Array.isArray(raw.data.scenarios) || raw.data.scenarios.length < 2 || raw.data.scenarios.some(scenario => !isRecord(scenario) || !Array.isArray(scenario.rows) || !Array.isArray(scenario.timeline))
+      || (raw.manifestSha256 !== undefined && (typeof raw.manifestSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(raw.manifestSha256))))) {
+    fail('INVALID_RESPONSE', 'scenarioSet response must include validated-false baseline and aligned intervention results.');
+  }
+  if (raw.type === 'progress') {
+    if (!Number.isInteger(raw.day) || !Number.isInteger(raw.days) || raw.day < 0 || raw.day > raw.days) {
+      fail('INVALID_RESPONSE', 'Progress response must contain a bounded day and horizon.');
+    }
+    const hasScenarioProgress = owns(raw, 'scenarioId') || owns(raw, 'scenarioCount') || owns(raw, 'scenarioIndex');
+    if (hasScenarioProgress && (typeof raw.scenarioId !== 'string' || !raw.scenarioId
+        || !Number.isInteger(raw.scenarioCount) || raw.scenarioCount < 1 || raw.scenarioCount > 9
+        || !Number.isInteger(raw.scenarioIndex) || raw.scenarioIndex < 1 || raw.scenarioIndex > raw.scenarioCount)) {
+      fail('INVALID_RESPONSE', 'Scenario progress identity must contain a bounded arm ID, index and count.');
+    }
+  }
   if (raw.type === 'comparison' && owns(raw, 'execution')) {
     const execution = raw.execution;
     if (!isRecord(execution) || !['local-rust','local-js'].includes(execution.backend) || typeof execution.fallbackUsed !== 'boolean'

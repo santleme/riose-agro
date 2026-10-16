@@ -1,0 +1,708 @@
+{
+  "schemaVersion": "perea-post-nogo-diagnostic.v1",
+  "diagnosticOnly": true,
+  "decision": "NO_GO_FOR_THIS_CANDIDATE_AND_SOURCE",
+  "method": "Frozen 09-confirmatory-v1 model/baseline implementations and seed schedule replayed after outcomes were opened; no fitting, tuning, threshold changes, or selection on held-out labels beyond this descriptive replay.",
+  "artifactSha256": {
+    "source": "b4d6e14d6ff029dbf497287a774aaa27ec471e7ed1ef5884e9cf0207c784fe37",
+    "confirmatoryResult": "499d7d0c0952428c9f305bab7c73123f70770f20599d9f779a645739bb23a94f",
+    "timeSeriesReadiness": "300593bf754021f3131b37dc7b7b473dab9db841f273704f24e514251968cc0b",
+    "confirmatoryProtocol": "a4b94c34a26285c5665bf75e5d82dd1e6dda235a7c4dc84ff8bedc1ac024051c",
+    "diagnosticProtocol": "22040e88c66e0183ecb45eae2ea8dc9e10c93403f55d7385bb0a63cd504e4602",
+    "candidate": "ba7fa908573a995d654d0442de80b4ebe5503bb0e0c5b63b5fb0be5a487c26b5",
+    "confirmatoryEvaluator": "464ff39e1145f0cff1b70be90c2db28324f84f4a71c9f51d6ab30a6b43e65196"
+  },
+  "partition": {
+    "trainingAnimals": 20,
+    "confirmatoryAnimals": [
+      "AH:2008",
+      "BH:5111",
+      "BR:8065",
+      "RC:35"
+    ],
+    "confirmatoryWindows": 226,
+    "replicatesPerWindow": 20
+  },
+  "coverage": {
+    "sourceExactMinuteWindows": 1305,
+    "sourceDiscontinuities": 1281,
+    "complete24HourWindows": 0,
+    "confirmatoryWindowLengthCounts": {
+      "1": 85,
+      "2": 38,
+      "3-5": 49,
+      "6-15": 39,
+      "16+": 15
+    }
+  },
+  "gateDiagnostics": {
+    "composition": {
+      "candidate": 0.3711029343609265,
+      "bestSimpleBaseline": 0.36087886146844783,
+      "allowedMaximum": 0.37087886146844784,
+      "excessOverAllowed": 0.00022407289247866613,
+      "passed": false
+    },
+    "transitionTV": {
+      "candidate": 0.7074737895116022,
+      "iid": 0.8184056400156305,
+      "persistence": 0.712482742195552,
+      "improvementVsIid": 0.11093185050402832,
+      "improvementVsPersistence": 0.005008952683949741,
+      "requiredImprovement": 0.02,
+      "passed": {
+        "iid": true,
+        "persistence": false
+      }
+    },
+    "rareClassRU": {
+      "candidateAbsoluteProportionError": 0.31019007378206737,
+      "bestSimpleBaseline": 0.24547566450939381,
+      "allowedMaximum": 0.29547566450939383,
+      "excessOverAllowed": 0.014714409272673534,
+      "passed": false
+    }
+  },
+  "observedConfirmatoryClassProportions": {
+    "GR": 0.4240177909562639,
+    "RE": 0.25796886582653816,
+    "RU": 0.061527057079318014,
+    "WA": 0.25648628613787994
+  },
+  "sequenceDiagnostics": {
+    "iid": {
+      "generatedClassMinutes": 26980,
+      "pooledClassProportions": {
+        "GR": 0.4275389177168273,
+        "RE": 0.20763528539659007,
+        "RU": 0.11289844329132691,
+        "WA": 0.25192735359525575
+      },
+      "singleClassReplicateWindowRate": 0.4396017699115044,
+      "missingClassOccurrencesPerReplicateWindow": 1.947566371681416,
+      "switchesPerMinute": 0.579058561897702,
+      "completeInteriorRunDurationsByClass": {
+        "GR": {
+          "completeInteriorRuns": 4461,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1,
+          "q75Minutes": 2.0
+        },
+        "RE": {
+          "completeInteriorRuns": 3122,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1.0,
+          "q75Minutes": 1.0
+        },
+        "RU": {
+          "completeInteriorRuns": 1917,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1,
+          "q75Minutes": 1.0
+        },
+        "WA": {
+          "completeInteriorRuns": 3590,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1.0,
+          "q75Minutes": 1.0
+        }
+      },
+      "perAnimalSequenceDiagnostics": {
+        "AH:2008": {
+          "singleClassReplicateWindowRate": 0.30675675675675673,
+          "missingClassOccurrencesPerReplicateWindow": 1.6527027027027028,
+          "switchesPerMinute": 0.6165594855305466
+        },
+        "BH:5111": {
+          "singleClassReplicateWindowRate": 0.3948529411764706,
+          "missingClassOccurrencesPerReplicateWindow": 1.9176470588235295,
+          "switchesPerMinute": 0.5796675191815857
+        },
+        "BR:8065": {
+          "singleClassReplicateWindowRate": 0.5202702702702703,
+          "missingClassOccurrencesPerReplicateWindow": 2.1385135135135136,
+          "switchesPerMinute": 0.5248366013071896
+        },
+        "RC:35": {
+          "singleClassReplicateWindowRate": 0.4819148936170213,
+          "missingClassOccurrencesPerReplicateWindow": 1.922340425531915,
+          "switchesPerMinute": 0.5928152492668621
+        }
+      },
+      "lengthStratifiedDiagnostics": {
+        "1": {
+          "observedConfirmatoryWindows": 85,
+          "replicateWindows": 1700,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "2": {
+          "observedConfirmatoryWindows": 38,
+          "replicateWindows": 760,
+          "singleClassReplicateWindowRate": 0.29736842105263156,
+          "missingClassOccurrencesPerReplicateWindow": 2.2973684210526315,
+          "switchesPerMinute": 0.3513157894736842
+        },
+        "3-5": {
+          "observedConfirmatoryWindows": 49,
+          "replicateWindows": 980,
+          "singleClassReplicateWindowRate": 0.06020408163265306,
+          "missingClassOccurrencesPerReplicateWindow": 1.523469387755102,
+          "switchesPerMinute": 0.5149456521739131
+        },
+        "6-15": {
+          "observedConfirmatoryWindows": 39,
+          "replicateWindows": 780,
+          "singleClassReplicateWindowRate": 0.002564102564102564,
+          "missingClassOccurrencesPerReplicateWindow": 0.5769230769230769,
+          "switchesPerMinute": 0.6201704545454545
+        },
+        "16+": {
+          "observedConfirmatoryWindows": 15,
+          "replicateWindows": 300,
+          "singleClassReplicateWindowRate": 0.0,
+          "missingClassOccurrencesPerReplicateWindow": 0.04666666666666667,
+          "switchesPerMinute": 0.6769938650306748
+        }
+      }
+    },
+    "persistence": {
+      "generatedClassMinutes": 26980,
+      "pooledClassProportions": {
+        "GR": 0.42998517420311344,
+        "RE": 0.19269829503335803,
+        "RU": 0.11990363232023721,
+        "WA": 0.25741289844329135
+      },
+      "singleClassReplicateWindowRate": 1.0,
+      "missingClassOccurrencesPerReplicateWindow": 3.0,
+      "switchesPerMinute": 0.0,
+      "completeInteriorRunDurationsByClass": {
+        "GR": {
+          "completeInteriorRuns": 0,
+          "q25Minutes": null,
+          "medianMinutes": null,
+          "q75Minutes": null
+        },
+        "RE": {
+          "completeInteriorRuns": 0,
+          "q25Minutes": null,
+          "medianMinutes": null,
+          "q75Minutes": null
+        },
+        "RU": {
+          "completeInteriorRuns": 0,
+          "q25Minutes": null,
+          "medianMinutes": null,
+          "q75Minutes": null
+        },
+        "WA": {
+          "completeInteriorRuns": 0,
+          "q25Minutes": null,
+          "medianMinutes": null,
+          "q75Minutes": null
+        }
+      },
+      "perAnimalSequenceDiagnostics": {
+        "AH:2008": {
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "BH:5111": {
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "BR:8065": {
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "RC:35": {
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        }
+      },
+      "lengthStratifiedDiagnostics": {
+        "1": {
+          "observedConfirmatoryWindows": 85,
+          "replicateWindows": 1700,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "2": {
+          "observedConfirmatoryWindows": 38,
+          "replicateWindows": 760,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "3-5": {
+          "observedConfirmatoryWindows": 49,
+          "replicateWindows": 980,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "6-15": {
+          "observedConfirmatoryWindows": 39,
+          "replicateWindows": 780,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "16+": {
+          "observedConfirmatoryWindows": 15,
+          "replicateWindows": 300,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        }
+      }
+    },
+    "markov": {
+      "generatedClassMinutes": 26980,
+      "pooledClassProportions": {
+        "GR": 0.29814677538917717,
+        "RE": 0.23702742772424018,
+        "RU": 0.21827279466271313,
+        "WA": 0.24655300222386953
+      },
+      "singleClassReplicateWindowRate": 0.49535398230088495,
+      "missingClassOccurrencesPerReplicateWindow": 2.056637168141593,
+      "switchesPerMinute": 0.4340993328391401,
+      "completeInteriorRunDurationsByClass": {
+        "GR": {
+          "completeInteriorRuns": 2390,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1.0,
+          "q75Minutes": 2.0
+        },
+        "RE": {
+          "completeInteriorRuns": 2355,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1,
+          "q75Minutes": 2.0
+        },
+        "RU": {
+          "completeInteriorRuns": 2338,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1.0,
+          "q75Minutes": 2.0
+        },
+        "WA": {
+          "completeInteriorRuns": 2348,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1.0,
+          "q75Minutes": 2.0
+        }
+      },
+      "perAnimalSequenceDiagnostics": {
+        "AH:2008": {
+          "singleClassReplicateWindowRate": 0.37972972972972974,
+          "missingClassOccurrencesPerReplicateWindow": 1.8027027027027027,
+          "switchesPerMinute": 0.45209003215434085
+        },
+        "BH:5111": {
+          "singleClassReplicateWindowRate": 0.45955882352941174,
+          "missingClassOccurrencesPerReplicateWindow": 2.0433823529411765,
+          "switchesPerMinute": 0.4411764705882353
+        },
+        "BR:8065": {
+          "singleClassReplicateWindowRate": 0.572972972972973,
+          "missingClassOccurrencesPerReplicateWindow": 2.235135135135135,
+          "switchesPerMinute": 0.3919934640522876
+        },
+        "RC:35": {
+          "singleClassReplicateWindowRate": 0.5159574468085106,
+          "missingClassOccurrencesPerReplicateWindow": 1.9946808510638299,
+          "switchesPerMinute": 0.44736070381231674
+        }
+      },
+      "lengthStratifiedDiagnostics": {
+        "1": {
+          "observedConfirmatoryWindows": 85,
+          "replicateWindows": 1700,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "2": {
+          "observedConfirmatoryWindows": 38,
+          "replicateWindows": 760,
+          "singleClassReplicateWindowRate": 0.48947368421052634,
+          "missingClassOccurrencesPerReplicateWindow": 2.4894736842105263,
+          "switchesPerMinute": 0.25526315789473686
+        },
+        "3-5": {
+          "observedConfirmatoryWindows": 49,
+          "replicateWindows": 980,
+          "singleClassReplicateWindowRate": 0.1663265306122449,
+          "missingClassOccurrencesPerReplicateWindow": 1.7877551020408162,
+          "switchesPerMinute": 0.38125
+        },
+        "6-15": {
+          "observedConfirmatoryWindows": 39,
+          "replicateWindows": 780,
+          "singleClassReplicateWindowRate": 0.005128205128205128,
+          "missingClassOccurrencesPerReplicateWindow": 0.6846153846153846,
+          "switchesPerMinute": 0.4744318181818182
+        },
+        "16+": {
+          "observedConfirmatoryWindows": 15,
+          "replicateWindows": 300,
+          "singleClassReplicateWindowRate": 0.0,
+          "missingClassOccurrencesPerReplicateWindow": 0.06,
+          "switchesPerMinute": 0.5046779141104294
+        }
+      }
+    },
+    "semimarkov": {
+      "generatedClassMinutes": 26980,
+      "pooledClassProportions": {
+        "GR": 0.43002223869532985,
+        "RE": 0.13621200889547813,
+        "RU": 0.29736842105263156,
+        "WA": 0.1363973313565604
+      },
+      "singleClassReplicateWindowRate": 0.6353982300884956,
+      "missingClassOccurrencesPerReplicateWindow": 2.441150442477876,
+      "switchesPerMinute": 0.15782060785767235,
+      "completeInteriorRunDurationsByClass": {
+        "GR": {
+          "completeInteriorRuns": 782,
+          "q25Minutes": 1.0,
+          "medianMinutes": 3.0,
+          "q75Minutes": 6.0
+        },
+        "RE": {
+          "completeInteriorRuns": 787,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1,
+          "q75Minutes": 2.0
+        },
+        "RU": {
+          "completeInteriorRuns": 324,
+          "q25Minutes": 6.0,
+          "medianMinutes": 6.0,
+          "q75Minutes": 18.0
+        },
+        "WA": {
+          "completeInteriorRuns": 717,
+          "q25Minutes": 1.0,
+          "medianMinutes": 1,
+          "q75Minutes": 2.0
+        }
+      },
+      "perAnimalSequenceDiagnostics": {
+        "AH:2008": {
+          "singleClassReplicateWindowRate": 0.5554054054054054,
+          "missingClassOccurrencesPerReplicateWindow": 2.3162162162162163,
+          "switchesPerMinute": 0.1509646302250804
+        },
+        "BH:5111": {
+          "singleClassReplicateWindowRate": 0.6176470588235294,
+          "missingClassOccurrencesPerReplicateWindow": 2.4286764705882353,
+          "switchesPerMinute": 0.16483375959079283
+        },
+        "BR:8065": {
+          "singleClassReplicateWindowRate": 0.6898648648648649,
+          "missingClassOccurrencesPerReplicateWindow": 2.54527027027027,
+          "switchesPerMinute": 0.16127450980392158
+        },
+        "RC:35": {
+          "singleClassReplicateWindowRate": 0.6382978723404256,
+          "missingClassOccurrencesPerReplicateWindow": 2.393617021276596,
+          "switchesPerMinute": 0.15293255131964809
+        }
+      },
+      "lengthStratifiedDiagnostics": {
+        "1": {
+          "observedConfirmatoryWindows": 85,
+          "replicateWindows": 1700,
+          "singleClassReplicateWindowRate": 1.0,
+          "missingClassOccurrencesPerReplicateWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "2": {
+          "observedConfirmatoryWindows": 38,
+          "replicateWindows": 760,
+          "singleClassReplicateWindowRate": 0.7157894736842105,
+          "missingClassOccurrencesPerReplicateWindow": 2.7157894736842105,
+          "switchesPerMinute": 0.14210526315789473
+        },
+        "3-5": {
+          "observedConfirmatoryWindows": 49,
+          "replicateWindows": 980,
+          "singleClassReplicateWindowRate": 0.4459183673469388,
+          "missingClassOccurrencesPerReplicateWindow": 2.3448979591836734,
+          "switchesPerMinute": 0.1953804347826087
+        },
+        "6-15": {
+          "observedConfirmatoryWindows": 39,
+          "replicateWindows": 780,
+          "singleClassReplicateWindowRate": 0.23076923076923078,
+          "missingClassOccurrencesPerReplicateWindow": 1.7987179487179488,
+          "switchesPerMinute": 0.17784090909090908
+        },
+        "16+": {
+          "observedConfirmatoryWindows": 15,
+          "replicateWindows": 300,
+          "singleClassReplicateWindowRate": 0.03666666666666667,
+          "missingClassOccurrencesPerReplicateWindow": 0.5633333333333334,
+          "switchesPerMinute": 0.15881901840490797
+        }
+      }
+    }
+  },
+  "observedAnnotatedRunDurationsByClass": {
+    "GR": {
+      "completeInteriorRuns": 19,
+      "q25Minutes": 3.5,
+      "medianMinutes": 5,
+      "q75Minutes": 7.0
+    },
+    "RE": {
+      "completeInteriorRuns": 12,
+      "q25Minutes": 1.0,
+      "medianMinutes": 2.0,
+      "q75Minutes": 2.0
+    },
+    "RU": {
+      "completeInteriorRuns": 1,
+      "q25Minutes": 10.0,
+      "medianMinutes": 10,
+      "q75Minutes": 10.0
+    },
+    "WA": {
+      "completeInteriorRuns": 10,
+      "q25Minutes": 1.0,
+      "medianMinutes": 1.5,
+      "q75Minutes": 6.75
+    }
+  },
+  "trainingCompleteDurationSupportByClass": {
+    "GR": {
+      "completeInteriorRuns": 160,
+      "q25Minutes": 2.0,
+      "medianMinutes": 4.0,
+      "q75Minutes": 8.0
+    },
+    "RE": {
+      "completeInteriorRuns": 79,
+      "q25Minutes": 1.0,
+      "medianMinutes": 1,
+      "q75Minutes": 2.0
+    },
+    "RU": {
+      "completeInteriorRuns": 2,
+      "q25Minutes": 9.0,
+      "medianMinutes": 12.0,
+      "q75Minutes": 15.0
+    },
+    "WA": {
+      "completeInteriorRuns": 102,
+      "q25Minutes": 1.0,
+      "medianMinutes": 2.0,
+      "q75Minutes": 3.0
+    }
+  },
+  "pereaSourceCensoringByClass": {
+    "GR": {
+      "observedRuns": 635,
+      "leftBoundaryCensored": 401,
+      "rightBoundaryCensored": 401,
+      "completeInteriorRuns": 179,
+      "fractionTouchingEitherBoundary": 0.7181102362204724
+    },
+    "RE": {
+      "observedRuns": 571,
+      "leftBoundaryCensored": 437,
+      "rightBoundaryCensored": 448,
+      "completeInteriorRuns": 91,
+      "fractionTouchingEitherBoundary": 0.840630472854641
+    },
+    "RU": {
+      "observedRuns": 267,
+      "leftBoundaryCensored": 247,
+      "rightBoundaryCensored": 238,
+      "completeInteriorRuns": 3,
+      "fractionTouchingEitherBoundary": 0.9887640449438202
+    },
+    "WA": {
+      "observedRuns": 356,
+      "leftBoundaryCensored": 220,
+      "rightBoundaryCensored": 218,
+      "completeInteriorRuns": 112,
+      "fractionTouchingEitherBoundary": 0.6853932584269663
+    }
+  },
+  "perAnimalFrozenMetrics": {
+    "iid": {
+      "AH:2008": {
+        "windows": 37,
+        "compositionError": 0.32602283142728034,
+        "transitionTV": 0.7676745785724269,
+        "RUAbsoluteProportionError": 0.1527232237128597
+      },
+      "BH:5111": {
+        "windows": 68,
+        "compositionError": 0.3606408165492918,
+        "transitionTV": 0.8480883355017843,
+        "RUAbsoluteProportionError": 0.14361879316503928
+      },
+      "BR:8065": {
+        "windows": 74,
+        "compositionError": 0.38186495385017344,
+        "transitionTV": 0.8626897402831517,
+        "RUAbsoluteProportionError": 0.3328598412382196
+      },
+      "RC:35": {
+        "windows": 47,
+        "compositionError": 0.3749868440470457,
+        "transitionTV": 0.7951699057051592,
+        "RUAbsoluteProportionError": 0.3527007999214567
+      }
+    },
+    "persistence": {
+      "AH:2008": {
+        "windows": 37,
+        "compositionError": 0.34279111328213957,
+        "transitionTV": 0.6729665966278258,
+        "RUAbsoluteProportionError": 0.16414637590067319
+      },
+      "BH:5111": {
+        "windows": 68,
+        "compositionError": 0.35551470588235295,
+        "transitionTV": 0.691304347826087,
+        "RUAbsoluteProportionError": 0.12058823529411766
+      },
+      "BR:8065": {
+        "windows": 74,
+        "compositionError": 0.3903716216216216,
+        "transitionTV": 0.7269791666666666,
+        "RUAbsoluteProportionError": 0.3391891891891892
+      },
+      "RC:35": {
+        "windows": 47,
+        "compositionError": 0.3933302519435196,
+        "transitionTV": 0.7586808576616286,
+        "RUAbsoluteProportionError": 0.3776595744680851
+      }
+    },
+    "markov": {
+      "AH:2008": {
+        "windows": 37,
+        "compositionError": 0.34332476325714445,
+        "transitionTV": 0.749890571571999,
+        "RUAbsoluteProportionError": 0.21265840034419406
+      },
+      "BH:5111": {
+        "windows": 68,
+        "compositionError": 0.3690035768862201,
+        "transitionTV": 0.781379681372368,
+        "RUAbsoluteProportionError": 0.17954163548010296
+      },
+      "BR:8065": {
+        "windows": 74,
+        "compositionError": 0.3853176918801919,
+        "transitionTV": 0.7847764679152547,
+        "RUAbsoluteProportionError": 0.36886908223817005
+      },
+      "RC:35": {
+        "windows": 47,
+        "compositionError": 0.3800234938626418,
+        "transitionTV": 0.7401252359311483,
+        "RUAbsoluteProportionError": 0.41685160473761285
+      }
+    },
+    "semimarkov": {
+      "AH:2008": {
+        "windows": 37,
+        "compositionError": 0.3359965650587491,
+        "transitionTV": 0.6158049182721498,
+        "RUAbsoluteProportionError": 0.2676121532087154
+      },
+      "BH:5111": {
+        "windows": 68,
+        "compositionError": 0.3707099266832239,
+        "transitionTV": 0.7062086238742965,
+        "RUAbsoluteProportionError": 0.19543915643180348
+      },
+      "BR:8065": {
+        "windows": 74,
+        "compositionError": 0.3875297492561006,
+        "transitionTV": 0.7599714026599476,
+        "RUAbsoluteProportionError": 0.36344474932988446
+      },
+      "RC:35": {
+        "windows": 47,
+        "compositionError": 0.3901754964456325,
+        "transitionTV": 0.7479102132400149,
+        "RUAbsoluteProportionError": 0.41426423615786606
+      }
+    }
+  },
+  "animalMetricRanges": {
+    "iid": {
+      "compositionError": {
+        "minimum": 0.32602283142728034,
+        "maximum": 0.38186495385017344,
+        "range": 0.0558421224228931
+      },
+      "transitionTV": {
+        "minimum": 0.7676745785724269,
+        "maximum": 0.8626897402831517,
+        "range": 0.09501516171072477
+      }
+    },
+    "persistence": {
+      "compositionError": {
+        "minimum": 0.34279111328213957,
+        "maximum": 0.3933302519435196,
+        "range": 0.050539138661380045
+      },
+      "transitionTV": {
+        "minimum": 0.6729665966278258,
+        "maximum": 0.7586808576616286,
+        "range": 0.08571426103380286
+      }
+    },
+    "markov": {
+      "compositionError": {
+        "minimum": 0.34332476325714445,
+        "maximum": 0.3853176918801919,
+        "range": 0.04199292862304743
+      },
+      "transitionTV": {
+        "minimum": 0.7401252359311483,
+        "maximum": 0.7847764679152547,
+        "range": 0.044651231984106365
+      }
+    },
+    "semimarkov": {
+      "compositionError": {
+        "minimum": 0.3359965650587491,
+        "maximum": 0.3901754964456325,
+        "range": 0.0541789313868834
+      },
+      "transitionTV": {
+        "minimum": 0.6158049182721498,
+        "maximum": 0.7599714026599476,
+        "range": 0.14416648438779778
+      }
+    }
+  },
+  "limitations": [
+    "The four confirmatory animals come from the same Perea source/two ranch contexts and do not establish external validity.",
+    "Generated replicates are deterministic synthetic outputs, not independent biological observations or uncertainty intervals.",
+    "Observed runs are based on sampled exact-minute annotation windows, may touch window boundaries, and are affected by the source sub-30-second carry-forward rule.",
+    "No complete 24-hour windows exist; circadian activity budgets are unsupported.",
+    "No intervention, forage availability, climate exposure linkage, physiology, DMI, ADG, or weight outcomes were measured by this comparison.",
+    "The replay is a post-hoc descriptive diagnostic on an already opened holdout. It cannot be used to modify or select this candidate."
+  ]
+}

@@ -9,6 +9,9 @@ import {validateFarmSnapshot} from '../client/snapshot-validator.js';
 import {validateFarmSnapshotManifestReference} from '../client/snapshot-manifest-link.js';
 import {executeNativeConfiguredComparison, nativeComparisonAvailable, nativeComparisonRunner} from './native-comparison.js';
 import {validateExperimentSpecification} from '../client/population-experiment.js';
+import {consumeBehaviorResearchRateLimit, requestBehaviorExperimentExecution, runBehaviorResearchAssistant, validateBehaviorExecutionRequest} from './behavior-research-assistant.js';
+import {interpretScenarioLabPromptWithProvider, validateScenarioLabInterpretationRequest} from './scenario-lab-ai.js';
+import {runDecisionAssistant, validateDecisionRequest} from './decision-assistant.js';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const MAX_BODY_BYTES = 16 * 1024;
@@ -20,13 +23,14 @@ const MAX_INTENT_OUTPUT_TOKENS = 700;
 const MAX_INTENT_INPUT_LENGTH = 1200;
 const PUBLIC_FILES = new Set([
   'home.html', 'home.js', 'header-interaction.js', 'manifesto.html', 'manifesto.css', 'manifesto.js',
-  'product.html', 'product.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
+  'product.html', 'product.css', 'scenario-lab.html', 'scenario-lab.css', 'experiments.html', 'simulator.html', 'riose-mark.svg',
   'assets/research-pages/README.md', 'assets/research-pages/generative-agents-1.webp',
   'assets/research-pages/generative-agents-2.webp', 'assets/research-pages/generative-agents-3.webp',
   'assets/research-pages/grounded-agents-1.webp', 'assets/research-pages/grounded-agents-2.webp', 'assets/research-pages/grounded-agents-3.webp',
   'assets/research-pages/social-simulacra-1.webp', 'assets/research-pages/social-simulacra-2.webp', 'assets/research-pages/social-simulacra-3.webp',
   'index.html', 'engine.js', 'engine-provenance.js', 'environment-model.js', 'feeding-model.js', 'simulation-report.js', 'run-history.js', 'worker.js', 'favicon.svg',
   'environment-inputs.js', 'lot-metrics.js', 'thermal-index.js', 'lot-selection.js', 'scientific/br_corte_pasture_dmi.js',
+  'scientific/br_corte_dmi_adapter.js', 'scientific/model-contract.js',
   'snapshot-review.js', 'snapshot-validator.js', 'outcome-review.html', 'outcome-review.css', 'outcome-review.js',
   'adult-data.html', 'adult-data.css', 'adult-data.js', 'adult-data-model.js',
   'adult-cow-data.html', 'adult-cow-data.css', 'adult-cow-data.js', 'adult-cow-data-model.js',
@@ -376,6 +380,9 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
       if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
         return sendJson(response, 415, {error: 'content_type_must_be_json'});
       }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {available: false, error: 'intent_interpretation_rate_limit'});
+      }
       try {
         const input=await readJson(request);
         if(!validateExperimentInterpretationRequest(input))return sendJson(response,400,{error:'invalid_experiment_prompt'});
@@ -389,6 +396,81 @@ export function createServer({env = process.env, fetchImpl = fetch} = {}) {
         return sendJson(response,200,result);
       }catch(error){
         return sendJson(response,error.status??503,{available:false,error:error.status===413?'request_too_large':'intent_interpretation_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/interpret-scenario-lab' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {available: false, error: 'scenario_lab_rate_limit'});
+      }
+      try {
+        const input = await readJson(request);
+        if (!validateScenarioLabInterpretationRequest(input)) return sendJson(response, 400, {available: false, error: 'invalid_scenario_lab_prompt'});
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const providerSettings = {
+          groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? ''},
+        }[provider] ?? {};
+        const result = await interpretScenarioLabPromptWithProvider(input.prompt, {
+          provider, apiKey: providerSettings.apiKey, model: providerSettings.model, fetchImpl,
+        });
+        return sendJson(response, 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {available: false, error: error.status === 413 ? 'request_too_large' : 'scenario_lab_interpretation_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/decision-assistant' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) return sendJson(response, 429, {error: 'decision_assistant_rate_limit'});
+      try {
+        const input = await readJson(request);
+        if (!validateDecisionRequest(input)) return sendJson(response, 400, {error: 'invalid_decision_request'});
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const settings = {groq: {apiKey: env.GROQ_API_KEY, model: env.LLM_MODEL ?? env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.LLM_MODEL ?? env.HF_MODEL ?? ''}}[provider] ?? {};
+        return sendJson(response, 200, await runDecisionAssistant(input, {provider, ...settings, fetchImpl}));
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {error: 'decision_assistant_unavailable', executed: false});
+      }
+    }
+    if (url.pathname === '/api/behavior-research-assistant' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      if (!consumeBehaviorResearchRateLimit(request.socket.remoteAddress)) {
+        return sendJson(response, 429, {error: 'research_assistant_rate_limit'});
+      }
+      try {
+        const input = await readJson(request);
+        const provider = env.LLM_PROVIDER ?? 'none';
+        const providerSettings = {
+          openai: {apiKey: env.OPENAI_API_KEY, model: env.OPENAI_MODEL ?? 'gpt-6-luna'},
+          groq: {apiKey: env.GROQ_API_KEY, model: env.GROQ_MODEL ?? 'openai/gpt-oss-20b'},
+          huggingface: {apiKey: env.HF_TOKEN, model: env.HF_MODEL ?? 'openai/gpt-oss-120b:cheapest'},
+        }[provider] ?? {};
+        const result = await runBehaviorResearchAssistant(input, {
+          provider, apiKey: providerSettings.apiKey,
+          model: env.LLM_MODEL ?? providerSettings.model,
+          fetchImpl,
+        });
+        return sendJson(response, result.status === 'invalid_request' ? 400 : 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 503, {status: 'unavailable', reason: error.status === 413 ? 'request_too_large' : 'research_assistant_unavailable'});
+      }
+    }
+    if (url.pathname === '/api/behavior-experiments/execute' && request.method === 'POST') {
+      if (!request.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+        return sendJson(response, 415, {error: 'content_type_must_be_json'});
+      }
+      try {
+        const input = await readJson(request);
+        if (!validateBehaviorExecutionRequest(input)) return sendJson(response, 400, {status: 'invalid_request', executed: false});
+        const result = requestBehaviorExperimentExecution(input);
+        return sendJson(response, result.status === 'behavior_model_not_eligible' ? 409 : 200, result);
+      } catch (error) {
+        return sendJson(response, error.status ?? 400, {status: 'invalid_request', executed: false, reason: error.status === 413 ? 'request_too_large' : 'invalid_json'});
       }
     }
     if (url.pathname === '/api/explain' && request.method === 'POST') {

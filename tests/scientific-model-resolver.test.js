@@ -183,8 +183,9 @@ test('registered model result records exact inputs, units, evidence status and i
   assert.deepEqual(provenance.inputs.bodyWeightKg, {value: 330, unit: 'kg'});
   assert.deepEqual(provenance.inputs.adgKgPerDay, {value: 0.5, unit: 'kg/day'});
   assert.deepEqual(provenance.inputs.supplementKgDMPerDay, {value: 1.6, unit: 'kg DM/day'});
-  assert.deepEqual(provenance.evidenceReferences, [{id: BR_CORTE_PASTURE_DMI_MODEL.evidence.source, locator: BR_CORTE_PASTURE_DMI_MODEL.evidence.source, status: 'demonstrative'}]);
-  assert.equal(provenance.evidenceStatus, 'demonstrative');
+  const evidenceStatus = 'published-equation-with-external-validation; no Riose-specific calibration';
+  assert.deepEqual(provenance.evidenceReferences, [{id: BR_CORTE_PASTURE_DMI_MODEL.evidence.source, locator: BR_CORTE_PASTURE_DMI_MODEL.evidence.source, status: evidenceStatus}]);
+  assert.equal(provenance.evidenceStatus, evidenceStatus);
   assert.equal(provenance.implementationHash, `sha256:${createHash('sha256').update(BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE).digest('hex')}`);
   assert.notEqual(provenance.implementationHash, `sha256:${createHash('sha256').update(BR_CORTE_PASTURE_DMI_MODEL.run.toString()).digest('hex')}`);
   assert.match(BR_CORTE_PASTURE_DMI_IMPLEMENTATION_SOURCE, /const finite =/);
@@ -264,7 +265,8 @@ test('report renders optional scientific provenance and keeps legacy reports rea
   assert.match(report, /br-corte-2023-eq-2\.6@2023/);
   assert.match(report, /bodyWeightKg=330 kg/);
   assert.match(report, /published-equation|https:\/\/brcorte\.com\.br/);
-  assert.match(report, /estado: demonstrative/);
+  assert.match(report, /estado: published-equation-with-external-validation; no Riose-specific calibration/);
+  assert.match(report, /Classificação do resultado: demonstrativo; não validado/);
   assert.match(report, /sha256:[a-f0-9]{64}/);
   assert.match(report, /não promove evidência nem valida o modelo/);
 });

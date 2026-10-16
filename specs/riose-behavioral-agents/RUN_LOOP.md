@@ -2,7 +2,7 @@
 
 At the start of *every* new Codex session:
 1. Read applicable repository `AGENTS.md`, git status, PR #190 dependency and branch head.
-2. Read this README, requirements, evidence inventory, model spec, validation protocol, tasks, progress and handoff.
+2. Read this README, requirements, evidence inventory, model spec, validation protocol, SDD decisions/risks/tasks/progress/handoff and the latest phase-specific protocols.
 3. Check actual code and data before assuming an earlier task is complete.
 4. Select the first READY unblocked task. Keep each task's acceptance criteria and negative scientific gates intact.
 
@@ -34,3 +34,12 @@ SPEC → INSPECT → DEFINE FAILING TEST / CHECK → IMPLEMENT
 7. **BEH-007** evaluate external-site data *only after explicit rights and eligibility clearance*.
 
 Avoid substituting classifier training, an LLM roleplay simulation, or UI animations for behavior generation validation.
+
+## Post-NO-GO continuation
+
+- BEH-004's Perea confirmatory data have been inspected. Never describe them as a sealed test set or tune/reselect on them. Any replay is post-hoc diagnosis only and cannot change the NO-GO result.
+- Keep FarmEngine as the existing demonstration baseline. Behavior policy, physiology, environment, observation and intervention effects have separate interfaces and evidence statuses.
+- No new generator is eligible solely from the current Perea source. Daypart requires supported complete time coverage; duration modeling needs observation/censoring semantics; intervention coupling needs direct intervention/outcome data.
+- Use external pasture sources only after both scientific eligibility and data-use rights clear. Article licenses do not automatically license unshared microdata. Do not send data-access requests on behalf of the user.
+- Optional LLM may retrieve only bounded, registered evidence/model results through a closed server allowlist. It cannot write scientific explanations from free-form output, modify the model, run per-tick decisions, or bypass confirmation. Provider spend requires a shared budget control before production configuration.
+- Resume at the highest READY task in `tasks.md`; if all remaining tasks are blocked by missing rights/evidence, document that gate instead of creating a candidate merely to obtain a GO.

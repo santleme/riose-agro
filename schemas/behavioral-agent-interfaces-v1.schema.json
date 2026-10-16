@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://riose.agro/schemas/behavioral-agent-interfaces-v1.schema.json",
+  "title": "Versioned Riose behavioral-agent component messages",
+  "oneOf": [
+    { "$ref": "#/$defs/behaviorPolicy" },
+    { "$ref": "#/$defs/physiologicalState" },
+    { "$ref": "#/$defs/environmentSnapshot" },
+    { "$ref": "#/$defs/observationRecord" },
+    { "$ref": "#/$defs/interventionEffect" }
+  ],
+  "$defs": {
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "evidenceStatus", "domain"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "evidenceStatus": { "enum": ["demonstrative", "exploratory", "validated_for_declared_scope", "no_go", "unsupported"] },
+        "domain": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "id", "uri", "sha256"],
+        "properties": {
+          "kind": { "enum": ["dataset", "model", "study", "execution", "observation", "scenario"] },
+          "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "uri": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "limitations": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 500 }, "maxItems": 30 },
+    "population": {
+      "type": "object", "additionalProperties": false,
+      "required": ["populationId", "animalId"],
+      "properties": {
+        "populationId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "animalId": { "type": "string", "minLength": 1, "maxLength": 160 }
+      }
+    },
+    "time": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start", "end", "timeZone", "offsetStatus", "basis"],
+      "properties": {
+        "start": { "type": "string", "minLength": 1, "maxLength": 48 },
+        "end": { "type": "string", "minLength": 1, "maxLength": 48 },
+        "timeZone": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "offsetStatus": { "enum": ["explicit", "unknown"] },
+        "basis": { "enum": ["observed_clock", "configured_clock", "model_step"] }
+      }
+    },
+    "value": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "value", "unit", "status", "origin"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "status": { "enum": ["observed", "configured", "estimated", "calculated", "not_available"] },
+        "origin": { "type": "string", "minLength": 1, "maxLength": 240 }
+      },
+      "allOf": [
+        { "if": { "properties": { "status": { "const": "not_available" } } }, "then": { "properties": { "value": { "type": "null" } } } },
+        { "if": { "properties": { "status": { "not": { "const": "not_available" } } } }, "then": { "properties": { "value": { "type": "number" } } } }
+      ]
+    },
+    "behaviorPolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interfaceVersion", "componentId", "implementation", "population", "time", "ontology", "seed", "sequence", "provenance", "limitations"],
+      "properties": {
+        "interfaceVersion": { "const": "riose.behavior-policy/v1" },
+        "componentId": { "const": "behavior-policy" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "population": { "$ref": "#/$defs/population" },
+        "time": { "$ref": "#/$defs/time" },
+        "ontology": { "type": "object", "additionalProperties": false, "required": ["id", "version", "labels"], "properties": { "id": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 }, "labels": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } } },
+        "seed": { "type": ["integer", "null"], "minimum": 0 },
+        "sequence": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["activity", "durationMinutes"], "properties": { "activity": { "type": "string", "minLength": 1 }, "durationMinutes": { "type": "integer", "minimum": 1 } } } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "limitations": { "$ref": "#/$defs/limitations" }
+      }
+    },
+    "physiologicalState": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interfaceVersion", "componentId", "implementation", "population", "time", "fields", "provenance", "limitations"],
+      "properties": {
+        "interfaceVersion": { "const": "riose.physiological-state/v1" },
+        "componentId": { "const": "physiological-state" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "population": { "$ref": "#/$defs/population" },
+        "time": { "$ref": "#/$defs/time" },
+        "fields": { "type": "array", "items": { "$ref": "#/$defs/value" } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "limitations": { "$ref": "#/$defs/limitations" }
+      }
+    },
+    "environmentSnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interfaceVersion", "componentId", "implementation", "populationId", "time", "values", "provenance", "limitations"],
+      "properties": {
+        "interfaceVersion": { "const": "riose.environment-snapshot/v1" },
+        "componentId": { "const": "environment" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "populationId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "time": { "$ref": "#/$defs/time" },
+        "values": { "type": "array", "items": { "$ref": "#/$defs/value" } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "limitations": { "$ref": "#/$defs/limitations" }
+      }
+    },
+    "observationRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interfaceVersion", "componentId", "implementation", "population", "time", "stage", "ontology", "records", "provenance", "limitations"],
+      "properties": {
+        "interfaceVersion": { "const": "riose.observation-model/v1" },
+        "componentId": { "const": "observation-model" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "population": { "$ref": "#/$defs/population" },
+        "time": { "$ref": "#/$defs/time" },
+        "stage": { "enum": ["latent", "human_annotated", "classified", "generated"] },
+        "ontology": { "type": "object", "additionalProperties": false, "required": ["id", "version", "labels"], "properties": { "id": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 }, "labels": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } } },
+        "records": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["timestamp", "label", "status"], "properties": { "timestamp": { "type": "string", "minLength": 1, "maxLength": 48 }, "label": { "type": ["string", "null"] }, "status": { "enum": ["observed", "annotated", "predicted", "generated", "unmapped", "missing"] } } } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "limitations": { "$ref": "#/$defs/limitations" }
+      }
+    },
+    "interventionEffect": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interfaceVersion", "componentId", "implementation", "population", "interventionId", "comparatorId", "outcome", "design", "effectStatus", "effect", "provenance", "limitations"],
+      "properties": {
+        "interfaceVersion": { "const": "riose.intervention-effect/v1" },
+        "componentId": { "const": "intervention-model" },
+        "implementation": { "$ref": "#/$defs/implementation" },
+        "population": { "type": "object", "additionalProperties": false, "required": ["populationId", "description"], "properties": { "populationId": { "type": "string", "minLength": 1 }, "description": { "type": "string", "minLength": 1, "maxLength": 500 } } },
+        "interventionId": { "type": "string", "minLength": 1 },
+        "comparatorId": { "type": "string", "minLength": 1 },
+        "outcome": { "type": "object", "additionalProperties": false, "required": ["id", "unit", "timeHorizon"], "properties": { "id": { "type": "string", "minLength": 1 }, "unit": { "type": "string", "minLength": 1 }, "timeHorizon": { "type": "string", "minLength": 1 } } },
+        "design": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "effectStatus": { "enum": ["supported", "unsupported", "not_evaluated"] },
+        "effect": { "type": ["object", "null"], "additionalProperties": false, "required": ["estimate", "unit", "methodId"], "properties": { "estimate": { "type": "number" }, "unit": { "type": "string", "minLength": 1 }, "methodId": { "type": "string", "minLength": 1 } } },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "limitations": { "$ref": "#/$defs/limitations" }
+      },
+      "allOf": [
+        { "if": { "properties": { "effectStatus": { "enum": ["unsupported", "not_evaluated"] } } }, "then": { "properties": { "effect": { "type": "null" } } } },
+        { "if": { "properties": { "effectStatus": { "const": "supported" } } }, "then": { "properties": { "effect": { "type": "object" } } } }
+      ]
+    }
+  }
+}

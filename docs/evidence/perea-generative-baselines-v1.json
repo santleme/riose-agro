@@ -1,0 +1,1020 @@
+{
+  "schemaVersion": "perea-generative-baselines.v1",
+  "studyType": "within_source_grouped_by_animal_exploratory_baseline_comparison",
+  "candidate": {
+    "id": "perea-simple-sequence-baselines",
+    "version": "1.0.0",
+    "status": "diagnostic_only"
+  },
+  "execution": {
+    "pythonVersion": "3.12.3",
+    "randomImplementation": "Python random.Random with SHA-256-derived per-candidate/fold/animal/window/replicate seed",
+    "candidateImplementationSha256": "ba7fa908573a995d654d0442de80b4ebe5503bb0e0c5b63b5fb0be5a487c26b5",
+    "evaluatorImplementationSha256": "0a2b984ee09c2d5f2a25ca028fbd1f237feb75b50d1a8f2945c6e15487a561b6",
+    "sequenceSchemaSha256": "f1aa87b6cd17153891beb0fb665321337eee8ffa671fc9a720bf622676484934"
+  },
+  "source": {
+    "file": "data/perea-rangeland-behavior/cattle_behavior_data_time_V2.csv",
+    "sha256": "b4d6e14d6ff029dbf497287a774aaa27ec471e7ed1ef5884e9cf0207c784fe37",
+    "preprocessing": {
+      "sourceRows": 9222,
+      "animalMinuteKeys": 8918,
+      "animals": 24,
+      "repeatedAnimalMinuteKeys": 290,
+      "excessRowsAtRepeatedKeys": 304,
+      "conflictingLabelKeys": 54,
+      "rowsExcludedForConflictingLabels": 121,
+      "sameLabelKeysCollapsed": 236,
+      "analysisRows": 8864,
+      "duplicatePolicy": "Same-label rows for an animal-minute collapse to one row with mean motion index; all rows for conflicting-label minutes are excluded."
+    }
+  },
+  "protocol": {
+    "file": "specs/riose-behavioral-agents/07-baseline-preregistration-v1.md",
+    "sha256": "fb4486a7ac90868c65c0b573a8700a737d55871a16b7200b90968a22775d8b94",
+    "version": "1",
+    "replicatesPerWindow": 20
+  },
+  "candidateProtocol": null,
+  "holdoutPolicy": {
+    "reservedConfirmatoryAnimals": [
+      "AH:2008",
+      "BH:5111",
+      "BR:8065",
+      "RC:35"
+    ],
+    "confirmatoryScoresComputed": false
+  },
+  "development": {
+    "folds": [
+      {
+        "fold": 0,
+        "trainAnimals": [
+          "AH:2004",
+          "AH:2009",
+          "AH:2013",
+          "AH:2019",
+          "BH:4071",
+          "BH:4085",
+          "BH:4511",
+          "BH:6495",
+          "BR:7001",
+          "BR:8071",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:2061",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2003",
+          "BH:4589",
+          "BR:8063",
+          "RC:6"
+        ],
+        "trainWindowCount": 883,
+        "testWindowCount": 196,
+        "transitionStatesSupportedAt20TrainingTransitions": [
+          "GR",
+          "RE",
+          "RU",
+          "WA"
+        ],
+        "semiMarkovTrainingDurationSupport": null,
+        "semiMarkovCompleteDurationSamplesByClass": null
+      },
+      {
+        "fold": 1,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2009",
+          "AH:2019",
+          "BH:4071",
+          "BH:4085",
+          "BH:4589",
+          "BH:6495",
+          "BR:8063",
+          "BR:8071",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2013",
+          "BH:4511",
+          "BR:7001",
+          "RC:2061"
+        ],
+        "trainWindowCount": 886,
+        "testWindowCount": 193,
+        "transitionStatesSupportedAt20TrainingTransitions": [
+          "GR",
+          "RE",
+          "RU",
+          "WA"
+        ],
+        "semiMarkovTrainingDurationSupport": null,
+        "semiMarkovCompleteDurationSamplesByClass": null
+      },
+      {
+        "fold": 2,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2013",
+          "AH:2019",
+          "BH:4071",
+          "BH:4511",
+          "BH:4589",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8071",
+          "BR:8073",
+          "RC:1067",
+          "RC:2061",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2009",
+          "BH:4085",
+          "BR:8089",
+          "RC:2024"
+        ],
+        "trainWindowCount": 854,
+        "testWindowCount": 225,
+        "transitionStatesSupportedAt20TrainingTransitions": [
+          "GR",
+          "RE",
+          "RU",
+          "WA"
+        ],
+        "semiMarkovTrainingDurationSupport": null,
+        "semiMarkovCompleteDurationSamplesByClass": null
+      },
+      {
+        "fold": 3,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2004",
+          "AH:2009",
+          "AH:2013",
+          "BH:4071",
+          "BH:4085",
+          "BH:4511",
+          "BH:4589",
+          "BR:7001",
+          "BR:8063",
+          "BR:8071",
+          "BR:8089",
+          "RC:2024",
+          "RC:2061",
+          "RC:6",
+          "RC:9012"
+        ],
+        "testAnimals": [
+          "AH:2019",
+          "BH:6495",
+          "BR:8073",
+          "RC:1067"
+        ],
+        "trainWindowCount": 880,
+        "testWindowCount": 199,
+        "transitionStatesSupportedAt20TrainingTransitions": [
+          "GR",
+          "RE",
+          "RU",
+          "WA"
+        ],
+        "semiMarkovTrainingDurationSupport": null,
+        "semiMarkovCompleteDurationSamplesByClass": null
+      },
+      {
+        "fold": 4,
+        "trainAnimals": [
+          "AH:2003",
+          "AH:2009",
+          "AH:2013",
+          "AH:2019",
+          "BH:4085",
+          "BH:4511",
+          "BH:4589",
+          "BH:6495",
+          "BR:7001",
+          "BR:8063",
+          "BR:8073",
+          "BR:8089",
+          "RC:1067",
+          "RC:2024",
+          "RC:2061",
+          "RC:6"
+        ],
+        "testAnimals": [
+          "AH:2004",
+          "BH:4071",
+          "BR:8071",
+          "RC:9012"
+        ],
+        "trainWindowCount": 813,
+        "testWindowCount": 266,
+        "transitionStatesSupportedAt20TrainingTransitions": [
+          "GR",
+          "RE",
+          "RU",
+          "WA"
+        ],
+        "semiMarkovTrainingDurationSupport": null,
+        "semiMarkovCompleteDurationSamplesByClass": null
+      }
+    ],
+    "candidateSummaries": {
+      "iid": {
+        "animalMacroCompositionError": 0.35318136492532376,
+        "animalMacroTransitionTotalVariation": 0.8177647657710271,
+        "animalMacroCompleteRunAbsoluteMedianErrorMinutes": 3.51749678317334,
+        "perClassAnimalMacroAbsoluteProportionError": {
+          "GR": 0.4491528082499309,
+          "RE": 0.385112359131518,
+          "RU": 0.2596557570556909,
+          "WA": 0.31313910216462804
+        },
+        "diagnostics": {
+          "singleClassWindowRate": 0.4381835032437442,
+          "missingClassOccurrencesPerWindow": 1.8690454124189064,
+          "switchesPerMinute": 0.5973453093812375
+        },
+        "perAnimal": {
+          "AH:2003": {
+            "compositionError": 0.36751981429176445,
+            "transitionTotalVariation": 0.8365080342074996,
+            "completeRunAbsoluteMedianErrorMinutes": 2.990625,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.43464650316359965,
+              "RE": 0.3889486325033992,
+              "RU": 0.3644215232512103,
+              "WA": 0.27974408463650713
+            },
+            "scoredWindows": 58
+          },
+          "AH:2004": {
+            "compositionError": 0.3500364438418398,
+            "transitionTotalVariation": 0.7814486983919815,
+            "completeRunAbsoluteMedianErrorMinutes": 2.7693798449612403,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.3995921323870388,
+              "RE": 0.3359647711793178,
+              "RU": 0.15151583286235978,
+              "WA": 0.5074550491986204
+            },
+            "scoredWindows": 62
+          },
+          "AH:2009": {
+            "compositionError": 0.3678019029126291,
+            "transitionTotalVariation": 0.8805440734022837,
+            "completeRunAbsoluteMedianErrorMinutes": 0.54,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.46071938424437237,
+              "RE": 0.38907846476546787,
+              "RU": 0.26011266370281383,
+              "WA": 0.3586875271833729
+            },
+            "scoredWindows": 83
+          },
+          "AH:2013": {
+            "compositionError": 0.31945675835725595,
+            "transitionTotalVariation": 0.8157121376340934,
+            "completeRunAbsoluteMedianErrorMinutes": 2.415335463258786,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4500143102582976,
+              "RE": 0.30678765679884074,
+              "RU": 0.25355155704312127,
+              "WA": 0.260740124578138
+            },
+            "scoredWindows": 51
+          },
+          "AH:2019": {
+            "compositionError": 0.3685748226232169,
+            "transitionTotalVariation": 0.796148102427326,
+            "completeRunAbsoluteMedianErrorMinutes": 4.325,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.45211871268076337,
+              "RE": 0.37404765490093717,
+              "RU": 0.3526788397740542,
+              "WA": 0.29365747296762146
+            },
+            "scoredWindows": 55
+          },
+          "BH:4071": {
+            "compositionError": 0.3475830048752044,
+            "transitionTotalVariation": 0.7896692235948755,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4947814738543639,
+              "RE": 0.4560459361610257,
+              "RU": 0.15898900864693702,
+              "WA": 0.27710650992939995
+            },
+            "scoredWindows": 66
+          },
+          "BH:4085": {
+            "compositionError": 0.3416673574947736,
+            "transitionTotalVariation": 0.7876024635845519,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.516241964050056,
+              "RE": 0.3708165243464757,
+              "RU": 0.20374593925740037,
+              "WA": 0.2729141826530313
+            },
+            "scoredWindows": 61
+          },
+          "BH:4511": {
+            "compositionError": 0.35201857126791336,
+            "transitionTotalVariation": 0.8576552157540965,
+            "completeRunAbsoluteMedianErrorMinutes": 0.14285714285714285,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4672097615834458,
+              "RE": 0.42012898431977375,
+              "RU": 0.24732063010089328,
+              "WA": 0.25994824240087394
+            },
+            "scoredWindows": 50
+          },
+          "BH:4589": {
+            "compositionError": 0.35053824307500775,
+            "transitionTotalVariation": 0.8418953847078847,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4703672529617908,
+              "RE": 0.3366292906051309,
+              "RU": 0.23734915683445093,
+              "WA": 0.3521525099938965
+            },
+            "scoredWindows": 42
+          },
+          "BH:6495": {
+            "compositionError": 0.35070623272925905,
+            "transitionTotalVariation": 0.8130978902374093,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.5033293168819485,
+              "RE": 0.4142562335325493,
+              "RU": 0.23414742786453316,
+              "WA": 0.25109195263800527
+            },
+            "scoredWindows": 38
+          },
+          "BR:7001": {
+            "compositionError": 0.38235912603257466,
+            "transitionTotalVariation": 0.8643593123875287,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.45018485120591945,
+              "RE": 0.47885183512948976,
+              "RU": 0.28841416005946174,
+              "WA": 0.3103189910687611
+            },
+            "scoredWindows": 45
+          },
+          "BR:8063": {
+            "compositionError": 0.35394995039024907,
+            "transitionTotalVariation": 0.762373410223345,
+            "completeRunAbsoluteMedianErrorMinutes": 1.617816091954023,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4413940024905947,
+              "RE": 0.35913599027116794,
+              "RU": 0.29670278635237024,
+              "WA": 0.3134152964535244
+            },
+            "scoredWindows": 59
+          },
+          "BR:8071": {
+            "compositionError": 0.38228130096278007,
+            "transitionTotalVariation": 0.8572445251441742,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4386399958460913,
+              "RE": 0.37651030357978355,
+              "RU": 0.3091579945109357,
+              "WA": 0.40481690991430974
+            },
+            "scoredWindows": 45
+          },
+          "BR:8073": {
+            "compositionError": 0.31417742879919,
+            "transitionTotalVariation": 0.7850617423664299,
+            "completeRunAbsoluteMedianErrorMinutes": 2.159090909090909,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.40376096998455696,
+              "RE": 0.3515687368200858,
+              "RU": 0.22484497236686843,
+              "WA": 0.24968899268366956
+            },
+            "scoredWindows": 56
+          },
+          "BR:8089": {
+            "compositionError": 0.34833884325302966,
+            "transitionTotalVariation": 0.770173973760284,
+            "completeRunAbsoluteMedianErrorMinutes": 2.4748743718592965,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4207559473673983,
+              "RE": 0.3994979558852406,
+              "RU": 0.29617864735927885,
+              "WA": 0.275740026701276
+            },
+            "scoredWindows": 31
+          },
+          "RC:1067": {
+            "compositionError": 0.37330919250526373,
+            "transitionTotalVariation": 0.8642431292749123,
+            "completeRunAbsoluteMedianErrorMinutes": 15.784090909090908,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.43422070625250375,
+              "RE": 0.38091776270413225,
+              "RU": 0.25421404366317363,
+              "WA": 0.4174721361891238
+            },
+            "scoredWindows": 50
+          },
+          "RC:2024": {
+            "compositionError": 0.37241152985222714,
+            "transitionTotalVariation": 0.8334777316876354,
+            "completeRunAbsoluteMedianErrorMinutes": 2.9096153846153845,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4059595502670318,
+              "RE": 0.3005277742673094,
+              "RU": 0.42233123724101984,
+              "WA": 0.3518480914475595
+            },
+            "scoredWindows": 50
+          },
+          "RC:2061": {
+            "compositionError": 0.3356913419273792,
+            "transitionTotalVariation": 0.8355408465641518,
+            "completeRunAbsoluteMedianErrorMinutes": 6.35625,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.48747379634746657,
+              "RE": 0.4243835972439696,
+              "RU": 0.16562710693561758,
+              "WA": 0.26477022888459056
+            },
+            "scoredWindows": 47
+          },
+          "RC:6": {
+            "compositionError": 0.34778736139281335,
+            "transitionTotalVariation": 0.8059659223427349,
+            "completeRunAbsoluteMedianErrorMinutes": 3.268041237113402,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.3962294069018376,
+              "RE": 0.43737813907065587,
+              "RU": 0.3177362218241173,
+              "WA": 0.22946368908311066
+            },
+            "scoredWindows": 37
+          },
+          "RC:9012": {
+            "compositionError": 0.33741807192210416,
+            "transitionTotalVariation": 0.7765734977273439,
+            "completeRunAbsoluteMedianErrorMinutes": 1.4919786096256684,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4554161262695418,
+              "RE": 0.40077093854560647,
+              "RU": 0.1540753914631998,
+              "WA": 0.3317500246871689
+            },
+            "scoredWindows": 93
+          }
+        }
+      },
+      "persistence": {
+        "animalMacroCompositionError": 0.36757232865478223,
+        "animalMacroTransitionTotalVariation": 0.7543715112663965,
+        "animalMacroCompleteRunAbsoluteMedianErrorMinutes": null,
+        "perClassAnimalMacroAbsoluteProportionError": {
+          "GR": 0.45302275337356035,
+          "RE": 0.38412420453759955,
+          "RU": 0.2648676001021018,
+          "WA": 0.3157707061690692
+        },
+        "diagnostics": {
+          "singleClassWindowRate": 1.0,
+          "missingClassOccurrencesPerWindow": 3.0,
+          "switchesPerMinute": 0.0
+        },
+        "perAnimal": {
+          "AH:2003": {
+            "compositionError": 0.3783401994750155,
+            "transitionTotalVariation": 0.7518659688210506,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.46689896117598234,
+              "RE": 0.37504442095140444,
+              "RU": 0.3566150598170303,
+              "WA": 0.2736243303687523
+            },
+            "scoredWindows": 58
+          },
+          "AH:2004": {
+            "compositionError": 0.36916208599614525,
+            "transitionTotalVariation": 0.7432567583827204,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.41558243123786337,
+              "RE": 0.3286543923716779,
+              "RU": 0.1521505376344086,
+              "WA": 0.5243443504912616
+            },
+            "scoredWindows": 62
+          },
+          "AH:2009": {
+            "compositionError": 0.37311265383465453,
+            "transitionTotalVariation": 0.7985655015062909,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.44991345664347526,
+              "RE": 0.38998047185388096,
+              "RU": 0.26292407726142664,
+              "WA": 0.36050398778211434
+            },
+            "scoredWindows": 83
+          },
+          "AH:2013": {
+            "compositionError": 0.3442454859176853,
+            "transitionTotalVariation": 0.7939171975814064,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.46133420737982783,
+              "RE": 0.31850496638617287,
+              "RU": 0.24102621891668544,
+              "WA": 0.2721713923439199
+            },
+            "scoredWindows": 51
+          },
+          "AH:2019": {
+            "compositionError": 0.37507386930118736,
+            "transitionTotalVariation": 0.7094855989676285,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.448010513912807,
+              "RE": 0.36933744221879816,
+              "RU": 0.3445300462249615,
+              "WA": 0.3159612072872292
+            },
+            "scoredWindows": 55
+          },
+          "BH:4071": {
+            "compositionError": 0.3502840909090909,
+            "transitionTotalVariation": 0.6717105263157894,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.49318181818181817,
+              "RE": 0.46515151515151515,
+              "RU": 0.1553030303030303,
+              "WA": 0.2742424242424243
+            },
+            "scoredWindows": 66
+          },
+          "BH:4085": {
+            "compositionError": 0.33795081967213114,
+            "transitionTotalVariation": 0.6375,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4942622950819672,
+              "RE": 0.35655737704918034,
+              "RU": 0.21639344262295082,
+              "WA": 0.27704918032786885
+            },
+            "scoredWindows": 61
+          },
+          "BH:4511": {
+            "compositionError": 0.3531,
+            "transitionTotalVariation": 0.7999999999999999,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.444,
+              "RE": 0.39233333333333337,
+              "RU": 0.261,
+              "WA": 0.264
+            },
+            "scoredWindows": 50
+          },
+          "BH:4589": {
+            "compositionError": 0.36041666666666666,
+            "transitionTotalVariation": 0.7326388888888888,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.47678571428571426,
+              "RE": 0.35535714285714287,
+              "RU": 0.2630952380952381,
+              "WA": 0.3273809523809524
+            },
+            "scoredWindows": 42
+          },
+          "BH:6495": {
+            "compositionError": 0.3539473684210526,
+            "transitionTotalVariation": 0.7310344827586207,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.5,
+              "RE": 0.40921052631578947,
+              "RU": 0.23026315789473684,
+              "WA": 0.27631578947368424
+            },
+            "scoredWindows": 38
+          },
+          "BR:7001": {
+            "compositionError": 0.38720284237726094,
+            "transitionTotalVariation": 0.747554347826087,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.46444444444444444,
+              "RE": 0.4881136950904393,
+              "RU": 0.28888888888888886,
+              "WA": 0.2896640826873385
+            },
+            "scoredWindows": 45
+          },
+          "BR:8063": {
+            "compositionError": 0.37186218578031144,
+            "transitionTotalVariation": 0.7499900624826733,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.43687309145596953,
+              "RE": 0.3622670303266446,
+              "RU": 0.304354178842782,
+              "WA": 0.31844425099323076
+            },
+            "scoredWindows": 59
+          },
+          "BR:8071": {
+            "compositionError": 0.37444444444444447,
+            "transitionTotalVariation": 0.7411764705882353,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.42777777777777776,
+              "RE": 0.36888888888888893,
+              "RU": 0.3044444444444444,
+              "WA": 0.3966666666666667
+            },
+            "scoredWindows": 45
+          },
+          "BR:8073": {
+            "compositionError": 0.3614261249321286,
+            "transitionTotalVariation": 0.7753825081168831,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.42581471108256824,
+              "RE": 0.36123768472906403,
+              "RU": 0.2548337438423645,
+              "WA": 0.2469482402518117
+            },
+            "scoredWindows": 56
+          },
+          "BR:8089": {
+            "compositionError": 0.39142541820080773,
+            "transitionTotalVariation": 0.7883176927968454,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.43195795734751447,
+              "RE": 0.404610370999108,
+              "RU": 0.31346529814271745,
+              "WA": 0.31180184632207597
+            },
+            "scoredWindows": 31
+          },
+          "RC:1067": {
+            "compositionError": 0.3938373060844559,
+            "transitionTotalVariation": 0.7905276015587075,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4213377980278113,
+              "RE": 0.3960412766641225,
+              "RU": 0.2748219178082192,
+              "WA": 0.43345177250524136
+            },
+            "scoredWindows": 50
+          },
+          "RC:2024": {
+            "compositionError": 0.38094048981199186,
+            "transitionTotalVariation": 0.7870004437444127,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.391456366226024,
+              "RE": 0.2729719550929079,
+              "RU": 0.41183087834151666,
+              "WA": 0.34039470127467353
+            },
+            "scoredWindows": 50
+          },
+          "RC:2061": {
+            "compositionError": 0.349344414893617,
+            "transitionTotalVariation": 0.7802417153996102,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.5117966903073287,
+              "RE": 0.4276063829787234,
+              "RU": 0.17898936170212765,
+              "WA": 0.26264775413711583
+            },
+            "scoredWindows": 47
+          },
+          "RC:6": {
+            "compositionError": 0.39211014632176755,
+            "transitionTotalVariation": 0.8099543800704607,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4244162732111082,
+              "RE": 0.4385114731456195,
+              "RU": 0.3412143851168241,
+              "WA": 0.2129857691263717
+            },
+            "scoredWindows": 37
+          },
+          "RC:9012": {
+            "compositionError": 0.3532199600552305,
+            "transitionTotalVariation": 0.747310079521618,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.47461055969120486,
+              "RE": 0.40210374434757734,
+              "RU": 0.14120809614168248,
+              "WA": 0.33681542471865056
+            },
+            "scoredWindows": 93
+          }
+        }
+      },
+      "markov": {
+        "animalMacroCompositionError": 0.36000760994305575,
+        "animalMacroTransitionTotalVariation": 0.7528384116427378,
+        "animalMacroCompleteRunAbsoluteMedianErrorMinutes": 3.565096111990133,
+        "perClassAnimalMacroAbsoluteProportionError": {
+          "GR": 0.43513474691124365,
+          "RE": 0.39043837200587017,
+          "RU": 0.2937717828274714,
+          "WA": 0.31104419733998506
+        },
+        "diagnostics": {
+          "singleClassWindowRate": 0.4749304911955514,
+          "missingClassOccurrencesPerWindow": 1.9653382761816496,
+          "switchesPerMinute": 0.4459481037924152
+        },
+        "perAnimal": {
+          "AH:2003": {
+            "compositionError": 0.37392968659612386,
+            "transitionTotalVariation": 0.779335854667456,
+            "completeRunAbsoluteMedianErrorMinutes": 3.0,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4436782670627933,
+              "RE": 0.39232930970796803,
+              "RU": 0.4015739505351212,
+              "WA": 0.25267827157388156
+            },
+            "scoredWindows": 58
+          },
+          "AH:2004": {
+            "compositionError": 0.364443039826247,
+            "transitionTotalVariation": 0.7559443991073169,
+            "completeRunAbsoluteMedianErrorMinutes": 2.838,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4004273632003014,
+              "RE": 0.34550804459032547,
+              "RU": 0.1773197529924934,
+              "WA": 0.5275067838303916
+            },
+            "scoredWindows": 62
+          },
+          "AH:2009": {
+            "compositionError": 0.36307440988632056,
+            "transitionTotalVariation": 0.7827700945342345,
+            "completeRunAbsoluteMedianErrorMinutes": 0.865,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4276910529143623,
+              "RE": 0.40050109355663593,
+              "RU": 0.2699911180506642,
+              "WA": 0.3475735585046936
+            },
+            "scoredWindows": 83
+          },
+          "AH:2013": {
+            "compositionError": 0.33293715107344707,
+            "transitionTotalVariation": 0.7236323353965771,
+            "completeRunAbsoluteMedianErrorMinutes": 2.448051948051948,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.46349436132750005,
+              "RE": 0.31798706482323763,
+              "RU": 0.27736734368973515,
+              "WA": 0.26085222051730733
+            },
+            "scoredWindows": 51
+          },
+          "AH:2019": {
+            "compositionError": 0.3788857905020601,
+            "transitionTotalVariation": 0.7329235630222277,
+            "completeRunAbsoluteMedianErrorMinutes": 4.229166666666667,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4500901613217822,
+              "RE": 0.37586729429640175,
+              "RU": 0.3957658843282236,
+              "WA": 0.2919677419385663
+            },
+            "scoredWindows": 55
+          },
+          "BH:4071": {
+            "compositionError": 0.35968701907640527,
+            "transitionTotalVariation": 0.7820723536288151,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.5065499210224275,
+              "RE": 0.45748805187424113,
+              "RU": 0.18359746994977175,
+              "WA": 0.2850520273985747
+            },
+            "scoredWindows": 66
+          },
+          "BH:4085": {
+            "compositionError": 0.35560126483949395,
+            "transitionTotalVariation": 0.756727881300395,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.5371656671261131,
+              "RE": 0.3571361683731823,
+              "RU": 0.2590981023043547,
+              "WA": 0.2683493838494077
+            },
+            "scoredWindows": 61
+          },
+          "BH:4511": {
+            "compositionError": 0.3513094153653364,
+            "transitionTotalVariation": 0.7736963630339355,
+            "completeRunAbsoluteMedianErrorMinutes": 0.375,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4453164497782919,
+              "RE": 0.40663009446693654,
+              "RU": 0.28133255414176467,
+              "WA": 0.2501585630743525
+            },
+            "scoredWindows": 50
+          },
+          "BH:4589": {
+            "compositionError": 0.36080731156098805,
+            "transitionTotalVariation": 0.7533201983201984,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4420195704544444,
+              "RE": 0.36646623043156656,
+              "RU": 0.28705885384456814,
+              "WA": 0.3387560200848016
+            },
+            "scoredWindows": 42
+          },
+          "BH:6495": {
+            "compositionError": 0.36951129827774565,
+            "transitionTotalVariation": 0.7609275357402542,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4808724937343359,
+              "RE": 0.4296367521367521,
+              "RU": 0.2944120316817685,
+              "WA": 0.27312391555812604
+            },
+            "scoredWindows": 38
+          },
+          "BR:7001": {
+            "compositionError": 0.3802714587683955,
+            "transitionTotalVariation": 0.7862297193288165,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.42840526866097056,
+              "RE": 0.47756894058969035,
+              "RU": 0.30991916953005916,
+              "WA": 0.3029702340706398
+            },
+            "scoredWindows": 45
+          },
+          "BR:8063": {
+            "compositionError": 0.36639828801352753,
+            "transitionTotalVariation": 0.7169652384504963,
+            "completeRunAbsoluteMedianErrorMinutes": 1.625,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4331455787855629,
+              "RE": 0.3724871655781606,
+              "RU": 0.3368763190878984,
+              "WA": 0.31444085573950104
+            },
+            "scoredWindows": 59
+          },
+          "BR:8071": {
+            "compositionError": 0.38105925070950647,
+            "transitionTotalVariation": 0.7655660422523812,
+            "completeRunAbsoluteMedianErrorMinutes": null,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4156397691853787,
+              "RE": 0.37639682816473097,
+              "RU": 0.3314602858856908,
+              "WA": 0.4007401196022253
+            },
+            "scoredWindows": 45
+          },
+          "BR:8073": {
+            "compositionError": 0.3307037106691651,
+            "transitionTotalVariation": 0.7323506051240426,
+            "completeRunAbsoluteMedianErrorMinutes": 2.575675675675676,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.41564323378545087,
+              "RE": 0.3553947656434612,
+              "RU": 0.27651453094823103,
+              "WA": 0.23868915023990214
+            },
+            "scoredWindows": 56
+          },
+          "BR:8089": {
+            "compositionError": 0.35530145239391236,
+            "transitionTotalVariation": 0.6946256660137877,
+            "completeRunAbsoluteMedianErrorMinutes": 2.28643216080402,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.37769813878163727,
+              "RE": 0.40524393064707104,
+              "RU": 0.34833561593198004,
+              "WA": 0.28220816693513523
+            },
+            "scoredWindows": 31
+          },
+          "RC:1067": {
+            "compositionError": 0.37457877521938215,
+            "transitionTotalVariation": 0.7736582221669105,
+            "completeRunAbsoluteMedianErrorMinutes": 16.04093567251462,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.36651521073472765,
+              "RE": 0.39932555062851355,
+              "RU": 0.29207458988964846,
+              "WA": 0.4314069346739473
+            },
+            "scoredWindows": 50
+          },
+          "RC:2024": {
+            "compositionError": 0.3683946311538703,
+            "transitionTotalVariation": 0.7377439992839049,
+            "completeRunAbsoluteMedianErrorMinutes": 2.595703125,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.364691769384126,
+              "RE": 0.2985035196584688,
+              "RU": 0.43400803126106086,
+              "WA": 0.3527937198183151
+            },
+            "scoredWindows": 50
+          },
+          "RC:2061": {
+            "compositionError": 0.3424959300451322,
+            "transitionTotalVariation": 0.76547863519804,
+            "completeRunAbsoluteMedianErrorMinutes": 6.33125,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.454503354210801,
+              "RE": 0.42844031180600334,
+              "RU": 0.2050321803393612,
+              "WA": 0.2804546823350015
+            },
+            "scoredWindows": 47
+          },
+          "RC:6": {
+            "compositionError": 0.348368326936344,
+            "transitionTotalVariation": 0.7219353085938256,
+            "completeRunAbsoluteMedianErrorMinutes": 3.154255319148936,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.3808659919445618,
+              "RE": 0.4376977432233794,
+              "RU": 0.34033143029367446,
+              "WA": 0.21413015213117154
+            },
+            "scoredWindows": 37
+          },
+          "RC:9012": {
+            "compositionError": 0.34239398794771186,
+            "transitionTotalVariation": 0.7608642176911408,
+            "completeRunAbsoluteMedianErrorMinutes": 1.546875,
+            "perClassAbsoluteProportionError": {
+              "GR": 0.4682813148093034,
+              "RE": 0.4081585799206767,
+              "RU": 0.17336644186335837,
+              "WA": 0.30703144492375994
+            },
+            "scoredWindows": 93
+          }
+        }
+      }
+    },
+    "semiMarkovGate": null
+  },
+  "interpretation": [
+    "All reported scores are development-fold descriptive metrics over animals from the Perea source; they are not external validation.",
+    "Synthetic replicates are not independent animals. Macro summaries weight each held-out animal equally.",
+    "Annotated label-run lengths may be biased by the source's carry-forward rule and are not unbiased biological bout durations.",
+    "No score enables a behavior model or changes FarmEngine defaults."
+  ]
+}

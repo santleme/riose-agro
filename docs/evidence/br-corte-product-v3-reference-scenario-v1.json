@@ -1,0 +1,241 @@
+{
+  "manifest": {
+    "type": "riose-br-corte-dmi-scenario-set",
+    "version": 1,
+    "modelId": "br-corte-2023-eq-2.6",
+    "modelVersion": "2023",
+    "inputs": {
+      "bodyWeightKg": 400,
+      "adgKgPerDay": 0.5,
+      "animalCount": 200,
+      "durationDays": 30,
+      "supplementLevelsKgDMPerHeadPerDay": [
+        1.6,
+        2,
+        2.5
+      ],
+      "supplementPricePerKgDM": 4,
+      "currency": "BRL"
+    },
+    "assumptions": {
+      "populationRepresentation": "representative animal inputs; no individual weight distribution is supplied or inferred",
+      "horizon": "body weight, supplied ADG and daily supplement are held constant across the selected days; totals are arithmetic rollups, not a weight trajectory",
+      "cost": "supplement DM amount multiplied by user-supplied price per kg DM (BRL); not total ration cost or profit"
+    }
+  },
+  "results": {
+    "type": "riose-br-corte-dmi-scenario-results",
+    "version": 1,
+    "status": "computed",
+    "validated": false,
+    "model": {
+      "id": "br-corte-2023-eq-2.6",
+      "version": "2023",
+      "source": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+      "equation": "DMI = -0.4684 + 0.7732 × supplement + 0.0742 × BW^0.75 + 0.7953 × ADG - 0.9047 × ADG²",
+      "applicationDomain": "growing Zebu cattle grazing tropical pasture with supplementation",
+      "publishedInputRanges": {
+        "bodyWeightKg": [
+          133,
+          474
+        ],
+        "adgKgPerDay": [
+          -0.18,
+          1.34
+        ],
+        "supplementKgDMPerDay": [
+          0,
+          5.32
+        ],
+        "productionSystem": "growing Zebu cattle grazing tropical pasture with supplementation"
+      },
+      "evidenceStatus": "published equation; external validation reported by the source; no Riose-specific calibration"
+    },
+    "assumptions": {
+      "populationRepresentation": "representative animal inputs; no individual weight distribution is supplied or inferred",
+      "horizon": "body weight, supplied ADG and daily supplement are held constant across the selected days; totals are arithmetic rollups, not a weight trajectory",
+      "cost": "supplement DM amount multiplied by user-supplied price per kg DM (BRL); not total ration cost or profit"
+    },
+    "units": {
+      "totalDmiKgDMPerHeadPerDay": "kg DM/head/day",
+      "herdDmiKgDM": "kg DM across the selected population and horizon",
+      "supplementKgDM": "kg DM across the selected population and horizon",
+      "supplementCost": "BRL across the selected population and horizon"
+    },
+    "manifest": {
+      "type": "riose-br-corte-dmi-scenario-set",
+      "version": 1,
+      "modelId": "br-corte-2023-eq-2.6",
+      "modelVersion": "2023",
+      "inputs": {
+        "bodyWeightKg": 400,
+        "adgKgPerDay": 0.5,
+        "animalCount": 200,
+        "durationDays": 30,
+        "supplementLevelsKgDMPerHeadPerDay": [
+          1.6,
+          2,
+          2.5
+        ],
+        "supplementPricePerKgDM": 4,
+        "currency": "BRL"
+      },
+      "assumptions": {
+        "populationRepresentation": "representative animal inputs; no individual weight distribution is supplied or inferred",
+        "horizon": "body weight, supplied ADG and daily supplement are held constant across the selected days; totals are arithmetic rollups, not a weight trajectory",
+        "cost": "supplement DM amount multiplied by user-supplied price per kg DM (BRL); not total ration cost or profit"
+      }
+    },
+    "scenarios": [
+      {
+        "id": "baseline",
+        "label": "Baseline · 1.6 kg DM/head/day",
+        "role": "baseline",
+        "input": {
+          "supplementKgDMPerHeadPerDay": 1.6,
+          "units": "kg DM/head/day"
+        },
+        "outputs": {
+          "totalDmiKgDMPerHeadPerDay": 7.5768447572193764,
+          "adgRole": "input-assumption; not predicted by this equation",
+          "inPublishedInputRange": true
+        },
+        "totals": {
+          "herdDmiKgDM": 45461.06854331626,
+          "supplementKgDM": 9600,
+          "supplementCost": 38400,
+          "currency": "BRL"
+        },
+        "provenance": {
+          "modelId": "br-corte-2023-eq-2.6",
+          "version": "2023",
+          "inputs": {
+            "bodyWeightKg": {
+              "value": 400,
+              "unit": "kg"
+            },
+            "adgKgPerDay": {
+              "value": 0.5,
+              "unit": "kg/day"
+            },
+            "supplementKgDMPerDay": {
+              "value": 1.6,
+              "unit": "kg DM/day"
+            }
+          },
+          "evidenceReferences": [
+            {
+              "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
+            }
+          ],
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
+          "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
+        }
+      },
+      {
+        "id": "scenario-1",
+        "label": "Scenario A · 2 kg DM/head/day",
+        "role": "intervention",
+        "input": {
+          "supplementKgDMPerHeadPerDay": 2,
+          "units": "kg DM/head/day"
+        },
+        "outputs": {
+          "totalDmiKgDMPerHeadPerDay": 7.886124757219378,
+          "adgRole": "input-assumption; not predicted by this equation",
+          "inPublishedInputRange": true
+        },
+        "totals": {
+          "herdDmiKgDM": 47316.748543316266,
+          "supplementKgDM": 12000,
+          "supplementCost": 48000,
+          "currency": "BRL"
+        },
+        "provenance": {
+          "modelId": "br-corte-2023-eq-2.6",
+          "version": "2023",
+          "inputs": {
+            "bodyWeightKg": {
+              "value": 400,
+              "unit": "kg"
+            },
+            "adgKgPerDay": {
+              "value": 0.5,
+              "unit": "kg/day"
+            },
+            "supplementKgDMPerDay": {
+              "value": 2,
+              "unit": "kg DM/day"
+            }
+          },
+          "evidenceReferences": [
+            {
+              "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
+            }
+          ],
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
+          "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
+        },
+        "baselineDeltas": {
+          "dmiKgDMPerHeadPerDay": 0.3092800000000011,
+          "supplementCost": 9600
+        }
+      },
+      {
+        "id": "scenario-2",
+        "label": "Scenario B · 2.5 kg DM/head/day",
+        "role": "intervention",
+        "input": {
+          "supplementKgDMPerHeadPerDay": 2.5,
+          "units": "kg DM/head/day"
+        },
+        "outputs": {
+          "totalDmiKgDMPerHeadPerDay": 8.272724757219377,
+          "adgRole": "input-assumption; not predicted by this equation",
+          "inPublishedInputRange": true
+        },
+        "totals": {
+          "herdDmiKgDM": 49636.348543316264,
+          "supplementKgDM": 15000,
+          "supplementCost": 60000,
+          "currency": "BRL"
+        },
+        "provenance": {
+          "modelId": "br-corte-2023-eq-2.6",
+          "version": "2023",
+          "inputs": {
+            "bodyWeightKg": {
+              "value": 400,
+              "unit": "kg"
+            },
+            "adgKgPerDay": {
+              "value": 0.5,
+              "unit": "kg/day"
+            },
+            "supplementKgDMPerDay": {
+              "value": 2.5,
+              "unit": "kg DM/day"
+            }
+          },
+          "evidenceReferences": [
+            {
+              "id": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "locator": "https://brcorte.com.br/assets/book2023/br/02.pdf",
+              "status": "published-equation-with-external-validation; no Riose-specific calibration"
+            }
+          ],
+          "evidenceStatus": "published-equation-with-external-validation; no Riose-specific calibration",
+          "implementationHash": "sha256:afbc3ca4973651f19e368b258e007296d305190a4ca15dd9953dd43bc24c79b9"
+        },
+        "baselineDeltas": {
+          "dmiKgDMPerHeadPerDay": 0.6958800000000007,
+          "supplementCost": 21600
+        }
+      }
+    ]
+  }
+}

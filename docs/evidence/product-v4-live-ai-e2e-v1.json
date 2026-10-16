@@ -1,0 +1,189 @@
+{
+  "type": "riose-live-ai-browser-evaluation",
+  "version": 1,
+  "requests": [
+    {
+      "prompt": "Compare 200 bovinos durante 30 dias com diferentes níveis de suplementação.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 926,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 951,
+          "completion_tokens": 324,
+          "total_tokens": 1275
+        }
+      },
+      "fallbackReason": null,
+      "intent": "clarification_needed",
+      "capability": "farm_comparison",
+      "missingInputs": [
+        "supplement in kg DM/head/day (explicit dry-matter basis)",
+        "three explicit supplement alternatives",
+        "shared weather: normal, hot or rain (demonstrative rule)"
+      ]
+    },
+    {
+      "prompt": "Compare 0.5, 1 and 1.5 kg DM/head/day for 200 cattle over 30 days with normal weather.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 745,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 978,
+          "completion_tokens": 160,
+          "total_tokens": 1138
+        }
+      },
+      "fallbackReason": null,
+      "intent": "compare_scenarios",
+      "capability": "farm_comparison",
+      "missingInputs": []
+    },
+    {
+      "prompt": "Mostre os resultados já calculados e a diferença entre os cenários.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 1853,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 995,
+          "completion_tokens": 241,
+          "total_tokens": 1236
+        }
+      },
+      "fallbackReason": null,
+      "intent": "inspect_results",
+      "capability": "results",
+      "missingInputs": []
+    },
+    {
+      "prompt": "Change the highest supplement level to 1.25 kg DM/head/day. Keep the other inputs unchanged.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 868,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1001,
+          "completion_tokens": 260,
+          "total_tokens": 1261
+        }
+      },
+      "fallbackReason": null,
+      "intent": "compare_scenarios",
+      "capability": "farm_comparison",
+      "missingInputs": []
+    },
+    {
+      "prompt": "Calcule o CMS condicional pelo BR-CORTE para um zebuíno em crescimento a pasto tropical de 400 kg, com GMD informado de 0,5 kg/dia e suplemento de 1,6 kg de matéria seca por animal por dia.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 919,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1058,
+          "completion_tokens": 238,
+          "total_tokens": 1296
+        }
+      },
+      "fallbackReason": null,
+      "intent": "create_experiment",
+      "capability": "br_corte_single",
+      "missingInputs": []
+    },
+    {
+      "prompt": "O BR-CORTE consegue prever automaticamente o ganho de peso?",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 895,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1073,
+          "completion_tokens": 189,
+          "total_tokens": 1262
+        }
+      },
+      "fallbackReason": null,
+      "intent": "scientific_explanation",
+      "capability": "evidence",
+      "missingInputs": []
+    },
+    {
+      "prompt": "Preveja quando cada bovino vai ruminar amanhã.",
+      "httpStatus": 200,
+      "source": "llm",
+      "provider": "groq",
+      "model": "openai/gpt-oss-20b",
+      "metadata": {
+        "latencyMs": 1132,
+        "httpStatus": 200,
+        "usage": {
+          "prompt_tokens": 1072,
+          "completion_tokens": 409,
+          "total_tokens": 1481
+        }
+      },
+      "fallbackReason": null,
+      "intent": "unsupported_request",
+      "capability": "evidence",
+      "missingInputs": [
+        "populationCount",
+        "durationDays",
+        "bodyWeightKg",
+        "adgKgPerDay",
+        "supplementLevels",
+        "sweepMinimum",
+        "sweepMaximum",
+        "sweepStep",
+        "weather",
+        "pricePerKgDM",
+        "currency"
+      ]
+    }
+  ],
+  "checks": {
+    "archiveBytes": 952072,
+    "exportManifestSha256": "8bb1685ac6eaffe1c80d750f1646a7f5558c1603f0b4b803f7f2ac78ae36df32",
+    "exportResultsSha256": "9d1131f690cb2b0b2cd7d551072e35589772d726a90fb1fe2a598dad515affc0",
+    "exportReplay": true,
+    "singleScientificReplay": true,
+    "liveReview": true,
+    "explicitExecution": true,
+    "singleScientificResultMatchesModule": true,
+    "singleExplicitReplay": true,
+    "groundedExplanation": true,
+    "revisionDoesNotExecute": true,
+    "unsupportedNoGo": true,
+    "outagePreservesResults": true,
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "reducedMotion": true,
+    "pageErrors": []
+  },
+  "credentialsRecorded": false,
+  "status": "passed"
+}

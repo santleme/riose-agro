@@ -1,0 +1,19 @@
+# Acceptance criteria
+
+| ID | Criterion | Evidence |
+|---|---|---|
+| P4-ACC-001 | Reuse existing V3 multi-arm comparison and binary historical compatibility without contract regression. | V3 E2E, scenario-set tests, archive tests |
+| P4-ACC-002 | BR-CORTE sensitivity sweep uses only registered Eq. 2.6 inputs inside source-declared ranges, with fixed BW/ADG and step/point checks. | Contract/unit tests and source worked-vector test |
+| P4-ACC-003 | Review precedes explicit calculation; no form edit runs automatically. | Browser E2E |
+| P4-ACC-004 | UI shows actual computed values, units, model source/status and deterministic/noncausal limitation. | Browser E2E + visual capture |
+| P4-ACC-005 | Conditional cost requires user price/currency and uses supplement DM amount, count, duration only. | Existing plus sensitivity cost tests |
+| P4-ACC-006 | Empty state distinguishes absent user inputs from an explicitly loaded example. | Browser E2E/accessibility review |
+| P4-ACC-007 | V2/V3, 497 baseline suite, parity as applicable, Perea NO-GO and provider/science gates remain unchanged. | Regression output and status records |
+| P4-ACC-008 | Product discovery materials are prepared without fabricating user feedback or contacting participants. | Demonstration script, question guide and blank structured record |
+| P4-ACC-009 | Sensitivity archive is versioned, verifies the exact registered-model result and provenance, opens without calculation, and replays only after explicit confirmation. | Archive unit/schema tests, tampering tests and Product V3 browser E2E |
+| P4-ACC-010 | Optional V4 AI interpretation returns only a strict validated intent, falls back deterministically, never starts execution, and archives provider/model plus the exact confirmed manifest while preserving v1 import. | Adapter security tests, AI-fixture and fallback browser E2E, archive compatibility, regression suite |
+
+| P4-ACC-011 | Real configured Groq interpretation reaches reviewed Product confirmation, actual engine/model results, grounded inspection and explicit export/replay; metadata proves real provider contact. | `product-v4-live-ai-e2e-v1.json`, `product-v4-live-scientific-v1.json`, `provider-live-smoke-v1.json`, live Chromium screenshots |
+| P4-ACC-012 | Pinned Laya CPU inference is actually evaluated with fixed bilingual labels, confusion/latency/RSS evidence, and remains disabled when its promotion screen fails. | Worker 3/3, `laya-routing-cpu-v1.json`, `intent-routing-comparison-v1.json`, cached/offline startup JSONL and official source audit |
+| P4-ACC-013 | Provider/output failures and edited inputs cannot run or replace an approved experiment silently; offline assumptions and typed result provenance persist. | 522 Node tests, new decision-contract E2E, existing E2E, compact export/import and single-report explicit replay |
+| P4-ACC-014 | Single BR-CORTE reports state each input/output unit, clarify the modeled residual-forage quantity, preserve strict v1 reading, and replay only after an explicit action. | `tests/decision-assistant.test.js`; `scripts/e2e/decision-single-live.mjs`; `product-v4-live-single-report-v2.json` |
